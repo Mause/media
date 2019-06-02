@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block header %}Options for "{{title}}"{% endblock %}
+
+{% block content %}
+
+{% for category, rset in results %}
+<ul>
+    <h3>{{category}}</h3>
+    {% for option in rset  %}
+    <li>
+        <a
+            href="{{url_for('download', magnet=option['download'], imdb_id=imdb_id, **extra)}}"
+        >{{option.title}}</a>
+        <small>{{option.seeders}}</small>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+    No results
+{% endfor %}
+
+{% endblock %}

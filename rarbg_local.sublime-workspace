@@ -1,0 +1,3101 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"cat",
+				"categorise"
+			],
+			[
+				"imdb",
+				"imdbID"
+			],
+			[
+				"quer",
+				"query_omdb\tfunction"
+			],
+			[
+				"torr",
+				"torrent_results"
+			],
+			[
+				"get_",
+				"get_rarbg\tfunction"
+			],
+			[
+				"que",
+				"query_omdb\tfunction"
+			],
+			[
+				"so",
+				"select_options\tfunction"
+			],
+			[
+				"sele",
+				"select_options\tfunction"
+			],
+			[
+				"back",
+				"background-color\tproperty"
+			],
+			[
+				"rend",
+				"render_progress"
+			],
+			[
+				"render_",
+				"render_template_string\tfunction"
+			],
+			[
+				"render",
+				"render_template_string\tfunction"
+			],
+			[
+				"def",
+				"defaultdict\tclass"
+			],
+			[
+				"h",
+				"head\tTag"
+			],
+			[
+				"Sql",
+				"SQLAlchemy\tmodule"
+			],
+			[
+				"get",
+				"get_torrent\tfunction"
+			],
+			[
+				"ti",
+				"transmission_id\tparam"
+			],
+			[
+				"epis",
+				"episodes"
+			],
+			[
+				"query",
+				"query_omdb\tfunction"
+			],
+			[
+				"iter",
+				"iterable\tparam"
+			],
+			[
+				"E",
+				"EpisodeDetails\tclass"
+			],
+			[
+				"im",
+				"imdb_id"
+			],
+			[
+				"movie",
+				"movie_details"
+			],
+			[
+				"gr",
+				"groups\tstatement"
+			],
+			[
+				"create",
+				"create_movie\tfunction"
+			],
+			[
+				"trans",
+				"transaction"
+			],
+			[
+				"con",
+				"contextmanager"
+			],
+			[
+				"hack",
+				"hackernews"
+			],
+			[
+				"m",
+				"m_multipleWidthCommand"
+			],
+			[
+				"pa",
+				"playerManager"
+			],
+			[
+				"wid",
+				"widevine"
+			],
+			[
+				"AV",
+				"ATV_URL"
+			],
+			[
+				"device",
+				"deviceId"
+			],
+			[
+				"dev",
+				"deviceTypeID"
+			],
+			[
+				"wide",
+				"Widevine2License"
+			],
+			[
+				"cl",
+				"clientId"
+			],
+			[
+				"d",
+				"deviceId\tstatement"
+			],
+			[
+				"Mc",
+				"MediaController\tmodule"
+			],
+			[
+				"segment",
+				"segment_template\tstatement"
+			],
+			[
+				"segm",
+				"segments\tstatement"
+			],
+			[
+				"uui",
+				"uuidv4"
+			],
+			[
+				"pl",
+				"player_config"
+			],
+			[
+				"cook",
+				"cookiejar\tmodule"
+			],
+			[
+				"de",
+				"deviceTypeId\tstatement"
+			],
+			[
+				"by",
+				"bytes\tclass"
+			],
+			[
+				"fetch",
+				"fetchmany\tfunction"
+			],
+			[
+				"ma",
+				"maybe_json\tfunction"
+			],
+			[
+				"ex",
+				"extractall\tfunction"
+			],
+			[
+				"gt",
+				"get_applets\tfunction"
+			],
+			[
+				"U",
+				"U3HTTPResponse\tclass"
+			],
+			[
+				"B",
+				"BytesIO\tclass"
+			],
+			[
+				"read_",
+				"read_requests_from_handle\tfunction"
+			],
+			[
+				"I",
+				"Iterator\tinstance"
+			],
+			[
+				"ext",
+				"extractfile\tfunction"
+			],
+			[
+				"Tar",
+				"TarFile\tclass"
+			],
+			[
+				"extr",
+				"extractall\tfunction"
+			],
+			[
+				"zip",
+				"ZipFile\tclass"
+			],
+			[
+				"en",
+				"encryptionAlg\tstatement"
+			],
+			[
+				"bytes",
+				"BytesIO\tclass"
+			],
+			[
+				"req",
+				"requests\tmodule"
+			],
+			[
+				"unpack",
+				"unpack\tfunction"
+			],
+			[
+				"reu",
+				"return\tkeyword"
+			],
+			[
+				"foat",
+				"float\tclass"
+			],
+			[
+				"Base",
+				"BaseHTTPRequestHandler\tclass"
+			],
+			[
+				"b64",
+				"b64decode\tfunction"
+			],
+			[
+				"client",
+				"client_id\tstatement"
+			],
+			[
+				"provi",
+				"ProviderName"
+			],
+			[
+				"Provid",
+				"ProviderName"
+			],
+			[
+				"stand",
+				"standard_b64encode\tfunction"
+			],
+			[
+				"srp",
+				"srp_b_hex\tstatement"
+			],
+			[
+				"SC",
+				"SecretCode"
+			],
+			[
+				"cog",
+				"cognito\tstatement"
+			],
+			[
+				"rep",
+				"response\tstatement"
+			],
+			[
+				"Cha",
+				"ChallengeParameters"
+			],
+			[
+				"uu",
+				"uuid\tmodule"
+			],
+			[
+				"ran",
+				"random\tstatement"
+			],
+			[
+				"rand",
+				"randint\tstatement"
+			],
+			[
+				"as",
+				"answer\tstatement"
+			],
+			[
+				"assert",
+				"assertEqual\tfunction"
+			],
+			[
+				"ip",
+				"import\tkeyword"
+			],
+			[
+				"asse",
+				"assertEqual\tfunction"
+			],
+			[
+				"ass",
+				"assertEqual\tfunction"
+			],
+			[
+				"r",
+				"return\tkeyword"
+			],
+			[
+				"TAB_",
+				"TAB_BRACKET_RE\tstatement"
+			],
+			[
+				"gro",
+				"groupdict\tfunction"
+			],
+			[
+				"g",
+				"groups\tfunction"
+			],
+			[
+				"un",
+				"Unit\tclass"
+			],
+			[
+				"par",
+				"pairings"
+			],
+			[
+				"wi",
+				"with\tkeyword"
+			],
+			[
+				"color",
+				"colored_term\tmodule"
+			],
+			[
+				"med",
+				"mediaSessionId\tstatement"
+			],
+			[
+				"media",
+				"mediaSessionId"
+			],
+			[
+				"MEDIA",
+				"MEDIA_STATUS"
+			],
+			[
+				"medians",
+				"MEDIA_NS\tstatement"
+			],
+			[
+				"tp",
+				"typing\tmodule"
+			],
+			[
+				"Web",
+				"websocket\tmodule"
+			],
+			[
+				"ge",
+				"geventwebsocket\tmodule"
+			],
+			[
+				"send",
+				"senderId"
+			],
+			[
+				"c",
+				"codec"
+			],
+			[
+				"base",
+				"base_path\tparam"
+			],
+			[
+				"add",
+				"add_segment\tfunction"
+			],
+			[
+				"id",
+				"ipdb\tipdb"
+			],
+			[
+				"tempfile",
+				"tempfilename\tstatement"
+			],
+			[
+				"mk",
+				"mkstemp\tfunction"
+			],
+			[
+				"time",
+				"time\tfunction"
+			],
+			[
+				"path",
+				"pathsep\tinstance"
+			],
+			[
+				"in",
+				"insert\tfunction"
+			],
+			[
+				"frm",
+				"fromdatetime\tfunction"
+			],
+			[
+				"rec",
+				"reciever_thread_inst\tstatement"
+			],
+			[
+				"conn",
+				"connections\tstatement"
+			],
+			[
+				"queue_",
+				"queue_declare\tfunction"
+			],
+			[
+				"curre",
+				"currentCycleRemainingTime"
+			],
+			[
+				"curren",
+				"currentTotalRemainingTime"
+			],
+			[
+				"crr",
+				"currentCycleRemainingTime"
+			],
+			[
+				"cycle",
+				"CYCLE\tstatement"
+			],
+			[
+				"current",
+				"currentCycle"
+			],
+			[
+				"temperatureSet",
+				"thermostatTemperatureSetpoint"
+			],
+			[
+				"curr",
+				"current_fan_speed_setting"
+			],
+			[
+				"exe",
+				"execute_many"
+			],
+			[
+				"get_d",
+				"get_device\tfunction"
+			],
+			[
+				"flt",
+				"flatten_dicts\tfunction"
+			],
+			[
+				"TRAIT",
+				"TRAITS_WITH_COMMANDS\tstatement"
+			],
+			[
+				"TYP",
+				"TYPES_WITH_TRAITS\tstatement"
+			],
+			[
+				"assertIs",
+				"assertIsInstance\tfunction"
+			],
+			[
+				"MM",
+				"MagicMock\tclass"
+			],
+			[
+				"typ",
+				"typing\tmodule"
+			],
+			[
+				"auto",
+				"autofocus\tAttr"
+			],
+			[
+				"trat",
+				"traits\tparam"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "data.json",
+			"settings":
+			{
+				"buffer_size": 6505,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "{'torrent_results': [{'title': 'Chernobyl.S01E01.i"
+			}
+		},
+		{
+			"file": "templates/base.html",
+			"settings":
+			{
+				"buffer_size": 1244,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 22 files for \"sorted\" (case sensitive)\n\nC:\\Users\\me\\Dropbox\\rarbg_local\\main.py:\n  223      seasons = groupby(show, lambda episode: episode.season)\n  224      return {\n  225:         number: sorted(season, key=lambda episode: episode.episode)\n  226          for number, season in seasons.items()\n  227      }\n  ...\n  274          progress=progress,\n  275          # functions\n  276:         sorted=sorted,\n  277          render_progress=render_progress,\n  278      )\n\nC:\\Users\\me\\Dropbox\\rarbg_local\\templates\\index.html:\n   36          </h3>\n   37  \n   38:         {% for i in sorted(seasons) %}\n   39              {% set season = seasons[i] %}\n   40              <h4>Season {{ i }}</h4>\n\n4 matches across 2 files\n",
+			"settings":
+			{
+				"buffer_size": 725,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "transmission.py",
+			"settings":
+			{
+				"buffer_size": 2038,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "main.py",
+			"settings":
+			{
+				"buffer_size": 7623,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "templates/download_all.html",
+			"settings":
+			{
+				"buffer_size": 353,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "templates/select_options.html",
+			"settings":
+			{
+				"buffer_size": 478,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "templates/select_season.html",
+			"settings":
+			{
+				"buffer_size": 340,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "db.py",
+			"settings":
+			{
+				"buffer_size": 2728,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "ranking.json",
+			"settings":
+			{
+				"buffer_size": 131,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "templates/index.html",
+			"settings":
+			{
+				"buffer_size": 1441,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Flow/Flow.sublime-build",
+					""
+				],
+				[
+					"Packages/MagicPython/settings/sublime/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/MagicPython/settings/sublime/Python.sublime-build",
+					"Syntax Check"
+				],
+				[
+					"Packages/User/npm start.sublime-build",
+					""
+				],
+				[
+					"Packages/User/pipenv python.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/MagicPython/settings/sublime/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 916.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"prettier",
+				"JsPrettier: Format Code"
+			],
+			[
+				"jsonfor",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"docu",
+				"SublimeGit: Documentation"
+			],
+			[
+				"json",
+				"Set Syntax: JSON"
+			],
+			[
+				"jsofn",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"jsonform",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"case",
+				"Convert Case: snake_case"
+			],
+			[
+				"black",
+				"Sublack: Toggle black on save for current view"
+			],
+			[
+				"low",
+				"Convert Case: Lower Case"
+			],
+			[
+				"base",
+				"Base Encoding: Base64 Decode Selection(s)"
+			],
+			[
+				"base64",
+				"Base Encoding: Base64 Decode Selection(s)"
+			],
+			[
+				"bas",
+				"Base Encoding: Base64 Decode Selection(s)"
+			],
+			[
+				"uppr",
+				"Convert Case: Upper Case"
+			],
+			[
+				"xml",
+				"Set Syntax: XML"
+			],
+			[
+				"urldecode",
+				"URL Decode"
+			],
+			[
+				"plain",
+				"Set Syntax: Plain Text"
+			],
+			[
+				"blac",
+				"Sublack: Toggle black on save for current view"
+			],
+			[
+				"htmlb",
+				"HTMLBeautify"
+			],
+			[
+				"word",
+				"Word Wrap: Toggle"
+			],
+			[
+				"uprgade",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"upa",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"html",
+				"Set Syntax: HTML"
+			],
+			[
+				"indetxm",
+				"Indent XML"
+			],
+			[
+				"jsnfor",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"base6",
+				"Base Encoding: Base64 Decode Selection(s)"
+			],
+			[
+				"url",
+				"URL Decode"
+			],
+			[
+				"urldeod",
+				"URL Decode"
+			],
+			[
+				"magoc",
+				"Set Syntax: MagicPython"
+			],
+			[
+				"indentml",
+				"Indent XML"
+			],
+			[
+				"inenm",
+				"Indent XML"
+			],
+			[
+				"b64de",
+				"Base Encoding: Base64 Decode Selection(s)"
+			],
+			[
+				"indentxm",
+				"Indent XML"
+			],
+			[
+				"jsonf",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"jsofor",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"jsonor",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"jsofnro",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"b64",
+				"Base Encoding: Base64 Decode Selection(s)"
+			],
+			[
+				"ur",
+				"URL Decode"
+			],
+			[
+				"blcack",
+				"Sublack: Start Blackd Server"
+			],
+			[
+				"urld",
+				"URL Decode"
+			],
+			[
+				"ul",
+				"URL Decode"
+			],
+			[
+				"sonfor",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"jsonfo",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"jsofno",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"upgrde",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"uldecode",
+				"URL Decode"
+			],
+			[
+				"http",
+				"HttpStatusCode: Http Status Code"
+			],
+			[
+				"jsof",
+				"Pretty JSON: Format and Sort JSON"
+			],
+			[
+				"wo",
+				"Word Wrap: Toggle"
+			],
+			[
+				"indent xm",
+				"Indent XML"
+			],
+			[
+				"inentml",
+				"Indent XML"
+			],
+			[
+				"synxml",
+				"Set Syntax: XML"
+			],
+			[
+				"indentxml",
+				"Indent XML"
+			],
+			[
+				"openurl",
+				"Open URL"
+			],
+			[
+				"indent xml",
+				"Indent XML"
+			],
+			[
+				"upgaade",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"upper",
+				"Convert Case: Upper Case"
+			],
+			[
+				"java",
+				"Set Syntax: Java"
+			],
+			[
+				"disoc",
+				"Package Control: Discover Packages"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"pop",
+				"Git: Pop Stash"
+			],
+			[
+				"pull",
+				"Git: Pull"
+			],
+			[
+				"stash",
+				"Git: Stash"
+			],
+			[
+				"blck",
+				"Sublack: Toggle black on save for current view"
+			],
+			[
+				"uuid",
+				"Generate UUID v4"
+			],
+			[
+				"uper",
+				"Convert Case: Upper Case"
+			],
+			[
+				"enable",
+				"Package Control: Enable Package"
+			],
+			[
+				"show",
+				"SublimeLinter: Show All Errors"
+			],
+			[
+				"disable",
+				"Package Control: Disable Package"
+			],
+			[
+				"lsp:",
+				"LSP: Rename Symbol"
+			],
+			[
+				"setup",
+				"LSP: Setup Language Server"
+			],
+			[
+				"setup ",
+				"LSP: Setup Language Server"
+			],
+			[
+				"show diag",
+				"LSP: Show Diagnostics"
+			],
+			[
+				"setup lang",
+				"LSP: Setup Language Server"
+			],
+			[
+				"lsp settings",
+				"Preferences: LSP Settings"
+			],
+			[
+				"upgrade",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"lint this",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"lint settings",
+				"Preferences: SublimeLinter Settings"
+			],
+			[
+				"lintersettings",
+				"Preferences: SublimeLinter Settings"
+			],
+			[
+				"synini",
+				"Set Syntax: INI"
+			],
+			[
+				"syninit",
+				"Set Syntax: ActionScript"
+			],
+			[
+				"nginx",
+				"Set Syntax: nginx"
+			],
+			[
+				"lint",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"diable",
+				"Package Control: Disable Package"
+			],
+			[
+				"upga",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"py",
+				"Set Syntax: MagicPython"
+			],
+			[
+				"packa",
+				"Package Control: Discover Packages"
+			],
+			[
+				"waka",
+				"WakaTime: Open Dashboard"
+			],
+			[
+				"urldcode",
+				"URL Decode"
+			],
+			[
+				"upgade",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"uniq",
+				"Permute Lines: Unique"
+			],
+			[
+				"reeve",
+				"Permute Lines: Reverse"
+			],
+			[
+				"uppe",
+				"Convert Case: Upper Case"
+			],
+			[
+				"ecode",
+				"URL Decode"
+			],
+			[
+				"spaces",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"magic",
+				"Set Syntax: MagicPython"
+			],
+			[
+				"reinde",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"error",
+				"SublimeLinter: Goto Error"
+			],
+			[
+				"git:stat",
+				"Git: Quick Status"
+			],
+			[
+				"python",
+				"Set Syntax: MagicPython"
+			],
+			[
+				"babel",
+				"Set Syntax: JavaScript (Babel)"
+			],
+			[
+				"javascript",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"pretti",
+				"JsPrettier: Format Code"
+			],
+			[
+				"grapql",
+				"Set Syntax: GraphQL"
+			],
+			[
+				"diff",
+				"Git: Diff Current File"
+			],
+			[
+				"rettier",
+				"JsPrettier: Format Code"
+			],
+			[
+				"sql",
+				"Set Syntax: SQL"
+			],
+			[
+				"pretier",
+				"JsPrettier: Format Code"
+			],
+			[
+				"prttier",
+				"JsPrettier: Format Code"
+			],
+			[
+				"pretiet",
+				"JsPrettier: Format Code"
+			],
+			[
+				"prettei",
+				"JsPrettier: Format Code"
+			],
+			[
+				"hight",
+				"SublimeLinter: Toggle Highlights"
+			],
+			[
+				"sublimeliner",
+				"SublimeLinter: Toggle Highlights"
+			],
+			[
+				"menu",
+				"View: Toggle Menu"
+			],
+			[
+				"git stash",
+				"Git: Stash"
+			],
+			[
+				"git",
+				"Git: Checkout"
+			],
+			[
+				"pretie",
+				"JsPrettier: Format Code"
+			],
+			[
+				"urlde",
+				"URL Decode"
+			],
+			[
+				"bash",
+				"Set Syntax: Bourne Again Shell (bash)"
+			],
+			[
+				"git file",
+				"Git: Diff Current File"
+			],
+			[
+				"gitgutter",
+				"GitGutter: Compare Against HEAD"
+			],
+			[
+				"status",
+				"Git: Status"
+			],
+			[
+				"subli",
+				"SublimeGit: Documentation"
+			],
+			[
+				"markdown",
+				"Set Syntax: Markdown"
+			],
+			[
+				"pretter",
+				"JsPrettier: Format Code"
+			],
+			[
+				"wordwrap",
+				"Word Wrap: Toggle"
+			],
+			[
+				"jsonformat",
+				"Pretty JSON: Format and Sort JSON"
+			]
+		],
+		"width": 1066.0
+	},
+	"console":
+	{
+		"height": 471.0,
+		"history":
+		[
+			"view.settings().get('syntax')",
+			"hashlib.md5(b'accounting-energytec').hexdigest()",
+			"hashlib.md5(b'accounting-energytec')",
+			"hashlib.md5('accounting-energytec')",
+			"import hashlib",
+			"import md5",
+			"3 * 4 * 500 ",
+			"72 / 2 / 5",
+			"72 / 2",
+			"''.join([random.choice(string.ascii_uppercase + string.digits) for _ in range(32)])",
+			"[random.choice(string.ascii_uppercase + string.digits) for _ in range(32)]",
+			"[random.choice(string.ascii_uppercase + stringn.digits) for _ in range(32)]",
+			"[random.choice(string.ascii_uppercase + ascii.digits) for _ in range(32)]",
+			"[random.choice(ascii.ascii_uppercase + ascii.digits) for _ in range(32)]",
+			"[random.choice(ascii.upper_letters + ascii.digits) for _ in range(32)]",
+			"import string",
+			"import random",
+			"968+54656",
+			"[str(uuid.uuid4()) for _ in range(10)]",
+			"uuid.uuid4()",
+			"import uuid",
+			"datetime.datetime.now().isoformat()",
+			"import datetime",
+			"2**6",
+			"'c'.index('d')",
+			"chr(65)",
+			"chr(62)",
+			"ord('A')",
+			"ord('a')",
+			"chr(98)",
+			"chr(97)",
+			"chr(63)",
+			"chr(36)",
+			"chr(57)",
+			"chr(48)",
+			"string.ascii_letters",
+			"import string",
+			"binascii",
+			"r[28:-2][:100]",
+			"r[26:-2][:100]",
+			"r[25:-2][:100]",
+			"r[15:-2][:100]",
+			"r[5:-2][:100]",
+			"r[:-2][:100]",
+			"r[:-2]",
+			"r",
+			"r = _",
+			"'''gdata.io.handleScriptLoaded({\"version\":\"1.0\",\"encoding\":\"UTF-8\",\"feed\":{\"xmlns\":\"http://www.w3.org/2005/Atom\",\"xmlns$openSearch\":\"http://a9.com/-/spec/opensearchrss/1.0/\",\"xmlns$blogger\":\"http://schemas.google.com/blogger/2008\",\"xmlns$georss\":\"http://www.georss.org/georss\",\"xmlns$gd\":\"http://schemas.google.com/g/2005\",\"xmlns$thr\":\"http://purl.org/syndication/thread/1.0\",\"id\":{\"$t\":\"tag:blogger.com,1999:blog-7422364006433587210\"},\"updated\":{\"$t\":\"2017-09-01T19:20:36.089-05:00\"},\"category\":[{\"term\":\"Sissy\"},{\"term\":\"feminization\"},{\"term\":\"forced feminization\"},{\"term\":\"gender role reversal\"},{\"term\":\"anal\"},{\"term\":\"big tits\"},{\"term\":\"naive sissy\"},{\"term\":\"caught\"},{\"term\":\"lingerie\"},{\"term\":\"College\"},{\"term\":\"big breasts\"},{\"term\":\"hypnosis\"},{\"term\":\"nude\"},{\"term\":\"punishment\"},{\"term\":\"revenge\"},{\"term\":\"Son\"},{\"term\":\"bdsm\"},{\"term\":\"beach\"},{\"term\":\"blowjob\"},{\"term\":\"breast implants\"},{\"term\":\"doggystyle\"},{\"term\":\"feminized\"},{\"term\":\"hormones\"},{\"term\":\"interracial\"},{\"term\":\"petite\"},{\"term\":\"public\"},{\"term\":\"sissy and proud\"},{\"term\":\"son feminization\"},{\"term\":\"story\"},{\"term\":\"stripper\"},{\"term\":\"Feminization Fiction\"},{\"term\":\"ass\"},{\"term\":\"bikini\"},{\"term\":\"bimbo\"},{\"term\":\"cheerleader\"},{\"term\":\"chemical induced change\"},{\"term\":\"closeted\"},{\"term\":\"conditioning\"},{\"term\":\"crossdress\"},{\"term\":\"crossdressing\"},{\"term\":\"ebony\"},{\"term\":\"fantasy\"},{\"term\":\"father feminization\"},{\"term\":\"friends.  denial.  college.\"},{\"term\":\"gradual feminization\"},{\"term\":\"homrones\"},{\"term\":\"indian\"},{\"term\":\"introspective\"},{\"term\":\"magical transformation\"},{\"term\":\"mass feminization\"},{\"term\":\"model\"},{\"term\":\"mother\"},{\"term\":\"motivational\"},{\"term\":\"nudist\"},{\"term\":\"panties\"},{\"term\":\"piercings\"},{\"term\":\"prostitue\"},{\"term\":\"punished\"},{\"term\":\"reparations\"},{\"term\":\"role reversal\"},{\"term\":\"schoolboy\"},{\"term\":\"secretary\"},{\"term\":\"secretary.  sissy.  feminized.  nephew.\"},{\"term\":\"sister\"},{\"term\":\"slave\"},{\"term\":\"spying\"},{\"term\":\"story. fiction.  sissy.  sex. anal. gay.\"},{\"term\":\"strap-on\"},{\"term\":\"striptease\"},{\"term\":\"surgery\"},{\"term\":\"switch\"},{\"term\":\"transformation\"},{\"term\":\"tricked\"},{\"term\":\"twins\"},{\"term\":\"upskirt\"},{\"term\":\"voyeur\"},{\"term\":\"yoga pants\"}],\"title\":{\"type\":\"text\",\"$t\":\"The Feminization Station TG and Sissy Captions\"},\"subtitle\":{\"type\":\"html\",\"$t\":\"A blog containing captions of a TG or Transgendered nature.  Forced Feminization , magical changes , hormones , breast implants ... they are all fair game. Feminization captions.\"},\"link\":[{\"rel\":\"http://schemas.google.com/g/2005#feed\",\"type\":\"application/atom+xml\",\"href\":\"http:\\\\/\\\\/feminizationstation.blogspot.com\\\\/feeds\\\\/posts\\\\/summary\"},{\"rel\":\"self\",\"type\":\"application/atom+xml\",\"href\":\"https:\\\\/\\\\/www.blogger.com\\\\/feeds\\\\/7422364006433587210\\\\/posts\\\\/summary?alt=json-in-script\\\\u0026max-results=0\"},{\"rel\":\"alternate\",\"type\":\"text/html\",\"href\":\"http:\\\\/\\\\/feminizationstation.blogspot.com\\\\/\"},{\"rel\":\"hub\",\"href\":\"http://pubsubhubbub.appspot.com/\"}],\"author\":[{\"name\":{\"$t\":\"Nikki Jenkins\"},\"uri\":{\"$t\":\"http:\\\\/\\\\/www.blogger.com\\\\/profile\\\\/07590424736985587504\"},\"email\":{\"$t\":\"noreply@blogger.com\"},\"gd$image\":{\"rel\":\"http://schemas.google.com/g/2005#thumbnail\",\"width\":\"16\",\"height\":\"16\",\"src\":\"https:\\\\/\\\\/img1.blogblog.com\\\\/img\\\\/b16-rounded.gif\"}}],\"generator\":{\"version\":\"7.00\",\"uri\":\"http://www.blogger.com\",\"$t\":\"Blogger\"},\"openSearch$totalResults\":{\"$t\":\"2353\"},\"openSearch$startIndex\":{\"$t\":\"1\"},\"openSearch$itemsPerPage\":{\"$t\":\"0\"},\"blogger$adultContent\":{\"$t\":\"true\"}}});'''",
+			"re.search(r'/\\d+$', 'List/73843294472')",
+			"re.search(r'/\\d+', 'List/73843294472')",
+			"re.search(r'\\d+', 'List/73843294472')",
+			"re.match(r'\\d+', 'List/73843294472')",
+			"re.match(r'/\\d+', 'List/73843294472')",
+			"re.match(r'\\/\\d+', 'List/73843294472')",
+			"re.match(r'\\/\\d+$', 'List/73843294472')",
+			"re.match(r'/\\d+$', 'List/73843294472')",
+			"re.match(r'/\\d+$', 'List')",
+			"re.match(r'/\\d+$', 'tp')",
+			"re.match(r'/\\d+$', tp)",
+			"import re",
+			"sys.path[-1]",
+			"sys.path.pop(-1); sys.path.append('c:\\\\Program Files\\\\java\\\\jdk1.8.0_131\\\\bin')",
+			"sys.path[-1]",
+			"sys.path.append('c:\\Program Files\\java\\jdk1.8.0_131\\bin')",
+			"sys.path",
+			"import sys",
+			"sys.path",
+			"float('')",
+			"next(set([0]))",
+			"md5(b'Mause').hexdigest()",
+			"md5('Mause').hexdigest()",
+			"from hashlib import md5"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": false,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/me/Dropbox/rarbg_local",
+		"/C/Users/me/Dropbox/rarbg_local/templates"
+	],
+	"file_history":
+	[
+		"/C/Users/me/Dropbox/rarbg_local/classify.py",
+		"/c/users/me/dropbox/rarbg_loca",
+		"/C/Users/me/Dropbox/rarbg_local/templates/select_season.html",
+		"/C/Users/me/Dropbox/rarbg_local/templates/select_options.html",
+		"/C/Users/me/Dropbox/rarbg_local/templates/select_item.html",
+		"/C/Users/me/Dropbox/rarbg_local/db.py",
+		"/C/Users/me/Dropbox/rarbg_local/templates/base.html",
+		"/C/Users/me/Dropbox/rarbg_local/templates/select_episode.html",
+		"/C/Users/me/Dropbox/rarbg_local/templates/index.html",
+		"/C/Users/me/Dropbox/rarbg_local/ranking.json",
+		"/C/Users/me/Dropbox/rarbg_local/transmission.py",
+		"/C/Users/me/Dropbox/rarbg_local/main.py",
+		"/C/Users/me/Dropbox/rarbg_local/rarbg_local.sublime-project",
+		"/C/Users/me/bin/cmder_mini/config/user_profile.ps1",
+		"/C/Users/me/bin/cmder_old/config/user-profile.ps1",
+		"/C/Users/me/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1",
+		"/C/Users/me/Downloads/cmder_mini/config/user_profile.ps1",
+		"/C/Users/me/Downloads/cmder_mini/vendor/profile.ps1",
+		"/C/Users/me/Downloads/response.bin",
+		"/C/Users/me/Downloads/starjavapos_1.13.11_windows_64bit_20190409/.env",
+		"/C/Users/me/Dropbox/remote_rec/plugins/dashproxy.py",
+		"/C/Users/me/Dropbox/remote_rec/main.py",
+		"/C/Users/me/Dropbox/remote_rec/thing.mpd",
+		"/C/Users/me/Dropbox/remote_rec/prime_receiver/index.html",
+		"/C/Users/me/Downloads/starjavapos_1.13.11_windows_64bit_20190409/StarCashDrawerTest.java",
+		"/C/Users/me/Downloads/starjavapos_1.13.11_windows_64bit_20190409/jpos.xml",
+		"/C/Users/me/Downloads/starjavapos_1.13.11_windows_64bit_20190409/StarReceiptTest.java",
+		"/C/Users/me/Downloads/starjavapos_1.13.11_windows_64bit_20190409/test.py",
+		"/C/Users/me/Dropbox/remote_rec/Pipfile",
+		"/C/Users/me/Dropbox/remote_rec/plugins/plex.py",
+		"/C/Users/me/Dropbox/remote_rec/plugins/prime.py",
+		"/C/Users/me/Downloads/mpcd_v8/AndroidManifest.xml",
+		"/C/Users/me/Dropbox/ifttt/out/obtain.py",
+		"/C/Users/me/Documents/remotecontroller",
+		"/C/Users/me/Dropbox/remote_rec/friends.py",
+		"/C/Users/me/Dropbox/ifttt/users.json",
+		"/C/Users/me/Dropbox/ifttt/android-backup-extractor/src/org/nick/abe/AndroidBackup.java",
+		"/C/Users/me/Dropbox/ifttt/Pipfile",
+		"/C/Users/me/Dropbox/ifttt/out/a8a17be69d667473beb10eba22e9ec97.json",
+		"/C/Users/me/Dropbox/ifttt/out/0b0001ca6e359cc30245656d9f521698.json",
+		"/C/Users/me/Dropbox/ifttt/out/4afaa6e97302529fee4462820ffd069e.json",
+		"/C/Users/me/Dropbox/ifttt/out/d8f5ce26f634ede5d584ffbfcd997b9f.json",
+		"/C/Users/me/Dropbox/ifttt/load.py",
+		"/C/Users/me/Dropbox/ifttt/out/09a6a1e873d8d65581b3fea26d941453.json",
+		"/C/Users/me/.virtualenvs/ifttt-0NEkJjcB/Lib/site-packages/urllib3/response.py",
+		"/C/Users/me/Dropbox/ifttt/integration.py",
+		"/C/Users/me/Dropbox/ifttt/out/065114cbd28fc1d20b404ef2fa42d2f3.json",
+		"/C/Users/me/Dropbox/ifttt/out/d60c64ec8770b74bf031c0ae2b742373.json",
+		"/C/Users/me/Dropbox/ifttt/out/d591feaa0d8741863c904da805010f51.json",
+		"/C/Users/me/Dropbox/ifttt/ifttt.py",
+		"/C/Users/me/Dropbox/ifttt/out/801ec2018512edc0a839e883ee4eea6f.json",
+		"/C/Users/me/Dropbox/ifttt/out/cd8cc6be9d14e4e89282a96b77d8d571.json",
+		"/C/Users/me/Dropbox/ifttt/backup.ab",
+		"/C/'C",
+		"/C/Users/me/Dropbox/ifttt/apps/app.greyshirts.sslcapture/f/capture-1046852824.dat",
+		"/C/Users/me/Dropbox/ifttt/apps/app.greyshirts.sslcapture/f/capture-1010756925.dat",
+		"/C/Users/me/Dropbox/ifttt/  50:39  note     mypy          Possible overload variants",
+		"/C/Users/me/Dropbox/ifttt/out/18d909df945722df20bd57933004b2b0.json",
+		"/C/Users/me/Dropbox/ifttt/urls.json",
+		"/C/Users/me/Dropbox/ifttt/apps/app.greyshirts.sslcapture/f/capture-1186029712.dat",
+		"/C/Users/me/Dropbox/ifttt/ 161:18  note     mypy         Possible overload variant",
+		"/C/Users/me/Dropbox/ifttt/  49:39  note     mypy         Possible overload variants",
+		"/C/Users/me/Dropbox/ifttt/  48:39  note     mypy         Possible overload variants",
+		"/C/Python37/Lib/http/client.py",
+		"/C/   45:39  note     mypy         Possible overload variants",
+		"/C/Users/me/Dropbox/ifttt/  45:39  note     mypy         Possible overload variants",
+		"/C/Users/me/Dropbox/ifttt/  52:39  note     mypy         Possible overload variants",
+		"/C/Python37/Lib/http/server.py",
+		"/C/   48:32  note     mypy         Possible overload variants",
+		"/C/Python37/Lib/urllib/parse.py",
+		"/C/Python37/Lib/urllib/request.py",
+		"/C/Users/me/Dropbox/oasis/out.ab",
+		"/C/Users/me/Downloads/letsencrypt",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/Lib/site-packages/saml2/server.py",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/Lib/site-packages/saml2/config.py",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/Lib/site-packages/saml2/assertion.py",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/Lib/site-packages/saml2/metadata.py",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/Lib/site-packages/saml2/sigver.py",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/Lib/site-packages/saml2/extension/dri.py",
+		"/C/Users/me/Downloads/xmlsec-1.3.3/setup.py",
+		"/C/Users/me/Downloads/xmlsec-1.3.3/xmlsec_setupinfo.py",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/Lib/site-packages/saml2/s_utils.py",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/Lib/site-packages/saml2/__init__.py",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/Lib/site-packages/xmlsec/__init__.py",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/lib/site-packages/xmlsec.cp37-win_amd64.py",
+		"/C/Users/me/.virtualenvs/cognito-9NePkQw8/Lib/site-packages/saml2/client_base.py",
+		"/C/Users/me/Dropbox/cognito/Pipfile",
+		"/C/Users/me/Dropbox/cognito/callback.py",
+		"/C/Users/me/Dropbox/cognito/secret_code.txt",
+		"/C/Python37/Lib/random.py",
+		"/C/Users/me/Dropbox/advent_of_code/2018/day_01/one.py",
+		"/C/Users/me/Dropbox/advent_of_code/2018/day_01/two.py",
+		"/C/Users/me/Dropbox/advent_of_code/2018/day_01/input_1.txt",
+		"/C/Users/me/Dropbox/advent_of_code/2018/day_02/one.py",
+		"/C/Users/me/Dropbox/advent_of_code/2018/day_02/two.py",
+		"/C/Users/me/Dropbox/advent_of_code/2018/day_02/input_1.txt",
+		"/C/Users/me/enc/tis trap/misc/mause-me/2018/10/27/1540648425.json",
+		"/C/Users/me/enc/tis trap/misc/mause-me/2018/10/17/1539726302.json",
+		"/C/Users/me/enc/tis trap/misc/mause-me/2018/10/11/1539248343.json",
+		"/C/Users/me/Dropbox/Tumblr/find-original/monthly_issue.py",
+		"/C/Users/me/Dropbox/medicine/own/data.xml",
+		"/C/Users/me/Dropbox/medicine/mypy.ini",
+		"/C/Users/me/Dropbox/medicine/own/compare.py",
+		"/C/Users/me/Dropbox/medicine/medicine.sublime-project",
+		"/C/Users/me/Dropbox/medicine/own/medicine.sublime-project",
+		"/C/Users/me/Downloads/.rsrc_1",
+		"/C/Users/me/Documents/cmder/vendor/git-for-windows/usr/share/gdb/auto-load/usr/lib/msys-gobject-2.0-0.dll-gdb.py",
+		"/C/Program Files (x86)/gnucash/share/glib-2.0/gdb/gobject.py",
+		"/C/Users/me/.virtualenvs/medicine-apXFEDc9/Lib/site-packages/weasyprint/document.py",
+		"/C/Users/me/AppData/Local/lxss/mnt/dash/stream.mpd",
+		"/C/Users/me/Dropbox/live_terminal/videos/live.m3u8",
+		"/C/Users/me/Dropbox/live_terminal/videos/live0.ts",
+		"/C/Users/me/Dropbox/live_terminal/img.png",
+		"/C/Users/me/.virtualenvs/live_terminal-Zw5qvfhj/Lib/site-packages/cairocffi/__init__.py",
+		"/C/Users/me/.virtualenvs/live_terminal-Zw5qvfhj/Lib/site-packages/flask_sockets.py",
+		"/C/Users/me/.virtualenvs/live_terminal-Zw5qvfhj/Lib/site-packages/geventwebsocket/gunicorn/workers.py",
+		"/C/Users/me/.virtualenvs/live_terminal-Zw5qvfhj/Lib/site-packages/geventwebsocket/handler.py",
+		"/C/Users/me/.virtualenvs/live_terminal-Zw5qvfhj/Lib/site-packages/geventwebsocket/websocket.py",
+		"/C/Users/me/.virtualenvs/live_terminal-Zw5qvfhj/Lib/site-packages/gevent/pywsgi.py",
+		"/C/Users/me/.virtualenvs/live_terminal-Zw5qvfhj/Lib/site-packages/gevent/server.py",
+		"/C/Users/me/.virtualenvs/live_terminal-Zw5qvfhj/Lib/site-packages/gevent/baseserver.py",
+		"/C/Program Files (x86)/Red5/webapps/root/flvdemo.html",
+		"/C/Program Files (x86)/Red5/webapps/live/WEB-INF/web.xml",
+		"/C/Users/me/Dropbox/live_terminal/templates/camera.html",
+		"/C/Users/me/.virtualenvs/live_terminal-Zw5qvfhj/Lib/site-packages/cffi/api.py",
+		"/C/Users/me/Dropbox/live_terminal/images.py",
+		"/C/Program Files (x86)/Red5/webapps/root/index.html",
+		"/C/Users/me/Dropbox/live_terminal/templates/index.html"
+	],
+	"find":
+	{
+		"height": 51.0
+	},
+	"find_in_files":
+	{
+		"height": 548.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"Movies/",
+			"'",
+			"ul",
+			"h2",
+			">{{",
+			"sorted",
+			"all, delete-orphan",
+			"\"",
+			"None",
+			"'",
+			"episode_details",
+			"WHERE id",
+			"item.id",
+			"feature",
+			"query_imdb",
+			"torrent_add",
+			"extr",
+			"{",
+			"i_episode",
+			"select_movie_options",
+			"@app.route",
+			"select_season",
+			"] =",
+			"h1",
+			"header",
+			"}",
+			"<",
+			"h1",
+			"title",
+			"/select/season",
+			"ul",
+			"square",
+			"cross",
+			"minus",
+			"h1",
+			"green",
+			"*",
+			"progress",
+			"h1",
+			"//",
+			"progress",
+			"'",
+			"app.route",
+			"movie",
+			"'''",
+			"'''\n",
+			"torrent_results",
+			"'",
+			"%}",
+			"h3",
+			"h2",
+			"h5",
+			"h4",
+			"h3",
+			" + 1",
+			"episodes",
+			"session",
+			"session, ",
+			"Base",
+			"db.Base",
+			"session.query",
+			"session: Session",
+			" = None",
+			"(session or Session())",
+			"(Base)",
+			"print",
+			"\\\"",
+			"'download.hash'",
+			"transmission_id: str",
+			"hash",
+			"str",
+			"hash",
+			"hashString",
+			"\"Movies/x264\"",
+			"  \"Movies/XVID\",\n",
+			"\"category\": ",
+			"None",
+			"'",
+			"None",
+			"'",
+			"hashString",
+			"resolve_episodes",
+			"episodes",
+			"()",
+			"imdb_id",
+			"session",
+			"movie.",
+			"select_options",
+			"    session.commit()\n",
+			"(hash",
+			"&",
+			"search_imdb",
+			"*",
+			"episode",
+			"imdb_id",
+			"magnet",
+			"type",
+			"episode",
+			"season",
+			"hash",
+			"movide",
+			"'",
+			"id = Column(String",
+			"type",
+			": ",
+			"'",
+			"use_list",
+			"\"",
+			"=",
+			"download.id",
+			"parent_id",
+			"download",
+			"download = relationship(\"Download\", back_populates=\"episode\")\n    season = Column(Integer)\n    episode = Column(Integer)\n",
+			"Column(ForeignKey(",
+			"movie",
+			"Movie",
+			">>> ",
+			")()",
+			"Field",
+			"> ",
+			">>> ",
+			">>>",
+			"request.args",
+			"download",
+			"magnet"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"\""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "data.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6505,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								458,
+								458
+							]
+						],
+						"settings":
+						{
+							"SL.245.region_keys":
+							[
+							],
+							"auto_name": "{'torrent_results': [{'title': 'Chernobyl.S01E01.i",
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "templates/base.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1244,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1244,
+								1244
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1024.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 725,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										201,
+										207
+									],
+									[
+										401,
+										407
+									],
+									[
+										408,
+										414
+									],
+									[
+										588,
+										594
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "transmission.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2038,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1202,
+								1202
+							]
+						],
+						"settings":
+						{
+							"SL.249.region_keys":
+							[
+								"sublime_linter.protected_regions"
+							],
+							"show_definitions": false,
+							"syntax": "Packages/MagicPython/grammars/MagicPython.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1020.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "main.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7623,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2989,
+								2989
+							]
+						],
+						"settings":
+						{
+							"SL.251.region_keys":
+							[
+								"SL.mypy.Gutter.|region.redish markup.error.sublime_linter|dot",
+								"sublime_linter.protected_regions",
+								"SL.mypy.Highlights.|2d4b228540aca4a14d5c7ff31dbf5897ae7bd3f25529156a0cd6ac1722845c5a|region.redish markup.error.sublime_linter|32"
+							],
+							"show_definitions": false,
+							"syntax": "Packages/MagicPython/grammars/MagicPython.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4098.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "templates/download_all.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 353,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								210,
+								210
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "templates/select_options.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 478,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								343,
+								343
+							]
+						],
+						"settings":
+						{
+							"SL.262.region_keys":
+							[
+							],
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 96.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "templates/select_season.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 340,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								245,
+								245
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "db.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2728,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1673,
+								1673
+							]
+						],
+						"settings":
+						{
+							"SL.254.region_keys":
+							[
+								"SL.mypy.Highlights.|f1948bfbab0786c1489c678851429ba7f145d3b4a6bb81eb5acec73692707884|region.redish markup.error.sublime_linter|32",
+								"SL.mypy.Highlights.|5b15b0b5c83269f9983470d57eac7dfd76850f6e9c320d25709bca2f4c916c2f|region.redish markup.error.sublime_linter|32",
+								"SL.mypy.Highlights.|7f5bfe8880e8def2f8c1afab8711f20d32b3187da9eaa4946f493bdd6872eef2|region.redish markup.error.sublime_linter|32",
+								"SL.mypy.Highlights.|820c4c5840a8468588eaf29a542debf5908453ff81016f24a7934b042a1c0fc2|region.redish markup.error.sublime_linter|32",
+								"SL.mypy.Highlights.|d5cf8076c6b33843b94e4b20512527864991a154b96b527070787eabc8041f2f|region.redish markup.error.sublime_linter|32",
+								"SL.mypy.Highlights.|76b2cfe982e872a62226dab8d4c0e44f1589da081fc505fe0401bd09a77a9b35|region.redish markup.error.sublime_linter|32",
+								"SL.mypy.Gutter.|region.redish markup.error.sublime_linter|dot",
+								"sublime_linter.protected_regions",
+								"SL.mypy.Highlights.|b6560b4d3d941221c00c86ddb8d422ba81739d5b2213068280b37079f7b7ae29|region.redish markup.error.sublime_linter|32",
+								"SL.mypy.Highlights.|444585744e9058c37385f46cbc43dd5831c27d48225c7c298ae532a4a0c892ef|region.redish markup.error.sublime_linter|32"
+							],
+							"show_definitions": false,
+							"syntax": "Packages/MagicPython/grammars/MagicPython.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1598.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "ranking.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 131,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								92,
+								92
+							]
+						],
+						"settings":
+						{
+							"SL.263.region_keys":
+							[
+								"sublime_linter.protected_regions"
+							],
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "templates/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1441,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								509,
+								501
+							]
+						],
+						"settings":
+						{
+							"SL.252.region_keys":
+							[
+							],
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 95.2,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 41.0
+	},
+	"input":
+	{
+		"height": 240.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": false,
+	"output.SublimeLinter":
+	{
+		"height": 210.0
+	},
+	"output.diagnostics":
+	{
+		"height": 210.0
+	},
+	"output.exec":
+	{
+		"height": 210.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git-pull":
+	{
+		"height": 210.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "rarbg_local.sublime-project",
+	"replace":
+	{
+		"height": 94.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"main",
+				"main.py"
+			],
+			[
+				"optios",
+				"templates\\select_options.html"
+			],
+			[
+				"p",
+				"Pipfile"
+			],
+			[
+				"prim",
+				"plugins\\prime.py"
+			],
+			[
+				"thig",
+				"thing.mpd"
+			],
+			[
+				"prie",
+				"plugins\\prime.py"
+			],
+			[
+				"prime",
+				"plugins\\prime.py"
+			],
+			[
+				"ind",
+				"prime_receiver\\index.html"
+			],
+			[
+				"inde",
+				"prime_receiver\\index.html"
+			],
+			[
+				"plex",
+				"plugins\\plex.py"
+			],
+			[
+				"thing.",
+				"thing.mpd"
+			],
+			[
+				"htm",
+				"html.html"
+			],
+			[
+				"htmlhtml",
+				"html.html"
+			],
+			[
+				"if",
+				"ifttt.py"
+			],
+			[
+				"integ",
+				"integration.py"
+			],
+			[
+				"urls.json",
+				"urls.json"
+			],
+			[
+				"ur",
+				"urls.json"
+			],
+			[
+				"sigver",
+				"sigver.py"
+			],
+			[
+				"callb",
+				"callback.py"
+			],
+			[
+				"images",
+				"images.py"
+			],
+			[
+				"serve",
+				"videos\\serve.py"
+			],
+			[
+				"ser",
+				"videos\\serve.py"
+			],
+			[
+				"devic",
+				"devices.py"
+			],
+			[
+				"alem",
+				"alembic.ini"
+			],
+			[
+				".tav",
+				".travis.yml"
+			],
+			[
+				"cirl",
+				".circleci\\config.yml"
+			],
+			[
+				"testrpc",
+				"test_rpc.py"
+			],
+			[
+				"devices",
+				"devices.py"
+			],
+			[
+				"config",
+				"config.json"
+			],
+			[
+				".travis",
+				".travis.yml"
+			],
+			[
+				"test",
+				"test.py"
+			],
+			[
+				"",
+				"traits_with_commands.json"
+			],
+			[
+				"dvices",
+				"devices.py"
+			],
+			[
+				"test.py",
+				"test.py"
+			],
+			[
+				"devices.html",
+				"templates\\devices.html"
+			],
+			[
+				"devi",
+				"devices.py"
+			],
+			[
+				"typesiwth",
+				"types_with_traits.json"
+			],
+			[
+				"ty",
+				"types_with_traits.json"
+			],
+			[
+				".trav",
+				".travis.yml"
+			],
+			[
+				"config.json",
+				"config.json"
+			],
+			[
+				"types",
+				"types_with_traits.json"
+			],
+			[
+				"models",
+				"models.py"
+			],
+			[
+				"pipfile",
+				"Pipfile"
+			],
+			[
+				"oauth",
+				"oauth.py"
+			],
+			[
+				"register",
+				"templates\\register.html"
+			],
+			[
+				"ipe",
+				"Pipfile"
+			],
+			[
+				"importing\\lot",
+				"api\\importing\\matchers\\lotus.js"
+			],
+			[
+				"csv_",
+				"reference\\et\\csv_to_postgres.py"
+			],
+			[
+				"gen_qeu",
+				"api\\gen_queue\\thing.js"
+			],
+			[
+				"csv",
+				"reference\\et\\csv_to_postgres.py"
+			],
+			[
+				"integrate",
+				"api\\tests\\integrateProspective.js"
+			],
+			[
+				"services\\",
+				"api\\services\\email.js"
+			],
+			[
+				"requestpasswo",
+				"api\\controllers\\mutations\\requestPasswordReset.js"
+			],
+			[
+				"usertest",
+				"api\\tests\\data\\usersTest.js"
+			],
+			[
+				"user",
+				"api\\importing\\data\\users.js"
+			],
+			[
+				"login.js",
+				"api\\controllers\\mutations\\login.js"
+			],
+			[
+				"mockdb",
+				"api\\tests\\mockDb.js"
+			],
+			[
+				"models\\index",
+				"api\\models\\index.js"
+			],
+			[
+				"users",
+				"api\\importing\\data\\users.js"
+			],
+			[
+				"userstest",
+				"api\\tests\\data\\usersTest.js"
+			],
+			[
+				"models\\",
+				"api\\models\\prospective-user.js"
+			],
+			[
+				"models\\pros",
+				"api\\models\\prospective-user.js"
+			],
+			[
+				"models\\user",
+				"api\\models\\user.js"
+			],
+			[
+				"ceateprosp",
+				"api\\controllers\\mutations\\createProspectiveUser.js"
+			],
+			[
+				"schema.",
+				"api\\controllers\\schema.graphql"
+			],
+			[
+				"attempt",
+				"frontended\\src\\components\\AttemptParse.js"
+			],
+			[
+				"gen_queue\\",
+				"api\\gen_queue\\thing.js"
+			],
+			[
+				"csv_to",
+				"reference\\et\\csv_to_postgres.py"
+			],
+			[
+				"setupaccount",
+				"frontended\\src\\components\\accounts\\SetupAccount.js"
+			],
+			[
+				"environment.js",
+				"frontended\\src\\environment.js"
+			],
+			[
+				"createprospectiveu",
+				"frontended\\src\\components\\users\\CreateProspectiveAdminUser.js"
+			],
+			[
+				"package.json",
+				"api\\package.json"
+			],
+			[
+				"config.js",
+				"api\\config.js"
+			],
+			[
+				"services\\db",
+				"api\\services\\db.js"
+			],
+			[
+				"integrae",
+				"api\\tests\\integrateProspective.js"
+			],
+			[
+				"importing\\data\\use",
+				"api\\importing\\data\\users.js"
+			],
+			[
+				"prospective-user",
+				"api\\controllers\\schema\\prospective-user\\index.js"
+			],
+			[
+				"prospecti",
+				"api\\models\\prospective-user.js"
+			],
+			[
+				"email.js",
+				"api\\services\\email.js"
+			],
+			[
+				"setupacc",
+				"frontended\\src\\components\\accounts\\SetupAccount.js"
+			],
+			[
+				"passwords",
+				"frontended\\src\\components\\accounts\\Passwords.js"
+			],
+			[
+				"invitepro",
+				"api\\controllers\\mutations\\inviteProspectiveUser.js"
+			],
+			[
+				"users.js",
+				"api\\importing\\data\\users.js"
+			],
+			[
+				"schema",
+				"api\\controllers\\schema.graphql"
+			],
+			[
+				"environment",
+				"frontended\\src\\environment.js"
+			],
+			[
+				"index.js",
+				"api\\index.js"
+			],
+			[
+				"prospectiveusers",
+				"frontended\\src\\components\\users\\ProspectiveUsers.js"
+			],
+			[
+				"schema.grap",
+				"api\\controllers\\schema.graphql"
+			],
+			[
+				"tests\\data",
+				"api\\tests\\data\\usersTest.js"
+			],
+			[
+				"dup.py",
+				"api\\tests\\data\\dup.py"
+			],
+			[
+				"user 2018",
+				"api\\tests\\data\\User 2018-05-17.csv"
+			],
+			[
+				"sqlite\\",
+				"api\\node_modules\\sequelize\\lib\\dialects\\sqlite\\query.js"
+			],
+			[
+				"todone",
+				"todo\\todo.todone"
+			],
+			[
+				"importing\\users",
+				"api\\importing\\data\\users.js"
+			],
+			[
+				"tests\\data\\users",
+				"api\\tests\\data\\usersTest.js"
+			],
+			[
+				"purge",
+				"reference\\et\\purge.py"
+			],
+			[
+				"csv_to_",
+				"reference\\et\\csv_to_postgres.py"
+			],
+			[
+				"userpropertiestest",
+				"api\\tests\\data\\userPropertiesTest.js"
+			],
+			[
+				"userpropei",
+				"api\\importing\\data\\userProperties.js"
+			],
+			[
+				"userprope",
+				"api\\tests\\data\\userPropertiesTest.js"
+			],
+			[
+				"lotus.js",
+				"api\\importing\\matchers\\lotus.js"
+			],
+			[
+				"importing\\index",
+				"api\\importing\\index.js"
+			],
+			[
+				"csv_topo",
+				"reference\\et\\csv_to_postgres.py"
+			],
+			[
+				"gen_qeue\\",
+				"api\\gen_queue\\out.json"
+			],
+			[
+				"lotus",
+				"api\\importing\\matchers\\lotus.js"
+			],
+			[
+				"importing\\",
+				"api\\importing\\index.js"
+			],
+			[
+				"s3event",
+				"api\\controllers\\s3Event.js"
+			],
+			[
+				"import\\index",
+				"api\\importing\\index.js"
+			],
+			[
+				"property-report",
+				"api\\models\\property-report.js"
+			],
+			[
+				"reconsder.js",
+				"api\\controllers\\reconsider.js"
+			],
+			[
+				"tests\\queued",
+				"api\\tests\\queuedFiles.js"
+			],
+			[
+				"reports",
+				"api\\controllers\\queries\\reports.js"
+			],
+			[
+				"attemptparse",
+				"frontended\\src\\components\\AttemptParse.js"
+			],
+			[
+				"schema.graphq",
+				"api\\controllers\\schema.graphql"
+			],
+			[
+				"graphql.js",
+				"api\\controllers\\graphql.js"
+			],
+			[
+				"attemparse",
+				"frontended\\src\\components\\AttemptParse.js"
+			],
+			[
+				"reports.js",
+				"frontended\\src\\components\\Reports.js"
+			],
+			[
+				"attemptpars",
+				"frontended\\src\\components\\AttemptParse.js"
+			],
+			[
+				"schema.grp",
+				"api\\controllers\\schema.graphql"
+			],
+			[
+				"importing\\data\\",
+				"api\\importing\\data\\userProperties.js"
+			],
+			[
+				"property/index.js",
+				"api\\controllers\\schema\\property\\index.js"
+			],
+			[
+				"proeprty/index",
+				"frontended\\node_modules\\react-router-prop-types\\node_modules\\prop-types\\index.js"
+			],
+			[
+				"logger",
+				"api\\logger.js"
+			],
+			[
+				"db.js",
+				"api\\services\\db.js"
+			],
+			[
+				"index",
+				"api\\index.js"
+			],
+			[
+				"schema.graphql",
+				"api\\controllers\\schema.graphql"
+			],
+			[
+				"app.js",
+				"frontended\\src\\App.js"
+			],
+			[
+				"schema.r",
+				"frontended\\schema.graphql"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 843.2,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"C:\\Users\\me\\Dropbox\\rarbg_local\\rarbg_local.sublime-project"
+			],
+			[
+				"rar",
+				"C:\\Users\\me\\Dropbox\\rarbg_local\\rarbg_local.sublime-project"
+			],
+			[
+				"felix",
+				"C:\\Users\\me\\Dropbox\\felix\\felix.sublime-project"
+			],
+			[
+				"201",
+				"C:\\Users\\me\\Dropbox\\govhack\\2017\\2017.sublime-workspace"
+			]
+		],
+		"width": 950.0
+	},
+	"select_symbol":
+	{
+		"height": 179.6,
+		"last_filter": "cat",
+		"selected_items":
+		[
+			[
+				"cat",
+				"categorise"
+			],
+			[
+				"optons",
+				"select_options"
+			],
+			[
+				"se",
+				"select_season"
+			],
+			[
+				"options",
+				"select_options"
+			],
+			[
+				"smo",
+				"select_movie_options"
+			],
+			[
+				"downloa",
+				"download"
+			],
+			[
+				"torrentadd",
+				"torrent_add"
+			],
+			[
+				"download",
+				"download"
+			],
+			[
+				"sto",
+				"select_tv_options"
+			],
+			[
+				"sepi",
+				"select_episode"
+			],
+			[
+				"selectseason",
+				"select_season"
+			],
+			[
+				"resolve",
+				"resolve_series"
+			],
+			[
+				"query",
+				"query_imdb"
+			],
+			[
+				"queryim",
+				"query_imdb"
+			],
+			[
+				"torrent",
+				"torrent_add"
+			],
+			[
+				"sele",
+				"select_tv_options"
+			],
+			[
+				"donwl",
+				"download"
+			],
+			[
+				"stv",
+				"select_tv_options"
+			],
+			[
+				"imdb",
+				"query_imdb"
+			],
+			[
+				"call",
+				"call"
+			],
+			[
+				"render",
+				"render_progress"
+			],
+			[
+				"ren",
+				"render_progress"
+			],
+			[
+				"rende",
+				"render_progress"
+			],
+			[
+				"gettorr",
+				"get_torrent"
+			],
+			[
+				"tor",
+				"torrent_add"
+			],
+			[
+				"getmoies",
+				"get_movies"
+			],
+			[
+				"create",
+				"create_download"
+			],
+			[
+				"movie",
+				"MovieDetails"
+			],
+			[
+				"getmovies",
+				"get_movies"
+			],
+			[
+				"option",
+				"select_options"
+			],
+			[
+				"build",
+				"build_episode_link"
+			],
+			[
+				"getmo",
+				"get_movies"
+			],
+			[
+				"index",
+				"index"
+			],
+			[
+				"queryimdb",
+				"query_imdb"
+			],
+			[
+				"getur",
+				"get_url"
+			],
+			[
+				"handlempd",
+				"handle_mpd"
+			],
+			[
+				"downlo",
+				"download_template"
+			],
+			[
+				"segmettime",
+				"segment_timeline"
+			],
+			[
+				"mpdloca",
+				"MpdLocator"
+			],
+			[
+				"ada",
+				"adaptation_set"
+			],
+			[
+				"set",
+				"segment_template"
+			],
+			[
+				"diy",
+				"build_diy"
+			],
+			[
+				"rqeuest",
+				"parse_request"
+			],
+			[
+				"maybe",
+				"maybe_json"
+			],
+			[
+				"todi",
+				"to_dict"
+			],
+			[
+				"todict",
+				"to_dict"
+			],
+			[
+				"request",
+				"parse_request"
+			],
+			[
+				"proces",
+				"process"
+			],
+			[
+				"read",
+				"read"
+			],
+			[
+				"requst",
+				"Request"
+			],
+			[
+				"parse",
+				"parse_request"
+			],
+			[
+				"mai",
+				"main"
+			],
+			[
+				"read_",
+				"read_requests_file"
+			],
+			[
+				"readheaderline",
+				"readHeaderLine"
+			],
+			[
+				"httphandler",
+				"HTTPHandler"
+			],
+			[
+				"Simpl",
+				"SimpleHTTPRequestHandler"
+			],
+			[
+				"setupa",
+				"setup_assertion"
+			],
+			[
+				"extensions_elem",
+				"extension_elements_to_elements"
+			],
+			[
+				"doex",
+				"do_extensions"
+			],
+			[
+				"pplypol",
+				"apply_policy"
+			],
+			[
+				"douiinfo",
+				"do_uiinfo"
+			],
+			[
+				"douifin",
+				"document_info_from_string"
+			],
+			[
+				"sign_state",
+				"sign_statement"
+			],
+			[
+				"sign_",
+				"sign_statement"
+			],
+			[
+				"unkown",
+				"UnknownPrincipal"
+			],
+			[
+				"server",
+				"Server"
+			],
+			[
+				"create_met",
+				"create_metadata_string"
+			],
+			[
+				"setup",
+				"setup_provider"
+			],
+			[
+				"reg",
+				"register_user"
+			],
+			[
+				"getprie",
+				"get_price"
+			],
+			[
+				"get",
+				"get"
+			],
+			[
+				"cleanup",
+				"cleanup"
+			],
+			[
+				"devic",
+				"Device"
+			],
+			[
+				"meta",
+				"meta"
+			],
+			[
+				"trait",
+				"Trait"
+			],
+			[
+				"combo",
+				"ComboDevice"
+			],
+			[
+				"worker",
+				"worker"
+			],
+			[
+				"recieverthread",
+				"reciever_thread"
+			],
+			[
+				"dock",
+				"dock"
+			],
+			[
+				"execute",
+				"execute"
+			],
+			[
+				"locator",
+				"Locator"
+			],
+			[
+				"toggles",
+				"Toggles"
+			],
+			[
+				"",
+				"FanSpeed"
+			],
+			[
+				"execut",
+				"execute_many"
+			],
+			[
+				"device",
+				"add_device"
+			],
+			[
+				"getdei",
+				"get_device"
+			],
+			[
+				"testgetcom",
+				"test_get_commands"
+			],
+			[
+				"getco",
+				"get_commands"
+			],
+			[
+				"getcomman",
+				"get_commands"
+			],
+			[
+				"geto",
+				"test_get_commands"
+			],
+			[
+				"getom",
+				"get_commands"
+			],
+			[
+				"testgetcommands",
+				"test_get_commands"
+			],
+			[
+				"lockun",
+				"LockUnlock"
+			],
+			[
+				"state",
+				"state"
+			],
+			[
+				"onoff",
+				"OnOff"
+			],
+			[
+				"locku",
+				"LockUnlock"
+			],
+			[
+				"lock",
+				"LockUnlock"
+			],
+			[
+				"camera",
+				"CameraStream"
+			],
+			[
+				"get_device",
+				"get_device"
+			],
+			[
+				"combodevi",
+				"ComboDevice"
+			],
+			[
+				"quey",
+				"query"
+			],
+			[
+				"req",
+				"request_sync"
+			],
+			[
+				"reqe",
+				"request_sync"
+			],
+			[
+				"stringstream",
+				"stringStream"
+			],
+			[
+				"proxyquire",
+				"Proxyquire"
+			],
+			[
+				"sendemails",
+				"sendEmails"
+			],
+			[
+				"requiresadmini",
+				"requiresAdministrator"
+			],
+			[
+				"invite",
+				"inviteProspectiveUser"
+			],
+			[
+				"createuserfromprospectie",
+				"createUserFromProspective"
+			],
+			[
+				"createprospectiveuser",
+				"createProspectiveUser"
+			],
+			[
+				"createprosp",
+				"CreateProspectiveUser"
+			],
+			[
+				"createuserfrom",
+				"createUserFromProspective"
+			],
+			[
+				"resolveintolink",
+				"resolveIntoLink"
+			],
+			[
+				"pagetitle",
+				"PageTitle"
+			],
+			[
+				"formatre",
+				"formatReportGroup"
+			],
+			[
+				"href",
+				"href"
+			],
+			[
+				"parseutility",
+				"parseUtilityFilename"
+			],
+			[
+				"utility",
+				"utility"
+			],
+			[
+				"parsetoreport",
+				"parseToReport"
+			],
+			[
+				"matchlotus",
+				"matchLotus"
+			],
+			[
+				"requestyear",
+				"requestYearToDateReport"
+			],
+			[
+				"yearto",
+				"requestYearToDateReport"
+			],
+			[
+				"formatreportgroup",
+				"formatReportGroup"
+			],
+			[
+				"make",
+				"make"
+			],
+			[
+				"view",
+				"ViewLink"
+			],
+			[
+				"validreporttpe",
+				"validReportType"
+			],
+			[
+				"isadmin",
+				"include(if: $isAdmin)"
+			],
+			[
+				"getpropertiesforuser",
+				"getPropertiesForUser"
+			]
+		],
+		"width": 577.6
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 163.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

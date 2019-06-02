@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block header %}{{info.Title}}{% endblock %}
+
+{% block content %}
+
+<ul>
+{% for n in seasons %}
+    <li><a href="{{url_for('select_episode', imdb_id=info.imdbID, season=n) }}">Season {{n}}</a></li>
+{% endfor %}
+</ul>
+
+<a href="{{ url_for('download_all_seasons', imdb_id=info.imdbID) }}">Download all</a>
+
+{% endblock %}

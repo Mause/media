@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Download all episodes of {{info.Title}}{% endblock %}
+
+{% block content %}
+    {% for pattern, rset in results.items() %}
+
+        <h3>{{pattern}}</h3>
+
+        <ul>
+        {% for result in rset %}
+            <li>{{result['title']}}</li>
+        {% endfor %}
+        </ul>
+
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block header %}Results for "{{query}}"{% endblock %}
+
+{% block content %}
+
+<ul>
+{% for item in results %}
+    <li>
+        {% if item.Type == 'movie' %}
+            {% set url = url_for('select_movie_options', imdb_id=item.imdbID) %}
+        {% else %}
+            {% set url = url_for('select_season', imdb_id=item.imdbID) %}
+        {% endif %}
+        <a href="{{url}}">{{item.Title}} ({{item.Year}})</a>
+    </li>
+{% endfor %}
+</ul>
+
+{% endblock %}
