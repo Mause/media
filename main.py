@@ -5,9 +5,8 @@ import inspect
 import logging
 from typing import Dict, List, Optional, Union, Iterable, Callable, TypeVar
 from collections import defaultdict
-from functools import lru_cache, wraps
+from functools import wraps
 
-import requests
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from humanize import naturaldelta
@@ -36,6 +35,15 @@ from db import (
     Download,
     db,
 )
+from tmdb import (
+    search_themoviedb,
+    get_tv,
+    resolve_id,
+    get_tv_episodes,
+    get_movie,
+    get_tv_imdb_id,
+    get_movie_imdb_id,
+)
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -58,22 +66,10 @@ class SearchForm(FlaskForm):
     query = StringField('Query', validators=[DataRequired()])
 
 
-@lru_cache()
-def query_omdb(**params) -> Dict:
-    res = requests.get(
-        'https://www.omdbapi.com/', params={'apikey': 'aca2c746', **params}
-    ).json()
-    if 'Error' in res:
-        raise Exception(res['Error'])
-    return res
-
-
 @app.route('/search/<query>')
 def select_item(query: str) -> Response:
     results = [
-        r
-        for r in query_omdb(s=query)['Search']
-        if r['Type'] in {'movie', 'series'}
+        r for r in search_themoviedb(query) if r['Type'] in {'movie', 'series'}
     ]
 
     return render_template('select_item.html', results=results, query=query)
@@ -93,12 +89,12 @@ def query_args(func):
 
 @app.route('/select/<imdb_id>/season/<season>/episode/<episode>/options')
 def select_tv_options(imdb_id: str, season: str, episode: str) -> Response:
-    info = query_omdb(i=imdb_id, Season=season, Episode=episode)
+    info = get_tv_episodes(imdb_id, season)['episodes'][int(episode) - 1]
 
     return select_options(
         'series',
-        imdb_id,
-        info['Title'],
+        get_tv_imdb_id(imdb_id),
+        info['name'],
         search_string=f'S{int(season):02d}E{int(episode):02d}',
         season=season,
         episode=episode,
@@ -108,7 +104,7 @@ def select_tv_options(imdb_id: str, season: str, episode: str) -> Response:
 @app.route('/select/<imdb_id>/options')
 def select_movie_options(imdb_id: str) -> Response:
     return select_options(
-        'movie', imdb_id, title=query_omdb(i=imdb_id)['Title']
+        'movie', get_movie_imdb_id(imdb_id), title=get_movie(imdb_id)['title']
     )
 
 
@@ -158,36 +154,43 @@ def select_episode(imdb_id: str, season: str) -> Response:
             'select_tv_options',
             imdb_id=imdb_id,
             season=season,
-            episode=episode["Episode"],
+            episode=episode["episode_number"],
         )
 
     return render_template(
         'select_episode.html',
         imdb_id=imdb_id,
-        item=query_omdb(i=imdb_id, Season=season),
+        title=get_tv(imdb_id)['name'],
+        season=season,
+        episodes=get_tv_episodes(imdb_id, season)['episodes'],
         build_episode_link=build_episode_link,
     )
 
 
-marker_re = re.compile(r'(S(\d{2})E(\d{2}))', re.I)
+marker_re = re.compile(r'(S(\d{2})E(\d{2}))')
+season_re = re.compile(r'\W(S\d{2})\W')
 punctuation_re = re.compile(f'[{string.punctuation} ]')
 
 
-def normalise(seasons: List[List[Dict]], title: str) -> Optional[str]:
+def normalise(episodes: List[Dict], title: str) -> Optional[str]:
     sel = marker_re.search(title)
     if not sel:
+        sel = season_re.search(title)
+        if sel:
+            return title
+
         print('unable to find marker in', title)
         return None
 
-    full, season, i_episode = sel.groups()
+    full, _, i_episode = sel.groups()
 
     print(title, sel.groups())
 
-    episode = seasons[int(season, 10) - 1][int(i_episode, 10) - 1]
+    episode = episodes[int(i_episode, 10) - 1]
 
-    title = re.sub(
-        punctuation_re.sub('.', episode['Title']), 'TITLE', title, re.I
-    )
+    to_replace = punctuation_re.sub('.', episode['name'])
+    print('to_replace', to_replace)
+    title = re.sub(to_replace, 'TITLE', title, re.I)
 
     title = title.replace(full, 'S00E00')
 
@@ -198,48 +201,29 @@ def normalise(seasons: List[List[Dict]], title: str) -> Optional[str]:
 def download_all_episodes(imdb_id: str, season: str) -> WResponse:
     i_season = int(season)
     results = get_rarbg(
-        'series', search_imdb=imdb_id, search_string=f'S{i_season:02d}'
+        'series',
+        search_imdb=get_tv_imdb_id(imdb_id),
+        search_string=f'S{i_season:02d}',
     )
 
-    seasons = [query_omdb(i=imdb_id, Season=season)['Episodes']] * i_season
+    episodes = get_tv_episodes(imdb_id, season)['episodes']
 
     results = groupby(
-        results, lambda result: normalise(seasons, result['title'])
-    )
-    print(results.pop(None))
-
-    return render_template(
-        'download_all.html', info=query_omdb(i=imdb_id), results=results
-    )
-
-
-@app.route('/select/<imdb_id>/download_all')
-def download_all_seasons(imdb_id: str) -> Response:
-    info = query_omdb(i=imdb_id)
-    seasons = [
-        query_omdb(i=imdb_id, Season=i)['Episodes']
-        for i in range(1, int(info['totalSeasons']) + 1)
-    ]
-
-    results = get_rarbg('series', search_imdb=imdb_id)
-    results = groupby(
-        results, lambda result: normalise(seasons, result['title'])
+        results, lambda result: normalise(episodes, result['title'])
     )
 
     return render_template(
-        'download_all.html', info=query_omdb(i=imdb_id), results=results
+        'download_all.html', info=get_tv(imdb_id), results=results
     )
 
 
 @app.route('/select/<imdb_id>/season')
 def select_season(imdb_id: str) -> Response:
-    info = query_omdb(i=imdb_id)
+    info = get_tv(imdb_id)
 
     print(info)
 
-    total_seasons = info['totalSeasons']
-    if total_seasons == 'N/A':
-        return Response('This isn\'t a real tv series', 200)
+    total_seasons = info['number_of_seasons']
 
     return render_template(
         'select_season.html',
@@ -253,12 +237,15 @@ def select_season(imdb_id: str) -> Response:
 def download(
     magnet: str, imdb_id: str, season: str, episode: str, title: str
 ) -> WResponse:
-    item = query_omdb(i=imdb_id)
+    __import__('ipdb').set_trace()
+    is_tv = season and episode
+    tv_id = resolve_id(imdb_id)
+    item = get_tv(tv_id) if is_tv else get_movie(tv_id)
 
-    if item['Type'] == 'movie':
-        subpath = 'movies'
+    if is_tv:
+        subpath = f'tv_shows/{item["name"]}/Season {season}'
     else:
-        subpath = f'tv_shows/{item["Title"]}/Season {season}'
+        subpath = 'movies'
 
     arguments = torrent_add(magnet, subpath)['arguments']
     print(arguments)
@@ -277,12 +264,12 @@ def download(
     print('already', already)
 
     if not already:
-        if item['Type'] == 'movie':
-            create_movie(transmission_id, imdb_id, title=item['Title'])
-        else:
+        if is_tv:
             create_episode(
                 transmission_id, imdb_id, int(season), int(episode), title
             )
+        else:
+            create_movie(transmission_id, imdb_id, title=item['Title'])
 
         db.session.commit()
 
@@ -310,7 +297,7 @@ def resolve_series() -> Dict[str, Dict[int, List[EpisodeDetails]]]:
     episodes = get_episodes()
 
     return {
-        query_omdb(i=imdb_id)['Title']: resolve_show(imdb_id, show)
+        get_tv(resolve_id(imdb_id))['name']: resolve_show(imdb_id, show)
         for imdb_id, show in groupby(
             episodes, lambda episode: episode.download.imdb_id
         ).items()

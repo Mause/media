@@ -17,7 +17,7 @@ session.params = {
     'format': 'json_extended',
     'app_id': 'Sonarr',
 }
-session.headers['User-Agent'] = "Dom's api client    - me+rarbg@mause.me"
+session.headers['User-Agent'] = "Dom's api client - me+rarbg@mause.me"
 
 
 def get_token():
@@ -42,8 +42,7 @@ CATEGORIES = {
 }
 
 
-
-def load_category_codes() -> Dict[str,int]:
+def load_category_codes() -> Dict[str, int]:
     with open('categories.json') as fh:
         return json.load(fh)
 
@@ -59,7 +58,8 @@ def get_rarbg(type, **kwargs):
 
     return list(
         chain.from_iterable(
-            ThreadPoolExecutor(10).map(
+            # ThreadPoolExecutor(2).
+            map(
                 lambda category: _get(**kwargs, category=category), categories
             )
         )
@@ -76,7 +76,7 @@ def _get(**kwargs: Dict[str, str]) -> List[Dict]:
     try:
         res = r.json()
     except JSONDecodeError as e:
-        raise Exception(r, r.request.url, r.text) from e
+        raise Exception(r, r.reason, r.headers, r.request.url, r.text) from e
 
     print(res.keys())
 

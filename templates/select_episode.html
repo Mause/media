@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
-{% block header %}Season {{item.Season}} of {{item.Title}}{% endblock %}
+{% block header %}Season {{season}} of {{title}}{% endblock %}
 
 {% block content %}
 
 <ol>
-    {% for episode in item.Episodes %}
-        <li value="{{episode.Episode}}">
-            <a href="{{ build_episode_link(episode) }}">{{episode.Title}}</a>
+    {% for episode in episodes %}
+        <li value="{{episode.episode_number}}">
+            <a href="{{ build_episode_link(episode) }}">{{episode.name}}</a>
         </li>
     {% endfor %}
 </ol>
 
-<a href="{{ url_for('download_all_episodes', imdb_id=imdb_id, season=item.Season) }}">Download all</a>
+<a href="{{ url_for('download_all_episodes', imdb_id=imdb_id, season=season) }}">Download all</a>
 
 {% endblock %}

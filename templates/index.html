@@ -19,6 +19,10 @@
         <li>
             <!-- <i class="far fa-times-circle"></i> -->
             {{movie.download.title}}
+            <small>
+                <a
+                    target="_blank"
+                 href="https://www.imdb.com/title/{{movie.download.imdb_id}}"><i class="fas fa-share"></i></a></small>
             {{render_progress(torrents, movie) | safe}}
         </li>
         {% endfor %}
