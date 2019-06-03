@@ -22,6 +22,7 @@ from flask import (
     jsonify,
     Response,
 )
+from werkzeug.wrappers import Response as WResponse
 
 from rarbg import get_rarbg
 from transmission import torrent_add, get_torrent
@@ -119,12 +120,14 @@ def select_tv_options(imdb_id: str, season: str, episode: str) -> Response:
 
 @app.route('/select/<imdb_id>/options')
 def select_movie_options(imdb_id: str) -> Response:
-    return select_options('movie', imdb_id, title=query_omdb(i=imdb_id)['Title'])
+    return select_options(
+        'movie', imdb_id, title=query_omdb(i=imdb_id)['Title']
+    )
 
 
 @app.route('/delete')
 @query_args
-def delete(download_id: str) -> Response:
+def delete(download_id: str) -> WResponse:
     query = db.session.query(Download).filter_by(id=download_id)
     print(query)
     query.delete()
@@ -205,14 +208,13 @@ def normalise(seasons: List[List[Dict]], title: str) -> Optional[str]:
 
 
 @app.route('/select/<imdb_id>/season/<season>/download_all')
-def download_all_episodes(imdb_id: str, season: str) -> Response:
+def download_all_episodes(imdb_id: str, season: str) -> WResponse:
     i_season = int(season)
     results = get_rarbg(
         'series', search_imdb=imdb_id, search_string=f'S{i_season:02d}'
     )
 
-    seasons = [None] * i_season
-    seasons[i_season - 1] = query_omdb(i=imdb_id, Season=season)['Episodes']
+    seasons = [query_omdb(i=imdb_id, Season=season)['Episodes']] * i_season
 
     results = groupby(
         results, lambda result: normalise(seasons, result['title'])
@@ -250,7 +252,7 @@ def select_season(imdb_id: str) -> Response:
 
     total_seasons = info['totalSeasons']
     if total_seasons == 'N/A':
-        return 'This isn\'t a real tv series', 200
+        return Response('This isn\'t a real tv series', 200)
 
     return render_template(
         'select_season.html',
@@ -263,7 +265,7 @@ def select_season(imdb_id: str) -> Response:
 @query_args
 def download(
     magnet: str, imdb_id: str, season: str, episode: str, title: str
-) -> Response:
+) -> WResponse:
     item = query_omdb(i=imdb_id)
 
     if item['Type'] == 'movie':
@@ -291,7 +293,9 @@ def download(
         if item['Type'] == 'movie':
             create_movie(transmission_id, imdb_id, title=item['Title'])
         else:
-            create_episode(transmission_id, imdb_id, season, episode, title)
+            create_episode(
+                transmission_id, imdb_id, int(season), int(episode), title
+            )
 
         db.session.commit()
 
@@ -299,7 +303,7 @@ def download(
 
 
 def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
-    dd = defaultdict(list)
+    dd: Dict[K, List[V]] = defaultdict(list)
     for item in iterable:
         dd[key(item)].append(item)
     return dict(dd)
@@ -346,7 +350,7 @@ def render_progress(
 
 
 @app.route('/', methods=['GET', 'POST'])
-def index() -> Response:
+def index() -> WResponse:
     form = SearchForm()
     if form.validate_on_submit():
         return redirect(url_for('select_item', query=form.data['query']))
