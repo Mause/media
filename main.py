@@ -108,6 +108,7 @@ def select_tv_options(imdb_id: str, season: str, episode: str) -> Response:
     info = query_omdb(i=imdb_id, Season=season, Episode=episode)
 
     return select_options(
+        'series',
         imdb_id,
         info['Title'],
         search_string=f'S{int(season):02d}E{int(episode):02d}',
@@ -118,7 +119,7 @@ def select_tv_options(imdb_id: str, season: str, episode: str) -> Response:
 
 @app.route('/select/<imdb_id>/options')
 def select_movie_options(imdb_id: str) -> Response:
-    return select_options(imdb_id, title=query_omdb(i=imdb_id)['Title'])
+    return select_options('movie', imdb_id, title=query_omdb(i=imdb_id)['Title'])
 
 
 @app.route('/delete')
@@ -136,10 +137,12 @@ def categorise(string: str) -> str:
     return string[7:] if string.startswith('Movies/') else string
 
 
-def select_options(imdb_id: str, title: str, search_string: str=None, **extra) -> Response:
+def select_options(
+    type: str, imdb_id: str, title: str, search_string: str = None, **extra
+) -> Response:
     query = {'search_string': search_string, 'search_imdb': imdb_id}
     print(query)
-    results = get_rarbg(**query)
+    results = get_rarbg(type, **query)
 
     with open('ranking.json') as fh:
         ranking = json.load(fh)
