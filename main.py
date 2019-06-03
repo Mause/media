@@ -68,19 +68,6 @@ def query_omdb(**params) -> Dict:
     return res
 
 
-@lru_cache()
-def query_imdb(query: str) -> Dict:
-    text = requests.get(
-        f'https://v2.sg.media-imdb.com/suggests/{query[0]}/{query}.json'
-    ).text
-
-    m = re.search(r'imdb\$[^(]*\((.*)\)', text)
-    assert m
-    text = m.groups()[0]
-
-    return json.loads(text)
-
-
 @app.route('/select_item/<query>')
 def select_item(query: str) -> Response:
     results = [
