@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Download all episodes of {{info.title}}{% endblock %}
+{% block title %}Download all episodes of Season {{season}} of {{info.title}}{% endblock %}
 
 {% block content %}
     {% for pattern, rset in results.items() %}
