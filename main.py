@@ -232,7 +232,7 @@ def download_all_seasons(imdb_id: str) -> Response:
         for i in range(1, int(info['totalSeasons']) + 1)
     ]
 
-    results = get_rarbg(search_imdb=imdb_id)
+    results = get_rarbg('series', search_imdb=imdb_id)
     results = groupby(
         results, lambda result: normalise(seasons, result['title'])
     )
