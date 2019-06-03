@@ -137,13 +137,8 @@ def select_options(imdb_id, title, search_string=None, **extra):
     print(query)
     results = get_rarbg(**query)
 
-    print(results)
-    print(results.get('error'))
-
     with open('ranking.json') as fh:
         ranking = json.load(fh)
-
-    results = results.get('torrent_results', [])
 
     results = groupby(results, lambda result: categorise(result['category']))
     results = sorted(
@@ -230,7 +225,7 @@ def download_all_seasons(imdb_id: str):
         for i in range(1, int(info['totalSeasons']) + 1)
     ]
 
-    results = get_rarbg(search_imdb=imdb_id).get('torrent_results', [])
+    results = get_rarbg(search_imdb=imdb_id)
     results = groupby(
         results, lambda result: normalise(seasons, result['title'])
     )
