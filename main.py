@@ -170,7 +170,7 @@ def select_episode(imdb_id: str, season: str) -> Response:
 
 
 marker_re = re.compile(r'(S(\d{2})E(\d{2}))', re.I)
-punctuation_re = re.compile(f'[{string.punctuation}]')
+punctuation_re = re.compile(f'[{string.punctuation} ]')
 
 
 def normalise(seasons: List[List[Dict]], title: str) -> Optional[str]:
