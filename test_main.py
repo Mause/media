@@ -2,9 +2,8 @@ import pytest
 from main import normalise
 
 
-seasons = [
-    [{'name': '1:23:45'}, {}, {}, {'name': 'The Happiness of All Mankind'}]
-]
+episodes = [{'name': '1:23:45'}, {}, {}, {'name': 'The Happiness of All Mankind'}]
+
 
 
 @pytest.mark.parametrize(
@@ -21,4 +20,4 @@ seasons = [
     ],
 )
 def test_normalise(original, expected):
-    assert normalise(seasons, original) == expected
+    assert normalise(episodes, original) == expected
