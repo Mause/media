@@ -327,17 +327,18 @@ def render_progress(
     torrents: Dict[str, Dict], item: Union[MovieDetails, EpisodeDetails]
 ) -> str:
     torrent = torrents[item.download.transmission_id]
-    print(torrent, naturaldelta(torrent['eta']))
     return render_template_string(
         '''
         {% if pc == 1 %}
             <i class="fas fa-check-circle"></i>
         {% else %}
-            <progress value="{{ pc }}" title="{{ pc * 100 }}% ({{eta}} remaining)"></progress>
+            <progress value="{{ pc }}" title="{{ '{:.02f}'.format(pc * 100) }}% ({{eta}} remaining)"></progress>
         {% endif %}
         ''',
         pc=torrent['percentDone'],
-        eta=naturaldelta(torrent['eta']),
+        eta=naturaldelta(torrent['eta'])
+        if torrent['eta'] > 0
+        else 'Unknown time',
     )
 
 
