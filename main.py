@@ -3,7 +3,7 @@ import json
 import string
 import inspect
 import logging
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union, Iterable, Callable, TypeVar
 from collections import defaultdict
 from functools import lru_cache, wraps
 
@@ -20,6 +20,7 @@ from flask import (
     request,
     render_template_string,
     jsonify,
+    Response,
 )
 
 from rarbg import get as get_rarbg
@@ -47,6 +48,9 @@ app.config.update(
 )
 db.init_app(app)
 db.create_all(app=app)
+
+K = TypeVar('K')
+V = TypeVar('V')
 
 
 class SearchForm(FlaskForm):
@@ -77,7 +81,7 @@ def query_imdb(query: str) -> Dict:
 
 
 @app.route('/select_item/<query>')
-def select_item(query):
+def select_item(query: str) -> Response:
     results = [
         r
         for r in query_omdb(s=query)['Search']
@@ -100,7 +104,7 @@ def query_args(func):
 
 
 @app.route('/select/<imdb_id>/season/<season>/episode/<episode>/options')
-def select_tv_options(imdb_id, season, episode):
+def select_tv_options(imdb_id: str, season: str, episode: str) -> Response:
     info = query_omdb(i=imdb_id, Season=season, Episode=episode)
 
     return select_options(
@@ -113,13 +117,13 @@ def select_tv_options(imdb_id, season, episode):
 
 
 @app.route('/select/<imdb_id>/options')
-def select_movie_options(imdb_id):
+def select_movie_options(imdb_id: str) -> Response:
     return select_options(imdb_id, title=query_omdb(i=imdb_id)['Title'])
 
 
 @app.route('/delete')
 @query_args
-def delete(download_id):
+def delete(download_id: str) -> Response:
     query = db.session.query(Download).filter_by(id=download_id)
     print(query)
     query.delete()
@@ -132,7 +136,7 @@ def categorise(string: str) -> str:
     return string[7:] if string.startswith('Movies/') else string
 
 
-def select_options(imdb_id, title, search_string=None, **extra):
+def select_options(imdb_id: str, title: str, search_string: str=None, **extra) -> Response:
     query = {'search_string': search_string, 'search_imdb': imdb_id}
     print(query)
     results = get_rarbg(**query)
@@ -155,7 +159,7 @@ def select_options(imdb_id, title, search_string=None, **extra):
 
 
 @app.route('/select/<imdb_id>/season/<season>')
-def select_episode(imdb_id, season):
+def select_episode(imdb_id: str, season: str) -> Response:
     def build_episode_link(episode: Dict) -> str:
         return url_for(
             'select_tv_options',
@@ -198,7 +202,7 @@ def normalise(seasons: List[List[Dict]], title: str) -> Optional[str]:
 
 
 @app.route('/select/<imdb_id>/season/<season>/download_all')
-def download_all_episodes(imdb_id, season):
+def download_all_episodes(imdb_id: str, season: str) -> Response:
     i_season = int(season)
     results = get_rarbg(
         'series', search_imdb=imdb_id, search_string=f'S{i_season:02d}'
@@ -218,7 +222,7 @@ def download_all_episodes(imdb_id, season):
 
 
 @app.route('/select/<imdb_id>/download_all')
-def download_all_seasons(imdb_id: str):
+def download_all_seasons(imdb_id: str) -> Response:
     info = query_omdb(i=imdb_id)
     seasons = [
         query_omdb(i=imdb_id, Season=i)['Episodes']
@@ -236,7 +240,7 @@ def download_all_seasons(imdb_id: str):
 
 
 @app.route('/select/<imdb_id>/season')
-def select_season(imdb_id):
+def select_season(imdb_id: str) -> Response:
     info = query_omdb(i=imdb_id)
 
     print(info)
@@ -254,7 +258,9 @@ def select_season(imdb_id):
 
 @app.route('/download')
 @query_args
-def download(magnet, imdb_id, season, episode, title):
+def download(
+    magnet: str, imdb_id: str, season: str, episode: str, title: str
+) -> Response:
     item = query_omdb(i=imdb_id)
 
     if item['Type'] == 'movie':
@@ -289,7 +295,7 @@ def download(magnet, imdb_id, season, episode, title):
     return redirect(url_for('index'))
 
 
-def groupby(iterable, key):
+def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
     dd = defaultdict(list)
     for item in iterable:
         dd[key(item)].append(item)
@@ -317,7 +323,9 @@ def resolve_series() -> Dict[str, Dict[int, List[EpisodeDetails]]]:
     }
 
 
-def render_progress(torrents, item):
+def render_progress(
+    torrents: Dict[str, Dict], item: Union[MovieDetails, EpisodeDetails]
+) -> str:
     torrent = torrents[item.download.transmission_id]
     print(torrent, naturaldelta(torrent['eta']))
     return render_template_string(
@@ -334,7 +342,7 @@ def render_progress(torrents, item):
 
 
 @app.route('/', methods=['GET', 'POST'])
-def index():
+def index() -> Response:
     form = SearchForm()
     if form.validate_on_submit():
         return redirect(url_for('select_item', query=form.data['query']))
@@ -356,7 +364,7 @@ def index():
 
 
 @app.route('/endpoints.json')
-def endpoints():
+def endpoints() -> Response:
     return jsonify([r.rule for r in app.url_map._rules])
 
 
