@@ -98,10 +98,12 @@ def query_args(func):
 def select_tv_options(imdb_id: str, season: str, episode: str) -> Response:
     info = get_tv_episodes(imdb_id, season)['episodes'][int(episode) - 1]
 
+    tv = get_tv(imdb_id)
+
     return select_options(
         'series',
         get_tv_imdb_id(imdb_id),
-        info['name'],
+        info['name'] + ' - ' + tv['name'],
         search_string=f'S{int(season):02d}E{int(episode):02d}',
         season=season,
         episode=episode,
