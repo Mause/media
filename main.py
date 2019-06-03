@@ -205,11 +205,10 @@ def normalise(episodes: List[Dict], title: str) -> Optional[str]:
 
 @app.route('/select/<imdb_id>/season/<season>/download_all')
 def download_all_episodes(imdb_id: str, season: str) -> WResponse:
-    i_season = int(season)
     results = get_rarbg(
         'series',
         search_imdb=get_tv_imdb_id(imdb_id),
-        search_string=f'S{i_season:02d}',
+        search_string=f'S{int(season):02d}',
     )
 
     episodes = get_tv_episodes(imdb_id, season)['episodes']
