@@ -68,7 +68,7 @@ def query_omdb(**params) -> Dict:
     return res
 
 
-@app.route('/select_item/<query>')
+@app.route('/search/<query>')
 def select_item(query: str) -> Response:
     results = [
         r
