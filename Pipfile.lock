@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6702cb949baadf1d8cc81f356ab4ef3173b8d4c99375c8d38b6725e8f0dff2ae"
+            "sha256": "a4d61b85fc799db2f5716efbe362aa117158c34bae4ad6e9eba195ce500e9f3e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -303,6 +303,12 @@
             ],
             "version": "==4.4.0"
         },
+        "fancycompleter": {
+            "hashes": [
+                "sha256:d2522f1f3512371f295379c4c0d1962de06762eb586c199620a2a5d423539b12"
+            ],
+            "version": "==0.8"
+        },
         "importlib-metadata": {
             "hashes": [
                 "sha256:a9f185022cfa69e9ca5f7eabfd5a58b689894cb78a11e3c8c89398a8ccbb8e7f",
@@ -360,6 +366,13 @@
             ],
             "version": "==0.4.0"
         },
+        "pdbpp": {
+            "hashes": [
+                "sha256:ee7eab02ecf32d92bd66b45eedb9bda152fa13f7be0dceb7050413a52cbbc4dd"
+            ],
+            "index": "pypi",
+            "version": "==0.10.0"
+        },
         "pickleshare": {
             "hashes": [
                 "sha256:87683d47965c1da65cdacaf31c8441d12b8044cdec9aca500cd78fc2c683afca",
@@ -403,6 +416,12 @@
             ],
             "version": "==2.4.0"
         },
+        "pyreadline": {
+            "hashes": [
+                "sha256:4530592fc2e85b25b1a9f79664433da09237c1a270e4d78ea5aa3a2c7229e2d1"
+            ],
+            "version": "==2.1"
+        },
         "pytest": {
             "hashes": [
                 "sha256:8304c2f6466cf48f24631263d60320a1996668acfd659d8fa5e5e8f28129e1cd",
@@ -431,6 +450,12 @@
                 "sha256:f4ebe71925af7b40a864553f761ed559b43544f8f71746c2d756c7fe788ade7c"
             ],
             "version": "==0.1.7"
+        },
+        "wmctrl": {
+            "hashes": [
+                "sha256:d806f65ac1554366b6e31d29d7be2e8893996c0acbb2824bbf2b1f49cf628a13"
+            ],
+            "version": "==0.3"
         },
         "zipp": {
             "hashes": [
