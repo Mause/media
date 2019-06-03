@@ -20,6 +20,7 @@ from flask import (
     render_template_string,
     jsonify,
     Response,
+    Blueprint,
 )
 from werkzeug.wrappers import Response as WResponse
 
@@ -47,19 +48,26 @@ from tmdb import (
 
 logging.basicConfig(level=logging.DEBUG)
 
-app = Flask(__name__)
-app.config.update(
-    {
-        'SECRET_KEY': 'hkfircsc',
-        'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.db',
-        'SQLALCHEMY_TRACK_MODIFICATIONS': False,
-    }
-)
-db.init_app(app)
-db.create_all(app=app)
+app = Blueprint('rarbg_local', __name__)
 
 K = TypeVar('K')
 V = TypeVar('V')
+
+
+def create_app(config):
+    papp = Flask(__name__)
+    papp.config.update(
+        {
+            'SECRET_KEY': 'hkfircsc',
+            'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.db',
+            'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+            **config,
+        }
+    )
+    db.init_app(papp)
+    db.create_all(app=papp)
+
+    return papp
 
 
 class SearchForm(FlaskForm):
@@ -351,4 +359,4 @@ def endpoints() -> Response:
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    create_app({}).run(debug=True, host='0.0.0.0')
