@@ -68,9 +68,7 @@ class SearchForm(FlaskForm):
 
 @app.route('/search/<query>')
 def select_item(query: str) -> Response:
-    results = [
-        r for r in search_themoviedb(query) if r['Type'] in {'movie', 'series'}
-    ]
+    results = search_themoviedb(query)
 
     return render_template('select_item.html', results=results, query=query)
 
