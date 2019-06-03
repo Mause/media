@@ -8,9 +8,9 @@
 {% for item in results %}
     <li>
         {% if item.Type == 'movie' %}
-            {% set url = url_for('select_movie_options', imdb_id=item.imdbID) %}
+            {% set url = url_for('.select_movie_options', imdb_id=item.imdbID) %}
         {% else %}
-            {% set url = url_for('select_season', imdb_id=item.imdbID) %}
+            {% set url = url_for('.select_season', imdb_id=item.imdbID) %}
         {% endif %}
         <a href="{{url}}">{{item.title}} ({{item.Year}})</a>
     </li>

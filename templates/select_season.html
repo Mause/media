@@ -5,7 +5,7 @@
 {% block content %}
 <ul>
 {% for n in seasons %}
-    <li><a href="{{url_for('select_episode', imdb_id=info.id, season=n) }}">Season {{n}}</a></li>
+    <li><a href="{{url_for('.select_episode', imdb_id=info.id, season=n) }}">Season {{n}}</a></li>
 {% endfor %}
 </ul>
 

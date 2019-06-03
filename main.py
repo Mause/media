@@ -56,6 +56,7 @@ V = TypeVar('V')
 
 def create_app(config):
     papp = Flask(__name__)
+    papp.register_blueprint(app)
     papp.config.update(
         {
             'SECRET_KEY': 'hkfircsc',
@@ -122,7 +123,7 @@ def delete(download_id: str) -> WResponse:
     query.delete()
     db.session.commit()
 
-    return redirect(url_for('index'))
+    return redirect(url_for('.index'))
 
 
 def categorise(string: str) -> str:
@@ -157,7 +158,7 @@ def select_options(
 def select_episode(imdb_id: str, season: str) -> Response:
     def build_episode_link(episode: Dict) -> str:
         return url_for(
-            'select_tv_options',
+            '.select_tv_options',
             imdb_id=imdb_id,
             season=season,
             episode=episode["episode_number"],
@@ -280,7 +281,7 @@ def download(
 
         db.session.commit()
 
-    return redirect(url_for('index'))
+    return redirect(url_for('.index'))
 
 
 def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
@@ -334,7 +335,7 @@ def render_progress(
 def index() -> WResponse:
     form = SearchForm()
     if form.validate_on_submit():
-        return redirect(url_for('select_item', query=form.data['query']))
+        return redirect(url_for('.select_item', query=form.data['query']))
 
     torrents = {t['id']: t for t in get_torrent()['arguments']['torrents']}
     series = resolve_series()

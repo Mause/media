@@ -45,7 +45,7 @@
             <ol>
             {% for episode in season %}
                 <li value="{{episode.episode}}">
-                    <!-- <a href="{{ url_for('delete', download_id=episode.download.id) }}"><i class="far fa-times-circle"></i></a> -->
+                    <!-- <a href="{{ url_for('.delete', download_id=episode.download.id) }}"><i class="far fa-times-circle"></i></a> -->
                     {{ episode.download.title }}
                     {{render_progress(torrents, episode) | safe}}
                 </li>

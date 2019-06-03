@@ -10,7 +10,7 @@
     {% for option in rset  %}
     <li>
         <a
-            href="{{url_for('download', magnet=option['download'], imdb_id=imdb_id, **extra)}}"
+            href="{{url_for('.download', magnet=option['download'], imdb_id=imdb_id, **extra)}}"
         >{{option.title}}</a>
         <small>{{option.seeders}}</small>
     </li>

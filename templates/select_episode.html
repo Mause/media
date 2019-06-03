@@ -12,6 +12,6 @@
     {% endfor %}
 </ol>
 
-<a href="{{ url_for('download_all_episodes', imdb_id=imdb_id, season=season) }}">Download all</a>
+<a href="{{ url_for('.download_all_episodes', imdb_id=imdb_id, season=season) }}">Download all</a>
 
 {% endblock %}
