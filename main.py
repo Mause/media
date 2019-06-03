@@ -213,7 +213,11 @@ def download_all_episodes(imdb_id: str, season: str) -> WResponse:
     )
 
     return render_template(
-        'download_all.html', info=get_tv(imdb_id), results=results
+        'download_all.html',
+        info=get_tv(imdb_id),
+        season=season,
+        imdb_id=get_tv_imdb_id(imdb_id),
+        results=results,
     )
 
 
@@ -237,8 +241,7 @@ def select_season(imdb_id: str) -> Response:
 def download(
     magnet: str, imdb_id: str, season: str, episode: str, title: str
 ) -> WResponse:
-    __import__('ipdb').set_trace()
-    is_tv = season and episode
+    is_tv = bool(season)
     tv_id = resolve_id(imdb_id)
     item = get_tv(tv_id) if is_tv else get_movie(tv_id)
 
@@ -262,11 +265,10 @@ def download(
     )
 
     print('already', already)
-
     if not already:
         if is_tv:
             create_episode(
-                transmission_id, imdb_id, int(season), int(episode), title
+                transmission_id, imdb_id, season, episode, title
             )
         else:
             create_movie(transmission_id, imdb_id, title=item['title'])
@@ -288,7 +290,7 @@ def resolve_show(
 ) -> Dict[int, List[EpisodeDetails]]:
     seasons = groupby(show, lambda episode: episode.season)
     return {
-        number: sorted(season, key=lambda episode: episode.episode)
+        number: sorted(season, key=lambda episode: episode.episode or -1)
         for number, season in seasons.items()
     }
 

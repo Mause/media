@@ -64,7 +64,7 @@ def create_movie(transmission_id: int, imdb_id: str, title: str) -> None:
 
 
 def create_episode(
-    transmission_id: int, imdb_id: str, season: int, episode: int, title: str
+    transmission_id: int, imdb_id: str, season: str, episode: str, title: str
 ) -> None:
     ed = EpisodeDetails(season=season, episode=episode)
     db.session.add(ed)

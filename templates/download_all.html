@@ -5,7 +5,7 @@
 {% block content %}
     {% for pattern, rset in results.items() %}
 
-        <h3>{{pattern}}</h3>
+        <h3><a href="{{ url_for('download', imdb_id=imdb_id, season=season, magnet=rset[0].download) }}">{{pattern}}</a></h3>
 
         <ul>
         {% for result in rset %}
