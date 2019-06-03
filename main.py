@@ -23,7 +23,7 @@ from flask import (
     Response,
 )
 
-from rarbg import get as get_rarbg
+from rarbg import get_rarbg
 from transmission import torrent_add, get_torrent
 from db import (
     create_movie,

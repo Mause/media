@@ -39,7 +39,7 @@ MOVIE_CATEGORIES = {
 }
 
 
-def get(type, **kwargs):
+def get_rarbg(type, **kwargs):
     from concurrent.futures import ThreadPoolExecutor
 
     if 'token' not in session.params:
