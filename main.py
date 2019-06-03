@@ -269,7 +269,7 @@ def download(
                 transmission_id, imdb_id, int(season), int(episode), title
             )
         else:
-            create_movie(transmission_id, imdb_id, title=item['Title'])
+            create_movie(transmission_id, imdb_id, title=item['title'])
 
         db.session.commit()
 

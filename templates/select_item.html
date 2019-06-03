@@ -12,7 +12,7 @@
         {% else %}
             {% set url = url_for('select_season', imdb_id=item.imdbID) %}
         {% endif %}
-        <a href="{{url}}">{{item.Title}} ({{item.Year}})</a>
+        <a href="{{url}}">{{item.title}} ({{item.Year}})</a>
     </li>
 {% endfor %}
 </ul>
