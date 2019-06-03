@@ -3,6 +3,7 @@
 import json
 import logging
 from itertools import chain
+from typing import List, Dict
 
 import requests
 
@@ -23,20 +24,28 @@ def get_token():
     return session.get(BASE, params={'get_token': 'get_token'}).json()['token']
 
 
-TV_CATEGORIES = {"TV Episodes", "TV HD Episodes", "TV UHD Episodes"}
-MOVIE_CATEGORIES = {
-    "Movies/BD Remux",
-    "Movies/Full BD",
-    "Movies/XVID",
-    "Movies/XVID/720",
-    "Movies/x264",
-    "Movies/x264/1080",
-    "Movies/x264/3D",
-    "Movies/x264/4k",
-    "Movies/x264/720",
-    "Movies/x265/4k",
-    "Movs/x265/4k/HDR",
+CATEGORIES = {
+    'movie': {
+        "Movies/BD Remux",
+        "Movies/Full BD",
+        "Movies/XVID",
+        "Movies/x264",
+        "Movies/x264/720",
+        "Movies/XVID/720",
+        "Movies/x264/3D",
+        "Movies/x264/1080",
+        "Movies/x264/4k",
+        "Movies/x265/4k",
+        "Movs/x265/4k/HDR",
+    },
+    'series': {"TV Episodes", "TV HD Episodes", "TV UHD Episodes"},
 }
+
+
+
+def load_category_codes() -> Dict[str,int]:
+    with open('categories.json') as fh:
+        return json.load(fh)
 
 
 def get_rarbg(type, **kwargs):
@@ -45,17 +54,19 @@ def get_rarbg(type, **kwargs):
     if 'token' not in session.params:
         session.params['token'] = get_token()
 
-    with open('categories.json') as fh:
-        categories = json.load(fh)
+    codes = load_category_codes()
+    categories = [codes[key] for key in CATEGORIES[type]]
 
-    return chain.from_iterable(
-        ThreadPoolExecutor(10).map(
-            lambda category: _get(**kwargs, category=category), categories
+    return list(
+        chain.from_iterable(
+            ThreadPoolExecutor(10).map(
+                lambda category: _get(**kwargs, category=category), categories
+            )
         )
     )
 
 
-def _get(**kwargs):
+def _get(**kwargs: Dict[str, str]) -> List[Dict]:
     r = session.get(
         BASE, params=kwargs, headers={'X-Server-Contact': 'me+rarbg@mause.me'}
     )
@@ -76,7 +87,4 @@ def _get(**kwargs):
     elif 'error' in res and res['error'] != 'No results found':
         raise Exception(res)
 
-    res = res.get('torrent_results', [])
-    if res:
-        print(res[-1].keys())
-    return res
+    return res.get('torrent_results', [])
