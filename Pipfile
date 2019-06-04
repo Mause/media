@@ -8,6 +8,7 @@ ipdb = "*"
 pytest = "*"
 pdbpp = "*"
 responses = "*"
+lxml = "*"
 
 [packages]
 flask = "*"
