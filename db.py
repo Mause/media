@@ -1,14 +1,13 @@
 import uuid
-import sqlite3
-from typing import List, Union
+from typing import List, Union, TypeVar, Type
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_repr import RepresentableBase
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship, joinedload
+from sqlalchemy import Column, Integer, String, ForeignKey
 
 db = SQLAlchemy(model_class=RepresentableBase)
+T = TypeVar('T')
 
 
 class Download(db.Model):
@@ -73,12 +72,16 @@ def create_episode(
     )
 
 
+def get_all(model: Type[T]) -> List[T]:
+    return db.session.query(model).options(joinedload('download')).all()
+
+
 def get_episodes() -> List[EpisodeDetails]:
-    return db.session.query(EpisodeDetails).all()
+    return get_all(EpisodeDetails)
 
 
 def get_movies() -> List[MovieDetails]:
-    return db.session.query(MovieDetails).all()
+    return get_all(MovieDetails)
 
 
 def main():
