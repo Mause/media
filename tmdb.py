@@ -78,3 +78,11 @@ def get_imdb_id(type: str, id: str) -> str:
 @lru_cache()
 def get_tv_episodes(id: str, season: str):
     return tmdb.get(f'tv/{id}/season/{season}').json()
+
+
+def cache_clear():
+    for key, value in globals().items():
+        print(key)
+        if hasattr(value, 'cache_clear'):
+            print(value)
+            value.cache_clear()

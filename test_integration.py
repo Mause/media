@@ -2,14 +2,20 @@ import json
 
 import responses
 from pytest import fixture
-from lxml.html import fromstring, tostring
+from lxml.html import fromstring
 
 from main import create_app
 from db import create_episode, db
+from tmdb import cache_clear
 
 
-@fixture(scope='module')
-def test_client():
+@fixture
+def clear_cache():
+    cache_clear()
+
+
+@fixture
+def test_client(clear_cache):
     flask_app = create_app(
         {
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
