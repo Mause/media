@@ -1,7 +1,10 @@
 import json
-from main import create_app
-from pytest import fixture
+
 import responses
+from pytest import fixture
+from lxml.html import fromstring, tostring
+
+from main import create_app
 from db import create_episode, db
 
 
@@ -33,33 +36,35 @@ def trm_session():
     )
 
 
+def add_json(method: str, url: str, json_body) -> None:
+    responses.add(method=method, url=url, body=json.dumps(json_body))
+
+
 @fixture
 def reverse_imdb():
-    responses.add(
-        method='GET',
-        url='https://api.themoviedb.org/3/find/tt000000?'
+    add_json(
+        'GET',
+        'https://api.themoviedb.org/3/find/tt000000?'
         'api_key=66b197263af60702ba14852b4ec9b143&external_source=imdb_id',
-        body=json.dumps({'tv_results': [{'id': '100000'}]}),
+        {'tv_results': [{'id': '100000'}]},
     )
-    responses.add(
-        method='GET',
-        url='https://api.themoviedb.org/3/tv/100000?api_key=66b197263af60702ba14852b4ec9b143',
-        body=json.dumps({'name': 'Introductory'}),
+    add_json(
+        'GET',
+        'https://api.themoviedb.org/3/tv/100000?api_key=66b197263af60702ba14852b4ec9b143',
+        {'name': 'Introductory'},
     )
 
 
 @responses.activate
 def test_index(test_client, trm_session, reverse_imdb):
-    responses.add(
-        method='POST',
-        url='http://novell.local:9091/transmission/rpc',
-        body=json.dumps(
-            {
-                'arguments': {
-                    'torrents': [{'id': 1, 'eta': 10000, 'percentDone': 0.5}]
-                }
+    add_json(
+        'POST',
+        'http://novell.local:9091/transmission/rpc',
+        {
+            'arguments': {
+                'torrents': [{'id': 1, 'eta': 10000, 'percentDone': 0.5}]
             }
-        ),
+        },
     )
 
     create_episode(
@@ -74,8 +79,34 @@ def test_index(test_client, trm_session, reverse_imdb):
     res = test_client.get('/')
 
     assert res.status == '200 OK'
-    assert b'Hello world' in res.get_data()
+
+    lists = fromstring(res.get_data()).xpath('.//li/text()')
+    lists = [t.strip() for t in lists]
+
+    assert ''.join(lists) == 'Hello world'
 
 
+@responses.activate
 def test_search(test_client):
-    assert test_client.get('/search/chernobyl').status == '200 OK'
+    add_json(
+        'GET',
+        'https://api.themoviedb.org/3/search/multi?api_key=66b197263af60702ba14852b4ec9b143&query=chernobyl',
+        {
+            'results': [
+                {
+                    'id': '10000',
+                    'media_type': 'tv',
+                    'name': 'Chernobyl',
+                    'first_air_date': '2019-01-01',
+                }
+            ]
+        },
+    )
+
+    res = test_client.get('/search/chernobyl')
+    assert res.status == '200 OK'
+
+    html = fromstring(res.get_data()).xpath('.//li/a/text()')
+    html = [t.strip() for t in html]
+
+    assert html == ['Chernobyl (2019)']
