@@ -81,8 +81,6 @@ def get_tv_episodes(id: str, season: str):
 
 
 def cache_clear():
-    for key, value in globals().items():
-        print(key)
+    for value in globals().values():
         if hasattr(value, 'cache_clear'):
-            print(value)
             value.cache_clear()
