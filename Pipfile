@@ -9,6 +9,7 @@ pytest = "*"
 pdbpp = "*"
 responses = "*"
 lxml = "*"
+selenium = "*"
 
 [packages]
 flask = "*"
