@@ -48,17 +48,12 @@ def add_json(method: str, url: str, json_body) -> None:
 
 @fixture
 def reverse_imdb():
-    add_json(
-        'GET',
-        'https://api.themoviedb.org/3/find/tt000000?'
-        'api_key=66b197263af60702ba14852b4ec9b143&external_source=imdb_id',
+    themoviedb(
+        '/find/tt000000',
         {'tv_results': [{'id': '100000'}]},
+        '&external_source=imdb_id',
     )
-    add_json(
-        'GET',
-        'https://api.themoviedb.org/3/tv/100000?api_key=66b197263af60702ba14852b4ec9b143',
-        {'name': 'Introductory'},
-    )
+    themoviedb('/tv/100000', {'name': 'Introductory'})
 
 
 @responses.activate
@@ -94,9 +89,8 @@ def test_index(test_client, trm_session, reverse_imdb):
 
 @responses.activate
 def test_search(test_client):
-    add_json(
-        'GET',
-        'https://api.themoviedb.org/3/search/multi?api_key=66b197263af60702ba14852b4ec9b143&query=chernobyl',
+    themoviedb(
+        '/search/multi',
         {
             'results': [
                 {
@@ -107,6 +101,7 @@ def test_search(test_client):
                 }
             ]
         },
+        query='&query=chernobyl',
     )
 
     res = test_client.get('/search/chernobyl')
@@ -116,3 +111,12 @@ def test_search(test_client):
     html = [t.strip() for t in html]
 
     assert html == ['Chernobyl (2019)']
+
+
+def themoviedb(path, response, query=''):
+    add_json(
+        'GET',
+        f'https://api.themoviedb.org/3{path}?api_key=66b197263af60702ba14852b4ec9b143'
+        + query,
+        response,
+    )
