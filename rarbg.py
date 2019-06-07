@@ -48,8 +48,6 @@ def load_category_codes() -> Dict[str, int]:
 
 
 def get_rarbg(type, **kwargs):
-    from concurrent.futures import ThreadPoolExecutor
-
     if 'token' not in session.params:
         session.params['token'] = get_token()
 
@@ -58,7 +56,6 @@ def get_rarbg(type, **kwargs):
 
     return list(
         chain.from_iterable(
-            # ThreadPoolExecutor(2).
             map(
                 lambda category: _get(**kwargs, category=category), categories
             )
