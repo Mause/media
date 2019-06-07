@@ -130,7 +130,12 @@ def delete(download_id: str) -> WResponse:
 
 
 def categorise(string: str) -> str:
-    return string[7:] if string.startswith('Movies/') else string
+    if string.startswith('Movies/'):
+        return string[7:]
+    elif string.startswith('Movs/'):
+        return string[5:]
+    else:
+        return string
 
 
 def select_options(
