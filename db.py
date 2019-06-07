@@ -1,4 +1,3 @@
-import uuid
 from typing import List, Union, TypeVar, Type
 
 from flask_sqlalchemy import SQLAlchemy
@@ -82,20 +81,3 @@ def get_episodes() -> List[EpisodeDetails]:
 
 def get_movies() -> List[MovieDetails]:
     return get_all(MovieDetails)
-
-
-def main():
-    hash = uuid.uuid4().hex
-    session = Session()
-    create_movie(
-        session, hash=hash, imdb_id='tt0000000', title='Woman Incoming'
-    )
-    create_episode(
-        session, uuid.uuid4().hex, 'tt0000000', 2, 1, 'American Gods'
-    )
-
-    print([d.asdict() for d in session.query(Download).all()])
-
-
-if __name__ == '__main__':
-    main()
