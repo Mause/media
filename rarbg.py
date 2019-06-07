@@ -79,6 +79,7 @@ def _get(**kwargs: Dict[str, str]) -> List[Dict]:
 
     if res.get('error_code') == 4:
         logging.info('Token expired, reacquiring')
+        assert isinstance(session.params, dict)
         session.params['token'] = get_token()
         res = _get(**kwargs)
     elif 'error' in res and res['error'] != 'No results found':

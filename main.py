@@ -12,6 +12,7 @@ from typing import (
     Callable,
     TypeVar,
     Tuple,
+    cast,
 )
 from collections import defaultdict
 from functools import wraps
@@ -241,7 +242,7 @@ def normalise(episodes: List[Dict], title: str) -> Optional[str]:
 def extract_marker(title: str) -> Tuple[str, str]:
     m = marker_re.search(title)
     assert m, title
-    return tuple(m.groups()[1:])
+    return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
 @app.route('/select/<imdb_id>/season/<season>/download_all')
@@ -368,6 +369,7 @@ def add_single(
     print('already', already)
     if not already:
         if is_tv:
+            assert season
             create_episode(transmission_id, imdb_id, season, episode, title)
         else:
             create_movie(transmission_id, imdb_id, title=title)

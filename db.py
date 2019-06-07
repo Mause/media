@@ -1,4 +1,4 @@
-from typing import List, Union, TypeVar, Type
+from typing import List, Union, TypeVar, Type, Optional
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_repr import RepresentableBase
@@ -62,7 +62,11 @@ def create_movie(transmission_id: int, imdb_id: str, title: str) -> None:
 
 
 def create_episode(
-    transmission_id: int, imdb_id: str, season: str, episode: str, title: str
+    transmission_id: int,
+    imdb_id: str,
+    season: str,
+    episode: Optional[str],
+    title: str,
 ) -> None:
     ed = EpisodeDetails(season=season, episode=episode)
     db.session.add(ed)
