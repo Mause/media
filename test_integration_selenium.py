@@ -36,21 +36,24 @@ def test_simple(webdriver):
     click_link(webdriver, 'Season 1')
     click_link(webdriver, '1:23:45')
 
-    anchor = urlparse(
-        webdriver.find_element_by_partial_link_text(
-            'Chernobyl.S01E01.iNTERNAL.1080p.WEB.H264-EDHD[rartv]'
-        ).get_attribute('href')
-    )
-    expected = urlparse(
+    check_download_link(
+        webdriver,
+        'Chernobyl.S01E01.iNTERNAL.1080p.WEB.H264-EDHD[rartv]',
         'http://cornell.local:5000/download/series?'
         + urlencode(
             {
                 'magnet': 'magnet:?xt=urn:btih:0a49edcbe6cfca62a7b8b24a7f60094b697aa2e9&dn=Chernobyl.S01E01.iNTERNAL.1080p.WEB.H264-EDHD%5Brartv%5D&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=udp%3A%2F%2Fopen.demonii.com%3A1337%2Fannounce',
                 'imdb_id': 'tt7366338',
-                'titles': '1:23:45',  # - Chernobyl',
+                'titles': '1:23:45',
                 'season': '1',
                 'episode': '1',
             }
-        )
+        ),
     )
-    assert anchor == expected
+
+
+def check_download_link(webdriver, text, expected):
+    anchor = webdriver.find_element_by_partial_link_text(text).get_attribute(
+        'href'
+    )
+    assert urlparse(anchor) == urlparse(expected)
