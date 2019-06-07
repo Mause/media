@@ -103,7 +103,8 @@ def select_tv_options(imdb_id: str, season: str, episode: str) -> Response:
     return select_options(
         'series',
         get_tv_imdb_id(imdb_id),
-        info['name'] + ' - ' + tv['name'],
+        display_title=info['name'] + ' - ' + tv['name'],
+        title=info['name'],
         search_string=f'S{int(season):02d}E{int(episode):02d}',
         season=season,
         episode=episode,
@@ -133,8 +134,14 @@ def categorise(string: str) -> str:
 
 
 def select_options(
-    type: str, imdb_id: str, title: str, search_string: str = None, **extra
+    type: str,
+    imdb_id: str,
+    title: str,
+    display_title: str = None,
+    search_string: str = None,
+    **extra,
 ) -> Response:
+    display_title = display_title or title
     query = {'search_string': search_string, 'search_imdb': imdb_id}
     print(query)
     results = get_rarbg(type, **query)
@@ -151,8 +158,8 @@ def select_options(
         'select_options.html',
         results=results,
         imdb_id=imdb_id,
-        title=title,
         extra=dict(extra, title=title),
+        display_title=display_title,
     )
 
 
