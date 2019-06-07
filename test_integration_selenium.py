@@ -5,7 +5,9 @@ import selenium.webdriver
 
 @fixture(scope='module')
 def webdriver():
-    driver = selenium.webdriver.Chrome()
+    options = selenium.webdriver.ChromeOptions()
+    options.add_argument('headless')
+    driver = selenium.webdriver.Chrome(options=options)
     try:
         yield driver
     finally:
