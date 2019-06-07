@@ -3,9 +3,19 @@ import json
 import string
 import inspect
 import logging
-from typing import Dict, List, Optional, Union, Iterable, Callable, TypeVar
+from typing import (
+    Dict,
+    List,
+    Optional,
+    Union,
+    Iterable,
+    Callable,
+    TypeVar,
+    Tuple,
+)
 from collections import defaultdict
 from functools import wraps
+from itertools import zip_longest
 
 from flask_wtf import FlaskForm
 from wtforms import StringField
@@ -146,7 +156,17 @@ def select_options(
     search_string: str = None,
     **extra,
 ) -> Response:
+    def build_download_link(option):
+        return url_for(
+            '.download',
+            type=type,
+            magnet=option['download'],
+            imdb_id=imdb_id,
+            titles=[title],
+            **extra,
+        )
     display_title = display_title or title
+
     query = {'search_string': search_string, 'search_imdb': imdb_id}
     print(query)
     results = get_rarbg(type, **query)
@@ -163,8 +183,8 @@ def select_options(
         'select_options.html',
         results=results,
         imdb_id=imdb_id,
-        extra=dict(extra, title=title),
         display_title=display_title,
+        build_download_link=build_download_link,
     )
 
 
@@ -218,8 +238,33 @@ def normalise(episodes: List[Dict], title: str) -> Optional[str]:
     return title
 
 
+def extract_marker(title: str) -> Tuple[str, str]:
+    m = marker_re.search(title)
+    assert m, title
+    return tuple(m.groups()[1:])
+
+
 @app.route('/select/<imdb_id>/season/<season>/download_all')
 def download_all_episodes(imdb_id: str, season: str) -> WResponse:
+    def build_download_link(
+        imdb_id: str, season: str, result_set: List[Dict]
+    ) -> str:
+        def get_title(title: str) -> str:
+            try:
+                _, i_episode = extract_marker(title)
+            except AssertionError:
+                return title
+            return episodes[int(i_episode) - 1]['name']
+
+        return url_for(
+            '.download',
+            type='series',
+            imdb_id=imdb_id,
+            season=season,
+            titles=[get_title(r['title']) for r in result_set],
+            magnet=[r['download'] for r in result_set],
+        )
+
     results = get_rarbg(
         'series',
         search_imdb=get_tv_imdb_id(imdb_id),
@@ -238,6 +283,7 @@ def download_all_episodes(imdb_id: str, season: str) -> WResponse:
         season=season,
         imdb_id=get_tv_imdb_id(imdb_id),
         results=results,
+        build_download_link=build_download_link,
     )
 
 
@@ -256,12 +302,21 @@ def select_season(imdb_id: str) -> Response:
     )
 
 
-@app.route('/download')
-@query_args
-def download(
-    magnet: str, imdb_id: str, season: str, episode: str, title: str
-) -> WResponse:
-    is_tv = bool(season)
+@app.route('/download/<type>')
+def download(type: str) -> WResponse:
+    assert type
+
+    args = request.args
+
+    imdb_id = args['imdb_id']
+
+    season = args.get('season')
+    episode = args.get('episode')
+
+    titles: List[str] = args.getlist('titles')
+    magnets: List[str] = args.getlist('magnet')
+
+    is_tv = type == 'series'
     tv_id = resolve_id(imdb_id)
     item = get_tv(tv_id) if is_tv else get_movie(tv_id)
 
@@ -270,6 +325,32 @@ def download(
     else:
         subpath = 'movies'
 
+    for title, magnet in zip_longest(titles, magnets):
+        if is_tv:
+            season, episode = map(int, extract_marker(magnet))
+        add_single(
+            magnet=magnet,
+            subpath=subpath,
+            imdb_id=imdb_id,
+            episode=episode,
+            season=season,
+            is_tv=is_tv,
+            title=title if is_tv else item['title'],
+        )
+
+    return redirect(url_for('.index'))
+
+
+def add_single(
+    *,
+    magnet: str,
+    subpath: str,
+    is_tv: bool,
+    imdb_id: str,
+    season: Optional[str],
+    episode: Optional[str],
+    title: str,
+) -> None:
     arguments = torrent_add(magnet, subpath)['arguments']
     print(arguments)
     transmission_id = (
@@ -287,15 +368,11 @@ def download(
     print('already', already)
     if not already:
         if is_tv:
-            create_episode(
-                transmission_id, imdb_id, season, episode, title
-            )
+            create_episode(transmission_id, imdb_id, season, episode, title)
         else:
-            create_movie(transmission_id, imdb_id, title=item['title'])
+            create_movie(transmission_id, imdb_id, title=title)
 
         db.session.commit()
-
-    return redirect(url_for('.index'))
 
 
 def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:

@@ -7,10 +7,10 @@
 {% for category, rset in results %}
 <ul>
     <h3>{{category}}</h3>
-    {% for option in rset  %}
+    {% for option in rset %}
     <li>
         <a
-            href="{{url_for('.download', magnet=option['download'], imdb_id=imdb_id, **extra)}}"
+            href="{{build_download_link(option)}}"
         >{{option.title}}</a>
         <small>{{option.seeders}}</small>
     </li>
