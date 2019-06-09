@@ -3,6 +3,7 @@ import json
 import responses
 from pytest import fixture
 from lxml.html import fromstring
+from flask import Flask
 
 from main import create_app
 from db import create_episode, db
@@ -15,8 +16,8 @@ def clear_cache():
 
 
 @fixture
-def test_client(clear_cache):
-    flask_app = create_app(
+def flask_app() -> Flask:
+    return create_app(
         {
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'ENV': 'development',
@@ -24,6 +25,9 @@ def test_client(clear_cache):
         }
     )
 
+
+@fixture
+def test_client(clear_cache, flask_app):
     # Flask provides a way to test your application by exposing the Werkzeug test Client
     # and handling the context locals for you.
     testing_client = flask_app.test_client()
