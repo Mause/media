@@ -67,12 +67,13 @@ def create_episode(
     season: str,
     episode: Optional[str],
     title: str,
-) -> None:
+) -> EpisodeDetails:
     ed = EpisodeDetails(season=season, episode=episode)
     db.session.add(ed)
     db.session.add(
         create_download(transmission_id, imdb_id, title, 'episode', ed)
     )
+    return ed
 
 
 def get_all(model: Type[T]) -> List[T]:
