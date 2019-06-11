@@ -1,9 +1,11 @@
 import json
+from typing import Generator
 
 import responses
 from pytest import fixture
 from lxml.html import fromstring
 from flask import Flask
+from flask.testing import FlaskClient
 
 from main import create_app
 from db import create_episode, db
@@ -27,7 +29,9 @@ def flask_app() -> Flask:
 
 
 @fixture
-def test_client(clear_cache, flask_app):
+def test_client(
+    clear_cache, flask_app: Flask
+) -> Generator[FlaskClient, None, None]:
     # Flask provides a way to test your application by exposing the Werkzeug test Client
     # and handling the context locals for you.
     testing_client = flask_app.test_client()
