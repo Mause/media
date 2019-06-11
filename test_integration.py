@@ -152,6 +152,17 @@ def test_delete_cascade(flask_app: Flask):
         assert len(session.query(Download).all()) == 0
 
 
+@responses.activate
+def test_select_season(test_client: FlaskClient):
+    themoviedb('/tv/100000', {'number_of_seasons': 1})
+
+    res = test_client.get('/select/100000/season')
+
+    assert res.status == '200 OK'
+
+    assert res.get_data()
+
+
 def test_foreign_key_integrity(flask_app: Flask):
     from main import db, Download
 
