@@ -131,26 +131,25 @@ def themoviedb(path, response, query=''):
     )
 
 
-def test_delete_cascade(flask_app: Flask, test_client: FlaskClient):
+def test_delete_cascade(test_client: FlaskClient):
     from main import db, get_episodes, Download
 
-    with flask_app.app_context():
-        e = create_episode(1, 'tt000000', '1', '1', 'Title')
+    e = create_episode(1, 'tt000000', '1', '1', 'Title')
 
-        session = db.session
+    session = db.session
 
-        session.commit()
+    session.commit()
 
-        assert len(get_episodes()) == 1
-        assert len(session.query(Download).all()) == 1
+    assert len(get_episodes()) == 1
+    assert len(session.query(Download).all()) == 1
 
-        res = test_client.get(f'/delete/series/{e.id}')
-        assert res.status_code == 302
+    res = test_client.get(f'/delete/series/{e.id}')
+    assert res.status_code == 302
 
-        session.commit()
+    session.commit()
 
-        assert len(get_episodes()) == 0
-        assert len(session.query(Download).all()) == 0
+    assert len(get_episodes()) == 0
+    assert len(session.query(Download).all()) == 0
 
 
 @responses.activate
