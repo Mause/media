@@ -2,10 +2,11 @@ import json
 from typing import Generator
 
 import responses
-from pytest import fixture
+from pytest import fixture, raises
 from lxml.html import fromstring
 from flask import Flask
 from flask.testing import FlaskClient
+from sqlalchemy.exc import IntegrityError
 
 from main import create_app
 from db import create_episode, db
@@ -149,3 +150,15 @@ def test_delete_cascade(flask_app: Flask):
 
         assert len(get_episodes()) == 0
         assert len(session.query(Download).all()) == 0
+
+
+def test_foreign_key_integrity(flask_app: Flask):
+    from main import db, Download
+
+    with flask_app.app_context():
+        session = db.session
+
+        # invalid fkey_id
+        ins = Download.__table__.insert().values(id=1, movie_id=99)
+        with raises(IntegrityError):
+            session.execute(ins)
