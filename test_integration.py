@@ -132,7 +132,7 @@ def themoviedb(path, response, query=''):
 
 
 def test_delete_cascade(flask_app: Flask, test_client: FlaskClient):
-    from main import db, delete, get_episodes, Download
+    from main import db, get_episodes, Download
 
     with flask_app.app_context():
         e = create_episode(1, 'tt000000', '1', '1', 'Title')
