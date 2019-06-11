@@ -131,7 +131,7 @@ def themoviedb(path, response, query=''):
     )
 
 
-def test_delete_cascade(flask_app: Flask):
+def test_delete_cascade(flask_app: Flask, test_client: FlaskClient):
     from main import db, delete, get_episodes, Download
 
     with flask_app.app_context():
@@ -144,7 +144,8 @@ def test_delete_cascade(flask_app: Flask):
         assert len(get_episodes()) == 1
         assert len(session.query(Download).all()) == 1
 
-        delete('series', e.id)
+        res = test_client.get(f'/delete/series/{e.id}')
+        assert res.status_code == 302
 
         session.commit()
 
