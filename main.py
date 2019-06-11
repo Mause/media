@@ -22,6 +22,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField
 from humanize import naturaldelta
 from wtforms.validators import DataRequired
+from sqlalchemy import event
 from flask import (
     Flask,
     render_template,
@@ -78,6 +79,14 @@ def create_app(config):
     )
     db.init_app(papp)
     db.create_all(app=papp)
+
+    if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
+        def _fk_pragma_on_connect(dbapi_con, con_record):
+            dbapi_con.execute('pragma foreign_keys=ON')
+
+        engine = db.get_engine(papp, None)
+        event.listen(engine, 'connect', _fk_pragma_on_connect)
+        _fk_pragma_on_connect(engine, None)
 
     return papp
 
