@@ -239,7 +239,8 @@ def normalise(episodes: List[Dict], title: str) -> Optional[str]:
 
     episode = episodes[int(i_episode, 10) - 1]
 
-    to_replace = punctuation_re.sub('.', episode['name'])
+    to_replace = punctuation_re.sub(' ', episode['name'])
+    to_replace = '.'.join(to_replace.split())
     print('to_replace', to_replace)
     title = re.sub(to_replace, 'TITLE', title, re.I)
 
