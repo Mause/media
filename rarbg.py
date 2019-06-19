@@ -48,17 +48,19 @@ def load_category_codes() -> Dict[str, int]:
 
 
 def get_rarbg(type, **kwargs):
+    return list(get_rarbg_iter(type, **kwargs))
+
+
+def get_rarbg_iter(type, **kwargs):
     if 'token' not in session.params:
         session.params['token'] = get_token()
 
     codes = load_category_codes()
     categories = [codes[key] for key in CATEGORIES[type]]
 
-    return list(
-        chain.from_iterable(
-            map(
-                lambda category: _get(**kwargs, category=category), categories
-            )
+    return chain.from_iterable(
+        map(
+            lambda category: _get(**kwargs, category=category), categories
         )
     )
 
