@@ -20,6 +20,11 @@ def get_json(*args, **kwargs):
 
 
 @lru_cache()
+def get_configuration() -> Dict:
+    return get_json('configuration')
+
+
+@lru_cache()
 def search_themoviedb(s: str) -> List[Dict]:
     MAP = {'tv': 'series', 'movie': 'movie'}
     r = tmdb.get('search/multi', params={'query': s})
