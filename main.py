@@ -29,7 +29,6 @@ from flask import (
     redirect,
     url_for,
     request,
-    render_template_string,
     jsonify,
     Response,
     Blueprint,
@@ -418,20 +417,19 @@ def resolve_series() -> Dict[str, Dict[int, List[EpisodeDetails]]]:
 def render_progress(
     torrents: Dict[str, Dict], item: Union[MovieDetails, EpisodeDetails]
 ) -> str:
-    torrent = torrents[item.download.transmission_id]
-    return render_template_string(
-        '''
-        {% if pc == 1 %}
-            <i class="fas fa-check-circle"></i>
-        {% else %}
-            <progress value="{{ pc }}" title="{{ '{:.02f}'.format(pc * 100) }}% ({{eta}} remaining)"></progress>
-        {% endif %}
-        ''',
-        pc=torrent['percentDone'],
-        eta=naturaldelta(torrent['eta'])
-        if torrent['eta'] > 0
-        else 'Unknown time',
+    torrent = torrents.get(
+        item.download.transmission_id, {'percentDone': 1, 'eta': 0}
     )
+    pc = torrent['percentDone']
+    eta = naturaldelta(torrent['eta']) if torrent['eta'] > 0 else 'Unknown time'
+
+    if pc == 1:
+        return '<i class="fas fa-check-circle"></i>'
+    else:
+        return f'''
+        <progress value="{pc}" title="{pc * 100:.02f}% ({eta} remaining)">
+        </progress>
+        '''
 
 
 @app.route('/', methods=['GET', 'POST'])
