@@ -22,6 +22,7 @@ flask-sqlalchemy = "*"
 humanize = "*"
 aiohttp = "*"
 requests-toolbelt = "*"
+backoff = "*"
 
 [requires]
 python_version = "3.7"
