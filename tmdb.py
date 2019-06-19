@@ -1,6 +1,7 @@
 from typing import Dict, List
 from itertools import chain
 from functools import lru_cache
+from datetime import date
 
 from requests_toolbelt.sessions import BaseUrlSession
 
@@ -20,9 +21,9 @@ def search_themoviedb(s: str) -> List[Dict]:
         {
             'Type': MAP[result['media_type']],
             'title': try_(result, 'title', 'name'),
-            'Year': try_(result, 'first_air_date', 'release_date').split('-')[
-                0
-            ],
+            'Year': date.fromisoformat(
+                try_(result, 'first_air_date', 'release_date')
+            ).year,
             'imdbID': result['id'],
         }
         for result in r.json()['results']
