@@ -13,6 +13,12 @@ def try_(dic: Dict[str, str], *keys: str) -> str:
     return next(dic[key] for key in keys if key in dic)
 
 
+def get_json(*args, **kwargs):
+    r = tmdb.get(*args, **kwargs)
+    r.raise_for_status()
+    return r.json()
+
+
 @lru_cache()
 def search_themoviedb(s: str) -> List[Dict]:
     MAP = {'tv': 'series', 'movie': 'movie'}
@@ -55,12 +61,12 @@ def resolve_id(imdb_id: str) -> str:
 
 @lru_cache()
 def get_movie(id: str):
-    return tmdb.get(f'movie/{id}').json()
+    return get_json(f'movie/{id}')
 
 
 @lru_cache()
 def get_tv(id: str):
-    return tmdb.get(f'tv/{id}').json()
+    return get_json(f'tv/{id}')
 
 
 def get_movie_imdb_id(tv_id: str) -> str:
@@ -73,12 +79,12 @@ def get_tv_imdb_id(tv_id: str) -> str:
 
 @lru_cache()
 def get_imdb_id(type: str, id: str) -> str:
-    return tmdb.get(f'{type}/{id}/external_ids').json()['imdb_id']
+    return get_json(f'{type}/{id}/external_ids')['imdb_id']
 
 
 @lru_cache()
 def get_tv_episodes(id: str, season: str):
-    return tmdb.get(f'tv/{id}/season/{season}').json()
+    return get_json(f'tv/{id}/season/{season}')
 
 
 def cache_clear():
