@@ -15,16 +15,28 @@ class Download(db.Model):
     transmission_id = Column(Integer)
     imdb_id = Column(String)
     type = Column(String)
-    movie = relationship('MovieDetails', uselist=False, cascade='delete')
-    episode = relationship('EpisodeDetails', uselist=False, cascade='delete')
+    movie = relationship('MovieDetails', uselist=False, cascade='all,delete')
+    movie_id = Column(
+        Integer, ForeignKey('movie_details.id', ondelete='CASCADE')
+    )
+    episode = relationship(
+        'EpisodeDetails', uselist=False, cascade='all,delete'
+    )
+    episode_id = Column(
+        Integer, ForeignKey('episode_details.id', ondelete='CASCADE')
+    )
     title = Column(String)
 
 
 class EpisodeDetails(db.Model):
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
-    download = relationship('Download', back_populates='episode', uselist=False)
-    download_id = Column(Integer, ForeignKey('download.id'))
+    download = relationship(
+        'Download',
+        back_populates='episode',
+        passive_deletes=True,
+        uselist=False,
+    )
     season = Column(Integer)
     episode = Column(Integer)
 
@@ -32,8 +44,9 @@ class EpisodeDetails(db.Model):
 class MovieDetails(db.Model):
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
-    download = relationship('Download', back_populates='movie', uselist=False)
-    download_id = Column(Integer, ForeignKey('download.id'))
+    download = relationship(
+        'Download', back_populates='movie', passive_deletes=True, uselist=False
+    )
 
 
 def create_download(
@@ -42,6 +55,7 @@ def create_download(
     title: str,
     type: str,
     details: Union[MovieDetails, EpisodeDetails],
+    id: int = None,
 ):
     assert imdb_id.startswith('tt'), imdb_id
     return Download(
@@ -49,7 +63,8 @@ def create_download(
         imdb_id=imdb_id,
         title=title,
         type=type,
-        **{type: details}
+        **{type: details},
+        id=id
     )
 
 
@@ -67,11 +82,15 @@ def create_episode(
     season: str,
     episode: Optional[str],
     title: str,
+    id: int = None,
+    download_id: int = None,
 ) -> EpisodeDetails:
-    ed = EpisodeDetails(season=season, episode=episode)
+    ed = EpisodeDetails(id=id, season=season, episode=episode)
     db.session.add(ed)
     db.session.add(
-        create_download(transmission_id, imdb_id, title, 'episode', ed)
+        create_download(
+            transmission_id, imdb_id, title, 'episode', ed, id=download_id
+        )
     )
     return ed
 
