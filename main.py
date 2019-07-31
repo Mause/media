@@ -438,7 +438,10 @@ def index() -> WResponse:
     if form.validate_on_submit():
         return redirect(url_for('.select_item', query=form.data['query']))
 
-    torrents = {t['id']: t for t in get_torrent()['arguments']['torrents']}
+    try:
+        torrents = {t['id']: t for t in get_torrent()['arguments']['torrents']}
+    except ConnectionError:
+        return Response('Unable to connect to transmission', 200)
     series = resolve_series()
 
     return render_template(
