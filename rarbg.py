@@ -17,7 +17,12 @@ session.params = {
     'format': 'json_extended',
     'app_id': 'Sonarr',
 }
-session.headers['User-Agent'] = "Dom's api client - me+rarbg@mause.me"
+session.headers.update(
+    {
+        'User-Agent': "Dom's api client - me+rarbg@mause.me",
+        'X-Server-Contact': 'me+rarbg@mause.me',
+    }
+)
 
 
 def get_token():
@@ -66,9 +71,7 @@ def get_rarbg_iter(type, **kwargs):
 
 
 def _get(**kwargs: str) -> List[Dict]:
-    r = session.get(
-        BASE, params=kwargs, headers={'X-Server-Contact': 'me+rarbg@mause.me'}
-    )
+    r = session.get(BASE, params=kwargs)
     print(r.request.url)
     from json.decoder import JSONDecodeError
 
