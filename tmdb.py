@@ -64,7 +64,9 @@ def resolve_id(imdb_id: str) -> str:
         f'find/{imdb_id}', params={'external_source': 'imdb_id'}
     ).json()
 
-    return next(item for item in chain.from_iterable(results.values()))['id']
+    res = next((item for item in chain.from_iterable(results.values())), None)
+    assert res, f'No results for {imdb_id}'
+    return res['id']
 
 
 @lru_cache()
