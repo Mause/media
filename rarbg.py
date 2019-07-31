@@ -65,7 +65,7 @@ def get_rarbg_iter(type, **kwargs):
     )
 
 
-def _get(**kwargs: Dict[str, str]) -> List[Dict]:
+def _get(**kwargs: str) -> List[Dict]:
     r = session.get(
         BASE, params=kwargs, headers={'X-Server-Contact': 'me+rarbg@mause.me'}
     )
