@@ -5,6 +5,7 @@ import logging
 from itertools import chain
 from typing import List, Dict
 
+import backoff
 import requests
 
 
@@ -70,6 +71,11 @@ def get_rarbg_iter(type, **kwargs):
     )
 
 
+class TooManyRequests(Exception):
+    pass
+
+
+@backoff.on_exception(backoff.expo, (TooManyRequests,))
 def _get(**kwargs: str) -> List[Dict]:
     r = session.get(BASE, params=kwargs)
     print(r.request.url)
@@ -82,12 +88,19 @@ def _get(**kwargs: str) -> List[Dict]:
 
     print(res.keys())
 
+    error = res.get('error')
+
     if res.get('error_code') == 4:
         logging.info('Token expired, reacquiring')
         assert isinstance(session.params, dict)
         session.params['token'] = get_token()
         res = _get(**kwargs)
-    elif 'error' in res and res['error'] != 'No results found':
-        raise Exception(res)
+    elif error:
+        if error == 'No results found':
+            pass
+        elif 'Too many requests' in error:
+            raise TooManyRequests(res)
+        else:
+            raise Exception(res)
 
     return res.get('torrent_results', [])
