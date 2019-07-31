@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 from itertools import chain
 from functools import lru_cache
 from datetime import date
@@ -24,6 +24,11 @@ def get_configuration() -> Dict:
     return get_json('configuration')
 
 
+def get_year(result: Dict[str, str]) -> Optional[int]:
+    data = try_(result, 'first_air_date', 'release_date')
+    return date.fromisoformat(data).year if data else None
+
+
 @lru_cache()
 def search_themoviedb(s: str) -> List[Dict]:
     MAP = {'tv': 'series', 'movie': 'movie'}
@@ -32,9 +37,7 @@ def search_themoviedb(s: str) -> List[Dict]:
         {
             'Type': MAP[result['media_type']],
             'title': try_(result, 'title', 'name'),
-            'Year': date.fromisoformat(
-                try_(result, 'first_air_date', 'release_date')
-            ).year,
+            'Year': get_year(result),
             'imdbID': result['id'],
         }
         for result in r.json()['results']
