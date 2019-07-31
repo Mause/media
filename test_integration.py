@@ -11,6 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from main import create_app
 from db import create_episode, db
 from tmdb import cache_clear
+from transmission import url as transmission_url
 
 
 @fixture
@@ -46,7 +47,7 @@ def test_client(
 def trm_session():
     responses.add(
         method='POST',
-        url='http://novell.local:9091/transmission/rpc',
+        url=transmission_url,
         headers={'X-Transmission-Session-Id': 'XXXXXXX'},
     )
 
@@ -69,7 +70,7 @@ def reverse_imdb():
 def test_index(test_client, trm_session, reverse_imdb):
     add_json(
         'POST',
-        'http://novell.local:9091/transmission/rpc',
+        transmission_url,
         {
             'arguments': {
                 'torrents': [{'id': 1, 'eta': 10000, 'percentDone': 0.5}]

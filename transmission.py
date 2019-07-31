@@ -4,6 +4,8 @@ from functools import lru_cache
 
 import requests
 
+url = 'http://novell.local:9091/transmission/rpc'
+
 
 def get_torrent(*ids: str) -> Dict:
     call = get_session()
@@ -74,7 +76,6 @@ def get_session():
             raise Exception(r.text)
         return r.json()
 
-    url = 'http://novell.local:9091/transmission/rpc'
     session = requests.Session()
     session.auth = ('transmission', 'transmission')
     refresh_session()
