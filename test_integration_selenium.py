@@ -1,8 +1,11 @@
 from urllib.parse import urlencode, urlparse
 
 import selenium.webdriver
-from pytest import fixture
+from pytest import fixture, mark
 from flask import url_for
+
+from test_integration import cache_clear
+from main import create_app
 
 
 @fixture
