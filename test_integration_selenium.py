@@ -1,3 +1,5 @@
+import json
+from typing import Optional
 from urllib.parse import urlencode, urlparse
 
 from selenium.webdriver import Chrome, ChromeOptions
@@ -29,7 +31,8 @@ def server_url(live_server):
 @fixture(scope='module')
 def webdriver():
     options = ChromeOptions()
-    options.add_argument('headless')
+    options.set_capability('loggingPrefs', {'performance': 'ALL'})
+    # options.headless = True
     driver = Chrome(options=options)
     try:
         yield driver
@@ -47,8 +50,8 @@ def search(webdriver: Chrome, text: str) -> None:
     form.submit()
 
 
-def test_simple(server_urls: str, webdriver: Chrome) -> None:
-    webdriver.get(server_url)
+def test_simple(server_url: str, webdriver: Chrome) -> None:
+    get(webdriver, server_url)
 
     search(webdriver, 'chernobyl')
 
@@ -80,8 +83,32 @@ def check_download_link(webdriver: Chrome, text: str, expected: str) -> None:
     assert urlparse(anchor) == urlparse(expected)
 
 
+def check_no_error(webdriver: Chrome) -> None:
+    h3 = [el.text for el in webdriver.find_elements_by_tag_name('h3')]
+    assert h3 == []
+
+
+def get(webdriver: Chrome, url: str) -> None:
+    webdriver.get(url)
+    assert get_status_code(webdriver) == 200
+    check_no_error(webdriver)
+
+
+def get_status_code(webdriver: Chrome) -> Optional[int]:
+    for entry in webdriver.get_log("performance"):
+        message = json.loads(entry['message'])["message"]
+
+        if message["method"] == "Network.responseReceived":
+            response = message["params"]["response"]
+
+            if webdriver.current_url == response["url"]:
+                return int(response["status"])
+
+    return None
+
+
 def test_movie(server_url: str, webdriver: Chrome) -> None:
-    webdriver.get(server_url)
+    get(webdriver, server_url)
 
     search(webdriver, 'pikachu')
 
