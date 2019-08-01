@@ -89,7 +89,7 @@ def test_movie(server_url, webdriver):
 
     check_download_link(
         webdriver,
-        'Pokemon.Detective.Pikachu.2019.1080p.HDRip.x264.AAC2.0-STUTTERSHIT',
+        'Pokemon.Detective.Pikachu.2019.1080p.BluRay.x264-AAA 1265',
         server_url
         + 'download/movie?'
         + urlencode(
