@@ -3,6 +3,8 @@ from itertools import chain
 from functools import lru_cache
 from datetime import date
 
+import backoff
+import requests
 from requests_toolbelt.sessions import BaseUrlSession
 
 tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
@@ -13,6 +15,12 @@ def try_(dic: Dict[str, str], *keys: str) -> str:
     return next(dic[key] for key in keys if key in dic)
 
 
+@backoff.on_exception(
+    backoff.fibo,
+    requests.exceptions.RequestException,
+    max_tries=5,
+    giveup=lambda e: e.response.status_code != 429,
+)
 def get_json(*args, **kwargs):
     r = tmdb.get(*args, **kwargs)
     r.raise_for_status()
