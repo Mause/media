@@ -11,6 +11,7 @@ responses = "*"
 lxml = "*"
 selenium = "*"
 pytest-html = "*"
+pytest-flask = "*"
 
 [packages]
 flask = "*"
