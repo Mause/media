@@ -4,3 +4,5 @@ __pycache__
 db.db
 report.html
 assets/*
+.mypy_cache
+.pytype
