@@ -2,8 +2,25 @@ from urllib.parse import urlencode, urlparse
 
 import selenium.webdriver
 from pytest import fixture
+from flask import url_for
 
-url = 'http://cornell.local:5000'
+
+@fixture
+def app():
+    cache_clear()
+    yield create_app(
+        {
+            'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
+            'ENV': 'development',
+            'TESTING': True,
+        }
+    )
+
+
+@fixture
+@mark.usefixtures('live_server', live_server_clean_stop=True)
+def server_url(live_server):
+    yield url_for('rarbg_local.index', _external=True)
 
 
 @fixture(scope='module')
@@ -27,8 +44,8 @@ def search(webdriver, text):
     form.submit()
 
 
-def test_simple(webdriver):
-    webdriver.get(url)
+def test_simple(server_url, webdriver):
+    webdriver.get(server_url)
 
     search(webdriver, 'chernobyl')
 
@@ -39,7 +56,8 @@ def test_simple(webdriver):
     check_download_link(
         webdriver,
         'Chernobyl.S01E01.iNTERNAL.1080p.WEB.H264-EDHD[rartv]',
-        'http://cornell.local:5000/download/series?'
+        server_url
+        + 'download/series?'
         + urlencode(
             {
                 'magnet': 'magnet:?xt=urn:btih:0a49edcbe6cfca62a7b8b24a7f60094b697aa2e9&dn=Chernobyl.S01E01.iNTERNAL.1080p.WEB.H264-EDHD%5Brartv%5D&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=udp%3A%2F%2Fopen.demonii.com%3A1337%2Fannounce',
@@ -59,8 +77,8 @@ def check_download_link(webdriver, text, expected):
     assert urlparse(anchor) == urlparse(expected)
 
 
-def test_movie(webdriver):
-    webdriver.get(url)
+def test_movie(server_url, webdriver):
+    webdriver.get(server_url)
 
     search(webdriver, 'pikachu')
 
@@ -69,7 +87,8 @@ def test_movie(webdriver):
     check_download_link(
         webdriver,
         'Pokemon.Detective.Pikachu.2019.1080p.HDRip.x264.AAC2.0-STUTTERSHIT',
-        'http://cornell.local:5000/download/movie?'
+        server_url
+        + 'download/movie?'
         + urlencode(
             {
                 'magnet': 'magnet:?xt=urn:btih:13bcfe725c0f663f439478d160ad59891a0475de&dn=Pokemon.Detective.Pikachu.2019.1080p.HDRip.x264.AAC2.0-STUTTERSHIT&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=udp%3A%2F%2Fopen.demonii.com%3A1337%2Fannounce',
