@@ -1,6 +1,6 @@
 from urllib.parse import urlencode, urlparse
 
-import selenium.webdriver
+from selenium.webdriver import Chrome, ChromeOptions
 from pytest import fixture, mark
 from flask import url_for
 
@@ -28,26 +28,26 @@ def server_url(live_server):
 
 @fixture(scope='module')
 def webdriver():
-    options = selenium.webdriver.ChromeOptions()
+    options = ChromeOptions()
     options.add_argument('headless')
-    driver = selenium.webdriver.Chrome(options=options)
+    driver = Chrome(options=options)
     try:
         yield driver
     finally:
         driver.quit()
 
 
-def click_link(webdriver, text):
+def click_link(webdriver: Chrome, text: str) -> None:
     webdriver.find_element_by_link_text(text).click()
 
 
-def search(webdriver, text):
+def search(webdriver: Chrome, text: str) -> None:
     form = webdriver.find_element_by_tag_name('form')
     form.find_element_by_name('query').send_keys(text)
     form.submit()
 
 
-def test_simple(server_url, webdriver):
+def test_simple(server_urls: str, webdriver: Chrome) -> None:
     webdriver.get(server_url)
 
     search(webdriver, 'chernobyl')
@@ -73,14 +73,14 @@ def test_simple(server_url, webdriver):
     )
 
 
-def check_download_link(webdriver, text, expected):
+def check_download_link(webdriver: Chrome, text: str, expected: str) -> None:
     anchor = webdriver.find_element_by_partial_link_text(text).get_attribute(
         'href'
     )
     assert urlparse(anchor) == urlparse(expected)
 
 
-def test_movie(server_url, webdriver):
+def test_movie(server_url: str, webdriver: Chrome) -> None:
     webdriver.get(server_url)
 
     search(webdriver, 'pikachu')
