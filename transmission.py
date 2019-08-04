@@ -3,8 +3,7 @@ from typing import Dict
 from functools import lru_cache
 
 import requests
-
-url = 'http://novell.local:9091/transmission/rpc'
+from flask import current_app
 
 
 def get_torrent(*ids: str) -> Dict:
@@ -59,6 +58,8 @@ def torrent_add(magnet: str, subpath: str) -> Dict:
 
 @lru_cache()
 def get_session():
+    url = current_app.config['TRANSMISSION_URL']
+
     def refresh_session():
         key = 'X-Transmission-Session-Id'
         session.headers[key] = session.post(

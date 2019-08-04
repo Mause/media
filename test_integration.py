@@ -11,7 +11,8 @@ from sqlalchemy.exc import IntegrityError
 from main import create_app
 from db import create_episode, db
 from tmdb import cache_clear
-from transmission import url as transmission_url
+
+transmission_url = 'http://whatever/transmission/rpc'
 
 
 @fixture
@@ -26,6 +27,7 @@ def flask_app() -> Flask:
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'ENV': 'development',
             'TESTING': True,
+            'TRANSMISSION_URL': transmission_url,
         }
     )
 
