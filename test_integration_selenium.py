@@ -11,21 +11,47 @@ from main import create_app
 
 
 @fixture
-def app():
-    cache_clear()
+def free_port():
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+        s.bind(('', 0))
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        return s.getsockname()[1]
+
+
+@fixture
+def mock_transmission(free_port):
+    from mock_transmission import app
+
+    server = LiveServer(app, 'localhost', free_port, True)
+    server.start()
+    yield server
+    server.stop()
+
+
+@fixture
+def app(mock_transmission):
     yield create_app(
         {
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'ENV': 'development',
             'TESTING': True,
+            'TRANSMISSION_URL': mock_transmission.url('/transmission/rpc'),
         }
     )
 
 
+def test_mock(mock_transmission):
+    import requests
+
+    url = mock_transmission.url('/transmission/rpc')
+    r = requests.get(url)
+    assert r.status_code == 200
+    assert 'is-mock' in r.headers
+
+
 @fixture
-@mark.usefixtures('live_server', live_server_clean_stop=True)
 def server_url(live_server):
-    yield url_for('rarbg_local.index', _external=True)
+    return live_server.url()
 
 
 @fixture
