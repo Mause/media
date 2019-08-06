@@ -2,9 +2,9 @@ import json
 from typing import Optional
 from urllib.parse import urlencode, urlparse
 
-from selenium.webdriver import Chrome, ChromeOptions
 from pytest import fixture, mark
 from flask import url_for
+from selenium.webdriver import Chrome
 
 from test_integration import cache_clear
 from main import create_app
@@ -28,16 +28,25 @@ def server_url(live_server):
     yield url_for('rarbg_local.index', _external=True)
 
 
-@fixture(scope='module')
-def webdriver():
-    options = ChromeOptions()
-    options.set_capability('loggingPrefs', {'performance': 'ALL'})
-    # options.headless = True
-    driver = Chrome(options=options)
+@fixture
+def capabilities(capabilities):
+    capabilities['loggingPrefs'] = {'performance': 'ALL'}
+    return capabilities
+
+
+@fixture
+def webdriver(request, selenium):
     try:
-        yield driver
+        yield selenium
     finally:
-        driver.quit()
+        node = request.node
+        if hasattr(node, 'rep_call') and node.rep_call.failed:
+            # Make the screen-shot if test failed:
+            selenium.save_screenshot(
+                f'screenshots/{node.name}-{time.time()}.png'
+            )
+
+        selenium.quit()
 
 
 def click_link(webdriver: Chrome, text: str) -> None:
