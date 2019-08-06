@@ -5,11 +5,10 @@ from typing import Optional
 from urllib.parse import urlencode, urlparse
 from contextlib import closing
 
-from pytest import fixture, mark
-from flask import url_for
+from pytest import fixture
 from selenium.webdriver import Chrome
+from pytest_flask.fixtures import LiveServer
 
-from test_integration import cache_clear
 from main import create_app
 
 
