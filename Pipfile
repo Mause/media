@@ -12,6 +12,7 @@ lxml = "*"
 selenium = "*"
 pytest-html = "*"
 pytest-flask = "*"
+pytest-selenium = "*"
 
 [packages]
 flask = "*"
