@@ -7,7 +7,7 @@ from flask import current_app
 
 
 def get_torrent(*ids: str) -> Dict:
-    call = get_session()
+    call = get_session(current_app.config['TRANSMISSION_URL'])
 
     arguments: Dict = {
         "fields": [
@@ -45,7 +45,7 @@ def get_torrent(*ids: str) -> Dict:
 
 
 def torrent_add(magnet: str, subpath: str) -> Dict:
-    call = get_session()
+    call = get_session(current_app.config['TRANSMISSION_URL'])
     return call(
         "torrent-add",
         {
@@ -57,9 +57,7 @@ def torrent_add(magnet: str, subpath: str) -> Dict:
 
 
 @lru_cache()
-def get_session():
-    url = current_app.config['TRANSMISSION_URL']
-
+def get_session(url):
     def refresh_session():
         key = 'X-Transmission-Session-Id'
         session.headers[key] = session.post(

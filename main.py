@@ -32,8 +32,10 @@ from flask import (
     jsonify,
     Response,
     Blueprint,
+    current_app,
 )
 from werkzeug.wrappers import Response as WResponse
+from requests.exceptions import ConnectionError
 
 from rarbg import get_rarbg
 from transmission import torrent_add, get_torrent
@@ -73,6 +75,7 @@ def create_app(config):
             'SECRET_KEY': 'hkfircsc',
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.db',
             'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+            'TRANSMISSION_URL': 'http://novell.local:9091/transmission/rpc',
             **config,
         }
     )
@@ -441,8 +444,15 @@ def index() -> WResponse:
 
     try:
         torrents = {t['id']: t for t in get_torrent()['arguments']['torrents']}
-    except ConnectionError:
-        return Response('Unable to connect to transmission', 200)
+    except (ConnectionError, ConnectionRefusedError) as e:
+        url = current_app.config["TRANSMISSION_URL"]
+        return Response(
+            f'''
+            <h3 class="error">Unable to connect to transmission: {url}</h3>
+            <code>{repr(e)}</code>
+            ''',
+            200,
+        )
     series = resolve_series()
 
     return render_template(
