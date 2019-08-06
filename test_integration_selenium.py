@@ -1,6 +1,7 @@
 import time
 import json
 import socket
+from pathlib import Path
 from typing import Optional
 from urllib.parse import urlencode, urlparse
 from contextlib import closing
@@ -10,6 +11,8 @@ from selenium.webdriver import Chrome
 from pytest_flask.fixtures import LiveServer
 
 from main import create_app
+
+HERE = Path(__name__).resolve().absolute().parent
 
 
 @fixture
@@ -70,8 +73,9 @@ def webdriver(request, selenium):
         node = request.node
         if hasattr(node, 'rep_call') and node.rep_call.failed:
             # Make the screen-shot if test failed:
+
             selenium.save_screenshot(
-                f'screenshots/{node.name}-{time.time()}.png'
+                str(HERE / 'screenshots' / f'{node.name}-{time.time()}.png')
             )
 
         selenium.quit()

@@ -42,6 +42,7 @@ jobs:
           name: run tests
           environment: {}
           command: |
+            mkdir screenshots
             pipenv run py.test -v --junitxml=test-reports/junit/junit.xml
       - store_test_results:
           path: test-reports
