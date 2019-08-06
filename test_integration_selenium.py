@@ -119,7 +119,7 @@ def check_download_link(webdriver: Chrome, text: str, expected: str) -> None:
 
 
 def check_no_error(webdriver: Chrome) -> None:
-    h3 = [el.text for el in webdriver.find_elements_by_tag_name('h3')]
+    h3 = [el.text for el in webdriver.find_elements_by_class_name('error')]
     assert h3 == []
 
 
