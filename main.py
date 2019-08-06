@@ -139,8 +139,9 @@ def select_movie_options(imdb_id: str) -> Response:
 
 @app.route('/delete/<type>/<id>')
 def delete(type: str, id: str) -> WResponse:
-    query = db.session.query(Download).filter_by(id=id)
-    print(query)
+    query = db.session.query(
+        EpisodeDetails if type == 'series' else MovieDetails
+    ).filter_by(id=id)
     assert query.count() > 0
     query.delete()
     db.session.commit()
