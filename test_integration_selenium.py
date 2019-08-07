@@ -140,7 +140,7 @@ def test_movie(server_url: str, selenium: Chrome) -> None:
 
     check_download_link(
         selenium,
-        'Pokemon.Detective.Pikachu.2019.1080p.BluRay.x264-AAA 1265',
+        'Pokemon.Detective.Pikachu.2019.1080p.BluRay.x264-AAA',
         server_url
         + '/download/movie?'
         + urlencode(
