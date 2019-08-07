@@ -104,7 +104,7 @@ def check_download_link(selenium: Chrome, text: str, expected: str) -> None:
     anchor = selenium.find_element_by_partial_link_text(text).get_attribute(
         'href'
     )
-    assert urlparse(anchor) == urlparse(expected)
+    assert urlparse(anchor)._asdict() == urlparse(expected)._asdict()
 
 
 def check_no_error(selenium: Chrome) -> None:
@@ -145,7 +145,7 @@ def test_movie(server_url: str, selenium: Chrome) -> None:
         + '/download/movie?'
         + urlencode(
             {
-                'magnet': 'magnet:?xt=urn:btih:13bcfe725c0f663f439478d160ad59891a0475de&dn=Pokemon.Detective.Pikachu.2019.1080p.HDRip.x264.AAC2.0-STUTTERSHIT&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=udp%3A%2F%2Fopen.demonii.com%3A1337%2Fannounce',
+                'magnet': 'magnet:?xt=urn:btih:18560491ab3e461ba04fcefda0c49cd1633be12a&dn=Pokemon.Detective.Pikachu.2019.1080p.BluRay.x264-AAA&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=udp%3A%2F%2Fopen.demonii.com%3A1337%2Fannounce',
                 'imdb_id': 'tt5884052',
                 'titles': 'Pokémon Detective Pikachu',
             }
