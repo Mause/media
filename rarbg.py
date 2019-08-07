@@ -78,6 +78,7 @@ class TooManyRequests(Exception):
 @backoff.on_exception(backoff.expo, (TooManyRequests,))
 def _get(**kwargs: str) -> List[Dict]:
     r = session.get(BASE, params=kwargs)
+    r.raise_for_status()
     print(r.request.url)
     from json.decoder import JSONDecodeError
 
