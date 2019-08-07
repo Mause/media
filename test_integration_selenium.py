@@ -87,7 +87,7 @@ def test_simple(server_url: str, selenium: Chrome) -> None:
         selenium,
         'Chernobyl.S01E01.iNTERNAL.1080p.WEB.H264-EDHD[rartv]',
         server_url
-        + 'download/series?'
+        + '/download/series?'
         + urlencode(
             {
                 'magnet': 'magnet:?xt=urn:btih:0a49edcbe6cfca62a7b8b24a7f60094b697aa2e9&dn=Chernobyl.S01E01.iNTERNAL.1080p.WEB.H264-EDHD%5Brartv%5D&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=udp%3A%2F%2Fopen.demonii.com%3A1337%2Fannounce',
@@ -142,7 +142,7 @@ def test_movie(server_url: str, selenium: Chrome) -> None:
         selenium,
         'Pokemon.Detective.Pikachu.2019.1080p.BluRay.x264-AAA 1265',
         server_url
-        + 'download/movie?'
+        + '/download/movie?'
         + urlencode(
             {
                 'magnet': 'magnet:?xt=urn:btih:13bcfe725c0f663f439478d160ad59891a0475de&dn=Pokemon.Detective.Pikachu.2019.1080p.HDRip.x264.AAC2.0-STUTTERSHIT&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710&tr=udp%3A%2F%2F9.rarbg.to%3A2710&tr=udp%3A%2F%2Fopen.demonii.com%3A1337%2Fannounce',
