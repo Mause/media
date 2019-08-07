@@ -1,4 +1,3 @@
-import time
 import json
 import socket
 from pathlib import Path
@@ -65,43 +64,27 @@ def capabilities(capabilities):
     return capabilities
 
 
-@fixture
-def webdriver(request, selenium):
-    try:
-        yield selenium
-    finally:
-        node = request.node
-        if hasattr(node, 'rep_call') and node.rep_call.failed:
-            # Make the screen-shot if test failed:
-
-            selenium.save_screenshot(
-                str(HERE / 'screenshots' / f'{node.name}-{time.time()}.png')
-            )
-
-        selenium.quit()
+def click_link(selenium: Chrome, text: str) -> None:
+    selenium.find_element_by_link_text(text).click()
 
 
-def click_link(webdriver: Chrome, text: str) -> None:
-    webdriver.find_element_by_link_text(text).click()
-
-
-def search(webdriver: Chrome, text: str) -> None:
-    form = webdriver.find_element_by_tag_name('form')
+def search(selenium: Chrome, text: str) -> None:
+    form = selenium.find_element_by_tag_name('form')
     form.find_element_by_name('query').send_keys(text)
     form.submit()
 
 
-def test_simple(server_url: str, webdriver: Chrome) -> None:
-    get(webdriver, server_url)
+def test_simple(server_url: str, selenium: Chrome) -> None:
+    get(selenium, server_url)
 
-    search(webdriver, 'chernobyl')
+    search(selenium, 'chernobyl')
 
-    click_link(webdriver, 'Chernobyl (2019)')
-    click_link(webdriver, 'Season 1')
-    click_link(webdriver, '1:23:45')
+    click_link(selenium, 'Chernobyl (2019)')
+    click_link(selenium, 'Season 1')
+    click_link(selenium, '1:23:45')
 
     check_download_link(
-        webdriver,
+        selenium,
         'Chernobyl.S01E01.iNTERNAL.1080p.WEB.H264-EDHD[rartv]',
         server_url
         + 'download/series?'
@@ -117,46 +100,46 @@ def test_simple(server_url: str, webdriver: Chrome) -> None:
     )
 
 
-def check_download_link(webdriver: Chrome, text: str, expected: str) -> None:
-    anchor = webdriver.find_element_by_partial_link_text(text).get_attribute(
+def check_download_link(selenium: Chrome, text: str, expected: str) -> None:
+    anchor = selenium.find_element_by_partial_link_text(text).get_attribute(
         'href'
     )
     assert urlparse(anchor) == urlparse(expected)
 
 
-def check_no_error(webdriver: Chrome) -> None:
-    h3 = [el.text for el in webdriver.find_elements_by_class_name('error')]
+def check_no_error(selenium: Chrome) -> None:
+    h3 = [el.text for el in selenium.find_elements_by_class_name('error')]
     assert h3 == []
 
 
-def get(webdriver: Chrome, url: str) -> None:
-    webdriver.get(url)
-    assert get_status_code(webdriver) == 200
-    check_no_error(webdriver)
+def get(selenium: Chrome, url: str) -> None:
+    selenium.get(url)
+    assert get_status_code(selenium) == 200
+    check_no_error(selenium)
 
 
-def get_status_code(webdriver: Chrome) -> Optional[int]:
-    for entry in webdriver.get_log("performance"):
+def get_status_code(selenium: Chrome) -> Optional[int]:
+    for entry in selenium.get_log("performance"):
         message = json.loads(entry['message'])["message"]
 
         if message["method"] == "Network.responseReceived":
             response = message["params"]["response"]
 
-            if webdriver.current_url == response["url"]:
+            if selenium.current_url == response["url"]:
                 return int(response["status"])
 
     return None
 
 
-def test_movie(server_url: str, webdriver: Chrome) -> None:
-    get(webdriver, server_url)
+def test_movie(server_url: str, selenium: Chrome) -> None:
+    get(selenium, server_url)
 
-    search(webdriver, 'pikachu')
+    search(selenium, 'pikachu')
 
-    click_link(webdriver, 'Pokémon Detective Pikachu (2019)')
+    click_link(selenium, 'Pokémon Detective Pikachu (2019)')
 
     check_download_link(
-        webdriver,
+        selenium,
         'Pokemon.Detective.Pikachu.2019.1080p.BluRay.x264-AAA 1265',
         server_url
         + 'download/movie?'
