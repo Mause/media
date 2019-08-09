@@ -7,6 +7,7 @@ from contextlib import closing
 
 from pytest import fixture
 from selenium.webdriver import Chrome
+from selenium.webdriver.remote.webelement import WebElement
 from pytest_flask.fixtures import LiveServer
 
 from main import create_app
@@ -83,7 +84,7 @@ def test_simple(server_url: str, selenium: Chrome) -> None:
     click_link(selenium, 'Season 1')
     click_link(selenium, '1:23:45')
 
-    check_download_link(
+    anchor=    check_download_link(
         selenium,
         'Chernobyl.S01E01.iNTERNAL.1080p.WEB.H264-EDHD[rartv]',
         server_url
@@ -99,12 +100,19 @@ def test_simple(server_url: str, selenium: Chrome) -> None:
         ),
     )
 
+    anchor.click()
 
-def check_download_link(selenium: Chrome, text: str, expected: str) -> None:
-    anchor = selenium.find_element_by_partial_link_text(text).get_attribute(
-        'href'
-    )
-    assert urlparse(anchor)._asdict() == urlparse(expected)._asdict()
+    assert has_download(selenium, '1:23:45')
+
+
+def check_download_link(
+    selenium: Chrome, text: str, expected: str
+) -> WebElement:
+    anchor = selenium.find_element_by_partial_link_text(text)
+    href = anchor.get_attribute('href')
+    assert urlparse(href)._asdict() == urlparse(expected)._asdict()
+
+    return anchor
 
 
 def check_no_error(selenium: Chrome) -> None:
@@ -131,6 +139,10 @@ def get_status_code(selenium: Chrome) -> Optional[int]:
     return None
 
 
+def has_download(selenium: Chrome, name: str) -> bool:
+    return selenium.find_element_by_xpath(f'.//li/span[contains(text(), "{name}")]')
+
+
 def test_movie(server_url: str, selenium: Chrome) -> None:
     get(selenium, server_url)
 
@@ -138,7 +150,7 @@ def test_movie(server_url: str, selenium: Chrome) -> None:
 
     click_link(selenium, 'Pokémon Detective Pikachu (2019)')
 
-    check_download_link(
+    anchor = check_download_link(
         selenium,
         'Pokemon.Detective.Pikachu.2019.1080p.BluRay.x264-AAA',
         server_url
@@ -151,3 +163,7 @@ def test_movie(server_url: str, selenium: Chrome) -> None:
             }
         ),
     )
+
+    anchor.click()
+
+    assert has_download(selenium, 'Pokémon Detective Pikachu')
