@@ -93,7 +93,7 @@ def test_index(test_client, trm_session, reverse_imdb):
 
     assert res.status == '200 OK'
 
-    lists = fromstring(res.get_data()).xpath('.//li/text()')
+    lists = fromstring(res.get_data()).xpath('.//li/span/text()')
     lists = [t.strip() for t in lists]
 
     assert ''.join(lists) == 'Hello world'
