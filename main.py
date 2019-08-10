@@ -371,7 +371,7 @@ def add_single(
         arguments['torrent-added']
         if 'torrent-added' in arguments
         else arguments['torrent-duplicate']
-    )['id']
+    )['hashString']
 
     already = (
         db.session.query(Download)
@@ -443,7 +443,9 @@ def index() -> WResponse:
         return redirect(url_for('.select_item', query=form.data['query']))
 
     try:
-        torrents = {t['id']: t for t in get_torrent()['arguments']['torrents']}
+        torrents = {
+            t['hashString']: t for t in get_torrent()['arguments']['torrents']
+        }
     except (ConnectionError, ConnectionRefusedError) as e:
         url = current_app.config["TRANSMISSION_URL"]
         return Response(

@@ -32,6 +32,7 @@ def get_torrent(*ids: str) -> Dict:
             # "sizeWhenDone",
             # "status",
             # "trackers",
+            'hashString',
             # "downloadDir",
             # "uploadedEver",
             # "uploadRatio",
