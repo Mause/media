@@ -22,7 +22,7 @@ def torrent_add(filename, **kwargs):
 
     _, hash_ = xt.rsplit(':', 1)
 
-    torrent = {'id': next(id_iter), 'hash': hash_}
+    torrent = {'id': next(id_iter), 'hashString': hash_}
     return {'arguments': {'torrent-added': torrent}}
 
 
