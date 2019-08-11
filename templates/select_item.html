@@ -12,7 +12,16 @@
         {% else %}
             {% set url = url_for('.select_season', imdb_id=item.imdbID) %}
         {% endif %}
-        <a href="{{url}}">{{item.title}} ({{item.Year}})</a>
+        <a href="{{url}}">
+            {{item.title}} ({{item.Year}})
+        </a>
+        <small>
+            <a
+                target="_blank"
+                href="{{ url_for('.redirect_to_imdb', type_=item.Type, ident=item.imdbID) }}">
+             <i class="fas fa-share"></i>
+             </a>
+         </small>
     </li>
 {% endfor %}
 </ul>

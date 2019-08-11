@@ -483,6 +483,15 @@ def index() -> WResponse:
     )
 
 
+@app.route('/redirect/<type_>/<ident>')
+def redirect_to_imdb(type_: str, ident: str):
+    imdb_id = (
+        get_movie_imdb_id(ident) if type_ == 'movie' else get_tv_imdb_id(ident)
+    )
+
+    return redirect(f'https://www.imdb.com/title/{imdb_id}')
+
+
 @app.route('/endpoints.json')
 def endpoints() -> Response:
     return jsonify([r.rule for r in app.url_map._rules])
