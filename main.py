@@ -76,6 +76,7 @@ def create_app(config):
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.db',
             'SQLALCHEMY_TRACK_MODIFICATIONS': False,
             'TRANSMISSION_URL': 'http://novell.local:9091/transmission/rpc',
+            'TORRENT_API_URL': 'https://torrentapi.org/pubapi_v2.php',
             **config,
         }
     )
@@ -182,7 +183,7 @@ def select_options(
 
     query = {'search_string': search_string, 'search_imdb': imdb_id}
     print(query)
-    results = get_rarbg(type, **query)
+    results = get_rarbg(current_app.config['TORRENT_API_URL'], type, **query)
 
     with open('ranking.json') as fh:
         ranking = json.load(fh)
@@ -285,6 +286,7 @@ def download_all_episodes(imdb_id: str, season: str) -> WResponse:
         )
 
     results = get_rarbg(
+        current_app.config['TORRENT_API_URL'],
         'series',
         search_imdb=get_tv_imdb_id(imdb_id),
         search_string=f'S{int(season):02d}',

@@ -9,7 +9,6 @@ import backoff
 import requests
 
 
-BASE = 'https://torrentapi.org/pubapi_v2.php'
 session = requests.Session()
 session.params = {
     'mode': 'search',
@@ -26,8 +25,8 @@ session.headers.update(
 )
 
 
-def get_token():
-    return session.get(BASE, params={'get_token': 'get_token'}).json()['token']
+def get_token(base):
+    return session.get(base, params={'get_token': 'get_token'}).json()['token']
 
 
 CATEGORIES = {
@@ -53,11 +52,11 @@ def load_category_codes() -> Dict[str, int]:
         return json.load(fh)
 
 
-def get_rarbg(type, **kwargs):
-    return list(get_rarbg_iter(type, **kwargs))
+def get_rarbg(base_url: str, type, **kwargs) -> List[Dict]:
+    return list(chain.from_iterable(get_rarbg_iter(base_url, type, **kwargs)))
 
 
-def get_rarbg_iter(type, **kwargs):
+def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[List[Dict]]:
     if 'token' not in session.params:
         session.params['token'] = get_token()
 
@@ -66,7 +65,7 @@ def get_rarbg_iter(type, **kwargs):
 
     return chain.from_iterable(
         map(
-            lambda category: _get(**kwargs, category=category), categories
+            lambda category: _get(base_url, **kwargs, category=category), categories
         )
     )
 
@@ -76,8 +75,8 @@ class TooManyRequests(Exception):
 
 
 @backoff.on_exception(backoff.expo, (TooManyRequests,))
-def _get(**kwargs: str) -> List[Dict]:
-    r = session.get(BASE, params=kwargs)
+def _get(base_url: str, **kwargs: str) -> List[Dict]:
+    r = session.get(base_url, params=kwargs)
     if r.status_code == 429:
         raise TooManyRequests()
 
@@ -96,8 +95,7 @@ def _get(**kwargs: str) -> List[Dict]:
 
     if res.get('error_code') == 4:
         logging.info('Token expired, reacquiring')
-        assert isinstance(session.params, dict)
-        session.params['token'] = get_token()
+        session.params['token'] = get_token(base_url)
         res = _get(**kwargs)
     elif error:
         if error == 'No results found':
