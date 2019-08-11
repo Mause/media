@@ -84,7 +84,7 @@ def test_simple(server_url: str, selenium: Chrome) -> None:
     click_link(selenium, 'Season 1')
     click_link(selenium, '1:23:45')
 
-    anchor=    check_download_link(
+    anchor = check_download_link(
         selenium,
         'Chernobyl.S01E01.iNTERNAL.1080p.WEB.H264-EDHD[rartv]',
         server_url
@@ -140,7 +140,9 @@ def get_status_code(selenium: Chrome) -> Optional[int]:
 
 
 def has_download(selenium: Chrome, name: str) -> bool:
-    return selenium.find_element_by_xpath(f'.//li/span[contains(text(), "{name}")]')
+    return selenium.find_element_by_xpath(
+        f'.//li/span[contains(text(), "{name}")]'
+    )
 
 
 def test_movie(server_url: str, selenium: Chrome) -> None:
