@@ -13,6 +13,7 @@ from db import create_episode, db
 from tmdb import cache_clear
 
 transmission_url = 'http://whatever/transmission/rpc'
+HASH_STRING = '00000000000000000'
 
 
 @fixture
@@ -75,13 +76,20 @@ def test_index(test_client, trm_session, reverse_imdb):
         transmission_url,
         {
             'arguments': {
-                'torrents': [{'id': 1, 'eta': 10000, 'percentDone': 0.5}]
+                'torrents': [
+                    {
+                        'id': 1,
+                        'eta': 10000,
+                        'percentDone': 0.5,
+                        'hashString': HASH_STRING,
+                    }
+                ]
             }
         },
     )
 
     create_episode(
-        transmission_id=1,
+        transmission_id=HASH_STRING,
         imdb_id='tt000000',
         season=1,
         episode=1,
