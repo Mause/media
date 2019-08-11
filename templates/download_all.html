@@ -9,7 +9,10 @@
 
         <ul>
         {% for result in rset %}
-            <li>{{result['title']}}</li>
+            <li>
+                {{result.title}}
+                <small>{{result.seeders}}</small>
+            </li>
         {% endfor %}
         </ul>
 
