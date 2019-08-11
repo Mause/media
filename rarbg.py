@@ -57,9 +57,6 @@ def get_rarbg(base_url: str, type, **kwargs) -> List[Dict]:
 
 
 def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[List[Dict]]:
-    if 'token' not in session.params:
-        session.params['token'] = get_token()
-
     codes = load_category_codes()
     categories = [codes[key] for key in CATEGORIES[type]]
 
@@ -76,6 +73,10 @@ class TooManyRequests(Exception):
 
 @backoff.on_exception(backoff.expo, (TooManyRequests,))
 def _get(base_url: str, **kwargs: str) -> List[Dict]:
+    assert isinstance(session.params, dict)
+    if 'token' not in session.params:
+        session.params['token'] = get_token(base_url)
+
     r = session.get(base_url, params=kwargs)
     if r.status_code == 429:
         raise TooManyRequests()
