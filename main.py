@@ -503,7 +503,7 @@ def redirect_to_imdb(type_: str, ident: str):
 
 @app.route('/endpoints.json')
 def endpoints() -> Response:
-    return jsonify([r.rule for r in app.url_map._rules])
+    return jsonify([r.rule for r in current_app.url_map._rules])
 
 
 if __name__ == '__main__':
