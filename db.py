@@ -37,6 +37,7 @@ class EpisodeDetails(db.Model):
         passive_deletes=True,
         uselist=False,
     )
+    show_title = Column(String, nullable=True)
     season = Column(Integer)
     episode = Column(Integer)
 
@@ -84,8 +85,11 @@ def create_episode(
     title: str,
     id: int = None,
     download_id: int = None,
+    show_title: str = None,
 ) -> EpisodeDetails:
-    ed = EpisodeDetails(id=id, season=season, episode=episode)
+    ed = EpisodeDetails(
+        id=id, season=season, episode=episode, show_title=show_title
+    )
     db.session.add(ed)
     db.session.add(
         create_download(

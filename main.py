@@ -350,6 +350,7 @@ def download(type: str) -> WResponse:
             season=season,
             is_tv=is_tv,
             title=title if is_tv else item['title'],
+            show_title=item["name"] if is_tv else None,
         )
 
     return redirect(url_for('.index'))
@@ -364,6 +365,7 @@ def add_single(
     season: Optional[str],
     episode: Optional[str],
     title: str,
+    show_title: str,
 ) -> None:
     arguments = torrent_add(magnet, subpath)['arguments']
     print(arguments)
@@ -383,7 +385,14 @@ def add_single(
     if not already:
         if is_tv:
             assert season
-            create_episode(transmission_id, imdb_id, season, episode, title)
+            create_episode(
+                transmission_id,
+                imdb_id,
+                season,
+                episode,
+                title,
+                show_title=show_title,
+            )
         else:
             create_movie(transmission_id, imdb_id, title=title)
 
@@ -411,7 +420,7 @@ def resolve_series() -> Dict[str, Dict[int, List[EpisodeDetails]]]:
     episodes = get_episodes()
 
     return {
-        get_tv(resolve_id(imdb_id))['name']: resolve_show(imdb_id, show)
+        show[0].show_title: resolve_show(imdb_id, show)
         for imdb_id, show in groupby(
             episodes, lambda episode: episode.download.imdb_id
         ).items()
