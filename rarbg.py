@@ -60,10 +60,9 @@ def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[List[Dict]]:
     codes = load_category_codes()
     categories = [codes[key] for key in CATEGORIES[type]]
 
-    return chain.from_iterable(
-        map(
-            lambda category: _get(base_url, **kwargs, category=category), categories
-        )
+    return map(
+        lambda category: _get(base_url, **dict(kwargs, category=str(category))),
+        categories,
     )
 
 
