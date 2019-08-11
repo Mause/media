@@ -455,20 +455,8 @@ def index() -> WResponse:
     if form.validate_on_submit():
         return redirect(url_for('.select_item', query=form.data['query']))
 
-    try:
-        torrents = {
-            t['hashString']: t for t in get_torrent()['arguments']['torrents']
-        }
-    except (ConnectionError, ConnectionRefusedError) as e:
-        url = current_app.config["TRANSMISSION_URL"]
-        return Response(
-            f'''
-            <h3 class="error">Unable to connect to transmission: {url}</h3>
-            <code>{repr(e)}</code>
-            ''',
-            200,
-        )
     series = resolve_series()
+    torrents = get_keyed_torrents()
 
     return render_template(
         'index.html',
@@ -481,6 +469,27 @@ def index() -> WResponse:
         sorted=sorted,
         render_progress=render_progress,
     )
+
+
+def get_keyed_torrents() -> Dict[str, Dict]:
+    try:
+        return {
+            t['hashString']: t for t in get_torrent()['arguments']['torrents']
+        }
+    except (ConnectionError, ConnectionRefusedError) as e:
+        url = current_app.config["TRANSMISSION_URL"]
+        error = 'Unable to connect to transmission'
+        return abort(
+            500,
+            error,
+            Response(
+                f'''
+                <h3 class="error">{error}: {url}</h3>
+                <code>{repr(e)}</code>
+                ''',
+                500,
+            )
+        )
 
 
 @app.route('/redirect/<type_>/<ident>')
