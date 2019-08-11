@@ -189,14 +189,16 @@ def select_options(
     with open('ranking.json') as fh:
         ranking = json.load(fh)
 
-    results = groupby(results, lambda result: categorise(result['category']))
-    results = sorted(
-        results.items(), key=lambda pair: ranking.index(pair[0]), reverse=True
+    categorized = list(
+        groupby(results, lambda result: categorise(result['category'])).items()
+    )
+    categorized = sorted(
+        categorized, key=lambda pair: ranking.index(pair[0]), reverse=True
     )
 
     return render_template(
         'select_options.html',
-        results=results,
+        results=categorized,
         imdb_id=imdb_id,
         display_title=display_title,
         build_download_link=build_download_link,
