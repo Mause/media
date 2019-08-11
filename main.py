@@ -221,13 +221,14 @@ def select_episode(imdb_id: str, season: str) -> Response:
     )
 
 
-marker_re = re.compile(r'(S(\d{2})E(\d{2}))')
+full_marker_re = re.compile(r'(S(\d{2})E(\d{2}))')
+partial_marker_re = re.compile(r'(S(\d{2}))')
 season_re = re.compile(r'\W(S\d{2})\W')
 punctuation_re = re.compile(f'[{string.punctuation} ]')
 
 
 def normalise(episodes: List[Dict], title: str) -> Optional[str]:
-    sel = marker_re.search(title)
+    sel = full_marker_re.search(title)
     if not sel:
         sel = season_re.search(title)
         if sel:
@@ -252,9 +253,12 @@ def normalise(episodes: List[Dict], title: str) -> Optional[str]:
     return title
 
 
-def extract_marker(title: str) -> Tuple[str, str]:
-    m = marker_re.search(title)
-    assert m, title
+def extract_marker(title: str) -> Tuple[str, Optional[str]]:
+    m = full_marker_re.search(title)
+    if not m:
+        m = partial_marker_re.search(title)
+        assert m, title
+        return m.group(2), None
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
@@ -268,6 +272,7 @@ def download_all_episodes(imdb_id: str, season: str) -> WResponse:
                 _, i_episode = extract_marker(title)
             except AssertionError:
                 return title
+            assert i_episode, title
             return episodes[int(i_episode) - 1]['name']
 
         return url_for(
@@ -325,7 +330,6 @@ def download(type: str) -> WResponse:
     imdb_id = args['imdb_id']
 
     season = args.get('season')
-    episode = args.get('episode')
 
     titles: List[str] = args.getlist('titles')
     magnets: List[str] = args.getlist('magnet')
@@ -341,7 +345,7 @@ def download(type: str) -> WResponse:
 
     for title, magnet in zip_longest(titles, magnets):
         if is_tv:
-            season, episode = map(int, extract_marker(magnet))
+            season, episode = extract_marker(magnet)
         add_single(
             magnet=magnet,
             subpath=subpath,
