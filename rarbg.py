@@ -3,7 +3,7 @@
 import json
 import logging
 from itertools import chain
-from typing import List, Dict
+from typing import List, Dict, Iterator
 
 import backoff
 import requests
