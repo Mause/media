@@ -335,6 +335,7 @@ def download(type: str) -> WResponse:
     imdb_id = args['imdb_id']
 
     season = args.get('season')
+    episode = None
 
     titles: List[str] = args.getlist('titles')
     magnets: List[str] = args.getlist('magnet')
