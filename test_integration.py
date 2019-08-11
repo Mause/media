@@ -1,18 +1,18 @@
 import json
 from typing import Generator
 
-import responses
 from pytest import fixture, raises
 from lxml.html import fromstring
 from flask import Flask
 from flask.testing import FlaskClient
 from sqlalchemy.exc import IntegrityError
+from responses import RequestsMock
 
 from main import create_app
 from db import create_episode, db
-from tmdb import cache_clear
+from utils import cache_clear
 
-transmission_url = 'http://whatever/transmission/rpc'
+transmission_url = 'http://novell.local:9091/transmission/rpc'
 HASH_STRING = '00000000000000000'
 
 
@@ -34,6 +34,17 @@ def flask_app() -> Flask:
 
 
 @fixture
+def responses( ):
+    mock = RequestsMock( )
+    try:
+        mock.start()
+        yield mock
+
+    finally:
+        mock.stop( )
+
+
+@fixture
 def test_client(
     clear_cache, flask_app: Flask
 ) -> Generator[FlaskClient, None, None]:
@@ -47,7 +58,7 @@ def test_client(
 
 
 @fixture
-def trm_session():
+def trm_session(responses):
     responses.add(
         method='POST',
         url=transmission_url,
@@ -55,23 +66,25 @@ def trm_session():
     )
 
 
-def add_json(method: str, url: str, json_body) -> None:
+def add_json(responses, method: str, url: str, json_body) -> None:
     responses.add(method=method, url=url, body=json.dumps(json_body))
 
 
 @fixture
-def reverse_imdb():
+def reverse_imdb(responses):
     themoviedb(
+        responses,
         '/find/tt000000',
         {'tv_results': [{'id': '100000'}]},
         '&external_source=imdb_id',
     )
-    themoviedb('/tv/100000', {'name': 'Introductory'})
+    themoviedb(responses, '/tv/100000', {'name': 'Introductory', 'number_of_seasons': 1})
 
 
-@responses.activate
-def test_index(test_client, trm_session, reverse_imdb):
+@fixture
+def torrent_get(responses):
     add_json(
+        responses,
         'POST',
         transmission_url,
         {
@@ -88,6 +101,8 @@ def test_index(test_client, trm_session, reverse_imdb):
         },
     )
 
+
+def test_index(responses, test_client, trm_session, reverse_imdb, torrent_get):
     create_episode(
         transmission_id=HASH_STRING,
         imdb_id='tt000000',
@@ -107,9 +122,9 @@ def test_index(test_client, trm_session, reverse_imdb):
     assert ''.join(lists) == 'Hello world'
 
 
-@responses.activate
-def test_search(test_client):
+def test_search(responses, test_client):
     themoviedb(
+        responses,
         '/search/multi',
         {
             'results': [
@@ -133,8 +148,9 @@ def test_search(test_client):
     assert html == ['Chernobyl (2019)']
 
 
-def themoviedb(path, response, query=''):
+def themoviedb(responses, path, response, query=''):
     add_json(
+        responses,
         'GET',
         f'https://api.themoviedb.org/3{path}?api_key=66b197263af60702ba14852b4ec9b143'
         + query,
@@ -163,9 +179,8 @@ def test_delete_cascade(test_client: FlaskClient):
     assert len(session.query(Download).all()) == 0
 
 
-@responses.activate
-def test_select_season(test_client: FlaskClient):
-    themoviedb('/tv/100000', {'number_of_seasons': 1})
+def test_select_season(responses: RequestsMock, test_client: FlaskClient) -> None:
+    themoviedb(responses, '/tv/100000', {'number_of_seasons': 1})
 
     res = test_client.get('/select/100000/season')
 
