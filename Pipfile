@@ -13,6 +13,7 @@ selenium = "*"
 pytest-html = "*"
 pytest-flask = "*"
 pytest-selenium = "*"
+webdriver-manager = "*"
 
 [packages]
 flask = "*"
