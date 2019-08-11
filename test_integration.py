@@ -106,13 +106,14 @@ def torrent_get(responses):
     )
 
 
-def test_index(responses, test_client, trm_session, reverse_imdb, torrent_get):
+def test_index(responses, test_client, trm_session, torrent_get):
     create_episode(
         transmission_id=HASH_STRING,
         imdb_id='tt000000',
         season=1,
         episode=1,
         title='Hello world',
+        show_title='Programming',
     )
     db.session.commit()
 
