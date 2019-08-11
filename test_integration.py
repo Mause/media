@@ -34,14 +34,14 @@ def flask_app() -> Flask:
 
 
 @fixture
-def responses( ):
-    mock = RequestsMock( )
+def responses():
+    mock = RequestsMock()
     try:
         mock.start()
         yield mock
 
     finally:
-        mock.stop( )
+        mock.stop()
 
 
 @fixture
@@ -78,7 +78,11 @@ def reverse_imdb(responses):
         {'tv_results': [{'id': '100000'}]},
         '&external_source=imdb_id',
     )
-    themoviedb(responses, '/tv/100000', {'name': 'Introductory', 'number_of_seasons': 1})
+    themoviedb(
+        responses,
+        '/tv/100000',
+        {'name': 'Introductory', 'number_of_seasons': 1},
+    )
 
 
 @fixture
@@ -179,7 +183,9 @@ def test_delete_cascade(test_client: FlaskClient):
     assert len(session.query(Download).all()) == 0
 
 
-def test_select_season(responses: RequestsMock, test_client: FlaskClient) -> None:
+def test_select_season(
+    responses: RequestsMock, test_client: FlaskClient
+) -> None:
     themoviedb(responses, '/tv/100000', {'number_of_seasons': 1})
 
     res = test_client.get('/select/100000/season')
