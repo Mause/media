@@ -1,9 +1,10 @@
 from pprint import pprint
 from typing import Dict
-from functools import lru_cache
 
 import requests
 from flask import current_app
+
+from utils import lru_cache
 
 
 def get_torrent(*ids: str) -> Dict:

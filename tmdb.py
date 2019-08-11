@@ -1,11 +1,12 @@
 from typing import Dict, List, Optional
 from itertools import chain
-from functools import lru_cache
 from datetime import date
 
 import backoff
 import requests
 from requests_toolbelt.sessions import BaseUrlSession
+
+from utils import lru_cache
 
 tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
 tmdb.params['api_key'] = '66b197263af60702ba14852b4ec9b143'
@@ -103,9 +104,3 @@ def get_imdb_id(type: str, id: str) -> str:
 @lru_cache()
 def get_tv_episodes(id: str, season: str):
     return get_json(f'tv/{id}/season/{season}')
-
-
-def cache_clear():
-    for value in globals().values():
-        if hasattr(value, 'cache_clear'):
-            value.cache_clear()
