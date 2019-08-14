@@ -33,7 +33,7 @@ def flask_app() -> Flask:
     )
 
 
-@fixture
+@fixture(scope='function')
 def responses():
     mock = RequestsMock()
     try:
