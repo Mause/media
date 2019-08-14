@@ -66,7 +66,11 @@ def capabilities(capabilities):
 
 
 def click_link(selenium: Chrome, text: str) -> None:
-    selenium.find_element_by_link_text(text).click()
+    try:
+        selenium.find_element_by_link_text(text).click()
+    except Exception:
+        print(selenium.getCurrentUrl())
+        raise
 
 
 def search(selenium: Chrome, text: str) -> None:
