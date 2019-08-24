@@ -272,11 +272,9 @@ def download_all_episodes(imdb_id: str, season: str) -> WResponse:
         imdb_id: str, season: str, result_set: List[Dict]
     ) -> str:
         def get_title(title: str) -> str:
-            try:
-                _, i_episode = extract_marker(title)
-            except AssertionError:
+            _, i_episode = extract_marker(title)
+            if i_episode is None:
                 return title
-            assert i_episode, title
             return episodes[int(i_episode) - 1]['name']
 
         return url_for(
