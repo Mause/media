@@ -62,9 +62,11 @@ def torrent_add(magnet: str, subpath: str) -> Dict:
 def get_session(url):
     def refresh_session():
         key = 'X-Transmission-Session-Id'
-        session.headers[key] = session.post(
+        r = session.post(
             url, json={'method': 'get-session'}
-        ).headers[key]
+        )
+        assert r.ok, (r, r.text, r.headers)
+        session.headers[key] = r.headers[key]
 
     def call(method: str, arguments=None):
         r = session.post(
