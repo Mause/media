@@ -65,7 +65,7 @@ def get_session(url):
         r = session.post(
             url, json={'method': 'get-session'}
         )
-        assert r.ok, (r, r.text, r.headers)
+        assert r.status_code == 409, (r, r.text, r.headers)
         session.headers[key] = r.headers[key]
 
     def call(method: str, arguments=None):
