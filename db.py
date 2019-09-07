@@ -12,7 +12,7 @@ T = TypeVar('T')
 class Download(db.Model):
     __tablename__ = 'download'
     id = Column(Integer, primary_key=True)
-    transmission_id = Column(Integer)
+    transmission_id = Column(String)
     imdb_id = Column(String)
     type = Column(String)
     movie = relationship('MovieDetails', uselist=False, cascade='all,delete')
