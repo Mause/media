@@ -26,6 +26,7 @@ humanize = "*"
 aiohttp = "*"
 requests-toolbelt = "*"
 backoff = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
