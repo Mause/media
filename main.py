@@ -274,7 +274,7 @@ def download_all_episodes(imdb_id: str, season: str) -> WResponse:
         def get_title(title: str) -> str:
             _, i_episode = extract_marker(title)
             if i_episode is None:
-                return title
+                return f'Season {season}'
             return episodes[int(i_episode) - 1]['name']
 
         return url_for(
