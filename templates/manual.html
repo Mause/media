@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Manual{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <strong>{{ form.title.label }}</strong> {{ form.title() }}<br/>
+    <strong>{{ form.magnet.label }}</strong> {{ form.magnet() }}<br/>
+    <strong>{{ form.imdb_id.label }}</strong> {{ form.imdb_id() }}<br/>
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock %}

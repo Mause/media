@@ -21,7 +21,7 @@ from itertools import zip_longest
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from humanize import naturaldelta
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Regexp
 from sqlalchemy import event
 from flask import (
     Flask,
@@ -364,6 +364,37 @@ def download(type: str) -> WResponse:
     return redirect(url_for('.index'))
 
 
+class ManualForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    magnet = StringField(
+        'Magnet link', validators=[DataRequired(), Regexp(r'^magnet:')]
+    )
+    imdb_id = StringField(
+        'IMDB id', validators=[DataRequired(), Regexp(r'tt\d+')]
+    )
+
+
+@app.route('/manual', methods=['POST', 'GET'])
+def manual():
+    form = ManualForm()
+
+    if form.validate_on_submit():
+        data = form.data
+        add_single(
+            magnet=data['magnet'],
+            subpath='movies',
+            is_tv=False,
+            imdb_id=data['imdb_id'],
+            season=None,
+            episode=None,
+            title=data['title'],
+            show_title=None,
+        )
+        return redirect(url_for('.index'))
+    else:
+        return render_template('manual.html', form=form)
+
+
 def add_single(
     *,
     magnet: str,
@@ -373,7 +404,7 @@ def add_single(
     season: Optional[str],
     episode: Optional[str],
     title: str,
-    show_title: str,
+    show_title: Optional[str],
 ) -> None:
     arguments = torrent_add(magnet, subpath)['arguments']
     print(arguments)
