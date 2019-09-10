@@ -38,6 +38,7 @@ def get_torrent(*ids: str) -> Dict:
             # "uploadedEver",
             # "uploadRatio",
             # "webseedsSendingToUs",
+            'files',
         ]
     }
     if ids:

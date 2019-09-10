@@ -41,6 +41,12 @@ class EpisodeDetails(db.Model):
     season = Column(Integer)
     episode = Column(Integer)
 
+    def is_season_pack(self):
+        return self.episode is None
+
+    def get_marker(self):
+        return f'S{self.season:02d}E{self.episode:02d}'
+
 
 class MovieDetails(db.Model):
     __tablename__ = 'movie_details'

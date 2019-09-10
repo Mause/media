@@ -445,12 +445,38 @@ def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
     return dict(dd)
 
 
+def resolve_season(episodes):
+    if not (len(episodes) == 1 and episodes[0].is_season_pack()):
+        return episodes
+
+    pack = episodes[0]
+    return [
+        EpisodeDetails(
+            id=-1,
+            download=Download(
+                id=-1,
+                transmission_id=f'{pack.download.transmission_id}.{episode["episode_number"]}',
+                title=episode['name'],
+                imdb_id=pack.download.imdb_id,
+            ),
+            season=pack.season,
+            episode=episode['episode_number'],
+            show_title='',
+        )
+        for episode in get_tv_episodes(
+            resolve_id(pack.download.imdb_id), pack.season
+        )['episodes']
+    ]
+
+
 def resolve_show(
     imdb_id: str, show: List[EpisodeDetails]
 ) -> Dict[int, List[EpisodeDetails]]:
     seasons = groupby(show, lambda episode: episode.season)
     return {
-        number: sorted(season, key=lambda episode: episode.episode or -1)
+        number: resolve_season(
+            sorted(season, key=lambda episode: episode.episode or -1)
+        )
         for number, season in seasons.items()
     }
 
@@ -469,9 +495,23 @@ def resolve_series() -> Dict[str, Dict[int, List[EpisodeDetails]]]:
 def render_progress(
     torrents: Dict[str, Dict], item: Union[MovieDetails, EpisodeDetails]
 ) -> str:
-    torrent = torrents.get(
-        item.download.transmission_id, {'percentDone': 1, 'eta': 0}
-    )
+    DEFAULT = {'percentDone': 1, 'eta': 0}
+    tid = item.download.transmission_id
+    item_id = None
+    if '.' in str(tid):
+        tid, item_id = tid.split('.')
+        if tid in torrents:
+            key = item.get_marker().lower()
+            files = torrents[tid]['files']
+            torrent = next(f for f in files if key in f['name'].lower())
+            torrent = {
+                'eta': -1,
+                'percentDone': (torrent['bytesCompleted'] / torrent['length']),
+            }
+        else:
+            torrent = DEFAULT
+    else:
+        torrent = torrents.get(tid, DEFAULT)
     pc = torrent['percentDone']
     eta = naturaldelta(torrent['eta']) if torrent['eta'] > 0 else 'Unknown time'
 
