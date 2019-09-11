@@ -63,16 +63,12 @@ def torrent_add(magnet: str, subpath: str) -> Dict:
 def get_session(url):
     def refresh_session():
         key = 'X-Transmission-Session-Id'
-        r = session.post(
-            url, json={'method': 'get-session'}
-        )
+        r = session.post(url, json={'method': 'get-session'})
         assert r.status_code == 409, (r, r.text, r.headers)
         session.headers[key] = r.headers[key]
 
     def call(method: str, arguments=None):
-        r = session.post(
-            url, json={'method': method, 'arguments': arguments}
-        )
+        r = session.post(url, json={'method': method, 'arguments': arguments})
         if r.status_code == 409:
             refresh_session()
             return call(method, arguments)

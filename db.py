@@ -16,15 +16,9 @@ class Download(db.Model):
     imdb_id = Column(String)
     type = Column(String)
     movie = relationship('MovieDetails', uselist=False, cascade='all,delete')
-    movie_id = Column(
-        Integer, ForeignKey('movie_details.id', ondelete='CASCADE')
-    )
-    episode = relationship(
-        'EpisodeDetails', uselist=False, cascade='all,delete'
-    )
-    episode_id = Column(
-        Integer, ForeignKey('episode_details.id', ondelete='CASCADE')
-    )
+    movie_id = Column(Integer, ForeignKey('movie_details.id', ondelete='CASCADE'))
+    episode = relationship('EpisodeDetails', uselist=False, cascade='all,delete')
+    episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
     title = Column(String)
 
 
@@ -32,10 +26,7 @@ class EpisodeDetails(db.Model):
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
     download = relationship(
-        'Download',
-        back_populates='episode',
-        passive_deletes=True,
-        uselist=False,
+        'Download', back_populates='episode', passive_deletes=True, uselist=False
     )
     show_title = Column(String, nullable=True)
     season = Column(Integer)
@@ -71,16 +62,14 @@ def create_download(
         title=title,
         type=type,
         **{type: details},
-        id=id
+        id=id,
     )
 
 
 def create_movie(transmission_id: int, imdb_id: str, title: str) -> None:
     md = MovieDetails()
     db.session.add(md)
-    db.session.add(
-        create_download(transmission_id, imdb_id, title, 'movie', md)
-    )
+    db.session.add(create_download(transmission_id, imdb_id, title, 'movie', md))
 
 
 def create_episode(
@@ -93,14 +82,10 @@ def create_episode(
     download_id: int = None,
     show_title: str = None,
 ) -> EpisodeDetails:
-    ed = EpisodeDetails(
-        id=id, season=season, episode=episode, show_title=show_title
-    )
+    ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
     db.session.add(ed)
     db.session.add(
-        create_download(
-            transmission_id, imdb_id, title, 'episode', ed, id=download_id
-        )
+        create_download(transmission_id, imdb_id, title, 'episode', ed, id=download_id)
     )
     return ed
 

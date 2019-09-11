@@ -109,9 +109,7 @@ def test_simple(server_url: str, selenium: Chrome) -> None:
     assert has_download(selenium, '1:23:45')
 
 
-def check_download_link(
-    selenium: Chrome, text: str, expected: str
-) -> WebElement:
+def check_download_link(selenium: Chrome, text: str, expected: str) -> WebElement:
     anchor = selenium.find_element_by_partial_link_text(text)
     href = anchor.get_attribute('href')
     assert urlparse(href)._asdict() == urlparse(expected)._asdict()
@@ -144,9 +142,7 @@ def get_status_code(selenium: Chrome) -> Optional[int]:
 
 
 def has_download(selenium: Chrome, name: str) -> bool:
-    return selenium.find_element_by_xpath(
-        f'.//li/span[contains(text(), "{name}")]'
-    )
+    return selenium.find_element_by_xpath(f'.//li/span[contains(text(), "{name}")]')
 
 
 def test_movie(server_url: str, selenium: Chrome) -> None:

@@ -10,6 +10,7 @@ def lru_cache(*args, **kwargs):
         cache = _lru_cache(*args, **kwargs)(func)
         _caches.add(cache)
         return cache
+
     return wrapper
 
 

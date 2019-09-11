@@ -1,8 +1,5 @@
 from pytest import hookimpl
-from test_integration import (
-    trm_session,
-    reverse_imdb,
-)
+from test_integration import trm_session, reverse_imdb
 
 trm_session, reverse_imdb
 

@@ -3,17 +3,7 @@ import json
 import string
 import inspect
 import logging
-from typing import (
-    Dict,
-    List,
-    Optional,
-    Union,
-    Iterable,
-    Callable,
-    TypeVar,
-    Tuple,
-    cast,
-)
+from typing import Dict, List, Optional, Union, Iterable, Callable, TypeVar, Tuple, cast
 from collections import defaultdict
 from functools import wraps
 from itertools import zip_longest
@@ -85,6 +75,7 @@ def create_app(config):
     db.create_all(app=papp)
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
+
         def _fk_pragma_on_connect(dbapi_con, con_record):
             dbapi_con.execute('pragma foreign_keys=ON')
 
@@ -110,9 +101,7 @@ def query_args(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         rargs = request.args
-        return func(
-            *args, **kwargs, **{arg: rargs.get(arg, None) for arg in args_spec}
-        )
+        return func(*args, **kwargs, **{arg: rargs.get(arg, None) for arg in args_spec})
 
     args_spec = inspect.getfullargspec(func).args
     return wrapper
@@ -180,6 +169,7 @@ def select_options(
             titles=[title],
             **extra,
         )
+
     display_title = display_title or title
 
     query = {'search_string': search_string, 'search_imdb': imdb_id}
@@ -196,9 +186,7 @@ def select_options(
         categorized, key=lambda pair: ranking.index(pair[0]), reverse=True
     )
     ten_eighty = dict(categorized).get('x264/1080', [])
-    auto = ten_eighty and max(
-        ten_eighty, key=lambda torrent: torrent['seeders']
-    )
+    auto = ten_eighty and max(ten_eighty, key=lambda torrent: torrent['seeders'])
 
     return render_template(
         'select_options.html',
@@ -273,9 +261,7 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
 
 @app.route('/select/<imdb_id>/season/<season>/download_all')
 def download_all_episodes(imdb_id: str, season: str) -> WResponse:
-    def build_download_link(
-        imdb_id: str, season: str, result_set: List[Dict]
-    ) -> str:
+    def build_download_link(imdb_id: str, season: str, result_set: List[Dict]) -> str:
         def get_title(title: str) -> str:
             _, i_episode = extract_marker(title)
             if i_episode is None:
@@ -300,9 +286,7 @@ def download_all_episodes(imdb_id: str, season: str) -> WResponse:
 
     episodes = get_tv_episodes(imdb_id, season)['episodes']
 
-    results = groupby(
-        results, lambda result: normalise(episodes, result['title'])
-    )
+    results = groupby(results, lambda result: normalise(episodes, result['title']))
 
     return render_template(
         'download_all.html',
@@ -323,9 +307,7 @@ def select_season(imdb_id: str) -> Response:
     total_seasons = info['number_of_seasons']
 
     return render_template(
-        'select_season.html',
-        info=info,
-        seasons=list(range(1, int(total_seasons) + 1)),
+        'select_season.html', info=info, seasons=list(range(1, int(total_seasons) + 1))
     )
 
 
@@ -374,9 +356,7 @@ class ManualForm(FlaskForm):
     magnet = StringField(
         'Magnet link', validators=[DataRequired(), Regexp(r'^magnet:')]
     )
-    imdb_id = StringField(
-        'IMDB id', validators=[DataRequired(), Regexp(r'tt\d+')]
-    )
+    imdb_id = StringField('IMDB id', validators=[DataRequired(), Regexp(r'tt\d+')])
 
 
 @app.route('/manual', methods=['POST', 'GET'])
@@ -430,12 +410,7 @@ def add_single(
         if is_tv:
             assert season
             create_episode(
-                transmission_id,
-                imdb_id,
-                season,
-                episode,
-                title,
-                show_title=show_title,
+                transmission_id, imdb_id, season, episode, title, show_title=show_title
             )
         else:
             create_movie(transmission_id, imdb_id, title=title)
@@ -468,9 +443,9 @@ def resolve_season(episodes):
             episode=episode['episode_number'],
             show_title='',
         )
-        for episode in get_tv_episodes(
-            resolve_id(pack.download.imdb_id), pack.season
-        )['episodes']
+        for episode in get_tv_episodes(resolve_id(pack.download.imdb_id), pack.season)[
+            'episodes'
+        ]
     ]
 
 
@@ -553,9 +528,7 @@ def index() -> WResponse:
 
 def get_keyed_torrents() -> Dict[str, Dict]:
     try:
-        return {
-            t['hashString']: t for t in get_torrent()['arguments']['torrents']
-        }
+        return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
     except (ConnectionError, ConnectionRefusedError) as e:
         url = current_app.config["TRANSMISSION_URL"]
         error = 'Unable to connect to transmission'
@@ -568,15 +541,13 @@ def get_keyed_torrents() -> Dict[str, Dict]:
                 <code>{repr(e)}</code>
                 ''',
                 500,
-            )
+            ),
         )
 
 
 @app.route('/redirect/<type_>/<ident>')
 def redirect_to_imdb(type_: str, ident: str):
-    imdb_id = (
-        get_movie_imdb_id(ident) if type_ == 'movie' else get_tv_imdb_id(ident)
-    )
+    imdb_id = get_movie_imdb_id(ident) if type_ == 'movie' else get_tv_imdb_id(ident)
 
     return redirect(f'https://www.imdb.com/title/{imdb_id}')
 
