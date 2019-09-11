@@ -4,6 +4,17 @@
 
 {% block content %}
 
+{% if auto %}
+    <br/>
+    <div>
+        Auto selection:
+        <a
+            href="{{build_download_link(auto)}}"
+        >{{auto.title}}</a>
+        <small>{{auto.seeders}}</small>
+    </div>
+{% endif %}
+
 {% for category, rset in results %}
 <ul>
     <h3>{{category}}</h3>
