@@ -102,7 +102,7 @@ def _get(base_url: str, **kwargs: str) -> List[Dict]:
             pass
         elif 'Too many requests' in error:
             raise TooManyRequests(res)
-        elif 'Cant find imdb in database' in error:
+        elif 'Cant find search_imdb in database' in error:
             pass
         else:
             raise Exception(res)
