@@ -69,7 +69,7 @@ def click_link(selenium: Chrome, text: str) -> None:
     try:
         selenium.find_element_by_link_text(text).click()
     except Exception:
-        print(selenium.getCurrentUrl())
+        print(selenium.current_url)
         raise
 
 
