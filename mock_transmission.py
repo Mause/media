@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 
 def get_session():
-    return '', 200, {'x-transmission-session-id': uuid4().hex}
+    return '', 409, {'x-transmission-session-id': uuid4().hex}
 
 
 def torrent_get(fields: Dict[str, Any] = None, ids: Set[str] = None):
