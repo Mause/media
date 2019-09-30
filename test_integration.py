@@ -1,15 +1,15 @@
 import json
 from typing import Generator
 
-from pytest import fixture, raises
-from lxml.html import fromstring
 from flask import Flask
 from flask.testing import FlaskClient
-from sqlalchemy.exc import IntegrityError
+from lxml.html import fromstring
+from pytest import fixture, raises
 from responses import RequestsMock
+from sqlalchemy.exc import IntegrityError
 
-from main import create_app
 from db import create_episode, db
+from main import create_app
 from utils import cache_clear
 
 transmission_url = 'http://novell.local:9091/transmission/rpc'

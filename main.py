@@ -1,54 +1,54 @@
-import re
-import json
-import string
 import inspect
+import json
 import logging
-from typing import Dict, List, Optional, Union, Iterable, Callable, TypeVar, Tuple, cast
+import re
+import string
 from collections import defaultdict
 from functools import wraps
 from itertools import zip_longest
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
 
-from flask_wtf import FlaskForm
-from wtforms import StringField
-from humanize import naturaldelta
-from wtforms.validators import DataRequired, Regexp
-from sqlalchemy import event
 from flask import (
-    Flask,
-    render_template,
-    redirect,
-    url_for,
-    request,
-    jsonify,
-    Response,
     Blueprint,
-    current_app,
+    Flask,
+    Response,
     abort,
+    current_app,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
 )
-from werkzeug.wrappers import Response as WResponse
+from flask_wtf import FlaskForm
+from humanize import naturaldelta
 from requests.exceptions import ConnectionError
+from sqlalchemy import event
+from werkzeug.wrappers import Response as WResponse
+from wtforms import StringField
+from wtforms.validators import DataRequired, Regexp
 
-from rarbg import get_rarbg
-from transmission import torrent_add, get_torrent
 from db import (
-    create_movie,
-    get_movies,
-    get_episodes,
-    create_episode,
+    Download,
     EpisodeDetails,
     MovieDetails,
-    Download,
+    create_episode,
+    create_movie,
     db,
+    get_episodes,
+    get_movies,
 )
+from rarbg import get_rarbg
 from tmdb import (
-    search_themoviedb,
-    get_tv,
-    resolve_id,
-    get_tv_episodes,
     get_movie,
-    get_tv_imdb_id,
     get_movie_imdb_id,
+    get_tv,
+    get_tv_episodes,
+    get_tv_imdb_id,
+    resolve_id,
+    search_themoviedb,
 )
+from transmission import get_torrent, torrent_add
 
 logging.basicConfig(level=logging.DEBUG)
 

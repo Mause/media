@@ -1,9 +1,9 @@
-from typing import List, Union, TypeVar, Type, Optional
+from typing import List, Optional, Type, TypeVar, Union
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import joinedload, relationship
 from sqlalchemy_repr import RepresentableBase
-from sqlalchemy.orm import relationship, joinedload
-from sqlalchemy import Column, Integer, String, ForeignKey
 
 db = SQLAlchemy(model_class=RepresentableBase)
 T = TypeVar('T')

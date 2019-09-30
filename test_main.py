@@ -1,6 +1,6 @@
 import pytest
-from main import normalise
 
+from main import normalise
 
 episodes = [
     {'name': '1:23:45'},

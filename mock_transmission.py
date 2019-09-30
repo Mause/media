@@ -1,9 +1,9 @@
-from uuid import uuid4
 from itertools import count
-from typing import Dict, Any, Set
-from urllib.parse import urlparse, parse_qsl
+from typing import Any, Dict, Set
+from urllib.parse import parse_qsl, urlparse
+from uuid import uuid4
 
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
 
 id_iter = iter(count())
 app = Flask(__name__)

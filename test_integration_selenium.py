@@ -1,14 +1,14 @@
 import json
 import socket
+from contextlib import closing
 from pathlib import Path
 from typing import Optional
 from urllib.parse import urlencode, urlparse
-from contextlib import closing
 
 from pytest import fixture
+from pytest_flask.fixtures import LiveServer
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
-from pytest_flask.fixtures import LiveServer
 
 from main import create_app
 

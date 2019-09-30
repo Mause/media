@@ -1,6 +1,5 @@
-from typing import Set
 from functools import lru_cache as _lru_cache
-
+from typing import Set
 
 _caches: Set[_lru_cache] = set()
 

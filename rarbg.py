@@ -3,11 +3,10 @@
 import json
 import logging
 from itertools import chain
-from typing import List, Dict, Iterator
+from typing import Dict, Iterator, List
 
 import backoff
 import requests
-
 
 session = requests.Session()
 session.params = {
