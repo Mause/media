@@ -194,6 +194,7 @@ def select_options(
         results=categorized,
         imdb_id=imdb_id,
         auto=auto,
+        type=type,
         display_title=display_title,
         build_download_link=build_download_link,
     )

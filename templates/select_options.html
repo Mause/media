@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 
-{% block header %}Options for "{{display_title}}"{% endblock %}
+{% block header %}
+    Options for "{{display_title}}"
+
+    {% if type == 'movie' %}
+        <small>
+            <a
+                target="_blank"
+                href="{{ url_for('.redirect_to_imdb', type_=type, ident=imdb_id) }}">
+             <i class="fas fa-share"></i>
+             </a>
+        </small>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 
