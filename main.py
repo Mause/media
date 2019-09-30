@@ -64,6 +64,7 @@ def create_app(config):
     papp.config.update(
         {
             'SECRET_KEY': 'hkfircsc',
+            'SQLALCHEMY_ECHO': True,
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.db',
             'SQLALCHEMY_TRACK_MODIFICATIONS': False,
             'TRANSMISSION_URL': 'http://novell.local:9091/transmission/rpc',
