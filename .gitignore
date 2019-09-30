@@ -6,3 +6,8 @@ report.html
 assets/*
 .mypy_cache
 .pytype
+screenshots/
+*.log
+*.pid
+*.bin
+*.pkl
