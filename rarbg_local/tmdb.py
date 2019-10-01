@@ -6,7 +6,8 @@ from typing import Dict, List, Optional
 import backoff
 import requests
 from requests_toolbelt.sessions import BaseUrlSession
-from utils import lru_cache
+
+from .utils import lru_cache
 
 tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
 tmdb.params['api_key'] = '66b197263af60702ba14852b4ec9b143'

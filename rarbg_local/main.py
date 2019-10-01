@@ -28,7 +28,7 @@ from werkzeug.wrappers import Response as WResponse
 from wtforms import StringField
 from wtforms.validators import DataRequired, Regexp
 
-from db import (
+from .db import (
     Download,
     EpisodeDetails,
     MovieDetails,
@@ -38,8 +38,8 @@ from db import (
     get_episodes,
     get_movies,
 )
-from rarbg import get_rarbg
-from tmdb import (
+from .rarbg import get_rarbg
+from .tmdb import (
     get_movie,
     get_movie_imdb_id,
     get_tv,
@@ -48,7 +48,7 @@ from tmdb import (
     resolve_id,
     search_themoviedb,
 )
-from transmission import get_torrent, torrent_add
+from .transmission import get_torrent, torrent_add
 
 logging.basicConfig(level=logging.DEBUG)
 
