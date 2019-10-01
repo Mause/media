@@ -1,6 +1,6 @@
 import pytest
 
-from main import normalise
+from rarbg_local.main import normalise
 
 episodes = [
     {'name': '1:23:45'},
