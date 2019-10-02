@@ -60,6 +60,7 @@ def trm_session(responses):
     responses.add(
         method='POST',
         url=transmission_url,
+        status=409,
         headers={'X-Transmission-Session-Id': 'XXXXXXX'},
     )
 
