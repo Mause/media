@@ -44,6 +44,11 @@ CATEGORIES = {
     },
     'series': {"TV Episodes", "TV HD Episodes", "TV UHD Episodes"},
 }
+NONE = {
+    'No results found',
+    'Cant find search_imdb in database',
+    'Cant find imdb in database',
+}
 
 
 def load_category_codes() -> Dict[str, int]:
@@ -97,12 +102,10 @@ def _get(base_url: str, **kwargs: str) -> List[Dict]:
         session.params['token'] = get_token(base_url)
         res = _get(**kwargs)
     elif error:
-        if error == 'No results found':
+        if any(message in error for message in NONE):
             pass
         elif 'Too many requests' in error:
             raise TooManyRequests(res)
-        elif 'Cant find search_imdb in database' in error:
-            pass
         else:
             raise Exception(res)
 
