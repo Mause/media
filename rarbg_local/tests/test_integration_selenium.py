@@ -10,7 +10,7 @@ from pytest_flask.fixtures import LiveServer
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
 
-from rarbg_local.main import create_app
+from .main import create_app
 
 HERE = Path(__name__).resolve().absolute().parent
 
@@ -25,7 +25,7 @@ def free_port():
 
 @fixture
 def mock_transmission(free_port):
-    from mock_transmission import app
+    from .mock_transmission import app
 
     server = LiveServer(app, 'localhost', free_port, True)
     server.start()

@@ -8,9 +8,9 @@ from pytest import fixture, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
-from rarbg_local.db import create_episode, db
-from rarbg_local.main import create_app
-from rarbg_local.utils import cache_clear
+from ..db import create_episode, db
+from ..main import create_app
+from ..utils import cache_clear
 
 transmission_url = 'http://novell.local:9091/transmission/rpc'
 HASH_STRING = '00000000000000000'
@@ -160,7 +160,7 @@ def themoviedb(responses, path, response, query=''):
 
 
 def test_delete_cascade(test_client: FlaskClient):
-    from main import db, get_episodes, Download
+    from .main import db, get_episodes, Download
 
     e = create_episode(1, 'tt000000', '1', '1', 'Title')
 
@@ -191,7 +191,7 @@ def test_select_season(responses: RequestsMock, test_client: FlaskClient) -> Non
 
 
 def test_foreign_key_integrity(flask_app: Flask):
-    from main import db, Download
+    from ..main import db, Download
 
     with flask_app.app_context():
         session = db.session
