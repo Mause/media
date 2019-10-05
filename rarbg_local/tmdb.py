@@ -13,8 +13,8 @@ tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
 tmdb.params['api_key'] = '66b197263af60702ba14852b4ec9b143'
 
 
-def try_(dic: Dict[str, str], *keys: str) -> str:
-    return next(dic[key] for key in keys if key in dic)
+def try_(dic: Dict[str, str], *keys: str) -> Optional[str]:
+    return next((dic[key] for key in keys if key in dic), None)
 
 
 @backoff.on_exception(
