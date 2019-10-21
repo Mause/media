@@ -103,9 +103,19 @@ class SearchForm(FlaskForm):
 
 @app.route('/search/<query>')
 def select_item(query: str) -> str:
+    def get_url(item: Dict) -> str:
+        return url_for(
+            '.select_movie_options'
+            if item['Type'] == 'movie'
+            else '.select_season',
+            imdb_id=item['imdbID'],
+        )
+
     results = search_themoviedb(query)
 
-    return render_template('select_item.html', results=results, query=query)
+    return render_template(
+        'select_item.html', results=results, query=query, get_url=get_url
+    )
 
 
 def query_args(func):
