@@ -92,7 +92,7 @@ class SearchForm(FlaskForm):
 
 
 @app.route('/search/<query>')
-def select_item(query: str) -> Response:
+def select_item(query: str) -> str:
     results = search_themoviedb(query)
 
     return render_template('select_item.html', results=results, query=query)
@@ -160,7 +160,7 @@ def select_options(
     display_title: str = None,
     search_string: str = None,
     **extra,
-) -> Response:
+) -> str:
     def build_download_link(option):
         return url_for(
             '.download',
@@ -201,7 +201,7 @@ def select_options(
 
 
 @app.route('/select/<imdb_id>/season/<season>')
-def select_episode(imdb_id: str, season: str) -> Response:
+def select_episode(imdb_id: str, season: str) -> str:
     def build_episode_link(episode: Dict) -> str:
         return url_for(
             '.select_tv_options',
@@ -262,7 +262,7 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
 
 
 @app.route('/select/<imdb_id>/season/<season>/download_all')
-def download_all_episodes(imdb_id: str, season: str) -> WResponse:
+def download_all_episodes(imdb_id: str, season: str) -> str:
     def build_download_link(imdb_id: str, season: str, result_set: List[Dict]) -> str:
         def get_title(title: str) -> str:
             _, i_episode = extract_marker(title)
@@ -288,20 +288,22 @@ def download_all_episodes(imdb_id: str, season: str) -> WResponse:
 
     episodes = get_tv_episodes(imdb_id, season)['episodes']
 
-    results = groupby(results, lambda result: normalise(episodes, result['title']))
+    grouped_results = groupby(
+        results, lambda result: normalise(episodes, result['title'])
+    )
 
     return render_template(
         'download_all.html',
         info=get_tv(imdb_id),
         season=season,
         imdb_id=get_tv_imdb_id(imdb_id),
-        results=results,
+        results=grouped_results,
         build_download_link=build_download_link,
     )
 
 
 @app.route('/select/<imdb_id>/season')
-def select_season(imdb_id: str) -> Response:
+def select_season(imdb_id: str) -> str:
     info = get_tv(imdb_id)
 
     print(info)
@@ -507,7 +509,7 @@ def render_progress(
 
 
 @app.route('/', methods=['GET', 'POST'])
-def index() -> WResponse:
+def index() -> str:
     form = SearchForm()
     if form.validate_on_submit():
         return redirect(url_for('.select_item', query=form.data['query']))
