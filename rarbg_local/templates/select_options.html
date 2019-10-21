@@ -40,11 +40,14 @@
     {% endfor %}
 </ul>
 {% else %}
-    No results.<br/>
+    <br/>
+    No results.
+    <br/>
+    <br/>
     Options:
     <ul>
         <li><a href="{{ url_for('.index') }}">Go home</a></li>
-        <li><a href="{{ url_for('.manual') }}">Add manually</a></li>
+        <li><a href="{{ manual_link }}">Add manually</a></li>
         <li><a href="#">Try Nyaa.si</a></li>
     </ul>
 {% endfor %}

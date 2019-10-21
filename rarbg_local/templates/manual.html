@@ -6,9 +6,14 @@
 
 <form method="POST">
     {{ form.hidden_tag() }}
-    <strong>{{ form.title.label }}</strong> {{ form.title() }}<br/>
-    <strong>{{ form.magnet.label }}</strong> {{ form.magnet() }}<br/>
-    <strong>{{ form.imdb_id.label }}</strong> {{ form.imdb_id() }}<br/>
+
+    {% if form.errors %}
+        {{ form.errors | safe }}
+    {% endif %}
+
+    <br/>
+
+    {{ form.magnet.label }}: {{ form.magnet() }}<br/>
     <input type="submit" value="Submit">
 </form>
 

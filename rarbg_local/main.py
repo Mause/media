@@ -183,6 +183,10 @@ def select_options(
             **extra,
         )
 
+    manual_link = url_for(
+        '.manual', type=type, imdb_id=imdb_id, titles=[title], **extra
+    )
+
     display_title = display_title or title
 
     query = {'search_string': search_string, 'search_imdb': imdb_id}
@@ -213,6 +217,7 @@ def select_options(
         type=type,
         display_title=display_title,
         build_download_link=build_download_link,
+        manual_link=manual_link,
     )
 
 
@@ -376,12 +381,8 @@ def download(type: str) -> WResponse:
 
 
 class ManualForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
     magnet = StringField(
         'Magnet link', validators=[DataRequired(), Regexp(r'^magnet:')]
-    )
-    imdb_id = StringField(
-        'IMDB id', validators=[DataRequired(), Regexp(r'tt\d+')]
     )
 
 
@@ -390,18 +391,9 @@ def manual():
     form = ManualForm()
 
     if form.validate_on_submit():
-        data = form.data
-        add_single(
-            magnet=data['magnet'],
-            subpath='movies',
-            is_tv=False,
-            imdb_id=data['imdb_id'],
-            season=None,
-            episode=None,
-            title=data['title'],
-            show_title=None,
+        return redirect(
+            url_for('.download', **request.args, magnet=form.data['magnet'])
         )
-        return redirect(url_for('.index'))
     else:
         return render_template('manual.html', form=form)
 
