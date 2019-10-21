@@ -186,7 +186,9 @@ def select_options(
     categorized = sorted(
         categorized, key=lambda pair: ranking.index(pair[0]), reverse=True
     )
-    ten_eighty = dict(categorized).get('x264/1080', [])
+    ten_eighty = dict(categorized).get(
+        'x264/1080' if type == 'movie' else 'TV HD Episodes', []
+    )
     auto = ten_eighty and max(ten_eighty, key=lambda torrent: torrent['seeders'])
 
     return render_template(
