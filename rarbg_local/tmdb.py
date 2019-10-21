@@ -58,7 +58,9 @@ def search_themoviedb(s: str) -> List[Dict]:
 @lru_cache()
 def find_themoviedb(i: str):
     assert i.startswith('tt')
-    results = tmdb.get(f'find/{i}', params={'external_source': 'imdb_id'}).json()
+    results = tmdb.get(
+        f'find/{i}', params={'external_source': 'imdb_id'}
+    ).json()
 
     result = next(item for item in chain.from_iterable(results.values()))
 
@@ -68,7 +70,9 @@ def find_themoviedb(i: str):
 @lru_cache()
 def resolve_id(imdb_id: str) -> str:
     assert imdb_id.startswith('tt')
-    results = tmdb.get(f'find/{imdb_id}', params={'external_source': 'imdb_id'}).json()
+    results = tmdb.get(
+        f'find/{imdb_id}', params={'external_source': 'imdb_id'}
+    ).json()
 
     res = next((item for item in chain.from_iterable(results.values())), None)
     assert res, f'No results for {imdb_id}'
