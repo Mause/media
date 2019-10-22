@@ -8,7 +8,7 @@
 {% for item in results %}
     <li>
         <a href="{{get_url(item)}}">
-            {{item.title}} ({{item.Year}})
+            {{- item.title }} ({{item.Year}}){{ '' -}}
         </a>
         <small>
             <a
