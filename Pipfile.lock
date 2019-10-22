@@ -752,10 +752,10 @@
         },
         "webdriver-manager": {
             "hashes": [
-                "sha256:5f0e3c096cb681c30e304fe732b87f1eb463b30e5d05e69989b2c7eaba4add54"
+                "sha256:2b1fc44fed63dd35294694c2b30e4310457ac2d4327b2983b8d251c3f83bbd03"
             ],
             "index": "pypi",
-            "version": "==2.0.0"
+            "version": "==2.2.0"
         },
         "werkzeug": {
             "hashes": [
