@@ -15,6 +15,7 @@ pytest-flask = "*"
 pytest-selenium = "*"
 webdriver-manager = "*"
 pre-commit = "*"
+sqlalchemy-stubs = "*"
 
 [packages]
 flask = "*"
