@@ -27,7 +27,7 @@ jobs:
           name: install dependencies
           command: |
             sudo pip3 install pipenv
-            pipenv install --dev
+            pipenv install --dev --system
       - save_cache:
           paths:
             - '{{ pipenv --env }}'
@@ -41,14 +41,13 @@ jobs:
       - run:
           name: mypy
           command: |
-            pipenv install mypy
-            pipenv run mypy rarbg_local
+            mypy rarbg_local
       - run:
           name: run tests
           environment: {}
           command: |
             mkdir screenshots
-            pipenv run py.test -v --junitxml=test-reports/junit/junit.xml
+            py.test -v --junitxml=test-reports/junit/junit.xml
       - store_test_results:
           path: test-reports
 
