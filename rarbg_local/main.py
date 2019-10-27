@@ -215,9 +215,9 @@ def select_options(
     ten_eighty = dict(categorized).get(
         'x264/1080' if type == 'movie' else 'TV HD Episodes', []
     )
-    auto = ten_eighty and max(
-        ten_eighty, key=lambda torrent: torrent['seeders']
-    )
+    auto: Optional[Dict] = None
+    if ten_eighty:
+        auto = max(ten_eighty, key=lambda torrent: torrent['seeders'])
 
     return render_template(
         'select_options.html',
