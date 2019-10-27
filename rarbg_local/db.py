@@ -9,11 +9,11 @@ db = SQLAlchemy(model_class=RepresentableBase)
 T = TypeVar('T')
 
 
-class Download(db.Model):
+class Download(db.Model):  # type: ignore
     __tablename__ = 'download'
     id = Column(Integer, primary_key=True)
-    transmission_id = Column(String)
-    imdb_id = Column(String)
+    transmission_id = Column(String, nullable=False)
+    imdb_id = Column(String, nullable=False)
     type = Column(String)
     movie = relationship('MovieDetails', uselist=False, cascade='all,delete')
     movie_id = Column(Integer, ForeignKey('movie_details.id', ondelete='CASCADE'))
@@ -22,14 +22,14 @@ class Download(db.Model):
     title = Column(String)
 
 
-class EpisodeDetails(db.Model):
+class EpisodeDetails(db.Model):  # type: ignore
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
     download = relationship(
         'Download', back_populates='episode', passive_deletes=True, uselist=False
     )
-    show_title = Column(String, nullable=True)
-    season = Column(Integer)
+    show_title = Column(String, nullable=False)
+    season = Column(Integer, nullable=False)
     episode = Column(Integer)
 
     def is_season_pack(self):
@@ -39,7 +39,7 @@ class EpisodeDetails(db.Model):
         return f'S{self.season:02d}E{self.episode:02d}'
 
 
-class MovieDetails(db.Model):
+class MovieDetails(db.Model):  # type: ignore
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
     download = relationship(
@@ -48,7 +48,7 @@ class MovieDetails(db.Model):
 
 
 def create_download(
-    transmission_id: int,
+    transmission_id: str,
     imdb_id: str,
     title: str,
     type: str,
@@ -66,14 +66,14 @@ def create_download(
     )
 
 
-def create_movie(transmission_id: int, imdb_id: str, title: str) -> None:
+def create_movie(transmission_id: str, imdb_id: str, title: str) -> None:
     md = MovieDetails()
     db.session.add(md)
     db.session.add(create_download(transmission_id, imdb_id, title, 'movie', md))
 
 
 def create_episode(
-    transmission_id: int,
+    transmission_id: str,
     imdb_id: str,
     season: str,
     episode: Optional[str],

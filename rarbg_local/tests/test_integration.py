@@ -167,7 +167,7 @@ def themoviedb(responses, path, response, query=''):
 def test_delete_cascade(test_client: FlaskClient):
     from ..main import db, get_episodes, Download
 
-    e = create_episode(1, 'tt000000', '1', '1', 'Title')
+    e = create_episode('1', 'tt000000', '1', '1', 'Title')
 
     session = db.session
 
