@@ -131,7 +131,7 @@ def query_args(func):
 
 
 @app.route('/select/<imdb_id>/season/<season>/episode/<episode>/options')
-def select_tv_options(imdb_id: str, season: str, episode: str) -> Response:
+def select_tv_options(imdb_id: str, season: str, episode: str) -> str:
     info = get_tv_episodes(imdb_id, season)['episodes'][int(episode) - 1]
 
     tv = get_tv(imdb_id)
@@ -148,7 +148,7 @@ def select_tv_options(imdb_id: str, season: str, episode: str) -> Response:
 
 
 @app.route('/select/<imdb_id>/options')
-def select_movie_options(imdb_id: str) -> Response:
+def select_movie_options(imdb_id: str) -> str:
     return select_options(
         'movie', get_movie_imdb_id(imdb_id), title=get_movie(imdb_id)['title']
     )
@@ -538,7 +538,7 @@ def render_progress(
 
 
 @app.route('/', methods=['GET', 'POST'])
-def index() -> str:
+def index() -> Union[str, WResponse]:
     form = SearchForm()
     if form.validate_on_submit():
         return redirect(url_for('.select_item', query=form.data['query']))
