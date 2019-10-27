@@ -41,7 +41,7 @@ jobs:
       - run:
           name: mypy
           command: |
-            set MYPY_PATH=$(pipenv --venv)
+            set MYPYPATH=$(pipenv --venv)\Lib\site-packages
             pipenv run mypy rarbg_local
       - run:
           name: run tests
