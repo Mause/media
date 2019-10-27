@@ -39,6 +39,11 @@ jobs:
       # https://pytest.org
       # https://nose.readthedocs.io
       - run:
+          name: mypy
+          command: |
+            pipenv install mypy
+            pipenv run mypy rarbg_local
+      - run:
           name: run tests
           environment: {}
           command: |
