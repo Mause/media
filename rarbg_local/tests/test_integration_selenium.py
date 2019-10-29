@@ -61,7 +61,9 @@ def server_url(live_server):
 
 @fixture
 def capabilities(capabilities):
-    capabilities['loggingPrefs'] = {'performance': 'ALL'}
+    capabilities['loggingPrefs'] = capabilities['goog:loggingPrefs'] = {
+        'performance': 'ALL'
+    }
     return capabilities
 
 
