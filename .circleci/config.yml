@@ -47,7 +47,7 @@ jobs:
           environment: {}
           command: |
             mkdir screenshots
-            pipenv shell
+            . $(pipenv --venv)/Scripts/activate
             py.test . -v --junitxml=test-reports/junit/junit.xml
       - store_test_results:
           path: test-reports
