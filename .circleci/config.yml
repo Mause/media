@@ -25,6 +25,8 @@ jobs:
 
       - run:
           name: Install Dependencies
+          environment:
+            PIPENV_VENV_IN_PROJECT: true
           command: |
             sudo pip3 install pipenv
             pipenv sync --dev
