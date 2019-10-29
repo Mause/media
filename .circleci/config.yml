@@ -24,7 +24,7 @@ jobs:
           - v1-dependencies-
 
       - run:
-          name: install dependencies
+          name: Install Dependencies
           command: |
             sudo pip3 install pipenv
             pipenv install --dev
@@ -39,12 +39,12 @@ jobs:
       # https://pytest.org
       # https://nose.readthedocs.io
       - run:
-          name: mypy
+          name: Mypy
           command: |
             set MYPYPATH=$(pipenv --venv)\Lib\site-packages
             pipenv run mypy rarbg_local
       - run:
-          name: run tests
+          name: Run Tests
           environment: {}
           command: |
             mkdir screenshots
