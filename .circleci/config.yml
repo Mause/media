@@ -30,7 +30,7 @@ jobs:
             pipenv sync --dev
       - save_cache:
           paths:
-            - '{{ pipenv --env }}'
+            - '.venv'
           key: v1-dependencies-{{ checksum "Pipfile.lock" }}
 
       # run tests!
@@ -40,11 +40,14 @@ jobs:
       # https://nose.readthedocs.io
       - run:
           name: Mypy
+          environment:
+            PIPENV_VENV_IN_PROJECT: true
           command: |
             pipenv run mypy rarbg_local
       - run:
           name: Run Tests
-          environment: {}
+          environment:
+            PIPENV_VENV_IN_PROJECT: true
           command: |
             mkdir screenshots
             ls $(pipenv --venv)
