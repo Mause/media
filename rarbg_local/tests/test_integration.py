@@ -1,4 +1,3 @@
-import json
 from typing import Generator
 
 from flask import Flask
@@ -11,8 +10,8 @@ from sqlalchemy.exc import IntegrityError
 from ..db import create_episode, db
 from ..main import create_app
 from ..utils import cache_clear
+from .conftest import add_json, themoviedb, transmission_url
 
-transmission_url = 'http://novell.local:9091/transmission/rpc'
 HASH_STRING = '00000000000000000'
 
 
@@ -55,35 +54,6 @@ def test_client(
     # Establish an application context before running the tests.
     with flask_app.app_context():
         yield testing_client  # this is where the testing happens!
-
-
-@fixture
-def trm_session(responses):
-    responses.add(
-        method='POST',
-        url=transmission_url,
-        status=409,
-        headers={'X-Transmission-Session-Id': 'XXXXXXX'},
-    )
-
-
-def add_json(responses, method: str, url: str, json_body) -> None:
-    responses.add(method=method, url=url, body=json.dumps(json_body))
-
-
-@fixture
-def reverse_imdb(responses):
-    themoviedb(
-        responses,
-        '/find/tt000000',
-        {'tv_results': [{'id': '100000'}]},
-        '&external_source=imdb_id',
-    )
-    themoviedb(
-        responses,
-        '/tv/100000',
-        {'name': 'Introductory', 'number_of_seasons': 1},
-    )
 
 
 @fixture
@@ -154,20 +124,10 @@ def test_search(responses, test_client):
     assert html == ['Chernobyl (2019)']
 
 
-def themoviedb(responses, path, response, query=''):
-    add_json(
-        responses,
-        'GET',
-        f'https://api.themoviedb.org/3{path}?api_key=66b197263af60702ba14852b4ec9b143'
-        + query,
-        response,
-    )
-
-
 def test_delete_cascade(test_client: FlaskClient):
     from ..main import db, get_episodes, Download
 
-    e = create_episode('1', 'tt000000', '1', '1', 'Title')
+    e = create_episode('1', 'tt000000', '1', '1', 'Title', show_title='')
 
     session = db.session
 

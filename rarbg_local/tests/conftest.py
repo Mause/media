@@ -1,8 +1,49 @@
-from pytest import hookimpl
 
-from .test_integration import reverse_imdb, trm_session
+import json
 
-trm_session, reverse_imdb
+from pytest import fixture, hookimpl
+
+transmission_url = 'http://novell.local:9091/transmission/rpc'
+
+
+def themoviedb(responses, path, response, query=''):
+    add_json(
+        responses,
+        'GET',
+        f'https://api.themoviedb.org/3{path}?api_key=66b197263af60702ba14852b4ec9b143'
+        + query,
+        response,
+    )
+
+def add_json(responses, method: str, url: str, json_body) -> None:
+    responses.add(method=method, url=url, body=json.dumps(json_body))
+
+
+
+
+@fixture
+def reverse_imdb(responses):
+    themoviedb(
+        responses,
+        '/find/tt000000',
+        {'tv_results': [{'id': '100000'}]},
+        '&external_source=imdb_id',
+    )
+    themoviedb(
+        responses,
+        '/tv/100000',
+        {'name': 'Introductory', 'number_of_seasons': 1},
+    )
+
+
+@fixture
+def trm_session(responses):
+    responses.add(
+        method='POST',
+        url=transmission_url,
+        status=409,
+        headers={'X-Transmission-Session-Id': 'XXXXXXX'},
+    )
 
 
 @hookimpl(tryfirst=True, hookwrapper=True)
