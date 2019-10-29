@@ -3,7 +3,7 @@
 import json
 import logging
 from itertools import chain
-from typing import Dict, Iterator, List
+from typing import Dict, Iterator, List, TypedDict
 
 import backoff
 import requests
@@ -56,11 +56,17 @@ def load_category_codes() -> Dict[str, int]:
         return json.load(fh)
 
 
-def get_rarbg(base_url: str, type, **kwargs) -> List[Dict]:
+class RarbgTorrent(TypedDict):
+    category: str
+    seeders: int
+    title: str
+
+
+def get_rarbg(base_url: str, type, **kwargs) -> List[RarbgTorrent]:
     return list(chain.from_iterable(get_rarbg_iter(base_url, type, **kwargs)))
 
 
-def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[List[Dict]]:
+def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[List[RarbgTorrent]]:
     codes = load_category_codes()
     categories = [codes[key] for key in CATEGORIES[type]]
 
