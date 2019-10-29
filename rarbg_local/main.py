@@ -48,7 +48,7 @@ from .db import (
     get_episodes,
     get_movies,
 )
-from .rarbg import get_rarbg
+from .rarbg import RarbgTorrent, get_rarbg
 from .tmdb import (
     get_movie,
     get_movie_imdb_id,
@@ -215,7 +215,7 @@ def select_options(
     ten_eighty = dict(categorized).get(
         'x264/1080' if type == 'movie' else 'TV HD Episodes', []
     )
-    auto: Optional[Dict] = None
+    auto: Optional[RarbgTorrent] = None
     if ten_eighty:
         auto = max(ten_eighty, key=lambda torrent: torrent['seeders'])
 
