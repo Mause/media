@@ -52,10 +52,7 @@ jobs:
             PIPENV_VENV_IN_PROJECT: true
           command: |
             mkdir screenshots
-            ls $(pipenv --venv)
-            ls $(pipenv --venv)/bin
-            . $(pipenv --venv)/bin/activate
-            py.test . -v --junitxml=test-reports/junit/junit.xml
+            pipenv run py.test -v --junitxml=test-reports/junit/junit.xml
       - store_test_results:
           path: test-reports
 
