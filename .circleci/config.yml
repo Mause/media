@@ -48,8 +48,8 @@ jobs:
           command: |
             mkdir screenshots
             ls $(pipenv --venv)
-            ls $(pipenv --venv)/Scripts
-            . $(pipenv --venv)/Scripts/activate
+            ls $(pipenv --venv)/bin
+            . $(pipenv --venv)/bin/activate
             py.test . -v --junitxml=test-reports/junit/junit.xml
       - store_test_results:
           path: test-reports
