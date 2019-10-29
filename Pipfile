@@ -30,6 +30,7 @@ requests-toolbelt = "*"
 backoff = "*"
 gunicorn = "*"
 psycopg2 = "*"
+dataclasses-json = "*"
 
 [requires]
 python_version = "3.8"
