@@ -37,13 +37,12 @@
         >{{option.title}}</a>
         <small>{{option.seeders}}</small>
     </li>
-
-    <div>
-        Otherwise, <a href="{{ manual_link }}">add manually</a>
-    </div>
-
     {% endfor %}
 </ul>
+
+<div>
+    Otherwise, <a href="{{ manual_link }}">add manually</a>
+</div>
 {% else %}
     <br/>
     No results.
