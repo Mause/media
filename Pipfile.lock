@@ -50,11 +50,11 @@
         },
         "backoff": {
             "hashes": [
-                "sha256:3f1ed23d36c65ec16c143e432b12c19aaf12ed791317b91ab50dd14ac6255a3c",
-                "sha256:53531e45432b18795f808c28dd9c5a4b32fe44aa713780ea892f07c3e6b36c11"
+                "sha256:76224b65f1808fd61dc14129e3e9de50cb1f7efaef608b657f7b108863ee15a7",
+                "sha256:794e9765eb4acb5014c7e1e1fc4f69abc4d176a7c2b6753b8dae2f2e69af4df9"
             ],
             "index": "pypi",
-            "version": "==1.8.1"
+            "version": "==1.9.2"
         },
         "certifi": {
             "hashes": [
