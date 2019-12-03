@@ -42,6 +42,9 @@
 <!--             <i class="far fa-plus-square"></i>
             &nbsp;
             <i class="far fa-minus-square"></i> -->
+            <a href="{{ url_for('search', query=title) }}">
+                <i class="fas fa-search" />
+            </a>
         </h3>
 
         {% for i in sorted(seasons) %}
