@@ -556,6 +556,7 @@ def index() -> Union[str, WResponse]:
         # functions
         sorted=sorted,
         render_progress=render_progress,
+        resolve_id=resolve_id,
     )
 
 

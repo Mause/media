@@ -39,17 +39,25 @@
     {% for title, seasons in series.items() %}
         <h3>
             {{title}}
-<!--             <i class="far fa-plus-square"></i>
-            &nbsp;
-            <i class="far fa-minus-square"></i> -->
-            <a href="{{ url_for('search', query=title) }}">
-                <i class="fas fa-search" />
+            <a href="{{ url_for('.select_item', query=title) }}">
+                <i class="fas fa-search"></i>
             </a>
         </h3>
 
         {% for i in sorted(seasons) %}
             {% set season = seasons[i] %}
-            <h4>Season {{ i }}</h4>
+            <h4>
+                Season {{ i }}
+                <a href="{{
+                url_for(
+                    '.select_episode',
+                    imdb_id=resolve_id(season[0].download.imdb_id),
+                    season=i
+                )
+                }}">
+                    <i class="fas fa-search"></i>
+                </a>
+            </h4>
             <ol>
             {% for episode in season %}
                 <li value="{{episode.episode}}">
