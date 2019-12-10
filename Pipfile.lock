@@ -776,11 +776,11 @@
         },
         "sqlalchemy-stubs": {
             "hashes": [
-                "sha256:4bb4a0377ed6c01bea2e1124d60747714d56742352bdb80e2093ca80a1bc036f",
-                "sha256:fe9df983274142f82973e4f7634a98dcbdbdde964918ad3dcf33d94398c51537"
+                "sha256:a3318c810697164e8c818aa2d90bac570c1a0e752ced3ec25455b309c0bee8fd",
+                "sha256:ca1250605a39648cc433f5c70cb1a6f9fe0b60bdda4c51e1f9a2ab3651daadc8"
             ],
             "index": "pypi",
-            "version": "==0.2"
+            "version": "==0.3"
         },
         "toml": {
             "hashes": [
