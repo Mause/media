@@ -6,17 +6,7 @@ import string
 from collections import defaultdict
 from functools import wraps
 from itertools import zip_longest
-from typing import (
-    Callable,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Tuple,
-    TypeVar,
-    Union,
-    cast,
-)
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
 
 from flask import (
     Blueprint,
@@ -30,6 +20,7 @@ from flask import (
     request,
     url_for,
 )
+from flask_user import UserManager, login_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
 from requests.exceptions import ConnectionError
@@ -42,6 +33,7 @@ from .db import (
     Download,
     EpisodeDetails,
     MovieDetails,
+    User,
     create_episode,
     create_movie,
     db,
@@ -79,11 +71,15 @@ def create_app(config):
             'SQLALCHEMY_TRACK_MODIFICATIONS': False,
             'TRANSMISSION_URL': 'http://novell.local:9091/transmission/rpc',
             'TORRENT_API_URL': 'https://torrentapi.org/pubapi_v2.php',
+            'USER_APP_NAME': 'Media',
+            'USER_ENABLE_EMAIL': False,  # Disable email authentication
+            'USER_ENABLE_USERNAME': True,  # Enable username authentication
             **config,
         }
     )
     db.init_app(papp)
     db.create_all(app=papp)
+    UserManager(papp, db, User)
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
 
@@ -105,9 +101,7 @@ class SearchForm(FlaskForm):
 def select_item(query: str) -> str:
     def get_url(item: Dict) -> str:
         return url_for(
-            '.select_movie_options'
-            if item['Type'] == 'movie'
-            else '.select_season',
+            '.select_movie_options' if item['Type'] == 'movie' else '.select_season',
             imdb_id=item['imdbID'],
         )
 
@@ -122,9 +116,7 @@ def query_args(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         rargs = request.args
-        return func(
-            *args, **kwargs, **{arg: rargs.get(arg, None) for arg in args_spec}
-        )
+        return func(*args, **kwargs, **{arg: rargs.get(arg, None) for arg in args_spec})
 
     args_spec = inspect.getfullargspec(func).args
     return wrapper
@@ -294,9 +286,7 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
 
 @app.route('/select/<imdb_id>/season/<season>/download_all')
 def download_all_episodes(imdb_id: str, season: str) -> str:
-    def build_download_link(
-        imdb_id: str, season: str, result_set: List[Dict]
-    ) -> str:
+    def build_download_link(imdb_id: str, season: str, result_set: List[Dict]) -> str:
         def get_title(title: str) -> str:
             _, i_episode = extract_marker(title)
             if i_episode is None:
@@ -344,9 +334,7 @@ def select_season(imdb_id: str) -> str:
     total_seasons = info['number_of_seasons']
 
     return render_template(
-        'select_season.html',
-        info=info,
-        seasons=list(range(1, int(total_seasons) + 1)),
+        'select_season.html', info=info, seasons=list(range(1, int(total_seasons) + 1))
     )
 
 
@@ -438,12 +426,7 @@ def add_single(
         if is_tv:
             assert season
             create_episode(
-                transmission_id,
-                imdb_id,
-                season,
-                episode,
-                title,
-                show_title=show_title,
+                transmission_id, imdb_id, season, episode, title, show_title=show_title
             )
         else:
             create_movie(transmission_id, imdb_id, title=title)
@@ -476,9 +459,9 @@ def resolve_season(episodes):
             episode=episode['episode_number'],
             show_title='',
         )
-        for episode in get_tv_episodes(
-            resolve_id(pack.download.imdb_id), pack.season
-        )['episodes']
+        for episode in get_tv_episodes(resolve_id(pack.download.imdb_id), pack.season)[
+            'episodes'
+        ]
     ]
 
 
@@ -538,6 +521,7 @@ def render_progress(
 
 
 @app.route('/', methods=['GET', 'POST'])
+@login_required
 def index() -> Union[str, WResponse]:
     form = SearchForm()
     if form.validate_on_submit():
@@ -562,9 +546,7 @@ def index() -> Union[str, WResponse]:
 
 def get_keyed_torrents() -> Dict[str, Dict]:
     try:
-        return {
-            t['hashString']: t for t in get_torrent()['arguments']['torrents']
-        }
+        return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
     except (ConnectionError, ConnectionRefusedError) as e:
         url = current_app.config["TRANSMISSION_URL"]
         error = 'Unable to connect to transmission'
@@ -583,9 +565,7 @@ def get_keyed_torrents() -> Dict[str, Dict]:
 
 @app.route('/redirect/<type_>/<ident>')
 def redirect_to_imdb(type_: str, ident: str):
-    imdb_id = (
-        get_movie_imdb_id(ident) if type_ == 'movie' else get_tv_imdb_id(ident)
-    )
+    imdb_id = get_movie_imdb_id(ident) if type_ == 'movie' else get_tv_imdb_id(ident)
 
     return redirect(f'https://www.imdb.com/title/{imdb_id}')
 
