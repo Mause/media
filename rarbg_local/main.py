@@ -97,6 +97,7 @@ class SearchForm(FlaskForm):
     query = StringField('Query', validators=[DataRequired()])
 
 
+@login_required
 @app.route('/search/<query>')
 def select_item(query: str) -> str:
     def get_url(item: Dict) -> str:
@@ -123,6 +124,7 @@ def query_args(func):
 
 
 @app.route('/select/<imdb_id>/season/<season>/episode/<episode>/options')
+@login_required
 def select_tv_options(imdb_id: str, season: str, episode: str) -> str:
     info = get_tv_episodes(imdb_id, season)['episodes'][int(episode) - 1]
 
@@ -140,6 +142,7 @@ def select_tv_options(imdb_id: str, season: str, episode: str) -> str:
 
 
 @app.route('/select/<imdb_id>/options')
+@login_required
 def select_movie_options(imdb_id: str) -> str:
     return select_options(
         'movie', get_movie_imdb_id(imdb_id), title=get_movie(imdb_id)['title']
@@ -147,6 +150,7 @@ def select_movie_options(imdb_id: str) -> str:
 
 
 @app.route('/delete/<type>/<id>')
+@login_required
 def delete(type: str, id: str) -> WResponse:
     query = db.session.query(
         EpisodeDetails if type == 'series' else MovieDetails
@@ -224,6 +228,7 @@ def select_options(
 
 
 @app.route('/select/<imdb_id>/season/<season>')
+@login_required
 def select_episode(imdb_id: str, season: str) -> str:
     def build_episode_link(episode: Dict) -> str:
         return url_for(
@@ -285,6 +290,7 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
 
 
 @app.route('/select/<imdb_id>/season/<season>/download_all')
+@login_required
 def download_all_episodes(imdb_id: str, season: str) -> str:
     def build_download_link(imdb_id: str, season: str, result_set: List[Dict]) -> str:
         def get_title(title: str) -> str:
@@ -326,6 +332,7 @@ def download_all_episodes(imdb_id: str, season: str) -> str:
 
 
 @app.route('/select/<imdb_id>/season')
+@login_required
 def select_season(imdb_id: str) -> str:
     info = get_tv(imdb_id)
 
@@ -339,6 +346,7 @@ def select_season(imdb_id: str) -> str:
 
 
 @app.route('/download/<type>')
+@login_required
 def download(type: str) -> WResponse:
     assert type
 
@@ -385,6 +393,7 @@ class ManualForm(FlaskForm):
 
 
 @app.route('/manual', methods=['POST', 'GET'])
+@login_required
 def manual():
     form = ManualForm()
 
@@ -564,6 +573,7 @@ def get_keyed_torrents() -> Dict[str, Dict]:
 
 
 @app.route('/redirect/<type_>/<ident>')
+@login_required
 def redirect_to_imdb(type_: str, ident: str):
     imdb_id = get_movie_imdb_id(ident) if type_ == 'movie' else get_tv_imdb_id(ident)
 
@@ -571,6 +581,7 @@ def redirect_to_imdb(type_: str, ident: str):
 
 
 @app.route('/endpoints.json')
+@login_required
 def endpoints() -> Response:
     return jsonify([r.rule for r in current_app.url_map._rules])
 
