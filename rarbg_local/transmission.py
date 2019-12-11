@@ -76,6 +76,7 @@ def get_session(url):
         return r.json()
 
     session = requests.Session()
+    session.timeout = 3  # seconds
     session.auth = ('transmission', 'transmission')
     refresh_session()
 
