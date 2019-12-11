@@ -32,6 +32,8 @@ gunicorn = "*"
 psycopg2 = "*"
 dataclasses-json = "*"
 flask-user = "*"
+dill = "*"
+pika = "*"
 
 [requires]
 python_version = "3.8"
