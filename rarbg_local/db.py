@@ -55,8 +55,7 @@ class User(db.Model, UserMixin):  # type: ignore
 
     # User authentication information. The collation='en_AU' is required
     # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
-    email = db.Column(db.String(255, collation='en_AU'), nullable=False, unique=True)
-    email_confirmed_at = db.Column(db.DateTime())
+    username = db.Column(db.String(255, collation='en_AU'), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False, server_default='')
 
     # User information
