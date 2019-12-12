@@ -18,19 +18,22 @@ _waiting: Dict[UUID, Future] = {}
 
 @dataclass
 class Proxy:
+    conn: pika.BlockingConnection
     channel: BlockingChannel
 
     def call(self, method, *args, **kwargs):
         f = Future()
         key = uuid4().hex
         _waiting[key] = f
-        self.channel.basic_publish(
-            exchange='',
-            routing_key=SERVER_QUEUE,
-            body=dill.dumps(
-                {'method': method, 'args': args, 'kwargs': kwargs, 'key': key}
-            ),
-            properties=pika.BasicProperties(reply_to='amq.rabbitmq.reply-to'),
+        self.conn.add_callback_threadsafe(
+            lambda: self.channel.basic_publish(
+                exchange='',
+                routing_key=SERVER_QUEUE,
+                body=dill.dumps(
+                    {'method': method, 'args': args, 'kwargs': kwargs, 'key': key}
+                ),
+                properties=pika.BasicProperties(reply_to='amq.rabbitmq.reply-to'),
+            )
         )
         return f.result()
 
@@ -52,7 +55,7 @@ def get_client():
     t.daemon = True
     t.start()
 
-    return Proxy(channel)
+    return Proxy(conn, channel)
 
 
 def main():
