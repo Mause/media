@@ -50,7 +50,7 @@ from .tmdb import (
     resolve_id,
     search_themoviedb,
 )
-from .transmission import get_torrent, torrent_add
+from .transmission_proxy import get_torrent, torrent_add
 
 logging.basicConfig(level=logging.DEBUG)
 
