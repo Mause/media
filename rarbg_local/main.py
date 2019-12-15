@@ -85,9 +85,10 @@ def create_app(config):
     UserManager(papp, db, User)
 
     with papp.app_context():
-        Mause = get_or_create(User, username='Mause')
-        Mause.roles = list(set(Mause.roles) | {Roles.Admin, Roles.Member})
-        db.session.commit()
+        Mause = db.session.query(User).filter_by(username='Mause').one_or_none()
+        if Mause:
+            Mause.roles = list(set(Mause.roles) | {Roles.Admin, Roles.Member})
+            db.session.commit()
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
 
