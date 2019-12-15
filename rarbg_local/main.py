@@ -121,7 +121,7 @@ def unauthorized():
 @app.before_request
 def before():
     if not request.path.startswith('/user'):
-        return login_required(roles_required('Member')(lambda: None)())
+        return login_required(roles_required('Member')(lambda: None))()
 
 
 @app.route('/search/<query>')
