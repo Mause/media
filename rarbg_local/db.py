@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import List, Optional, Type, TypeVar, Union
 
 from flask_sqlalchemy import SQLAlchemy
@@ -76,6 +77,15 @@ class Role(db.Model):  # type: ignore
     __tablename__ = 'roles'
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(50), unique=True)
+
+
+class _Roles:
+    @lru_cache()
+    def __getattr__(self, name):
+        return get_or_create(Role, name=name)
+
+
+Roles = _Roles()
 
 
 # Define the UserRoles association table

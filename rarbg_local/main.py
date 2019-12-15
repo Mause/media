@@ -33,12 +33,14 @@ from .db import (
     Download,
     EpisodeDetails,
     MovieDetails,
+    Roles,
     User,
     create_episode,
     create_movie,
     db,
     get_episodes,
     get_movies,
+    get_or_create,
 )
 from .rarbg import RarbgTorrent, get_rarbg
 from .tmdb import (
@@ -81,6 +83,11 @@ def create_app(config):
     db.init_app(papp)
     db.create_all(app=papp)
     UserManager(papp, db, User)
+
+    with papp.app_context():
+        Mause = get_or_create(User, username='Mause')
+        Mause.roles = list(set(Mause.roles) | {Roles.Admin, Roles.Member})
+        db.session.commit()
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
 
