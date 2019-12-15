@@ -20,7 +20,7 @@ from flask import (
     request,
     url_for,
 )
-from flask_user import UserManager, roles_required
+from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
 from requests.exceptions import ConnectionError
@@ -113,7 +113,7 @@ def unauthorized():
 @app.before_request
 def before():
     if not request.path.startswith('/user'):
-        return roles_required('Member')(lambda: None)()
+        return login_required(roles_required('Member')(lambda: None)())
 
 
 @app.route('/search/<query>')
