@@ -34,6 +34,7 @@ dataclasses-json = "*"
 flask-user = "*"
 dill = "*"
 pika = "*"
+flask-admin = "*"
 
 [requires]
 python_version = "3.8"

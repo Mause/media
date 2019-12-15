@@ -20,6 +20,7 @@ from flask import (
     request,
     url_for,
 )
+from flask_admin import Admin
 from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
@@ -29,10 +30,12 @@ from werkzeug.wrappers import Response as WResponse
 from wtforms import StringField
 from wtforms.validators import DataRequired, Regexp
 
+from .admin import RoleAdmin, UserAdmin
 from .db import (
     Download,
     EpisodeDetails,
     MovieDetails,
+    Role,
     Roles,
     User,
     create_episode,
@@ -83,6 +86,10 @@ def create_app(config):
     db.init_app(papp)
     db.create_all(app=papp)
     UserManager(papp, db, User)
+
+    admin = Admin(papp, name='Media')
+    admin.add_view(UserAdmin(User, db.session))
+    admin.add_view(RoleAdmin(Role, db.session))
 
     with papp.app_context():
         Mause = db.session.query(User).filter_by(username='Mause').one_or_none()
