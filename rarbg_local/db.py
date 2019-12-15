@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserMixin
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import joinedload, relationship
+from sqlalchemy.sql import ClauseElement
 from sqlalchemy_repr import RepresentableBase
 
 db = SQLAlchemy(model_class=RepresentableBase)
@@ -138,3 +139,14 @@ def get_episodes() -> List[EpisodeDetails]:
 
 def get_movies() -> List[MovieDetails]:
     return get_all(MovieDetails)
+
+
+def get_or_create(model: Type[T], defaults=None, **kwargs) -> T:
+    instance = db.session.query(model).filter_by(**kwargs).first()
+    if instance:
+        return instance
+    params = {k: v for k, v in kwargs.items() if not isinstance(v, ClauseElement)}
+    params.update(defaults or {})
+    instance: T = model(**params)  # type: ignore
+    db.session.add(instance)
+    return instance
