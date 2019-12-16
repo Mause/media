@@ -4,6 +4,7 @@ import logging
 import re
 import string
 from collections import defaultdict
+from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from functools import wraps
 from itertools import zip_longest
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
@@ -573,7 +574,12 @@ def index() -> Union[str, WResponse]:
 def get_keyed_torrents() -> Dict[str, Dict]:
     try:
         return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
-    except (ConnectionError, ConnectionRefusedError) as e:
+    except (
+        ConnectionError,
+        ConnectionRefusedError,
+        TimeoutError,
+        FutureTimeoutError,
+    ) as e:
         url = current_app.config["TRANSMISSION_URL"]
         error = 'Unable to connect to transmission'
         return abort(
