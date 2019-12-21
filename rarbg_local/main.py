@@ -124,7 +124,7 @@ def unauthorized():
 def before():
     if not request.path.startswith('/user'):
         try:
-            current_user.is_authenticated()
+            current_user.is_authenticated
         except AttributeError:
             session.clear()
             return redirect(request.url)
