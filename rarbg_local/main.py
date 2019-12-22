@@ -78,6 +78,7 @@ def create_app(config):
             'TRANSMISSION_URL': 'http://novell.local:9091/transmission/rpc',
             'TORRENT_API_URL': 'https://torrentapi.org/pubapi_v2.php',
             'USER_APP_NAME': 'Media',
+            'USER_CORPORATION_NAME': 'Lysdev',
             'USER_ENABLE_EMAIL': False,  # Disable email authentication
             'USER_ENABLE_USERNAME': True,  # Enable username authentication
             'USER_UNAUTHORIZED_ENDPOINT': 'rarbg_local.unauthorized',
