@@ -7,7 +7,18 @@ from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from functools import wraps
 from itertools import zip_longest
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
+from typing import (
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Tuple,
+    TypedDict,
+    TypeVar,
+    Union,
+    cast,
+)
 
 from flask import (
     Blueprint,
@@ -524,15 +535,25 @@ def resolve_show(
     }
 
 
-def resolve_series() -> Dict[str, Dict[int, List[EpisodeDetails]]]:
+class SeriesDetails(TypedDict):
+    seasons: Dict[int, List[EpisodeDetails]]
+    title: str
+    imdb_id: str
+
+
+def resolve_series() -> List[SeriesDetails]:
     episodes = get_episodes()
 
-    return {
-        show[0].show_title: resolve_show(imdb_id, show)
+    return [
+        {
+            'title': show[0].show_title,
+            'seasons': resolve_show(imdb_id, show),
+            'imdb_id': imdb_id,
+        }
         for imdb_id, show in groupby(
             episodes, lambda episode: episode.download.imdb_id
         ).items()
-    }
+    ]
 
 
 def render_progress(

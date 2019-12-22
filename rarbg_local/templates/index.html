@@ -37,22 +37,22 @@
 
 <div class="colB">
     <h2>TV Shows</h2>
-    {% for title, seasons in series.items() %}
+    {% for serie in series %}
         <h3>
-            {{title}}
-            <a href="{{ url_for('.select_item', query=title) }}">
+            {{serie.title}}
+            <a href="{{ url_for('.select_season', imdb_id=resolve_id(serie.imdb_id)) }}">
                 <i class="fas fa-search"></i>
             </a>
         </h3>
 
-        {% for i in sorted(seasons) %}
-            {% set season = seasons[i] %}
+        {% for i in sorted(serie.seasons) %}
+            {% set season = serie.seasons[i] %}
             <h4>
                 Season {{ i }}
                 <a href="{{
                 url_for(
                     '.select_episode',
-                    imdb_id=resolve_id(season[0].download.imdb_id),
+                    imdb_id=resolve_id(serie.imdb_id),
                     season=i
                 )
                 }}">
