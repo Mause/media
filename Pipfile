@@ -35,6 +35,7 @@ flask-user = "*"
 dill = "*"
 pika = "*"
 flask-admin = "*"
+flask-restless = "*"
 
 [requires]
 python_version = "3.8"

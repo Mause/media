@@ -22,7 +22,8 @@ from flask import (
     url_for,
 )
 from flask_admin import Admin
-from flask_user import UserManager, login_required, roles_required
+from flask_restless import APIManager, ProcessingException
+from flask_user import UserManager, current_user, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
 from requests.exceptions import ConnectionError
@@ -89,6 +90,13 @@ def create_app(config):
     db.create_all(app=papp)
     UserManager(papp, db, User)
 
+    manager = APIManager(
+        papp, flask_sqlalchemy_db=db, preprocessors={'GET_MANY': [check_auth]}
+    )
+    manager.create_api(
+        Download, collection_name='downloads', include_methods=['progress']
+    )
+
     admin = Admin(papp, name='Media')
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(RoleAdmin(Role, db.session))
@@ -118,6 +126,11 @@ class SearchForm(FlaskForm):
 @app.route('/user/unauthorized')
 def unauthorized():
     return render_template('unauthorized.html')
+
+
+def check_auth(*args, **kwargs):
+    if not getattr(current_user, 'is_authorized', False):
+        raise ProcessingException(description='Not Authorized', code=401)
 
 
 @app.before_request

@@ -24,6 +24,11 @@ class Download(db.Model):  # type: ignore
     episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
     title = Column(String)
 
+    def progress(self):
+        from .main import get_keyed_torrents
+
+        return get_keyed_torrents()[self.transmission_id]['percentDone'] * 100
+
 
 class EpisodeDetails(db.Model):  # type: ignore
     __tablename__ = 'episode_details'
