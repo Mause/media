@@ -15,6 +15,7 @@ from flask import (
     Response,
     abort,
     current_app,
+    g,
     jsonify,
     redirect,
     render_template,
@@ -590,6 +591,14 @@ def index() -> Union[str, WResponse]:
 
 
 def get_keyed_torrents() -> Dict[str, Dict]:
+    if hasattr(g, 'get_keyed_torrents'):
+        return g.get_keyed_torrents
+    else:
+        g.get_keyed_torrents = _get_keyed_torrents()
+        return g.get_keyed_torrents
+
+
+def _get_keyed_torrents() -> Dict[str, Dict]:
     try:
         return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
     except (
