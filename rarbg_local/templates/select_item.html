@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 
-{% block header %}Results for "{{query}}"{% endblock %}
+{% block title %}Results for "{{query}}"{% endblock %}
+
+{% block header %}
+Results
+<form action="{{url_for('.select_item')}}">
+    {{ form.query(size=20) }}
+    <input type="submit" value="Search">
+</form>
+{% endblock %}
 
 {% block content %}
 
