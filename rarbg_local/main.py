@@ -129,8 +129,7 @@ def unauthorized():
 
 
 def check_auth(*args, **kwargs):
-    print(current_user)
-    if not getattr(current_user, 'is_authorized', False):
+    if not current_user.is_authenticated:
         raise ProcessingException(description='Not Authorized', code=401)
 
 
