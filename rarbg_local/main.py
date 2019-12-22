@@ -19,11 +19,10 @@ from flask import (
     redirect,
     render_template,
     request,
-    session,
     url_for,
 )
 from flask_admin import Admin
-from flask_user import UserManager, current_user, login_required, roles_required
+from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
 from requests.exceptions import ConnectionError
@@ -123,12 +122,6 @@ def unauthorized():
 @app.before_request
 def before():
     if not request.path.startswith('/user'):
-        try:
-            current_user.is_authenticated
-        except AttributeError:
-            session.clear()
-            return redirect(request.url)
-
         return login_required(roles_required('Member')(lambda: None))()
 
 
