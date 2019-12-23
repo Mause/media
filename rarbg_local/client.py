@@ -35,7 +35,7 @@ class Proxy:
                 properties=pika.BasicProperties(reply_to='amq.rabbitmq.reply-to'),
             )
         )
-        return f.result(timeout=5)
+        return f.result(timeout=10)
 
     def __getattr__(self, method):
         return partial(self.call, method)
