@@ -2,6 +2,12 @@
 
 {% block title %}Media{% endblock %}
 
+{% block nav %}
+<a href="http://novell.mause.me:9091" target="_blank">Transmission</a>
+<a href="http://novell.mause.me:32400" target="_blank">Plex</a>
+<a href="{{ url_for('user.logout') }}">Logout</a>
+{% endblock %}
+
 {% block content %}
 
 <h1>Media</h1>
@@ -13,10 +19,6 @@
 </form>
 
 <br/>
-
-<a href="http://novell.mause.me:9091" target="_blank">Transmission</a>
-<a href="http://novell.mause.me:32400" target="_blank">Plex</a>
-<a href="{{ url_for('user.logout') }}">Logout</a>
 
 <div class="colA">
     <h2>Movies</h2>

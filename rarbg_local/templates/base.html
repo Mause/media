@@ -36,6 +36,11 @@
     <body>
         <h3>{% block header %}{% endblock %}</h3>
 
+        <nav>
+            <a href="{{ url_for('.index') }}">Home</a>
+            {% block nav %}{% endblock %}
+        </nav>
+
         {% block content %}{% endblock %}
     </body>
 </html>
