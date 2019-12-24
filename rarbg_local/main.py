@@ -142,7 +142,7 @@ def unauthorized():
 
 
 def check_auth(*args, **kwargs):
-    auth = request.auth
+    auth = request.authorization
     if not auth:
         raise ProcessingException(description='Not Authenticated', code=403)
 
