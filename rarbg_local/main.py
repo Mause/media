@@ -147,14 +147,9 @@ def check_auth(*args, **kwargs):
         raise ProcessingException(description='Not Authenticated', code=403)
 
     um = current_app.user_manager
-
     user = um.db_manager.find_user_by_username(auth['username'])
-    print(auth, user)
     if um.verify_password(auth['password'], user.password):
-        login_user(user)
-
-    if not current_user.is_authenticated:
-        raise ProcessingException(description='Not Authorized', code=401)
+        raise ProcessingException(description='Invalid credentials', code=403)
 
 
 @app.before_request
