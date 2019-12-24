@@ -145,13 +145,12 @@ def check_auth(*args, **kwargs):
     auth = request.authorization
     if not auth:
         raise ProcessingException(description='Not Authenticated', code=403)
-    print(auth)
 
     um = current_app.user_manager
 
-    user = um.db_manager.find_user_by_username(auth[0])
+    user = um.db_manager.find_user_by_username(auth['username'])
     print(auth, user)
-    if um.verify_password(user.password, auth[1]):
+    if um.verify_password(user.password, auth['password']):
         login_user(user)
 
     if not current_user.is_authenticated:
