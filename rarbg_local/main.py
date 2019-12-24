@@ -142,6 +142,10 @@ def unauthorized():
 
 
 def check_auth(*args, **kwargs):
+    auth = request.auth
+    if not auth:
+        raise ProcessingException(description='Not Authenticated', code=403)
+
     um = current_app.user_manager
 
     user = um.db_manager.find_user_by_username(auth[0])
@@ -155,8 +159,7 @@ def check_auth(*args, **kwargs):
 
 @app.before_request
 def before():
-
-
+    if request.path.startswith('/api'):
         return login_required(roles_required('Member')(lambda: None))()
 
 
