@@ -142,24 +142,19 @@ def unauthorized():
 
 
 def check_auth(*args, **kwargs):
+    um = current_app.user_manager
+
+    user = um.db_manager.find_user_by_username(auth[0])
+    print(auth, user)
+    if um.verify_password(user.password, auth[1]):
+        login_user(user)
+
     if not current_user.is_authenticated:
         raise ProcessingException(description='Not Authorized', code=401)
 
 
 @app.before_request
 def before():
-    if not request.path.startswith('/user'):
-
-
-        if request.path.startswith('/api'):
-            auth =  request.auth
-
-            um = current_app.user_manager
-
-            user = um.db_manager.find_user_by_username(auth[0])
-            print(auth, user)
-            if um.verify_password(user.password, auth[1]):
-                login_user(user)
 
 
         return login_required(roles_required('Member')(lambda: None))()
