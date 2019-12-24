@@ -34,6 +34,7 @@ from flask import (
     url_for,
 )
 from flask_admin import Admin
+from flask_login import login_user
 from flask_restless import APIManager, ProcessingException
 from flask_user import UserManager, current_user, login_required, roles_required
 from flask_wtf import FlaskForm
@@ -148,6 +149,18 @@ def check_auth(*args, **kwargs):
 @app.before_request
 def before():
     if not request.path.startswith('/user'):
+
+
+        if request.path.startswith('/api'):
+            auth =  request.auth
+
+            um = current_app.user_manager
+
+            user = um.db_manager.find_user_by_username(auth[0])
+            if um.verify_password(user.password, auth[1]):
+                login_user(user)
+
+
         return login_required(roles_required('Member')(lambda: None))()
 
 
