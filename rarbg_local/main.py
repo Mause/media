@@ -157,6 +157,7 @@ def before():
             um = current_app.user_manager
 
             user = um.db_manager.find_user_by_username(auth[0])
+            print(auth, user)
             if um.verify_password(user.password, auth[1]):
                 login_user(user)
 
