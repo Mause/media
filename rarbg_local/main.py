@@ -145,6 +145,7 @@ def check_auth(*args, **kwargs):
     auth = request.authorization
     if not auth:
         raise ProcessingException(description='Not Authenticated', code=403)
+    print(auth)
 
     um = current_app.user_manager
 
