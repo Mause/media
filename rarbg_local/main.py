@@ -151,6 +151,8 @@ def check_auth(*args, **kwargs):
     if um.verify_password(auth['password'], user.password):
         raise ProcessingException(description='Invalid credentials', code=403)
 
+    if Roles.Member not in user.roles:
+        raise ProcessingException(description='Not a member', code=401)
 
 @app.before_request
 def before():
