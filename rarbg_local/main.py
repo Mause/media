@@ -150,7 +150,7 @@ def check_auth(*args, **kwargs):
 
     user = um.db_manager.find_user_by_username(auth['username'])
     print(auth, user)
-    if um.verify_password(user.password, auth['password']):
+    if um.verify_password(auth['password'], user.password):
         login_user(user)
 
     if not current_user.is_authenticated:
