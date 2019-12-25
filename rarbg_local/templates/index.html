@@ -8,17 +8,16 @@
 <a href="{{ url_for('user.logout') }}">Logout</a>
 {% endblock %}
 
-{% block content %}
-
+{% block header %}
 <h1>Media</h1>
+{% endblock %}
 
+{% block content %}
 <form method="POST" action="/">
     {{ form.hidden_tag() }}
     <strong>{{ form.query.label }}</strong> {{ form.query(size=20) }}
     <input type="submit" value="Search">
 </form>
-
-<br/>
 
 <div class="colA">
     <h2>Movies</h2>
