@@ -144,7 +144,7 @@ def unauthorized():
 def check_auth(*args, **kwargs):
     auth = request.authorization
     if not auth:
-        raise ProcessingException(description='Not Authenticated', code=403)
+        return abort(401, www_authenticate='Basic')
 
     um = current_app.user_manager
     user = um.db_manager.find_user_by_username(auth['username'])
