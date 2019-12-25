@@ -148,11 +148,15 @@ def check_auth(*args, **kwargs):
 
     um = current_app.user_manager
     user = um.db_manager.find_user_by_username(auth['username'])
+    if not user:
+        raise ProcessingException('No such user', 403)
+
     if um.verify_password(auth['password'], user.password):
         raise ProcessingException(description='Invalid credentials', code=403)
 
     if Roles.Member not in user.roles:
         raise ProcessingException(description='Not a member', code=401)
+
 
 @app.before_request
 def before():
