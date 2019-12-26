@@ -160,7 +160,7 @@ def check_auth(*args, **kwargs):
 
 @app.before_request
 def before():
-    if request.path.startswith('/api'):
+    if not request.path.startswith('/api'):
         return login_required(roles_required('Member')(lambda: None))()
 
 
