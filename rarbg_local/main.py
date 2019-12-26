@@ -151,6 +151,7 @@ def check_auth(*args, **kwargs):
     if not user:
         raise ProcessingException('No such user', 403)
 
+    logging.log(auth)
     if um.verify_password(auth['password'], user.password):
         raise ProcessingException(description='Invalid credentials', code=403)
 
