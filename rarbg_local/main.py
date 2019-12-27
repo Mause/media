@@ -34,6 +34,7 @@ from flask import (
     url_for,
 )
 from flask_admin import Admin
+from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_login import login_user
 from flask_restless import APIManager, ProcessingException
 from flask_user import UserManager, current_user, login_required, roles_required
@@ -102,6 +103,8 @@ def create_app(config):
     db.init_app(papp)
     db.create_all(app=papp)
     UserManager(papp, db, User)
+
+    papp.json_encoder = DynamicJSONEncoder
 
     manager = APIManager(
         papp, flask_sqlalchemy_db=db, preprocessors={'GET_MANY': [check_auth]}
@@ -571,8 +574,9 @@ def resolve_series() -> List[SeriesDetails]:
 
 
 @app.route('/api/index')
+@jsonapi
 def api_index():
-    return jsonify(resolve_series())
+    return resolve_series()
 
 
 def render_progress(

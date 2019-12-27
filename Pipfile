@@ -36,6 +36,7 @@ dill = "*"
 pika = "*"
 flask-admin = "*"
 flask-restless = "*"
+flask-jsontools = "*"
 
 [requires]
 python_version = "3.8"

@@ -1,6 +1,7 @@
 from functools import lru_cache
 from typing import List, Optional, Type, TypeVar, Union
 
+from flask_jsontools import JsonSerializableBase
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserMixin
 from sqlalchemy import Column, ForeignKey, Integer, String
@@ -8,7 +9,7 @@ from sqlalchemy.orm import joinedload, relationship
 from sqlalchemy.sql import ClauseElement
 from sqlalchemy_repr import RepresentableBase
 
-db = SQLAlchemy(model_class=RepresentableBase)
+db = SQLAlchemy(model_class=(RepresentableBase,JsonSerializableBase))
 T = TypeVar('T')
 
 
