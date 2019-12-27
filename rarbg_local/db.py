@@ -15,6 +15,7 @@ T = TypeVar('T')
 
 class Download(db.Model):  # type: ignore
     __tablename__ = 'download'
+    _json_exclude = {'movie', 'episode'}
     id = Column(Integer, primary_key=True)
     transmission_id = Column(String, nullable=False)
     imdb_id = Column(String, nullable=False)
