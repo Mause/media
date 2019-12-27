@@ -390,7 +390,9 @@ def download_all_episodes(imdb_id: str, season: str) -> str:
     packs_or_not = groupby(
         results, lambda result: extract_marker(result['title'])[1] is None
     )
-    packs = packs_or_not.get(True, [])
+    packs = sorted(
+        packs_or_not.get(True, []), key=lambda result: result['seeders'], reverse=True
+    )
 
     grouped_results = groupby(
         packs_or_not.get(False, []), lambda result: normalise(episodes, result['title'])
