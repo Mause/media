@@ -3,6 +3,18 @@
 {% block header %}Download all episodes of Season {{season}} of {{info.name}}{% endblock %}
 
 {% block content %}
+    <h3>Packs</h3>
+    <ul>
+    {% for result in packs %}
+        <li>
+        <a href="{{ build_download_link(imdb_id, season, [result]) }}">{{result.title}}</a>
+        <small>{{result.seeders}}</small>
+        </li>
+    {% endfor %}
+    </ul>
+
+
+    <h3>Multiple</h3>
     {% for pattern, rset in results.items() %}
 
         <h3><a href="{{ build_download_link(imdb_id, season, rset) }}">{{pattern}}</a></h3>

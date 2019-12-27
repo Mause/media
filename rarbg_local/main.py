@@ -387,8 +387,13 @@ def download_all_episodes(imdb_id: str, season: str) -> str:
 
     episodes = get_tv_episodes(imdb_id, season)['episodes']
 
+    packs_or_not = groupby(
+        results, lambda result: extract_marker(result['title'])[1] is None
+    )
+    packs = packs_or_not.get(True, [])
+
     grouped_results = groupby(
-        results, lambda result: normalise(episodes, result['title'])
+        packs_or_not.get(False, []), lambda result: normalise(episodes, result['title'])
     )
 
     return render_template(
@@ -396,6 +401,7 @@ def download_all_episodes(imdb_id: str, season: str) -> str:
         info=get_tv(imdb_id),
         season=season,
         imdb_id=get_tv_imdb_id(imdb_id),
+        packs=packs,
         results=grouped_results,
         build_download_link=build_download_link,
     )
