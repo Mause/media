@@ -529,10 +529,11 @@ def resolve_season(episodes):
                 transmission_id=f'{pack.download.transmission_id}.{episode["episode_number"]}',
                 title=episode['name'],
                 imdb_id=pack.download.imdb_id,
+                type='episode',
             ),
             season=pack.season,
             episode=episode['episode_number'],
-            show_title='',
+            show_title=pack.show_title,
         )
         for episode in get_tv_episodes(resolve_id(pack.download.imdb_id), pack.season)[
             'episodes'
