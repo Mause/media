@@ -36,6 +36,9 @@
             href="{{build_download_link(option)}}"
         >{{option.title}}</a>
         <small>{{option.seeders}}</small>
+        {% if already_downloaded(option) %}
+        <small>downloaded</small>
+        {% endif %}
     </li>
     {% endfor %}
 </ul>

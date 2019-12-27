@@ -19,6 +19,7 @@ from typing import (
     Union,
     cast,
 )
+from urllib.parse import parse_qsl, urlparse
 
 from flask import (
     Blueprint,
@@ -261,6 +262,13 @@ def select_options(
             **extra,
         )
 
+    def already_downloaded(result):
+        t = get_keyed_torrents()
+        url = urlparse(result['download'])
+        hash_string = dict(parse_qsl(url.query))['xt'].split(':')[-1]
+
+        return hash_string in t
+
     manual_link = url_for(
         '.manual', type=type, imdb_id=imdb_id, titles=[title], **extra
     )
@@ -295,6 +303,7 @@ def select_options(
         type=type,
         display_title=display_title,
         build_download_link=build_download_link,
+        already_downloaded=already_downloaded,
         manual_link=manual_link,
     )
 
@@ -682,7 +691,9 @@ def redirect_to_imdb(type_: str, ident: str, season: str = None, episode: str = 
     if type == 'movie':
         imdb_id = get_movie_imdb_id(ident)
     elif season:
-        imdb_id = get_json(f'tv/{ident}/season/{season}/episode/{episode}/external_ids')['imdb_id']
+        imdb_id = get_json(
+            f'tv/{ident}/season/{season}/episode/{episode}/external_ids'
+        )['imdb_id']
     else:
         imdb_id = get_tv_imdb_id(ident)
 
