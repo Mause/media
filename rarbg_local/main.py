@@ -63,6 +63,7 @@ from .db import (
 )
 from .rarbg import RarbgTorrent, get_rarbg
 from .tmdb import (
+    get_json,
     get_movie,
     get_movie_imdb_id,
     get_tv,
@@ -668,8 +669,14 @@ def _get_keyed_torrents() -> Dict[str, Dict]:
 
 
 @app.route('/redirect/<type_>/<ident>')
-def redirect_to_imdb(type_: str, ident: str):
-    imdb_id = get_movie_imdb_id(ident) if type_ == 'movie' else get_tv_imdb_id(ident)
+@app.route('/redirect/<type_>/<ident>/<season>/<episode>')
+def redirect_to_imdb(type_: str, ident: str, season: str = None, episode: str = None):
+    if type == 'movie':
+        imdb_id = get_movie_imdb_id(ident)
+    elif season:
+        imdb_id = get_json(f'tv/{ident}/season/{season}/episode/{episode}/external_ids')['imdb_id']
+    else:
+        imdb_id = get_tv_imdb_id(ident)
 
     return redirect(f'https://www.imdb.com/title/{imdb_id}')
 
