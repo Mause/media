@@ -570,6 +570,11 @@ def resolve_series() -> List[SeriesDetails]:
     ]
 
 
+@app.route('/api/index')
+def api_index():
+    return jsonify(resolve_series())
+
+
 def render_progress(
     torrents: Dict[str, Dict], item: Union[MovieDetails, EpisodeDetails]
 ) -> str:
