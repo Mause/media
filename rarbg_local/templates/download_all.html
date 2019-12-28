@@ -7,12 +7,13 @@
     <ul>
     {% for result in packs %}
         <li>
-        <a href="{{ build_download_link(imdb_id, season, [result]) }}">{{result.title}}</a>
-        <small>{{result.seeders}}</small>
+            <a href="{{ build_download_link(imdb_id, season, [result]) }}">{{result.title}}</a>
+            <small>{{result.seeders}}</small>
         </li>
+    {% else %}
+        No pack results
     {% endfor %}
     </ul>
-
 
     {% for name, results in super_results %}
     <h3>{{name}} sets</h3>
@@ -29,7 +30,7 @@
             </ul>
 
         {% else %}
-        No {{name}} results
+            No {{name.lower()}} results
         {% endfor %}
     {% endfor %}
 
