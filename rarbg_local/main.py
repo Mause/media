@@ -216,16 +216,22 @@ def select_tv_options(imdb_id: str, season: str, episode: str) -> str:
     )
 
 
+def eventstream(func: Callable):
+    def decorator(*args, **kwargs):
+        return Response(
+            (f'data: {json.dumps(rset)}\n\n' for rset in func(*args, **kwargs)),
+            mimetype="text/event-stream",
+        )
+
+    return decorator
+
+
 @app.route('/select/<imdb_id>/options/stream')
+@eventstream
 def stream(imdb_id: str):
     url = current_app.config['TORRENT_API_URL']
-
-    def s():
-        results = get_rarbg(url, 'movie', search_imdb=get_movie_imdb_id(imdb_id))
-        for rset in results:
-            yield f'data: {json.dumps(rset)}\n\n'
-
-    return Response(s(), mimetype="text/event-stream")
+    results = get_rarbg(url, 'movie', search_imdb=get_movie_imdb_id(imdb_id))
+    return results
 
 
 @app.route('/select/<imdb_id>/options')
