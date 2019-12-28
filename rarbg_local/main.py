@@ -694,7 +694,7 @@ def _get_keyed_torrents() -> Dict[str, Dict]:
 @app.route('/redirect/<type_>/<ident>')
 @app.route('/redirect/<type_>/<ident>/<season>/<episode>')
 def redirect_to_imdb(type_: str, ident: str, season: str = None, episode: str = None):
-    if type == 'movie':
+    if type_ == 'movie':
         imdb_id = get_movie_imdb_id(ident)
     elif season:
         imdb_id = get_json(
