@@ -406,6 +406,9 @@ def download_all_episodes(imdb_id: str, season: str) -> str:
     grouped_results = groupby(
         packs_or_not.get(False, []), lambda result: normalise(episodes, result['title'])
     )
+    complete_or_not = groupby(
+        grouped_results.items(), lambda rset: len(rset[1]) == len(episodes)
+    )
 
     return render_template(
         'download_all.html',
@@ -413,7 +416,10 @@ def download_all_episodes(imdb_id: str, season: str) -> str:
         season=season,
         imdb_id=get_tv_imdb_id(imdb_id),
         packs=packs,
-        results=grouped_results,
+        super_results=[
+            ('Complete', complete_or_not.get(True, [])),
+            ('Incomplete', complete_or_not.get(False, [])),
+        ],
         build_download_link=build_download_link,
     )
 

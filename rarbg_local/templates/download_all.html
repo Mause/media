@@ -14,22 +14,23 @@
     </ul>
 
 
-    <h3>Multiple</h3>
-    {% for pattern, rset in results.items() %}
+    {% for name, results in super_results %}
+    <h3>{{name}} sets</h3>
+        {% for pattern, rset in results %}
+            <h3><a href="{{ build_download_link(imdb_id, season, rset) }}">{{pattern}}</a></h3>
 
-        <h3><a href="{{ build_download_link(imdb_id, season, rset) }}">{{pattern}}</a></h3>
+            <ul>
+            {% for result in rset %}
+                <li>
+                    {{result.title}}
+                    <small>{{result.seeders}}</small>
+                </li>
+            {% endfor %}
+            </ul>
 
-        <ul>
-        {% for result in rset %}
-            <li>
-                {{result.title}}
-                <small>{{result.seeders}}</small>
-            </li>
+        {% else %}
+        No {{name}} results
         {% endfor %}
-        </ul>
-
-    {% else %}
-        No results
     {% endfor %}
 
 {% endblock %}
