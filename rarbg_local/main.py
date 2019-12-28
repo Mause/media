@@ -694,14 +694,13 @@ def _get_keyed_torrents() -> Dict[str, Dict]:
         TimeoutError,
         FutureTimeoutError,
     ) as e:
-        url = current_app.config["TRANSMISSION_URL"]
         error = 'Unable to connect to transmission'
         return abort(
             500,
             error,
             Response(
                 f'''
-                <h3 class="error">{error}: {url}</h3>
+                <h3>{error}</h3>
                 <code>{repr(e)}</code>
                 ''',
                 500,
