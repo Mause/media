@@ -37,6 +37,7 @@ pika = "*"
 flask-admin = "*"
 flask-restless = "*"
 flask-jsontools = "*"
+flask-assets = "*"
 
 [requires]
 python_version = "3.8"
