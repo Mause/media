@@ -6,7 +6,7 @@ import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from functools import wraps
-from itertools import zip_longest
+from itertools import chain, zip_longest
 from typing import (
     Callable,
     Dict,
@@ -219,7 +219,13 @@ def select_tv_options(imdb_id: str, season: str, episode: str) -> str:
 def eventstream(func: Callable):
     def decorator(*args, **kwargs):
         return Response(
-            (f'data: {json.dumps(rset)}\n\n' for rset in func(*args, **kwargs)),
+            chain(
+                (
+                    f'data: {json.dumps(rset)}\n\n'
+                    for rset in func(*args, **kwargs)
+                ),
+                ['data:\n\n'],
+            ),
             mimetype="text/event-stream",
         )
 
