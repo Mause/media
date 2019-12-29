@@ -60,9 +60,8 @@ from .db import (
     db,
     get_episodes,
     get_movies,
-    get_or_create,
 )
-from .rarbg import RarbgTorrent, get_rarbg
+from .rarbg import RarbgTorrent, get_rarbg, get_rarbg_iter
 from .tmdb import (
     get_json,
     get_movie,
@@ -224,10 +223,7 @@ def eventstream(func: Callable):
     def decorator(*args, **kwargs):
         return Response(
             chain(
-                (
-                    f'data: {json.dumps(rset)}\n\n'
-                    for rset in func(*args, **kwargs)
-                ),
+                (f'data: {json.dumps(rset)}\n\n' for rset in func(*args, **kwargs)),
                 ['data:\n\n'],
             ),
             mimetype="text/event-stream",
@@ -239,9 +235,13 @@ def eventstream(func: Callable):
 @app.route('/select/<imdb_id>/options/stream')
 @eventstream
 def stream(imdb_id: str):
-    url = current_app.config['TORRENT_API_URL']
-    results = get_rarbg(url, 'movie', search_imdb=get_movie_imdb_id(imdb_id))
-    return results
+    return chain.from_iterable(
+        get_rarbg_iter(
+            current_app.config['TORRENT_API_URL'],
+            'movie',
+            search_imdb=get_movie_imdb_id(imdb_id),
+        )
+    )
 
 
 @app.route('/select/<imdb_id>/options')
@@ -669,9 +669,10 @@ def test(tmdb_id: str) -> str:
     init = {
         'imdb_id': get_movie_imdb_id(tmdb_id),
         'title': get_movie(tmdb_id)['title'],
-        'tmdb_id':tmdb_id,
+        'tmdb_id': tmdb_id,
     }
     from .frontend import e
+
     return render_template('test.html', init=json.dumps(init), e=e)
 
 
