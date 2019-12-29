@@ -108,6 +108,10 @@ def create_app(config):
 
     papp.json_encoder = DynamicJSONEncoder
 
+    from .frontend import e
+
+    e.init_app(papp)
+
     manager = APIManager(
         papp, flask_sqlalchemy_db=db, preprocessors={'GET_MANY': [check_auth]}
     )
@@ -658,6 +662,17 @@ def render_progress(
         <progress value="{pc}" title="{pc * 100:.02f}% ({eta} remaining)">
         </progress>
         '''
+
+
+@app.route('/test/<tmdb_id>')
+def test(tmdb_id: str) -> str:
+    init = {
+        'imdb_id': get_movie_imdb_id(tmdb_id),
+        'title': get_movie(tmdb_id)['title'],
+        'tmdb_id':tmdb_id,
+    }
+    from .frontend import e
+    return render_template('test.html', init=json.dumps(init), e=e)
 
 
 @app.route('/', methods=['GET', 'POST'])
