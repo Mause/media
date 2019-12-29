@@ -673,7 +673,9 @@ def test(tmdb_id: str) -> str:
     }
     from .frontend import e
 
-    return render_template('test.html', init=json.dumps(init), e=e)
+    return render_template(
+        'test.html', init=json.dumps(init), e=e, title=init['title']
+    )
 
 
 @app.route('/', methods=['GET', 'POST'])
