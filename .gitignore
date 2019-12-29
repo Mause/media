@@ -11,3 +11,5 @@ screenshots/
 *.pid
 *.bin
 *.pkl
+.webassets-cache
+node_modules/
