@@ -1,0 +1,62 @@
+{
+  "name": "rarbg_local",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@babel/cli": "^7.7.7",
+    "@types/lodash": "^4.14.149",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "ansi-styles": "^3.2.1",
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "chalk": "^2.4.2",
+    "color-convert": "^1.9.3",
+    "color-name": "^1.1.3",
+    "csstype": "^2.6.8",
+    "debug": "^4.1.1",
+    "escape-string-regexp": "^1.0.5",
+    "esutils": "^2.0.3",
+    "globals": "^11.12.0",
+    "has-flag": "^3.0.0",
+    "js-tokens": "^4.0.0",
+    "jsesc": "^2.5.2",
+    "lodash": "^4.17.15",
+    "ms": "^2.1.2",
+    "qs": "^6.9.1",
+    "querystring": "^0.2.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "source-map": "^0.5.7",
+    "supports-color": "^5.5.0",
+    "to-fast-properties": "^2.0.0",
+    "tsc": "^1.20150623.0",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-react": "^4.1.0",
+    "typescript": "^3.7.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-react": "^7.7.4",
+    "@babel/preset-typescript": "^7.7.7",
+    "babel-loader": "^8.0.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mause/rarbg_local.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mause/rarbg_local/issues"
+  },
+  "homepage": "https://github.com/Mause/rarbg_local#readme"
+}
