@@ -9,7 +9,7 @@ e = Environment()
 class TypeScript(ExternalTool):
     def input(self, _in, out, **kw):
         argv = [
-            abspath('node_modules/.bin/tsc.cmd'),
+            abspath('node_modules/.bin/tsc'),
             '--outFile',
             '{output}',
             '--jsx',
