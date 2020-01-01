@@ -6,4 +6,4 @@ transmission = lru_cache()(get_client)
 
 
 def __getattr__(name):
-    return transmission().__getattr__(name)
+    return lambda *args, **kwargs: getattr(transmission(), name)(*args, **kwargs)
