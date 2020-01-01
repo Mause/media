@@ -3,6 +3,7 @@ import * as qs from 'qs';
 import React from 'react';
 import { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { HashRouter, withRouter, RouteComponentProps } from 'react-router-dom';
 
 const ranking = [
   'Movies/XVID',
@@ -28,7 +29,7 @@ interface ITorrent {
   seeders: number;
   download: string;
 }
-interface IAppProps {}
+type IAppProps = {} & RouteComponentProps<{ tmdb_id: string }>;
 const init = (window as any).init;
 
 function DisplayTorrent({ torrent }: { torrent: ITorrent }) {
@@ -117,4 +118,5 @@ function subscribe(path: string, callback: (a: any) => void, end: (() => void) |
   });
 }
 
-ReactDOM.render(<AppComponent />, document.getElementById('app'));
+const Wrapped = withRouter(AppComponent);
+ReactDOM.render( <HashRouter><Wrapped /></HashRouter>, document.getElementById('app'));

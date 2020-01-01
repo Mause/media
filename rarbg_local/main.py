@@ -650,15 +650,12 @@ def render_progress(
         '''
 
 
-@app.route('/test/<tmdb_id>')
-def test(tmdb_id: str) -> str:
-    init = {
-        'imdb_id': get_movie_imdb_id(tmdb_id),
-        'title': get_movie(tmdb_id)['title'],
-        'tmdb_id': tmdb_id,
-    }
-
-    return render_template('test.html', init=json.dumps(init), e=e, title=init['title'])
+@app.route('/app')
+def test() -> str:
+    return render_template(
+        'test.html',
+        BUNDLES=json.dumps({bundle.urls()[0]: bundle.extra['names'] for bundle in e}),
+    )
 
 
 @app.route('/', methods=['GET', 'POST'])
