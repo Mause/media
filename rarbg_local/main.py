@@ -632,6 +632,12 @@ def api_index():
     return {'series': resolve_series(), 'movies': get_movies()}
 
 
+@app.route('/api/torrents')
+@jsonapi
+def api_torrents():
+    return get_keyed_torrents()
+
+
 def render_progress(
     torrents: Dict[str, Dict], item: Union[MovieDetails, EpisodeDetails]
 ) -> str:
