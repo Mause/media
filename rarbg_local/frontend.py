@@ -37,6 +37,7 @@ urls = [
     dep("qs", "6.9.1", "qs.min.js"),
     dep("react-router", "5.1.2", "react-router.js"),
     dep("react-router-dom", "5.1.2", "react-router-dom.js"),
+    dep('axios', "0.19.0", "axios.js"),
 ]
 
 
@@ -89,11 +90,9 @@ e.register(
 
 
 if __name__ == '__main__':
-    # from .main import create_app
-
     from flask import Flask
 
     f = Flask(__name__)
 
     with f.app_context():
-        e['streaming'].build(force=True)
+        e['deps'].build(force=True)
