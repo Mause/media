@@ -113,6 +113,30 @@ class AppComponent extends Component<
     );
   }
 }
+export interface Download {
+  id: number;
+  imdb_id: string;
+  title: string,
+  transmission_id: string,
+}
+export interface MovieResponse {
+  download: Download,
+  id: number
+}
+export interface SeriesResponse {
+  imdb_id: string;
+  title: string;
+  seasons: {
+    [key: string]:
+    {
+      download: Download,
+      episode: number,
+      id: number,
+      season: number,
+      show_title: string;
+    }[]
+  };
+}
 
 
 const Wrapped = withRouter(AppComponent);
