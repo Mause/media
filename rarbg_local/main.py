@@ -651,7 +651,8 @@ def render_progress(
 
 
 @app.route('/app')
-def test() -> str:
+@app.route('/app/<path:path>')
+def test(path=None) -> str:
     return render_template(
         'test.html',
         BUNDLES=json.dumps({bundle.urls()[0]: bundle.extra['names'] for bundle in e}),
