@@ -7,6 +7,7 @@ from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from functools import wraps
 from itertools import chain, zip_longest
+from pathlib import Path
 from typing import (
     Callable,
     Dict,
@@ -88,7 +89,8 @@ def create_app(config):
         {
             'SECRET_KEY': 'hkfircsc',
             'SQLALCHEMY_ECHO': True,
-            'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.db',
+            'SQLALCHEMY_DATABASE_URI': 'sqlite:///'
+            + str(Path(__file__).parent.parent / 'db.db'),
             'SQLALCHEMY_TRACK_MODIFICATIONS': False,
             'TRANSMISSION_URL': 'http://novell.local:9091/transmission/rpc',
             'TORRENT_API_URL': 'https://torrentapi.org/pubapi_v2.php',
