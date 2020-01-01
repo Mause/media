@@ -13,3 +13,4 @@ screenshots/
 *.pkl
 .webassets-cache
 node_modules/
+.env
