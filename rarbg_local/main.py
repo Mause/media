@@ -629,7 +629,7 @@ def resolve_series() -> List[SeriesDetails]:
 @app.route('/api/index')
 @jsonapi
 def api_index():
-    return resolve_series()
+    return {'series': resolve_series(), 'movies': get_movies()}
 
 
 def render_progress(
@@ -673,9 +673,7 @@ def test(tmdb_id: str) -> str:
     }
     from .frontend import e
 
-    return render_template(
-        'test.html', init=json.dumps(init), e=e, title=init['title']
-    )
+    return render_template('test.html', init=json.dumps(init), e=e, title=init['title'])
 
 
 @app.route('/', methods=['GET', 'POST'])
