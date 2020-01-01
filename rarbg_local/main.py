@@ -36,9 +36,7 @@ from flask import (
 )
 from flask_admin import Admin
 from flask_jsontools import DynamicJSONEncoder, jsonapi
-from flask_login import login_user
-from flask_restless import APIManager, ProcessingException
-from flask_user import UserManager, current_user, login_required, roles_required
+from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
 from requests.exceptions import ConnectionError
@@ -110,13 +108,6 @@ def create_app(config):
 
     e.init_app(papp)
 
-    manager = APIManager(
-        papp, flask_sqlalchemy_db=db, preprocessors={'GET_MANY': [check_auth]}
-    )
-    manager.create_api(
-        Download, collection_name='downloads', include_methods=['progress']
-    )
-
     admin = Admin(papp, name='Media')
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(RoleAdmin(Role, db.session))
@@ -146,24 +137,6 @@ class SearchForm(FlaskForm):
 @app.route('/user/unauthorized')
 def unauthorized():
     return render_template('unauthorized.html')
-
-
-def check_auth(*args, **kwargs):
-    auth = request.authorization
-    if not auth:
-        return abort(401, www_authenticate='Basic')
-
-    um = current_app.user_manager
-    user = um.db_manager.find_user_by_username(auth['username'])
-    if not user:
-        raise ProcessingException('No such user', 403)
-
-    logging.log(auth)
-    if um.verify_password(auth['password'], user.password):
-        raise ProcessingException(description='Invalid credentials', code=403)
-
-    if Roles.Member not in user.roles:
-        raise ProcessingException(description='Not a member', code=401)
 
 
 @app.before_request

@@ -35,7 +35,6 @@ flask-user = "*"
 dill = "*"
 pika = "*"
 flask-admin = "*"
-flask-restless = "*"
 flask-jsontools = "*"
 flask-assets = "*"
 
