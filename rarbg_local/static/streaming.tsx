@@ -52,10 +52,13 @@ function remove(bit: string): string {
   return parts.slice(1).join('/');
 }
 
-class AppComponent extends Component<IAppProps, { results: ITorrent[] }> {
+class AppComponent extends Component<
+  IAppProps,
+  { results: ITorrent[]; loading: boolean }
+  > {
   constructor(props: IAppProps) {
     super(props);
-    this.state = { results: [] };
+    this.state = { results: [], loading: true };
     this.onComponentMount();
   }
   public render() {
@@ -76,6 +79,7 @@ class AppComponent extends Component<IAppProps, { results: ITorrent[] }> {
     ));
     return (
       <div>
+        {this.state.loading ? 'Loading...' : ''}
         <p>
           Auto selection: {auto ? <DisplayTorrent torrent={auto} /> : 'None'}
         </p>
@@ -84,26 +88,32 @@ class AppComponent extends Component<IAppProps, { results: ITorrent[] }> {
     );
   }
   private onComponentMount() {
-    subscribe(`/select/${init.tmdb_id}/options/stream`, data => {
-      this.setState(state => ({
-        ...state,
-        results: state.results.concat([data]),
-      }));
-    });
+    const { tmdb_id } = this.props.match.params;
+    subscribe(
+      `/select/${tmdb_id}/options/stream`,
+      data => {
+        this.setState(state => ({
+          ...state,
+          results: state.results.concat([data]),
+        }));
+      },
+      () => this.setState({ loading: false }),
+    );
   }
 }
 
-function subscribe(path: string, callback: (a: any) => void) {
-  window.addEventListener('load', () => {
-    const es = new EventSource(path, {
-      withCredentials: true,
-    });
-    es.addEventListener('message', ({ data }) => {
-      if (!data) {
-        return es.close();
+function subscribe(path: string, callback: (a: any) => void, end: (() => void) | null = null): void {
+  const es = new EventSource(path, {
+    withCredentials: true,
+  });
+  es.addEventListener('message', ({ data }) => {
+    if (!data) {
+      if (end) {
+        end();
       }
-      callback(JSON.parse(data));
-    });
+      return es.close();
+    }
+    callback(JSON.parse(data));
   });
 }
 
