@@ -5,21 +5,16 @@ Options for "{{title}}"
 {% endblock %}
 
 {% block content %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/6.1.7/system.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/6.1.7/extras/amd.js"></script>
-    <script type="text/javascript">
-        window.init = {{init | safe}};
-    </script>
-    <script type="systemjs-importmap">
-    {
-      "imports": {
-        {% for bundle in e %}
-        "{{bundle.extra.name}}": "{{bundle.urls()[0]}}"{{ "," if not loop.last }}
-        {% endfor %}
-      }
+<script type="text/javascript">
+  var require = {
+    bundles: JSON.parse(`{{BUNDLES|safe}}`),
+    deps: ['streaming'],
+    callback: function () {
+      console.log('Loaded');
     }
-    </script>
-    <script type="systemjs-module" src="import:streaming"></script>
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.js"></script>
 
-    <div id="app"></div>
+<div id="app"></div>
 {% endblock %}

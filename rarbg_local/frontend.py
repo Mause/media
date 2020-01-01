@@ -35,15 +35,21 @@ urls = [
     dep("react", "16.12.0", "umd/react.production.min.js"),
     dep("qs", "6.9.1", "qs.min.js"),
 ]
+
+
+def get_name(url: str) -> str:
+    return url.split('/')[-1].split('.')[0]
+
+
 for url in urls:
-    name = url.split('/')[-1].split('.')[0]
-    e.register(name, Bundle(url, extra={'name': name}))
+    name = get_name(url)
+    e.register(name, Bundle(url, extra={'names': [name]}))
 e.register(
     'streaming',
     Bundle(
         'streaming.tsx',
         filters=[TypeScript()],
-        extra={'name': 'streaming'},
+        extra={'names': ['streaming']},
         output='gen/streaming.js',
     ),
 )
