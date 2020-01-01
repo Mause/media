@@ -61,6 +61,7 @@ from .db import (
     get_episodes,
     get_movies,
 )
+from .frontend import e
 from .rarbg import RarbgTorrent, get_rarbg, get_rarbg_iter
 from .tmdb import (
     get_json,
@@ -106,8 +107,6 @@ def create_app(config):
     UserManager(papp, db, User)
 
     papp.json_encoder = DynamicJSONEncoder
-
-    from .frontend import e
 
     e.init_app(papp)
 
@@ -677,7 +676,6 @@ def test(tmdb_id: str) -> str:
         'title': get_movie(tmdb_id)['title'],
         'tmdb_id': tmdb_id,
     }
-    from .frontend import e
 
     return render_template('test.html', init=json.dumps(init), e=e, title=init['title'])
 
