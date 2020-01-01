@@ -1,6 +1,6 @@
-import * as _ from 'lodash';
-import * as qs from 'qs';
 import React from 'react';
+import _ from 'lodash';
+import qs from 'qs';
 import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, withRouter, RouteComponentProps } from 'react-router-dom';
