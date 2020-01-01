@@ -31,8 +31,8 @@ class TypeScript(ExternalTool):
 dep = "https://cdnjs.cloudflare.com/ajax/libs/{}/{}/{}".format
 urls = [
     dep("lodash.js", "4.17.15", "lodash.js"),
-    dep("react-dom", "16.11.0", "umd/react-dom.production.min.js"),
-    dep("react", "16.12.0", "umd/react.production.min.js"),
+    dep("react-dom", "16.11.0", "umd/react-dom.development.js"),
+    dep("react", "16.12.0", "umd/react.development.js"),
     dep("qs", "6.9.1", "qs.min.js"),
     dep("react-router", "5.1.2", "react-router.js"),
     dep("react-router-dom", "5.1.2", "react-router-dom.js"),
