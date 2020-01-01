@@ -1,6 +1,7 @@
-import React from 'react';
 import _ from 'lodash';
 import qs from 'qs';
+import Axios from 'axios';
+import React, { useState } from 'react';
 import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, withRouter, RouteComponentProps } from 'react-router-dom';
@@ -31,16 +32,23 @@ interface ITorrent {
   download: string;
 }
 type IAppProps = {} & RouteComponentProps<{ tmdb_id: string }>;
-const init = (window as any).init;
 
-function DisplayTorrent({ torrent }: { torrent: ITorrent }) {
-  const url =
-    '/download/movie?' +
-    qs.stringify({
-      imdb_id: init.imdb_id,
-      magnet: torrent.download,
-      titles: init.title,
-    });
+interface ItemInfo {
+  imdb_id: string;
+  title: string;
+}
+
+function DisplayTorrent({ torrent, itemInfo }: { torrent: ITorrent, itemInfo: Promise<ItemInfo> }) {
+  const [url, setUrl] = useState<string>();
+  itemInfo.then(data => {
+    setUrl(
+      '/download/movie?' +
+      qs.stringify({
+        imdb_id: data.imdb_id,
+        magnet: torrent.download,
+        titles: data.title,
+      }));
+  })
   return (
     <span>
       <a href={url}>{torrent.title}</a>
@@ -58,10 +66,12 @@ class AppComponent extends Component<
   IAppProps,
   { results: ITorrent[]; loading: boolean }
   > {
+  itemInfo: Promise<ItemInfo>;
   constructor(props: IAppProps) {
     super(props);
     this.state = { results: [], loading: true };
     this.onComponentMount();
+    this.itemInfo = Axios.get<ItemInfo>(`/api/movie/${props.match.params.tmdb_id}`).then(({ data }) => data);
   }
   public render() {
     const grouped = _.groupBy(this.state.results, 'category');
@@ -74,7 +84,7 @@ class AppComponent extends Component<
         <h3>{remove(category)}</h3>
         {_.sortBy(results, i => -i.seeders).map(result => (
           <li key={result.title}>
-            <DisplayTorrent torrent={result} />
+            <DisplayTorrent torrent={result} itemInfo={this.itemInfo} />
           </li>
         ))}
       </div>
@@ -83,7 +93,7 @@ class AppComponent extends Component<
       <div>
         {this.state.loading ? 'Loading...' : ''}
         <p>
-          Auto selection: {auto ? <DisplayTorrent torrent={auto} /> : 'None'}
+          Auto selection: {auto ? <DisplayTorrent torrent={auto} itemInfo={this.itemInfo} /> : 'None'}
         </p>
         <ul>{bits}</ul>
       </div>
