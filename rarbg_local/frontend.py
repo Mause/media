@@ -1,7 +1,8 @@
 from os.path import abspath
 
 from flask_assets import Bundle, Environment
-from webassets.filter import ExternalTool
+from webassets.filter import ExternalTool, Filter
+from webassets.filter.requirejs import RequireJSFilter
 
 e = Environment()
 
@@ -43,9 +44,39 @@ def get_name(url: str) -> str:
     return url.split('/')[-1].split('.')[0]
 
 
-for url in urls:
-    name = get_name(url)
-    e.register(name, Bundle(url, extra={'names': [name]}))
+class Namer(Filter):
+    def input(self, in_, out, **kwargs):
+        template = """
+        (function(){
+            let captureDeps, captureCb;
+
+            (function(){
+                function define(valueDeps, valueCb) {
+                    captureDeps = valueDeps;
+                    captureCb = valueCb;
+                }
+                define.amd = {};
+                \n %s \n
+            })()
+
+            define('%s', captureDeps, captureCb);
+        })();
+        """
+
+        name = get_name(kwargs['source_path'])
+        out.write(template % (in_.read(), name))
+
+
+e.register(
+    'deps',
+    Bundle(
+        *urls,
+        extra={'names': list(map(get_name, urls))},
+        filters=[Namer()],
+        output='gen/deps.js'
+    ),
+)
+
 e.register(
     'streaming',
     Bundle(
