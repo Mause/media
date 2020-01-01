@@ -631,6 +631,12 @@ def api_index():
     return {'series': resolve_series(), 'movies': get_movies()}
 
 
+@app.route('/api/movie/<tmdb_id>')
+@jsonapi
+def api_movie(tmdb_id: str):
+    return {"title": get_movie(tmdb_id), "imdb_id": get_movie_imdb_id(tmdb_id)}
+
+
 @app.route('/api/torrents')
 @jsonapi
 def api_torrents():
