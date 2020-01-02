@@ -37,6 +37,7 @@ pika = "*"
 flask-admin = "*"
 flask-jsontools = "*"
 flask-assets = "*"
+sentry-sdk = "*"
 
 [requires]
 python_version = "3.8"
