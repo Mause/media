@@ -59,7 +59,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "pipenv run python -m rarbg_local.frontend"
+    "build": "python -m rarbg_local.frontend"
   },
   "repository": {
     "type": "git",
