@@ -142,6 +142,12 @@ export interface SeriesResponse {
     }[]
   };
 }
+export interface TorrentFile {
+  name: string;
+  bytesCompleted: number;
+  length: number;
+}
+export type Torrents = { [key: string]: { eta: number, percentDone: number, files: TorrentFile[] } }
 
 function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
   return (
