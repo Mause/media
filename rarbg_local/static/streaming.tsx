@@ -4,7 +4,7 @@ import Axios from 'axios';
 import React, { useState } from 'react';
 import { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter, withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps, Link, Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { subscribe } from './subscribe';
 
 const ranking = [
@@ -78,7 +78,7 @@ class AppComponent extends Component<
     const auto = _.maxBy(grouped['Movies/x264/1080'] || [], 'seeders');
     const bits = _.sortBy(
       _.toPairs(grouped),
-      ([category, results]) => -ranking.indexOf(category),
+      ([category]) => -ranking.indexOf(category),
     ).map(([category, results]) => (
       <div key={category}>
         <h3>{remove(category)}</h3>
@@ -137,7 +137,25 @@ export interface SeriesResponse {
     }[]
   };
 }
+function ParentComponent() {
+  return (
+    <Router basename='/app'>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/select/299534/options">Try streaming</Link>
+            </li>
+          </ul>
+        </nav>
 
+        <Switch>
+          <Route path="/select/:tmdb_id/options"><Wrapped /></Route>
+        </Switch>
+      </div>
+    </Router>
+  );
+}
 
 const Wrapped = withRouter(AppComponent);
-ReactDOM.render( <HashRouter><Wrapped /></HashRouter>, document.getElementById('app'));
+ReactDOM.render(<ParentComponent />, document.getElementById('app'));
