@@ -8,6 +8,9 @@ import { withRouter, RouteComponentProps, Link, Switch, Route, BrowserRouter as 
 import { subscribe } from './subscribe';
 import { RouteProps } from 'react-router';
 import Helmet from 'react-helmet';
+import * as Sentry from '@sentry/browser';
+
+Sentry.init({dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914"});
 
 const ranking = [
   'Movies/XVID',
