@@ -6,6 +6,8 @@ import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter, RouteComponentProps, Link, Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { subscribe } from './subscribe';
+import { RouteProps } from 'react-router';
+import Helmet from 'react-helmet';
 
 const ranking = [
   'Movies/XVID',
@@ -137,6 +139,18 @@ export interface SeriesResponse {
     }[]
   };
 }
+
+function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
+  return (
+    <>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
+      <Route {...props} />
+    </>
+  )
+}
+
 function ParentComponent() {
   return (
     <Router basename='/app'>
@@ -150,7 +164,7 @@ function ParentComponent() {
         </nav>
 
         <Switch>
-          <Route path="/select/:tmdb_id/options"><Wrapped /></Route>
+          <RouteWithTitle path="/select/:tmdb_id/options" title="Options"><Wrapped /></RouteWithTitle>
         </Switch>
       </div>
     </Router>
