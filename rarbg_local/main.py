@@ -611,7 +611,7 @@ def api_index():
 @app.route('/api/movie/<tmdb_id>')
 @jsonapi
 def api_movie(tmdb_id: str):
-    if not imdb_id.isdigit():
+    if not tmdb_id.isdigit():
         return abort(422)
     return {"title": get_movie(tmdb_id), "imdb_id": get_movie_imdb_id(tmdb_id)}
 
