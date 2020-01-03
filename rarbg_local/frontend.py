@@ -13,6 +13,8 @@ class Browserify(ExternalTool):
             '-p',
             '[',
             'tsify',
+            '--module',
+            'es5',
             ']',
             kwargs['source_path'],
         ]
