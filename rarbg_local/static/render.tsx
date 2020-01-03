@@ -5,7 +5,22 @@ import { String } from 'typescript-string-operations';
 import Moment from "moment";
 
 export function Movies({ movies, torrents }: { movies: MovieResponse[], torrents: Torrents }) {
-    return <div>{movies.length}</div>
+    return <div className="colA">
+        <h2>Movies</h2>
+        <ul>
+            {movies.map(movie =>
+                <li key={movie.id}>
+                    <span>{movie.download.title}</span>
+                    <small>
+                        <a target="_blank" href="https://www.imdb.com/title/{{movie.download.imdb_id}}">
+                            <i className="fas fa-share"></i>
+                        </a>
+                    </small>
+                    <Progress torrents={torrents} item={movie} />
+                </li>
+            )}
+        </ul>
+    </div>
 }
 
 function Progress({ torrents, item }: { torrents: Torrents, item: { download: Download } }) {
