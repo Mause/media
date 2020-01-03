@@ -1,3 +1,5 @@
+import Axios from 'axios';
+
 export function subscribe(path: string, callback: (a: any) => void, end: (() => void) | null = null): void {
   const es = new EventSource(path, {
     withCredentials: true,
@@ -11,4 +13,8 @@ export function subscribe(path: string, callback: (a: any) => void, end: (() => 
     }
     callback(JSON.parse(data));
   });
+}
+
+export function load<T>(path: string, cb: (t: T) => void) {
+  Axios.get<T>(`/api/${path}`, { withCredentials: true }).then(t => cb(t.data));
 }

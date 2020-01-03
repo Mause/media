@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter, RouteComponentProps, Link, Switch, Route, BrowserRouter as Router } from 'react-router-dom';
-import { subscribe } from './subscribe';
+import { subscribe } from './utils';
 import { RouteProps } from 'react-router';
 import Helmet from 'react-helmet';
 import * as Sentry from '@sentry/browser';
