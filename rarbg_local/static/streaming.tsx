@@ -9,6 +9,7 @@ import { subscribe } from './utils';
 import { RouteProps } from 'react-router';
 import Helmet from 'react-helmet';
 import * as Sentry from '@sentry/browser';
+import { IndexComponent } from './IndexComponent';
 
 Sentry.init({dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914"});
 
@@ -118,6 +119,10 @@ class AppComponent extends Component<
     );
   }
 }
+export interface IndexResponse {
+  series: SeriesResponse[];
+  movies: MovieResponse[];
+}
 export interface Download {
   id: number;
   imdb_id: string;
@@ -167,6 +172,9 @@ function ParentComponent() {
         <nav>
           <ul>
             <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
               <Link to="/select/299534/options">Try streaming</Link>
             </li>
           </ul>
@@ -174,6 +182,7 @@ function ParentComponent() {
 
         <Switch>
           <RouteWithTitle path="/select/:tmdb_id/options" title="Options"><Wrapped /></RouteWithTitle>
+          <RouteWithTitle path="/" title="Media"><IndexComponent /></RouteWithTitle>
         </Switch>
       </div>
     </Router>
