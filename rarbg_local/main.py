@@ -661,9 +661,10 @@ def render_progress(
 
 
 @app.route('/app')
+@app.route('/app/')
 @app.route('/app/<path:path>')
-def test(path=None) -> str:
-    return render_template('test.html')
+def app(path=None) -> str:
+    return render_template('app.html')
 
 
 @app.route('/', methods=['GET', 'POST'])
