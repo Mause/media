@@ -1,23 +1,32 @@
+import sys
 from os.path import abspath
+from shlex import shlex
 
 from flask_assets import Bundle, Environment
 from webassets.filter import ExternalTool
 
 e = Environment()
 
+production = '--prod' in sys.argv[1:]
+
 
 class Browserify(ExternalTool):
     def input(self, data, out, **kwargs):
+        breakpoint()
         argv = [
             abspath('node_modules/.bin/browserify'),
-            '-p',
-            '[',
-            'tsify',
-            '--module',
-            'es5',
-            ']',
+            *'-p [ tsify --module es5 ]'.split(),
             kwargs['source_path'],
         ]
+
+        if production:
+            argv.extend(
+                [
+                    *'-g [ envify --NODE_ENV production ] '.split(),
+                    *'-g uglifyify'.split(),
+                ]
+            )
+
         return self.subprocess(argv, out, data, cwd=abspath('.'))
 
 
