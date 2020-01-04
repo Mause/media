@@ -9,13 +9,19 @@ type IndexState = { state: IndexResponse, torrents: Torrents, query: string };
 type IndexProps = RouteComponentProps<{}>;
 
 class _IndexComponent extends Component<IndexProps, IndexState> {
+  interval?: number;
   constructor(props: IndexProps) {
     super(props);
     this.state = { state: { series: [], movies: [] }, torrents: {}, query: '' };
   }
   async componentDidMount() {
     this.reload();
-    setTimeout(this.reload.bind(this), 1000);
+    this.interval = setInterval(this.reload.bind(this), 1000);
+  }
+  async componentWillUnmount() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
   }
   private reload() {
     load<IndexResponse>('index', state => this.setState({ state }));
