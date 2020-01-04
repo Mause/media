@@ -1,17 +1,16 @@
+import * as Sentry from '@sentry/browser';
+import Axios from 'axios';
 import _ from 'lodash';
 import qs from 'qs';
-import Axios from 'axios';
-import React, { useState } from 'react';
-import { Component } from 'react';
+import React, { Component, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { withRouter, RouteComponentProps, Link, Switch, Route, BrowserRouter as Router } from 'react-router-dom';
-import { subscribe } from './utils';
-import { RouteProps } from 'react-router';
 import Helmet from 'react-helmet';
-import * as Sentry from '@sentry/browser';
+import { RouteProps } from 'react-router';
+import { BrowserRouter as Router, Link, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
+import { load, subscribe } from './utils';
 
-Sentry.init({dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914"});
+Sentry.init({ dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914" });
 
 const ranking = [
   'Movies/XVID',
@@ -165,6 +164,44 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
   )
 }
 
+interface SearchResult {
+  Type: string,
+  Year: number,
+  imdbID: number,
+  title: string
+}
+
+const SearchComponent = withRouter(class SearchComponent extends Component<RouteComponentProps<{}>, { results: SearchResult[] }>{
+  constructor(props: RouteComponentProps<{}>) {
+    super(props);
+    this.state = { results: [] }
+  }
+  getQuery() {
+    return qs.parse(this.props.location.search.slice(1)).query;
+  }
+  componentDidMount() {
+    load<SearchResult[]>(
+      'search',
+      results => this.setState({ results }),
+      { query: this.getQuery() }
+    );
+  }
+  render() {
+    return <div>
+      Match: {this.getQuery()} {this.state.results.length}
+      <ul>
+        {this.state.results.map(result =>
+          <li key={result.imdbID}>
+            <Link to={`/select/${result.imdbID}/options`}>
+              {result.title}
+            </Link>
+          </li>
+        )}
+      </ul>
+    </div>
+  }
+});
+
 function ParentComponent() {
   return (
     <Router basename='/app'>
@@ -182,6 +219,7 @@ function ParentComponent() {
 
         <Switch>
           <RouteWithTitle path="/select/:tmdb_id/options" title="Options"><Wrapped /></RouteWithTitle>
+          <RouteWithTitle path="/search" title="Search"><SearchComponent /></RouteWithTitle>
           <RouteWithTitle path="/" title="Media"><IndexComponent /></RouteWithTitle>
         </Switch>
       </div>
