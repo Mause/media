@@ -15,6 +15,6 @@ export function subscribe(path: string, callback: (a: any) => void, end: (() => 
   });
 }
 
-export function load<T>(path: string, cb: (t: T) => void) {
-  Axios.get<T>(`/api/${path}`, { withCredentials: true }).then(t => cb(t.data));
+export function load<T>(path: string, cb: (t: T) => void, params?: any) {
+  Axios.get<T>(`/api/${path}`, { params, withCredentials: true }).then(t => cb(t.data));
 }
