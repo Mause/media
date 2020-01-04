@@ -663,7 +663,7 @@ def render_progress(
 @app.route('/app')
 @app.route('/app/')
 @app.route('/app/<path:path>')
-def app(path=None) -> str:
+def app_index(path=None) -> str:
     return render_template('app.html')
 
 
