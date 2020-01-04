@@ -12,7 +12,6 @@ production = '--prod' in sys.argv[1:]
 
 class Browserify(ExternalTool):
     def input(self, data, out, **kwargs):
-        breakpoint()
         argv = [
             abspath('node_modules/.bin/browserify'),
             *'-p [ tsify --module es5 ]'.split(),
