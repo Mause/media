@@ -622,6 +622,12 @@ def api_torrents():
     return get_keyed_torrents()
 
 
+@app.route('/api/search')
+@jsonapi
+def api_search():
+    return search_themoviedb(request.args['query'])
+
+
 def render_progress(
     torrents: Dict[str, Dict], item: Union[MovieDetails, EpisodeDetails]
 ) -> str:
