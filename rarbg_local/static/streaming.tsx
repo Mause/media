@@ -193,7 +193,7 @@ const SearchComponent = withRouter(class SearchComponent extends Component<Route
         {this.state.results.map(result =>
           <li key={result.imdbID}>
             <Link to={`/select/${result.imdbID}/options`}>
-              {result.title}
+              {result.title} ({result.Year ? result.Year : 'Unknown year'})
             </Link>
           </li>
         )}
