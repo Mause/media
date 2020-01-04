@@ -602,6 +602,16 @@ def resolve_series() -> List[SeriesDetails]:
     ]
 
 
+def has_tmdb_id(func):
+    @wraps(func)
+    def wrapper(tmdb_id, *args, **kwargs):
+        if not (tmdb_id and tmdb_id.isdigit()):
+            return abort(422, response=jsonify({'error': 'Invalid tmdb_id value'}))
+        return func(tmdb_id, *args, **kwargs)
+
+    return wrapper
+
+
 @app.route('/api/index')
 @jsonapi
 def api_index():
@@ -610,10 +620,16 @@ def api_index():
 
 @app.route('/api/movie/<tmdb_id>')
 @jsonapi
+@has_tmdb_id
 def api_movie(tmdb_id: str):
-    if not tmdb_id.isdigit():
-        return abort(422)
     return {"title": get_movie(tmdb_id), "imdb_id": get_movie_imdb_id(tmdb_id)}
+
+
+@app.route('/api/tv/<tmdb_id>')
+@jsonapi
+@has_tmdb_id
+def api_tv(tmdb_id: str):
+    return {'number_of_seasons': get_tv(tmdb_id)['number_of_seasons']}
 
 
 @app.route('/api/torrents')
