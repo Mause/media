@@ -98,7 +98,7 @@ class AppComponent extends Component<
       <div>
         {this.state.loading ? 'Loading...' : ''}
         {
-          bits.length && this.state.loading ?
+          bits.length || this.state.loading ?
             <div>
               <p>
                 Auto selection: {auto ? <DisplayTorrent torrent={auto} itemInfo={this.itemInfo} /> : 'None'}
