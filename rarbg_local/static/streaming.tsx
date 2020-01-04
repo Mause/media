@@ -205,24 +205,22 @@ const SearchComponent = withRouter(class SearchComponent extends Component<Route
 function ParentComponent() {
   return (
     <Router basename='/app'>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/select/299534/options">Try streaming</Link>
-            </li>
-          </ul>
-        </nav>
+      <h1>Media</h1>
 
-        <Switch>
-          <RouteWithTitle path="/select/:tmdb_id/options" title="Options"><Wrapped /></RouteWithTitle>
-          <RouteWithTitle path="/search" title="Search"><SearchComponent /></RouteWithTitle>
-          <RouteWithTitle path="/" title="Media"><IndexComponent /></RouteWithTitle>
-        </Switch>
-      </div>
+      <nav>
+        <Link to="/">Home</Link>&nbsp;
+        <a href="http://novell.mause.me:9091" target="_blank">Transmission</a>&nbsp;
+        <a href="http://novell.mause.me:32400" target="_blank">Plex</a>&nbsp;
+        <a href="/user/sign-out">Logout</a>
+      </nav>
+
+      <br />
+
+      <Switch>
+        <RouteWithTitle path="/select/:tmdb_id/options" title="Options"><Wrapped /></RouteWithTitle>
+        <RouteWithTitle path="/search" title="Search"><SearchComponent /></RouteWithTitle>
+        <RouteWithTitle path="/" title="Media"><IndexComponent /></RouteWithTitle>
+      </Switch>
     </Router>
   );
 }
