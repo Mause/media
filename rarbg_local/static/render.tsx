@@ -12,7 +12,7 @@ export function Movies({ movies, torrents }: { movies: MovieResponse[], torrents
         <li key={movie.id}>
           <span>{movie.download.title}</span>
           <small>
-            <a target="_blank" href="https://www.imdb.com/title/{{movie.download.imdb_id}}">
+            <a target="_blank" href={`https://www.imdb.com/title/${movie.download.imdb_id}`}>
               <i className="fas fa-share"></i>
             </a>
           </small>
