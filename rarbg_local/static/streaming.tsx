@@ -196,12 +196,16 @@ const SearchComponent = withRouter(class SearchComponent extends Component<Route
     return <div>
       Match: {this.getQuery()} {this.state.results.length}
       <ul>
-        {this.state.results.map(result =>
-          <li key={result.imdbID}>
-            <Link to={`/select/${result.imdbID}/options`}>
-              {result.title} ({result.Year ? result.Year : 'Unknown year'})
-            </Link>
+        {this.state.results.map(result => {
+          const title = <span>{result.title} ({result.Year ? result.Year : 'Unknown year'})</span>;
+          return <li key={result.imdbID}>
+            {
+              result.Type === 'movie' ?
+                <Link to={`/select/${result.imdbID}/options`}>{title}</Link> :
+                <a href={`/select/${result.imdbID}/season`}>{title}</a>
+            }
           </li>
+        }
         )}
       </ul>
     </div>
