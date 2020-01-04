@@ -11,11 +11,13 @@ export function Movies({ movies, torrents }: { movies: MovieResponse[], torrents
       {movies.map(movie =>
         <li key={movie.id}>
           <span>{movie.download.title}</span>
+          &nbsp;
           <small>
             <a target="_blank" href={`https://www.imdb.com/title/${movie.download.imdb_id}`}>
               <i className="fas fa-share"></i>
             </a>
           </small>
+          &nbsp;
           <Progress torrents={torrents} item={movie} />
         </li>
       )}
