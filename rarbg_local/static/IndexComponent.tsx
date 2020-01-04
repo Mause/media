@@ -16,7 +16,7 @@ class _IndexComponent extends Component<IndexProps, IndexState> {
   }
   async componentDidMount() {
     this.reload();
-    this.interval = setInterval(this.reload.bind(this), 1000);
+    this.interval = setInterval(this.reload.bind(this), 10000);
   }
   async componentWillUnmount() {
     if (this.interval) {
