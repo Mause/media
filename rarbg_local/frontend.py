@@ -1,6 +1,5 @@
 import sys
 from os.path import abspath
-from shlex import shlex
 
 from flask_assets import Bundle, Environment
 from webassets.filter import ExternalTool

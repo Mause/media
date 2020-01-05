@@ -1,8 +1,10 @@
+from typing import Dict, List
+
 import pytest
 
 from ..main import normalise
 
-episodes = [
+episodes: List[Dict] = [
     {'name': '1:23:45'},
     {},
     {'name': 'Open Wide, O Earth'},

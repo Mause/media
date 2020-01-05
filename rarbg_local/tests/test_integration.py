@@ -44,9 +44,7 @@ def responses():
 
 
 @fixture
-def test_client(
-    clear_cache, flask_app: Flask
-) -> Generator[FlaskClient, None, None]:
+def test_client(clear_cache, flask_app: Flask) -> Generator[FlaskClient, None, None]:
     # Flask provides a way to test your application by exposing the Werkzeug test Client
     # and handling the context locals for you.
     testing_client = flask_app.test_client()
@@ -81,8 +79,8 @@ def test_index(responses, test_client, trm_session, torrent_get):
     create_episode(
         transmission_id=HASH_STRING,
         imdb_id='tt000000',
-        season=1,
-        episode=1,
+        season='1',
+        episode='1',
         title='Hello world',
         show_title='Programming',
     )
@@ -145,9 +143,7 @@ def test_delete_cascade(test_client: FlaskClient):
     assert len(session.query(Download).all()) == 0
 
 
-def test_select_season(
-    responses: RequestsMock, test_client: FlaskClient
-) -> None:
+def test_select_season(responses: RequestsMock, test_client: FlaskClient) -> None:
     themoviedb(responses, '/tv/100000', {'number_of_seasons': 1})
 
     res = test_client.get('/select/100000/season')
