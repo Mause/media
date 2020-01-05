@@ -37,7 +37,7 @@ interface ITorrent {
   seeders: number;
   download: string;
 }
-type IAppProps = {} & RouteComponentProps<{ tmdb_id: string }>;
+type OptionsProps = {} & RouteComponentProps<{ tmdb_id: string }>;
 
 interface ItemInfo {
   imdb_id: string;
@@ -68,12 +68,12 @@ function remove(bit: string): string {
   return parts.slice(1).join('/');
 }
 
-class AppComponent extends Component<
-  IAppProps,
+class _OptionsComponent extends Component<
+  OptionsProps,
   { results: ITorrent[]; loading: boolean }
   > {
   itemInfo: Promise<ItemInfo>;
-  constructor(props: IAppProps) {
+  constructor(props: OptionsProps) {
     super(props);
     this.state = { results: [], loading: true };
     this.onComponentMount();
@@ -224,7 +224,7 @@ function ParentComponent() {
       <br />
 
       <Switch>
-        <RouteWithTitle path="/select/:tmdb_id/options" title="Options"><Wrapped /></RouteWithTitle>
+        <RouteWithTitle path="/select/:tmdb_id/options" title="Options"><OptionsComponent /></RouteWithTitle>
         <RouteWithTitle path="/search" title="Search"><SearchComponent /></RouteWithTitle>
         <RouteWithTitle path="/" title="Media"><IndexComponent /></RouteWithTitle>
       </Switch>
@@ -232,5 +232,5 @@ function ParentComponent() {
   );
 }
 
-const Wrapped = withRouter(AppComponent);
+const OptionsComponent = withRouter(_OptionsComponent);
 ReactDOM.render(<ParentComponent />, document.getElementById('app'));
