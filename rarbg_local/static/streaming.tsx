@@ -179,6 +179,10 @@ interface SearchResult {
 }
 
 const SearchComponent = withRouter(class SearchComponent extends Component<RouteComponentProps<{}>, { results?: SearchResult[] }>{
+  constructor(props: RouteComponentProps<{}>) {
+    super(props);
+    this.state = {};
+  }
   getQuery() {
     return qs.parse(this.props.location.search.slice(1)).query;
   }
