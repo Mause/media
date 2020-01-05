@@ -5,14 +5,14 @@ import { IndexResponse, Torrents } from './streaming';
 import { load } from './utils';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-type IndexState = { state: IndexResponse, torrents: Torrents, query: string };
+type IndexState = { state: IndexResponse, torrents: Torrents, query: string, loadingTorrents: boolean, loadingState: boolean };
 type IndexProps = RouteComponentProps<{}>;
 
 class _IndexComponent extends Component<IndexProps, IndexState> {
   interval?: number;
   constructor(props: IndexProps) {
     super(props);
-    this.state = { state: { series: [], movies: [] }, torrents: {}, query: '' };
+    this.state = { state: { series: [], movies: [] }, torrents: {}, query: '', loadingTorrents: true, loadingState: true };
   }
   async componentDidMount() {
     this.reload();
@@ -24,12 +24,16 @@ class _IndexComponent extends Component<IndexProps, IndexState> {
     }
   }
   private reload() {
-    load<IndexResponse>('index', state => this.setState({ state }));
-    load<Torrents>('torrents', torrents => this.setState({ torrents }));
+    this.setState({ loadingTorrents: true, loadingState: true });
+    load<IndexResponse>('index', state => this.setState({ state, loadingState: false }));
+    load<Torrents>('torrents', torrents => this.setState({ torrents, loadingTorrents: false }));
   }
   search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     this.props.history.replace({ pathname: '/search', search: `query=${this.state.query}` })
+  }
+  get loading() {
+    return this.state.loadingState || this.state.loadingTorrents;
   }
   render() {
     return <div>
@@ -40,8 +44,8 @@ class _IndexComponent extends Component<IndexProps, IndexState> {
           <input type="submit" value="Search"></input>
         </label>
       </form>
-      <Movies torrents={this.state.torrents} movies={this.state.state.movies} />
-      <TVShows torrents={this.state.torrents} series={this.state.state.series} />
+      <Movies torrents={this.state.torrents} movies={this.state.state.movies} loading={this.loading} />
+      <TVShows torrents={this.state.torrents} series={this.state.state.series} loading={this.loading} />
     </div >;
   }
 }

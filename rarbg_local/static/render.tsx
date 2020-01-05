@@ -4,9 +4,13 @@ import { Download, MovieResponse, SeriesResponse, Torrents } from './streaming';
 import { String } from 'typescript-string-operations';
 import Moment from "moment";
 
-export function Movies({ movies, torrents }: { movies: MovieResponse[], torrents: Torrents }) {
+function Loading({ loading }: { loading: boolean }) {
+  return loading ? <i className="fas fa-spinner fa-spin fa-xs"></i> : <></>
+}
+
+export function Movies({ movies, torrents, loading }: { movies: MovieResponse[], torrents: Torrents, loading: boolean }) {
   return <div className="colA">
-    <h2>Movies</h2>
+    <h2>Movies <Loading loading={loading} /></h2>
     <ul>
       {movies.map(movie =>
         <li key={movie.id}>
@@ -38,13 +42,14 @@ function Progress({ torrents, item }: { torrents: Torrents, item: { download: Do
   }
 }
 
-export function TVShows({ series, torrents }: {
+export function TVShows({ series, torrents, loading }: {
   series: SeriesResponse[];
   torrents: Torrents;
+  loading: boolean;
 }) {
   return <div>
     <div className="colB">
-      <h2>TV Shows</h2>
+      <h2>TV Shows <Loading loading={loading} /></h2>
       {series.map(serie => <div key={serie.imdb_id}>
         <h3>{serie.title}</h3>
         {_.sortBy(Object.keys(serie.seasons), parseInt).map(i => {
