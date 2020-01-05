@@ -456,7 +456,7 @@ def download(type: str) -> WResponse:
     magnets: List[str] = args.getlist('magnet')
 
     is_tv = type == 'series'
-    tv_id = resolve_id(imdb_id)
+    tv_id = resolve_id(imdb_id, type)
     item = get_tv(tv_id) if is_tv else get_movie(tv_id)
 
     if is_tv:
@@ -563,9 +563,9 @@ def resolve_season(episodes):
             episode=episode['episode_number'],
             show_title=pack.show_title,
         )
-        for episode in get_tv_episodes(resolve_id(pack.download.imdb_id), pack.season)[
-            'episodes'
-        ]
+        for episode in get_tv_episodes(
+            resolve_id(pack.download.imdb_id, 'tv'), pack.season
+        )['episodes']
     ]
 
 
