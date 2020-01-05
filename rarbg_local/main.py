@@ -637,6 +637,13 @@ def api_tv(tmdb_id: str):
     }
 
 
+@app.route('/api/tv/<tmdb_id>/season/<season>')
+@jsonapi
+@has_tmdb_id
+def api_tv_season(tmdb_id: str, season: str):
+    return get_tv_episodes(tmdb_id, season)
+
+
 @app.route('/api/torrents')
 @jsonapi
 def api_torrents():
