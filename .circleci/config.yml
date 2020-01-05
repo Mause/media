@@ -5,6 +5,22 @@
 #
 version: 2
 jobs:
+  build_frontend:
+    docker:
+      - image: circleci/node
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - install:
+          command: |
+            npm ci
+
+      - build:
+          command: |
+            npm run build
+
   build:
     docker:
       # specify the version you desire here
