@@ -77,9 +77,6 @@ class _OptionsComponent extends Component<
   constructor(props: OptionsProps) {
     super(props);
     this.state = { results: [], loading: true };
-    this.onComponentMount();
-    let { type, match } = props;
-    this.itemInfo = Axios.get<ItemInfo>(`/api/${type}/${match.params.tmdb_id}`).then(({ data }) => data);
   }
   public render() {
     const grouped = _.groupBy(this.state.results, 'category');
@@ -113,8 +110,9 @@ class _OptionsComponent extends Component<
       </div>
     );
   }
-  private onComponentMount() {
+  componentDidMount() {
     const { tmdb_id } = this.props.match.params;
+    this.itemInfo = Axios.get<ItemInfo>(`/api/${this.props.type}/${tmdb_id}`).then(({ data }) => data);
     subscribe(
       `/select/${tmdb_id}/options/stream`,
       data => {
