@@ -629,7 +629,12 @@ def api_movie(tmdb_id: str):
 @jsonapi
 @has_tmdb_id
 def api_tv(tmdb_id: str):
-    return {'number_of_seasons': get_tv(tmdb_id)['number_of_seasons']}
+    tv = get_tv(tmdb_id)
+    return {
+        'number_of_seasons': tv['number_of_seasons'],
+        'imdb_id': get_tv_imdb_id(tmdb_id),
+        'title': tv['name'],
+    }
 
 
 @app.route('/api/torrents')
