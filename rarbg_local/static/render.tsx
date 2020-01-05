@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import { Download, MovieResponse, SeriesResponse, Torrents } from './streaming';
+import { Download, MovieResponse, SeriesResponse, Torrents, EpisodeResponse } from './streaming';
 import { String } from 'typescript-string-operations';
 import Moment from "moment";
 
@@ -8,7 +8,7 @@ function Loading({ loading }: { loading: boolean }) {
   return loading ? <i className="fas fa-spinner fa-spin fa-xs"></i> : <></>
 }
 
-export function Movies({ movies, torrents, loading }: { movies: MovieResponse[], torrents: Torrents, loading: boolean }) {
+export function Movies({ movies, torrents, loading }: { movies: MovieResponse[], torrents?: Torrents, loading: boolean }) {
   return <div className="colA">
     <h2>Movies <Loading loading={loading} /></h2>
     <ul>
@@ -29,22 +29,40 @@ export function Movies({ movies, torrents, loading }: { movies: MovieResponse[],
   </div>
 }
 
-function Progress({ torrents, item }: { torrents: Torrents, item: { download: Download } }) {
-  let tid = item.download.transmission_id
-  let { percentDone, eta } = torrents[tid] || { percentDone: 1, eta: 0 };
+function Progress({ torrents, item }: { torrents?: Torrents, item: { download: Download } }) {
+  if (!torrents) return null;
 
+  let { eta, percentDone } = getProgress(item.download.transmission_id, item, torrents);
   if (percentDone == 1) {
     return <i className="fas fa-check-circle"></i>
   } else {
     let etaDescr = eta > 0 ? Moment().add(eta, 'seconds').fromNow(true) : 'Unknown time'
-    const title = String.Format("{0:00}% ({1} remaining)", percentDone * 100, etaDescr);
+    const title = String.Format("{0:00}% ({1} remaining)", percentDone ? percentDone * 100 : -1, etaDescr);
     return <progress value={percentDone} title={title}></progress>
   }
 }
 
+function getProgress(tid: string, item: { download: Download; }, torrents: Torrents): { eta: number, percentDone?: number } {
+  let eta, percentDone;
+  if (tid.includes('.')) {
+    tid = tid.split('.')[0];
+    const episode = item as EpisodeResponse;
+    const marker = String.Format('S{0:00}E{0:00}', episode.season, episode.episode);
+    const torrent = torrents[tid];
+    eta = torrent.eta;
+    const tf = torrent.files.find(file => file.name.includes(marker));
+    if (tf) {
+      percentDone = tf.bytesCompleted / tf.length;
+    }
+  } else {
+    ({ eta, percentDone } = torrents[tid]);
+  }
+  return { eta, percentDone };
+}
+
 export function TVShows({ series, torrents, loading }: {
   series: SeriesResponse[];
-  torrents: Torrents;
+  torrents?: Torrents;
   loading: boolean;
 }) {
   return <div>

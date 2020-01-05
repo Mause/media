@@ -5,14 +5,14 @@ import { IndexResponse, Torrents } from './streaming';
 import { load } from './utils';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-type IndexState = { state: IndexResponse, torrents: Torrents, query: string, loadingTorrents: boolean, loadingState: boolean };
+type IndexState = { state: IndexResponse, torrents?: Torrents, query: string, loadingTorrents: boolean, loadingState: boolean };
 type IndexProps = RouteComponentProps<{}>;
 
 class _IndexComponent extends Component<IndexProps, IndexState> {
   interval?: number;
   constructor(props: IndexProps) {
     super(props);
-    this.state = { state: { series: [], movies: [] }, torrents: {}, query: '', loadingTorrents: true, loadingState: true };
+    this.state = { state: { series: [], movies: [] }, query: '', loadingTorrents: true, loadingState: true };
   }
   async componentDidMount() {
     this.reload();
