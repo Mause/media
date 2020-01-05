@@ -1,8 +1,7 @@
 import * as Sentry from '@sentry/browser';
-import Axios from 'axios';
 import _ from 'lodash';
 import qs from 'qs';
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Helmet from 'react-helmet';
 import { RouteProps } from 'react-router';
@@ -45,17 +44,16 @@ interface ItemInfo {
   title: string;
 }
 
-function DisplayTorrent({ torrent, itemInfo }: { torrent: ITorrent, itemInfo: Promise<ItemInfo> }) {
-  const [url, setUrl] = useState<string>();
-  itemInfo.then(data => {
-    setUrl(
-      '/download/movie?' +
+function DisplayTorrent({ torrent, itemInfo }: { torrent: ITorrent, itemInfo?: ItemInfo }) {
+  let url;
+  if (itemInfo) {
+    url = '/download/movie?' +
       qs.stringify({
-        imdb_id: data.imdb_id,
+        imdb_id: itemInfo.imdb_id,
         magnet: torrent.download,
-        titles: data.title,
-      }));
-  })
+        titles: itemInfo.title,
+      });
+  }
   return (
     <span>
       <a href={url}>{torrent.title}</a>
@@ -71,12 +69,11 @@ function remove(bit: string): string {
 
 class _OptionsComponent extends Component<
   OptionsProps,
-  { results: ITorrent[]; loading: boolean }
+  { results: ITorrent[]; loading: boolean, itemInfo?: ItemInfo }
   > {
-  itemInfo: Promise<ItemInfo>;
   constructor(props: OptionsProps) {
     super(props);
-    this.state = { results: [], loading: true };
+    this.state = { results: [], loading: true, itemInfo: undefined };
   }
   public render() {
     const grouped = _.groupBy(this.state.results, 'category');
@@ -89,7 +86,7 @@ class _OptionsComponent extends Component<
         <h3>{remove(category)}</h3>
         {_.sortBy(results, i => -i.seeders).map(result => (
           <li key={result.title}>
-            <DisplayTorrent torrent={result} itemInfo={this.itemInfo} />
+            <DisplayTorrent torrent={result} itemInfo={this.state.itemInfo} />
           </li>
         ))}
       </div>
@@ -101,7 +98,7 @@ class _OptionsComponent extends Component<
           bits.length || this.state.loading ?
             <div>
               <p>
-                Auto selection: {auto ? <DisplayTorrent torrent={auto} itemInfo={this.itemInfo} /> : 'None'}
+                Auto selection: {auto ? <DisplayTorrent torrent={auto} itemInfo={this.state.itemInfo} /> : 'None'}
               </p>
               <ul>{bits}</ul>
             </div> :
@@ -112,7 +109,7 @@ class _OptionsComponent extends Component<
   }
   componentDidMount() {
     const { tmdb_id } = this.props.match.params;
-    this.itemInfo = Axios.get<ItemInfo>(`/api/${this.props.type}/${tmdb_id}`).then(({ data }) => data);
+    load<ItemInfo>(`movie/${tmdb_id}`, itemInfo => this.setState({ itemInfo }));
     subscribe(
       `/select/${tmdb_id}/options/stream`,
       data => {
