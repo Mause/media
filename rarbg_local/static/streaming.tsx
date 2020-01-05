@@ -177,11 +177,7 @@ interface SearchResult {
   title: string
 }
 
-const SearchComponent = withRouter(class SearchComponent extends Component<RouteComponentProps<{}>, { results: SearchResult[] }>{
-  constructor(props: RouteComponentProps<{}>) {
-    super(props);
-    this.state = { results: [] }
-  }
+const SearchComponent = withRouter(class SearchComponent extends Component<RouteComponentProps<{}>, { results?: SearchResult[] }>{
   getQuery() {
     return qs.parse(this.props.location.search.slice(1)).query;
   }
@@ -194,19 +190,15 @@ const SearchComponent = withRouter(class SearchComponent extends Component<Route
   }
   render() {
     return <div>
-      Match: {this.getQuery()} {this.state.results.length}
       <ul>
-        {this.state.results.map(result => {
-          const title = <span>{result.title} ({result.Year ? result.Year : 'Unknown year'})</span>;
-          return <li key={result.imdbID}>
-            {
+        {this.state.results ? this.state.results.map(result =>
+          <li key={result.imdbID}>
+            <Link to={
               result.Type === 'movie' ?
-                <Link to={`/select/${result.imdbID}/options`}>{title}</Link> :
-                <a href={`/select/${result.imdbID}/season`}>{title}</a>
-            }
+                `/select/${result.imdbID}/options` :
+                `/select/${result.imdbID}/season`}>{result.title} ({result.Year ? result.Year : 'Unknown year'})</Link>
           </li>
-        }
-        )}
+        ) : <ReactLoading type='balls' color='#000' />}
       </ul>
     </div>
   }
