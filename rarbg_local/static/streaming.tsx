@@ -9,6 +9,7 @@ import { RouteProps } from 'react-router';
 import { BrowserRouter as Router, Link, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
 import { load, subscribe } from './utils';
+import ReactLoading from 'react-loading';
 
 Sentry.init({ dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914" });
 
