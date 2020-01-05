@@ -52,7 +52,7 @@ class _EpisodeSelectComponent extends Component<EpisodeProps, { season?: Season 
     this.state = { season: undefined }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { tmdb_id, season } = this.props.match.params;
     load<Season>(`tv/${tmdb_id}/season/${season}`, season => this.setState({ season }));
   }
