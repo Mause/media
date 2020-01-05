@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from functools import partial
 from threading import Thread
 from typing import Dict
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import dill
 import pika
@@ -13,7 +13,7 @@ from .config import parameters
 
 SERVER_QUEUE = 'rpc.server.queue'
 
-_waiting: Dict[UUID, Future] = {}
+_waiting: Dict[str, Future] = {}
 
 
 @dataclass
@@ -22,7 +22,7 @@ class Proxy:
     channel: BlockingChannel
 
     def call(self, method, *args, **kwargs):
-        f = Future()
+        f: Future = Future()
         key = uuid4().hex
         _waiting[key] = f
         self.conn.add_callback_threadsafe(
