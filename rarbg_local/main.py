@@ -206,16 +206,23 @@ def eventstream(func: Callable):
     return decorator
 
 
-@app.route('/select/<imdb_id>/options/stream')
+@app.route('/stream/<type>/<imdb_id>')
 @eventstream
-def stream(imdb_id: str):
+def stream(type: str, imdb_id: str):
     if not imdb_id.isdigit():
         return abort(422)
     return chain.from_iterable(
         get_rarbg_iter(
             current_app.config['TORRENT_API_URL'],
-            'movie',
-            search_imdb=get_movie_imdb_id(imdb_id),
+            type,
+            search_imdb=get_movie_imdb_id(imdb_id)
+            if type == 'movie'
+            else get_tv_imdb_id(imdb_id),
+            search_string='S{:02d}E{:02d}'.format(
+                int(request.args['season']), int(request.args['episode'])
+            )
+            if type == 'series'
+            else None,
         )
     )
 

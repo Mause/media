@@ -37,7 +37,7 @@ interface ITorrent {
   seeders: number;
   download: string;
 }
-type OptionsProps = { type: 'movie' | 'tv' } & RouteComponentProps<{ tmdb_id: string }>;
+type OptionsProps = { type: 'movie' | 'series' } & RouteComponentProps<{ tmdb_id: string, season?: string, episode?: string }>;
 
 interface ItemInfo {
   imdb_id: string;
@@ -63,8 +63,11 @@ function DisplayTorrent({ torrent, itemInfo }: { torrent: ITorrent, itemInfo?: I
   );
 }
 function remove(bit: string): string {
-  const parts = bit.split('/');
-  return parts.slice(1).join('/');
+  if (bit.startsWith('Mov')) {
+    const parts = bit.split('/');
+    return parts.slice(1).join('/');
+  }
+  return bit;
 }
 
 class _OptionsComponent extends Component<
@@ -77,7 +80,7 @@ class _OptionsComponent extends Component<
   }
   public render() {
     const grouped = _.groupBy(this.state.results, 'category');
-    const auto = _.maxBy(grouped['Movies/x264/1080'] || [], 'seeders');
+    const auto = _.maxBy(grouped['Movies/x264/1080'] || grouped['TV HD Episodes'] || [], 'seeders');
     const bits = _.sortBy(
       _.toPairs(grouped),
       ([category]) => -ranking.indexOf(category),
@@ -108,10 +111,10 @@ class _OptionsComponent extends Component<
     );
   }
   componentDidMount() {
-    const { tmdb_id } = this.props.match.params;
-    load<ItemInfo>(`movie/${tmdb_id}`, itemInfo => this.setState({ itemInfo }));
+    const { tmdb_id, season, episode } = this.props.match.params;
+    load<ItemInfo>(`${this.props.type == 'series' ? 'tv' : 'movie'}/${tmdb_id}`, itemInfo => this.setState({ itemInfo }));
     subscribe(
-      `/select/${tmdb_id}/options/stream`,
+      `/stream/${this.props.type}/${tmdb_id}?` + qs.stringify({ season, episode }),
       data => {
         this.setState(state => ({
           ...state,
@@ -223,7 +226,7 @@ function ParentComponent() {
 
       <Switch>
         <RouteWithTitle path="/select/:tmdb_id/options" title="Movie Options"><OptionsComponent type='movie' /></RouteWithTitle>
-        <RouteWithTitle path="/select/:tmdb_id/season/:season/episode/:episode/options" title="TV Options"><OptionsComponent type='tv' /></RouteWithTitle>
+        <RouteWithTitle path="/select/:tmdb_id/season/:season/episode/:episode/options" title="TV Options"><OptionsComponent type='series' /></RouteWithTitle>
         <RouteWithTitle path="/select/:tmdb_id/season/:season" title="Select Episode"><EpisodeSelectComponent /></RouteWithTitle>
         <RouteWithTitle path="/select/:tmdb_id/season" title="Select Season"><SeasonSelectComponent /></RouteWithTitle>
         <RouteWithTitle path="/search" title="Search"><SearchComponent /></RouteWithTitle>
