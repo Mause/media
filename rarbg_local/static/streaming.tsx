@@ -9,6 +9,7 @@ import { RouteProps } from 'react-router';
 import { BrowserRouter as Router, Link, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
 import { load, subscribe } from './utils';
+import { SeasonSelectComponent, EpisodeSelectComponent } from './SeasonSelectComponent';
 import ReactLoading from 'react-loading';
 
 Sentry.init({ dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914" });
@@ -37,7 +38,7 @@ interface ITorrent {
   seeders: number;
   download: string;
 }
-type OptionsProps = {} & RouteComponentProps<{ tmdb_id: string }>;
+type OptionsProps = { type: 'movie' | 'tv' } & RouteComponentProps<{ tmdb_id: string }>;
 
 interface ItemInfo {
   imdb_id: string;
@@ -77,7 +78,8 @@ class _OptionsComponent extends Component<
     super(props);
     this.state = { results: [], loading: true };
     this.onComponentMount();
-    this.itemInfo = Axios.get<ItemInfo>(`/api/movie/${props.match.params.tmdb_id}`).then(({ data }) => data);
+    let { type, match } = props;
+    this.itemInfo = Axios.get<ItemInfo>(`/api/${type}/${match.params.tmdb_id}`).then(({ data }) => data);
   }
   public render() {
     const grouped = _.groupBy(this.state.results, 'category');
@@ -166,7 +168,7 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Route {...props} />
+      <Route {...props} strict={true} />
     </>
   )
 }
@@ -224,7 +226,10 @@ function ParentComponent() {
       <br />
 
       <Switch>
-        <RouteWithTitle path="/select/:tmdb_id/options" title="Options"><OptionsComponent /></RouteWithTitle>
+        <RouteWithTitle path="/select/:tmdb_id/options" title="Movie Options"><OptionsComponent type='movie' /></RouteWithTitle>
+        <RouteWithTitle path="/select/:tmdb_id/season/:season/episode/:episode/options" title="TV Options"><OptionsComponent type='tv' /></RouteWithTitle>
+        <RouteWithTitle path="/select/:tmdb_id/season/:season" title="Select Episode"><EpisodeSelectComponent /></RouteWithTitle>
+        <RouteWithTitle path="/select/:tmdb_id/season" title="Select Season"><SeasonSelectComponent /></RouteWithTitle>
         <RouteWithTitle path="/search" title="Search"><SearchComponent /></RouteWithTitle>
         <RouteWithTitle path="/" title="Media"><IndexComponent /></RouteWithTitle>
       </Switch>
