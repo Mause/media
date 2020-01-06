@@ -463,7 +463,7 @@ def download(type: str) -> WResponse:
     magnets: List[str] = args.getlist('magnet')
 
     is_tv = type == 'series'
-    tv_id = resolve_id(imdb_id, type)
+    tv_id = resolve_id(imdb_id, 'tv' if is_tv else type)
     item = get_tv(tv_id) if is_tv else get_movie(tv_id)
 
     if is_tv:
