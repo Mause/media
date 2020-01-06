@@ -44,10 +44,10 @@ interface ItemInfo {
   title: string;
 }
 
-function DisplayTorrent({ torrent, itemInfo }: { torrent: ITorrent, itemInfo?: ItemInfo }) {
+function DisplayTorrent({ torrent, itemInfo, type }: { torrent: ITorrent, itemInfo?: ItemInfo, type: string }) {
   let url;
   if (itemInfo) {
-    url = '/download/movie?' +
+    url = `/download/${type}?` +
       qs.stringify({
         imdb_id: itemInfo.imdb_id,
         magnet: torrent.download,
@@ -79,6 +79,7 @@ class _OptionsComponent extends Component<
     this.state = { results: [], loading: true, itemInfo: undefined };
   }
   public render() {
+    const { type } = this.props;
     const grouped = _.groupBy(this.state.results, 'category');
     const auto = _.maxBy(grouped['Movies/x264/1080'] || grouped['TV HD Episodes'] || [], 'seeders');
     const bits = _.sortBy(
@@ -89,7 +90,7 @@ class _OptionsComponent extends Component<
         <h3>{remove(category)}</h3>
         {_.sortBy(results, i => -i.seeders).map(result => (
           <li key={result.title}>
-            <DisplayTorrent torrent={result} itemInfo={this.state.itemInfo} />
+            <DisplayTorrent torrent={result} itemInfo={this.state.itemInfo} type={type} / >
           </li>
         ))}
       </div>
@@ -101,7 +102,7 @@ class _OptionsComponent extends Component<
           bits.length || this.state.loading ?
             <div>
               <p>
-                Auto selection: {auto ? <DisplayTorrent torrent={auto} itemInfo={this.state.itemInfo} /> : 'None'}
+                Auto selection: {auto ? <DisplayTorrent torrent={auto} itemInfo={this.state.itemInfo} type={type} /> : 'None'}
               </p>
               <ul>{bits}</ul>
             </div> :
