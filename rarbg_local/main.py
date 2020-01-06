@@ -629,7 +629,8 @@ def api_index():
 @jsonapi
 @has_tmdb_id
 def api_movie(tmdb_id: str):
-    return {"title": get_movie(tmdb_id), "imdb_id": get_movie_imdb_id(tmdb_id)}
+    movie = get_movie(tmdb_id)
+    return {"title": movie['title'], "imdb_id": movie['imdb_id']}
 
 
 @app.route('/api/tv/<tmdb_id>')
@@ -639,7 +640,7 @@ def api_tv(tmdb_id: str):
     tv = get_tv(tmdb_id)
     return {
         'number_of_seasons': tv['number_of_seasons'],
-        'imdb_id': get_tv_imdb_id(tmdb_id),
+        'imdb_id': tv['imdb_id'],
         'title': tv['name'],
     }
 
