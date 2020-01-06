@@ -640,7 +640,7 @@ def api_tv(tmdb_id: str):
     tv = get_tv(tmdb_id)
     return {
         'number_of_seasons': tv['number_of_seasons'],
-        'imdb_id': tv['imdb_id'],
+        'imdb_id': get_tv_imdb_id(tmdb_id)['imdb_id'],
         'title': tv['name'],
     }
 
