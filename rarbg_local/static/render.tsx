@@ -37,12 +37,12 @@ function Progress({ torrents, item }: { torrents?: Torrents, item: { download: D
     return <i className="fas fa-check-circle"></i>
   } else {
     let etaDescr = eta > 0 ? Moment().add(eta, 'seconds').fromNow(true) : 'Unknown time'
-    const title = String.Format("{0:00}% ({1} remaining)", percentDone ? percentDone * 100 : -1, etaDescr);
+    const title = String.Format("{0:00}% ({1} remaining)", percentDone * 100, etaDescr);
     return <progress value={percentDone} title={title}></progress>
   }
 }
 
-function getProgress(tid: string, item: { download: Download; }, torrents: Torrents): { eta: number, percentDone?: number } {
+function getProgress(tid: string, item: { download: Download; }, torrents: Torrents): { eta: number, percentDone: number } {
   let eta, percentDone;
   if (tid.includes('.')) {
     tid = tid.split('.')[0];
@@ -53,6 +53,8 @@ function getProgress(tid: string, item: { download: Download; }, torrents: Torre
     const tf = torrent.files.find(file => file.name.includes(marker));
     if (tf) {
       percentDone = tf.bytesCompleted / tf.length;
+    } else {
+      percentDone = torrent.percentDone;
     }
   } else {
     ({ eta, percentDone } = torrents[tid]);
