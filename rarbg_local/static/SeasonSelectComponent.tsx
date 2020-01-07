@@ -42,7 +42,7 @@ interface Episode {
   id: string;
   name: string;
 }
-interface Season {
+export interface Season {
   episodes: Episode[];
 }
 type EpisodeProps = RouteComponentProps<{ tmdb_id: string, season: string }>;

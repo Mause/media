@@ -4,12 +4,12 @@ import qs from 'qs';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Helmet from 'react-helmet';
+import ReactLoading from 'react-loading';
 import { RouteProps } from 'react-router';
 import { BrowserRouter as Router, Link, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
+import { EpisodeSelectComponent, Season, SeasonSelectComponent } from './SeasonSelectComponent';
 import { load, subscribe } from './utils';
-import { SeasonSelectComponent, EpisodeSelectComponent } from './SeasonSelectComponent';
-import ReactLoading from 'react-loading';
 
 Sentry.init({ dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914" });
 
@@ -90,7 +90,7 @@ class _OptionsComponent extends Component<
         <h3>{remove(category)}</h3>
         {_.sortBy(results, i => -i.seeders).map(result => (
           <li key={result.title}>
-            <DisplayTorrent torrent={result} itemInfo={this.state.itemInfo} type={type} / >
+            <DisplayTorrent torrent={result} itemInfo={this.state.itemInfo} type={type} />
           </li>
         ))}
       </div>
@@ -113,7 +113,16 @@ class _OptionsComponent extends Component<
   }
   componentDidMount() {
     const { tmdb_id, season, episode } = this.props.match.params;
-    load<ItemInfo>(`${this.props.type == 'series' ? 'tv' : 'movie'}/${tmdb_id}`).then(itemInfo => this.setState({ itemInfo }));
+    const prom = load<ItemInfo>(`${this.props.type == 'series' ? 'tv' : 'movie'}/${tmdb_id}`);
+    if (this.props.type === 'series') {
+      Promise.all([
+        load<Season>(`tv/${tmdb_id}/season/${season}`),
+        prom]).then(([season, { imdb_id }]) => {
+          this.setState({ itemInfo: { title: season.episodes[parseInt(episode!, 10)].name, imdb_id } });
+        })
+    } else {
+      prom.then(itemInfo => this.setState({ itemInfo }));
+    }
     subscribe(
       `/stream/${this.props.type}/${tmdb_id}?` + qs.stringify({ season, episode }),
       data => {
