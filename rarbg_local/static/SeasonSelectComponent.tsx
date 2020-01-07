@@ -17,7 +17,7 @@ class _SeasonSelectComponent extends Component<Props, { tv?: TV, loading: boolea
   }
 
   componentDidMount() {
-    load<TV>(`tv/${this.props.match.params.tmdb_id}`, tv => this.setState({ tv }))
+    load<TV>(`tv/${this.props.match.params.tmdb_id}`).then(tv => this.setState({ tv }))
   }
 
   render() {
@@ -54,7 +54,7 @@ class _EpisodeSelectComponent extends Component<EpisodeProps, { season?: Season 
 
   componentDidMount() {
     const { tmdb_id, season } = this.props.match.params;
-    load<Season>(`tv/${tmdb_id}/season/${season}`, season => this.setState({ season }));
+    load<Season>(`tv/${tmdb_id}/season/${season}`).then(season => this.setState({ season }));
   }
 
   render() {

@@ -25,8 +25,8 @@ class _IndexComponent extends Component<IndexProps, IndexState> {
   }
   private reload() {
     this.setState({ loadingTorrents: true, loadingState: true });
-    load<IndexResponse>('index', state => this.setState({ state, loadingState: false }));
-    load<Torrents>('torrents', torrents => this.setState({ torrents, loadingTorrents: false }));
+    load<IndexResponse>('index').then(state => this.setState({ state, loadingState: false }));
+    load<Torrents>('torrents').then(torrents => this.setState({ torrents, loadingTorrents: false }));
   }
   search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

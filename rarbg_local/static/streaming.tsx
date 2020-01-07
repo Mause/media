@@ -113,7 +113,7 @@ class _OptionsComponent extends Component<
   }
   componentDidMount() {
     const { tmdb_id, season, episode } = this.props.match.params;
-    load<ItemInfo>(`${this.props.type == 'series' ? 'tv' : 'movie'}/${tmdb_id}`, itemInfo => this.setState({ itemInfo }));
+    load<ItemInfo>(`${this.props.type == 'series' ? 'tv' : 'movie'}/${tmdb_id}`).then(itemInfo => this.setState({ itemInfo }));
     subscribe(
       `/stream/${this.props.type}/${tmdb_id}?` + qs.stringify({ season, episode }),
       data => {
@@ -191,8 +191,9 @@ const SearchComponent = withRouter(class SearchComponent extends Component<Route
   componentDidMount() {
     load<SearchResult[]>(
       'search',
-      results => this.setState({ results }),
       { query: this.getQuery() }
+    ).then(
+      results => this.setState({ results })
     );
   }
   render() {
