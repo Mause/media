@@ -59,7 +59,8 @@
     "babel-loader": "^8.0.6",
     "envify": "^4.1.0",
     "terser": "^4.5.1",
-    "uglifyify": "^5.0.2"
+    "uglifyify": "^5.0.2",
+    "watchify": "^3.11.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
