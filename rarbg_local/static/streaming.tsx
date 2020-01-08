@@ -229,7 +229,7 @@ function ParentComponent() {
       <nav>
         <Link to="/">Home</Link>&nbsp;
         <a href="http://novell.mause.me:9091" target="_blank">Transmission</a>&nbsp;
-        <a href="https://app.plex.com" target="_blank">Plex</a>&nbsp;
+        <a href="https://app.plex.tv" target="_blank">Plex</a>&nbsp;
         <a href="/user/sign-out">Logout</a>
       </nav>
 
