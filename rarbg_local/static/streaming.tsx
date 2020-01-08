@@ -97,7 +97,7 @@ class _OptionsComponent extends Component<
     ));
     return (
       <div>
-        {this.state.loading ? 'Loading...' : ''}
+        {this.state.loading ? <i className="fas fa-spinner fa-spin fa-xs"></i> : ''}
         {
           bits.length || this.state.loading ?
             <div>
