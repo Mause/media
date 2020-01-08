@@ -115,11 +115,13 @@ def create_app(config):
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(RoleAdmin(Role, db.session))
 
+    '''
     with papp.app_context():
         Mause = db.session.query(User).filter_by(username='Mause').one_or_none()
         if Mause:
             Mause.roles = list(set(Mause.roles) | {Roles.Admin, Roles.Member})
             db.session.commit()
+    '''
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
 
