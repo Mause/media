@@ -111,9 +111,11 @@ def create_app(config):
 
     e.init_app(papp)
 
+    '''
     admin = Admin(papp, name='Media')
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(RoleAdmin(Role, db.session))
+    '''
 
     '''
     with papp.app_context():
