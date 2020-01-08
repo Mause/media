@@ -38,6 +38,7 @@ flask-admin = "*"
 flask-jsontools = "*"
 flask-assets = "*"
 sentry-sdk = {extras = ["flask"],version = "*"}
+alembic = "*"
 
 [requires]
 python_version = "3.8"
