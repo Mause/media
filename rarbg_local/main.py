@@ -75,6 +75,7 @@ from .tmdb import (
 from .transmission_proxy import get_torrent, torrent_add
 
 logging.basicConfig(level=logging.DEBUG)
+logging.getLogger("pika").setLevel(logging.WARNING)
 
 app = Blueprint('rarbg_local', __name__)
 
