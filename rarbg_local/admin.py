@@ -24,7 +24,7 @@ class UserAdmin(sqla.ModelView, AdminOnly):
         form_class = super(UserAdmin, self).scaffold_form()
 
         form_class.password2 = PasswordField('New Password')
-        form_class.username.kwargs['validators'] = [validators.required()]
+        form_class.username.kwargs['validators'] = [validators.DataRequired()]
 
         return form_class
 
