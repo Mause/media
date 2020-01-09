@@ -1,4 +1,4 @@
-"""empty message
+"""Add tmdb_id column
 
 Revision ID: 01602e6e9637
 Revises: 050b415e6bc9

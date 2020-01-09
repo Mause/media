@@ -1,4 +1,4 @@
-"""empty message
+"""Initial database schema
 
 Revision ID: 050b415e6bc9
 Revises:
