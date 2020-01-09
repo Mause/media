@@ -20,7 +20,7 @@ config = context.config
 fileConfig(config.config_file_name)
 
 sys.path.insert(0, '.')
-db = __import__('rarbg_local.db')
+db = __import__('rarbg_local.db').db.db
 
 if 'HEROKU' in os.environ:
     from rarbg_local.wsgi import app
