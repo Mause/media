@@ -9,7 +9,6 @@ from logging.config import fileConfig
 from pathlib import Path
 
 from alembic import context
-from rarbg_local.db import User, db
 from sqlalchemy import engine_from_config, pool
 
 # this is the Alembic Config object, which provides
@@ -21,6 +20,7 @@ config = context.config
 fileConfig(config.config_file_name)
 
 sys.path.insert(0, '.')
+db = __import__('rarbg_local.db')
 
 if 'HEROKU' in os.environ:
     from rarbg_local.wsgi import app
