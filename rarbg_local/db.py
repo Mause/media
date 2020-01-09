@@ -9,7 +9,7 @@ from sqlalchemy.orm import joinedload, relationship
 from sqlalchemy.sql import ClauseElement
 from sqlalchemy_repr import RepresentableBase
 
-db = SQLAlchemy(model_class=(RepresentableBase,JsonSerializableBase))
+db = SQLAlchemy(model_class=(RepresentableBase, JsonSerializableBase))
 T = TypeVar('T')
 
 
@@ -17,6 +17,7 @@ class Download(db.Model):  # type: ignore
     __tablename__ = 'download'
     _json_exclude = {'movie', 'episode'}
     id = Column(Integer, primary_key=True)
+    tmdb_id = Column(Integer, default=None)
     transmission_id = Column(String, nullable=False)
     imdb_id = Column(String, nullable=False)
     type = Column(String)
