@@ -11,7 +11,11 @@ import { IndexComponent } from './IndexComponent';
 import { EpisodeSelectComponent, Season, SeasonSelectComponent } from './SeasonSelectComponent';
 import { load, subscribe } from './utils';
 
-Sentry.init({ dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914" });
+const [, hash] = '__GIT_MY_VERSION__'.split('-');
+Sentry.init({
+  dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914",
+  release: hash
+});
 
 const ranking = [
   'Movies/XVID',

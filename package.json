@@ -57,6 +57,7 @@
     "@types/react-helmet": "^5.0.14",
     "@types/react-router-dom": "^5.1.3",
     "babel-loader": "^8.0.6",
+    "browserify-git-my-version": "^1.0.2",
     "envify": "^4.1.0",
     "terser": "^4.5.1",
     "uglifyify": "^5.0.2",

@@ -14,6 +14,7 @@ class Browserify(ExternalTool):
         argv = [
             abspath('node_modules/.bin/browserify'),
             *'-p [ tsify --module es5 ]'.split(),
+            *'-t browserify-git-my-version'.split(),
             kwargs['source_path'],
         ]
 
