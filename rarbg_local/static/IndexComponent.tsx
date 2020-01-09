@@ -9,7 +9,7 @@ type IndexState = { state: IndexResponse, torrents?: Torrents, query: string, lo
 type IndexProps = RouteComponentProps<{}>;
 
 class _IndexComponent extends Component<IndexProps, IndexState> {
-  interval?: number;
+  interval?: NodeJS.Timeout;
   constructor(props: IndexProps) {
     super(props);
     this.state = { state: { series: [], movies: [] }, query: '', loadingTorrents: true, loadingState: true };

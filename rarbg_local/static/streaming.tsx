@@ -11,10 +11,10 @@ import { IndexComponent } from './IndexComponent';
 import { EpisodeSelectComponent, Season, SeasonSelectComponent } from './SeasonSelectComponent';
 import { load, subscribe } from './utils';
 
-const [, hash] = '__GIT_MY_VERSION__'.split('-');
+const release = process.env.HEROKU_SLUG_COMMIT;
 Sentry.init({
   dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914",
-  release: hash
+  release
 });
 
 const ranking = [
