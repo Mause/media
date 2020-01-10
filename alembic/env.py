@@ -29,7 +29,7 @@ else:
 
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + str(
-        Path(__file__).parent.parent.absolute() / 'dbd.db'
+        Path(__file__).parent.parent.absolute() / 'db.db'
     )
     db.init_app(app)
     # db.create_all(app=app)
