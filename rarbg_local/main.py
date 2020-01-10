@@ -490,7 +490,7 @@ def download(type: str) -> WResponse:
             show_title=item["name"] if is_tv else None,
         )
 
-    return redirect(url_for('.index'))
+    return redirect(url_for('.app'))
 
 
 class ManualForm(FlaskForm):
