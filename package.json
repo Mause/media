@@ -60,7 +60,7 @@
     "babel-loader": "^8.0.6",
     "browserify-git-my-version": "^1.0.2",
     "envify": "git+https://github.com/goto-bus-stop/envify.git#new-syntax",
-    "terser": "^4.5.1",
+    "terser": "^4.6.2",
     "uglifyify": "^5.0.2",
     "watchify": "^3.11.1"
   },
