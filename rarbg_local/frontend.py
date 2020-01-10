@@ -1,3 +1,4 @@
+import os
 import sys
 from os.path import abspath
 
@@ -14,14 +15,15 @@ class Browserify(ExternalTool):
         argv = [
             abspath('node_modules/.bin/browserify'),
             *'-p [ tsify --module es5 ]'.split(),
-            *'-t browserify-git-my-version'.split(),
             kwargs['source_path'],
         ]
 
         if production:
             argv.extend(
                 [
-                    *'-g [ envify --NODE_ENV production ] '.split(),
+                    *'-g [ envify --NODE_ENV production --HEROKU_SLUG_COMMIT {} ]'.format(
+                        os.environ['HEROKU_SLUG_COMMIT']
+                    ).split(),
                     *'-g uglifyify'.split(),
                 ]
             )
