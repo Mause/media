@@ -11,10 +11,10 @@ import { IndexComponent } from './IndexComponent';
 import { EpisodeSelectComponent, Season, SeasonSelectComponent } from './SeasonSelectComponent';
 import { load, subscribe } from './utils';
 
-const release = process.env.HEROKU_SLUG_COMMIT;
 Sentry.init({
   dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914",
-  release
+  release: process.env.HEROKU_SLUG_COMMIT,
+  environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
 });
 
 const ranking = [
