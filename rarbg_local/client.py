@@ -48,7 +48,12 @@ def get_client():
     def recieve(ch, method_frame, properties, body):
         body = dill.loads(body)
         f = _waiting.pop(body['key'])
-        f.set_result(body['body'])
+        if 'body' in body:
+            f.set_result(body['body'])
+        elif 'exception' in body:
+            f.set_exception(body['exception'])
+        else:
+            raise RuntimeError()
 
     channel.basic_consume('amq.rabbitmq.reply-to', recieve, auto_ack=True)
 
