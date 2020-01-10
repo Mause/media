@@ -48,7 +48,12 @@ interface ItemInfo {
   title: string;
 }
 
-function DisplayTorrent({ torrent, itemInfo, type }: { torrent: ITorrent, itemInfo?: ItemInfo, type: string }) {
+function getHash(magnet: string) {
+  const u = new URL(magnet);
+  return _.last(u.searchParams.get('xt')!.split(':'))
+}
+
+function DisplayTorrent({ torrent, torrents, itemInfo, type }: { torrent: ITorrent, torrents?: Torrents, itemInfo?: ItemInfo, type: string }) {
   let url;
   if (itemInfo) {
     url = `/download/${type}?` +
@@ -63,6 +68,8 @@ function DisplayTorrent({ torrent, itemInfo, type }: { torrent: ITorrent, itemIn
       <a href={url}>{torrent.title}</a>
       &nbsp;
       <small>{torrent.seeders}</small>
+      &nbsp;
+      {torrents && getHash(torrent.download)! in torrents ? <small>downloaded</small> : ''}
     </span>
   );
 }
@@ -76,13 +83,14 @@ function remove(bit: string): string {
 
 class _OptionsComponent extends Component<
   OptionsProps,
-  { results: ITorrent[]; loading: boolean, itemInfo?: ItemInfo }
+  { results: ITorrent[], torrents?: Torrents, loading: boolean, itemInfo?: ItemInfo }
   > {
   constructor(props: OptionsProps) {
     super(props);
     this.state = { results: [], loading: true, itemInfo: undefined };
   }
   public render() {
+    const dt = (result: ITorrent) => <DisplayTorrent itemInfo={this.state.itemInfo} type={type} torrents={this.state.torrents} torrent={result} />
     const { type } = this.props;
     const grouped = _.groupBy(this.state.results, 'category');
     const auto = _.maxBy(grouped['Movies/x264/1080'] || grouped['TV HD Episodes'] || [], 'seeders');
@@ -93,9 +101,7 @@ class _OptionsComponent extends Component<
       <div key={category}>
         <h3>{remove(category)}</h3>
         {_.sortBy(results, i => -i.seeders).map(result => (
-          <li key={result.title}>
-            <DisplayTorrent torrent={result} itemInfo={this.state.itemInfo} type={type} />
-          </li>
+          <li key={result.title}>{dt(result)}</li>
         ))}
       </div>
     ));
@@ -106,7 +112,7 @@ class _OptionsComponent extends Component<
           bits.length || this.state.loading ?
             <div>
               <p>
-                Auto selection: {auto ? <DisplayTorrent torrent={auto} itemInfo={this.state.itemInfo} type={type} /> : 'None'}
+                Auto selection: {auto ? dt(auto) : 'None'}
               </p>
               <ul>{bits}</ul>
             </div> :
@@ -117,6 +123,9 @@ class _OptionsComponent extends Component<
   }
   componentDidMount() {
     const { tmdb_id, season, episode } = this.props.match.params;
+
+    load<Torrents>('torrents').then(torrents => this.setState({ torrents }));
+
     const prom = load<ItemInfo>(`${this.props.type == 'series' ? 'tv' : 'movie'}/${tmdb_id}`);
     if (this.props.type === 'series') {
       Promise.all([
