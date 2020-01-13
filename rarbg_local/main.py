@@ -541,10 +541,15 @@ def add_single(
         if is_tv:
             assert season
             create_episode(
-                transmission_id, imdb_id, season, episode, title, show_title=show_title
+                transmission_id=transmission_id,
+                imdb_id=imdb_id,
+                season=season,
+                episode=episode,
+                title=title,
+                show_title=show_title,
             )
         else:
-            create_movie(transmission_id, imdb_id, title=title)
+            create_movie(transmission_id=transmission_id, imdb_id=imdb_id, title=title)
 
         db.session.commit()
 

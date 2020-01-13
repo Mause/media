@@ -108,6 +108,7 @@ class UserRoles(db.Model):  # type: ignore
 
 
 def create_download(
+    *,
     transmission_id: str,
     imdb_id: str,
     title: str,
@@ -126,13 +127,22 @@ def create_download(
     )
 
 
-def create_movie(transmission_id: str, imdb_id: str, title: str) -> None:
+def create_movie(*, transmission_id: str, imdb_id: str, title: str) -> None:
     md = MovieDetails()
     db.session.add(md)
-    db.session.add(create_download(transmission_id, imdb_id, title, 'movie', md))
+    db.session.add(
+        create_download(
+            transmission_id=transmission_id,
+            imdb_id=imdb_id,
+            title=title,
+            type='movie',
+            details=md,
+        )
+    )
 
 
 def create_episode(
+    *,
     transmission_id: str,
     imdb_id: str,
     season: str,
@@ -145,7 +155,14 @@ def create_episode(
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
     db.session.add(ed)
     db.session.add(
-        create_download(transmission_id, imdb_id, title, 'episode', ed, id=download_id)
+        create_download(
+            transmission_id=transmission_id,
+            imdb_id=imdb_id,
+            title=title,
+            type='episode',
+            details=ed,
+            id=download_id,
+        )
     )
     return ed
 
