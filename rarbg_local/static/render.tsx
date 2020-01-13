@@ -4,9 +4,20 @@ import { Download, MovieResponse, SeriesResponse, Torrents, EpisodeResponse } fr
 import { String } from 'typescript-string-operations';
 import Moment from "moment";
 import { ContextMenu, ContextMenuTrigger, MenuItem } from "react-contextmenu";
+import { load } from './utils';
 
 function Loading({ loading }: { loading: boolean }) {
   return loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : <></>
+}
+
+function plex(plexId: string, serverId: string): string {
+  return `https://app.plex.tv/desktop#!/server/${serverId}/details?` + new URLSearchParams({ 'key': '/library/metadata/' + plexId });
+}
+
+function openPlex(movie: { download: { imdb_id: string } }) {
+  load<{ id: string, server_id: string }>(`plex/${movie.download.imdb_id}`).then(
+    ({ id, server_id }) => window.open(plex(id, server_id))
+  );
 }
 
 function contextMenuTrigger(id: string) {
@@ -32,6 +43,7 @@ export function Movies({ movies, torrents, loading }: { movies: MovieResponse[],
           &nbsp;
           {contextMenuTrigger(`movie_${movie.id}`)}
           <ContextMenu id={`movie_${movie.id}`}>
+            <MenuItem onClick={() => openPlex(movie)}><span className="unselectable">Play in Plex</span></MenuItem>
             <MenuItem onClick={() => window.open(`https://www.imdb.com/title/${movie.download.imdb_id}`)}>Open in IMDB</MenuItem>
           </ContextMenu>
           &nbsp;
