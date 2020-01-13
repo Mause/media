@@ -8,6 +8,19 @@ function Loading({ loading }: { loading: boolean }) {
   return loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : <></>
 }
 
+function contextMenuTrigger(id: string) {
+  // @ts-ignore
+  return <ContextMenuTrigger mouseButton={0}
+    id={id}
+    renderTag='i'
+    attributes={{
+      className: 'fas fa-list',
+      style: { cursor: 'pointer' },
+    }}
+    children={''}
+  />
+}
+
 export function Movies({ movies, torrents, loading }: { movies: MovieResponse[], torrents?: Torrents, loading: boolean }) {
   return <div className="colA">
     <h2>Movies <Loading loading={loading} /></h2>
@@ -16,11 +29,10 @@ export function Movies({ movies, torrents, loading }: { movies: MovieResponse[],
         <li key={movie.id}>
           <span>{movie.download.title}</span>
           &nbsp;
-          <small>
-            <a target="_blank" href={`https://www.imdb.com/title/${movie.download.imdb_id}`}>
-              <i className="fas fa-share"></i>
-            </a>
-          </small>
+          {contextMenuTrigger(`movie_${movie.id}`)}
+          <ContextMenu id={`movie_${movie.id}`}>
+            <MenuItem onClick={() => window.open(`https://www.imdb.com/title/${movie.download.imdb_id}`)}>Open in IMDB</MenuItem>
+          </ContextMenu>
           &nbsp;
           <Progress torrents={torrents} item={movie} />
         </li>
