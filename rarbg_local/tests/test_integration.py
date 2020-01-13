@@ -80,6 +80,7 @@ def test_index(responses, test_client, trm_session, torrent_get):
         transmission_id=HASH_STRING,
         imdb_id='tt000000',
         season='1',
+        tmdb_id=1,
         episode='1',
         title='Hello world',
         show_title='Programming',
@@ -128,6 +129,7 @@ def test_delete_cascade(test_client: FlaskClient):
     e = create_episode(
         transmission_id='1',
         imdb_id='tt000000',
+        tmdb_id=1,
         season='1',
         episode='1',
         title='Title',

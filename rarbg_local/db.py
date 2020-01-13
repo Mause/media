@@ -113,6 +113,7 @@ def create_download(
     imdb_id: str,
     title: str,
     type: str,
+    tmdb_id: int,
     details: Union[MovieDetails, EpisodeDetails],
     id: int = None,
 ):
@@ -122,12 +123,15 @@ def create_download(
         imdb_id=imdb_id,
         title=title,
         type=type,
+        tmdb_id=tmdb_id,
         **{type: details},
         id=id,
     )
 
 
-def create_movie(*, transmission_id: str, imdb_id: str, title: str) -> None:
+def create_movie(
+    *, transmission_id: str, imdb_id: str, title: str, tmdb_id: int
+) -> None:
     md = MovieDetails()
     db.session.add(md)
     db.session.add(
@@ -136,6 +140,7 @@ def create_movie(*, transmission_id: str, imdb_id: str, title: str) -> None:
             imdb_id=imdb_id,
             title=title,
             type='movie',
+            tmdb_id=tmdb_id,
             details=md,
         )
     )
@@ -148,9 +153,10 @@ def create_episode(
     season: str,
     episode: Optional[str],
     title: str,
+    tmdb_id: int,
     id: int = None,
+    show_title: str,
     download_id: int = None,
-    show_title: str = None,
 ) -> EpisodeDetails:
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
     db.session.add(ed)
@@ -158,6 +164,7 @@ def create_episode(
         create_download(
             transmission_id=transmission_id,
             imdb_id=imdb_id,
+            tmdb_id=tmdb_id,
             title=title,
             type='episode',
             details=ed,

@@ -73,6 +73,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .transmission_proxy import get_torrent, torrent_add
+from .utils import non_null
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -483,6 +484,7 @@ def download(type: str) -> WResponse:
             magnet=magnet,
             subpath=subpath,
             imdb_id=imdb_id,
+            tmdb_id=item['id'],
             episode=episode,
             season=season,
             is_tv=is_tv,
@@ -517,6 +519,7 @@ def add_single(
     subpath: str,
     is_tv: bool,
     imdb_id: str,
+    tmdb_id: int,
     season: Optional[str],
     episode: Optional[str],
     title: str,
@@ -546,10 +549,16 @@ def add_single(
                 season=season,
                 episode=episode,
                 title=title,
-                show_title=show_title,
+                tmdb_id=tmdb_id,
+                show_title=non_null(show_title),
             )
         else:
-            create_movie(transmission_id=transmission_id, imdb_id=imdb_id, title=title)
+            create_movie(
+                transmission_id=transmission_id,
+                imdb_id=imdb_id,
+                tmdb_id=tmdb_id,
+                title=title,
+            )
 
         db.session.commit()
 
