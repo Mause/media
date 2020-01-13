@@ -3,6 +3,7 @@ import React from 'react';
 import { Download, MovieResponse, SeriesResponse, Torrents, EpisodeResponse } from './streaming';
 import { String } from 'typescript-string-operations';
 import Moment from "moment";
+import { ContextMenu, ContextMenuTrigger, MenuItem } from "react-contextmenu";
 
 function Loading({ loading }: { loading: boolean }) {
   return loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : <></>
