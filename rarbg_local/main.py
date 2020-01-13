@@ -73,7 +73,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .transmission_proxy import get_torrent, torrent_add
-from .utils import non_null
+from .utils import non_null, precondition
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -245,7 +245,7 @@ def delete(type: str, id: str) -> WResponse:
     query = db.session.query(
         EpisodeDetails if type == 'series' else MovieDetails
     ).filter_by(id=id)
-    assert query.count() > 0
+    precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
     db.session.commit()
 
@@ -381,8 +381,8 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     m = full_marker_re.search(title)
     if not m:
         m = partial_marker_re.search(title)
-        assert m, title
-        return m.group(2), None
+        precondition(m, f'Cannot find marker in: {title}')
+        return non_null(m).group(2), None
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
@@ -456,7 +456,7 @@ def select_season(imdb_id: str) -> str:
 
 @app.route('/download/<type>')
 def download(type: str) -> WResponse:
-    assert type
+    precondition(type, 'Type must be provided')
 
     args = request.args
 
@@ -542,7 +542,7 @@ def add_single(
     print('already', already)
     if not already:
         if is_tv:
-            assert season
+            precondition(season, 'Season must be provided for tv type')
             create_episode(
                 transmission_id=transmission_id,
                 imdb_id=imdb_id,

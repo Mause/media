@@ -9,6 +9,8 @@ from sqlalchemy.orm import joinedload, relationship
 from sqlalchemy.sql import ClauseElement
 from sqlalchemy_repr import RepresentableBase
 
+from .utils import precondition
+
 db = SQLAlchemy(model_class=(RepresentableBase, JsonSerializableBase))
 T = TypeVar('T')
 
@@ -117,7 +119,7 @@ def create_download(
     details: Union[MovieDetails, EpisodeDetails],
     id: int = None,
 ):
-    assert imdb_id.startswith('tt'), imdb_id
+    precondition(imdb_id.startswith('tt'), f'Invalid imdb_id: {imdb_id}')
     return Download(
         transmission_id=transmission_id,
         imdb_id=imdb_id,

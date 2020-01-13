@@ -7,7 +7,7 @@ import backoff
 import requests
 from requests_toolbelt.sessions import BaseUrlSession
 
-from .utils import lru_cache
+from .utils import lru_cache, precondition
 
 tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
 tmdb.params['api_key'] = '66b197263af60702ba14852b4ec9b143'
@@ -56,9 +56,9 @@ def search_themoviedb(s: str) -> List[Dict]:
 
 
 @lru_cache()
-def find_themoviedb(i: str):
-    assert i.startswith('tt')
-    results = tmdb.get(f'find/{i}', params={'external_source': 'imdb_id'}).json()
+def find_themoviedb(imdb_id: str):
+    precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
+    results = tmdb.get(f'find/{imdb_id}', params={'external_source': 'imdb_id'}).json()
 
     result = next(item for item in chain.from_iterable(results.values()))
 
@@ -67,16 +67,16 @@ def find_themoviedb(i: str):
 
 @lru_cache()
 def resolve_id(imdb_id: str, type: str) -> str:
-    assert imdb_id.startswith('tt')
+    precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
     results = tmdb.get(f'find/{imdb_id}', params={'external_source': 'imdb_id'}).json()
 
     if type:
         res = results[f'{type}_results']
-        assert res, f'No results for {imdb_id}'
+        precondition(res, f'No results for {imdb_id}')
         res = res[0]
     else:
         res = next((item for item in chain.from_iterable(results.values())), None)
-        assert res, f'No results for {imdb_id}'
+        precondition(res, f'No results for {imdb_id}')
 
     return res['id']
 

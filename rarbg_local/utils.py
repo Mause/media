@@ -23,3 +23,8 @@ def cache_clear():
 def non_null(thing: Optional[T]) -> T:
     assert thing, 'NPE'
     return thing
+
+
+def precondition(res: Optional[T], message: str) -> None:
+    if not res:
+        raise AssertionError(message)
