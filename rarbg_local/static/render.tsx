@@ -5,7 +5,7 @@ import { String } from 'typescript-string-operations';
 import Moment from "moment";
 
 function Loading({ loading }: { loading: boolean }) {
-  return loading ? <i className="fas fa-spinner fa-spin fa-xs"></i> : <></>
+  return loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : <></>
 }
 
 export function Movies({ movies, torrents, loading }: { movies: MovieResponse[], torrents?: Torrents, loading: boolean }) {
