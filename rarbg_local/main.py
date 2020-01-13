@@ -1,14 +1,16 @@
 import inspect
 import json
 import logging
+import os
 import re
 import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from functools import wraps
+from functools import lru_cache, wraps
 from itertools import chain, zip_longest
 from pathlib import Path
 from typing import (
+    Any,
     Callable,
     Dict,
     Iterable,
@@ -40,6 +42,8 @@ from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
+from plexapi.myplex import MyPlexAccount
+from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
 from sqlalchemy import event
 from werkzeug.wrappers import Response as WResponse
@@ -82,6 +86,15 @@ app = Blueprint('rarbg_local', __name__)
 
 K = TypeVar('K')
 V = TypeVar('V')
+
+
+@lru_cache()
+def get_plex() -> PlexServer:
+    return (
+        MyPlexAccount(os.environ['PLEX_USERNAME'], os.environ['PLEX_PASSWORD'])
+        .resource('Novell')
+        .connect()
+    )
 
 
 def create_app(config):
@@ -642,6 +655,23 @@ def has_tmdb_id(func):
 @jsonapi
 def api_index():
     return {'series': resolve_series(), 'movies': get_movies()}
+
+
+def get_imdb_in_plex(imdb_id: str) -> Optional[Any]:
+    guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
+    items = get_plex().library.search(guid=guid)
+    if items:
+        return items[0]
+
+
+@app.route('/api/plex/<imdb_id>')
+@jsonapi
+def api_plex(imdb_id: str):
+    data = get_imdb_in_plex(imdb_id)
+    if not data:
+        abort(404, 'Not found in plex')
+
+    return {'id': data.ratingKey, 'server_id': get_plex().machineIdentifier}
 
 
 @app.route('/api/movie/<tmdb_id>')
