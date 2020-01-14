@@ -65,7 +65,6 @@ from .db import (
     get_episodes,
     get_movies,
 )
-from .frontend import e
 from .rarbg import RarbgTorrent, get_rarbg, get_rarbg_iter
 from .tmdb import (
     get_json,
@@ -132,8 +131,6 @@ def create_app(config):
     UserManager(papp, db, User)
 
     papp.json_encoder = DynamicJSONEncoder
-
-    e.init_app(papp)
 
     '''
     admin = Admin(papp, name='Media')
