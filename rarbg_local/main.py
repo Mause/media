@@ -101,7 +101,9 @@ def cache_busting_url_for(endpoint, **values):
     if endpoint == 'static':
         filename = values.get('filename')
         if filename:
-            values['_'] = int(os.stat(join(current_app.static_dir, filename)).st_mtime)
+            values['_'] = int(
+                os.stat(join(non_null(current_app.static_folder), filename)).st_mtime
+            )
     return url_for(endpoint, **values)
 
 
