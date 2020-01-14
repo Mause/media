@@ -17,6 +17,8 @@ Sentry.init({
   environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
 });
 
+import './app.css';
+
 const ranking = [
   'Movies/XVID',
   'Movies/x264',
