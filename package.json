@@ -61,6 +61,7 @@
     "babel-loader": "^8.0.6",
     "browserify-css": "^0.15.0",
     "browserify-git-my-version": "^1.0.2",
+    "browserify-livereload": "^1.0.10",
     "envify": "git+https://github.com/goto-bus-stop/envify.git#new-syntax",
     "terser": "^4.6.3",
     "uglifyify": "^5.0.2",
