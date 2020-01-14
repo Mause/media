@@ -91,11 +91,10 @@ V = TypeVar('V')
 
 @lru_cache()
 def get_plex() -> PlexServer:
-    return (
-        MyPlexAccount(os.environ['PLEX_USERNAME'], os.environ['PLEX_PASSWORD'])
-        .resource('Novell')
-        .connect()
-    )
+    acct = MyPlexAccount(os.environ['PLEX_USERNAME'], os.environ['PLEX_PASSWORD'])
+    novell = acct.resource('Novell')
+    novell.connections = [c for c in novell.connections if not c.local]
+    return novell.connect()
 
 
 def cache_busting_url_for(endpoint, **values):
