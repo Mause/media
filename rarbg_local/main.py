@@ -8,6 +8,7 @@ from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from functools import lru_cache, wraps
 from itertools import chain, zip_longest
+from os.path import join
 from pathlib import Path
 from typing import (
     Any,
@@ -95,6 +96,14 @@ def get_plex() -> PlexServer:
         .resource('Novell')
         .connect()
     )
+
+
+def cache_busting_url_for(endpoint, **values):
+    if endpoint == 'static':
+        filename = values.get('filename')
+        if filename:
+            values['_'] = int(os.stat(join(current_app.static_dir, filename)).st_mtime)
+    return url_for(endpoint, **values)
 
 
 def create_app(config):
@@ -749,7 +758,7 @@ def render_progress(
 @app.route('/app/')
 @app.route('/app/<path:path>')
 def app_index(path=None) -> str:
-    return render_template('app.html')
+    return render_template('app.html', url_for=cache_busting_url_for)
 
 
 @app.route('/', methods=['GET', 'POST'])
