@@ -94,7 +94,7 @@ def get_plex() -> PlexServer:
     acct = MyPlexAccount(os.environ['PLEX_USERNAME'], os.environ['PLEX_PASSWORD'])
     novell = acct.resource('Novell')
     novell.connections = [c for c in novell.connections if not c.local]
-    return novell.connect()
+    return novell.connect(ssl=True)
 
 
 def cache_busting_url_for(endpoint, **values):
