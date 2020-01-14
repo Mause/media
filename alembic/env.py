@@ -37,7 +37,6 @@ else:
 alembic_config = config.get_section(config.config_ini_section)
 alembic_config['sqlalchemy.url'] = app.config['SQLALCHEMY_DATABASE_URI']
 
-print(app.config['SQLALCHEMY_DATABASE_URI'])
 app.app_context().__enter__()
 target_metadata = db.Model.metadata
 
