@@ -7,6 +7,7 @@ import Helmet from 'react-helmet';
 import ReactLoading from 'react-loading';
 import { RouteProps } from 'react-router';
 import { BrowserRouter as Router, Link, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import './app.css';
 import { IndexComponent } from './IndexComponent';
 import { EpisodeSelectComponent, Season, SeasonSelectComponent } from './SeasonSelectComponent';
 import { load, subscribe } from './utils';
@@ -16,8 +17,6 @@ Sentry.init({
   release: process.env.HEROKU_SLUG_COMMIT,
   environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
 });
-
-import './app.css';
 
 const ranking = [
   'Movies/XVID',
