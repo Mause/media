@@ -36,7 +36,6 @@ dill = "*"
 pika = "*"
 flask-admin = "*"
 flask-jsontools = "*"
-flask-assets = "*"
 sentry-sdk = {extras = ["flask"],version = "*"}
 alembic = "*"
 plexapi = "*"
