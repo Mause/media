@@ -20,8 +20,13 @@ def cache_clear():
         cache.cache_clear()  # type: ignore
 
 
+class NullPointerException(Exception):
+    pass
+
+
 def non_null(thing: Optional[T]) -> T:
-    assert thing, 'NPE'
+    if not thing:
+        raise NullPointerException()
     return thing
 
 
