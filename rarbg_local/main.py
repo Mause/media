@@ -132,11 +132,9 @@ def create_app(config):
 
     papp.json_encoder = DynamicJSONEncoder
 
-    '''
     admin = Admin(papp, name='Media')
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(RoleAdmin(Role, db.session))
-    '''
 
     '''
     with papp.app_context():
