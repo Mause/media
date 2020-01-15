@@ -22,7 +22,7 @@
     "debug": "^4.1.1",
     "escape-string-regexp": "^1.0.5",
     "esutils": "^2.0.3",
-    "globals": "^11.12.0",
+    "globals": "^12.3.0",
     "has-flag": "^4.0.0",
     "js-tokens": "^4.0.0",
     "jsesc": "^2.5.2",
