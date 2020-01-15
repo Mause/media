@@ -24,7 +24,7 @@
     "esutils": "^2.0.3",
     "globals": "^12.3.0",
     "has-flag": "^4.0.0",
-    "js-tokens": "^4.0.0",
+    "js-tokens": "^5.0.0",
     "jsesc": "^2.5.2",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
