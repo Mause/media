@@ -231,6 +231,8 @@ const SearchComponent = withRouter(class SearchComponent extends Component<Route
           </li>
         ) : <ReactLoading type='balls' color='#000' />}
       </ul>
+      {this.state.results && this.state.results.length === 0 ?
+      'No results' : null}
     </div>
   }
 });
