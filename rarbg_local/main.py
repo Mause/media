@@ -629,6 +629,7 @@ class SeriesDetails(TypedDict):
     seasons: Dict[int, List[EpisodeDetails]]
     title: str
     imdb_id: str
+    tmdb_id: int
 
 
 def resolve_series() -> List[SeriesDetails]:
@@ -639,6 +640,7 @@ def resolve_series() -> List[SeriesDetails]:
             'title': show[0].show_title,
             'seasons': resolve_show(imdb_id, show),
             'imdb_id': imdb_id,
+            'tmdb_id': show[0].download.tmdb_id or resolve_id(imdb_id, 'tv'),
         }
         for imdb_id, show in groupby(
             episodes, lambda episode: episode.download.imdb_id
