@@ -1,7 +1,7 @@
 from datetime import date
 from enum import Enum
 from itertools import chain
-from typing import Dict, List, Optional
+from typing import Dict, List, Literal, Optional
 
 import backoff
 import requests
@@ -11,6 +11,8 @@ from .utils import lru_cache, precondition
 
 tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
 tmdb.params['api_key'] = '66b197263af60702ba14852b4ec9b143'
+
+ThingType = Literal['movie', 'tv']
 
 
 def try_(dic: Dict[str, str], *keys: str) -> Optional[str]:
@@ -66,7 +68,7 @@ def find_themoviedb(imdb_id: str):
 
 
 @lru_cache()
-def resolve_id(imdb_id: str, type: str) -> str:
+def resolve_id(imdb_id: str, type: ThingType) -> str:
     precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
     results = tmdb.get(f'find/{imdb_id}', params={'external_source': 'imdb_id'}).json()
 
