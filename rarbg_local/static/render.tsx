@@ -5,6 +5,7 @@ import { String } from 'typescript-string-operations';
 import Moment from "moment";
 import { ContextMenu, ContextMenuTrigger, MenuItem } from "react-contextmenu";
 import { load } from './utils';
+import { Link } from 'react-router-dom';
 
 function Loading({ loading }: { loading: boolean }) {
   return loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : <></>
@@ -96,7 +97,12 @@ export function TVShows({ series, torrents, loading }: {
     <div className="colB">
       <h2>TV Shows <Loading loading={loading} /></h2>
       {series.map(serie => <div key={serie.imdb_id}>
-        <h3>{serie.title}</h3>
+        <h3>
+          {serie.title}
+          <Link to={`/select/${serie.tmdb_id}/season`}>
+            <i className="fas fa-search" />
+          </Link>
+        </h3>
         {_.sortBy(Object.keys(serie.seasons), parseInt).map(i => {
           const season = serie.seasons[i];
           return <div key={i}>

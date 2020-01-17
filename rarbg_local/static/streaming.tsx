@@ -165,6 +165,7 @@ export interface MovieResponse {
 }
 export interface SeriesResponse {
   imdb_id: string;
+  tmdb_id: string;
   title: string;
   seasons: {
     [key: string]:
