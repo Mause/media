@@ -99,6 +99,7 @@ export function TVShows({ series, torrents, loading }: {
       {series.map(serie => <div key={serie.imdb_id}>
         <h3>
           {serie.title}
+          &nbsp;
           <Link to={`/select/${serie.tmdb_id}/season`}>
             <i className="fas fa-search" />
           </Link>
@@ -106,7 +107,13 @@ export function TVShows({ series, torrents, loading }: {
         {_.sortBy(Object.keys(serie.seasons), parseInt).map(i => {
           const season = serie.seasons[i];
           return <div key={i}>
-            <h4>Season {i}</h4>
+            <h4>
+              Season {i}
+              &nbsp;
+              <Link to={`/select/${serie.tmdb_id}/season/${i}`}>
+                <i className="fas fa-search" />
+              </Link>
+            </h4>
             <ol>
               {season.map(episode => <li key={episode.episode} value={episode.episode}>
                 <span>{episode.download.title}</span>
