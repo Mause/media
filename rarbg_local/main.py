@@ -11,7 +11,6 @@ from itertools import chain, zip_longest
 from os.path import join
 from pathlib import Path
 from typing import (
-    Any,
     Callable,
     Dict,
     Iterable,
@@ -23,7 +22,7 @@ from typing import (
     Union,
     cast,
 )
-from urllib.parse import parse_qsl, urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse
 
 from flask import (
     Blueprint,
@@ -43,6 +42,7 @@ from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
+from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
@@ -664,21 +664,11 @@ def api_index():
     return {'series': resolve_series(), 'movies': get_movies()}
 
 
-def get_imdb_in_plex(imdb_id: str) -> Optional[Any]:
+def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
     guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
     items = get_plex().library.search(guid=guid)
     if items:
         return items[0]
-
-
-@app.route('/api/plex/<imdb_id>')
-@jsonapi
-def api_plex(imdb_id: str):
-    data = get_imdb_in_plex(imdb_id)
-    if not data:
-        abort(404, 'Not found in plex')
-
-    return {'id': data.ratingKey, 'server_id': get_plex().machineIdentifier}
 
 
 @app.route('/api/movie/<tmdb_id>')
@@ -811,6 +801,20 @@ def _get_keyed_torrents() -> Dict[str, Dict]:
                 500,
             ),
         )
+
+
+@app.route('/redirect/plex/<tmdb_id>')
+def redirect_to_plex(tmdb_id: str):
+    dat = get_imdb_in_plex(tmdb_id)
+    if not dat:
+        return abort(404, 'Not found in plex')
+
+    server_id = get_plex().machineIdentifier
+
+    return redirect(
+        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
+        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
+    )
 
 
 @app.route('/redirect/<type_>/<ident>')

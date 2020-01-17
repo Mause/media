@@ -4,21 +4,16 @@ import { Download, MovieResponse, SeriesResponse, Torrents, EpisodeResponse } fr
 import { String } from 'typescript-string-operations';
 import Moment from "moment";
 import { ContextMenu, ContextMenuTrigger, MenuItem } from "react-contextmenu";
-import { load } from './utils';
 import { Link } from 'react-router-dom';
 
 function Loading({ loading }: { loading: boolean }) {
   return loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : <></>
 }
 
-function plex(plexId: string, serverId: string): string {
-  return `https://app.plex.tv/desktop#!/server/${serverId}/details?` + new URLSearchParams({ 'key': '/library/metadata/' + plexId });
-}
-
-function openPlex(movie: { download: { imdb_id: string } }) {
-  load<{ id: string, server_id: string }>(`plex/${movie.download.imdb_id}`).then(
-    ({ id, server_id }) => window.open(plex(id, server_id))
-  );
+function openPlex(item: { download: { imdb_id: string } }) {
+  window.open(
+    `/redirect/plex/${item.download.imdb_id}`
+  )
 }
 
 function contextMenuTrigger(id: string) {
