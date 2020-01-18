@@ -5,12 +5,13 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Helmet from 'react-helmet';
 import ReactLoading from 'react-loading';
-import { RouteProps } from 'react-router';
+import { RouteProps, Redirect } from 'react-router';
 import { BrowserRouter as Router, Link, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import './app.css';
 import { IndexComponent } from './IndexComponent';
 import { EpisodeSelectComponent, Season, SeasonSelectComponent } from './SeasonSelectComponent';
 import { load, subscribe } from './utils';
+import Axios from 'axios';
 
 Sentry.init({
   dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914",
@@ -54,19 +55,46 @@ function getHash(magnet: string) {
   return _.last(u.searchParams.get('xt')!.split(':'))
 }
 
+class _DownloadComponent extends Component<RouteComponentProps<{}>, { done?: boolean }> {
+  constructor(props: RouteComponentProps<{}>) {
+    debugger;
+    super(props);
+    this.state = {};
+  }
+  componentDidMount() {
+    const state = this.props.location.state;
+    const url = `/download/${state.type}?` +
+      qs.stringify({
+        imdb_id: state.imdb_id,
+        magnet: state.magnet,
+        titles: state.titles,
+      });
+    Axios.get(url).then(() => {
+      debugger;
+      this.setState({ done: true })
+    })
+  }
+  render() {
+    return this.state.done ? <Redirect to='/' /> : <ReactLoading type='balls' color='#000000' />;
+  }
+}
+const DownloadComponent = withRouter(_DownloadComponent);
+
 function DisplayTorrent({ torrent, torrents, itemInfo, type }: { torrent: ITorrent, torrents?: Torrents, itemInfo?: ItemInfo, type: string }) {
   let url;
   if (itemInfo) {
-    url = `/download/${type}?` +
-      qs.stringify({
+    url = {
+      pathname: `/download`, state: {
+        type,
         imdb_id: itemInfo.imdb_id,
         magnet: torrent.download,
         titles: itemInfo.title,
-      });
+      }
+    };
   }
   return (
     <span>
-      <a href={url}>{torrent.title}</a>
+      {url ? <Link to={url}>{torrent.title}</Link> : torrent.title}
       &nbsp;
       <small>{torrent.seeders}</small>
       &nbsp;
@@ -233,7 +261,7 @@ const SearchComponent = withRouter(class SearchComponent extends Component<Route
         ) : <ReactLoading type='balls' color='#000' />}
       </ul>
       {this.state.results && this.state.results.length === 0 ?
-      'No results' : null}
+        'No results' : null}
     </div>
   }
 });
@@ -258,6 +286,7 @@ function ParentComponent() {
         <RouteWithTitle path="/select/:tmdb_id/season/:season" title="Select Episode"><EpisodeSelectComponent /></RouteWithTitle>
         <RouteWithTitle path="/select/:tmdb_id/season" title="Select Season"><SeasonSelectComponent /></RouteWithTitle>
         <RouteWithTitle path="/search" title="Search"><SearchComponent /></RouteWithTitle>
+        <RouteWithTitle path="/download" title="Download"><DownloadComponent /></RouteWithTitle>
         <RouteWithTitle path="/" title="Media"><IndexComponent /></RouteWithTitle>
       </Switch>
     </Router>
