@@ -18,6 +18,7 @@ T = TypeVar('T')
 class Download(db.Model):  # type: ignore
     __tablename__ = 'download'
     _json_exclude = {'movie', 'episode'}
+    _json_include = {'added_by'}
     id = Column(Integer, primary_key=True)
     tmdb_id = Column(Integer, default=None)
     transmission_id = Column(String, nullable=False)
@@ -74,6 +75,7 @@ class MovieDetails(db.Model):  # type: ignore
 
 class User(db.Model, UserMixin):  # type: ignore
     __tablename__ = 'users'
+    _json_exclude = {'roles', 'password'}
     id = db.Column(db.Integer, primary_key=True)
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
 
