@@ -510,7 +510,10 @@ def download(type: str) -> WResponse:
             show_title=item["name"] if is_tv else None,
         )
 
-    return redirect(url_for('.app_index'))
+    if 'application/json' in request.headers['accept']:
+        return jsonify({})
+    else:
+        return redirect(url_for('.app_index'))
 
 
 class ManualForm(FlaskForm):
