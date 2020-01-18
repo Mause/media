@@ -670,8 +670,7 @@ def api_index():
 def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
     guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
     items = get_plex().library.search(guid=guid)
-    if items:
-        return items[0]
+    return items[0] if items else None
 
 
 @app.route('/api/movie/<tmdb_id>')
