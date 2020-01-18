@@ -4,9 +4,9 @@ from typing import List, Optional, Type, TypeVar, Union
 from flask_jsontools import JsonSerializableBase
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserMixin
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import joinedload, relationship
-from sqlalchemy.sql import ClauseElement
+from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy_repr import RepresentableBase
 
 from .utils import precondition
@@ -28,6 +28,9 @@ class Download(db.Model):  # type: ignore
     episode = relationship('EpisodeDetails', uselist=False, cascade='all,delete')
     episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
     title = Column(String)
+    timestamp = Column(
+        DateTime(timezone='Etc/GMT+8'), nullable=False, default=func.now()
+    )
 
     def progress(self):
         from .main import get_keyed_torrents
