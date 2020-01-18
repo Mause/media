@@ -3,7 +3,7 @@ from typing import List, Optional, Type, TypeVar, Union
 
 from flask_jsontools import JsonSerializableBase
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import UserMixin
+from flask_user import UserMixin, current_user
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import joinedload, relationship
 from sqlalchemy.sql import ClauseElement, func
@@ -31,6 +31,8 @@ class Download(db.Model):  # type: ignore
     timestamp = Column(
         DateTime(timezone='Etc/GMT+8'), nullable=False, default=func.now()
     )
+    added_by_id = Column(Integer, ForeignKey('users.id'))
+    added_by = relationship('User', back_populates='downloads')
 
     def progress(self):
         from .main import get_keyed_torrents
@@ -84,6 +86,8 @@ class User(db.Model, UserMixin):  # type: ignore
     # Define the relationship to Role via UserRoles
     roles = db.relationship('Role', secondary='user_roles')
 
+    downloads = db.relationship('Download')
+
 
 # Define the Role data-model
 class Role(db.Model):  # type: ignore
@@ -131,6 +135,7 @@ def create_download(
         tmdb_id=tmdb_id,
         **{type: details},
         id=id,
+        added_by=current_user,
     )
 
 
