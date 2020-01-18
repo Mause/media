@@ -53,7 +53,7 @@ export function Movies({ movies, torrents, loading }: { movies: MovieResponse[],
 function Progress({ torrents, item }: { torrents?: Torrents, item: { download: Download } }) {
   if (!torrents) return null;
 
-  let { eta, percentDone } = getProgress(item.download.transmission_id, item, torrents);
+  let { eta, percentDone } = getProgress(item, torrents);
   if (percentDone == 1) {
     return <i className="fas fa-check-circle"></i>
   } else {
@@ -63,8 +63,8 @@ function Progress({ torrents, item }: { torrents?: Torrents, item: { download: D
   }
 }
 
-function getProgress(tid: string, item: { download: Download; }, torrents: Torrents): { eta: number, percentDone: number } {
-  let eta, percentDone;
+function getProgress(item: { download: Download; }, torrents: Torrents): { eta: number, percentDone: number } {
+  let eta, percentDone, tid = item.download.transmission_id;
   if (tid.includes('.')) {
     tid = tid.split('.')[0];
     const episode = item as EpisodeResponse;
