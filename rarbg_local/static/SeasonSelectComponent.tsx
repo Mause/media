@@ -59,15 +59,18 @@ class _EpisodeSelectComponent extends Component<EpisodeProps, { season?: Season 
 
   render() {
     const { tmdb_id, season } = this.props.match.params;
-    return this.state.season ? <ol>
-      {this.state.season.episodes.map(episode =>
-        <li key={episode.id} value={episode.episode_number}>
-          <Link to={`/select/${tmdb_id}/season/${season}/episode/${episode.episode_number}/options`}>
-            {episode.name}
-          </Link>
-        </li>
-      )}
-    </ol> : <ReactLoading type='balls' color='#000' />;
+    return <div>
+      {this.state.season ? <ol>
+        {this.state.season.episodes.map(episode =>
+          <li key={episode.id} value={episode.episode_number}>
+            <Link to={`/select/${tmdb_id}/season/${season}/episode/${episode.episode_number}/options`}>
+              {episode.name}
+            </Link>
+          </li>
+        )}
+      </ol> : <ReactLoading type='balls' color='#000' />}
+      <a href={`/select/${tmdb_id}/season/${season}/download_all`}>Download season</a>
+    </div>;
   }
 }
 
