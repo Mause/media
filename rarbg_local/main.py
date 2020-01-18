@@ -564,7 +564,7 @@ def add_single(
             create_episode(
                 transmission_id=transmission_id,
                 imdb_id=imdb_id,
-                season=season,
+                season=non_null(season),
                 episode=episode,
                 title=title,
                 tmdb_id=tmdb_id,
