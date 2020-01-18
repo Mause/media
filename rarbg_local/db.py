@@ -56,6 +56,13 @@ class EpisodeDetails(db.Model):  # type: ignore
     def get_marker(self):
         return f'S{self.season:02d}E{self.episode:02d}'
 
+    def __repr__(self):
+        return (
+            self.show_title
+            + ' '
+            + (self.get_marker() if self.episode else f'S{self.season:02d}')
+        )
+
 
 class MovieDetails(db.Model):  # type: ignore
     __tablename__ = 'movie_details'
@@ -87,6 +94,9 @@ class User(db.Model, UserMixin):  # type: ignore
     roles = db.relationship('Role', secondary='user_roles')
 
     downloads = db.relationship('Download')
+
+    def __repr__(self):
+        return self.username
 
 
 # Define the Role data-model

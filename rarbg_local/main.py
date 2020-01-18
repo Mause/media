@@ -51,13 +51,12 @@ from werkzeug.wrappers import Response as WResponse
 from wtforms import StringField
 from wtforms.validators import DataRequired, Regexp
 
-from .admin import RoleAdmin, UserAdmin
+from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .db import (
     Download,
     EpisodeDetails,
     MovieDetails,
     Role,
-    Roles,
     User,
     create_episode,
     create_movie,
@@ -135,6 +134,7 @@ def create_app(config):
     admin = Admin(papp, name='Media')
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(RoleAdmin(Role, db.session))
+    admin.add_view(DownloadAdmin(Download, db.session))
 
     '''
     with papp.app_context():

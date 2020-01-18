@@ -37,3 +37,7 @@ class UserAdmin(sqla.ModelView, AdminOnly):
 class RoleAdmin(sqla.ModelView, AdminOnly):
 
     pass
+
+
+class DownloadAdmin(sqla.ModelView, AdminOnly):
+    column_exclude_list = ('movie',)
