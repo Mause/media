@@ -41,6 +41,7 @@ export function Movies({ movies, torrents, loading }: { movies: MovieResponse[],
           <ContextMenu id={`movie_${movie.id}`}>
             <MenuItem onClick={() => openPlex(movie)}><span className="unselectable">Play in Plex</span></MenuItem>
             <MenuItem onClick={() => window.open(`https://www.imdb.com/title/${movie.download.imdb_id}`)}>Open in IMDB</MenuItem>
+            {movie.download.added_by ? <MenuItem>Added by: {movie.download.added_by.first_name}</MenuItem> : null}
           </ContextMenu>
           &nbsp;
           <Progress torrents={torrents} item={movie} />
