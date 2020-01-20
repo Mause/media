@@ -100,6 +100,9 @@ class User(db.Model, UserMixin):  # type: ignore
     def __repr__(self):
         return self.username
 
+    def __eq__(self, other):
+        return isinstance(other, User) and self.id == other.id
+
 
 # Define the Role data-model
 class Role(db.Model):  # type: ignore
