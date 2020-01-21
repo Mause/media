@@ -47,6 +47,7 @@ from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
 from sqlalchemy import event
+from sqlalchemy.orm.session import make_transient
 from werkzeug.wrappers import Response as WResponse
 from wtforms import StringField
 from wtforms.validators import DataRequired, Regexp
@@ -592,22 +593,31 @@ def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
 
 
 def resolve_season(episodes):
-    if not (len(episodes) == 1 and episodes[0].is_season_pack()):
+    if not (len(episodes) == 1 and episodes[0].is_season_pack):
         return episodes
 
     pack = episodes[0]
+    download = pack.download
+    if download.added_by:
+        added_by = download.added_by
+        make_transient(download.added_by)
+    else:
+        added_by = None
+    common = dict(
+        imdb_id=download.imdb_id,
+        type='episode',
+        tmdb_id=download.tmdb_id,
+        timestamp=download.timestamp,
+        added_by=added_by,
+    )
     return [
         EpisodeDetails(
             id=-1,
             download=Download(
                 id=-1,
-                transmission_id=f'{pack.download.transmission_id}.{episode["episode_number"]}',
+                transmission_id=f'{download.transmission_id}.{episode["episode_number"]}',
                 title=episode['name'],
-                imdb_id=pack.download.imdb_id,
-                type='episode',
-                tmdb_id=pack.download.tmdb_id,
-                timestamp=pack.download.timestamp,
-                # added_by=pack.download.added_by,
+                **common,
             ),
             season=pack.season,
             episode=episode['episode_number'],

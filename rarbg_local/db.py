@@ -75,7 +75,7 @@ class MovieDetails(db.Model):  # type: ignore
 
 class User(db.Model, UserMixin):  # type: ignore
     __tablename__ = 'users'
-    _json_exclude = {'roles', 'password'}
+    _json_exclude = {'roles', 'password', 'downloads'}
     id = db.Column(db.Integer, primary_key=True)
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
 
