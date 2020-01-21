@@ -42,3 +42,4 @@ class RoleAdmin(sqla.ModelView, AdminOnly):
 class DownloadAdmin(sqla.ModelView, AdminOnly):
     column_exclude_list = ('movie',)
     form_choices = {'type': [('movie', 'movie'), ('episode', 'episode'),]}
+    column_filters = ['added_by']

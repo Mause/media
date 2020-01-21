@@ -607,7 +607,7 @@ def resolve_season(episodes):
                 type='episode',
                 tmdb_id=pack.download.tmdb_id,
                 timestamp=pack.download.timestamp,
-                added_by=pack.download.added_by,
+                # added_by=pack.download.added_by,
             ),
             season=pack.season,
             episode=episode['episode_number'],
