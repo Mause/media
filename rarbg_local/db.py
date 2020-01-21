@@ -29,9 +29,7 @@ class Download(db.Model):  # type: ignore
     episode = relationship('EpisodeDetails', uselist=False, cascade='all,delete')
     episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
     title = Column(String)
-    timestamp = Column(
-        DateTime(timezone='Etc/GMT+8'), nullable=False, default=func.now()
-    )
+    timestamp = Column(DateTime(timezone=True), nullable=False, default=func.now())
     added_by_id = Column(Integer, ForeignKey('users.id'))
     added_by = relationship('User', back_populates='downloads')
 
