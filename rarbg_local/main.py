@@ -47,7 +47,7 @@ from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
-from sqlalchemy import event
+from sqlalchemy import event, func
 from sqlalchemy.orm.session import make_transient
 from werkzeug.wrappers import Response as WResponse
 from wtforms import StringField
@@ -682,6 +682,17 @@ def has_tmdb_id(func):
 @jsonapi
 def api_index():
     return {'series': resolve_series(), 'movies': get_movies()}
+
+
+@app.route('/api/stats')
+@jsonapi
+def api_stats():
+    query = (
+        db.session.query(User.username, func.count(Download.added_by_id))
+        .outerjoin(Download)
+        .group_by(User.username)
+    )
+    return dict(query.all())
 
 
 def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
