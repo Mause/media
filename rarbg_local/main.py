@@ -31,6 +31,7 @@ from flask import (
     abort,
     current_app,
     g,
+    get_flashed_messages,
     jsonify,
     redirect,
     render_template,
@@ -163,7 +164,10 @@ class SearchForm(FlaskForm):
 
 @app.route('/user/unauthorized')
 def unauthorized():
-    return render_template('unauthorized.html')
+    if get_flashed_messages():
+        return render_template('unauthorized.html')
+    else:
+        return redirect(url_for('.app_index'))
 
 
 @app.before_request
