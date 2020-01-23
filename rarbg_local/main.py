@@ -688,11 +688,14 @@ def api_index():
 @jsonapi
 def api_stats():
     query = (
-        db.session.query(User.username, func.count(Download.added_by_id))
+        db.session.query(User.username, Download.type, func.count(Download.added_by_id))
         .outerjoin(Download)
-        .group_by(User.username)
+        .group_by(User.username, Download.type)
     )
-    return dict(query.all())
+    return {
+        user: {type: value for _, type, value in values}
+        for user, values in groupby(query.all(), lambda row: row[0]).items()
+    }
 
 
 def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
