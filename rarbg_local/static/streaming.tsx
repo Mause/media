@@ -187,7 +187,7 @@ export interface Download {
   imdb_id: string;
   title: string,
   transmission_id: string,
-  added_by?: {first_name: string}
+  added_by?: { first_name: string }
 }
 export interface MovieResponse {
   download: Download,
