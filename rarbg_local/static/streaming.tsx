@@ -10,7 +10,7 @@ import { BrowserRouter as Router, Link, Route, RouteComponentProps, Switch, with
 import './app.css';
 import { IndexComponent } from './IndexComponent';
 import { EpisodeSelectComponent, Season, SeasonSelectComponent } from './SeasonSelectComponent';
-import { load, subscribe } from './utils';
+import { load, subscribe, useLoad } from './utils';
 import Axios from 'axios';
 import { StatsComponent } from './StatsComponent';
 
@@ -234,38 +234,29 @@ interface SearchResult {
   title: string
 }
 
-const SearchComponent = withRouter(class SearchComponent extends Component<RouteComponentProps<{}>, { results?: SearchResult[] }>{
-  constructor(props: RouteComponentProps<{}>) {
-    super(props);
-    this.state = {};
-  }
-  getQuery() {
-    return qs.parse(this.props.location.search.slice(1)).query;
-  }
-  componentDidMount() {
-    load<SearchResult[]>(
-      'search',
-      { query: this.getQuery() }
-    ).then(
-      results => this.setState({ results })
-    );
-  }
-  render() {
-    return <div>
-      <ul>
-        {this.state.results ? this.state.results.map(result =>
-          <li key={result.imdbID}>
-            <Link to={
-              result.Type === 'movie' ?
-                `/select/${result.imdbID}/options` :
-                `/select/${result.imdbID}/season`}>{result.title} ({result.Year ? result.Year : 'Unknown year'})</Link>
-          </li>
-        ) : <ReactLoading type='balls' color='#000' />}
-      </ul>
-      {this.state.results && this.state.results.length === 0 ?
-        'No results' : null}
-    </div>
-  }
+function getQuery(props: RouteComponentProps<{}>) {
+  return qs.parse(props.location.search.slice(1)).query;
+}
+
+const SearchComponent = withRouter(function SearchComponent(props: RouteComponentProps<{}>) {
+  const results = useLoad<SearchResult[]>(
+    'search',
+    { query: getQuery(props) }
+  );
+  return <div>
+    <ul>
+      {results ? results.map(result =>
+        <li key={result.imdbID}>
+          <Link to={
+            result.Type === 'movie' ?
+              `/select/${result.imdbID}/options` :
+              `/select/${result.imdbID}/season`}>{result.title} ({result.Year ? result.Year : 'Unknown year'})</Link>
+        </li>
+      ) : <ReactLoading type='balls' color='#000' />}
+    </ul>
+    {results && results.length === 0 ?
+      'No results' : null}
+  </div>
 });
 
 function ParentComponent() {
