@@ -10,10 +10,10 @@ interface TV {
   number_of_seasons: number;
 }
 
-class _SeasonSelectComponent extends Component<Props, { tv?: TV, loading: boolean }>{
+class _SeasonSelectComponent extends Component<Props, { tv?: TV }>{
   constructor(props: Props) {
     super(props);
-    this.state = { tv: undefined, loading: true }
+    this.state = { tv: undefined }
   }
 
   componentDidMount() {
