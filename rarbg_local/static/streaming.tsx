@@ -10,9 +10,10 @@ import { BrowserRouter as Router, Link, Route, RouteComponentProps, Switch, with
 import './app.css';
 import { IndexComponent } from './IndexComponent';
 import { EpisodeSelectComponent, Season, SeasonSelectComponent } from './SeasonSelectComponent';
-import { load, subscribe, useLoad } from './utils';
+import { load, subscribe } from './utils';
 import Axios from 'axios';
 import { StatsComponent } from './StatsComponent';
+import { SearchComponent } from './SearchComponent';
 
 Sentry.init({
   dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914",
@@ -226,38 +227,6 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
     </>
   )
 }
-
-interface SearchResult {
-  Type: string,
-  Year: number,
-  imdbID: number,
-  title: string
-}
-
-function getQuery(props: RouteComponentProps<{}>) {
-  return qs.parse(props.location.search.slice(1)).query;
-}
-
-const SearchComponent = withRouter(function SearchComponent(props: RouteComponentProps<{}>) {
-  const results = useLoad<SearchResult[]>(
-    'search',
-    { query: getQuery(props) }
-  );
-  return <div>
-    <ul>
-      {results ? results.map(result =>
-        <li key={result.imdbID}>
-          <Link to={
-            result.Type === 'movie' ?
-              `/select/${result.imdbID}/options` :
-              `/select/${result.imdbID}/season`}>{result.title} ({result.Year ? result.Year : 'Unknown year'})</Link>
-        </li>
-      ) : <ReactLoading type='balls' color='#000' />}
-    </ul>
-    {results && results.length === 0 ?
-      'No results' : null}
-  </div>
-});
 
 function ParentComponent() {
   return (
