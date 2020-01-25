@@ -12,6 +12,7 @@ import { IndexComponent } from './IndexComponent';
 import { EpisodeSelectComponent, Season, SeasonSelectComponent } from './SeasonSelectComponent';
 import { load, subscribe } from './utils';
 import Axios from 'axios';
+import { StatsComponent } from './StatsComponent';
 
 Sentry.init({
   dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914",
@@ -288,6 +289,7 @@ function ParentComponent() {
         <RouteWithTitle path="/select/:tmdb_id/season" title="Select Season"><SeasonSelectComponent /></RouteWithTitle>
         <RouteWithTitle path="/search" title="Search"><SearchComponent /></RouteWithTitle>
         <RouteWithTitle path="/download" title="Download"><DownloadComponent /></RouteWithTitle>
+        <RouteWithTitle path="/stats" title="Stats"><StatsComponent /></RouteWithTitle>
         <RouteWithTitle path="/" title="Media"><IndexComponent /></RouteWithTitle>
       </Switch>
     </Router>
