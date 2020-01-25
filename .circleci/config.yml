@@ -11,14 +11,8 @@ jobs:
 
     steps:
       - checkout
-
-      - install:
-          command: |
-            npm ci
-
-      - build:
-          command: |
-            npm run build
+      - run: npm ci
+      - run: npm run build
 
   build_backend:
     docker:
