@@ -13,7 +13,7 @@ from sqlalchemy.exc import IntegrityError
 from ..db import Roles, User, create_episode, db
 from ..main import create_app
 from ..utils import cache_clear
-from .conftest import add_json, themoviedb, transmission_url
+from .conftest import add_json, themoviedb
 
 HASH_STRING = '00000000000000000'
 
@@ -30,7 +30,6 @@ def flask_app() -> Flask:
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'ENV': 'development',
             'TESTING': True,
-            'TRANSMISSION_URL': transmission_url,
         }
     )
 

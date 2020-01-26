@@ -1,9 +1,6 @@
-
 import json
 
 from pytest import fixture, hookimpl
-
-transmission_url = 'http://novell.local:9091/transmission/rpc'
 
 
 def themoviedb(responses, path, response, query=''):
@@ -15,10 +12,9 @@ def themoviedb(responses, path, response, query=''):
         response,
     )
 
+
 def add_json(responses, method: str, url: str, json_body) -> None:
     responses.add(method=method, url=url, body=json.dumps(json_body))
-
-
 
 
 @fixture
@@ -30,19 +26,7 @@ def reverse_imdb(responses):
         '&external_source=imdb_id',
     )
     themoviedb(
-        responses,
-        '/tv/100000',
-        {'name': 'Introductory', 'number_of_seasons': 1},
-    )
-
-
-@fixture
-def trm_session(responses):
-    responses.add(
-        method='POST',
-        url=transmission_url,
-        status=409,
-        headers={'X-Transmission-Session-Id': 'XXXXXXX'},
+        responses, '/tv/100000', {'name': 'Introductory', 'number_of_seasons': 1}
     )
 
 
