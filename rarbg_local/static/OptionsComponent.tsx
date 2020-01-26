@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import qs from 'qs';
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Season } from './SeasonSelectComponent';
 import { load, subscribe, useLoad } from './utils';
 import { Torrents } from './streaming';
@@ -88,8 +88,9 @@ class _OptionsComponent extends Component<OptionsProps, {
     return <Pure
       itemInfo={this.state.itemInfo}
       type={this.props.type}
-      results={this.state.results}
-      loading={this.state.loading}
+      episode={this.props.match.params.episode}
+      season={this.props.match.params.season}
+      tmdb_id={this.props.match.params.tmdb_id}
     />;
   }
   componentDidMount() {
@@ -106,28 +107,23 @@ class _OptionsComponent extends Component<OptionsProps, {
     else {
       prom.then(itemInfo => this.setState({ itemInfo }));
     }
-    subscribe(`/stream/${this.props.type}/${tmdb_id}?` + qs.stringify({ season, episode }), data => {
-      this.setState(state => ({
-        ...state,
-        results: state.results.concat([data]),
-      }));
-    }, () => this.setState({ loading: false }));
   }
 }
 
-function Pure(props: { itemInfo?: ItemInfo, results: ITorrent[], loading: boolean, type: string }) {
+function Pure(props: { itemInfo?: ItemInfo, type: string, tmdb_id: string, season?: string, episode?: string }) {
   const torrents = useLoad<Torrents>('torrents');
-  const dt = (result: ITorrent) => <DisplayTorrent itemInfo={props.itemInfo} type={type} torrents={torrents} torrent={result} />;
   const { type } = props;
-  const grouped = _.groupBy(props.results, 'category');
+  const { items: results, loading } = useSubscribe<ITorrent>(`/stream/${type}/${props.tmdb_id}?` + qs.stringify({ season: props.season, episode: props.episode }));
+  const dt = (result: ITorrent) => <DisplayTorrent itemInfo={props.itemInfo} type={type} torrents={torrents} torrent={result} />;
+  const grouped = _.groupBy(results, 'category');
   const auto = _.maxBy(grouped['Movies/x264/1080'] || grouped['TV HD Episodes'] || [], 'seeders');
   const bits = _.sortBy(_.toPairs(grouped), ([category]) => -ranking.indexOf(category)).map(([category, results]) => (<div key={category}>
     <h3>{remove(category)}</h3>
     {_.sortBy(results, i => -i.seeders).map(result => (<li key={result.title}>{dt(result)}</li>))}
   </div>));
   return (<div>
-    {props.loading ? <i className="fas fa-spinner fa-spin fa-xs"></i> : ''}
-    {bits.length || props.loading ?
+    {loading ? <i className="fas fa-spinner fa-spin fa-xs"></i> : ''}
+    {bits.length || loading ?
       <div>
         <p>
           Auto selection: {auto ? dt(auto) : 'None'}
@@ -137,5 +133,24 @@ function Pure(props: { itemInfo?: ItemInfo, results: ITorrent[], loading: boolea
       'No results'}
   </div>);
 }
+
+function useSubscribe<T>(url: string) {
+  const [subscription, setSubscription] = useState<{ items: T[], loading: boolean }>({ loading: true, items: [] });
+
+  useEffect(() => {
+    const items: T[] = [];
+    subscribe(url, data => {
+      items.push(data);
+      setSubscription({
+        items,
+        loading: true,
+      })
+    }, () => setSubscription({ loading: false, items }));
+  }, [url]);
+
+  return subscription;
+}
+
+
 const OptionsComponent = withRouter(_OptionsComponent);
 export { OptionsComponent };
