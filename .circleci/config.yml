@@ -59,6 +59,7 @@ jobs:
           name: Run Tests
           environment:
             PIPENV_VENV_IN_PROJECT: true
+            CLOUDAMQP_URL: ''
           command: |
             mkdir screenshots
             pipenv run py.test -v --junitxml=test-reports/junit/junit.xml
