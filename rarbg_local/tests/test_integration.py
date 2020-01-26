@@ -1,14 +1,16 @@
 from typing import Generator
-from unittest.mock import patch
+from unittest.mock import MagicMock, Mock, patch
 
-from flask import Flask
+from flask import Flask, Request
+from flask.globals import _request_ctx_stack
 from flask.testing import FlaskClient
+from flask_login import login_user
 from lxml.html import fromstring
 from pytest import fixture, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
-from ..db import create_episode, db
+from ..db import Roles, User, create_episode, db
 from ..main import create_app
 from ..utils import cache_clear
 from .conftest import add_json, themoviedb, transmission_url
@@ -68,7 +70,28 @@ def get_torrent(responses):
         yield
 
 
-def test_index(responses, test_client, trm_session, torrent_get):
+@fixture
+def user():
+    u = User(username='python', password='is-great!')
+    u.roles = [Roles.Member]
+    db.session.add(u)
+    db.session.commit()
+    return u
+
+
+@fixture
+def logged_in(flask_app, test_client, user):
+    with patch.object(flask_app.login_manager, 'request_callback', return_value=user):
+        with flask_app.app_context():
+            rq: Request = Mock(spec=Request, headers={}, remote_addr='', environ={})
+
+            _request_ctx_stack.push(MagicMock(session={}, request=rq))
+            login_user(user)
+
+            yield
+
+
+def test_index(responses, test_client, flask_app, get_torrent, logged_in):
     create_episode(
         transmission_id=HASH_STRING,
         imdb_id='tt000000',
