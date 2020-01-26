@@ -2,7 +2,7 @@ import _ from 'lodash';
 import qs from 'qs';
 import React, { Component } from 'react';
 import { Season } from './SeasonSelectComponent';
-import { load, subscribe } from './utils';
+import { load, subscribe, useLoad } from './utils';
 import { Torrents } from './streaming';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 
@@ -77,7 +77,6 @@ function remove(bit: string): string {
 
 class _OptionsComponent extends Component<OptionsProps, {
   results: ITorrent[];
-  torrents?: Torrents;
   loading: boolean;
   itemInfo?: ItemInfo;
 }> {
@@ -90,13 +89,11 @@ class _OptionsComponent extends Component<OptionsProps, {
       itemInfo={this.state.itemInfo}
       type={this.props.type}
       results={this.state.results}
-      torrents={this.state.torrents}
       loading={this.state.loading}
     />;
   }
   componentDidMount() {
     const { tmdb_id, season, episode } = this.props.match.params;
-    load<Torrents>('torrents').then(torrents => this.setState({ torrents }));
     const prom = load<ItemInfo>(`${this.props.type == 'series' ? 'tv' : 'movie'}/${tmdb_id}`);
     if (this.props.type === 'series') {
       Promise.all([
@@ -118,8 +115,9 @@ class _OptionsComponent extends Component<OptionsProps, {
   }
 }
 
-function Pure(props: { itemInfo?: ItemInfo, results: ITorrent[], loading: boolean, type: string, torrents?: Torrents }) {
-  const dt = (result: ITorrent) => <DisplayTorrent itemInfo={props.itemInfo} type={type} torrents={props.torrents} torrent={result} />;
+function Pure(props: { itemInfo?: ItemInfo, results: ITorrent[], loading: boolean, type: string }) {
+  const torrents = useLoad<Torrents>('torrents');
+  const dt = (result: ITorrent) => <DisplayTorrent itemInfo={props.itemInfo} type={type} torrents={torrents} torrent={result} />;
   const { type } = props;
   const grouped = _.groupBy(props.results, 'category');
   const auto = _.maxBy(grouped['Movies/x264/1080'] || grouped['TV HD Episodes'] || [], 'seeders');
