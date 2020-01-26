@@ -86,25 +86,13 @@ class _OptionsComponent extends Component<OptionsProps, {
     this.state = { results: [], loading: true, itemInfo: undefined };
   }
   public render() {
-    const dt = (result: ITorrent) => <DisplayTorrent itemInfo={this.state.itemInfo} type={type} torrents={this.state.torrents} torrent={result} />;
-    const { type } = this.props;
-    const grouped = _.groupBy(this.state.results, 'category');
-    const auto = _.maxBy(grouped['Movies/x264/1080'] || grouped['TV HD Episodes'] || [], 'seeders');
-    const bits = _.sortBy(_.toPairs(grouped), ([category]) => -ranking.indexOf(category)).map(([category, results]) => (<div key={category}>
-      <h3>{remove(category)}</h3>
-      {_.sortBy(results, i => -i.seeders).map(result => (<li key={result.title}>{dt(result)}</li>))}
-    </div>));
-    return (<div>
-      {this.state.loading ? <i className="fas fa-spinner fa-spin fa-xs"></i> : ''}
-      {bits.length || this.state.loading ?
-        <div>
-          <p>
-            Auto selection: {auto ? dt(auto) : 'None'}
-          </p>
-          <ul>{bits}</ul>
-        </div> :
-        'No results'}
-    </div>);
+    return <Pure
+      itemInfo={this.state.itemInfo}
+      type={this.props.type}
+      results={this.state.results}
+      torrents={this.state.torrents}
+      loading={this.state.loading}
+    />;
   }
   componentDidMount() {
     const { tmdb_id, season, episode } = this.props.match.params;
@@ -130,5 +118,26 @@ class _OptionsComponent extends Component<OptionsProps, {
   }
 }
 
+function Pure(props: { itemInfo?: ItemInfo, results: ITorrent[], loading: boolean, type: string, torrents?: Torrents }) {
+  const dt = (result: ITorrent) => <DisplayTorrent itemInfo={props.itemInfo} type={type} torrents={props.torrents} torrent={result} />;
+  const { type } = props;
+  const grouped = _.groupBy(props.results, 'category');
+  const auto = _.maxBy(grouped['Movies/x264/1080'] || grouped['TV HD Episodes'] || [], 'seeders');
+  const bits = _.sortBy(_.toPairs(grouped), ([category]) => -ranking.indexOf(category)).map(([category, results]) => (<div key={category}>
+    <h3>{remove(category)}</h3>
+    {_.sortBy(results, i => -i.seeders).map(result => (<li key={result.title}>{dt(result)}</li>))}
+  </div>));
+  return (<div>
+    {props.loading ? <i className="fas fa-spinner fa-spin fa-xs"></i> : ''}
+    {bits.length || props.loading ?
+      <div>
+        <p>
+          Auto selection: {auto ? dt(auto) : 'None'}
+        </p>
+        <ul>{bits}</ul>
+      </div> :
+      'No results'}
+  </div>);
+}
 const OptionsComponent = withRouter(_OptionsComponent);
 export { OptionsComponent };
