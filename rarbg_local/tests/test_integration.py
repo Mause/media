@@ -89,6 +89,8 @@ def logged_in(flask_app, test_client, user):
 
             yield
 
+            _request_ctx_stack.pop()
+
 
 def test_index(responses, test_client, flask_app, get_torrent, logged_in):
     create_episode(
