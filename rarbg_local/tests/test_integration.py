@@ -102,6 +102,13 @@ def test_index(responses, test_client, flask_app, get_torrent, logged_in):
     )
     db.session.commit()
 
+    themoviedb(
+        responses,
+        '/find/tt000000',
+        {'tv_results': [{'id': 1}]},
+        query='&external_source=imdb_id',
+    )
+
     res = test_client.get('/')
 
     assert res.status == '200 OK'
