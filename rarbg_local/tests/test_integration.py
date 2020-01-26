@@ -121,7 +121,7 @@ def test_index(responses, test_client, flask_app, get_torrent, logged_in):
     assert ''.join(lists) == 'Hello world'
 
 
-def test_search(responses, test_client):
+def test_search(responses, test_client, logged_in):
     themoviedb(
         responses,
         '/search/multi',
@@ -138,7 +138,7 @@ def test_search(responses, test_client):
         query='&query=chernobyl',
     )
 
-    res = test_client.get('/search/chernobyl')
+    res = test_client.get('/search?query=chernobyl')
     assert res.status == '200 OK'
 
     html = fromstring(res.get_data()).xpath('.//li/a/text()')
