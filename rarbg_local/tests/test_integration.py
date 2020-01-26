@@ -1,4 +1,5 @@
 from typing import Generator
+from unittest.mock import patch
 
 from flask import Flask
 from flask.testing import FlaskClient
@@ -55,24 +56,16 @@ def test_client(clear_cache, flask_app: Flask) -> Generator[FlaskClient, None, N
 
 
 @fixture
-def torrent_get(responses):
-    add_json(
-        responses,
-        'POST',
-        transmission_url,
-        {
-            'arguments': {
-                'torrents': [
-                    {
-                        'id': 1,
-                        'eta': 10000,
-                        'percentDone': 0.5,
-                        'hashString': HASH_STRING,
-                    }
-                ]
-            }
-        },
-    )
+def get_torrent(responses):
+    res = {
+        'arguments': {
+            'torrents': [
+                {'id': 1, 'eta': 10000, 'percentDone': 0.5, 'hashString': HASH_STRING}
+            ]
+        }
+    }
+    with patch('rarbg_local.main.get_torrent', return_value=res):
+        yield
 
 
 def test_index(responses, test_client, trm_session, torrent_get):
