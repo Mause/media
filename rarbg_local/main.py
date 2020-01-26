@@ -128,6 +128,17 @@ def create_app(config):
         }
     )
     db.init_app(papp)
+
+    if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
+        engine = db.get_engine(papp, None)
+        con = engine.raw_connection().connection
+        import sqlite3
+
+        try:
+            con.create_collation("en_AU", str.lower)
+        except sqlite3.ProgrammingError as e:
+            print(e)
+
     db.create_all(app=papp)
     UserManager(papp, db, User)
 
