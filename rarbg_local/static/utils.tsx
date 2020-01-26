@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import { useState, useEffect } from 'react';
+import qs from 'qs';
 
 export function subscribe(path: string, callback: (a: any) => void, end: (() => void) | null = null): void {
   const es = new EventSource(path, {
@@ -24,6 +25,6 @@ export function useLoad<T>(path: string, params: any = null) {
   const [data, setData] = useState<T>()
   useEffect(() => {
     load<T>(path, params).then(setData);
-  }, [path, params]);
+  }, [path, params ? qs.stringify(params) : null]);
   return data;
 }
