@@ -148,7 +148,7 @@ def create_download(
         tmdb_id=tmdb_id,
         **{type: details},
         id=id,
-        added_by=current_user,
+        added_by=current_user._get_current_object(),
     )
 
 
