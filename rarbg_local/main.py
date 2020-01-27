@@ -608,7 +608,7 @@ def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
 
 
 def resolve_season(episodes):
-    if not (len(episodes) == 1 and episodes[0].is_season_pack):
+    if not (len(episodes) == 1 and episodes[0].is_season_pack()):
         return episodes
 
     pack = episodes[0]
