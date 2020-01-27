@@ -1,13 +1,14 @@
 from typing import Dict
 
 import requests
-from flask import current_app
 
 from .utils import lru_cache
 
+config = {'TRANSMISSION_URL': 'http://novell.local:9091/transmission/rpc'}
+
 
 def get_torrent(*ids: str) -> Dict:
-    call = get_session(current_app.config['TRANSMISSION_URL'])
+    call = get_session(config['TRANSMISSION_URL'])
 
     arguments: Dict = {
         "fields": [
@@ -47,7 +48,7 @@ def get_torrent(*ids: str) -> Dict:
 
 
 def torrent_add(magnet: str, subpath: str) -> Dict:
-    call = get_session(current_app.config['TRANSMISSION_URL'])
+    call = get_session(config['TRANSMISSION_URL'])
     return call(
         "torrent-add",
         {
