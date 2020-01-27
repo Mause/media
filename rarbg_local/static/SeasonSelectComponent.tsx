@@ -45,7 +45,7 @@ function _EpisodeSelectComponent(props: EpisodeProps) {
     {season ? <ol>
       {season.episodes.map(episode =>
         <li key={episode.id} value={episode.episode_number}>
-          <Link to={`/select/${tmdb_id}/season/${season}/episode/${episode.episode_number}/options`}>
+          <Link to={`/select/${tmdb_id}/season/${seasonNumber}/episode/${episode.episode_number}/options`}>
             {episode.name}
           </Link>
         </li>
