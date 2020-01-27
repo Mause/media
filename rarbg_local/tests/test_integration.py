@@ -147,7 +147,7 @@ def test_search(responses, test_client, logged_in):
     assert html == ['Chernobyl (2019)']
 
 
-def test_delete_cascade(test_client: FlaskClient):
+def test_delete_cascade(test_client: FlaskClient, logged_in):
     from ..main import db, get_episodes, Download
 
     e = create_episode(
@@ -176,7 +176,9 @@ def test_delete_cascade(test_client: FlaskClient):
     assert len(session.query(Download).all()) == 0
 
 
-def test_select_season(responses: RequestsMock, test_client: FlaskClient) -> None:
+def test_select_season(
+    responses: RequestsMock, test_client: FlaskClient, logged_in
+) -> None:
     themoviedb(responses, '/tv/100000', {'number_of_seasons': 1})
 
     res = test_client.get('/select/100000/season')
