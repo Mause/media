@@ -96,9 +96,15 @@ export function TVShows({ series, torrents, loading }: {
         <h3>
           {serie.title}
           &nbsp;
-          <Link to={`/select/${serie.tmdb_id}/season`}>
-            <i className="fas fa-search" />
-          </Link>
+          {contextMenuTrigger(`tv_${serie.imdb_id}`)}
+          <ContextMenu id={`tv_${serie.imdb_id}`}>
+            <MenuItem onClick={() => window.open(`https://www.imdb.com/title/${serie.imdb_id}`)}>Open in IMDB</MenuItem>
+            <MenuItem>
+              <Link to={`/select/${serie.tmdb_id}/season`}>
+                Search
+              </Link>
+            </MenuItem>
+          </ContextMenu>
         </h3>
         {_.sortBy(Object.keys(serie.seasons), parseInt).map(i => {
           const season = serie.seasons[i];
