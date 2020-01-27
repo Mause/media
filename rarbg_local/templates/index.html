@@ -26,10 +26,12 @@
         <li>
             <!-- <i class="far fa-times-circle"></i> -->
             <span>{{movie.download.title}}</span>
+            {% if movie.download.imdb_id %}
             <small>
                 <a
                     target="_blank"
                  href="https://www.imdb.com/title/{{movie.download.imdb_id}}"><i class="fas fa-share"></i></a></small>
+            {% endif %}
             {{render_progress(torrents, movie) | safe}}
         </li>
         {% endfor %}
@@ -41,15 +43,18 @@
     {% for serie in series %}
         <h3>
             {{serie.title}}
+            {% if serie.imdb_id %}
             <a href="{{ url_for('.select_season', imdb_id=resolve_id(serie.imdb_id, 'tv')) }}">
                 <i class="fas fa-search"></i>
             </a>
+            {% endif %}
         </h3>
 
         {% for i in sorted(serie.seasons) %}
             {% set season = serie.seasons[i] %}
             <h4>
                 Season {{ i }}
+                {% if serie.imdb_id %}
                 <a href="{{
                 url_for(
                     '.select_episode',
@@ -59,6 +64,7 @@
                 }}">
                     <i class="fas fa-search"></i>
                 </a>
+                {% endif %}
             </h4>
             <ol>
             {% for episode in season %}

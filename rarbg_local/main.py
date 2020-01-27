@@ -638,15 +638,11 @@ def resolve_season(episodes):
             episode=episode['episode_number'],
             show_title=pack.show_title,
         )
-        for episode in get_tv_episodes(
-            resolve_id(pack.download.imdb_id, 'tv'), pack.season
-        )['episodes']
+        for episode in get_tv_episodes(pack.download.tmdb_id, pack.season)['episodes']
     ]
 
 
-def resolve_show(
-    imdb_id: str, show: List[EpisodeDetails]
-) -> Dict[int, List[EpisodeDetails]]:
+def resolve_show(show: List[EpisodeDetails]) -> Dict[int, List[EpisodeDetails]]:
     seasons = groupby(show, lambda episode: episode.season)
     return {
         number: resolve_season(
@@ -669,12 +665,12 @@ def resolve_series() -> List[SeriesDetails]:
     return [
         {
             'title': show[0].show_title,
-            'seasons': resolve_show(imdb_id, show),
-            'imdb_id': imdb_id,
+            'seasons': resolve_show(show),
+            'imdb_id': show[0].download.imdb_id,
             'tmdb_id': show[0].download.tmdb_id or resolve_id(imdb_id, 'tv'),
         }
         for imdb_id, show in groupby(
-            episodes, lambda episode: episode.download.imdb_id
+            episodes, lambda episode: episode.download.tmdb_id
         ).items()
     ]
 
