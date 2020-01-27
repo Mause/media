@@ -18,7 +18,7 @@ session.params = {
 }
 session.headers.update(
     {
-        'User-Agent': "Dom's api client - me+rarbg@mause.me",
+        'User-Agent': "rarbg api client - me+rarbg@mause.me",
         'X-Server-Contact': 'me+rarbg@mause.me',
     }
 )
