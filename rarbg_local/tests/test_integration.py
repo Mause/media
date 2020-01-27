@@ -10,7 +10,7 @@ from pytest import fixture, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
-from ..db import Roles, User, create_episode, db
+from ..db import Role, Roles, User, create_episode, db
 from ..main import create_app
 from ..utils import cache_clear
 from .conftest import add_json, themoviedb
@@ -72,7 +72,7 @@ def get_torrent(responses):
 @fixture
 def user():
     u = User(username='python', password='is-great!')
-    u.roles = [Roles.Member]
+    u.roles = [Role(name='Member')]
     db.session.add(u)
     db.session.commit()
     return u
