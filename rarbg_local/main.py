@@ -147,7 +147,7 @@ def create_app(config):
 
     db.create_all(app=papp)
     UserManager(papp, db, User)
-    papp.login_manager.request_callback = basic_auth
+    papp.login_manager.header_callback = basic_auth
 
     papp.json_encoder = DynamicJSONEncoder
 
@@ -178,7 +178,8 @@ def create_app(config):
 
 def basic_auth(header):
     auth = request.authorization
-    assert auth
+    if not auth or auth.type != 'basic':
+        return None
 
     user = db.session.query(User).filter_by(username=auth['username']).one_or_none()
 
