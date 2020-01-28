@@ -97,7 +97,7 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
 
 function ParentComponent() {
   return (
-    <Router basename='/app'>
+    <Router>
       <h1>Media</h1>
 
       <nav>

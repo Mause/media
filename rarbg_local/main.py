@@ -178,7 +178,7 @@ def unauthorized():
     if get_flashed_messages():
         return render_template('unauthorized.html')
     else:
-        return redirect(url_for('.app_index'))
+        return redirect(url_for('.index'))
 
 
 @app.before_request
@@ -529,7 +529,7 @@ def download(type: str) -> WResponse:
     if 'application/json' in request.headers['accept']:
         return jsonify({})
     else:
-        return redirect(url_for('.app_index'))
+        return redirect(url_for('.index'))
 
 
 class ManualForm(FlaskForm):
@@ -782,15 +782,14 @@ def render_progress(
         '''
 
 
-@app.route('/app')
-@app.route('/app/')
-@app.route('/app/<path:path>')
-def app_index(path=None) -> str:
+@app.route('/')
+@app.route('/<path:path>')
+def index(path=None) -> str:
     return render_template('app.html', url_for=cache_busting_url_for)
 
 
-@app.route('/', methods=['GET', 'POST'])
-def index() -> Union[str, WResponse]:
+@app.route('/old', methods=['GET', 'POST'])
+def old_index() -> Union[str, WResponse]:
     form = SearchForm()
     if form.validate_on_submit():
         return redirect(url_for('.select_item', query=form.data['query']))
