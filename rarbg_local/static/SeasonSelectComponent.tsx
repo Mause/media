@@ -7,12 +7,14 @@ import ReactLoading from 'react-loading';
 type Props = RouteComponentProps<{ tmdb_id: string }>;
 interface TV {
   number_of_seasons: number;
+  title: string;
 }
 
 function _SeasonSelectComponent(props: Props) {
   const tv = useLoad<TV>(`tv/${props.match.params.tmdb_id}`);
 
   return <div>
+    <h3>{tv && tv.title}</h3>
     {!tv ?
       <ReactLoading type='balls' color='#000000' /> :
       <ul>
