@@ -145,7 +145,7 @@ def test_index(responses, test_client, flask_app, get_torrent, logged_in):
         query='&external_source=imdb_id',
     )
 
-    res = test_client.get('/')
+    res = test_client.get('/old')
 
     assert res.status == '200 OK'
 
