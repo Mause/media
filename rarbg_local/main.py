@@ -532,9 +532,12 @@ def api_download() -> str:
 
         add_single(
             magnet=thing.magnet,
-            imdb_id=get_tv_imdb_id(str(thing.tmdb_id))
-            if is_tv
-            else get_movie_imdb_id(str(thing.tmdb_id)),
+            imdb_id=(
+                get_tv_imdb_id(str(thing.tmdb_id))
+                if is_tv
+                else get_movie_imdb_id(str(thing.tmdb_id))
+            )
+            or '',
             subpath=subpath,
             tmdb_id=thing.tmdb_id,
             season=thing.season,
