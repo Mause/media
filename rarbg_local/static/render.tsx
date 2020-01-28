@@ -98,7 +98,7 @@ export function TVShows({ series, torrents, loading }: {
           &nbsp;
           {contextMenuTrigger(`tv_${serie.imdb_id}`)}
           <ContextMenu id={`tv_${serie.imdb_id}`}>
-            <MenuItem onClick={() => window.open(`https://www.imdb.com/title/${serie.imdb_id}`)}>Open in IMDB</MenuItem>
+            {serie.imdb_id && <MenuItem onClick={() => window.open(`https://www.imdb.com/title/${serie.imdb_id}`)}>Open in IMDB</MenuItem>}
             <MenuItem>
               <Link to={`/select/${serie.tmdb_id}/season`}>
                 Search
