@@ -47,7 +47,8 @@ from flask_wtf import FlaskForm
 from humanize import naturaldelta
 from marshmallow import Schema
 from marshmallow.fields import Integer, String
-from marshmallow.validate import OneOf, Regexp
+from marshmallow.validate import OneOf
+from marshmallow.validate import Regexp as MarshRegexp
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
@@ -493,16 +494,14 @@ def select_season(imdb_id: str) -> str:
     )
 
 
-def validate(validate):
-    return field(metadata=config(mm_field=String(validate=validate)))
-
-
 @dataclass
 class DownloadSchema(DataClassJsonMixin):
     tmdb_id: int
     season: Optional[str]
     episode: Optional[str]
-    magnet: str = validate(Regexp(r'^magnet:'))
+    magnet: str = field(
+        metadata=config(mm_field=String(validate=MarshRegexp(r'^magnet:')))
+    )
 
 
 @app.route('/api/download', methods=['POST'])
