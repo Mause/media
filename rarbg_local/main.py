@@ -6,6 +6,7 @@ import re
 import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
+from dataclasses import dataclass, field
 from functools import lru_cache, wraps
 from itertools import chain, zip_longest
 from os.path import join
@@ -24,6 +25,7 @@ from typing import (
 )
 from urllib.parse import parse_qsl, urlencode, urlparse
 
+from dataclasses_json import DataClassJsonMixin, config, dataclass_json
 from flask import (
     Blueprint,
     Flask,
@@ -43,6 +45,9 @@ from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
+from marshmallow import Schema
+from marshmallow.fields import Integer, String
+from marshmallow.validate import OneOf, Regexp
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
@@ -486,6 +491,61 @@ def select_season(imdb_id: str) -> str:
     return render_template(
         'select_season.html', info=info, seasons=list(range(1, int(total_seasons) + 1))
     )
+
+
+def validate(validate):
+    return field(metadata=config(mm_field=String(validate=validate)))
+
+
+@dataclass
+class DownloadSchema(DataClassJsonMixin):
+    tmdb_id: int
+    season: Optional[str]
+    episode: Optional[str]
+    magnet: str = validate(Regexp(r'^magnet:'))
+
+
+@app.route('/api/download', methods=['POST'])
+def api_download() -> str:
+    schema = DownloadSchema.schema(many=True, unknown='EXCLUDE')
+
+    things: List[DownloadSchema] = schema.load(request.json)
+    for thing in things:
+        is_tv = thing.season is not None
+
+        item = get_tv(thing.tmdb_id) if is_tv else get_movie(thing.tmdb_id)
+        if is_tv:
+            subpath = f'tv_shows/{item["name"]}/Season {thing.season}'
+        else:
+            subpath = 'movies'
+
+        if thing.season is not None:
+            if thing.episode is None:
+                title = f'Season {thing.season}'
+            else:
+                idx = int(thing.episode) - 1
+                title = get_tv_episodes(thing.tmdb_id, thing.season)['episodes'][idx][
+                    'name'
+                ]
+            show_title = item['name']
+        else:
+            title = item['name']
+
+        add_single(
+            magnet=thing.magnet,
+            imdb_id=get_tv_imdb_id(str(thing.tmdb_id))
+            if is_tv
+            else get_movie_imdb_id(str(thing.tmdb_id)),
+            subpath=subpath,
+            tmdb_id=thing.tmdb_id,
+            season=thing.season,
+            episode=thing.episode,
+            title=title,
+            show_title=show_title,
+            is_tv=is_tv,
+        )
+
+    return jsonify()
 
 
 @app.route('/download/<type>')

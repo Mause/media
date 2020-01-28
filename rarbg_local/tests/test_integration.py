@@ -10,7 +10,7 @@ from pytest import fixture, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
-from ..db import Role, Roles, User, create_episode, db
+from ..db import Download, Role, Roles, User, create_episode, db
 from ..main import create_app
 from ..utils import cache_clear
 from .conftest import add_json, themoviedb
@@ -57,7 +57,7 @@ def test_client(clear_cache, flask_app: Flask) -> Generator[FlaskClient, None, N
 
 
 @fixture
-def get_torrent(responses):
+def get_torrent():
     res = {
         'arguments': {
             'torrents': [
@@ -66,6 +66,13 @@ def get_torrent(responses):
         }
     }
     with patch('rarbg_local.main.get_torrent', return_value=res):
+        yield
+
+
+@fixture
+def add_torrent():
+    res = {'arguments': {'torrent-added': {'hashString': HASH_STRING}}}
+    with patch('rarbg_local.main.torrent_add', return_value=res):
         yield
 
 
@@ -90,6 +97,33 @@ def logged_in(flask_app, test_client, user):
             yield
 
             _request_ctx_stack.pop()
+
+
+def test_download(test_client, logged_in, responses, add_torrent):
+    themoviedb(responses, '/tv/95792', {'name': 'Pocket Monsters'})
+    themoviedb(responses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(
+        responses,
+        '/tv/95792/season/1',
+        {'episodes': [None, {'name': "Satoshi, Go, and Lugia Go!"}]},
+    )
+
+    res = test_client.post(
+        '/api/download',
+        json=[
+            {
+                'magnet': 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce',
+                'tmdb_id': '95792',
+                'season': '1',
+                'episode': '2',
+            }
+        ],
+    )
+    assert res.status == '200 OK'
+
+    download = db.session.query(Download).first()
+    assert download
+    assert download.episode
 
 
 def test_index(responses, test_client, flask_app, get_torrent, logged_in):
