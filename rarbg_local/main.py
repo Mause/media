@@ -147,6 +147,7 @@ def create_app(config):
 
     db.create_all(app=papp)
     UserManager(papp, db, User)
+    papp.login_manager.request_callback = basic_auth
 
     papp.json_encoder = DynamicJSONEncoder
 
@@ -173,6 +174,18 @@ def create_app(config):
         _fk_pragma_on_connect(engine, None)
 
     return papp
+
+
+def basic_auth(header):
+    auth = request.authorization
+    assert auth
+
+    user = db.session.query(User).filter_by(username=auth['username']).one_or_none()
+
+    if current_app.user_manager.verify_password(
+        auth['password'], user.password if user else None
+    ):
+        return user
 
 
 class SearchForm(FlaskForm):
