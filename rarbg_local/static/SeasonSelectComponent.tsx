@@ -53,6 +53,7 @@ function _EpisodeSelectComponent(props: EpisodeProps) {
       )}
     </ol> : <ReactLoading type='balls' color='#000' />}
     <a href={`/select/${tmdb_id}/season/${seasonNumber}/download_all`}>Download season</a>
+    <br />
   </div>;
 }
 
