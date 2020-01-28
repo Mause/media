@@ -21,6 +21,9 @@ Sentry.init({
   release: process.env.HEROKU_SLUG_COMMIT,
   environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
 });
+Sentry.configureScope(function(scope) {
+    scope.setUser((window as any).USER);
+});
 
 class _DownloadComponent extends Component<RouteComponentProps<{}>, { done?: boolean }> {
   constructor(props: RouteComponentProps<{}>) {
