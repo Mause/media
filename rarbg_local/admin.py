@@ -43,3 +43,4 @@ class DownloadAdmin(sqla.ModelView, AdminOnly):
     column_exclude_list = ('movie',)
     form_choices = {'type': [('movie', 'movie'), ('episode', 'episode'),]}
     column_filters = ['added_by']
+    column_searchable_list = ['title', 'episode.show_title']
