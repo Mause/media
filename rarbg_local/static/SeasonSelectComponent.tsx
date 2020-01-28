@@ -42,6 +42,7 @@ function _EpisodeSelectComponent(props: EpisodeProps) {
   const season = useLoad<Season>(`tv/${tmdb_id}/season/${seasonNumber}`)
 
   return <div>
+    <Link to={`/select/${tmdb_id}/season`}><small>Back to seasons</small></Link>
     {season ? <ol>
       {season.episodes.map(episode =>
         <li key={episode.id} value={episode.episode_number}>
