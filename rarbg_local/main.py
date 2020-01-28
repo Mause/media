@@ -756,10 +756,11 @@ def api_index():
 @app.route('/api/stats')
 @jsonapi
 def api_stats():
+    keys = User.username, Download.type
     query = (
-        db.session.query(User.username, Download.type, func.count(Download.added_by_id))
+        db.session.query(*keys, func.count(Download.added_by_id))
         .outerjoin(Download)
-        .group_by(User.username, Download.type)
+        .group_by(*keys)
     )
     return {
         user: {type: value for _, type, value in values}
