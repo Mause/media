@@ -13,6 +13,7 @@ import { EpisodeSelectComponent, SeasonSelectComponent } from './SeasonSelectCom
 import Axios from 'axios';
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
+import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 
 Sentry.init({
@@ -95,6 +96,14 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
   )
 }
 
+function reportError(error: Error, componentStack: string) {
+  Sentry.withScope((scope) => {
+    scope.setExtras({stack: componentStack});
+    const eventId = Sentry.captureException(error);
+    Sentry.showReportDialog({ eventId: eventId })
+  });
+}
+
 function ParentComponent() {
   return (
     <Router>
@@ -109,16 +118,18 @@ function ParentComponent() {
 
       <br />
 
-      <Switch>
-        <RouteWithTitle path="/select/:tmdb_id/options" title="Movie Options"><OptionsComponent type='movie' /></RouteWithTitle>
-        <RouteWithTitle path="/select/:tmdb_id/season/:season/episode/:episode/options" title="TV Options"><OptionsComponent type='series' /></RouteWithTitle>
-        <RouteWithTitle path="/select/:tmdb_id/season/:season" title="Select Episode"><EpisodeSelectComponent /></RouteWithTitle>
-        <RouteWithTitle path="/select/:tmdb_id/season" title="Select Season"><SeasonSelectComponent /></RouteWithTitle>
-        <RouteWithTitle path="/search" title="Search"><SearchComponent /></RouteWithTitle>
-        <RouteWithTitle path="/download" title="Download"><DownloadComponent /></RouteWithTitle>
-        <RouteWithTitle path="/stats" title="Stats"><StatsComponent /></RouteWithTitle>
-        <RouteWithTitle path="/" title="Media"><IndexComponent /></RouteWithTitle>
-      </Switch>
+      <ErrorBoundary onError={reportError} FallbackComponent={(props: FallbackProps) => <div>An error has occured: {props.error!!.message}</div>}>
+        <Switch>
+          <RouteWithTitle path="/select/:tmdb_id/options" title="Movie Options"><OptionsComponent type='movie' /></RouteWithTitle>
+          <RouteWithTitle path="/select/:tmdb_id/season/:season/episode/:episode/options" title="TV Options"><OptionsComponent type='series' /></RouteWithTitle>
+          <RouteWithTitle path="/select/:tmdb_id/season/:season" title="Select Episode"><EpisodeSelectComponent /></RouteWithTitle>
+          <RouteWithTitle path="/select/:tmdb_id/season" title="Select Season"><SeasonSelectComponent /></RouteWithTitle>
+          <RouteWithTitle path="/search" title="Search"><SearchComponent /></RouteWithTitle>
+          <RouteWithTitle path="/download" title="Download"><DownloadComponent /></RouteWithTitle>
+          <RouteWithTitle path="/stats" title="Stats"><StatsComponent /></RouteWithTitle>
+          <RouteWithTitle path="/" title="Media"><IndexComponent /></RouteWithTitle>
+        </Switch>
+      </ErrorBoundary>
     </Router>
   );
 }
