@@ -21,7 +21,10 @@
     <body><div id="app"></div></body>
 
     <script>
-        const USER = {"username": {{current_user.username | tojson }}};
+        const USER = {
+            "username": {{current_user.username | tojson}},
+            "id": {{current_user.id | tojson}}
+        };
     </script>
     <script src="{{ url_for('static', filename='gen/streaming.js') }}"></script>
 </html>

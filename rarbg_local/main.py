@@ -207,6 +207,12 @@ def before():
         return login_required(roles_required('Member')(lambda: None))()
 
 
+@app.route('/')
+@app.route('/<path:path>')
+def index(path=None) -> str:
+    return render_template('app.html', url_for=cache_busting_url_for)
+
+
 @app.route('/search')
 def select_item() -> str:
     def get_url(item: Dict) -> str:
@@ -857,12 +863,6 @@ def render_progress(
         <progress value="{pc}" title="{pc * 100:.02f}% ({eta} remaining)">
         </progress>
         '''
-
-
-@app.route('/')
-@app.route('/<path:path>')
-def index(path=None) -> str:
-    return render_template('app.html', url_for=cache_busting_url_for)
 
 
 @app.route('/old', methods=['GET', 'POST'])
