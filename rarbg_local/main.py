@@ -213,7 +213,7 @@ def index(path=None) -> str:
     return render_template('app.html', url_for=cache_busting_url_for)
 
 
-@app.route('/search')
+# @app.route('/search')
 def select_item() -> str:
     def get_url(item: Dict) -> str:
         return url_for(
@@ -242,7 +242,7 @@ def query_args(func):
     return wrapper
 
 
-@app.route('/select/<imdb_id>/season/<season>/episode/<episode>/options')
+# @app.route('/select/<imdb_id>/season/<season>/episode/<episode>/options')
 def select_tv_options(imdb_id: str, season: str, episode: str) -> str:
     info = get_tv_episodes(imdb_id, season)['episodes'][int(episode) - 1]
 
@@ -293,14 +293,14 @@ def stream(type: str, imdb_id: str):
     )
 
 
-@app.route('/select/<imdb_id>/options')
+# @app.route('/select/<imdb_id>/options')
 def select_movie_options(imdb_id: str) -> str:
     return select_options(
         'movie', get_movie_imdb_id(imdb_id), title=get_movie(imdb_id)['title']
     )
 
 
-@app.route('/delete/<type>/<id>')
+# @app.route('/delete/<type>/<id>')
 def delete(type: str, id: str) -> WResponse:
     query = db.session.query(
         EpisodeDetails if type == 'series' else MovieDetails
@@ -385,7 +385,7 @@ def select_options(
     )
 
 
-@app.route('/select/<imdb_id>/season/<season>')
+# @app.route('/select/<imdb_id>/season/<season>')
 def select_episode(imdb_id: str, season: str) -> str:
     def build_episode_link(episode: Dict) -> str:
         return url_for(
@@ -501,7 +501,7 @@ def download_all_episodes(imdb_id: str, season: str) -> str:
     )
 
 
-@app.route('/select/<imdb_id>/season')
+# @app.route('/select/<imdb_id>/season')
 def select_season(imdb_id: str) -> str:
     info = get_tv(imdb_id)
 
