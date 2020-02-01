@@ -41,7 +41,9 @@ from flask import (
     url_for,
 )
 from flask_admin import Admin
+from flask_cors import CORS
 from flask_jsontools import DynamicJSONEncoder, jsonapi
+from flask_sslify import SSLify
 from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
@@ -134,6 +136,8 @@ def create_app(config):
         }
     )
     db.init_app(papp)
+    CORS(papp, supports_credentials=True)
+    SSLify(papp)
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
         engine = db.get_engine(papp, None)

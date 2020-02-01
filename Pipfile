@@ -39,6 +39,8 @@ flask-jsontools = "*"
 sentry-sdk = {extras = ["flask"],version = "*"}
 alembic = "*"
 plexapi = "*"
+flask-cors = "*"
+flask-sslify = "*"
 
 [requires]
 python_version = "3.8"
