@@ -95,7 +95,7 @@ class _OptionsComponent extends Component<OptionsProps, {
   }
   componentDidMount() {
     const { tmdb_id, season, episode } = this.props.match.params;
-    const prom = load<ItemInfo>(`${this.props.type == 'series' ? 'tv' : 'movie'}/${tmdb_id}`);
+    const prom = load<ItemInfo>(`${this.props.type === 'series' ? 'tv' : 'movie'}/${tmdb_id}`);
     if (this.props.type === 'series') {
       Promise.all([
         load<Season>(`tv/${tmdb_id}/season/${season}`),

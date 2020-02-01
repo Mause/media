@@ -58,7 +58,7 @@ function Progress({ torrents, item }: { torrents?: Torrents, item: { download: D
   if (!prog) return null;
 
   let { eta, percentDone } = prog;
-  if (percentDone == 1) {
+  if (percentDone === 1) {
     return <i className="fas fa-check-circle"></i>
   } else {
     let etaDescr = eta > 0 ? Moment().add(eta, 'seconds').fromNow(true) : 'Unknown time'
