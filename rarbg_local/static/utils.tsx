@@ -18,13 +18,14 @@ export function subscribe(path: string, callback: (a: any) => void, end: (() => 
 }
 
 export function load<T>(path: string, params?: any): Promise<T> {
-  return Axios.get<T>(`/api/${path}`, { params, withCredentials: true }).then(t => t.data);
+  return Axios.get<T>(`/api/${path}`, { params: qs.parse(params), withCredentials: true }).then(t => t.data);
 }
 
 export function useLoad<T>(path: string, params: any = null) {
+  const sparams = params ? qs.stringify(params) : null;
   const [data, setData] = useState<T>()
   useEffect(() => {
-    load<T>(path, params).then(setData);
-  }, [path, params ? qs.stringify(params) : null]);
+    load<T>(path, sparams).then(setData);
+  }, [path, sparams]);
   return data;
 }
