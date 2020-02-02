@@ -43,6 +43,8 @@ from flask import (
 from flask_admin import Admin
 from flask_cors import CORS
 from flask_jsontools import DynamicJSONEncoder, jsonapi
+from flask_restplus import Api, Resource
+from flask_restplus.reqparse import RequestParser
 from flask_sslify import SSLify
 from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
@@ -90,6 +92,7 @@ logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
 
 app = Blueprint('rarbg_local', __name__)
+api = Api(doc='/doc/')
 
 K = TypeVar('K')
 V = TypeVar('V')
@@ -134,6 +137,7 @@ def create_app(config):
         }
     )
     db.init_app(papp)
+    api.init_app(papp)
     CORS(papp, supports_credentials=True)
     SSLify(papp)
 
@@ -526,7 +530,22 @@ class DownloadSchema(DataClassJsonMixin):
     )
 
 
-@app.route('/api/download', methods=['POST'])
+def as_resource(methods: List[str] = ['GET']):
+    def wrapper(func: Callable):
+        return type(
+            func.__name__,
+            (Resource,),
+            {
+                method.lower(): lambda self, *args, **kwargs: func(*args, **kwargs)
+                for method in methods
+            },
+        )
+
+    return wrapper
+
+
+@api.route('/api/download')
+@as_resource(['POST'])
 def api_download() -> str:
     schema = DownloadSchema.schema(many=True, unknown='EXCLUDE')
 
@@ -759,23 +778,18 @@ def resolve_series() -> List[SeriesDetails]:
     ]
 
 
-def has_tmdb_id(func):
-    @wraps(func)
-    def wrapper(tmdb_id, *args, **kwargs):
-        if not (tmdb_id and tmdb_id.isdigit()):
-            return abort(422, response=jsonify({'error': 'Invalid tmdb_id value'}))
-        return func(tmdb_id, *args, **kwargs)
-
-    return wrapper
+has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
 
 
-@app.route('/api/index')
+@api.route('/api/index')
+@as_resource()
 @jsonapi
 def api_index():
     return {'series': resolve_series(), 'movies': get_movies()}
 
 
-@app.route('/api/stats')
+@api.route('/api/stats')
+@as_resource()
 @jsonapi
 def api_stats():
     keys = User.username, Download.type
@@ -796,7 +810,8 @@ def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
     return items[0] if items else None
 
 
-@app.route('/api/movie/<tmdb_id>')
+@api.route('/api/movie/<int:tmdb_id>')
+@as_resource()
 @jsonapi
 @has_tmdb_id
 def api_movie(tmdb_id: str):
@@ -804,7 +819,8 @@ def api_movie(tmdb_id: str):
     return {"title": movie['title'], "imdb_id": movie['imdb_id']}
 
 
-@app.route('/api/tv/<tmdb_id>')
+@api.route('/api/tv/<int:tmdb_id>')
+@as_resource()
 @jsonapi
 @has_tmdb_id
 def api_tv(tmdb_id: str):
@@ -816,21 +832,29 @@ def api_tv(tmdb_id: str):
     }
 
 
-@app.route('/api/tv/<tmdb_id>/season/<season>')
+@api.route('/api/tv/<int:tmdb_id>/season/<int:season>')
+@as_resource()
 @jsonapi
 @has_tmdb_id
 def api_tv_season(tmdb_id: str, season: str):
     return get_tv_episodes(tmdb_id, season)
 
 
-@app.route('/api/torrents')
+@api.route('/api/torrents')
+@as_resource()
 @jsonapi
 def api_torrents():
     return get_keyed_torrents()
 
 
-@app.route('/api/search')
+@api.route('/api/search')
 @jsonapi
+@api.expect(
+    RequestParser().add_argument(
+        'query', type=str, help='Search query', location='args'
+    )
+)
+@as_resource()
 def api_search():
     return search_themoviedb(request.args['query'])
 
