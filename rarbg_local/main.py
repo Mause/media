@@ -47,9 +47,7 @@ from flask_sslify import SSLify
 from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
-from marshmallow import Schema
-from marshmallow.fields import Integer, String
-from marshmallow.validate import OneOf
+from marshmallow.fields import String
 from marshmallow.validate import Regexp as MarshRegexp
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
