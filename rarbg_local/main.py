@@ -848,13 +848,13 @@ def api_torrents():
 
 
 @api.route('/api/search')
-@jsonapi
 @api.expect(
     RequestParser().add_argument(
         'query', type=str, help='Search query', location='args'
     )
 )
 @as_resource()
+@jsonapi
 def api_search():
     return search_themoviedb(request.args['query'])
 
