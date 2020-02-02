@@ -140,7 +140,7 @@ def create_app(config):
     api.init_app(papp)
     if not papp.config.get('TESTING', False):
         CORS(papp, supports_credentials=True)
-        SSLify(papp)
+        # SSLify(papp)
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
         engine = db.get_engine(papp, None)
