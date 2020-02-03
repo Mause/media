@@ -559,6 +559,7 @@ DownloadRequest = api.model(
 
 @api.route('/api/download')
 @api.expect([DownloadRequest])
+@api.response(200, 'OK', {})
 @as_resource(['POST'])
 def api_download() -> str:
     schema = DownloadSchema.schema(many=True, unknown='EXCLUDE')
@@ -802,9 +803,20 @@ def api_index():
     return {'series': resolve_series(), 'movies': get_movies()}
 
 
+StatsResponse = api.model(
+    'StatsResponse',
+    {
+        '*': fields.Wildcard(
+            fields.Nested(api.model('Stats', {'episode': fields.Integer}))
+        )
+    },
+)
+
+
 @api.route('/api/stats')
+@api.response(200, 'OK', StatsResponse)
 @as_resource()
-@jsonapi
+@api.marshal_with(StatsResponse)
 def api_stats():
     keys = User.username, Download.type
     query = (
@@ -831,6 +843,16 @@ def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
 def api_movie(tmdb_id: str):
     movie = get_movie(tmdb_id)
     return {"title": movie['title'], "imdb_id": movie['imdb_id']}
+
+
+TvResponse = api.model(
+    'TvResponse',
+    {
+        'number_of_seasons': fields.Integer,
+        'title': fields.String,
+        'imdb_id': fields.String,
+    },
+)
 
 
 TvResponse = api.model(
