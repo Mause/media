@@ -879,14 +879,26 @@ def api_torrents():
     return get_keyed_torrents()
 
 
+SearchResponse = api.model(
+    'SearchResponse',
+    {
+        'title': fields.String,
+        "Type": fields.String(enum=('movie', 'episode')),
+        "Year": fields.Integer,
+        "imdbID": fields.Integer,
+    },
+)
+
+
 @api.route('/api/search')
 @api.expect(
     RequestParser().add_argument(
         'query', type=str, help='Search query', location='args'
     )
 )
+@api.response(200, 'OK', [SearchResponse])
 @as_resource()
-@jsonapi
+@api.marshal_with(SearchResponse, as_list=True)
 def api_search():
     return search_themoviedb(request.args['query'])
 
