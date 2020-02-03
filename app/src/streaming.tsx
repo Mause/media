@@ -1,13 +1,10 @@
 import * as Sentry from '@sentry/browser';
-import _ from 'lodash';
 import qs from 'qs';
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import Helmet from 'react-helmet';
 import ReactLoading from 'react-loading';
 import { RouteProps, Redirect } from 'react-router';
 import { BrowserRouter as Router, Link, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
-import './app.css';
 import { IndexComponent } from './IndexComponent';
 import { EpisodeSelectComponent, SeasonSelectComponent } from './SeasonSelectComponent';
 import Axios from 'axios';
@@ -21,8 +18,8 @@ Sentry.init({
   release: process.env.HEROKU_SLUG_COMMIT,
   environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
 });
-Sentry.configureScope(function(scope) {
-    scope.setUser((window as any).USER);
+Sentry.configureScope(function (scope) {
+  scope.setUser((window as any).USER);
 });
 
 class _DownloadComponent extends Component<RouteComponentProps<{}>, { done?: boolean }> {
@@ -101,7 +98,7 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
 
 function reportError(error: Error, componentStack: string) {
   Sentry.withScope((scope) => {
-    scope.setExtras({stack: componentStack});
+    scope.setExtras({ stack: componentStack });
     const eventId = Sentry.captureException(error);
     Sentry.showReportDialog({ eventId: eventId })
   });
@@ -114,8 +111,8 @@ function ParentComponent() {
 
       <nav>
         <Link to="/">Home</Link>&nbsp;
-        <a href="http://novell.mause.me:9091" target="_blank">Transmission</a>&nbsp;
-        <a href="https://app.plex.tv" target="_blank">Plex</a>&nbsp;
+        <a href="http://novell.mause.me:9091" target="_blank" rel="noopener noreferrer">Transmission</a>&nbsp;
+        <a href="https://app.plex.tv" target="_blank" rel="noopener noreferrer">Plex</a>&nbsp;
         <a href="/user/sign-out">Logout</a>
       </nav>
 
@@ -137,4 +134,4 @@ function ParentComponent() {
   );
 }
 
-ReactDOM.render(<ParentComponent />, document.getElementById('app'));
+export { ParentComponent };

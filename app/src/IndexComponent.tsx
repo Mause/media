@@ -51,4 +51,4 @@ class _IndexComponent extends Component<IndexProps, IndexState> {
 }
 
 const IndexComponent = withRouter(_IndexComponent);
-export { IndexComponent as IndexComponent };
+export { IndexComponent };
