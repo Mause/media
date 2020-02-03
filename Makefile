@@ -29,7 +29,4 @@ prod: clean
 		$(INPUT) \
 		| ./node_modules/.bin/terser --compress --mangle > $(OUTPUT)
 
-	cd app
-	npm ci
-	npm test
-	npm build
+	cd app && npm ci && npm test && npm build
