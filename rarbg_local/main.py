@@ -832,6 +832,7 @@ TvResponse = api.model(
 
 
 @api.route('/api/tv/<int:tmdb_id>')
+@api.response(200, 'OK', TvResponse)
 @as_resource()
 @api.marshal_with(TvResponse)
 @has_tmdb_id
@@ -844,9 +845,28 @@ def api_tv(tmdb_id: str):
     }
 
 
+TvSeasonResponse = api.model(
+    'TvSeasonResponse',
+    {
+        'episodes': fields.Nested(
+            api.model(
+                'Episode',
+                {
+                    'name': fields.String,
+                    'id': fields.Integer,
+                    'episode_number': fields.Integer,
+                },
+            ),
+            as_list=True,
+        )
+    },
+)
+
+
 @api.route('/api/tv/<int:tmdb_id>/season/<int:season>')
+@api.response(200, 'OK', TvSeasonResponse)
 @as_resource()
-@jsonapi
+@api.marshal_with(TvSeasonResponse)
 @has_tmdb_id
 def api_tv_season(tmdb_id: str, season: str):
     return get_tv_episodes(tmdb_id, season)
