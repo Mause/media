@@ -855,16 +855,6 @@ TvResponse = api.model(
 )
 
 
-TvResponse = api.model(
-    'TvResponse',
-    {
-        'number_of_seasons': fields.Integer,
-        'title': fields.String,
-        'imdb_id': fields.String,
-    },
-)
-
-
 @api.route('/api/tv/<int:tmdb_id>')
 @api.response(200, 'OK', TvResponse)
 @as_resource()
