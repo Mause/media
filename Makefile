@@ -29,4 +29,4 @@ prod: clean
 		$(INPUT) \
 		| ./node_modules/.bin/terser --compress --mangle > $(OUTPUT)
 
-	cd app && yarn && yarn test && yarn build
+	cd app && yarn && yarn build
