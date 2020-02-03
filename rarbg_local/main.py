@@ -546,7 +546,19 @@ def as_resource(methods: List[str] = ['GET']):
     return wrapper
 
 
+DownloadRequest = api.model(
+    'Download',
+    {
+        'tmdb_id': fields.Integer,
+        'magnet': fields.String,
+        'season': fields.Integer,
+        'episode': fields.Integer,
+    },
+)
+
+
 @api.route('/api/download')
+@api.expect([DownloadRequest])
 @as_resource(['POST'])
 def api_download() -> str:
     schema = DownloadSchema.schema(many=True, unknown='EXCLUDE')
