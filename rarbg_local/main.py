@@ -43,7 +43,7 @@ from flask import (
 from flask_admin import Admin
 from flask_cors import CORS
 from flask_jsontools import DynamicJSONEncoder, jsonapi
-from flask_restplus import Api, Resource
+from flask_restplus import Api, Resource, fields
 from flask_restplus.reqparse import RequestParser
 from flask_sslify import SSLify
 from flask_user import UserManager, login_required, roles_required
@@ -821,9 +821,19 @@ def api_movie(tmdb_id: str):
     return {"title": movie['title'], "imdb_id": movie['imdb_id']}
 
 
+TvResponse = api.model(
+    'TvResponse',
+    {
+        'number_of_seasons': fields.Integer,
+        'title': fields.String,
+        'imdb_id': fields.String,
+    },
+)
+
+
 @api.route('/api/tv/<int:tmdb_id>')
 @as_resource()
-@jsonapi
+@api.marshal_with(TvResponse)
 @has_tmdb_id
 def api_tv(tmdb_id: str):
     tv = get_tv(tmdb_id)
