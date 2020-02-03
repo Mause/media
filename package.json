@@ -53,5 +53,8 @@
   "bugs": {
     "url": "https://github.com/Mause/rarbg_local/issues"
   },
-  "homepage": "https://github.com/Mause/rarbg_local#readme"
+  "homepage": "https://github.com/Mause/rarbg_local#readme",
+  "engines": {
+    "yarn": "1.x"
+  }
 }
