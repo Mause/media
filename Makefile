@@ -28,5 +28,3 @@ prod: clean
 		-g uglifyify \
 		$(INPUT) \
 		| ./node_modules/.bin/terser --compress --mangle > $(OUTPUT)
-
-	cd app && yarn && yarn build
