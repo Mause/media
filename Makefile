@@ -22,6 +22,7 @@ build: clean
 		-o $(OUTPUT)
 
 prod: clean
+	rm -rf app
 	./node_modules/.bin/browserify -p [ tsify --module es5 ] \
 		-t browserify-css \
 		-g [ envify --NODE_ENV production --HEROKU_SLUG_COMMIT $(HEROKU_SLUG_COMMIT) ] \
