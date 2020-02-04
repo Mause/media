@@ -201,10 +201,6 @@ def basic_auth(header):
         return user
 
 
-class SearchForm(FlaskForm):
-    query = StringField('Query', validators=[DataRequired()])
-
-
 @app.route('/user/unauthorized')
 def unauthorized():
     if get_flashed_messages():
@@ -225,25 +221,6 @@ def index(path=None) -> str:
     return render_template('app.html', url_for=cache_busting_url_for)
 
 
-# @app.route('/search')
-def select_item() -> str:
-    def get_url(item: Dict) -> str:
-        return url_for(
-            '.select_movie_options' if item['Type'] == 'movie' else '.select_season',
-            imdb_id=item['imdbID'],
-        )
-
-    query = request.args['query']
-
-    results = search_themoviedb(query)
-
-    form = SearchForm(query=query)
-
-    return render_template(
-        'select_item.html', results=results, query=query, get_url=get_url, form=form
-    )
-
-
 def query_args(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -252,23 +229,6 @@ def query_args(func):
 
     args_spec = inspect.getfullargspec(func).args
     return wrapper
-
-
-# @app.route('/select/<imdb_id>/season/<season>/episode/<episode>/options')
-def select_tv_options(imdb_id: str, season: str, episode: str) -> str:
-    info = get_tv_episodes(imdb_id, season)['episodes'][int(episode) - 1]
-
-    tv = get_tv(imdb_id)
-
-    return select_options(
-        'series',
-        get_tv_imdb_id(imdb_id),
-        display_title=info['name'] + ' - ' + tv['name'],
-        title=info['name'],
-        search_string=f'S{int(season):02d}E{int(episode):02d}',
-        season=season,
-        episode=episode,
-    )
 
 
 def eventstream(func: Callable):
