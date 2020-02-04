@@ -13,10 +13,11 @@ jobs:
       - checkout
       - run: npm ci
       - run: npm run build
-      - run: cd app
-      - run: yarn
-      - run: yarn test
-      - run: yarn build
+      - run: |
+          cd app
+          yarn
+          yarn test
+          yarn build
 
   build_backend:
     docker:
