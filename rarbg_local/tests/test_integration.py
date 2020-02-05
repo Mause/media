@@ -6,7 +6,7 @@ from flask.globals import _request_ctx_stack
 from flask.testing import FlaskClient
 from flask_login import login_user
 from lxml.html import fromstring
-from pytest import fixture, raises
+from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
@@ -99,6 +99,7 @@ def logged_in(flask_app, test_client, user):
             _request_ctx_stack.pop()
 
 
+@mark.skip
 def test_download(test_client, logged_in, responses, add_torrent):
     themoviedb(responses, '/tv/95792', {'name': 'Pocket Monsters'})
     themoviedb(responses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
@@ -126,6 +127,7 @@ def test_download(test_client, logged_in, responses, add_torrent):
     assert download.episode
 
 
+@mark.skip
 def test_index(responses, test_client, flask_app, get_torrent, logged_in):
     create_episode(
         transmission_id=HASH_STRING,
@@ -155,6 +157,7 @@ def test_index(responses, test_client, flask_app, get_torrent, logged_in):
     assert ''.join(lists) == 'Hello world'
 
 
+@mark.skip
 def test_search(responses, test_client, logged_in):
     themoviedb(
         responses,
@@ -210,6 +213,7 @@ def test_delete_cascade(test_client: FlaskClient, logged_in):
     assert len(session.query(Download).all()) == 0
 
 
+@mark.skip
 def test_select_season(
     responses: RequestsMock, test_client: FlaskClient, logged_in
 ) -> None:
