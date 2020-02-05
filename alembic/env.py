@@ -9,6 +9,7 @@ from logging.config import fileConfig
 from pathlib import Path
 
 from alembic import context
+from flask import Flask
 from sqlalchemy import engine_from_config, pool
 
 # this is the Alembic Config object, which provides
@@ -23,16 +24,14 @@ sys.path.insert(0, '.')
 db = __import__('rarbg_local.db').db.db
 
 if 'HEROKU' in os.environ:
-    from rarbg_local.wsgi import app
+    url = os.environ['DATABASE_URL']
 else:
-    from flask import Flask
+    url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
 
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + str(
-        Path(__file__).parent.parent.absolute() / 'db.db'
-    )
-    db.init_app(app)
-    # db.create_all(app=app)
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = url
+db.init_app(app)
 
 alembic_config = config.get_section(config.config_ini_section)
 alembic_config['sqlalchemy.url'] = app.config['SQLALCHEMY_DATABASE_URI']
