@@ -93,7 +93,6 @@ logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
 
 app = Blueprint('rarbg_local', __name__)
-react_app = Blueprint(__name__, 'react-app', static_folder='app/build')
 
 Api.specs_url = '/swagger.json'
 api = Api(doc='/doc/')
@@ -121,9 +120,8 @@ def cache_busting_url_for(endpoint, **values):
 
 
 def create_app(config):
-    papp = Flask(__name__)
+    papp = Flask(__name__, static_folder='../app/build/static')
     papp.register_blueprint(app)
-    papp.register_blueprint(react_app, url_prefix='/app')
     papp.config.update(
         {
             'SECRET_KEY': 'hkfircsc',
@@ -220,9 +218,8 @@ def before():
 
 
 @app.route('/')
-@app.route('/<path:path>')
-def index(path=None) -> str:
-    return render_template('app.html', url_for=cache_busting_url_for)
+def serve():
+    return send_from_directory('../app/build/', 'index.html')
 
 
 # @app.route('/search')
@@ -838,16 +835,6 @@ def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
     guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
     items = get_plex().library.search(guid=guid)
     return items[0] if items else None
-
-
-@react_app.route('/')
-@react_app.route('/<path:path>')
-def serve(path=None):
-    sf = normpath(react_app.static_folder)
-    if path and exists(sf + '/' + path):
-        return send_from_directory(sf, path)
-    else:
-        return send_from_directory(sf, 'index.html')
 
 
 @api.route('/api/movie/<int:tmdb_id>')

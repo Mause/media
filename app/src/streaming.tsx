@@ -106,7 +106,7 @@ function reportError(error: Error, componentStack: string) {
 
 function ParentComponent() {
   return (
-    <Router basename='/app'>
+    <Router>
       <h1>Media</h1>
 
       <nav>
