@@ -321,7 +321,7 @@ def delete(type: str, id: str) -> WResponse:
     query.delete()
     db.session.commit()
 
-    return redirect(url_for('.index'))
+    return jsonify()
 
 
 def categorise(string: str) -> str:
