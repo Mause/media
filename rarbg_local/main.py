@@ -920,29 +920,6 @@ def render_progress(
         '''
 
 
-@app.route('/old', methods=['GET', 'POST'])
-def old_index() -> Union[str, WResponse]:
-    form = SearchForm()
-    if form.validate_on_submit():
-        return redirect(url_for('.select_item', query=form.data['query']))
-
-    series = resolve_series()
-    torrents = get_keyed_torrents()
-
-    return render_template(
-        'index.html',
-        form=form,
-        # data
-        movies=get_movies(),
-        series=series,
-        torrents=torrents,
-        # functions
-        sorted=sorted,
-        render_progress=render_progress,
-        resolve_id=resolve_id,
-    )
-
-
 def get_keyed_torrents() -> Dict[str, Dict]:
     if hasattr(g, 'get_keyed_torrents'):
         return g.get_keyed_torrents
