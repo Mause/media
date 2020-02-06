@@ -130,7 +130,14 @@ function Pure(props: { itemInfo?: ItemInfo, type: string, tmdb_id: string, seaso
         </p>
         <ul>{bits}</ul>
       </div> :
-      'No results'}
+      <div>
+          No results
+          <ul>
+            <li>
+              <Link to={{pathname: '/manual'}}>Add manually</Link>
+            </li>
+          </ul>
+      </div>}
   </div>);
 }
 
