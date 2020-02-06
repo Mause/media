@@ -214,12 +214,12 @@ def before():
 
 
 @app.route('/')
-def serve():
+def serve_index():
     return send_from_directory('../app/build/', 'index.html')
 
 
 @app.route('/manifest.json')
-def serve():
+def serve_manifest():
     return send_from_directory('../app/build/', 'manifest.json')
 
 
