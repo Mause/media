@@ -17,8 +17,10 @@ export function subscribe(path: string, callback: (a: any) => void, end: (() => 
   });
 }
 
+const BASE = window.location.host.includes('localhost') ? 'http://localhost:5000' : '';
+
 export function load<T>(path: string, params?: any): Promise<T> {
-  return Axios.get<T>(`/api/${path}`, { params: qs.parse(params), withCredentials: true }).then(t => t.data);
+  return Axios.get<T>(BASE + `/api/${path}`, { params: qs.parse(params), withCredentials: true }).then(t => t.data);
 }
 
 export function useLoad<T>(path: string, params: any = null) {

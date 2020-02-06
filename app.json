@@ -1,0 +1,14 @@
+{
+  "addons": [
+    "heroku-postgresql:hobby-dev",
+    "cloudamqp:lemur"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    },
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

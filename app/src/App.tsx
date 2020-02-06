@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
+import { ParentComponent } from './streaming';
 
 const App = () => {
   return (
-    <div>Hi!</div>
+    <ParentComponent />
   );
 }
 
