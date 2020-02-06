@@ -312,7 +312,7 @@ def select_movie_options(imdb_id: str) -> str:
     )
 
 
-# @app.route('/delete/<type>/<id>')
+@app.route('/delete/<type>/<id>')
 def delete(type: str, id: str) -> WResponse:
     query = db.session.query(
         EpisodeDetails if type == 'series' else MovieDetails
