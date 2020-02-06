@@ -218,6 +218,11 @@ def serve():
     return send_from_directory('../app/build/', 'index.html')
 
 
+@app.route('/manifest.json')
+def serve():
+    return send_from_directory('../app/build/', 'manifest.json')
+
+
 def query_args(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
