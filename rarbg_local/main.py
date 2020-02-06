@@ -93,7 +93,6 @@ logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
 
 app = Blueprint('rarbg_local', __name__)
-react_app = Blueprint(__name__, 'react-app', static_folder='app/build')
 
 Api.specs_url = '/swagger.json'
 api = Api(doc='/doc/')
@@ -121,9 +120,8 @@ def cache_busting_url_for(endpoint, **values):
 
 
 def create_app(config):
-    papp = Flask(__name__)
+    papp = Flask(__name__, static_folder='../app/build/static')
     papp.register_blueprint(app)
-    papp.register_blueprint(react_app, url_prefix='/app')
     papp.config.update(
         {
             'SECRET_KEY': 'hkfircsc',
@@ -216,9 +214,13 @@ def before():
 
 
 @app.route('/')
-@app.route('/<path:path>')
-def index(path=None) -> str:
-    return render_template('app.html', url_for=cache_busting_url_for)
+def serve():
+    return send_from_directory('../app/build/', 'index.html')
+
+
+@app.route('/manifest.json')
+def serve():
+    return send_from_directory('../app/build/', 'manifest.json')
 
 
 def query_args(func):
@@ -272,7 +274,7 @@ def select_movie_options(imdb_id: str) -> str:
     )
 
 
-# @app.route('/delete/<type>/<id>')
+@app.route('/delete/<type>/<id>')
 def delete(type: str, id: str) -> WResponse:
     query = db.session.query(
         EpisodeDetails if type == 'series' else MovieDetails
@@ -281,7 +283,7 @@ def delete(type: str, id: str) -> WResponse:
     query.delete()
     db.session.commit()
 
-    return redirect(url_for('.index'))
+    return jsonify()
 
 
 def categorise(string: str) -> str:
@@ -800,16 +802,6 @@ def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
     return items[0] if items else None
 
 
-@react_app.route('/')
-@react_app.route('/<path:path>')
-def serve(path=None):
-    sf = normpath(react_app.static_folder)
-    if path and exists(sf + '/' + path):
-        return send_from_directory(sf, path)
-    else:
-        return send_from_directory(sf, 'index.html')
-
-
 @api.route('/api/movie/<int:tmdb_id>')
 @as_resource()
 @jsonapi
@@ -931,29 +923,6 @@ def render_progress(
         <progress value="{pc}" title="{pc * 100:.02f}% ({eta} remaining)">
         </progress>
         '''
-
-
-@app.route('/old', methods=['GET', 'POST'])
-def old_index() -> Union[str, WResponse]:
-    form = SearchForm()
-    if form.validate_on_submit():
-        return redirect(url_for('.select_item', query=form.data['query']))
-
-    series = resolve_series()
-    torrents = get_keyed_torrents()
-
-    return render_template(
-        'index.html',
-        form=form,
-        # data
-        movies=get_movies(),
-        series=series,
-        torrents=torrents,
-        # functions
-        sorted=sorted,
-        render_progress=render_progress,
-        resolve_id=resolve_id,
-    )
 
 
 def get_keyed_torrents() -> Dict[str, Dict]:

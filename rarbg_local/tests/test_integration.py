@@ -205,7 +205,8 @@ def test_delete_cascade(test_client: FlaskClient, logged_in):
     assert len(session.query(Download).all()) == 1
 
     res = test_client.get(f'/delete/series/{e.id}')
-    assert res.status_code == 302
+    assert res.status_code == 200
+    assert res.data == b'{}\n'
 
     session.commit()
 
