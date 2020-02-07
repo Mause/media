@@ -213,8 +213,9 @@ def before():
         return login_required(roles_required('Member')(lambda: None))()
 
 
-@app.route('/')
-def serve_index():
+@app.route('/', defaults={'path': None})
+@app.route('/<path:path>')
+def serve_index(path):
     return send_from_directory('../app/build/', 'index.html')
 
 
