@@ -29,7 +29,7 @@ class _DownloadComponent extends Component<RouteComponentProps<{}>, { done?: boo
     this.state = {};
   }
   componentDidMount() {
-    const state = this.props.location.state;
+    const state = this.props.location.state!
     const url = `/download/${state.type}?` +
       qs.stringify({
         imdb_id: state.imdb_id,
