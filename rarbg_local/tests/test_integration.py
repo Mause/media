@@ -72,8 +72,8 @@ def get_torrent():
 @fixture
 def add_torrent():
     res = {'arguments': {'torrent-added': {'hashString': HASH_STRING}}}
-    with patch('rarbg_local.main.torrent_add', return_value=res):
-        yield
+    with patch('rarbg_local.main.torrent_add', return_value=res) as mock:
+        yield mock
 
 
 @fixture
@@ -108,18 +108,15 @@ def test_download(test_client, logged_in, responses, add_torrent):
         {'episodes': [None, {'name': "Satoshi, Go, and Lugia Go!"}]},
     )
 
+    magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
+
     res = test_client.post(
         '/api/download',
-        json=[
-            {
-                'magnet': 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce',
-                'tmdb_id': '95792',
-                'season': '1',
-                'episode': '2',
-            }
-        ],
+        json=[{'magnet': magnet, 'tmdb_id': '95792', 'season': '1', 'episode': '2',}],
     )
     assert res.status == '200 OK'
+
+    add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
 
     download = db.session.query(Download).first()
     assert download
