@@ -123,7 +123,11 @@ def test_download(test_client, logged_in, responses, add_torrent):
 
     download = db.session.query(Download).first()
     assert download
+    assert download.title == 'Satoshi, Go, and Lugia Go!'
     assert download.episode
+    assert download.episode.season == 1
+    assert download.episode.episode == 2
+    assert download.episode.show_title == 'Pocket Monsters'
 
 
 @mark.skip
