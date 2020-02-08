@@ -99,7 +99,6 @@ def logged_in(flask_app, test_client, user):
             _request_ctx_stack.pop()
 
 
-@mark.skip
 def test_download(test_client, logged_in, responses, add_torrent):
     themoviedb(responses, '/tv/95792', {'name': 'Pocket Monsters'})
     themoviedb(responses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
