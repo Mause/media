@@ -8,7 +8,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^8.1.0",
     "@types/jest": "^25.1.2",
-    "@types/node": "12.14.1",
+    "@types/node": "13.7.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@use-it/interval": "^0.1.3",
