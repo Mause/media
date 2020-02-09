@@ -1,19 +1,10 @@
-import { render, act } from "@testing-library/react";
-import { SeasonSelectComponent, Season, EpisodeSelectComponent, TV } from "./SeasonSelectComponent";
+import { act, render } from "@testing-library/react";
 import React from "react";
 import { MemoryRouter, Route } from "react-router-dom";
-import moxios from 'moxios';
+import { EpisodeSelectComponent, Season, SeasonSelectComponent, TV } from "./SeasonSelectComponent";
+import { mock, useMoxios, wait } from "./utils.test";
 
-beforeEach(() => {
-  moxios.install();
-});
-afterEach(() => {
-  moxios.uninstall();
-})
-
-export function wait() {
-  return new Promise(resolve => moxios.wait(resolve));
-}
+useMoxios();
 
 test('SeasonSelectComponent  render', async () => {
   await act(async () => {
@@ -24,7 +15,7 @@ test('SeasonSelectComponent  render', async () => {
     mock<TV>('/api/tv/1', {
       title: 'Hello',
       number_of_seasons: 1,
-      seasons: [{ episode_count: 1, season_number: 1 }]
+      seasons: [{ episode_count: 1 }]
     });
     await wait();
 
@@ -51,9 +42,3 @@ test('EpisodeSelectComponent render', async () => {
     expect(el.getByTestId('title').textContent).toEqual("Season 1");
   });
 });
-
-export function mock<T>(path: string, response: T) {
-  moxios.stubOnce('GET', new RegExp(path), {
-    response,
-  });
-}

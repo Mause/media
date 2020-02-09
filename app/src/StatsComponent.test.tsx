@@ -1,19 +1,10 @@
-import moxios from "moxios";
-import { act } from "react-dom/test-utils";
 import { render, wait } from "@testing-library/react";
-import { StatsComponent, StatsResponse } from "./StatsComponent";
 import React from "react";
-import { mock } from "./SeasonSelectComponent.test";
-import { EpisodeSelectComponent } from "./SeasonSelectComponent";
+import { act } from "react-dom/test-utils";
+import { StatsComponent, StatsResponse } from "./StatsComponent";
+import { mock, useMoxios } from "./utils.test";
 
-
-beforeEach(() => {
-  moxios.install();
-});
-afterEach(() => {
-  moxios.uninstall();
-});
-
+useMoxios();
 
 test('render', async () => {
   await act(async () => {
