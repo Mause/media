@@ -1,19 +1,19 @@
-from typing import Generator
+from datetime import datetime
+from typing import Dict, Generator
 from unittest.mock import MagicMock, Mock, patch
 
 from flask import Flask, Request
 from flask.globals import _request_ctx_stack
 from flask.testing import FlaskClient
 from flask_login import login_user
-from lxml.html import fromstring
 from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
-from ..db import Download, Role, Roles, User, create_episode, db
+from ..db import Download, Role, User, create_episode, db
 from ..main import create_app
 from ..utils import cache_clear
-from .conftest import add_json, themoviedb
+from .conftest import themoviedb
 
 HASH_STRING = '00000000000000000'
 
@@ -128,7 +128,10 @@ def test_download(test_client, logged_in, responses, add_torrent):
     assert download.episode.show_title == 'Pocket Monsters'
 
 
-@mark.skip
+def shallow(d: Dict):
+    return {k: v for k, v in d.items() if not isinstance(v, dict)}
+
+
 def test_index(responses, test_client, flask_app, get_torrent, logged_in):
     create_episode(
         transmission_id=HASH_STRING,
@@ -138,27 +141,55 @@ def test_index(responses, test_client, flask_app, get_torrent, logged_in):
         episode='1',
         title='Hello world',
         show_title='Programming',
+        timestamp=datetime(2020, 4, 21),
     )
     db.session.commit()
 
-    themoviedb(
-        responses,
-        '/find/tt000000',
-        {'tv_results': [{'id': 1}]},
-        query='&external_source=imdb_id',
-    )
-
-    res = test_client.get('/old')
+    res = test_client.get('/api/index')
 
     assert res.status == '200 OK'
 
-    lists = fromstring(res.get_data()).xpath('.//li/span/text()')
-    lists = [t.strip() for t in lists]
+    js = res.json
 
-    assert ''.join(lists) == 'Hello world'
+    assert set(js.keys()) == {'movies', 'series'}
+    assert js['movies'] == []
+    assert len(js['series']) == 1
+
+    series = js['series'][0]
+
+    assert shallow(series) == {
+        'imdb_id': 'tt000000',
+        'title': 'Programming',
+        'tmdb_id': 1,
+    }
+    (episode,) = series['seasons']['1']
+    assert shallow(episode) == {
+        'show_title': 'Programming',
+        'episode': 1,
+        'season': 1,
+        'id': 1,
+    }
+    assert shallow(episode['download']) == {
+        'tmdb_id': 1,
+        'transmission_id': HASH_STRING,
+        'added_by_id': 1,
+        'imdb_id': 'tt000000',
+        'movie_id': None,
+        'timestamp': 'Tue, 21 Apr 2020 00:00:00 GMT',
+        'episode_id': 1,
+        'id': 1,
+        'type': 'episode',
+        'title': 'Hello world',
+    }
+    assert shallow(episode['download']['added_by']) == {
+        'active': True,
+        'first_name': '',
+        'id': 1,
+        'last_name': '',
+        'username': 'python',
+    }
 
 
-@mark.skip
 def test_search(responses, test_client, logged_in):
     themoviedb(
         responses,
@@ -176,13 +207,11 @@ def test_search(responses, test_client, logged_in):
         query='&query=chernobyl',
     )
 
-    res = test_client.get('/search?query=chernobyl')
+    res = test_client.get('/api/search?query=chernobyl')
     assert res.status == '200 OK'
-
-    html = fromstring(res.get_data()).xpath('.//li/a/text()')
-    html = [t.strip() for t in html]
-
-    assert html == ['Chernobyl (2019)']
+    assert res.json == [
+        {'Type': 'series', 'imdbID': 10000, 'title': 'Chernobyl', 'Year': 2019}
+    ]
 
 
 def test_delete_cascade(test_client: FlaskClient, logged_in):
