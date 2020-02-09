@@ -28,6 +28,7 @@ def flask_app() -> Flask:
     return create_app(
         {
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
+            'SQLALCHEMY_ECHO': False,
             'ENV': 'development',
             'TESTING': True,
         }
@@ -112,7 +113,7 @@ def test_download(test_client, logged_in, responses, add_torrent):
 
     res = test_client.post(
         '/api/download',
-        json=[{'magnet': magnet, 'tmdb_id': '95792', 'season': '1', 'episode': '2',}],
+        json=[{'magnet': magnet, 'tmdb_id': '95792', 'season': '1', 'episode': '2'}],
     )
     assert res.status == '200 OK'
 
