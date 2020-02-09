@@ -2,7 +2,7 @@ import { act, render } from "@testing-library/react";
 import React from "react";
 import { MemoryRouter, Route } from "react-router-dom";
 import { EpisodeSelectComponent, Season, SeasonSelectComponent, TV } from "./SeasonSelectComponent";
-import { mock, useMoxios, wait } from "./utils.test";
+import { mock, useMoxios, wait } from "./test.utils";
 
 useMoxios();
 

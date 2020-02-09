@@ -2,7 +2,7 @@ import { render, wait } from "@testing-library/react";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { StatsComponent, StatsResponse } from "./StatsComponent";
-import { mock, useMoxios } from "./utils.test";
+import { mock, useMoxios } from "./test.utils";
 
 useMoxios();
 
