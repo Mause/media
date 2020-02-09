@@ -19,6 +19,8 @@ jobs:
             yarn build
           environment:
             JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+      - store_test_results:
+          path: reports
 
   build_backend:
     docker:
