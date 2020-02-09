@@ -1,3 +1,4 @@
+from datetime import datetime
 from functools import lru_cache
 from typing import List, Optional, Type, TypeVar, Union
 
@@ -138,6 +139,7 @@ def create_download(
     tmdb_id: int,
     details: Union[MovieDetails, EpisodeDetails],
     id: int = None,
+    timestamp: datetime = None,
 ):
     precondition(not imdb_id or imdb_id.startswith('tt'), f'Invalid imdb_id: {imdb_id}')
     return Download(
@@ -149,6 +151,7 @@ def create_download(
         **{type: details},
         id=id,
         added_by=current_user._get_current_object(),
+        timestamp=timestamp,
     )
 
 
@@ -180,6 +183,7 @@ def create_episode(
     id: int = None,
     show_title: str,
     download_id: int = None,
+    timestamp: datetime = None,
 ) -> EpisodeDetails:
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
     db.session.add(ed)
@@ -192,6 +196,7 @@ def create_episode(
             type='episode',
             details=ed,
             id=download_id,
+            timestamp=timestamp,
         )
     )
     return ed
