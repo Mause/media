@@ -97,40 +97,44 @@ export function TVShows({ series, torrents, loading }: {
   return <div>
     <div className="colB">
       <h2>TV Shows <Loading loading={loading} /></h2>
-      {series.map(serie => <div key={serie.imdb_id}>
-        <h3>
-          {serie.title}
-          &nbsp;
-          {contextMenuTrigger(`tv_${serie.imdb_id}`)}
-          <ContextMenu id={`tv_${serie.imdb_id}`}>
-            {serie.imdb_id && <MenuItem onClick={() => window.open(`https://www.imdb.com/title/${serie.imdb_id}`)}>Open in IMDB</MenuItem>}
-            <MenuItem>
-              <Link to={`/select/${serie.tmdb_id}/season`}>
-                Search
-              </Link>
-            </MenuItem>
-          </ContextMenu>
-        </h3>
-        {_.sortBy(Object.keys(serie.seasons), parseInt).map(i => {
-          const season = serie.seasons[i];
-          return <div key={i}>
-            <h4>
-              Season {i}
-              &nbsp;
-              <Link to={`/select/${serie.tmdb_id}/season/${i}`}>
-                <i className="fas fa-search" />
-              </Link>
-            </h4>
-            <ol>
-              {season.map(episode => <li key={episode.episode} value={episode.episode}>
-                <span>{episode.download.title}</span>
-                &nbsp;
-                <Progress torrents={torrents} item={episode} />
-              </li>)}
-            </ol>
-          </div>;
-        })}
-      </div>)}
+      {series.map(serie => <Series key={serie.imdb_id} serie={serie} torrents={torrents} />)}
     </div>
   </div>;
+}
+
+function Series({ serie, torrents }: { serie: SeriesResponse, torrents?: Torrents }) {
+  return <div>
+    <h3>
+      {serie.title}
+      &nbsp;
+    {contextMenuTrigger(`tv_${serie.imdb_id}`)}
+      <ContextMenu id={`tv_${serie.imdb_id}`}>
+        {serie.imdb_id && <MenuItem onClick={() => window.open(`https://www.imdb.com/title/${serie.imdb_id}`)}>Open in IMDB</MenuItem>}
+        <MenuItem>
+          <Link to={`/select/${serie.tmdb_id}/season`}>
+            Search
+        </Link>
+        </MenuItem>
+      </ContextMenu>
+    </h3>
+    {_.sortBy(Object.keys(serie.seasons), parseInt).map(i => {
+      const season = serie.seasons[i];
+      return <div key={i}>
+        <h4>
+          Season {i}
+          &nbsp;
+          <Link to={`/select/${serie.tmdb_id}/season/${i}`}>
+            <i className="fas fa-search" />
+          </Link>
+        </h4>
+        <ol>
+          {season.map(episode => <li key={episode.episode} value={episode.episode}>
+            <span>{episode.download.title}</span>
+            &nbsp;
+          <Progress torrents={torrents} item={episode} />
+          </li>)}
+        </ol>
+      </div>;
+    })}
+  </div>
 }
