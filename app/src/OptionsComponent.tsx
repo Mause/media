@@ -101,7 +101,7 @@ class _OptionsComponent extends Component<OptionsProps, {
         load<Season>(`tv/${tmdb_id}/season/${season}`),
         prom
       ]).then(([season, { imdb_id }]) => {
-        this.setState({ itemInfo: { title: season.episodes[parseInt(episode!, 10)].name, imdb_id } });
+        this.setState({ itemInfo: { title: season.episodes[parseInt(episode!, 10) - 1].name, imdb_id } });
       });
     }
     else {
