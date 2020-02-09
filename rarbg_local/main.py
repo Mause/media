@@ -818,6 +818,9 @@ TvResponse = api.model(
         'number_of_seasons': fields.Integer,
         'title': fields.String,
         'imdb_id': fields.String,
+        'seasons': fields.List(
+            fields.Nested(api.model('SeasonMeta', {'episode_count': fields.Integer}))
+        ),
     },
 )
 
@@ -829,11 +832,7 @@ TvResponse = api.model(
 @has_tmdb_id
 def api_tv(tmdb_id: str):
     tv = get_tv(tmdb_id)
-    return {
-        'number_of_seasons': tv['number_of_seasons'],
-        'imdb_id': get_tv_imdb_id(tmdb_id),
-        'title': tv['name'],
-    }
+    return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv['name']}
 
 
 TvSeasonResponse = api.model(

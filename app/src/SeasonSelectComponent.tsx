@@ -5,9 +5,10 @@ import React from 'react';
 import ReactLoading from 'react-loading';
 
 type Props = RouteComponentProps<{ tmdb_id: string }>;
-interface TV {
+export interface TV {
   number_of_seasons: number;
   title: string;
+  seasons: { episode_count: number }[];
 }
 
 function _SeasonSelectComponent(props: Props) {
