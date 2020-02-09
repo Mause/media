@@ -15,12 +15,12 @@ jobs:
           command: |
             cd app
             yarn
-            yarn test -- --testResultsProcessor ./node_modules/jest-junit
+            yarn test --ci --reporters jest-junit
             yarn build
           environment:
-            JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+            JEST_JUNIT_OUTPUT_DIR: "reports/"
       - store_test_results:
-          path: reports
+          path: reports/*
 
   build_backend:
     docker:
