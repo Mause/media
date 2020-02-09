@@ -11,11 +11,14 @@ jobs:
 
     steps:
       - checkout
-      - run: |
-          cd app
-          yarn
-          yarn test
-          yarn build
+      - run:
+          command: |
+            cd app
+            yarn
+            yarn test
+            yarn build
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
 
   build_backend:
     docker:
