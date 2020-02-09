@@ -204,10 +204,11 @@
         },
         "flask-admin": {
             "hashes": [
-                "sha256:ed7b256471dba0f3af74f1a315733c3b36244592f2002c3bbdc65fd7c2aa807a"
+                "sha256:aeebf87b5d5fd18525c876e0ecd71e0d0837614610122be235375c411b2d59dc",
+                "sha256:ff8270de5e8916541d19a0b03e469e2f8bbd22e4952c17aebc605112976f2fc4"
             ],
             "index": "pypi",
-            "version": "==1.5.4"
+            "version": "==1.5.5"
         },
         "flask-cors": {
             "hashes": [
