@@ -12,6 +12,7 @@ import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
+import { BASE } from './utils';
 
 Sentry.init({
   dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914",
@@ -37,8 +38,7 @@ class _DownloadComponent extends Component<DownloadProps, { done?: boolean }> {
         magnet: state.magnet,
         titles: state.titles,
       });
-    Axios.get(url).then(() => {
-      debugger;
+    Axios.get(BASE + url, { withCredentials: true }).then(() => {
       this.setState({ done: true })
     })
   }
