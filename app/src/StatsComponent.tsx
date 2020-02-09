@@ -3,13 +3,15 @@ import { useLoad } from './utils';
 import _ from 'lodash';
 import ReactLoading from 'react-loading';
 
+export type StatsResponse = {
+  [key: string]: {
+    movie: number;
+    episode: number;
+  };
+};
+
 export function StatsComponent() {
-  const stats = useLoad<{
-    [key: string]: {
-      movie: number;
-      episode: number;
-    };
-  }>('stats');
+  const stats = useLoad<StatsResponse>('stats');
 
   if (!stats) return <ReactLoading type='balls' color='#000' />;
 

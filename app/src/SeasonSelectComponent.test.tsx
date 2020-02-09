@@ -11,7 +11,7 @@ afterEach(() => {
   moxios.uninstall();
 })
 
-function wait() {
+export function wait() {
   return new Promise(resolve => moxios.wait(resolve));
 }
 
@@ -29,6 +29,7 @@ test('SeasonSelectComponent  render', async () => {
     await wait();
 
     expect(el.getByTestId('title').textContent).toEqual("Hello");
+    expect(el).toMatchSnapshot();
   });
 });
 
@@ -51,7 +52,7 @@ test('EpisodeSelectComponent render', async () => {
   });
 });
 
-function mock<T>(path: string, response: T) {
+export function mock<T>(path: string, response: T) {
   moxios.stubOnce('GET', new RegExp(path), {
     response,
   });
