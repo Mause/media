@@ -15,7 +15,7 @@ function _SeasonSelectComponent(props: Props) {
   const tv = useLoad<TV>(`tv/${props.match.params.tmdb_id}`);
 
   return <div>
-    <h3>{tv && tv.title}</h3>
+    <h3 data-testid='title'>{tv && tv.title}</h3>
     {!tv ?
       <ReactLoading type='balls' color='#000000' /> :
       <ul>
@@ -45,7 +45,7 @@ function _EpisodeSelectComponent(props: EpisodeProps) {
   const season = useLoad<Season>(`tv/${tmdb_id}/season/${seasonNumber}`)
 
   return <div>
-    <h3>Season {seasonNumber}</h3>
+    <h3 data-testid='title'>Season {seasonNumber}</h3>
     <Link to={`/select/${tmdb_id}/season`}><small>Back to seasons</small></Link>
     {season ? <ol>
       {season.episodes.map(episode =>
