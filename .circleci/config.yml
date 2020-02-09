@@ -19,6 +19,8 @@ jobs:
             yarn build
           environment:
             JEST_JUNIT_OUTPUT_DIR: "reports/"
+      - store_artifacts:
+          path: '**'
       - store_test_results:
           path: reports/*
 
