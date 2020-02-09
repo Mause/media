@@ -22,9 +22,10 @@ Sentry.configureScope(function (scope) {
   scope.setUser((window as any).USER);
 });
 
-class _DownloadComponent extends Component<RouteComponentProps<{}>, { done?: boolean }> {
-  constructor(props: RouteComponentProps<{}>) {
-    debugger;
+type DownloadProps = RouteComponentProps<{}, {}, { type: string, magnet: string, titles: string, imdb_id: string }>;
+
+class _DownloadComponent extends Component<DownloadProps, { done?: boolean }> {
+  constructor(props: DownloadProps) {
     super(props);
     this.state = {};
   }
