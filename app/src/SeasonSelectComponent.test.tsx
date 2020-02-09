@@ -21,8 +21,10 @@ test('SeasonSelectComponent  render', async () => {
       <Route path="/select/:tmdb_id/season"><SeasonSelectComponent /></Route>
     </MemoryRouter>);
 
-    moxios.stubOnce('GET', /\/api\/tv\/1/, {
-      response: { title: 'Hello', }
+    mock<TV>('/api/tv/1', {
+      title: 'Hello',
+      number_of_seasons: 1,
+      seasons: [{ episode_count: 1, season_number: 1 }]
     });
     await wait();
 
@@ -36,16 +38,21 @@ test('EpisodeSelectComponent render', async () => {
       <Route path="/select/:tmdb_id/season/:season"><EpisodeSelectComponent /></Route>
     </MemoryRouter>);
 
-    const response: Season = {
+    mock<Season>('/api/tv/1/season/1', {
       episodes: [{
         episode_number: 1,
         id: '1',
         name: 'Episode 1',
       }],
-    };
-    moxios.stubOnce('GET', /\/api\/tv\/1\/season\/1/, { response, });
+    });
     await wait();
 
     expect(el.getByTestId('title').textContent).toEqual("Season 1");
   });
 });
+
+function mock<T>(path: string, response: T) {
+  moxios.stubOnce('GET', new RegExp(path), {
+    response,
+  });
+}
