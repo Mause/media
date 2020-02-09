@@ -15,7 +15,7 @@ jobs:
           command: |
             cd app
             yarn
-            yarn test
+            yarn test -- --testResultsProcessor jest-unit
             yarn build
           environment:
             JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
