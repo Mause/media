@@ -20,7 +20,7 @@ jobs:
           environment:
             JEST_JUNIT_OUTPUT_DIR: "reports/"
       - store_test_results:
-          path: reports/
+          path: app/reports/
 
   build_backend:
     docker:
