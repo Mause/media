@@ -15,7 +15,7 @@ jobs:
           command: |
             cd app
             yarn
-            yarn test --ci --reporters jest-junit
+            yarn test --ci --runInBand --reporters jest-junit
             yarn build
           environment:
             JEST_JUNIT_OUTPUT_DIR: "reports/"
