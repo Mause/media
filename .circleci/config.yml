@@ -11,11 +11,16 @@ jobs:
 
     steps:
       - checkout
-      - run: |
-          cd app
-          yarn
-          yarn test
-          yarn build
+      - run:
+          command: |
+            cd app
+            yarn
+            yarn test --ci --runInBand --reporters jest-junit
+            yarn build
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: "reports/"
+      - store_test_results:
+          path: app/reports/
 
   build_backend:
     docker:
