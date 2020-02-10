@@ -19,10 +19,10 @@ jobs:
             yarn build
           environment:
             JEST_JUNIT_OUTPUT_DIR: "reports/"
+      - store_test_results:
+          path: reports/
       - store_artifacts:
           path: /home/circleci/repo
-      - store_test_results:
-          path: reports/*
 
   build_backend:
     docker:
