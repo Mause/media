@@ -87,7 +87,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .transmission_proxy import get_torrent, torrent_add
-from .utils import non_null, precondition
+from .utils import non_null, precondition, schema_to_openapi
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -513,20 +513,11 @@ def as_resource(methods: List[str] = ['GET']):
     return wrapper
 
 
-DownloadRequest = api.model(
-    'Download',
-    {
-        'tmdb_id': fields.Integer,
-        'magnet': fields.String,
-        'season': fields.Integer,
-        'episode': fields.Integer,
-    },
-)
-
-
 @api.route('/api/download')
-@api.expect([DownloadRequest])
 @api.response(200, 'OK', {})
+@api.expect(
+    schema_to_openapi('Download', DownloadSchema.schema(many=True)), validate=True
+)
 @as_resource(['POST'])
 def api_download() -> str:
     schema = DownloadSchema.schema(many=True, unknown='EXCLUDE')
