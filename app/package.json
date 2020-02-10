@@ -56,5 +56,8 @@
     "@types/react-router-dom": "^5.1.3",
     "jest-junit": "^10.0.0",
     "moxios": "^0.4.0"
+  },
+  "jest-junit": {
+    "outputDirectory": "reports"
   }
 }
