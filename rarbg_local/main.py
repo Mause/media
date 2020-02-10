@@ -516,7 +516,7 @@ def as_resource(methods: List[str] = ['GET']):
 @api.route('/api/download')
 @api.response(200, 'OK', {})
 @api.expect(
-    schema_to_openapi('Download', DownloadSchema.schema(many=True)), validate=True
+    schema_to_openapi(api, 'Download', DownloadSchema.schema(many=True)), validate=True
 )
 @as_resource(['POST'])
 def api_download() -> str:

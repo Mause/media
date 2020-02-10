@@ -2,6 +2,7 @@ from functools import lru_cache as _lru_cache
 from typing import Dict, Optional, Set, TypeVar
 
 from apispec.ext.marshmallow import MarshmallowPlugin
+from flask_restplus import Api
 from marshmallow import Schema
 
 T = TypeVar('T')
@@ -42,5 +43,5 @@ mp = MarshmallowPlugin()
 mp.converter = mp.Converter("3.0.2", None, None)
 
 
-def schema_to_openapi(name: str, schema: Schema) -> Dict:
-    return mp.schema_helper(name, None, schema=schema)
+def schema_to_openapi(api: Api, name: str, schema: Schema) -> Dict:
+    return api.schema_model(name, mp.schema_helper(name, None, schema=schema))
