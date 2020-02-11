@@ -514,7 +514,7 @@ def as_resource(methods: List[str] = ['GET']):
     return wrapper
 
 
-@app.errorhandler(ValidationError)
+@api.errorhandler(ValidationError)
 def validation(error):
     return jsonify(error.messages), 422
 
