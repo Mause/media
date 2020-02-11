@@ -43,6 +43,7 @@ flask-cors = "*"
 flask-sslify = "*"
 flask-restplus = "*"
 werkzeug = "==0.*"
+apispec = "*"
 
 [requires]
 python_version = "3.8"
