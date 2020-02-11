@@ -50,6 +50,7 @@ from flask_sslify import SSLify
 from flask_user import UserManager, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
+from marshmallow.exceptions import ValidationError
 from marshmallow.fields import String
 from marshmallow.validate import Regexp as MarshRegexp
 from plexapi.media import Media
@@ -511,6 +512,11 @@ def as_resource(methods: List[str] = ['GET']):
         )
 
     return wrapper
+
+
+@app.errorhandler(ValidationError)
+def validation(error):
+    return jsonify(error.messages), 422
 
 
 @api.route('/api/download')
