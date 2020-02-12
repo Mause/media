@@ -40,5 +40,6 @@ test('EpisodeSelectComponent render', async () => {
     await wait();
 
     expect(el.getByTestId('title').textContent).toEqual("Season 1");
+    expect(el).toMatchSnapshot();
   });
 });
