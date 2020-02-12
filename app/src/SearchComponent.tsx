@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
-import { useParams,Link, RouteComponentProps } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useLoad } from './utils';
 
 interface SearchResult {
@@ -10,7 +10,7 @@ interface SearchResult {
   title: string
 }
 
-export function SearchComponent(props: RouteComponentProps<{}>) {
+export function SearchComponent() {
   const { query } = useParams()
   const results = useLoad<SearchResult[]>('search', { query, });
   return <div>
