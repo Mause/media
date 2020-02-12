@@ -4,8 +4,8 @@ export function wait() {
   return new Promise(resolve => moxios.wait(resolve));
 }
 
-export function mock<T>(path: string, response: T) {
-  moxios.stubOnce('GET', new RegExp(path), {
+export async function mock<T>(path: string, response: T) {
+  await moxios.stubOnce('GET', new RegExp(path.replace(/\?/, '\\?')), {
     response,
   });
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
 import qs from 'qs';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useLoad } from './utils';
 
 interface SearchResult {
@@ -11,8 +11,11 @@ interface SearchResult {
   title: string
 }
 
-export function _SearchComponent(props: RouteComponentProps<{}>) {
-  const results = useLoad<SearchResult[]>('search', { query: getQuery(props) });
+export function SearchComponent() {
+  const { search } = useLocation();
+  const { query } = qs.parse(search.slice(1));
+
+  const results = useLoad<SearchResult[]>('search', { query, });
   return <div>
     <ul>
       {results ? results.map(result => <li key={result.imdbID}>
@@ -25,10 +28,3 @@ export function _SearchComponent(props: RouteComponentProps<{}>) {
       'No results' : null}
   </div>;
 }
-
-export function getQuery(props: RouteComponentProps<{}>) {
-  return qs.parse(props.location.search.slice(1)).query;
-}
-
-const SearchComponent = withRouter(_SearchComponent);
-export { SearchComponent };
