@@ -113,12 +113,13 @@ def logged_in(flask_app, test_client, user):
 def test_basic_auth(flask_app, user):
     with flask_app.test_client() as client:
         r = client.get(
-            '/api/diagnostics',
+            '/diagnostics',
             headers={
                 'Authorization': 'Basic ' + b64encode(b'python:is-great!').decode()
             },
         )
         assert r.status_code == 200
+        assert r.json == {}
 
 
 def test_download(test_client, responses, add_torrent):
