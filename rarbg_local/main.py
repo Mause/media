@@ -158,7 +158,7 @@ def create_app(config):
 
     db.create_all(app=papp)
     UserManager(papp, db, User)
-    papp.login_manager.header_callback = basic_auth
+    papp.login_manager.header_loader(basic_auth)
 
     papp.json_encoder = DynamicJSONEncoder
 
