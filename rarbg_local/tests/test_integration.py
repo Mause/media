@@ -113,7 +113,7 @@ def logged_in(flask_app, test_client, user):
 def test_basic_auth(flask_app, user):
     with flask_app.test_client() as client:
         r = client.get(
-            '/',
+            '/api/diagnostics',
             headers={
                 'Authorization': 'Basic ' + b64encode(b'python:is-great!').decode()
             },

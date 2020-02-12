@@ -521,6 +521,12 @@ def validation(error):
     return jsonify(error.messages), 422
 
 
+@api.route('/diagnostics')
+@as_resource()
+def api_diagnostics():
+    return {}
+
+
 @api.route('/api/download')
 @api.response(200, 'OK', {})
 @api.expect(
