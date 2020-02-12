@@ -12,7 +12,7 @@ test('SeasonSelectComponent  render', async () => {
       <Route path="/select/:tmdb_id/season"><SeasonSelectComponent /></Route>
     </MemoryRouter>);
 
-    mock<TV>('/api/tv/1', {
+    await mock<TV>('/api/tv/1', {
       title: 'Hello',
       number_of_seasons: 1,
       seasons: [{ episode_count: 1 }]
@@ -30,7 +30,7 @@ test('EpisodeSelectComponent render', async () => {
       <Route path="/select/:tmdb_id/season/:season"><EpisodeSelectComponent /></Route>
     </MemoryRouter>);
 
-    mock<Season>('/api/tv/1/season/1', {
+    await mock<Season>('/api/tv/1/season/1', {
       episodes: [{
         episode_number: 1,
         id: '1',

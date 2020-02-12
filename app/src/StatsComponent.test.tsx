@@ -10,7 +10,7 @@ test('render', async () => {
   await act(async () => {
     const el = render(<StatsComponent />);
 
-    mock<StatsResponse>('/api/stats', { Mause: { episode: 1, movie: 1 } });
+    await mock<StatsResponse>('/api/stats', { Mause: { episode: 1, movie: 1 } });
 
     await wait();
 
