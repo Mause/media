@@ -152,7 +152,9 @@ def create_app(config):
         import sqlite3
 
         try:
-            con.create_collation("en_AU", str.lower)
+            con.create_collation(
+                "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
+            )
         except sqlite3.ProgrammingError as e:
             print(e)
 
