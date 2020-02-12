@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
-import { useParams, Link } from 'react-router-dom';
+import qs from 'qs';
+import { useLocation, Link } from 'react-router-dom';
 import { useLoad } from './utils';
 
 interface SearchResult {
@@ -11,7 +12,9 @@ interface SearchResult {
 }
 
 export function SearchComponent() {
-  const { query } = useParams()
+  const { search } = useLocation();
+  const { query } = qs.parse(search.slice(1));
+
   const results = useLoad<SearchResult[]>('search', { query, });
   return <div>
     <ul>
