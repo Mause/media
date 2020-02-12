@@ -152,13 +152,15 @@ def create_app(config):
         import sqlite3
 
         try:
-            con.create_collation("en_AU", str.lower)
+            con.create_collation(
+                "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
+            )
         except sqlite3.ProgrammingError as e:
             print(e)
 
     db.create_all(app=papp)
     UserManager(papp, db, User)
-    papp.login_manager.header_callback = basic_auth
+    papp.login_manager.request_loader(basic_auth)
 
     papp.json_encoder = DynamicJSONEncoder
 
@@ -517,6 +519,12 @@ def as_resource(methods: List[str] = ['GET']):
 @api.errorhandler(ValidationError)
 def validation(error):
     return jsonify(error.messages), 422
+
+
+@api.route('/diagnostics')
+@as_resource()
+def api_diagnostics():
+    return {}
 
 
 @api.route('/api/download')

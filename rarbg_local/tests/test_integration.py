@@ -1,3 +1,4 @@
+from base64 import b64encode
 from datetime import datetime
 from typing import Dict, Generator
 from unittest.mock import MagicMock, Mock, patch
@@ -5,7 +6,7 @@ from unittest.mock import MagicMock, Mock, patch
 from flask import Flask, Request
 from flask.globals import _request_ctx_stack
 from flask.testing import FlaskClient
-from flask_login import login_user
+from flask_login import FlaskLoginClient, login_user
 from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
@@ -24,8 +25,8 @@ def clear_cache():
 
 
 @fixture
-def flask_app() -> Flask:
-    return create_app(
+def flask_app() -> Generator[Flask, None, None]:
+    app = create_app(
         {
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'SQLALCHEMY_ECHO': False,
@@ -33,6 +34,11 @@ def flask_app() -> Flask:
             'TESTING': True,
         }
     )
+
+    app.test_client_class = FlaskLoginClient
+
+    with app.app_context():
+        yield app
 
 
 @fixture(scope='function')
@@ -47,10 +53,12 @@ def responses():
 
 
 @fixture
-def test_client(clear_cache, flask_app: Flask) -> Generator[FlaskClient, None, None]:
+def test_client(
+    clear_cache, flask_app: Flask, user: User
+) -> Generator[FlaskClient, None, None]:
     # Flask provides a way to test your application by exposing the Werkzeug test Client
     # and handling the context locals for you.
-    testing_client = flask_app.test_client()
+    testing_client = flask_app.test_client(user=user)
 
     # Establish an application context before running the tests.
     with flask_app.app_context():
@@ -78,8 +86,10 @@ def add_torrent():
 
 
 @fixture
-def user():
-    u = User(username='python', password='is-great!')
+def user(flask_app):
+    u = User(
+        username='python', password=flask_app.user_manager.hash_password('is-great!')
+    )
     u.roles = [Role(name='Member')]
     db.session.add(u)
     db.session.commit()
@@ -88,7 +98,7 @@ def user():
 
 @fixture
 def logged_in(flask_app, test_client, user):
-    with patch.object(flask_app.login_manager, 'request_callback', return_value=user):
+    with patch.object(flask_app.login_manager, '_request_callback', return_value=user):
         with flask_app.app_context():
             rq: Request = Mock(spec=Request, headers={}, remote_addr='', environ={})
 
@@ -100,7 +110,19 @@ def logged_in(flask_app, test_client, user):
             _request_ctx_stack.pop()
 
 
-def test_download(test_client, logged_in, responses, add_torrent):
+def test_basic_auth(flask_app, user):
+    with flask_app.test_client() as client:
+        r = client.get(
+            '/diagnostics',
+            headers={
+                'Authorization': 'Basic ' + b64encode(b'python:is-great!').decode()
+            },
+        )
+        assert r.status_code == 200
+        assert r.json == {}
+
+
+def test_download(test_client, responses, add_torrent):
     themoviedb(responses, '/tv/95792', {'name': 'Pocket Monsters'})
     themoviedb(responses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
     themoviedb(
@@ -190,7 +212,7 @@ def test_index(responses, test_client, flask_app, get_torrent, logged_in):
     }
 
 
-def test_search(responses, test_client, logged_in):
+def test_search(responses, test_client):
     themoviedb(
         responses,
         '/search/multi',
