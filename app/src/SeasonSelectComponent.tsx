@@ -39,9 +39,8 @@ interface Episode {
 export interface Season {
   episodes: Episode[];
 }
-type EpisodeProps = RouteComponentProps<{ tmdb_id: string, season: string }>;
-function _EpisodeSelectComponent(props: EpisodeProps) {
-  const { tmdb_id, season: seasonNumber } = props.match.params;
+function EpisodeSelectComponent() {
+  const { tmdb_id, season: seasonNumber } = useParams();
   const season = useLoad<Season>(`tv/${tmdb_id}/season/${seasonNumber}`)
 
   return <div>
@@ -60,7 +59,5 @@ function _EpisodeSelectComponent(props: EpisodeProps) {
     <br />
   </div>;
 }
-
-const EpisodeSelectComponent = withRouter(_EpisodeSelectComponent);
 
 export { SeasonSelectComponent, EpisodeSelectComponent };
