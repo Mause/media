@@ -24,8 +24,7 @@ def clear_cache():
 
 
 @fixture
-def flask_app() -> Flask:
-
+def flask_app() -> Generator[Flask, None, None]:
     app = create_app(
         {
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
