@@ -5,7 +5,7 @@ export function wait() {
 }
 
 export function mock<T>(path: string, response: T) {
-  moxios.stubOnce('GET', new RegExp(path), {
+  moxios.stubOnce('GET', new RegExp(path.replace(/\?/, '\\?')), {
     response,
   });
 }
