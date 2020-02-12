@@ -1,3 +1,4 @@
+from base64 import b64encode
 from datetime import datetime
 from typing import Dict, Generator
 from unittest.mock import MagicMock, Mock, patch
@@ -86,7 +87,9 @@ def add_torrent():
 
 @fixture
 def user(flask_app):
-    u = User(username='python', password='is-great!')
+    u = User(
+        username='python', password=flask_app.user_manager.hash_password('is-great!')
+    )
     u.roles = [Role(name='Member')]
     db.session.add(u)
     db.session.commit()
