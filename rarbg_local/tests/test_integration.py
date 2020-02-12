@@ -110,6 +110,17 @@ def logged_in(flask_app, test_client, user):
             _request_ctx_stack.pop()
 
 
+def test_basic_auth(flask_app, user):
+    with flask_app.test_client() as client:
+        r = client.get(
+            '/',
+            headers={
+                'Authorization': 'Basic ' + b64encode(b'python:is-great!').decode()
+            },
+        )
+        assert r.status_code == 200
+
+
 def test_download(test_client, responses, add_torrent):
     themoviedb(responses, '/tv/95792', {'name': 'Pocket Monsters'})
     themoviedb(responses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
