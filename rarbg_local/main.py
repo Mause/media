@@ -212,7 +212,7 @@ def unauthorized():
 
 @app.before_request
 def before():
-    if not request.path.startswith('/user'):
+    if not request.path.startswith(('/user', '/manifest.json')):
         return login_required(roles_required('Member')(lambda: None))()
 
 
