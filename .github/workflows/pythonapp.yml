@@ -27,3 +27,5 @@ jobs:
     - name: Test with pytest
       run: |
         pipenv run pytest
+      env:
+        CLOUDAMQP_URL: ''
