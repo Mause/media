@@ -28,4 +28,4 @@ jobs:
       run: |
         pipenv run pytest
       env:
-        CLOUDAMQP_URL: ''
+        CLOUDAMQP_URL: 'https://hello'
