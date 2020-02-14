@@ -16,4 +16,7 @@ def seed():
 
 
 if 'IS_REVIEW_APP' in os.environ:
+    print('seeding db')
     seed()
+else:
+    print('not seeding db')
