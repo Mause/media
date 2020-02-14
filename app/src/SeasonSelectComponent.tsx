@@ -1,4 +1,4 @@
-import { useParams, RouteComponentProps, Link, withRouter } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useLoad } from './utils';
 import _ from 'lodash';
 import React from 'react';
