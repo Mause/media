@@ -35,10 +35,10 @@ class CloudflareProxy(object):
         return self.app(environ, start_response)
 
 
-app = create_app(
+_app = create_app(
     {
         'TRANSMISSION_URL': 'http://novell.mause.me:9091/transmission/rpc',
         'SQLALCHEMY_DATABASE_URI': os.environ['DATABASE_URL'],
     }
 )
-app = CloudflareProxy(app)
+app = CloudflareProxy(_app)
