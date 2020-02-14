@@ -10,6 +10,7 @@ import {
 import { String } from 'typescript-string-operations';
 import Moment from 'moment';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
+import Collapsible from 'react-collapsible';
 import { Link } from 'react-router-dom';
 import { useLoad } from './utils';
 import { TV } from './SeasonSelectComponent';
@@ -229,15 +230,19 @@ function Season({
   tmdb_id: string;
 }) {
   return (
-    <div>
-      <h4>
-        Season {i} {collapse && '(Complete) '}
-        &nbsp;
-        <Link to={`/select/${tmdb_id}/season/${i}`}>
-          <i className="fas fa-search" />
-        </Link>
-      </h4>
-      <ol style={{ display: collapse ? 'none' : undefined }}>
+    <Collapsible
+      trigger={
+        <h4>
+          Season {i} {collapse && '(Complete) '}
+          &nbsp;
+          <Link to={`/select/${tmdb_id}/season/${i}`}>
+            <i className="fas fa-search" />
+          </Link>
+        </h4>
+      }
+      open={!collapse}
+    >
+      <ol>
         {season.map(episode => (
           <li key={episode.episode} value={episode.episode}>
             <span>{episode.download.title}</span>
@@ -246,7 +251,7 @@ function Season({
           </li>
         ))}
       </ol>
-    </div>
+    </Collapsible>
   );
 }
 
