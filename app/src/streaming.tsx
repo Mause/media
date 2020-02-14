@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/browser';
 import qs from 'qs';
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Helmet from 'react-helmet';
 import ReactLoading from 'react-loading';
 import { RouteProps, Redirect } from 'react-router';
@@ -9,9 +9,7 @@ import {
   Link,
   Route,
   useLocation,
-  RouteComponentProps,
   Switch,
-  withRouter,
 } from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
 import {
