@@ -15,6 +15,9 @@ def seed():
         db.session.commit()
 
 
+print({k: v for k, v in os.environ if 'HEROKU' in k})
+
+
 if 'IS_REVIEW_APP' in os.environ:
     print('seeding db')
     seed()
