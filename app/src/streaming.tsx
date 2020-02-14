@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/browser';
 import qs from 'qs';
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import Helmet from 'react-helmet';
 import ReactLoading from 'react-loading';
 import { RouteProps, Redirect } from 'react-router';
@@ -8,6 +8,7 @@ import {
   BrowserRouter as Router,
   Link,
   Route,
+  useLocation,
   RouteComponentProps,
   Switch,
   withRouter,
@@ -34,39 +35,29 @@ Sentry.configureScope(function(scope) {
   scope.setUser((window as any).USER);
 });
 
-type DownloadProps = RouteComponentProps<
-  {},
-  {},
-  { type: string; magnet: string; titles: string; imdb_id: string }
->;
-
-class _DownloadComponent extends Component<DownloadProps, { done?: boolean }> {
-  constructor(props: DownloadProps) {
-    super(props);
-    this.state = {};
-  }
-  componentDidMount() {
-    const state = this.props.location.state!;
-    const url =
-      `/download/${state.type}?` +
-      qs.stringify({
-        imdb_id: state.imdb_id,
-        magnet: state.magnet,
-        titles: state.titles,
-      });
-    Axios.get(BASE + url, { withCredentials: true }).then(() => {
-      this.setState({ done: true });
+export function DownloadComponent() {
+  const { state } = useLocation();
+  const [done, setDone] = useState(false);
+  const url =
+    `/download/${state.type}?` +
+    qs.stringify({
+      imdb_id: state.imdb_id,
+      magnet: state.magnet,
+      titles: state.titles,
     });
-  }
-  render() {
-    return this.state.done ? (
-      <Redirect to="/" />
-    ) : (
-      <ReactLoading type="balls" color="#000000" />
-    );
-  }
+  useEffect(() => {
+      console.log(url);
+    Axios.get(BASE + url, { withCredentials: true }).then(() => {
+      setDone(true);
+    });
+  }, [url]);
+
+  return done ? (
+    <Redirect to="/" />
+  ) : (
+    <ReactLoading type="balls" color="#000000" />
+  );
 }
-const DownloadComponent = withRouter(_DownloadComponent);
 
 export interface IndexResponse {
   series: SeriesResponse[];
