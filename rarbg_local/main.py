@@ -778,17 +778,18 @@ def api_index():
 StatsResponse = api.model(
     'StatsResponse',
     {
-        '*': fields.Wildcard(
-            fields.Nested(api.model('Stats', {'episode': fields.Integer}))
-        )
+        "user": fields.String,
+        "values": fields.Nested(
+            api.model('Stats', {'episode': fields.Integer, 'movie': fields.Integer})
+        ),
     },
 )
 
 
 @api.route('/api/stats')
-@api.response(200, 'OK', StatsResponse)
+@api.response(200, 'OK', [StatsResponse])
 @as_resource()
-@api.marshal_with(StatsResponse)
+@api.marshal_with([StatsResponse])
 def api_stats():
     keys = User.username, Download.type
     query = (
@@ -796,10 +797,10 @@ def api_stats():
         .outerjoin(Download)
         .group_by(*keys)
     )
-    return {
-        user: {type: value for _, type, value in values}
+    return [
+        {"user": user, 'values': {type: value for _, type, value in values}}
         for user, values in groupby(query.all(), lambda row: row[0]).items()
-    }
+    ]
 
 
 def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
