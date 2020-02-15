@@ -942,24 +942,9 @@ def get_keyed_torrents() -> Dict[str, Dict]:
 def _get_keyed_torrents() -> Dict[str, Dict]:
     try:
         return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
-    except (
-        ConnectionError,
-        ConnectionRefusedError,
-        TimeoutError,
-        FutureTimeoutError,
-    ) as e:
+    except (ConnectionError, ConnectionRefusedError, TimeoutError, FutureTimeoutError):
         error = 'Unable to connect to transmission'
-        return abort(
-            500,
-            error,
-            Response(
-                f'''
-                <h3>{error}</h3>
-                <code>{repr(e)}</code>
-                ''',
-                500,
-            ),
-        )
+        return abort(500, error, jsonify({'message': error}))
 
 
 @app.route('/redirect/plex/<tmdb_id>')
