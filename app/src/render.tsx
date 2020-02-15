@@ -162,7 +162,7 @@ export function TVShows({
           TV Shows <Loading loading={loading} />
         </h2>
         {series.map(serie => (
-          <Series key={serie.imdb_id} serie={serie} torrents={torrents} />
+          <Series key={serie.tmdb_id} serie={serie} torrents={torrents} />
         ))}
       </div>
     </div>
