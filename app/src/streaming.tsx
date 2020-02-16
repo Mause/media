@@ -22,6 +22,7 @@ import { SearchComponent } from './SearchComponent';
 import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { BASE } from './utils';
+import AxiosErrorCatcher from './AxiosErrorCatcher';
 
 Sentry.init({
   dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
@@ -145,7 +146,9 @@ function ParentComponent() {
           <div>An error has occured: {props.error!!.message}</div>
         )}
       >
-        ><Routes />
+        <AxiosErrorCatcher>
+          <Routes />
+        </AxiosErrorCatcher>
       </ErrorBoundary>
     </Router>
   );

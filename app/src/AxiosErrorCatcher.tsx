@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function AxiosErrorCatcher(props: { children: any }) {
+export default function AxiosErrorCatcher(props: { children: any }) {
   const [error, setError] = useState();
 
   useEffect(() => {
