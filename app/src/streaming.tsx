@@ -145,41 +145,46 @@ function ParentComponent() {
           <div>An error has occured: {props.error!!.message}</div>
         )}
       >
-        <Switch>
-          <RouteWithTitle path="/select/:tmdb_id/options" title="Movie Options">
-            <OptionsComponent type="movie" />
-          </RouteWithTitle>
-          <RouteWithTitle
-            path="/select/:tmdb_id/season/:season/episode/:episode/options"
-            title="TV Options"
-          >
-            <OptionsComponent type="series" />
-          </RouteWithTitle>
-          <RouteWithTitle
-            path="/select/:tmdb_id/season/:season"
-            title="Select Episode"
-          >
-            <EpisodeSelectComponent />
-          </RouteWithTitle>
-          <RouteWithTitle path="/select/:tmdb_id/season" title="Select Season">
-            <SeasonSelectComponent />
-          </RouteWithTitle>
-          <RouteWithTitle path="/search" title="Search">
-            <SearchComponent />
-          </RouteWithTitle>
-          <RouteWithTitle path="/download" title="Download">
-            <DownloadComponent />
-          </RouteWithTitle>
-          <RouteWithTitle path="/stats" title="Stats">
-            <StatsComponent />
-          </RouteWithTitle>
-          <RouteWithTitle path="/" title="Media">
-            <IndexComponent />
-          </RouteWithTitle>
-        </Switch>
+        ><Routes />
       </ErrorBoundary>
     </Router>
   );
 }
 
+function Routes() {
+  return (
+    <Switch>
+      <RouteWithTitle path="/select/:tmdb_id/options" title="Movie Options">
+        <OptionsComponent type="movie" />
+      </RouteWithTitle>
+      <RouteWithTitle
+        path="/select/:tmdb_id/season/:season/episode/:episode/options"
+        title="TV Options"
+      >
+        <OptionsComponent type="series" />
+      </RouteWithTitle>
+      <RouteWithTitle
+        path="/select/:tmdb_id/season/:season"
+        title="Select Episode"
+      >
+        <EpisodeSelectComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/select/:tmdb_id/season" title="Select Season">
+        <SeasonSelectComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/search" title="Search">
+        <SearchComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/download" title="Download">
+        <DownloadComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/stats" title="Stats">
+        <StatsComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/" title="Media">
+        <IndexComponent />
+      </RouteWithTitle>
+    </Switch>
+  );
+}
 export { ParentComponent };
