@@ -15,7 +15,7 @@ function Fake() {
   const [fire, setFire] = useState(false);
   useEffect(() => {
     if (fire) axios.get('/');
-      else setFire(true);
+    else setFire(true);
   }, [fire]);
   return 'Thing';
 }

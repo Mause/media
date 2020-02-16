@@ -45,7 +45,6 @@ export function DownloadComponent() {
       titles: state.titles,
     });
   useEffect(() => {
-      console.log(url);
     Axios.get(BASE + url, { withCredentials: true }).then(() => {
       setDone(true);
     });
