@@ -39,5 +39,6 @@ test('AxiosErrorCatcher', async () => {
     });
     await wait();
     expect(lerror).toBeTruthy();
+    expect(lerror).toEqual(new Error('Request failed with status code 500'));
   });
 });
