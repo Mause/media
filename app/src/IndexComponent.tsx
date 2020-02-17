@@ -1,18 +1,28 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { Component } from 'react';
 import { TVShows, Movies } from './render';
 import { IndexResponse, Torrents } from './streaming';
 import { load } from './utils';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps, useHistory } from 'react-router-dom';
+import qs from 'qs';
 
-type IndexState = { state: IndexResponse, torrents?: Torrents, query: string, loadingTorrents: boolean, loadingState: boolean };
+type IndexState = {
+  state: IndexResponse;
+  torrents?: Torrents;
+  loadingTorrents: boolean;
+  loadingState: boolean;
+};
 type IndexProps = RouteComponentProps<{}>;
 
 class _IndexComponent extends Component<IndexProps, IndexState> {
   interval?: NodeJS.Timeout;
   constructor(props: IndexProps) {
     super(props);
-    this.state = { state: { series: [], movies: [] }, query: '', loadingTorrents: true, loadingState: true };
+    this.state = {
+      state: { series: [], movies: [] },
+      loadingTorrents: true,
+      loadingState: true,
+    };
   }
   async componentDidMount() {
     this.reload();
@@ -28,23 +38,33 @@ class _IndexComponent extends Component<IndexProps, IndexState> {
     load<IndexResponse>('index').then(state => this.setState({ state, loadingState: false }));
     load<Torrents>('torrents').then(torrents => this.setState({ torrents, loadingTorrents: false }));
   }
-  search(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    this.props.history.replace({ pathname: '/search', search: `query=${this.state.query}` })
-  }
   get loading() {
     return this.state.loadingState || this.state.loadingTorrents;
   }
   render() {
     return <div>
-      <form onSubmit={this.search.bind(this)}>
-        <input name="query" onChange={e => this.setState({ query: e.target.value })} />&nbsp;
-        <input type="submit" value="Search"></input>
-      </form>
       <Movies torrents={this.state.torrents} movies={this.state.state.movies} loading={this.loading} />
       <TVShows torrents={this.state.torrents} series={this.state.state.series} loading={this.loading} />
     </div >;
   }
+}
+
+function SearchBox() {
+  function search(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    history.push({ pathname: '/search', search: qs.stringify({query}) });
+  }
+
+  const [query, setQuery] = useState('');
+  const history = useHistory();
+
+  return (
+    <form onSubmit={search}>
+      <input name="query" onChange={e => setQuery(e.target.value)} />
+      &nbsp;
+      <input type="submit" value="Search" />
+    </form>
+  );
 }
 
 const IndexComponent = withRouter(_IndexComponent);
