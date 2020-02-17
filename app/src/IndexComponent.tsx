@@ -38,10 +38,7 @@ class _IndexComponent extends Component<IndexProps, IndexState> {
   render() {
     return <div>
       <form onSubmit={this.search.bind(this)}>
-        <label>
-          <strong>Query</strong>&nbsp;
-          <input name="query" onChange={e => this.setState({ query: e.target.value })} />&nbsp;
-        </label>
+        <input name="query" onChange={e => this.setState({ query: e.target.value })} />&nbsp;
         <input type="submit" value="Search"></input>
       </form>
       <Movies torrents={this.state.torrents} movies={this.state.state.movies} loading={this.loading} />
