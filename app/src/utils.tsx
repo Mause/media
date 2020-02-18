@@ -2,6 +2,10 @@ import Axios from 'axios';
 import { useState, useEffect } from 'react';
 import qs from 'qs';
 
+import axiosRetry from '@vtex/axios-concurrent-retry';
+
+axiosRetry(Axios, { retries: 3 });
+
 export const BASE = window.location.host.includes('localhost') ? 'http://localhost:5000' : '';
 
 export function subscribe(path: string, callback: (a: any) => void, end: (() => void) | null = null): void {
