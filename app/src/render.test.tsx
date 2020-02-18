@@ -3,11 +3,13 @@ import React from 'react';
 import { Movies, TVShows } from './render';
 import { Route, MemoryRouter } from 'react-router-dom';
 import { mock, wait, useMoxios } from './test.utils';
+import { MovieResponse } from './streaming';
+import { TvResponse } from './types';
 
 useMoxios();
 
 test('Movies', () => {
-  const movies: Movie[] = [
+  const movies: MovieResponse[] = [
     {
       id: 1,
       download: {
@@ -15,18 +17,21 @@ test('Movies', () => {
         added_by: {
           first_name: 'David',
         },
+        id: 1,
+        imdb_id: '',
+        transmission_id: '',
       },
     },
   ];
 
-  const el = render(<Movies movies={movies} />);
+  const el = render(<Movies movies={movies} loading={false} />);
 
   expect(el).toMatchSnapshot();
 });
 
 test('TVShows', async () => {
   await act(async () => {
-    const series: TV[] = [
+    const series: SeriesResponse[] = [
       {
         tmdb_id: 1,
         seasons: {
@@ -36,7 +41,7 @@ test('TVShows', async () => {
     ];
     const el = render(
       <MemoryRouter>
-        <TVShows series={series} />
+        <TVShows series={series} loading={false} />
       </MemoryRouter>,
     );
 
