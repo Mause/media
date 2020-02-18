@@ -20,8 +20,8 @@ function SeasonSelectComponent() {
   return <div>
     <h3 data-testid='title'>{tv && tv.title}</h3>
     <Breadcrumbs aria-label="breadcrumb">
-      <MLink color="inherit">
-        <Link to='/'>Home</Link>
+      <MLink color="inherit" component={Link} to='/'>
+        Home
       </MLink>
       <MLink color="inherit">
         Search Results
