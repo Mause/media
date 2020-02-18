@@ -3,6 +3,9 @@ import { useLoad } from './utils';
 import _ from 'lodash';
 import React from 'react';
 import ReactLoading from 'react-loading';
+import Typography from '@material-ui/core/Typography';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import MLink from '@material-ui/core/Link';
 
 export interface TV {
   number_of_seasons: number;
@@ -16,6 +19,15 @@ function SeasonSelectComponent() {
 
   return <div>
     <h3 data-testid='title'>{tv && tv.title}</h3>
+    <Breadcrumbs aria-label="breadcrumb">
+      <MLink color="inherit">
+        <Link to='/'>Home</Link>
+      </MLink>
+      <MLink color="inherit">
+        Search Results
+      </MLink>
+      <Typography color="textPrimary">Season Select</Typography>
+    </Breadcrumbs>
     {!tv ?
       <ReactLoading type='balls' color='#000000' /> :
       <ul>
