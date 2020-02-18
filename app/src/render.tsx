@@ -84,12 +84,16 @@ export function Movies({
   );
 }
 
-function Progress({
+interface ShortDownload {
+  transmission_id: string
+}
+
+export function Progress({
   torrents,
   item,
 }: {
   torrents?: Torrents;
-  item: { download: Download };
+  item: { download: ShortDownload };
 }) {
   if (!torrents) return null;
 
@@ -116,7 +120,7 @@ function Progress({
 }
 
 function getProgress(
-  item: { download: Download },
+  item: { download: ShortDownload },
   torrents: Torrents,
 ): { eta: number; percentDone: number } | null {
   let eta,

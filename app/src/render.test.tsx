@@ -1,9 +1,9 @@
 import { act, render } from '@testing-library/react';
 import React from 'react';
-import { Movies, TVShows } from './render';
+import { Movies, TVShows, Progress } from './render';
 import { Route, MemoryRouter } from 'react-router-dom';
 import { mock, wait, useMoxios } from './test.utils';
-import { MovieResponse } from './streaming';
+import { MovieResponse, Torrents, TorrentFile } from './streaming';
 import { TvResponse } from './types';
 
 useMoxios();
@@ -46,5 +46,56 @@ test('TVShows', async () => {
     );
 
     expect(el).toMatchSnapshot();
+  });
+});
+
+describe('Progress', () => {
+  it('simple', () => {
+    function fn() {
+      return <Progress item={item} torrents={torrents} />;
+    }
+
+    const item = { download: { transmission_id: 'GUID', } };
+    const torrents: Torrents = {};
+    const el = render(fn());
+
+    expect(el.container).toMatchSnapshot();
+
+    const torrent = torrents['GUID'] = {
+      eta: -1,
+      percentDone: 1,
+      files: [],
+    };
+    el.rerender(fn());
+    expect(el.container).toMatchSnapshot();
+
+    torrent.percentDone = 0.5;
+    torrent.eta = 360;
+    el.rerender(fn());
+
+    expect(el.container).toMatchSnapshot();
+  });
+
+  it('complex', () => {
+    function fn() {
+      return <Progress item={item} torrents={torrents} />;
+    }
+    const item = { download: { transmission_id: 'GUID.1' }, season: 1, episode: 1 };
+    const torrents: Torrents = {};
+
+    const el = render(fn());
+    expect(el.container).toMatchSnapshot();
+
+    const torrent = torrents['GUID'] = { eta: -1, files: [] as TorrentFile[], percentDone: 0.5 };
+    el.rerender(fn());
+    expect(el.container).toMatchSnapshot();
+
+    torrent.files.push({
+      name: 'Title.S01E01.mkv',
+      bytesCompleted: 3,
+      length: 4,
+    });
+    el.rerender(fn());
+    expect(el.container).toMatchSnapshot();
   });
 });

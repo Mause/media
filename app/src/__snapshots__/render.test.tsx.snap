@@ -175,6 +175,45 @@ Object {
 }
 `;
 
+exports[`Progress complex 1`] = `<div />`;
+
+exports[`Progress complex 2`] = `
+<div>
+  <progress
+    title="50% (Unknown time remaining)"
+    value="0.5"
+  />
+</div>
+`;
+
+exports[`Progress complex 3`] = `
+<div>
+  <progress
+    title="75% (Unknown time remaining)"
+    value="0.75"
+  />
+</div>
+`;
+
+exports[`Progress simple 1`] = `<div />`;
+
+exports[`Progress simple 2`] = `
+<div>
+  <i
+    class="fas fa-check-circle"
+  />
+</div>
+`;
+
+exports[`Progress simple 3`] = `
+<div>
+  <progress
+    title="50% (6 minutes remaining)"
+    value="0.5"
+  />
+</div>
+`;
+
 exports[`TVShows 1`] = `
 Object {
   "asFragment": [Function],
