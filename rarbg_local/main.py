@@ -593,6 +593,13 @@ class MonitorResource(Resource):
         db.session.commit()
         return c, 201
 
+    @api.marshal_with(
+        api.model('Monitor', {'id': fields.Integer, 'tmdb_id': fields.Integer}),
+        as_list=True,
+    )
+    def get(self):
+        return db.session.query(Monitor)
+
 
 @app.route('/download/<type>')
 def download(type: str) -> WResponse:
