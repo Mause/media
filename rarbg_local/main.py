@@ -67,6 +67,7 @@ from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .db import (
     Download,
     EpisodeDetails,
+    Monitor,
     MovieDetails,
     Role,
     User,
@@ -576,6 +577,21 @@ def api_download() -> str:
         )
 
     return jsonify()
+
+
+@api.route('/api/monitor')
+class MonitorResource(Resource):
+    @api.expect(api.model('MonitorPost', {'tmdb_id': fields.Integer}))
+    @api.marshal_with(
+        api.model('MonitorCreated', {'id': fields.Integer}),
+        code=201,
+        description='Created',
+    )
+    def post(self):
+        c = Monitor(tmdb_id=request.json['tmdb_id'])
+        db.session.add(c)
+        db.session.commit()
+        return c, 201
 
 
 @app.route('/download/<type>')
