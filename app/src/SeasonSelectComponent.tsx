@@ -1,11 +1,11 @@
 import { useParams, Link } from 'react-router-dom';
-import { useLoad } from './utils';
 import _ from 'lodash';
 import React from 'react';
 import ReactLoading from 'react-loading';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import MLink from '@material-ui/core/Link';
+import useSWR from 'swr';
 
 export interface TV {
   number_of_seasons: number;
@@ -15,7 +15,7 @@ export interface TV {
 
 function SeasonSelectComponent() {
   const { tmdb_id } = useParams();
-  const tv = useLoad<TV>(`tv/${tmdb_id}`);
+  const { data: tv } = useSWR<TV>(`tv/${tmdb_id}`);
 
   return <div>
     <h3 data-testid='title'>{tv && tv.title}</h3>
@@ -53,7 +53,9 @@ export interface Season {
 }
 function EpisodeSelectComponent() {
   const { tmdb_id, season: seasonNumber } = useParams();
-  const season = useLoad<Season>(`tv/${tmdb_id}/season/${seasonNumber}`)
+  const { data: season } = useSWR<Season>(
+    `tv/${tmdb_id}/season/${seasonNumber}`,
+  );
 
   return <div>
     <h3 data-testid='title'>Season {seasonNumber}</h3>
