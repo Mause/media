@@ -116,7 +116,7 @@ function reportError(error: Error, componentStack: string) {
   });
 }
 
-function _ParentComponent() {
+function ParentComponentInt() {
   return (
     <Router>
       <h1>Media</h1>
@@ -161,7 +161,7 @@ function ParentComponent() {
         fetcher: (...args) => load(args[0], args[1]),
       }}
     >
-      <_ParentComponent />
+      <ParentComponentInt />
     </SWRConfig>
   );
 }
