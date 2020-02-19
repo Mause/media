@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
 import {
-  Download,
   MovieResponse,
   SeriesResponse,
   Torrents,
@@ -24,16 +23,20 @@ function openPlex(item: { download: { imdb_id: string } }) {
 }
 
 function contextMenuTrigger(id: string) {
-  // @ts-ignore
-  return <ContextMenuTrigger mouseButton={0}
-    id={id}
-    renderTag='i'
-    attributes={{
-      className: 'fas fa-list',
-      style: { cursor: 'pointer' },
-    }}
-    children={''}
-  />
+  // workaround for type issue
+  const props = { mouseButton: 0 };
+  return (
+    <ContextMenuTrigger
+      {...props}
+      id={id}
+      renderTag="i"
+      attributes={{
+        className: 'fas fa-list',
+        style: { cursor: 'pointer' },
+      }}
+      children={''}
+    />
+  );
 }
 
 export function Movies({
@@ -85,7 +88,7 @@ export function Movies({
 }
 
 interface ShortDownload {
-  transmission_id: string
+  transmission_id: string;
 }
 
 export function Progress({
