@@ -132,7 +132,7 @@ class UserRoles(db.Model):  # type: ignore
 
 class Monitor(db.Model):  # type: ignore
     id = db.Column(db.Integer(), primary_key=True)
-    tmdb_id = Column(Integer, default=None)
+    tmdb_id = Column(Integer)
 
 
 def create_download(
