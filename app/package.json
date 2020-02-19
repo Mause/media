@@ -22,7 +22,6 @@
     "qs": "^6.9.1",
     "react": "^16.12.0",
     "react-collapsible": "^2.6.2",
-    "react-contextmenu": "https://github.com/vkbansal/react-contextmenu",
     "react-dom": "^16.12.0",
     "react-error-boundary": "^1.2.5",
     "react-helmet": "^5.2.1",
@@ -37,7 +36,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "install": "yarn-git install"
+  },
+  "gitDependencies": {
+    "react-contextmenu": "https://github.com/vkbansal/react-contextmenu"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -61,7 +64,8 @@
     "@types/react-helmet": "^5.0.15",
     "@types/react-router-dom": "^5.1.3",
     "jest-junit": "^10.0.0",
-    "moxios": "^0.4.0"
+    "moxios": "^0.4.0",
+    "yarn-git-install": "^0.4.7"
   },
   "prettier": {
     "singleQuote": true,
