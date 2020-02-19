@@ -105,7 +105,7 @@ export function Progress({
 
   let { eta, percentDone } = prog;
   if (percentDone === 1) {
-    return <i className="fas fa-check-circle"></i>;
+    return <i className="fas fa-check-circle" />;
   } else {
     let etaDescr =
       eta > 0
@@ -118,7 +118,7 @@ export function Progress({
       percentDone * 100,
       etaDescr,
     );
-    return <progress value={percentDone} title={title}></progress>;
+    return <progress value={percentDone} title={title} />;
   }
 }
 
