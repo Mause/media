@@ -24,16 +24,18 @@ function openPlex(item: { download: { imdb_id: string } }) {
 }
 
 function contextMenuTrigger(id: string) {
-  // @ts-ignore
-  return <ContextMenuTrigger mouseButton={0}
-    id={id}
-    renderTag='i'
-    attributes={{
-      className: 'fas fa-list',
-      style: { cursor: 'pointer' },
-    }}
-    children={''}
-  />
+  return (
+    <ContextMenuTrigger
+      mouseButton={0}
+      id={id}
+      renderTag="i"
+      attributes={{
+        className: 'fas fa-list',
+        style: { cursor: 'pointer' },
+      }}
+      children={''}
+    />
+  );
 }
 
 export function Movies({
@@ -85,7 +87,7 @@ export function Movies({
 }
 
 interface ShortDownload {
-  transmission_id: string
+  transmission_id: string;
 }
 
 export function Progress({
