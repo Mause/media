@@ -23,9 +23,11 @@ function openPlex(item: { download: { imdb_id: string } }) {
 }
 
 function contextMenuTrigger(id: string) {
+  // workaround for type issue
+  const props = { mouseButton: 0 };
   return (
     <ContextMenuTrigger
-      mouseButton={0}
+      {...props}
       id={id}
       renderTag="i"
       attributes={{
