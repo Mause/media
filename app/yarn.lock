@@ -8737,10 +8737,9 @@ react-collapsible@^2.6.2:
   resolved "https://registry.yarnpkg.com/react-collapsible/-/react-collapsible-2.6.2.tgz#68de102b57de050c1b9c1405f4278f0048da3fda"
   integrity sha512-QLjwhhrAgrTdrVRUuuCWOHLt98bRXgx106Z1OErhk5mliQ9h1VH0LMLbmCkX8rdGTNxTsUvqR8y01ylkXCps0Q==
 
-react-contextmenu@^2.13.0:
+"react-contextmenu@https://github.com/vkbansal/react-contextmenu":
   version "2.13.0"
-  resolved "https://registry.yarnpkg.com/react-contextmenu/-/react-contextmenu-2.13.0.tgz#dabaea63124e30c85f1b4245c095b7045d013459"
-  integrity sha512-hhFuJX4di0zGV7H7pXPn42U70OZbGpQD+PxcdmKStNT5mebSjI+inhOuFESDmDbqVsN/f99hI5/nw95oXTVRXQ==
+  resolved "https://github.com/vkbansal/react-contextmenu#ab5b8f97dd83f411584247071de634fcd5dc51f9"
   dependencies:
     classnames "^2.2.5"
     object-assign "^4.1.0"
