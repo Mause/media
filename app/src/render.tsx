@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
 import {
-  Download,
   MovieResponse,
   SeriesResponse,
   Torrents,
