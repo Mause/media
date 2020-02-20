@@ -153,7 +153,7 @@ function ParentComponentInt() {
     </Router>
   );
 }
-export function swrConfig(WrappedComponent) {
+export function swrConfig<P>(WrappedComponent: React.ComponentType<P>) {
   return () => (
     <SWRConfig
       value={{
