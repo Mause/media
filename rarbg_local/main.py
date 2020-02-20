@@ -56,7 +56,7 @@ from marshmallow.validate import Regexp as MarshRegexp
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
-from requests.exceptions import ConnectionError
+from requests.exceptions import ConnectionError, HTTPError
 from sqlalchemy import event, func
 from sqlalchemy.orm.session import make_transient
 from werkzeug.wrappers import Response as WResponse
@@ -579,6 +579,17 @@ def api_download() -> str:
     return jsonify()
 
 
+def validate_movie_id(tmdb_id: str) -> str:
+    try:
+        get_movie(tmdb_id)
+    except HTTPError as e:
+        if e.response.status_code == 404:
+            return api.abort(422, f'Movie not found: {tmdb_id}')
+        else:
+            raise
+    return tmdb_id
+
+
 @api.route('/api/monitor')
 class MonitorResource(Resource):
     @api.expect(api.model('MonitorPost', {'tmdb_id': fields.Integer}))
@@ -588,7 +599,8 @@ class MonitorResource(Resource):
         description='Created',
     )
     def post(self):
-        c = Monitor(tmdb_id=request.json['tmdb_id'])
+        tmdb_id = validate_movie_id(request.json['tmdb_id'])
+        c = Monitor(tmdb_id=tmdb_id)
         db.session.add(c)
         db.session.commit()
         return c, 201
