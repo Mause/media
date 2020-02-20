@@ -153,18 +153,19 @@ function ParentComponentInt() {
     </Router>
   );
 }
-function ParentComponent() {
-  return (
+export function swrConfig(WrappedComponent: React.ComponentType<{}>) {
+  return () => (
     <SWRConfig
       value={{
         refreshInterval: 3000,
         fetcher: (...args) => load(args[0], args[1]),
       }}
     >
-      <ParentComponentInt />
+      <WrappedComponent />
     </SWRConfig>
   );
 }
+const ParentComponent = swrConfig(ParentComponentInt);
 
 function Routes() {
   return (
