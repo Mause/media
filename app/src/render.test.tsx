@@ -3,7 +3,12 @@ import React from 'react';
 import { Movies, TVShows, Progress } from './render';
 import { Route, MemoryRouter } from 'react-router-dom';
 import { mock, wait, useMoxios } from './test.utils';
-import { MovieResponse, Torrents, TorrentFile } from './streaming';
+import {
+  MovieResponse,
+  Torrents,
+  TorrentFile,
+  SeriesResponse,
+} from './streaming';
 import { TvResponse } from './types';
 
 useMoxios();
@@ -33,7 +38,9 @@ test('TVShows', async () => {
   await act(async () => {
     const series: SeriesResponse[] = [
       {
-        tmdb_id: 1,
+        tmdb_id: '1',
+        imdb_id: '',
+        title: 'Title',
         seasons: {
           1: [],
         },
