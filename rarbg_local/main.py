@@ -610,7 +610,7 @@ class MonitorResource(Resource):
         as_list=True,
     )
     def get(self):
-        return db.session.query(Monitor)
+        return db.session.query(Monitor).all()
 
 
 @app.route('/download/<type>')
