@@ -10,6 +10,7 @@ import {
   SeriesResponse,
 } from './streaming';
 import { TvResponse } from './types';
+import { swrConfig } from './streaming';
 
 useMoxios();
 
@@ -47,9 +48,11 @@ test('TVShows', async () => {
       },
     ];
     const el = render(
-      <MemoryRouter>
-        <TVShows series={series} loading={false} />
-      </MemoryRouter>,
+      swrConfig(() => (
+        <MemoryRouter>
+          <TVShows series={series} loading={false} />
+        </MemoryRouter>
+      ))(),
     );
 
     expect(el).toMatchSnapshot();

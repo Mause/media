@@ -11,8 +11,8 @@ import Moment from 'moment';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import Collapsible from 'react-collapsible';
 import { Link } from 'react-router-dom';
-import { useLoad } from './utils';
 import { TV } from './SeasonSelectComponent';
+import useSWR from 'swr';
 
 function Loading({ loading }: { loading: boolean }) {
   return loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : <></>;
@@ -183,7 +183,7 @@ function Series({
   serie: SeriesResponse;
   torrents?: Torrents;
 }) {
-  const data = useLoad<TV>(`tv/${serie.tmdb_id}`);
+  const { data } = useSWR<TV>(`tv/${serie.tmdb_id}`);
   return (
     <div>
       <h3>
