@@ -3,7 +3,7 @@ import React from 'react';
 import ReactLoading from 'react-loading';
 
 export function MonitorComponent() {
-  const { data } = useSWR<{ id: number; tmdb_id: number }[]>('monitor');
+  const { data } = useSWR<{ title: string }[]>('monitor');
 
   return (
     <div>
@@ -11,9 +11,7 @@ export function MonitorComponent() {
       {data ? (
         <ul>
           {data.map(m => (
-            <li>
-              {m.id} - {m.tmdb_id}
-            </li>
+            <li>{m.title}</li>
           ))}
         </ul>
       ) : (
