@@ -16,18 +16,40 @@ Object {
             <li
               class="MuiBreadcrumbs-li"
             >
-              <a
-                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                href="/"
+              <nav
+                class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
               >
-                Home
-              </a>
-              <a
-                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                href=""
-              >
-                Search Results
-              </a>
+                <ol
+                  class="MuiBreadcrumbs-ol"
+                >
+                  <li
+                    class="MuiBreadcrumbs-li"
+                  >
+                    <a
+                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                      href="/"
+                    >
+                      Home
+                    </a>
+                  </li>
+                  <li
+                    aria-hidden="true"
+                    class="MuiBreadcrumbs-separator"
+                  >
+                    /
+                  </li>
+                  <li
+                    class="MuiBreadcrumbs-li"
+                  >
+                    <a
+                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                      href=""
+                    >
+                      Search Results
+                    </a>
+                  </li>
+                </ol>
+              </nav>
             </li>
             <li
               aria-hidden="true"
@@ -96,18 +118,40 @@ Object {
           <li
             class="MuiBreadcrumbs-li"
           >
-            <a
-              class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-              href="/"
+            <nav
+              class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
             >
-              Home
-            </a>
-            <a
-              class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-              href=""
-            >
-              Search Results
-            </a>
+              <ol
+                class="MuiBreadcrumbs-ol"
+              >
+                <li
+                  class="MuiBreadcrumbs-li"
+                >
+                  <a
+                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                    href="/"
+                  >
+                    Home
+                  </a>
+                </li>
+                <li
+                  aria-hidden="true"
+                  class="MuiBreadcrumbs-separator"
+                >
+                  /
+                </li>
+                <li
+                  class="MuiBreadcrumbs-li"
+                >
+                  <a
+                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                    href=""
+                  >
+                    Search Results
+                  </a>
+                </li>
+              </ol>
+            </nav>
           </li>
           <li
             aria-hidden="true"
@@ -233,18 +277,40 @@ Object {
             <li
               class="MuiBreadcrumbs-li"
             >
-              <a
-                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                href="/"
+              <nav
+                class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
               >
-                Home
-              </a>
-              <a
-                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                href=""
-              >
-                Search Results
-              </a>
+                <ol
+                  class="MuiBreadcrumbs-ol"
+                >
+                  <li
+                    class="MuiBreadcrumbs-li"
+                  >
+                    <a
+                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                      href="/"
+                    >
+                      Home
+                    </a>
+                  </li>
+                  <li
+                    aria-hidden="true"
+                    class="MuiBreadcrumbs-separator"
+                  >
+                    /
+                  </li>
+                  <li
+                    class="MuiBreadcrumbs-li"
+                  >
+                    <a
+                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                      href=""
+                    >
+                      Search Results
+                    </a>
+                  </li>
+                </ol>
+              </nav>
             </li>
             <li
               aria-hidden="true"
@@ -289,18 +355,40 @@ Object {
           <li
             class="MuiBreadcrumbs-li"
           >
-            <a
-              class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-              href="/"
+            <nav
+              class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
             >
-              Home
-            </a>
-            <a
-              class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-              href=""
-            >
-              Search Results
-            </a>
+              <ol
+                class="MuiBreadcrumbs-ol"
+              >
+                <li
+                  class="MuiBreadcrumbs-li"
+                >
+                  <a
+                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                    href="/"
+                  >
+                    Home
+                  </a>
+                </li>
+                <li
+                  aria-hidden="true"
+                  class="MuiBreadcrumbs-separator"
+                >
+                  /
+                </li>
+                <li
+                  class="MuiBreadcrumbs-li"
+                >
+                  <a
+                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                    href=""
+                  >
+                    Search Results
+                  </a>
+                </li>
+              </ol>
+            </nav>
           </li>
           <li
             aria-hidden="true"

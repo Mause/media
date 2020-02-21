@@ -17,7 +17,7 @@ export interface TV {
 function Shared() {
   const { state } = useLocation();
   return (
-    <>
+    <Breadcrumbs>
       <MLink to="/">Home</MLink>
       <MLink
         to={
@@ -29,7 +29,7 @@ function Shared() {
       >
         Search Results
       </MLink>
-    </>
+    </Breadcrumbs>
   );
 }
 
