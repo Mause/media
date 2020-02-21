@@ -134,6 +134,11 @@ class Monitor(db.Model):  # type: ignore
     id = db.Column(db.Integer(), primary_key=True)
     tmdb_id = Column(Integer)
 
+    added_by_id = Column(Integer, ForeignKey('users.id'))
+    added_by = relationship('User')
+
+    title = Column(String, nullable=False)
+
 
 def create_download(
     *,
