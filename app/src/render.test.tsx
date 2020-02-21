@@ -3,8 +3,14 @@ import React from 'react';
 import { Movies, TVShows, Progress } from './render';
 import { Route, MemoryRouter } from 'react-router-dom';
 import { mock, wait, useMoxios } from './test.utils';
-import { MovieResponse, Torrents, TorrentFile } from './streaming';
+import {
+  MovieResponse,
+  Torrents,
+  TorrentFile,
+  SeriesResponse,
+} from './streaming';
 import { TvResponse } from './types';
+import { swrConfig } from './streaming';
 
 useMoxios();
 
@@ -33,16 +39,20 @@ test('TVShows', async () => {
   await act(async () => {
     const series: SeriesResponse[] = [
       {
-        tmdb_id: 1,
+        tmdb_id: '1',
+        imdb_id: '',
+        title: 'Title',
         seasons: {
           1: [],
         },
       },
     ];
     const el = render(
-      <MemoryRouter>
-        <TVShows series={series} loading={false} />
-      </MemoryRouter>,
+      swrConfig(() => (
+        <MemoryRouter>
+          <TVShows series={series} loading={false} />
+        </MemoryRouter>
+      ))(),
     );
 
     expect(el).toMatchSnapshot();
@@ -55,17 +65,17 @@ describe('Progress', () => {
       return <Progress item={item} torrents={torrents} />;
     }
 
-    const item = { download: { transmission_id: 'GUID', } };
+    const item = { download: { transmission_id: 'GUID' } };
     const torrents: Torrents = {};
     const el = render(fn());
 
     expect(el.container).toMatchSnapshot();
 
-    const torrent = torrents['GUID'] = {
+    const torrent = (torrents['GUID'] = {
       eta: -1,
       percentDone: 1,
       files: [],
-    };
+    });
     el.rerender(fn());
     expect(el.container).toMatchSnapshot();
 
@@ -80,13 +90,21 @@ describe('Progress', () => {
     function fn() {
       return <Progress item={item} torrents={torrents} />;
     }
-    const item = { download: { transmission_id: 'GUID.1' }, season: 1, episode: 1 };
+    const item = {
+      download: { transmission_id: 'GUID.1' },
+      season: 1,
+      episode: 1,
+    };
     const torrents: Torrents = {};
 
     const el = render(fn());
     expect(el.container).toMatchSnapshot();
 
-    const torrent = torrents['GUID'] = { eta: -1, files: [] as TorrentFile[], percentDone: 0.5 };
+    const torrent = (torrents['GUID'] = {
+      eta: -1,
+      files: [] as TorrentFile[],
+      percentDone: 0.5,
+    });
     el.rerender(fn());
     expect(el.container).toMatchSnapshot();
 
