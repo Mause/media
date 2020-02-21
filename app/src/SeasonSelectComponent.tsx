@@ -1,11 +1,12 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import _ from 'lodash';
 import React from 'react';
 import ReactLoading from 'react-loading';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import MLink from '@material-ui/core/Link';
 import useSWR from 'swr';
+import qs from 'qs';
+import { MLink } from './utils';
 
 export interface TV {
   number_of_seasons: number;
@@ -13,20 +14,33 @@ export interface TV {
   seasons: { episode_count: number }[];
 }
 
+function Shared() {
+  const { state } = useLocation();
+  return (
+    <>
+      <MLink to="/">Home</MLink>
+      <MLink
+        to={
+          state && {
+            pathname: '/search',
+            search: qs.stringify({ query: state.query }),
+          }
+        }
+      >
+        Search Results
+      </MLink>
+    </>
+  );
+}
+
 function SeasonSelectComponent() {
   const { tmdb_id } = useParams();
   const { data: tv } = useSWR<TV>(`tv/${tmdb_id}`);
 
   return <div>
-    <h3 data-testid='title'>{tv && tv.title}</h3>
     <Breadcrumbs aria-label="breadcrumb">
-      <MLink color="inherit" component={Link} to='/'>
-        Home
-      </MLink>
-      <MLink color="inherit">
-        Search Results
-      </MLink>
-      <Typography color="textPrimary">Season Select</Typography>
+      <Shared />
+      <Typography color="textPrimary" data-testid='title'>{tv && tv.title}</Typography>
     </Breadcrumbs>
     {!tv ?
       <ReactLoading type='balls' color='#000000' /> :
@@ -53,13 +67,15 @@ export interface Season {
 }
 function EpisodeSelectComponent() {
   const { tmdb_id, season: seasonNumber } = useParams();
-  const { data: season } = useSWR<Season>(
-    `tv/${tmdb_id}/season/${seasonNumber}`,
-  );
+  const { data: season } = useSWR<Season>(`tv/${tmdb_id}/season/${seasonNumber}`)
+  const { data: tv } = useSWR<TV>(`tv/${tmdb_id}`);
 
   return <div>
-    <h3 data-testid='title'>Season {seasonNumber}</h3>
-    <Link to={`/select/${tmdb_id}/season`}><small>Back to seasons</small></Link>
+    <Breadcrumbs aria-label="breadcrumb">
+      <Shared />
+      <MLink to={`/select/${tmdb_id}/season`}>{tv && tv.title}</MLink>
+      <Typography color="textPrimary" data-testid='title'>Season {seasonNumber}</Typography>
+    </Breadcrumbs>
     {season ? <ol>
       {season.episodes.map(episode =>
         <li key={episode.id} value={episode.episode_number}>
