@@ -6,19 +6,64 @@ Object {
   "baseElement": <body>
     <div>
       <div>
-        <h3
-          data-testid="title"
+        <nav
+          aria-label="breadcrumb"
+          class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
         >
-          Season 
-          1
-        </h3>
-        <a
-          href="/select/1/season"
-        >
-          <small>
-            Back to seasons
-          </small>
-        </a>
+          <ol
+            class="MuiBreadcrumbs-ol"
+          >
+            <li
+              class="MuiBreadcrumbs-li"
+            >
+              <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                href="/"
+              >
+                Home
+              </a>
+              <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                href=""
+              >
+                Search Results
+              </a>
+            </li>
+            <li
+              aria-hidden="true"
+              class="MuiBreadcrumbs-separator"
+            >
+              /
+            </li>
+            <li
+              class="MuiBreadcrumbs-li"
+            >
+              <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                href="/select/1/season"
+              >
+                Hello
+              </a>
+            </li>
+            <li
+              aria-hidden="true"
+              class="MuiBreadcrumbs-separator"
+            >
+              /
+            </li>
+            <li
+              class="MuiBreadcrumbs-li"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+                data-testid="title"
+              >
+                Season 
+                1
+              </p>
+            </li>
+          </ol>
+        </nav>
         <ol>
           <li
             value="1"
@@ -41,19 +86,64 @@ Object {
   </body>,
   "container": <div>
     <div>
-      <h3
-        data-testid="title"
+      <nav
+        aria-label="breadcrumb"
+        class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
       >
-        Season 
-        1
-      </h3>
-      <a
-        href="/select/1/season"
-      >
-        <small>
-          Back to seasons
-        </small>
-      </a>
+        <ol
+          class="MuiBreadcrumbs-ol"
+        >
+          <li
+            class="MuiBreadcrumbs-li"
+          >
+            <a
+              class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+              href=""
+            >
+              Search Results
+            </a>
+          </li>
+          <li
+            aria-hidden="true"
+            class="MuiBreadcrumbs-separator"
+          >
+            /
+          </li>
+          <li
+            class="MuiBreadcrumbs-li"
+          >
+            <a
+              class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+              href="/select/1/season"
+            >
+              Hello
+            </a>
+          </li>
+          <li
+            aria-hidden="true"
+            class="MuiBreadcrumbs-separator"
+          >
+            /
+          </li>
+          <li
+            class="MuiBreadcrumbs-li"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+              data-testid="title"
+            >
+              Season 
+              1
+            </p>
+          </li>
+        </ol>
+      </nav>
       <ol>
         <li
           value="1"
@@ -133,11 +223,6 @@ Object {
   "baseElement": <body>
     <div>
       <div>
-        <h3
-          data-testid="title"
-        >
-          Hello
-        </h3>
         <nav
           aria-label="breadcrumb"
           class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
@@ -154,18 +239,9 @@ Object {
               >
                 Home
               </a>
-            </li>
-            <li
-              aria-hidden="true"
-              class="MuiBreadcrumbs-separator"
-            >
-              /
-            </li>
-            <li
-              class="MuiBreadcrumbs-li"
-            >
               <a
                 class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                href=""
               >
                 Search Results
               </a>
@@ -181,8 +257,9 @@ Object {
             >
               <p
                 class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+                data-testid="title"
               >
-                Season Select
+                Hello
               </p>
             </li>
           </ol>
@@ -202,11 +279,6 @@ Object {
   </body>,
   "container": <div>
     <div>
-      <h3
-        data-testid="title"
-      >
-        Hello
-      </h3>
       <nav
         aria-label="breadcrumb"
         class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
@@ -223,18 +295,9 @@ Object {
             >
               Home
             </a>
-          </li>
-          <li
-            aria-hidden="true"
-            class="MuiBreadcrumbs-separator"
-          >
-            /
-          </li>
-          <li
-            class="MuiBreadcrumbs-li"
-          >
             <a
               class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+              href=""
             >
               Search Results
             </a>
@@ -250,8 +313,9 @@ Object {
           >
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+              data-testid="title"
             >
-              Season Select
+              Hello
             </p>
           </li>
         </ol>
