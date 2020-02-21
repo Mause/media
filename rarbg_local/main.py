@@ -47,7 +47,7 @@ from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_restplus import Api, Resource, fields
 from flask_restplus.reqparse import RequestParser
 from flask_sslify import SSLify
-from flask_user import UserManager, login_required, roles_required
+from flask_user import UserManager, current_user, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
 from marshmallow.exceptions import ValidationError
@@ -579,15 +579,14 @@ def api_download() -> str:
     return jsonify()
 
 
-def validate_movie_id(tmdb_id: str) -> str:
+def validate_movie_id(tmdb_id: str) -> Dict:
     try:
-        get_movie(tmdb_id)
+        return get_movie(tmdb_id)
     except HTTPError as e:
         if e.response.status_code == 404:
             return api.abort(422, f'Movie not found: {tmdb_id}')
         else:
             raise
-    return tmdb_id
 
 
 @api.route('/api/monitor')
@@ -599,14 +598,23 @@ class MonitorResource(Resource):
         description='Created',
     )
     def post(self):
-        tmdb_id = validate_movie_id(request.json['tmdb_id'])
-        c = Monitor(tmdb_id=tmdb_id)
+        tmdb_id = request.json['tmdb_id']
+        movie = validate_movie_id(tmdb_id)
+        c = Monitor(tmdb_id=tmdb_id, added_by=current_user, title=movie['title'])
         db.session.add(c)
         db.session.commit()
         return c, 201
 
     @api.marshal_with(
-        api.model('Monitor', {'id': fields.Integer, 'tmdb_id': fields.Integer}),
+        api.model(
+            'Monitor',
+            {
+                'id': fields.Integer,
+                'tmdb_id': fields.Integer,
+                'title': fields.String,
+                'added_by': fields.String('added_by.username'),
+            },
+        ),
         as_list=True,
     )
     def get(self):
