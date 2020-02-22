@@ -24,7 +24,7 @@ import { OptionsComponent } from './OptionsComponent';
 import { BASE, load } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { SWRConfig } from 'swr';
-import { MonitorComponent } from './MonitorComponent';
+import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
 
 Sentry.init({
   dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
@@ -197,6 +197,9 @@ function Routes() {
       </RouteWithTitle>
       <RouteWithTitle path="/stats" title="Stats">
         <StatsComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/monitor/add/:tmdb_id" title="Monitor">
+        <MonitorAddComponent />
       </RouteWithTitle>
       <RouteWithTitle path="/monitor" title="Monitor">
         <MonitorComponent />

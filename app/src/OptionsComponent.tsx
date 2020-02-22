@@ -134,7 +134,10 @@ function Pure(props: { itemInfo?: ItemInfo, type: string, tmdb_id: string, seaso
           No results
           <ul>
             <li>
-              <Link to={{pathname: '/manual'}}>Add manually</Link>
+              <Link to={{ pathname: '/manual' }}>Add manually</Link>
+            </li>
+            <li>
+              <Link to={`/monitor/add/${props.tmdb_id}`}>Add to monitor</Link>
             </li>
           </ul>
       </div>}
@@ -157,7 +160,6 @@ function useSubscribe<T>(url: string) {
 
   return subscription;
 }
-
 
 const OptionsComponent = withRouter(_OptionsComponent);
 export { OptionsComponent };
