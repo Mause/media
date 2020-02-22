@@ -122,6 +122,23 @@ def test_basic_auth(flask_app, user):
         assert r.json == {}
 
 
+def test_download_movie(test_client, responses, add_torrent):
+    themoviedb(responses, '/movie/533985', {'title': 'Bit'})
+    themoviedb(responses, '/movie/533985/external_ids', {'imdb_id': "tt8425034"})
+
+    magnet = 'magnet:...'
+
+    res = test_client.post(
+        '/api/download', json=[{'magnet': magnet, 'tmdb_id': '533985'}]
+    )
+    assert res.status == '200 OK'
+
+    add_torrent.assert_called_with(magnet, 'movies')
+
+    download = db.session.query(Download).first()
+    assert download.title == 'Bit'
+
+
 def test_download(test_client, responses, add_torrent):
     themoviedb(responses, '/tv/95792', {'name': 'Pocket Monsters'})
     themoviedb(responses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
