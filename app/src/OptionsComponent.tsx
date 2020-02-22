@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import qs from 'qs';
 import React, { Component, useState, useEffect } from 'react';
-import { Season } from './SeasonSelectComponent';
-import { load, subscribe, useLoad } from './utils';
+import { subscribe, useLoad } from './utils';
 import { Torrents } from './streaming';
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 
@@ -39,7 +38,7 @@ function DisplayTorrent({ torrent, torrents, itemInfo, type }: { torrent: ITorre
   }
   return (
     <span>
-      {url ? <Link to={url}>{torrent.title}</Link> : torrent.title}
+      <Link to={url}>{torrent.title}</Link>
       &nbsp;
       <small>{torrent.seeders}</small>
       &nbsp;
@@ -75,46 +74,43 @@ function remove(bit: string): string {
   return bit;
 }
 
-class _OptionsComponent extends Component<OptionsProps, {
-  results: ITorrent[];
-  loading: boolean;
-  itemInfo?: ItemInfo;
-}> {
+class _OptionsComponent extends Component<OptionsProps, {}> {
   constructor(props: OptionsProps) {
     super(props);
-    this.state = { results: [], loading: true, itemInfo: undefined };
   }
   public render() {
-    return <Pure
-      itemInfo={this.state.itemInfo}
-      type={this.props.type}
-      episode={this.props.match.params.episode}
-      season={this.props.match.params.season}
-      tmdb_id={this.props.match.params.tmdb_id}
-    />;
-  }
-  componentDidMount() {
-    const { tmdb_id, season, episode } = this.props.match.params;
-    const prom = load<ItemInfo>(`${this.props.type === 'series' ? 'tv' : 'movie'}/${tmdb_id}`);
-    if (this.props.type === 'series') {
-      Promise.all([
-        load<Season>(`tv/${tmdb_id}/season/${season}`),
-        prom
-      ]).then(([season, { imdb_id }]) => {
-        this.setState({ itemInfo: { title: season.episodes[parseInt(episode!, 10) - 1].name, imdb_id } });
-      });
-    }
-    else {
-      prom.then(itemInfo => this.setState({ itemInfo }));
-    }
+    return (
+      <Pure
+        type={this.props.type}
+        episode={this.props.match.params.episode}
+        season={this.props.match.params.season}
+        tmdb_id={this.props.match.params.tmdb_id}
+      />
+    );
   }
 }
 
-function Pure(props: { itemInfo?: ItemInfo, type: string, tmdb_id: string, season?: string, episode?: string }) {
+function Pure(props: {
+  type: string;
+  tmdb_id: string;
+  season?: string;
+  episode?: string;
+}) {
   const torrents = useLoad<Torrents>('torrents');
   const { type } = props;
-  const { items: results, loading } = useSubscribe<ITorrent>(`/stream/${type}/${props.tmdb_id}?` + qs.stringify({ season: props.season, episode: props.episode }));
-  const dt = (result: ITorrent) => <DisplayTorrent itemInfo={props.itemInfo} type={type} torrents={torrents} torrent={result} />;
+  const { items: results, loading } = useSubscribe<ITorrent>(
+    `/stream/${type}/${props.tmdb_id}?` +
+      qs.stringify({ season: props.season, episode: props.episode }),
+  );
+  const dt = (result: ITorrent) => (
+    <DisplayTorrent
+      tmdb_id={props.tmdb_id}
+      season={props.season}
+      episode={props.episode}
+      torrents={torrents}
+      torrent={result}
+    />
+  );
   const grouped = _.groupBy(results, 'category');
   const auto = _.maxBy(grouped['Movies/x264/1080'] || grouped['TV HD Episodes'] || [], 'seeders');
   const bits = _.sortBy(_.toPairs(grouped), ([category]) => -ranking.indexOf(category)).map(([category, results]) => (<div key={category}>

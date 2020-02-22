@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/browser';
-import qs from 'qs';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Helmet from 'react-helmet';
 import ReactLoading from 'react-loading';
 import { RouteProps, Redirect } from 'react-router';
@@ -16,12 +15,11 @@ import {
   EpisodeSelectComponent,
   SeasonSelectComponent,
 } from './SeasonSelectComponent';
-import Axios from 'axios';
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
-import { BASE, load } from './utils';
+import { load, usePost } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { SWRConfig } from 'swr';
 
@@ -37,25 +35,17 @@ Sentry.configureScope(function(scope) {
 
 export function DownloadComponent() {
   const { state } = useLocation();
-  const [done, setDone] = useState(false);
-  const url =
-    `/download/${state.type}?` +
-    qs.stringify({
-      imdb_id: state.imdb_id,
-      magnet: state.magnet,
-      titles: state.titles,
-    });
-  useEffect(() => {
-    Axios.get(BASE + url, { withCredentials: true }).then(() => {
-      setDone(true);
-    });
-  }, [url]);
 
-  return done ? (
-    <Redirect to="/" />
-  ) : (
-    <ReactLoading type="balls" color="#000000" />
-  );
+  const [done] = usePost('download', [
+    {
+      tmdb_id: state.tmdb_id,
+      magnet: state.magnet,
+      season: state.season,
+      episode: state.episode,
+    },
+  ]);
+
+  return done ? <Redirect to="/" /> : <ReactLoading color="#000000" />;
 }
 
 export interface IndexResponse {
