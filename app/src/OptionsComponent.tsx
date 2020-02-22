@@ -3,7 +3,7 @@ import qs from 'qs';
 import React, { useState, useEffect } from 'react';
 import { subscribe, useLoad } from './utils';
 import { Torrents } from './streaming';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
