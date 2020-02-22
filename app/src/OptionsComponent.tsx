@@ -1,15 +1,9 @@
 import _ from 'lodash';
 import qs from 'qs';
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { subscribe, useLoad } from './utils';
 import { Torrents } from './streaming';
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
-
-type OptionsProps = { type: 'movie' | 'series' } & RouteComponentProps<{
-  tmdb_id: string;
-  season?: string;
-  episode?: string;
-}>;
+import { Link, useLocation } from 'react-router-dom';
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
@@ -86,39 +80,22 @@ function remove(bit: string): string {
   return bit;
 }
 
-class _OptionsComponent extends Component<OptionsProps, {}> {
-  constructor(props: OptionsProps) {
-    super(props);
-  }
-  public render() {
-    return (
-      <Pure
-        type={this.props.type}
-        episode={this.props.match.params.episode}
-        season={this.props.match.params.season}
-        tmdb_id={this.props.match.params.tmdb_id}
-      />
-    );
-  }
-}
+function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
+  const { season, episode, tmdb_id } = useLocation<{
+    tmdb_id: string;
+    season?: string;
+    episode?: string;
+  }>().state;
 
-function Pure(props: {
-  type: string;
-  tmdb_id: string;
-  season?: string;
-  episode?: string;
-}) {
   const torrents = useLoad<Torrents>('torrents');
-  const { type } = props;
   const { items: results, loading } = useSubscribe<ITorrent>(
-    `/stream/${type}/${props.tmdb_id}?` +
-      qs.stringify({ season: props.season, episode: props.episode }),
+    `/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
   );
   const dt = (result: ITorrent) => (
     <DisplayTorrent
-      tmdb_id={props.tmdb_id}
-      season={props.season}
-      episode={props.episode}
+      tmdb_id={tmdb_id}
+      season={season}
+      episode={episode}
       torrents={torrents}
       torrent={result}
     />
@@ -185,5 +162,4 @@ function useSubscribe<T>(url: string) {
   return subscription;
 }
 
-const OptionsComponent = withRouter(_OptionsComponent);
 export { OptionsComponent };
