@@ -157,7 +157,8 @@ export function swrConfig(WrappedComponent: React.ComponentType<{}>) {
   return () => (
     <SWRConfig
       value={{
-        refreshInterval: 3000,
+        // five minute refresh
+        refreshInterval: 5 * 60 * 1000,
         fetcher: (...args) => load(args[0], args[1]),
       }}
     >
