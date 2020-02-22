@@ -496,11 +496,11 @@ def select_season(imdb_id: str) -> str:
 @dataclass
 class DownloadSchema(DataClassJsonMixin):
     tmdb_id: int
-    season: Optional[str]
-    episode: Optional[str]
     magnet: str = field(
         metadata=config(mm_field=String(validate=MarshRegexp(r'^magnet:')))
     )
+    season: Optional[str] = None
+    episode: Optional[str] = None
 
 
 def as_resource(methods: List[str] = ['GET']):
@@ -547,6 +547,7 @@ def api_download() -> str:
         else:
             subpath = 'movies'
 
+        show_title = None
         if thing.season is not None:
             if thing.episode is None:
                 title = f'Season {thing.season}'
@@ -557,7 +558,7 @@ def api_download() -> str:
                 ]
             show_title = item['name']
         else:
-            title = item['name']
+            title = item['title']
 
         add_single(
             magnet=thing.magnet,
