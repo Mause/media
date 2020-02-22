@@ -3,7 +3,7 @@ import qs from 'qs';
 import React, { useState, useEffect } from 'react';
 import { subscribe, useLoad } from './utils';
 import { Torrents } from './streaming';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
@@ -81,11 +81,11 @@ function remove(bit: string): string {
 }
 
 function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
-  const { season, episode, tmdb_id } = useLocation<{
+  const { season, episode, tmdb_id } = useParams<{
     tmdb_id: string;
     season?: string;
     episode?: string;
-  }>().state;
+  }>();
 
   const torrents = useLoad<Torrents>('torrents');
   const { items: results, loading } = useSubscribe<ITorrent>(
