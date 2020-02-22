@@ -1,9 +1,10 @@
 import { act, render } from '@testing-library/react';
 import React from 'react';
-import { DownloadComponent } from './streaming';
+import { DownloadComponent, swrConfig } from './streaming';
 import { Route, Router } from 'react-router-dom';
 import { mock, wait, useMoxios } from './test.utils';
 import { createMemoryHistory } from 'history';
+import moxios from 'moxios';
 
 useMoxios();
 
@@ -11,25 +12,24 @@ test('DownloadComponent', async () => {
   await act(async () => {
     const history = createMemoryHistory();
     const state = {
-      type: 'movie',
-      imdb_id: 'tt10000',
-      titles: 'Hello',
+      tmdb_id: '10000',
       magnet: '...',
     };
     history.push('/download', state);
 
     const el = render(
-      <Router history={history}>
-        <Route path="/download">
-          <DownloadComponent />
-        </Route>
-      </Router>,
+      swrConfig(() => (
+        <Router history={history}>
+          <Route path="/download">
+            <DownloadComponent />
+          </Route>
+        </Router>
+      ))(),
     );
 
-    //await wait();
     expect(el).toMatchSnapshot();
 
-    await mock('/download/movie?imdb_id=tt10000&magnet=...&titles=Hello', {});
+    await moxios.stubOnce('POST', /\/api\/download/, {});
     await wait();
 
     expect(el).toMatchSnapshot();
