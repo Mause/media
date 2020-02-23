@@ -2,8 +2,8 @@ from functools import lru_cache as _lru_cache
 from typing import Dict, Optional, Set, TypeVar
 
 from apispec.ext.marshmallow import MarshmallowPlugin
-from flask_restplus import Api
-from flask_restplus.model import SchemaModel
+from flask_restx import Api
+from flask_restx.model import SchemaModel
 from marshmallow import Schema
 
 T = TypeVar('T')
