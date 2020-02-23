@@ -3,6 +3,7 @@ import ReactLoading from 'react-loading';
 import qs from 'qs';
 import { useLocation, Link } from 'react-router-dom';
 import { useLoad } from './utils';
+import { SearchBox } from './IndexComponent';
 
 interface SearchResult {
   Type: string,
@@ -17,6 +18,7 @@ export function SearchComponent() {
 
   const results = useLoad<SearchResult[]>('search', { query, });
   return <div>
+    <SearchBox />
     <ul>
       {results ? results.map(result => <li key={result.imdbID}>
         <Link to={result.Type === 'movie' ?

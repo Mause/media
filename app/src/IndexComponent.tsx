@@ -50,10 +50,10 @@ class _IndexComponent extends Component<IndexProps, IndexState> {
   }
 }
 
-function SearchBox() {
+export function SearchBox() {
   function search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    history.push({ pathname: '/search', search: qs.stringify({query}) });
+    history.push({ pathname: '/search', search: qs.stringify({ query }) });
   }
 
   const [query, setQuery] = useState('');
