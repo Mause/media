@@ -42,8 +42,7 @@ Object {
                     class="MuiBreadcrumbs-li"
                   >
                     <a
-                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                      href=""
+                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
                     >
                       Search Results
                     </a>
@@ -144,8 +143,7 @@ Object {
                   class="MuiBreadcrumbs-li"
                 >
                   <a
-                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                    href=""
+                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
                   >
                     Search Results
                   </a>
@@ -303,8 +301,7 @@ Object {
                     class="MuiBreadcrumbs-li"
                   >
                     <a
-                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                      href=""
+                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
                     >
                       Search Results
                     </a>
@@ -381,8 +378,7 @@ Object {
                   class="MuiBreadcrumbs-li"
                 >
                   <a
-                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                    href=""
+                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
                   >
                     Search Results
                   </a>

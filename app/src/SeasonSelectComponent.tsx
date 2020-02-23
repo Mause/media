@@ -7,6 +7,7 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import useSWR from 'swr';
 import qs from 'qs';
 import { MLink } from './utils';
+import MateralLink from '@material-ui/core/Link';
 
 export interface TV {
   number_of_seasons: number;
@@ -19,16 +20,18 @@ function Shared() {
   return (
     <Breadcrumbs>
       <MLink to="/">Home</MLink>
-      <MLink
-        to={
-          state && {
+      {state ? (
+        <MLink
+          to={{
             pathname: '/search',
             search: qs.stringify({ query: state.query }),
-          }
-        }
-      >
-        Search Results
-      </MLink>
+          }}
+        >
+          Search Results
+        </MLink>
+      ) : (
+        <MateralLink>Search Results</MateralLink>
+      )}
     </Breadcrumbs>
   );
 }
