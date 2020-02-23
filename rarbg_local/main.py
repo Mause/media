@@ -44,8 +44,8 @@ from flask import (
 from flask_admin import Admin
 from flask_cors import CORS
 from flask_jsontools import DynamicJSONEncoder, jsonapi
-from flask_restplus import Api, Resource, fields
-from flask_restplus.reqparse import RequestParser
+from flask_restx import Api, Resource, fields
+from flask_restx.reqparse import RequestParser
 from flask_sslify import SSLify
 from flask_user import UserManager, current_user, login_required, roles_required
 from flask_wtf import FlaskForm
