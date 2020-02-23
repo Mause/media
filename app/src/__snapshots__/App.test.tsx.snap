@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders learn react link 1`] = `
+<div>
+  <h1>
+    Media
+  </h1>
+  <nav>
+    <a
+      href="/"
+    >
+      Home
+    </a>
+     
+    <a
+      href="http://novell.mause.me:9091"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Transmission
+    </a>
+     
+    <a
+      href="https://app.plex.tv"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Plex
+    </a>
+     
+    <a
+      href="/user/sign-out"
+    >
+      Logout
+    </a>
+  </nav>
+  <br />
+  <div>
+    <form>
+      <input
+        name="query"
+      />
+       
+      <input
+        type="submit"
+        value="Search"
+      />
+    </form>
+    <div
+      class="colA"
+    >
+      <h2>
+        Movies 
+        <i
+          class="fas fa-spinner fa-spin fa-xs"
+        />
+      </h2>
+      <ul />
+    </div>
+    <div>
+      <div
+        class="colB"
+      >
+        <h2>
+          TV Shows 
+          <i
+            class="fas fa-spinner fa-spin fa-xs"
+          />
+        </h2>
+      </div>
+    </div>
+  </div>
+</div>
+`;
