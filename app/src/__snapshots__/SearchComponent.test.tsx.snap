@@ -6,6 +6,16 @@ Object {
   "baseElement": <body>
     <div>
       <div>
+        <form>
+          <input
+            name="query"
+          />
+           
+          <input
+            type="submit"
+            value="Search"
+          />
+        </form>
         <ul>
           <li>
             <a
@@ -23,6 +33,16 @@ Object {
   </body>,
   "container": <div>
     <div>
+      <form>
+        <input
+          name="query"
+        />
+         
+        <input
+          type="submit"
+          value="Search"
+        />
+      </form>
       <ul>
         <li>
           <a
