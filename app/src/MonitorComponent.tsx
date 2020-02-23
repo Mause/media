@@ -1,10 +1,8 @@
 import useSWR from 'swr';
 import React from 'react';
-import { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
 import { Redirect, useParams } from 'react-router-dom';
-import Axios from 'axios';
-import { BASE } from './utils';
+import { usePost } from './utils';
 
 export function MonitorComponent() {
   const { data } = useSWR<{ title: string }[]>('monitor');
@@ -26,16 +24,9 @@ export function MonitorComponent() {
 }
 
 export function MonitorAddComponent() {
-  const [done, setDone] = useState(false);
   const { tmdb_id } = useParams();
 
-  useEffect(() => {
-    Axios.post(
-      BASE + '/api/monitor',
-      { tmdb_id },
-      { withCredentials: true },
-    ).then(() => setDone(true));
-  }, [tmdb_id]);
+  const [done] = usePost('monitor', { tmdb_id });
 
   return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
 }
