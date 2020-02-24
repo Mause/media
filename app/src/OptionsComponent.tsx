@@ -14,6 +14,7 @@ interface ITorrent {
   title: string;
   seeders: number;
   download: string;
+  category: string;
 }
 
 function DisplayTorrent({
