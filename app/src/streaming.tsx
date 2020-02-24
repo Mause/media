@@ -34,11 +34,16 @@ Sentry.configureScope(function(scope) {
 });
 
 export function DownloadComponent() {
-  const { state } = useLocation();
+  const { state } = useLocation<{
+    tmdb_id: string;
+    magnet: string;
+    season?: string;
+    episode?: string;
+  }>();
 
   const [done] = usePost('download', [
     {
-      tmdb_id: state.tmdb_id,
+      tmdb_id: state!.tmdb_id,
       magnet: state.magnet,
       season: state.season,
       episode: state.episode,
