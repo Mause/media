@@ -16,7 +16,7 @@ export interface TV {
 }
 
 function Shared() {
-  const { state } = useLocation();
+  const { state } = useLocation<{ query: string }>();
   return (
     <Breadcrumbs>
       <MLink to="/">Home</MLink>

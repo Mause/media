@@ -6,7 +6,7 @@ export default function AxiosErrorCatcher(props: { children: any }) {
 
   useEffect(() => {
     const reqId = axios.interceptors.request.use(req => {
-      setError(null);
+      setError(undefined);
       return req;
     });
     const resId = axios.interceptors.response.use(req => req, setError);
