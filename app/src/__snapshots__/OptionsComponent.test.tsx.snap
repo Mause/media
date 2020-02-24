@@ -16,3 +16,53 @@ exports[`OptionsComponent 1`] = `
   </div>
 </div>
 `;
+
+exports[`OptionsComponent 2`] = `
+<div>
+  <div>
+    <i
+      class="fas fa-spinner fa-spin fa-xs"
+    />
+    <div>
+      <p>
+        Auto selection: 
+        <span>
+          <a
+            href="/download"
+          >
+            title
+          </a>
+           
+          <small>
+            5
+          </small>
+           
+          
+        </span>
+      </p>
+      <ul>
+        <div>
+          <h3>
+            x264/1080
+          </h3>
+          <li>
+            <span>
+              <a
+                href="/download"
+              >
+                title
+              </a>
+               
+              <small>
+                5
+              </small>
+               
+              
+            </span>
+          </li>
+        </div>
+      </ul>
+    </div>
+  </div>
+</div>
+`;

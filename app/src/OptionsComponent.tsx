@@ -10,7 +10,7 @@ function getHash(magnet: string) {
   return _.last(u.searchParams.get('xt')!.split(':'));
 }
 
-interface ITorrent {
+export interface ITorrent {
   title: string;
   seeders: number;
   download: string;
