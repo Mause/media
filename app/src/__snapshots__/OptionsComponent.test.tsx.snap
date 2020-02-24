@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OptionsComponent 1`] = `
+<div>
+  <div>
+    <i
+      class="fas fa-spinner fa-spin fa-xs"
+    />
+    <div>
+      <p>
+        Auto selection: 
+        None
+      </p>
+      <ul />
+    </div>
+  </div>
+</div>
+`;
