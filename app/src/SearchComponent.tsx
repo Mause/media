@@ -5,7 +5,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { useLoad } from './utils';
 import { SearchBox } from './IndexComponent';
 
-interface SearchResult {
+export interface SearchResult {
   Type: string,
   Year: number,
   imdbID: number,
