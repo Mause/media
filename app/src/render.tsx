@@ -122,6 +122,10 @@ export function Progress({
   }
 }
 
+export function getMarker(episode: { season: any; episode: any }) {
+  return String.Format('S{0:00}E{0:00}', episode.season, episode.episode);
+}
+
 function getProgress(
   item: { download: ShortDownload },
   torrents: Torrents,
@@ -131,12 +135,7 @@ function getProgress(
     tid = item.download.transmission_id;
   if (tid.includes('.')) {
     tid = tid.split('.')[0];
-    const episode = item as EpisodeResponse;
-    const marker = String.Format(
-      'S{0:00}E{0:00}',
-      episode.season,
-      episode.episode,
-    );
+    const marker = getMarker(item as EpisodeResponse);
     const torrent = torrents[tid];
     if (!torrent) return null;
     eta = torrent.eta;
