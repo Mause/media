@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { subscribe, useLoad } from './utils';
 import { Torrents } from './streaming';
 import { Link, useParams } from 'react-router-dom';
+import useSWR from 'swr';
+import { getMarker } from './render';
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
@@ -48,8 +50,8 @@ function DisplayTorrent({
       {torrents && getHash(torrent.download)! in torrents ? (
         <small>downloaded</small>
       ) : (
-        ''
-      )}
+          ''
+        )}
     </span>
   );
 }
@@ -88,6 +90,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     episode?: string;
   }>();
 
+  const { data: meta } = useSWR<{ title: string }>((season ? 'tv' : 'movie') + '/' + tmdb_id);
   const torrents = useLoad<Torrents>('torrents');
   const { items: results, loading } = useSubscribe<ITorrent>(
     `/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
@@ -119,6 +122,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   ));
   return (
     <div>
+      <h3>{meta && meta.title} {season && getMarker({ season, episode })}</h3>
       {loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : ''}
       {bits.length || loading ? (
         <div>
