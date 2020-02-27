@@ -10,10 +10,6 @@ import axiosRetry from '@vtex/axios-concurrent-retry';
 
 axiosRetry(Axios, { retries: 3 });
 
-export const BASE = window.location.host.includes('localhost')
-  ? 'http://localhost:5000'
-  : '';
-
 export function MLink<S>(props: {
   children: React.ReactNode;
   to: LocationDescriptor<S>;
@@ -26,7 +22,7 @@ export function subscribe(
   callback: (a: any) => void,
   end: (() => void) | null = null,
 ): void {
-  const es = new EventSource(BASE + path, {
+  const es = new EventSource(path, {
     withCredentials: true,
   });
   es.addEventListener('message', ({ data }) => {
@@ -41,7 +37,7 @@ export function subscribe(
 }
 
 export function load<T>(path: string, params?: any): Promise<T> {
-  return Axios.get<T>(BASE + `/api/${path}`, {
+  return Axios.get<T>(`/api/${path}`, {
     params: qs.parse(params),
     withCredentials: true,
   }).then(t => t.data);
@@ -61,7 +57,7 @@ export function usePost<T>(url: string, body: any): [boolean, T?] {
   const sbody = JSON.stringify(body);
 
   useEffect(() => {
-    Axios.post<T>(BASE + '/api/' + url, JSON.parse(sbody), {
+    Axios.post<T>('/api/' + url, JSON.parse(sbody), {
       withCredentials: true,
     }).then(res => setDone([true, res.data]));
   }, [url, sbody]);
