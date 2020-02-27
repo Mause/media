@@ -21,7 +21,7 @@
     "moment": "^2.24.0",
     "qs": "^6.9.1",
     "react": "^16.13.0",
-    "react-collapsible": "^2.6.3",
+    "react-collapsible": "^2.7.0",
     "react-contextmenu": "^2.13.0",
     "react-dom": "^16.13.0",
     "react-error-boundary": "^1.2.5",

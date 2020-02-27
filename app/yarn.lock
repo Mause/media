@@ -8726,10 +8726,10 @@ react-app-polyfill@^1.0.6:
     regenerator-runtime "^0.13.3"
     whatwg-fetch "^3.0.0"
 
-react-collapsible@^2.6.3:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/react-collapsible/-/react-collapsible-2.6.3.tgz#8162f17956e0b0590afe146043cf4f4e77639f85"
-  integrity sha512-BxkZJfmlw4ja3QRqAoNLsJM3SvmchyNGSBCW4V+lU43ta/fxehZWnFfTSaEMCfCTOJIfvgR2W7TLARN+wxVduA==
+react-collapsible@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/react-collapsible/-/react-collapsible-2.7.0.tgz#d95111bfbea3c01adc7898c5895b191360f71e94"
+  integrity sha512-uS6cFyJ2WR0F0xfCjmJ3TGwH+no/JOs8cDKNTPMWKWSJdosmHPCk8io4ZrDyz5dKJmSI5X2T5eJqnasawe6wew==
 
 react-contextmenu@^2.13.0:
   version "2.13.0"
