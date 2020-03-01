@@ -6,10 +6,10 @@ import { useLoad } from './utils';
 import { SearchBox } from './IndexComponent';
 
 export interface SearchResult {
-  Type: string,
-  Year: number,
-  imdbID: number,
-  title: string
+  Type: string;
+  Year: number;
+  imdbID: number;
+  title: string;
 }
 
 export function SearchComponent() {
