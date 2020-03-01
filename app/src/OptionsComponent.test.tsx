@@ -2,6 +2,7 @@ import React from 'react';
 import { render, act, wait } from '@testing-library/react';
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { renderWithSWR } from './test.utils';
 
 const sources: ES[] = [];
 type CB = (event: { data: string }) => void;
@@ -21,7 +22,7 @@ Object.defineProperty(window, 'EventSource', { value: ES });
 
 test('OptionsComponent', async () => {
   await act(async () => {
-    const el = render(
+    const el = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
           <OptionsComponent type="movie" />
