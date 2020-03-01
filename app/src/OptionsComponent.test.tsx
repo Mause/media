@@ -2,7 +2,9 @@ import React from 'react';
 import { render, act, wait } from '@testing-library/react';
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { renderWithSWR } from './test.utils';
+import { mock, useMoxios, renderWithSWR } from './test.utils';
+
+useMoxios();
 
 const sources: ES[] = [];
 type CB = (event: { data: string }) => void;
@@ -29,9 +31,9 @@ test('OptionsComponent', async () => {
         </Route>
       </MemoryRouter>,
     );
-    expect(el.container).toMatchSnapshot();
+    await mock('movie/1', { title: 'Hello World' });
 
-    await wait();
+    expect(el.container).toMatchSnapshot();
 
     const torrent: ITorrent = {
       title: 'title',

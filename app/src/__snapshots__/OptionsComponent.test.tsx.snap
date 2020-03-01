@@ -3,6 +3,10 @@
 exports[`OptionsComponent 1`] = `
 <div>
   <div>
+    <h3>
+      Hello World
+       
+    </h3>
     <i
       class="fas fa-spinner fa-spin fa-xs"
     />
@@ -20,6 +24,10 @@ exports[`OptionsComponent 1`] = `
 exports[`OptionsComponent 2`] = `
 <div>
   <div>
+    <h3>
+      Hello World
+       
+    </h3>
     <i
       class="fas fa-spinner fa-spin fa-xs"
     />
