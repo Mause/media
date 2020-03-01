@@ -35,18 +35,32 @@ class _IndexComponent extends Component<IndexProps, IndexState> {
   }
   private reload() {
     this.setState({ loadingTorrents: true, loadingState: true });
-    load<IndexResponse>('index').then(state => this.setState({ state, loadingState: false }));
-    load<Torrents>('torrents').then(torrents => this.setState({ torrents, loadingTorrents: false }));
+    load<IndexResponse>('index').then(state =>
+      this.setState({ state, loadingState: false }),
+    );
+    load<Torrents>('torrents').then(torrents =>
+      this.setState({ torrents, loadingTorrents: false }),
+    );
   }
   get loading() {
     return this.state.loadingState || this.state.loadingTorrents;
   }
   render() {
-    return <div>
-      <SearchBox />
-      <Movies torrents={this.state.torrents} movies={this.state.state.movies} loading={this.loading} />
-      <TVShows torrents={this.state.torrents} series={this.state.state.series} loading={this.loading} />
-    </div >;
+    return (
+      <div>
+        <SearchBox />
+        <Movies
+          torrents={this.state.torrents}
+          movies={this.state.state.movies}
+          loading={this.loading}
+        />
+        <TVShows
+          torrents={this.state.torrents}
+          series={this.state.state.series}
+          loading={this.loading}
+        />
+      </div>
+    );
   }
 }
 

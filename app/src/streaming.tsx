@@ -22,7 +22,7 @@ import { OptionsComponent } from './OptionsComponent';
 import { load, usePost } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { SWRConfig } from 'swr';
-import { ManualAddComponent } from './ManualAddComponent'
+import { ManualAddComponent } from './ManualAddComponent';
 
 Sentry.init({
   dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
@@ -191,7 +191,7 @@ function Routes() {
       <RouteWithTitle path="/download" title="Download">
         <DownloadComponent />
       </RouteWithTitle>
-      <RouteWithTitle path='/manual' title='Manual'>
+      <RouteWithTitle path="/manual" title="Manual">
         <ManualAddComponent />
       </RouteWithTitle>
       <RouteWithTitle path="/stats" title="Stats">

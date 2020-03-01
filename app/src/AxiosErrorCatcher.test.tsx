@@ -12,7 +12,7 @@ import ErrorBoundary from 'react-error-boundary';
 useMoxios();
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => { });
+  jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 afterEach(() => {
