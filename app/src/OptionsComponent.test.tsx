@@ -32,6 +32,7 @@ test('OptionsComponent', async () => {
       </MemoryRouter>,
     );
     await mock('movie/1', { title: 'Hello World' });
+    await wait();
 
     expect(el.container).toMatchSnapshot();
 
