@@ -3,13 +3,74 @@
 exports[`OptionsComponent 1`] = `
 <div>
   <div>
-    <h3>
-      Hello World
-       
-    </h3>
-    <i
-      class="fas fa-spinner fa-spin fa-xs"
-    />
+    <nav
+      aria-label="breadcrumb"
+      class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+    >
+      <ol
+        class="MuiBreadcrumbs-ol"
+      >
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <nav
+            class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            <ol
+              class="MuiBreadcrumbs-ol"
+            >
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-hidden="true"
+                class="MuiBreadcrumbs-separator"
+              >
+                /
+              </li>
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                >
+                  Search Results
+                </a>
+              </li>
+            </ol>
+          </nav>
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+          >
+            Hello World
+          </p>
+        </li>
+      </ol>
+    </nav>
+    <div
+      style="text-align: center;"
+    >
+      <i
+        class="fas fa-spinner fa-spin "
+      />
+    </div>
     <div>
       <p>
         Auto selection: 
@@ -24,13 +85,74 @@ exports[`OptionsComponent 1`] = `
 exports[`OptionsComponent 2`] = `
 <div>
   <div>
-    <h3>
-      Hello World
-       
-    </h3>
-    <i
-      class="fas fa-spinner fa-spin fa-xs"
-    />
+    <nav
+      aria-label="breadcrumb"
+      class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+    >
+      <ol
+        class="MuiBreadcrumbs-ol"
+      >
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <nav
+            class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            <ol
+              class="MuiBreadcrumbs-ol"
+            >
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-hidden="true"
+                class="MuiBreadcrumbs-separator"
+              >
+                /
+              </li>
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                >
+                  Search Results
+                </a>
+              </li>
+            </ol>
+          </nav>
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+          >
+            Hello World
+          </p>
+        </li>
+      </ol>
+    </nav>
+    <div
+      style="text-align: center;"
+    >
+      <i
+        class="fas fa-spinner fa-spin "
+      />
+    </div>
     <div>
       <p>
         Auto selection: 
