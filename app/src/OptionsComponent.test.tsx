@@ -43,7 +43,13 @@ test('OptionsComponent', async () => {
       category: 'Movies/x264/1080',
     };
 
-    sources[0]!.ls!({ data: JSON.stringify(torrent) });
+    const cb = sources[0]!.ls!;
+
+    cb({ data: JSON.stringify(torrent) });
+
+    expect(el.container).toMatchSnapshot();
+
+    cb({ data: '' });
 
     expect(el.container).toMatchSnapshot();
   });
