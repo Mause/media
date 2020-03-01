@@ -6,7 +6,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.4",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.44",
+    "@material-ui/lab": "^4.0.0-alpha.45",
     "@sentry/browser": "^5.12.5",
     "@testing-library/jest-dom": "^5.1.1",
     "@testing-library/react": "^9.4.1",
