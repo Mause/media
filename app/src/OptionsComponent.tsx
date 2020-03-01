@@ -138,7 +138,14 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           No results
           <ul>
             <li>
-              <Link to={{ pathname: '/manual' }}>Add manually</Link>
+              <Link
+                to={{
+                  pathname: '/manual',
+                  state: { tmdb_id, season, episode },
+                }}
+              >
+                Add manually
+              </Link>
             </li>
           </ul>
         </div>
