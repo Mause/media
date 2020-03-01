@@ -14,8 +14,15 @@ import { Link } from 'react-router-dom';
 import { TV } from './SeasonSelectComponent';
 import useSWR from 'swr';
 
-function Loading({ loading }: { loading: boolean }) {
-  return loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : <></>;
+export function Loading({
+  loading,
+  large,
+}: {
+  loading: boolean;
+  large?: boolean;
+}) {
+  const cls = ['fas fa-spinner fa-spin', large ? '' : 'fa-xs'].join(' ');
+  return loading ? <i className={cls} /> : <></>;
 }
 
 function openPlex(item: { download: { imdb_id: string } }) {
