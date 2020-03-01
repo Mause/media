@@ -149,7 +149,9 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   return (
     <div>
       {header}
-      {loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : ''}
+      <div style={{ textAlign: 'center' }}>
+        <Loading loading={loading} large={true} />
+      </div>
       {bits.length || loading ? (
         <div>
           <p>Auto selection: {auto ? dt(auto) : 'None'}</p>
