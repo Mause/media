@@ -1,11 +1,13 @@
 import _ from 'lodash';
 import qs from 'qs';
 import React, { useState, useEffect } from 'react';
-import { subscribe, useLoad } from './utils';
+import { subscribe, useLoad, MLink } from './utils';
 import { Torrents } from './streaming';
 import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { getMarker } from './render';
+import { Loading } from './render';
+import { Breadcrumbs, Typography } from '@material-ui/core';
+import { Shared } from './SeasonSelectComponent';
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
@@ -122,11 +124,31 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       ))}
     </div>
   ));
+
+  let header = null;
+  if (type === 'movie') {
+    header = (
+      <Breadcrumbs aria-label="breadcrumb">
+        <Shared />
+        <Typography color="textPrimary">{meta && meta.title}</Typography>
+      </Breadcrumbs>
+    );
+  } else {
+    header = (
+      <Breadcrumbs aria-label="breadcrumb">
+        <Shared />
+        <MLink to={`/select/${tmdb_id}/season`}>{meta && meta.title}</MLink>
+        <MLink to={`/select/${tmdb_id}/season/${season}`}>
+          Season {season}
+        </MLink>
+        <Typography color="textPrimary">Episode {episode}</Typography>
+      </Breadcrumbs>
+    );
+  }
+
   return (
     <div>
-      <h3>
-        {meta && meta.title} {season && getMarker({ season, episode })}
-      </h3>
+      {header}
       {loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : ''}
       {bits.length || loading ? (
         <div>

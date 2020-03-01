@@ -15,7 +15,7 @@ export interface TV {
   seasons: { episode_count: number }[];
 }
 
-function Shared() {
+export function Shared() {
   const { state } = useLocation<{ query: string }>();
   return (
     <Breadcrumbs>
