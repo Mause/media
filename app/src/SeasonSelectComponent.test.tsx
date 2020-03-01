@@ -32,7 +32,7 @@ test('SeasonSelectComponent  render', async () => {
     await wait();
 
     expect(el.getByTestId('title').textContent).toEqual('Hello');
-    expect(el).toMatchSnapshot();
+    expect(el.container).toMatchSnapshot();
   });
 });
 
@@ -60,6 +60,6 @@ test('EpisodeSelectComponent render', async () => {
     await wait();
 
     expect(el.getByTestId('title').textContent).toEqual('Season 1');
-    expect(el).toMatchSnapshot();
+    expect(el.container).toMatchSnapshot();
   });
 });

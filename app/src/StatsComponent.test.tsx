@@ -15,6 +15,6 @@ test('render', async () => {
     await wait();
 
     expect(el.findByText('Mause')).toBeTruthy();
-    expect(el).toMatchSnapshot();
+    expect(el.container).toMatchSnapshot();
   })
 })

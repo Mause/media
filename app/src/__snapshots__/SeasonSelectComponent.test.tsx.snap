@@ -1,471 +1,183 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`EpisodeSelectComponent render 1`] = `
-Object {
-  "asFragment": [Function],
-  "baseElement": <body>
-    <div>
-      <div>
-        <nav
-          aria-label="breadcrumb"
-          class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
-        >
-          <ol
-            class="MuiBreadcrumbs-ol"
-          >
-            <li
-              class="MuiBreadcrumbs-li"
-            >
-              <nav
-                class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
-              >
-                <ol
-                  class="MuiBreadcrumbs-ol"
-                >
-                  <li
-                    class="MuiBreadcrumbs-li"
-                  >
-                    <a
-                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                      href="/"
-                    >
-                      Home
-                    </a>
-                  </li>
-                  <li
-                    aria-hidden="true"
-                    class="MuiBreadcrumbs-separator"
-                  >
-                    /
-                  </li>
-                  <li
-                    class="MuiBreadcrumbs-li"
-                  >
-                    <a
-                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-                    >
-                      Search Results
-                    </a>
-                  </li>
-                </ol>
-              </nav>
-            </li>
-            <li
-              aria-hidden="true"
-              class="MuiBreadcrumbs-separator"
-            >
-              /
-            </li>
-            <li
-              class="MuiBreadcrumbs-li"
-            >
-              <a
-                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                href="/select/1/season"
-              >
-                Hello
-              </a>
-            </li>
-            <li
-              aria-hidden="true"
-              class="MuiBreadcrumbs-separator"
-            >
-              /
-            </li>
-            <li
-              class="MuiBreadcrumbs-li"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
-                data-testid="title"
-              >
-                Season 
-                1
-              </p>
-            </li>
-          </ol>
-        </nav>
-        <ol>
-          <li
-            value="1"
-          >
-            <a
-              href="/select/1/season/1/episode/1/options"
-            >
-              Episode 1
-            </a>
-          </li>
-        </ol>
-        <a
-          href="/select/1/season/1/download_all"
-        >
-          Download season
-        </a>
-        <br />
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div>
-      <nav
-        aria-label="breadcrumb"
-        class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+<div>
+  <div>
+    <nav
+      aria-label="breadcrumb"
+      class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+    >
+      <ol
+        class="MuiBreadcrumbs-ol"
       >
-        <ol
-          class="MuiBreadcrumbs-ol"
-        >
-          <li
-            class="MuiBreadcrumbs-li"
-          >
-            <nav
-              class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
-            >
-              <ol
-                class="MuiBreadcrumbs-ol"
-              >
-                <li
-                  class="MuiBreadcrumbs-li"
-                >
-                  <a
-                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                    href="/"
-                  >
-                    Home
-                  </a>
-                </li>
-                <li
-                  aria-hidden="true"
-                  class="MuiBreadcrumbs-separator"
-                >
-                  /
-                </li>
-                <li
-                  class="MuiBreadcrumbs-li"
-                >
-                  <a
-                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-                  >
-                    Search Results
-                  </a>
-                </li>
-              </ol>
-            </nav>
-          </li>
-          <li
-            aria-hidden="true"
-            class="MuiBreadcrumbs-separator"
-          >
-            /
-          </li>
-          <li
-            class="MuiBreadcrumbs-li"
-          >
-            <a
-              class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-              href="/select/1/season"
-            >
-              Hello
-            </a>
-          </li>
-          <li
-            aria-hidden="true"
-            class="MuiBreadcrumbs-separator"
-          >
-            /
-          </li>
-          <li
-            class="MuiBreadcrumbs-li"
-          >
-            <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
-              data-testid="title"
-            >
-              Season 
-              1
-            </p>
-          </li>
-        </ol>
-      </nav>
-      <ol>
         <li
-          value="1"
+          class="MuiBreadcrumbs-li"
+        >
+          <nav
+            class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            <ol
+              class="MuiBreadcrumbs-ol"
+            >
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-hidden="true"
+                class="MuiBreadcrumbs-separator"
+              >
+                /
+              </li>
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                >
+                  Search Results
+                </a>
+              </li>
+            </ol>
+          </nav>
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
         >
           <a
-            href="/select/1/season/1/episode/1/options"
+            class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+            href="/select/1/season"
           >
-            Episode 1
+            Hello
           </a>
         </li>
-      </ol>
-      <a
-        href="/select/1/season/1/download_all"
-      >
-        Download season
-      </a>
-      <br />
-    </div>
-  </div>,
-  "debug": [Function],
-  "findAllByAltText": [Function],
-  "findAllByDisplayValue": [Function],
-  "findAllByLabelText": [Function],
-  "findAllByPlaceholderText": [Function],
-  "findAllByRole": [Function],
-  "findAllByTestId": [Function],
-  "findAllByText": [Function],
-  "findAllByTitle": [Function],
-  "findByAltText": [Function],
-  "findByDisplayValue": [Function],
-  "findByLabelText": [Function],
-  "findByPlaceholderText": [Function],
-  "findByRole": [Function],
-  "findByTestId": [Function],
-  "findByText": [Function],
-  "findByTitle": [Function],
-  "getAllByAltText": [Function],
-  "getAllByDisplayValue": [Function],
-  "getAllByLabelText": [Function],
-  "getAllByPlaceholderText": [Function],
-  "getAllByRole": [Function],
-  "getAllByTestId": [Function],
-  "getAllByText": [Function],
-  "getAllByTitle": [Function],
-  "getByAltText": [Function],
-  "getByDisplayValue": [Function],
-  "getByLabelText": [Function],
-  "getByPlaceholderText": [Function],
-  "getByRole": [Function],
-  "getByTestId": [Function],
-  "getByText": [Function],
-  "getByTitle": [Function],
-  "queryAllByAltText": [Function],
-  "queryAllByDisplayValue": [Function],
-  "queryAllByLabelText": [Function],
-  "queryAllByPlaceholderText": [Function],
-  "queryAllByRole": [Function],
-  "queryAllByTestId": [Function],
-  "queryAllByText": [Function],
-  "queryAllByTitle": [Function],
-  "queryByAltText": [Function],
-  "queryByDisplayValue": [Function],
-  "queryByLabelText": [Function],
-  "queryByPlaceholderText": [Function],
-  "queryByRole": [Function],
-  "queryByTestId": [Function],
-  "queryByText": [Function],
-  "queryByTitle": [Function],
-  "rerender": [Function],
-  "unmount": [Function],
-}
-`;
-
-exports[`SeasonSelectComponent  render 1`] = `
-Object {
-  "asFragment": [Function],
-  "baseElement": <body>
-    <div>
-      <div>
-        <nav
-          aria-label="breadcrumb"
-          class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator"
         >
-          <ol
-            class="MuiBreadcrumbs-ol"
-          >
-            <li
-              class="MuiBreadcrumbs-li"
-            >
-              <nav
-                class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
-              >
-                <ol
-                  class="MuiBreadcrumbs-ol"
-                >
-                  <li
-                    class="MuiBreadcrumbs-li"
-                  >
-                    <a
-                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                      href="/"
-                    >
-                      Home
-                    </a>
-                  </li>
-                  <li
-                    aria-hidden="true"
-                    class="MuiBreadcrumbs-separator"
-                  >
-                    /
-                  </li>
-                  <li
-                    class="MuiBreadcrumbs-li"
-                  >
-                    <a
-                      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-                    >
-                      Search Results
-                    </a>
-                  </li>
-                </ol>
-              </nav>
-            </li>
-            <li
-              aria-hidden="true"
-              class="MuiBreadcrumbs-separator"
-            >
-              /
-            </li>
-            <li
-              class="MuiBreadcrumbs-li"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
-                data-testid="title"
-              >
-                Hello
-              </p>
-            </li>
-          </ol>
-        </nav>
-        <ul>
-          <li>
-            <a
-              href="/select/1/season/1"
-            >
-              Season 
-              1
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div>
-      <nav
-        aria-label="breadcrumb"
-        class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
-      >
-        <ol
-          class="MuiBreadcrumbs-ol"
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
         >
-          <li
-            class="MuiBreadcrumbs-li"
-          >
-            <nav
-              class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
-            >
-              <ol
-                class="MuiBreadcrumbs-ol"
-              >
-                <li
-                  class="MuiBreadcrumbs-li"
-                >
-                  <a
-                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-                    href="/"
-                  >
-                    Home
-                  </a>
-                </li>
-                <li
-                  aria-hidden="true"
-                  class="MuiBreadcrumbs-separator"
-                >
-                  /
-                </li>
-                <li
-                  class="MuiBreadcrumbs-li"
-                >
-                  <a
-                    class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-                  >
-                    Search Results
-                  </a>
-                </li>
-              </ol>
-            </nav>
-          </li>
-          <li
-            aria-hidden="true"
-            class="MuiBreadcrumbs-separator"
-          >
-            /
-          </li>
-          <li
-            class="MuiBreadcrumbs-li"
-          >
-            <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
-              data-testid="title"
-            >
-              Hello
-            </p>
-          </li>
-        </ol>
-      </nav>
-      <ul>
-        <li>
-          <a
-            href="/select/1/season/1"
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+            data-testid="title"
           >
             Season 
             1
-          </a>
+          </p>
         </li>
-      </ul>
-    </div>
-  </div>,
-  "debug": [Function],
-  "findAllByAltText": [Function],
-  "findAllByDisplayValue": [Function],
-  "findAllByLabelText": [Function],
-  "findAllByPlaceholderText": [Function],
-  "findAllByRole": [Function],
-  "findAllByTestId": [Function],
-  "findAllByText": [Function],
-  "findAllByTitle": [Function],
-  "findByAltText": [Function],
-  "findByDisplayValue": [Function],
-  "findByLabelText": [Function],
-  "findByPlaceholderText": [Function],
-  "findByRole": [Function],
-  "findByTestId": [Function],
-  "findByText": [Function],
-  "findByTitle": [Function],
-  "getAllByAltText": [Function],
-  "getAllByDisplayValue": [Function],
-  "getAllByLabelText": [Function],
-  "getAllByPlaceholderText": [Function],
-  "getAllByRole": [Function],
-  "getAllByTestId": [Function],
-  "getAllByText": [Function],
-  "getAllByTitle": [Function],
-  "getByAltText": [Function],
-  "getByDisplayValue": [Function],
-  "getByLabelText": [Function],
-  "getByPlaceholderText": [Function],
-  "getByRole": [Function],
-  "getByTestId": [Function],
-  "getByText": [Function],
-  "getByTitle": [Function],
-  "queryAllByAltText": [Function],
-  "queryAllByDisplayValue": [Function],
-  "queryAllByLabelText": [Function],
-  "queryAllByPlaceholderText": [Function],
-  "queryAllByRole": [Function],
-  "queryAllByTestId": [Function],
-  "queryAllByText": [Function],
-  "queryAllByTitle": [Function],
-  "queryByAltText": [Function],
-  "queryByDisplayValue": [Function],
-  "queryByLabelText": [Function],
-  "queryByPlaceholderText": [Function],
-  "queryByRole": [Function],
-  "queryByTestId": [Function],
-  "queryByText": [Function],
-  "queryByTitle": [Function],
-  "rerender": [Function],
-  "unmount": [Function],
-}
+      </ol>
+    </nav>
+    <ol>
+      <li
+        value="1"
+      >
+        <a
+          href="/select/1/season/1/episode/1/options"
+        >
+          Episode 1
+        </a>
+      </li>
+    </ol>
+    <a
+      href="/select/1/season/1/download_all"
+    >
+      Download season
+    </a>
+    <br />
+  </div>
+</div>
+`;
+
+exports[`SeasonSelectComponent  render 1`] = `
+<div>
+  <div>
+    <nav
+      aria-label="breadcrumb"
+      class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+    >
+      <ol
+        class="MuiBreadcrumbs-ol"
+      >
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <nav
+            class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            <ol
+              class="MuiBreadcrumbs-ol"
+            >
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-hidden="true"
+                class="MuiBreadcrumbs-separator"
+              >
+                /
+              </li>
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                >
+                  Search Results
+                </a>
+              </li>
+            </ol>
+          </nav>
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+            data-testid="title"
+          >
+            Hello
+          </p>
+        </li>
+      </ol>
+    </nav>
+    <ul>
+      <li>
+        <a
+          href="/select/1/season/1"
+        >
+          Season 
+          1
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
 `;

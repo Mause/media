@@ -27,6 +27,6 @@ test("SearchComponent", async () => {
     await mock("/api/search?query=world", results);
     await wait();
 
-    expect(el).toMatchSnapshot();
+    expect(el.container).toMatchSnapshot();
   });
 });
