@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional, TypedDict
 
 import requests
 
@@ -47,7 +47,19 @@ def get_torrent(*ids: str) -> Dict:
     return call("torrent-get", arguments)
 
 
-def torrent_add(magnet: str, subpath: str) -> Dict:
+TorrentAddTorrent = TypedDict('TorrentAddTorrent', {'hashString': str})
+TorrentAddArguments = TypedDict(
+    'TorrentAddArguments',
+    {'torrent-added': TorrentAddTorrent, 'torrent-duplicate': TorrentAddTorrent},
+)
+
+
+class TorrentAdd(TypedDict):
+    arguments: TorrentAddArguments
+    result: Optional[str]
+
+
+def torrent_add(magnet: str, subpath: str) -> TorrentAdd:
     call = get_session(config['TRANSMISSION_URL'])
     return call(
         "torrent-add",

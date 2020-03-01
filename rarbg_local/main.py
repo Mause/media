@@ -653,8 +653,13 @@ def add_single(
     title: str,
     show_title: Optional[str],
 ) -> None:
-    arguments = torrent_add(magnet, subpath)['arguments']
+    res = torrent_add(magnet, subpath)
+    arguments = res['arguments']
     print(arguments)
+    if not arguments:
+        # the error result shape is really weird
+        raise ValidationError(res['result'], data={'message': res['result']})
+
     transmission_id = (
         arguments['torrent-added']
         if 'torrent-added' in arguments
