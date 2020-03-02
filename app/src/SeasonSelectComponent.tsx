@@ -7,7 +7,6 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import useSWR from 'swr';
 import qs from 'qs';
 import { MLink } from './utils';
-import MateralLink from '@material-ui/core/Link';
 
 export interface TV {
   number_of_seasons: number;
