@@ -32,7 +32,7 @@ test('Movies', () => {
 
   const el = render(<Movies movies={movies} loading={false} />);
 
-  expect(el).toMatchSnapshot();
+  expect(el.container).toMatchSnapshot();
 });
 
 test('TVShows', async () => {
@@ -55,7 +55,7 @@ test('TVShows', async () => {
       ))(),
     );
 
-    expect(el).toMatchSnapshot();
+    expect(el.container).toMatchSnapshot();
   });
 });
 

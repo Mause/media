@@ -27,12 +27,12 @@ test('DownloadComponent', async () => {
       ))(),
     );
 
-    expect(el).toMatchSnapshot();
+    expect(el.container).toMatchSnapshot();
 
     await moxios.stubOnce('POST', /\/api\/download/, {});
     await wait();
 
-    expect(el).toMatchSnapshot();
+    expect(el.container).toMatchSnapshot();
     expect(history.length).toBe(2);
   });
 });

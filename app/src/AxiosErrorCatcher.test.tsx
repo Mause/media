@@ -25,7 +25,7 @@ function Fake() {
     if (fire) axios.get('/');
     else setFire(true);
   }, [fire]);
-  return 'Thing';
+  return <div>Thing</div>;
 }
 
 test('AxiosErrorCatcher', async () => {
@@ -39,7 +39,7 @@ test('AxiosErrorCatcher', async () => {
       </ErrorBoundary>,
     );
 
-    expect(el).toMatchSnapshot();
+    expect(el.container).toMatchSnapshot();
 
     await moxios.stubOnce('GET', /.*/, {
       status: 500,

@@ -45,4 +45,7 @@ mp.converter = mp.Converter("3.0.2", None, None)
 
 
 def schema_to_openapi(api: Api, name: str, schema: Schema) -> SchemaModel:
-    return api.schema_model(name, mp.schema_helper(name, None, schema=schema))
+    s = api.schema_model(name, mp.schema_helper(name, None, schema=schema))
+    if schema.many:
+        s = [s]
+    return s

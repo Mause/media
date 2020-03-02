@@ -1,19 +1,24 @@
 import _ from 'lodash';
 import qs from 'qs';
 import React, { useState, useEffect } from 'react';
-import { subscribe, useLoad } from './utils';
+import { subscribe, useLoad, MLink } from './utils';
 import { Torrents } from './streaming';
 import { Link, useParams } from 'react-router-dom';
+import useSWR from 'swr';
+import { Loading } from './render';
+import { Breadcrumbs, Typography } from '@material-ui/core';
+import { Shared } from './SeasonSelectComponent';
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
   return _.last(u.searchParams.get('xt')!.split(':'));
 }
 
-interface ITorrent {
+export interface ITorrent {
   title: string;
   seeders: number;
   download: string;
+  category: string;
 }
 
 function DisplayTorrent({
@@ -87,6 +92,9 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     episode?: string;
   }>();
 
+  const { data: meta } = useSWR<{ title: string }>(
+    (season ? 'tv' : 'movie') + '/' + tmdb_id,
+  );
   const torrents = useLoad<Torrents>('torrents');
   const { items: results, loading } = useSubscribe<ITorrent>(
     `/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
@@ -116,9 +124,34 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       ))}
     </div>
   ));
+
+  let header = null;
+  if (type === 'movie') {
+    header = (
+      <Breadcrumbs aria-label="breadcrumb">
+        <Shared />
+        <Typography color="textPrimary">{meta && meta.title}</Typography>
+      </Breadcrumbs>
+    );
+  } else {
+    header = (
+      <Breadcrumbs aria-label="breadcrumb">
+        <Shared />
+        <MLink to={`/select/${tmdb_id}/season`}>{meta && meta.title}</MLink>
+        <MLink to={`/select/${tmdb_id}/season/${season}`}>
+          Season {season}
+        </MLink>
+        <Typography color="textPrimary">Episode {episode}</Typography>
+      </Breadcrumbs>
+    );
+  }
+
   return (
     <div>
-      {loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : ''}
+      {header}
+      <div style={{ textAlign: 'center' }}>
+        <Loading loading={loading} large={true} />
+      </div>
       {bits.length || loading ? (
         <div>
           <p>Auto selection: {auto ? dt(auto) : 'None'}</p>
@@ -129,7 +162,14 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           No results
           <ul>
             <li>
-              <Link to={{ pathname: '/manual' }}>Add manually</Link>
+              <Link
+                to={{
+                  pathname: '/manual',
+                  state: { tmdb_id, season, episode },
+                }}
+              >
+                Add manually
+              </Link>
             </li>
             <li>
               <Link to={`/monitor/add/${tmdb_id}`}>Add to monitor</Link>

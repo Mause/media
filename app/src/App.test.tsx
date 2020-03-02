@@ -3,7 +3,6 @@ import { render } from '@testing-library/react';
 import App from './App';
 
 test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/Media/i);
-  expect(linkElement).toBeInTheDocument();
+  const el = render(<App />);
+  expect(el.container).toMatchSnapshot();
 });

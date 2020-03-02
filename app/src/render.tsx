@@ -14,8 +14,15 @@ import { Link } from 'react-router-dom';
 import { TV } from './SeasonSelectComponent';
 import useSWR from 'swr';
 
-function Loading({ loading }: { loading: boolean }) {
-  return loading ? <i className="fas fa-spinner fa-spin fa-xs" /> : <></>;
+export function Loading({
+  loading,
+  large,
+}: {
+  loading: boolean;
+  large?: boolean;
+}) {
+  const cls = ['fas fa-spinner fa-spin', large ? '' : 'fa-xs'].join(' ');
+  return loading ? <i className={cls} /> : <></>;
 }
 
 function openPlex(item: { download: { imdb_id: string } }) {
@@ -122,6 +129,10 @@ export function Progress({
   }
 }
 
+export function getMarker(episode: { season: any; episode: any }) {
+  return String.Format('S{0:00}E{0:00}', episode.season, episode.episode);
+}
+
 function getProgress(
   item: { download: ShortDownload },
   torrents: Torrents,
@@ -131,12 +142,7 @@ function getProgress(
     tid = item.download.transmission_id;
   if (tid.includes('.')) {
     tid = tid.split('.')[0];
-    const episode = item as EpisodeResponse;
-    const marker = String.Format(
-      'S{0:00}E{0:00}',
-      episode.season,
-      episode.episode,
-    );
+    const marker = getMarker(item as EpisodeResponse);
     const torrent = torrents[tid];
     if (!torrent) return null;
     eta = torrent.eta;

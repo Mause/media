@@ -1,178 +1,64 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Movies 1`] = `
-Object {
-  "asFragment": [Function],
-  "baseElement": <body>
-    <div>
-      <div
-        class="colA"
-      >
-        <h2>
-          Movies 
-        </h2>
-        <ul>
-          <li>
-            <span>
-              Hello
-            </span>
-             
-            <i
-              class="react-contextmenu-wrapper fas fa-list"
-              style="cursor: pointer;"
-            />
-            <nav
-              class="react-contextmenu"
-              role="menu"
-              style="position: fixed; opacity: 0; pointer-events: none;"
-              tabindex="-1"
-            >
-              <div
-                aria-disabled="false"
-                class="react-contextmenu-item"
-                role="menuitem"
-                tabindex="-1"
-              >
-                <span
-                  class="unselectable"
-                >
-                  Play in Plex
-                </span>
-              </div>
-              <div
-                aria-disabled="false"
-                class="react-contextmenu-item"
-                role="menuitem"
-                tabindex="-1"
-              >
-                Open in IMDB
-              </div>
-              <div
-                aria-disabled="false"
-                class="react-contextmenu-item"
-                role="menuitem"
-                tabindex="-1"
-              >
-                Added by: 
-                David
-              </div>
-            </nav>
-             
-          </li>
-        </ul>
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div
-      class="colA"
-    >
-      <h2>
-        Movies 
-      </h2>
-      <ul>
-        <li>
-          <span>
-            Hello
-          </span>
-           
-          <i
-            class="react-contextmenu-wrapper fas fa-list"
-            style="cursor: pointer;"
-          />
-          <nav
-            class="react-contextmenu"
-            role="menu"
-            style="position: fixed; opacity: 0; pointer-events: none;"
+<div>
+  <div
+    class="colA"
+  >
+    <h2>
+      Movies 
+    </h2>
+    <ul>
+      <li>
+        <span>
+          Hello
+        </span>
+         
+        <i
+          class="react-contextmenu-wrapper fas fa-list"
+          style="cursor: pointer;"
+        />
+        <nav
+          class="react-contextmenu"
+          role="menu"
+          style="position: fixed; opacity: 0; pointer-events: none;"
+          tabindex="-1"
+        >
+          <div
+            aria-disabled="false"
+            class="react-contextmenu-item"
+            role="menuitem"
             tabindex="-1"
           >
-            <div
-              aria-disabled="false"
-              class="react-contextmenu-item"
-              role="menuitem"
-              tabindex="-1"
+            <span
+              class="unselectable"
             >
-              <span
-                class="unselectable"
-              >
-                Play in Plex
-              </span>
-            </div>
-            <div
-              aria-disabled="false"
-              class="react-contextmenu-item"
-              role="menuitem"
-              tabindex="-1"
-            >
-              Open in IMDB
-            </div>
-            <div
-              aria-disabled="false"
-              class="react-contextmenu-item"
-              role="menuitem"
-              tabindex="-1"
-            >
-              Added by: 
-              David
-            </div>
-          </nav>
-           
-        </li>
-      </ul>
-    </div>
-  </div>,
-  "debug": [Function],
-  "findAllByAltText": [Function],
-  "findAllByDisplayValue": [Function],
-  "findAllByLabelText": [Function],
-  "findAllByPlaceholderText": [Function],
-  "findAllByRole": [Function],
-  "findAllByTestId": [Function],
-  "findAllByText": [Function],
-  "findAllByTitle": [Function],
-  "findByAltText": [Function],
-  "findByDisplayValue": [Function],
-  "findByLabelText": [Function],
-  "findByPlaceholderText": [Function],
-  "findByRole": [Function],
-  "findByTestId": [Function],
-  "findByText": [Function],
-  "findByTitle": [Function],
-  "getAllByAltText": [Function],
-  "getAllByDisplayValue": [Function],
-  "getAllByLabelText": [Function],
-  "getAllByPlaceholderText": [Function],
-  "getAllByRole": [Function],
-  "getAllByTestId": [Function],
-  "getAllByText": [Function],
-  "getAllByTitle": [Function],
-  "getByAltText": [Function],
-  "getByDisplayValue": [Function],
-  "getByLabelText": [Function],
-  "getByPlaceholderText": [Function],
-  "getByRole": [Function],
-  "getByTestId": [Function],
-  "getByText": [Function],
-  "getByTitle": [Function],
-  "queryAllByAltText": [Function],
-  "queryAllByDisplayValue": [Function],
-  "queryAllByLabelText": [Function],
-  "queryAllByPlaceholderText": [Function],
-  "queryAllByRole": [Function],
-  "queryAllByTestId": [Function],
-  "queryAllByText": [Function],
-  "queryAllByTitle": [Function],
-  "queryByAltText": [Function],
-  "queryByDisplayValue": [Function],
-  "queryByLabelText": [Function],
-  "queryByPlaceholderText": [Function],
-  "queryByRole": [Function],
-  "queryByTestId": [Function],
-  "queryByText": [Function],
-  "queryByTitle": [Function],
-  "rerender": [Function],
-  "unmount": [Function],
-}
+              Play in Plex
+            </span>
+          </div>
+          <div
+            aria-disabled="false"
+            class="react-contextmenu-item"
+            role="menuitem"
+            tabindex="-1"
+          >
+            Open in IMDB
+          </div>
+          <div
+            aria-disabled="false"
+            class="react-contextmenu-item"
+            role="menuitem"
+            tabindex="-1"
+          >
+            Added by: 
+            David
+          </div>
+        </nav>
+         
+      </li>
+    </ul>
+  </div>
+</div>
 `;
 
 exports[`Progress complex 1`] = `<div />`;
@@ -215,204 +101,76 @@ exports[`Progress simple 3`] = `
 `;
 
 exports[`TVShows 1`] = `
-Object {
-  "asFragment": [Function],
-  "baseElement": <body>
-    <div>
+<div>
+  <div>
+    <div
+      class="colB"
+    >
+      <h2>
+        TV Shows 
+      </h2>
       <div>
-        <div
-          class="colB"
-        >
-          <h2>
-            TV Shows 
-          </h2>
-          <div>
-            <h3>
-              Title
-               
-              <i
-                class="react-contextmenu-wrapper fas fa-list"
-                style="cursor: pointer;"
-              />
-              <nav
-                class="react-contextmenu"
-                role="menu"
-                style="position: fixed; opacity: 0; pointer-events: none;"
-                tabindex="-1"
-              >
-                
-                <div
-                  aria-disabled="false"
-                  class="react-contextmenu-item"
-                  role="menuitem"
-                  tabindex="-1"
-                >
-                  <a
-                    href="/select/1/season"
-                  >
-                    Search
-                  </a>
-                </div>
-              </nav>
-            </h3>
+        <h3>
+          Title
+           
+          <i
+            class="react-contextmenu-wrapper fas fa-list"
+            style="cursor: pointer;"
+          />
+          <nav
+            class="react-contextmenu"
+            role="menu"
+            style="position: fixed; opacity: 0; pointer-events: none;"
+            tabindex="-1"
+          >
+            
             <div
-              class="Collapsible"
-            >
-              <span
-                class="Collapsible__trigger is-open"
-              >
-                <h4>
-                  Season 
-                  1
-                   
-                   
-                  <a
-                    href="/select/1/season/1"
-                  >
-                    <i
-                      class="fas fa-search"
-                    />
-                  </a>
-                </h4>
-              </span>
-              <div
-                class="Collapsible__contentOuter"
-                style="height: auto; transition: none; overflow: hidden;"
-              >
-                <div
-                  class="Collapsible__contentInner"
-                >
-                  <ol />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div>
-      <div
-        class="colB"
-      >
-        <h2>
-          TV Shows 
-        </h2>
-        <div>
-          <h3>
-            Title
-             
-            <i
-              class="react-contextmenu-wrapper fas fa-list"
-              style="cursor: pointer;"
-            />
-            <nav
-              class="react-contextmenu"
-              role="menu"
-              style="position: fixed; opacity: 0; pointer-events: none;"
+              aria-disabled="false"
+              class="react-contextmenu-item"
+              role="menuitem"
               tabindex="-1"
             >
-              
-              <div
-                aria-disabled="false"
-                class="react-contextmenu-item"
-                role="menuitem"
-                tabindex="-1"
+              <a
+                href="/select/1/season"
               >
-                <a
-                  href="/select/1/season"
-                >
-                  Search
-                </a>
-              </div>
-            </nav>
-          </h3>
-          <div
-            class="Collapsible"
+                Search
+              </a>
+            </div>
+          </nav>
+        </h3>
+        <div
+          class="Collapsible"
+        >
+          <span
+            class="Collapsible__trigger is-open"
           >
-            <span
-              class="Collapsible__trigger is-open"
-            >
-              <h4>
-                Season 
-                1
-                 
-                 
-                <a
-                  href="/select/1/season/1"
-                >
-                  <i
-                    class="fas fa-search"
-                  />
-                </a>
-              </h4>
-            </span>
-            <div
-              class="Collapsible__contentOuter"
-              style="height: auto; transition: none; overflow: hidden;"
-            >
-              <div
-                class="Collapsible__contentInner"
+            <h4>
+              Season 
+              1
+               
+               
+              <a
+                href="/select/1/season/1"
               >
-                <ol />
-              </div>
+                <i
+                  class="fas fa-search"
+                />
+              </a>
+            </h4>
+          </span>
+          <div
+            class="Collapsible__contentOuter"
+            style="height: auto; transition: none; overflow: hidden;"
+          >
+            <div
+              class="Collapsible__contentInner"
+            >
+              <ol />
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>,
-  "debug": [Function],
-  "findAllByAltText": [Function],
-  "findAllByDisplayValue": [Function],
-  "findAllByLabelText": [Function],
-  "findAllByPlaceholderText": [Function],
-  "findAllByRole": [Function],
-  "findAllByTestId": [Function],
-  "findAllByText": [Function],
-  "findAllByTitle": [Function],
-  "findByAltText": [Function],
-  "findByDisplayValue": [Function],
-  "findByLabelText": [Function],
-  "findByPlaceholderText": [Function],
-  "findByRole": [Function],
-  "findByTestId": [Function],
-  "findByText": [Function],
-  "findByTitle": [Function],
-  "getAllByAltText": [Function],
-  "getAllByDisplayValue": [Function],
-  "getAllByLabelText": [Function],
-  "getAllByPlaceholderText": [Function],
-  "getAllByRole": [Function],
-  "getAllByTestId": [Function],
-  "getAllByText": [Function],
-  "getAllByTitle": [Function],
-  "getByAltText": [Function],
-  "getByDisplayValue": [Function],
-  "getByLabelText": [Function],
-  "getByPlaceholderText": [Function],
-  "getByRole": [Function],
-  "getByTestId": [Function],
-  "getByText": [Function],
-  "getByTitle": [Function],
-  "queryAllByAltText": [Function],
-  "queryAllByDisplayValue": [Function],
-  "queryAllByLabelText": [Function],
-  "queryAllByPlaceholderText": [Function],
-  "queryAllByRole": [Function],
-  "queryAllByTestId": [Function],
-  "queryAllByText": [Function],
-  "queryAllByTitle": [Function],
-  "queryByAltText": [Function],
-  "queryByDisplayValue": [Function],
-  "queryByLabelText": [Function],
-  "queryByPlaceholderText": [Function],
-  "queryByRole": [Function],
-  "queryByTestId": [Function],
-  "queryByText": [Function],
-  "queryByTitle": [Function],
-  "rerender": [Function],
-  "unmount": [Function],
-}
+  </div>
+</div>
 `;

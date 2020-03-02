@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EpisodeSelectComponent render 1`] = `
+exports[`OptionsComponent 1`] = `
 <div>
   <div>
     <nav
@@ -56,54 +56,33 @@ exports[`EpisodeSelectComponent render 1`] = `
         <li
           class="MuiBreadcrumbs-li"
         >
-          <a
-            class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
-            href="/select/1/season"
-          >
-            Hello
-          </a>
-        </li>
-        <li
-          aria-hidden="true"
-          class="MuiBreadcrumbs-separator"
-        >
-          /
-        </li>
-        <li
-          class="MuiBreadcrumbs-li"
-        >
           <p
             class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
-            data-testid="title"
           >
-            Season 
-            1
+            Hello World
           </p>
         </li>
       </ol>
     </nav>
-    <ol>
-      <li
-        value="1"
-      >
-        <a
-          href="/select/1/season/1/episode/1/options"
-        >
-          Episode 1
-        </a>
-      </li>
-    </ol>
-    <a
-      href="/select/1/season/1/download_all"
+    <div
+      style="text-align: center;"
     >
-      Download season
-    </a>
-    <br />
+      <i
+        class="fas fa-spinner fa-spin "
+      />
+    </div>
+    <div>
+      <p>
+        Auto selection: 
+        None
+      </p>
+      <ul />
+    </div>
   </div>
 </div>
 `;
 
-exports[`SeasonSelectComponent  render 1`] = `
+exports[`OptionsComponent 2`] = `
 <div>
   <div>
     <nav
@@ -161,23 +140,170 @@ exports[`SeasonSelectComponent  render 1`] = `
         >
           <p
             class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
-            data-testid="title"
           >
-            Hello
+            Hello World
           </p>
         </li>
       </ol>
     </nav>
-    <ul>
-      <li>
-        <a
-          href="/select/1/season/1"
+    <div
+      style="text-align: center;"
+    >
+      <i
+        class="fas fa-spinner fa-spin "
+      />
+    </div>
+    <div>
+      <p>
+        Auto selection: 
+        <span>
+          <a
+            href="/download"
+          >
+            title
+          </a>
+           
+          <small>
+            5
+          </small>
+           
+          
+        </span>
+      </p>
+      <ul>
+        <div>
+          <h3>
+            x264/1080
+          </h3>
+          <li>
+            <span>
+              <a
+                href="/download"
+              >
+                title
+              </a>
+               
+              <small>
+                5
+              </small>
+               
+              
+            </span>
+          </li>
+        </div>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`OptionsComponent 3`] = `
+<div>
+  <div>
+    <nav
+      aria-label="breadcrumb"
+      class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+    >
+      <ol
+        class="MuiBreadcrumbs-ol"
+      >
+        <li
+          class="MuiBreadcrumbs-li"
         >
-          Season 
-          1
-        </a>
-      </li>
-    </ul>
+          <nav
+            class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            <ol
+              class="MuiBreadcrumbs-ol"
+            >
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-hidden="true"
+                class="MuiBreadcrumbs-separator"
+              >
+                /
+              </li>
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                >
+                  Search Results
+                </a>
+              </li>
+            </ol>
+          </nav>
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+          >
+            Hello World
+          </p>
+        </li>
+      </ol>
+    </nav>
+    <div
+      style="text-align: center;"
+    />
+    <div>
+      <p>
+        Auto selection: 
+        <span>
+          <a
+            href="/download"
+          >
+            title
+          </a>
+           
+          <small>
+            5
+          </small>
+           
+          
+        </span>
+      </p>
+      <ul>
+        <div>
+          <h3>
+            x264/1080
+          </h3>
+          <li>
+            <span>
+              <a
+                href="/download"
+              >
+                title
+              </a>
+               
+              <small>
+                5
+              </small>
+               
+              
+            </span>
+          </li>
+        </div>
+      </ul>
+    </div>
   </div>
 </div>
 `;

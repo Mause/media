@@ -15,8 +15,8 @@ export interface TV {
   seasons: { episode_count: number }[];
 }
 
-function Shared() {
-  const { state } = useLocation();
+export function Shared() {
+  const { state } = useLocation<{ query: string }>();
   return (
     <Breadcrumbs>
       <MLink to="/">Home</MLink>
@@ -40,24 +40,27 @@ function SeasonSelectComponent() {
   const { tmdb_id } = useParams();
   const { data: tv } = useSWR<TV>(`tv/${tmdb_id}`);
 
-  return <div>
-    <Breadcrumbs aria-label="breadcrumb">
-      <Shared />
-      <Typography color="textPrimary" data-testid='title'>{tv && tv.title}</Typography>
-    </Breadcrumbs>
-    {!tv ?
-      <ReactLoading type='balls' color='#000000' /> :
-      <ul>
-        {_.range(1, tv.number_of_seasons + 1).map(i =>
-          <li key={i}>
-            <Link to={`/select/${tmdb_id}/season/${i}`}>
-              Season {i}
-            </Link>
-          </li>
-        )}
-      </ul>
-    }
-  </div>;
+  return (
+    <div>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Shared />
+        <Typography color="textPrimary" data-testid="title">
+          {tv && tv.title}
+        </Typography>
+      </Breadcrumbs>
+      {!tv ? (
+        <ReactLoading type="balls" color="#000000" />
+      ) : (
+        <ul>
+          {_.range(1, tv.number_of_seasons + 1).map(i => (
+            <li key={i}>
+              <Link to={`/select/${tmdb_id}/season/${i}`}>Season {i}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 interface Episode {
@@ -70,27 +73,43 @@ export interface Season {
 }
 function EpisodeSelectComponent() {
   const { tmdb_id, season: seasonNumber } = useParams();
-  const { data: season } = useSWR<Season>(`tv/${tmdb_id}/season/${seasonNumber}`)
+  const { data: season } = useSWR<Season>(
+    `tv/${tmdb_id}/season/${seasonNumber}`,
+  );
   const { data: tv } = useSWR<TV>(`tv/${tmdb_id}`);
 
-  return <div>
-    <Breadcrumbs aria-label="breadcrumb">
-      <Shared />
-      <MLink to={`/select/${tmdb_id}/season`}>{tv && tv.title}</MLink>
-      <Typography color="textPrimary" data-testid='title'>Season {seasonNumber}</Typography>
-    </Breadcrumbs>
-    {season ? <ol>
-      {season.episodes.map(episode =>
-        <li key={episode.id} value={episode.episode_number}>
-          <Link to={`/select/${tmdb_id}/season/${seasonNumber}/episode/${episode.episode_number}/options`}>
-            {episode.name}
-          </Link>
-        </li>
+  return (
+    <div>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Shared />
+        <MLink to={`/select/${tmdb_id}/season`}>{tv && tv.title}</MLink>
+        <Typography color="textPrimary" data-testid="title">
+          Season {seasonNumber}
+        </Typography>
+      </Breadcrumbs>
+      {season ? (
+        <ol>
+          {season.episodes.map(episode => (
+            <li key={episode.id} value={episode.episode_number}>
+              <Link
+                to={`/select/${tmdb_id}/season/${seasonNumber}/episode/${
+                  episode.episode_number
+                }/options`}
+              >
+                {episode.name}
+              </Link>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <ReactLoading type="balls" color="#000" />
       )}
-    </ol> : <ReactLoading type='balls' color='#000' />}
-    <a href={`/select/${tmdb_id}/season/${seasonNumber}/download_all`}>Download season</a>
-    <br />
-  </div>;
+      <a href={`/select/${tmdb_id}/season/${seasonNumber}/download_all`}>
+        Download season
+      </a>
+      <br />
+    </div>
+  );
 }
 
 export { SeasonSelectComponent, EpisodeSelectComponent };
