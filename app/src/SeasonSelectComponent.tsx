@@ -30,7 +30,7 @@ export function Shared() {
           Search Results
         </MLink>
       ) : (
-        <MateralLink>Search Results</MateralLink>
+        <Typography>Search Results</Typography>
       )}
     </Breadcrumbs>
   );
