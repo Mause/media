@@ -38,11 +38,11 @@ exports[`OptionsComponent 1`] = `
               <li
                 class="MuiBreadcrumbs-li"
               >
-                <a
-                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                <p
+                  class="MuiTypography-root MuiTypography-body1"
                 >
                   Search Results
-                </a>
+                </p>
               </li>
             </ol>
           </nav>
@@ -120,11 +120,11 @@ exports[`OptionsComponent 2`] = `
               <li
                 class="MuiBreadcrumbs-li"
               >
-                <a
-                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                <p
+                  class="MuiTypography-root MuiTypography-body1"
                 >
                   Search Results
-                </a>
+                </p>
               </li>
             </ol>
           </nav>
@@ -235,11 +235,11 @@ exports[`OptionsComponent 3`] = `
               <li
                 class="MuiBreadcrumbs-li"
               >
-                <a
-                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                <p
+                  class="MuiTypography-root MuiTypography-body1"
                 >
                   Search Results
-                </a>
+                </p>
               </li>
             </ol>
           </nav>
