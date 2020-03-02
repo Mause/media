@@ -9,7 +9,6 @@ import {
   TorrentFile,
   SeriesResponse,
 } from './streaming';
-import { TvResponse } from './types';
 import { swrConfig } from './streaming';
 
 useMoxios();
