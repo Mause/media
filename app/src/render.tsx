@@ -10,7 +10,7 @@ import { String } from 'typescript-string-operations';
 import Moment from 'moment';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import Collapsible from 'react-collapsible';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { TV } from './SeasonSelectComponent';
 import useSWR from 'swr';
 
@@ -190,6 +190,7 @@ function Series({
   torrents?: Torrents;
 }) {
   const { data } = useSWR<TV>(`tv/${serie.tmdb_id}`);
+  const history = useHistory();
   return (
     <div>
       <h3>
@@ -206,8 +207,10 @@ function Series({
               Open in IMDB
             </MenuItem>
           )}
-          <MenuItem>
-            <Link to={`/select/${serie.tmdb_id}/season`}>Search</Link>
+          <MenuItem onClick={
+            () => history.push(`/select/${serie.tmdb_id}/season`)
+          }>
+            Search
           </MenuItem>
         </ContextMenu>
       </h3>
