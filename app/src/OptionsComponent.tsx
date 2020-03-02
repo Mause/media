@@ -134,13 +134,12 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       </Breadcrumbs>
     );
   } else {
+    const url = `/select/${tmdb_id}/season`;
     header = (
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
-        <MLink to={`/select/${tmdb_id}/season`}>{meta && meta.title}</MLink>
-        <MLink to={`/select/${tmdb_id}/season/${season}`}>
-          Season {season}
-        </MLink>
+        <MLink to={url}>{meta && meta.title}</MLink>
+        <MLink to={`${url}/${season}`}>Season {season}</MLink>
         <Typography color="textPrimary">Episode {episode}</Typography>
       </Breadcrumbs>
     );
