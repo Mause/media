@@ -9,7 +9,7 @@ from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from .main import create_app
 
 if 'HEROKU' in os.environ:
-    assert exists('app/build/index.html'), os.listdir()
+    assert exists('app/build/index.html'), os.listdir('app')
 
 
 if 'SENTRY_DSN' in os.environ:
