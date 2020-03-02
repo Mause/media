@@ -1,11 +1,16 @@
 import json
 import os
+from os.path import exists
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
 from .main import create_app
+
+if 'HEROKU' in os.environ:
+    assert exists('app/build/index.html'), os.listdir()
+
 
 if 'SENTRY_DSN' in os.environ:
     sentry_sdk.init(
