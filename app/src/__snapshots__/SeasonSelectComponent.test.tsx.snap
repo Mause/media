@@ -38,11 +38,11 @@ exports[`EpisodeSelectComponent render 1`] = `
               <li
                 class="MuiBreadcrumbs-li"
               >
-                <a
-                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                <p
+                  class="MuiTypography-root MuiTypography-body1"
                 >
                   Search Results
-                </a>
+                </p>
               </li>
             </ol>
           </nav>
@@ -141,11 +141,11 @@ exports[`SeasonSelectComponent  render 1`] = `
               <li
                 class="MuiBreadcrumbs-li"
               >
-                <a
-                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                <p
+                  class="MuiTypography-root MuiTypography-body1"
                 >
                   Search Results
-                </a>
+                </p>
               </li>
             </ol>
           </nav>

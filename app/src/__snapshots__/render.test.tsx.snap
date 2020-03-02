@@ -130,11 +130,7 @@ exports[`TVShows 1`] = `
               role="menuitem"
               tabindex="-1"
             >
-              <a
-                href="/select/1/season"
-              >
-                Search
-              </a>
+              Search
             </div>
           </nav>
         </h3>
