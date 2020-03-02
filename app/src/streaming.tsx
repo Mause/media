@@ -31,7 +31,7 @@ Sentry.init({
   environment:
     process.env.NODE_ENV === 'production' ? 'production' : 'development',
 });
-Sentry.configureScope(function (scope) {
+Sentry.configureScope(scope => {
   scope.setUser((window as any).USER);
 });
 
