@@ -25,11 +25,13 @@ export function SearchComponent() {
           results.map(result => (
             <li key={result.imdbID}>
               <Link
-                to={
-                  result.Type === 'movie'
-                    ? `/select/${result.imdbID}/options`
-                    : `/select/${result.imdbID}/season`
-                }
+                to={{
+                  pathname:
+                    result.Type === 'movie'
+                      ? `/select/${result.imdbID}/options`
+                      : `/select/${result.imdbID}/season`,
+                  state: { query },
+                }}
               >
                 {result.title} ({result.Year ? result.Year : 'Unknown year'})
               </Link>
