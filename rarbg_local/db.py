@@ -130,6 +130,16 @@ class UserRoles(db.Model):  # type: ignore
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
 
+class Monitor(db.Model):  # type: ignore
+    id = db.Column(db.Integer(), primary_key=True)
+    tmdb_id = Column(Integer)
+
+    added_by_id = Column(Integer, ForeignKey('users.id'))
+    added_by = relationship('User')
+
+    title = Column(String, nullable=False)
+
+
 def create_download(
     *,
     transmission_id: str,

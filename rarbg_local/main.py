@@ -47,7 +47,7 @@ from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_restx import Api, Resource, fields
 from flask_restx.reqparse import RequestParser
 from flask_sslify import SSLify
-from flask_user import UserManager, login_required, roles_required
+from flask_user import UserManager, current_user, login_required, roles_required
 from flask_wtf import FlaskForm
 from humanize import naturaldelta
 from marshmallow.exceptions import ValidationError
@@ -56,7 +56,7 @@ from marshmallow.validate import Regexp as MarshRegexp
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
-from requests.exceptions import ConnectionError
+from requests.exceptions import ConnectionError, HTTPError
 from sqlalchemy import event, func
 from sqlalchemy.orm.session import make_transient
 from werkzeug.wrappers import Response as WResponse
@@ -67,6 +67,7 @@ from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .db import (
     Download,
     EpisodeDetails,
+    Monitor,
     MovieDetails,
     Role,
     User,
@@ -577,6 +578,48 @@ def api_download() -> str:
         )
 
     return jsonify()
+
+
+def validate_movie_id(tmdb_id: str) -> Dict:
+    try:
+        return get_movie(tmdb_id)
+    except HTTPError as e:
+        if e.response.status_code == 404:
+            return api.abort(422, f'Movie not found: {tmdb_id}')
+        else:
+            raise
+
+
+@api.route('/api/monitor')
+class MonitorResource(Resource):
+    @api.expect(api.model('MonitorPost', {'tmdb_id': fields.Integer}))
+    @api.marshal_with(
+        api.model('MonitorCreated', {'id': fields.Integer}),
+        code=201,
+        description='Created',
+    )
+    def post(self):
+        tmdb_id = request.json['tmdb_id']
+        movie = validate_movie_id(tmdb_id)
+        c = Monitor(tmdb_id=tmdb_id, added_by=current_user, title=movie['title'])
+        db.session.add(c)
+        db.session.commit()
+        return c, 201
+
+    @api.marshal_with(
+        api.model(
+            'Monitor',
+            {
+                'id': fields.Integer,
+                'tmdb_id': fields.Integer,
+                'title': fields.String,
+                'added_by': fields.String('added_by.username'),
+            },
+        ),
+        as_list=True,
+    )
+    def get(self):
+        return db.session.query(Monitor).all()
 
 
 @app.route('/download/<type>')

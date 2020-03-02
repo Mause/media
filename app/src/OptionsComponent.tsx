@@ -171,6 +171,9 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
                 Add manually
               </Link>
             </li>
+            <li>
+              <Link to={`/monitor/add/${tmdb_id}`}>Add to monitor</Link>
+            </li>
           </ul>
         </div>
       )}

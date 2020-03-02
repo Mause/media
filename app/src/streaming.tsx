@@ -22,6 +22,7 @@ import { OptionsComponent } from './OptionsComponent';
 import { load, usePost } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { SWRConfig } from 'swr';
+import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 
 Sentry.init({
@@ -30,7 +31,7 @@ Sentry.init({
   environment:
     process.env.NODE_ENV === 'production' ? 'production' : 'development',
 });
-Sentry.configureScope(function(scope) {
+Sentry.configureScope(function (scope) {
   scope.setUser((window as any).USER);
 });
 
@@ -196,6 +197,12 @@ function Routes() {
       </RouteWithTitle>
       <RouteWithTitle path="/stats" title="Stats">
         <StatsComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/monitor/add/:tmdb_id" title="Monitor">
+        <MonitorAddComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/monitor" title="Monitor">
+        <MonitorComponent />
       </RouteWithTitle>
       <RouteWithTitle path="/" title="Media">
         <IndexComponent />
