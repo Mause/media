@@ -5,7 +5,6 @@ import ReactLoading from 'react-loading';
 import { RouteProps, Redirect } from 'react-router';
 import {
   BrowserRouter as Router,
-  Link,
   Route,
   useLocation,
   Switch,
