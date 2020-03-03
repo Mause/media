@@ -19,11 +19,13 @@ import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
-import { load, usePost } from './utils';
+import { load, usePost, MLink } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
+import { Link as MaterialLink } from '@material-ui/core';
 import { SWRConfig } from 'swr';
 import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
+import { makeStyles, Theme, createStyles } from '@material-ui/core';
 
 Sentry.init({
   dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
@@ -113,25 +115,36 @@ function reportError(error: Error, componentStack: string) {
   });
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      '& > *': {
+        margin: theme.spacing(1),
+        linkStyle: 'underline',
+      },
+    },
+  }),
+);
+
+function ExtMLink(props: { href: string; children: string }) {
+  return (
+    <MaterialLink href={props.href} target="_blank" rel="noopener noreferrer">
+      {props.children}
+    </MaterialLink>
+  );
+}
+
 function ParentComponentInt() {
+  const classes = useStyles();
   return (
     <Router>
       <h1>Media</h1>
 
-      <nav>
-        <Link to="/">Home</Link>&nbsp;
-        <a
-          href="http://novell.mause.me:9091"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Transmission
-        </a>
-        &nbsp;
-        <a href="https://app.plex.tv" target="_blank" rel="noopener noreferrer">
-          Plex
-        </a>
-        &nbsp;
+      <nav className={classes.root}>
+        <MLink to="/">Home</MLink>
+        <MLink to="/monitor">Monitors</MLink>
+        <ExtMLink href="http://novell.mause.me:9091">Transmission</ExtMLink>
+        <ExtMLink href="https://app.plex.tv">Plex</ExtMLink>
         <a href="/user/sign-out">Logout</a>
       </nav>
 
