@@ -5,29 +5,37 @@ exports[`renders learn react link 1`] = `
   <h1>
     Media
   </h1>
-  <nav>
+  <nav
+    class="makeStyles-root-1"
+  >
     <a
+      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
       href="/"
     >
       Home
     </a>
-     
     <a
+      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+      href="/monitor"
+    >
+      Monitors
+    </a>
+    <a
+      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
       href="http://novell.mause.me:9091"
       rel="noopener noreferrer"
       target="_blank"
     >
       Transmission
     </a>
-     
     <a
+      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
       href="https://app.plex.tv"
       rel="noopener noreferrer"
       target="_blank"
     >
       Plex
     </a>
-     
     <a
       href="/user/sign-out"
     >
