@@ -1,67 +1,34 @@
 import React, { FormEvent, useState } from 'react';
-import { Component } from 'react';
 import { TVShows, Movies } from './render';
 import { IndexResponse, Torrents } from './streaming';
-import { load } from './utils';
-import { withRouter, RouteComponentProps, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import qs from 'qs';
+import useSWR from 'swr';
 
-type IndexState = {
-  state: IndexResponse;
-  torrents?: Torrents;
-  loadingTorrents: boolean;
-  loadingState: boolean;
+const CFG = {
+  refreshInterval: 10000,
 };
-type IndexProps = RouteComponentProps<{}>;
+function IndexComponent() {
+  const { data: state, isValidating: loadingState } = useSWR<IndexResponse>(
+    'index',
+    CFG,
+  );
+  const { data: torrents, isValidating: loadingTorrents } = useSWR<Torrents>(
+    'torrents',
+    CFG,
+  );
 
-class _IndexComponent extends Component<IndexProps, IndexState> {
-  interval?: NodeJS.Timeout;
-  constructor(props: IndexProps) {
-    super(props);
-    this.state = {
-      state: { series: [], movies: [] },
-      loadingTorrents: true,
-      loadingState: true,
-    };
-  }
-  async componentDidMount() {
-    this.reload();
-    this.interval = setInterval(this.reload.bind(this), 10000);
-  }
-  async componentWillUnmount() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
-  }
-  private reload() {
-    this.setState({ loadingTorrents: true, loadingState: true });
-    load<IndexResponse>('index').then(state =>
-      this.setState({ state, loadingState: false }),
-    );
-    load<Torrents>('torrents').then(torrents =>
-      this.setState({ torrents, loadingTorrents: false }),
-    );
-  }
-  get loading() {
-    return this.state.loadingState || this.state.loadingTorrents;
-  }
-  render() {
-    return (
-      <div>
-        <SearchBox />
-        <Movies
-          torrents={this.state.torrents}
-          movies={this.state.state.movies}
-          loading={this.loading}
-        />
-        <TVShows
-          torrents={this.state.torrents}
-          series={this.state.state.series}
-          loading={this.loading}
-        />
-      </div>
-    );
-  }
+  const loading = loadingState || loadingTorrents;
+
+  const ostate = state || { series: [], movies: [] };
+
+  return (
+    <div>
+      <SearchBox />
+      <Movies torrents={torrents} movies={ostate.movies} loading={loading} />
+      <TVShows torrents={torrents} series={ostate.series} loading={loading} />
+    </div>
+  );
 }
 
 export function SearchBox() {
@@ -82,5 +49,4 @@ export function SearchBox() {
   );
 }
 
-const IndexComponent = withRouter(_IndexComponent);
 export { IndexComponent };
