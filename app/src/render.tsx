@@ -29,7 +29,7 @@ function openPlex(item: { download: { imdb_id: string } }) {
   window.open(`/redirect/plex/${item.download.imdb_id}`);
 }
 
-function contextMenuTrigger(id: string) {
+export function contextMenuTrigger(id: string) {
   // workaround for type issue
   const props = { mouseButton: 0 };
   return (
