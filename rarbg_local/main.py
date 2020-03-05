@@ -272,13 +272,6 @@ def stream(type: str, imdb_id: str):
     )
 
 
-# @app.route('/select/<imdb_id>/options')
-def select_movie_options(imdb_id: str) -> str:
-    return select_options(
-        'movie', get_movie_imdb_id(imdb_id), title=get_movie(imdb_id)['title']
-    )
-
-
 @app.route('/delete/<type>/<id>')
 def delete(type: str, id: str) -> WResponse:
     query = db.session.query(
@@ -361,26 +354,6 @@ def select_options(
         build_download_link=build_download_link,
         already_downloaded=already_downloaded,
         manual_link=manual_link,
-    )
-
-
-# @app.route('/select/<imdb_id>/season/<season>')
-def select_episode(imdb_id: str, season: str) -> str:
-    def build_episode_link(episode: Dict) -> str:
-        return url_for(
-            '.select_tv_options',
-            imdb_id=imdb_id,
-            season=season,
-            episode=episode["episode_number"],
-        )
-
-    return render_template(
-        'select_episode.html',
-        imdb_id=imdb_id,
-        title=get_tv(imdb_id)['name'],
-        season=season,
-        episodes=get_tv_episodes(imdb_id, season)['episodes'],
-        build_episode_link=build_episode_link,
     )
 
 
@@ -477,19 +450,6 @@ def download_all_episodes(imdb_id: str, season: str) -> str:
             ('Incomplete', complete_or_not.get(False, [])),
         ],
         build_download_link=build_download_link,
-    )
-
-
-# @app.route('/select/<imdb_id>/season')
-def select_season(imdb_id: str) -> str:
-    info = get_tv(imdb_id)
-
-    print(info)
-
-    total_seasons = info['number_of_seasons']
-
-    return render_template(
-        'select_season.html', info=info, seasons=list(range(1, int(total_seasons) + 1))
     )
 
 
