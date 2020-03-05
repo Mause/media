@@ -138,8 +138,12 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     header = (
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
-        <MLink to={url}>{meta && meta.title}</MLink>
-        <MLink to={`${url}/${season}`}>Season {season}</MLink>
+        <MLink color="inherit" to={url}>
+          {meta && meta.title}
+        </MLink>
+        <MLink color="inherit" to={`${url}/${season}`}>
+          Season {season}
+        </MLink>
         <Typography color="textPrimary">Episode {episode}</Typography>
       </Breadcrumbs>
     );

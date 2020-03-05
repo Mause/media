@@ -9,13 +9,13 @@ exports[`renders learn react link 1`] = `
     class="makeStyles-root-1"
   >
     <a
-      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
       href="/"
     >
       Home
     </a>
     <a
-      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
       href="/monitor"
     >
       Monitors
@@ -37,6 +37,7 @@ exports[`renders learn react link 1`] = `
       Plex
     </a>
     <a
+      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
       href="/user/sign-out"
     >
       Logout

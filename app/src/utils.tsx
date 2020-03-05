@@ -7,14 +7,16 @@ import { Link } from 'react-router-dom';
 import { LocationDescriptor } from 'history';
 
 import axiosRetry from '@vtex/axios-concurrent-retry';
+import { TypographyTypeMap } from '@material-ui/core';
 
 axiosRetry(Axios, { retries: 3 });
 
 export function MLink<S>(props: {
   children: React.ReactNode;
   to: LocationDescriptor<S>;
+  color?: TypographyTypeMap['props']['color'];
 }) {
-  return <MaterialLink color="inherit" component={Link} {...props} />;
+  return <MaterialLink component={Link} {...props} />;
 }
 
 export function subscribe(

@@ -18,9 +18,12 @@ export function Shared() {
   const { state } = useLocation<{ query: string }>();
   return (
     <Breadcrumbs>
-      <MLink to="/">Home</MLink>
+      <MLink color="inherit" to="/">
+        Home
+      </MLink>
       {state ? (
         <MLink
+          color="inherit"
           to={{
             pathname: '/search',
             search: qs.stringify({ query: state.query }),
@@ -81,7 +84,9 @@ function EpisodeSelectComponent() {
     <div>
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
-        <MLink to={`/select/${tmdb_id}/season`}>{tv && tv.title}</MLink>
+        <MLink color="inherit" to={`/select/${tmdb_id}/season`}>
+          {tv && tv.title}
+        </MLink>
         <Typography color="textPrimary" data-testid="title">
           Season {seasonNumber}
         </Typography>

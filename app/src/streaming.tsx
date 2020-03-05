@@ -20,7 +20,7 @@ import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, usePost, MLink } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
-import { Link as MaterialLink } from '@material-ui/core';
+import { Link as MaterialLink, Link } from '@material-ui/core';
 import { SWRConfig } from 'swr';
 import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
@@ -144,7 +144,7 @@ function ParentComponentInt() {
         <MLink to="/monitor">Monitors</MLink>
         <ExtMLink href="http://novell.mause.me:9091">Transmission</ExtMLink>
         <ExtMLink href="https://app.plex.tv">Plex</ExtMLink>
-        <a href="/user/sign-out">Logout</a>
+        <Link href="/user/sign-out">Logout</Link>
       </nav>
 
       <br />
