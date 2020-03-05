@@ -672,18 +672,6 @@ class ManualForm(FlaskForm):
     )
 
 
-@app.route('/manual', methods=['POST', 'GET'])
-def manual():
-    form = ManualForm()
-
-    if form.validate_on_submit():
-        return redirect(
-            url_for('.download', **request.args, magnet=form.data['magnet'])
-        )
-    else:
-        return render_template('manual.html', form=form)
-
-
 def add_single(
     *,
     magnet: str,
