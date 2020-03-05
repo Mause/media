@@ -20,7 +20,7 @@ import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, usePost, MLink } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
-import { Link as MaterialLink, Link } from '@material-ui/core';
+import { Link as MaterialLink, Link, Grid } from '@material-ui/core';
 import { SWRConfig } from 'swr';
 import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
@@ -140,11 +140,23 @@ function ParentComponentInt() {
       <h1>Media</h1>
 
       <nav className={classes.root}>
-        <MLink to="/">Home</MLink>
-        <MLink to="/monitor">Monitors</MLink>
-        <ExtMLink href="http://novell.mause.me:9091">Transmission</ExtMLink>
-        <ExtMLink href="https://app.plex.tv">Plex</ExtMLink>
-        <Link href="/user/sign-out">Logout</Link>
+        <Grid container spacing={1}>
+          <Grid item xs="auto">
+            <MLink to="/">Home</MLink>
+          </Grid>
+          <Grid item xs="auto">
+            <MLink to="/monitor">Monitors</MLink>
+          </Grid>
+          <Grid item xs="auto">
+            <ExtMLink href="http://novell.mause.me:9091">Transmission</ExtMLink>
+          </Grid>
+          <Grid item xs="auto">
+            <ExtMLink href="https://app.plex.tv">Plex</ExtMLink>
+          </Grid>
+          <Grid item xs="auto">
+            <Link href="/user/sign-out">Logout</Link>
+          </Grid>
+        </Grid>
       </nav>
 
       <br />
