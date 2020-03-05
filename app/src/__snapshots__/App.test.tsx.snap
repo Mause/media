@@ -8,40 +8,64 @@ exports[`renders learn react link 1`] = `
   <nav
     class="makeStyles-root-1"
   >
-    <a
-      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-      href="/"
+    <div
+      class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1"
     >
-      Home
-    </a>
-    <a
-      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-      href="/monitor"
-    >
-      Monitors
-    </a>
-    <a
-      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-      href="http://novell.mause.me:9091"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      Transmission
-    </a>
-    <a
-      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-      href="https://app.plex.tv"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      Plex
-    </a>
-    <a
-      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-      href="/user/sign-out"
-    >
-      Logout
-    </a>
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
+      >
+        <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          href="/"
+        >
+          Home
+        </a>
+      </div>
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
+      >
+        <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          href="/monitor"
+        >
+          Monitors
+        </a>
+      </div>
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
+      >
+        <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          href="http://novell.mause.me:9091"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Transmission
+        </a>
+      </div>
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
+      >
+        <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          href="https://app.plex.tv"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Plex
+        </a>
+      </div>
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
+      >
+        <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          href="/user/sign-out"
+        >
+          Logout
+        </a>
+      </div>
+    </div>
   </nav>
   <br />
   <div>
