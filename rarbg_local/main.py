@@ -49,7 +49,6 @@ from flask_restx.reqparse import RequestParser
 from flask_sslify import SSLify
 from flask_user import UserManager, current_user, login_required, roles_required
 from flask_wtf import FlaskForm
-from humanize import naturaldelta
 from marshmallow.exceptions import ValidationError
 from marshmallow.fields import String
 from marshmallow.validate import Regexp as MarshRegexp
