@@ -895,38 +895,6 @@ def api_search():
     return search_themoviedb(request.args['query'])
 
 
-def render_progress(
-    torrents: Dict[str, Dict], item: Union[MovieDetails, EpisodeDetails]
-) -> str:
-    DEFAULT = {'percentDone': 1, 'eta': 0}
-    tid = item.download.transmission_id
-    item_id = None
-    if '.' in str(tid):
-        tid, item_id = tid.split('.')
-        if tid in torrents:
-            key = item.get_marker().lower()
-            files = torrents[tid]['files']
-            torrent = next(f for f in files if key in f['name'].lower())
-            torrent = {
-                'eta': -1,
-                'percentDone': (torrent['bytesCompleted'] / torrent['length']),
-            }
-        else:
-            torrent = DEFAULT
-    else:
-        torrent = torrents.get(tid, DEFAULT)
-    pc = torrent['percentDone']
-    eta = naturaldelta(torrent['eta']) if torrent['eta'] > 0 else 'Unknown time'
-
-    if pc == 1:
-        return '<i class="fas fa-check-circle"></i>'
-    else:
-        return f'''
-        <progress value="{pc}" title="{pc * 100:.02f}% ({eta} remaining)">
-        </progress>
-        '''
-
-
 def get_keyed_torrents() -> Dict[str, Dict]:
     if hasattr(g, 'get_keyed_torrents'):
         return g.get_keyed_torrents
