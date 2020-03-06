@@ -208,7 +208,7 @@ def unauthorized():
     if get_flashed_messages():
         return render_template('unauthorized.html')
     else:
-        return redirect(url_for('.index'))
+        return redirect(url_for('.serve_index'))
 
 
 @app.before_request
@@ -623,7 +623,7 @@ def download(type: str) -> WResponse:
     if 'application/json' in request.headers['accept']:
         return jsonify({})
     else:
-        return redirect(url_for('.index'))
+        return redirect(url_for('.serve_index'))
 
 
 class ManualForm(FlaskForm):
