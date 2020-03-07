@@ -65,6 +65,25 @@ function SeasonSelectComponent() {
   );
 }
 
+export function EpisodeSelectBreadcrumbs(props: {
+  tmdb_id: string;
+  season: string;
+}) {
+  const { data: tv } = useSWR<TV>(`tv/${props.tmdb_id}`);
+
+  return (
+    <Breadcrumbs aria-label="breadcrumb">
+      <Shared />
+      <MLink color="inherit" to={`/select/${props.tmdb_id}/season`}>
+        {tv ? tv.title : ''}
+      </MLink>
+      <Typography color="textPrimary" data-testid="title">
+        Season {props.season}
+      </Typography>
+    </Breadcrumbs>
+  );
+}
+
 interface Episode {
   episode_number: number;
   id: string;
@@ -78,19 +97,10 @@ function EpisodeSelectComponent() {
   const { data: season } = useSWR<Season>(
     `tv/${tmdb_id}/season/${seasonNumber}`,
   );
-  const { data: tv } = useSWR<TV>(`tv/${tmdb_id}`);
 
   return (
     <div>
-      <Breadcrumbs aria-label="breadcrumb">
-        <Shared />
-        <MLink color="inherit" to={`/select/${tmdb_id}/season`}>
-          {tv && tv.title}
-        </MLink>
-        <Typography color="textPrimary" data-testid="title">
-          Season {seasonNumber}
-        </Typography>
-      </Breadcrumbs>
+      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={seasonNumber!} />
       {season ? (
         <ol>
           {season.episodes.map(episode => (
