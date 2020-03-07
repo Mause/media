@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import { Loading } from './render';
 import { Breadcrumbs, Typography } from '@material-ui/core';
 import { Shared } from './SeasonSelectComponent';
+import { DownloadState } from './DownloadComponent';
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
@@ -34,15 +35,17 @@ function DisplayTorrent({
   torrent: ITorrent;
   torrents?: Torrents;
 }) {
-  let url = {
-    pathname: `/download`,
-    state: {
-      tmdb_id: tmdb_id,
-      magnet: torrent.download,
-      season: season,
-      episode: episode,
-    },
+  const state: DownloadState = {
+    downloads: [
+      {
+        tmdb_id: tmdb_id,
+        magnet: torrent.download,
+        season: season,
+        episode: episode,
+      },
+    ],
   };
+  let url = { pathname: '/download', state };
   return (
     <span>
       <Link to={url}>{torrent.title}</Link>

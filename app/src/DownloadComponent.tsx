@@ -4,20 +4,20 @@ import { Redirect } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import { usePost } from './utils';
 
+export interface DownloadCall {
+  tmdb_id: string;
+  magnet: string;
+  season?: string;
+  episode?: string;
+}
+export interface DownloadState {
+  downloads: DownloadCall[];
+}
+
 export function DownloadComponent() {
-  const { state } = useLocation<{
-    tmdb_id: string;
-    magnet: string;
-    season?: string;
-    episode?: string;
-  }>();
-  const [done] = usePost('download', [
-    {
-      tmdb_id: state!.tmdb_id,
-      magnet: state.magnet,
-      season: state.season,
-      episode: state.episode,
-    },
-  ]);
+  const { state } = useLocation<{ download: DownloadCall[] }>();
+
+  const [done] = usePost('download', state.download);
+
   return done ? <Redirect to="/" /> : <ReactLoading color="#000000" />;
 }

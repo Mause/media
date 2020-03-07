@@ -1,6 +1,6 @@
 import { act } from '@testing-library/react';
 import React from 'react';
-import { DownloadComponent } from './DownloadComponent';
+import { DownloadComponent, DownloadState } from './DownloadComponent';
 import { Route, Router } from 'react-router-dom';
 import { wait, useMoxios, renderWithSWR } from './test.utils';
 import { createMemoryHistory } from 'history';
@@ -11,9 +11,13 @@ useMoxios();
 test('DownloadComponent', async () => {
   await act(async () => {
     const history = createMemoryHistory();
-    const state = {
-      tmdb_id: '10000',
-      magnet: '...',
+    const state: DownloadState = {
+      downloads: [
+        {
+          tmdb_id: '10000',
+          magnet: '...',
+        },
+      ],
     };
     history.push('/download', state);
 
