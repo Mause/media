@@ -63,7 +63,7 @@ export function MonitorDeleteComponent() {
     Axios.delete(`/api/monitor/${id}`, { withCredentials: true }).then(() =>
       setDone(true),
     );
-  }, [tmdb_id]);
+  }, [id]);
 
   return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
 }
