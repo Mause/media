@@ -164,25 +164,23 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           <ul>{bits}</ul>
         </div>
       ) : (
-        <div>
-          No results
-          <ul>
-            <li>
-              <Link
-                to={{
-                  pathname: '/manual',
-                  state: { tmdb_id, season, episode },
-                }}
-              >
-                Add manually
-              </Link>
-            </li>
-            <li>
-              <Link to={`/monitor/add/${tmdb_id}`}>Add to monitor</Link>
-            </li>
-          </ul>
-        </div>
+        <div>No results</div>
       )}
+      <ul>
+        <li>
+          <Link
+            to={{
+              pathname: '/manual',
+              state: { tmdb_id, season, episode },
+            }}
+          >
+            Add manually
+          </Link>
+        </li>
+        <li>
+          <Link to={`/monitor/add/${tmdb_id}`}>Add to monitor</Link>
+        </li>
+      </ul>
     </div>
   );
 }

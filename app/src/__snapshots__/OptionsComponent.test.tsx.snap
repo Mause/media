@@ -78,6 +78,22 @@ exports[`OptionsComponent 1`] = `
       </p>
       <ul />
     </div>
+    <ul>
+      <li>
+        <a
+          href="/manual"
+        >
+          Add manually
+        </a>
+      </li>
+      <li>
+        <a
+          href="/monitor/add/1"
+        >
+          Add to monitor
+        </a>
+      </li>
+    </ul>
   </div>
 </div>
 `;
@@ -193,6 +209,22 @@ exports[`OptionsComponent 2`] = `
         </div>
       </ul>
     </div>
+    <ul>
+      <li>
+        <a
+          href="/manual"
+        >
+          Add manually
+        </a>
+      </li>
+      <li>
+        <a
+          href="/monitor/add/1"
+        >
+          Add to monitor
+        </a>
+      </li>
+    </ul>
   </div>
 </div>
 `;
@@ -304,6 +336,22 @@ exports[`OptionsComponent 3`] = `
         </div>
       </ul>
     </div>
+    <ul>
+      <li>
+        <a
+          href="/manual"
+        >
+          Add manually
+        </a>
+      </li>
+      <li>
+        <a
+          href="/monitor/add/1"
+        >
+          Add to monitor
+        </a>
+      </li>
+    </ul>
   </div>
 </div>
 `;
