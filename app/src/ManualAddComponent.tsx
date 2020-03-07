@@ -7,6 +7,7 @@ import {
   Theme,
   createStyles,
 } from '@material-ui/core';
+import { DownloadState } from './DownloadComponent';
 import React, { FormEvent, useState } from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,8 +27,8 @@ export function ManualAddComponent() {
   }
 
   const { state } = useLocation<{
-    season?: number;
-    episode?: number;
+    season?: string;
+    episode?: string;
     tmdb_id: string;
   }>();
 
@@ -42,7 +43,7 @@ export function ManualAddComponent() {
     return <Redirect to="/" />;
   }
   if (submitted) {
-    const state: DownloadState = {
+    const toState: DownloadState = {
       downloads: [
         {
           magnet,
@@ -50,7 +51,7 @@ export function ManualAddComponent() {
         },
       ],
     };
-    return <Redirect to={{ pathname: '/download', state }} />;
+    return <Redirect to={{ pathname: '/download', state: toState }} />;
   }
 
   return (
