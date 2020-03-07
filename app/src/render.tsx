@@ -130,7 +130,7 @@ export function Progress({
 }
 
 export function getMarker(episode: { season: any; episode: any }) {
-  return String.Format('S{0:00}E{0:00}', episode.season, episode.episode);
+  return String.Format('S{0:00}E{1:00}', episode.season, episode.episode);
 }
 
 function getProgress(
@@ -207,9 +207,9 @@ function Series({
               Open in IMDB
             </MenuItem>
           )}
-          <MenuItem onClick={
-            () => history.push(`/select/${serie.tmdb_id}/season`)
-          }>
+          <MenuItem
+            onClick={() => history.push(`/select/${serie.tmdb_id}/season`)}
+          >
             Search
           </MenuItem>
         </ContextMenu>
