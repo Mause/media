@@ -25,6 +25,7 @@ import { SWRConfig } from 'swr';
 import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import { DownloadComponent } from './DownloadComponent';
 
 Sentry.init({
   dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
@@ -35,26 +36,6 @@ Sentry.init({
 Sentry.configureScope(scope => {
   scope.setUser((window as any).USER);
 });
-
-export function DownloadComponent() {
-  const { state } = useLocation<{
-    tmdb_id: string;
-    magnet: string;
-    season?: string;
-    episode?: string;
-  }>();
-
-  const [done] = usePost('download', [
-    {
-      tmdb_id: state!.tmdb_id,
-      magnet: state.magnet,
-      season: state.season,
-      episode: state.episode,
-    },
-  ]);
-
-  return done ? <Redirect to="/" /> : <ReactLoading color="#000000" />;
-}
 
 export interface IndexResponse {
   series: SeriesResponse[];

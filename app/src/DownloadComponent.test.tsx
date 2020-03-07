@@ -1,8 +1,8 @@
 import { act } from '@testing-library/react';
 import React from 'react';
-import { DownloadComponent } from './streaming';
+import { DownloadComponent } from './DownloadComponent';
 import { Route, Router } from 'react-router-dom';
-import { mock, wait, useMoxios, renderWithSWR } from './test.utils';
+import { wait, useMoxios, renderWithSWR } from './test.utils';
 import { createMemoryHistory } from 'history';
 import moxios from 'moxios';
 
