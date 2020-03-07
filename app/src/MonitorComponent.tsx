@@ -1,10 +1,11 @@
 import useSWR from 'swr';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
 import { Redirect, useParams, useHistory } from 'react-router-dom';
 import { usePost } from './utils';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
 import { contextMenuTrigger } from './render';
+import Axios from 'axios';
 
 export function MonitorComponent() {
   const { data } = useSWR<{ title: string; id: number; tmdb_id: string }[]>(
@@ -30,7 +31,7 @@ export function MonitorComponent() {
                     Search
                   </MenuItem>
                   <MenuItem
-                    onClick={() => history.push(`/monitor/delete/${t.id}`)}
+                    onClick={() => history.push(`/monitor/delete/${m.id}`)}
                   >
                     Delete
                   </MenuItem>
@@ -50,6 +51,19 @@ export function MonitorAddComponent() {
   const { tmdb_id } = useParams();
 
   const [done] = usePost('monitor', { tmdb_id });
+
+  return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
+}
+
+export function MonitorDeleteComponent() {
+  const { id } = useParams();
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    Axios.delete(`/api/monitor/${id}`, { withCredentials: true }).then(() =>
+      setDone(true),
+    );
+  }, [tmdb_id]);
 
   return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
 }

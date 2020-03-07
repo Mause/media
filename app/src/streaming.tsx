@@ -16,7 +16,11 @@ import { load, MLink } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { Link as MaterialLink, Link, Grid } from '@material-ui/core';
 import { SWRConfig } from 'swr';
-import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
+import {
+  MonitorComponent,
+  MonitorAddComponent,
+  MonitorDeleteComponent,
+} from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { DownloadComponent } from './DownloadComponent';
@@ -196,6 +200,9 @@ function Routes() {
       </RouteWithTitle>
       <RouteWithTitle path="/stats" title="Stats">
         <StatsComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/monitor/delete/:tmdb_id" title="Monitor">
+        <MonitorDeleteComponent />
       </RouteWithTitle>
       <RouteWithTitle path="/monitor/add/:tmdb_id" title="Monitor">
         <MonitorAddComponent />
