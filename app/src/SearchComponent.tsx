@@ -2,8 +2,8 @@ import React from 'react';
 import ReactLoading from 'react-loading';
 import qs from 'qs';
 import { useLocation, Link } from 'react-router-dom';
-import { useLoad } from './utils';
 import { SearchBox } from './IndexComponent';
+import useSWR from 'swr';
 
 export interface SearchResult {
   Type: string;
@@ -16,7 +16,7 @@ export function SearchComponent() {
   const { search } = useLocation();
   const { query } = qs.parse(search.slice(1));
 
-  const results = useLoad<SearchResult[]>('search', { query });
+  const { data: results } = useSWR<SearchResult[]>('search', { query });
   return (
     <div>
       <SearchBox />

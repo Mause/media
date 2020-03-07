@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import qs from 'qs';
 import React, { useState, useEffect } from 'react';
-import { subscribe, useLoad, MLink } from './utils';
+import { subscribe, MLink } from './utils';
 import { Torrents } from './streaming';
 import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -95,7 +95,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   const { data: meta } = useSWR<{ title: string }>(
     (season ? 'tv' : 'movie') + '/' + tmdb_id,
   );
-  const torrents = useLoad<Torrents>('torrents');
+  const { data: torrents } = useSWR<Torrents>('torrents');
   const { items: results, loading } = useSubscribe<ITorrent>(
     `/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
   );
