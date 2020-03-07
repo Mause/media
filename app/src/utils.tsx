@@ -56,13 +56,12 @@ export function useLoad<T>(path: string, params: any = null) {
 
 export function usePost<T>(url: string, body: any): [boolean, T?] {
   const [done, setDone] = useState<[boolean, T?]>([false, undefined]);
-  const sbody = JSON.stringify(body);
 
   useEffect(() => {
-    Axios.post<T>('/api/' + url, JSON.parse(sbody), {
+    Axios.post<T>('/api/' + url, body, {
       withCredentials: true,
     }).then(res => setDone([true, res.data]));
-  }, [url, sbody]);
+  }, [url, body]);
 
   return done;
 }
