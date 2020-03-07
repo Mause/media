@@ -2,14 +2,13 @@ import { act, render } from '@testing-library/react';
 import React from 'react';
 import { Movies, TVShows, Progress } from './render';
 import { Route, MemoryRouter } from 'react-router-dom';
-import { mock, wait, useMoxios } from './test.utils';
+import { mock, wait, useMoxios, renderWithSWR } from './test.utils';
 import {
   MovieResponse,
   Torrents,
   TorrentFile,
   SeriesResponse,
 } from './streaming';
-import { swrConfig } from './streaming';
 
 useMoxios();
 
@@ -46,12 +45,10 @@ test('TVShows', async () => {
         },
       },
     ];
-    const el = render(
-      swrConfig(() => (
-        <MemoryRouter>
-          <TVShows series={series} loading={false} />
-        </MemoryRouter>
-      ))(),
+    const el = renderWithSWR(
+      <MemoryRouter>
+        <TVShows series={series} loading={false} />
+      </MemoryRouter>,
     );
 
     expect(el.container).toMatchSnapshot();

@@ -1,14 +1,14 @@
-import { act, render } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import React from 'react';
-import { SearchComponent } from './SearchComponent';
+import { SearchComponent, SearchResult } from './SearchComponent';
 import { Route, MemoryRouter } from 'react-router-dom';
-import { mock, wait, useMoxios } from './test.utils';
+import { mock, wait, useMoxios, renderWithSWR } from './test.utils';
 
 useMoxios();
 
 test('SearchComponent', async () => {
   await act(async () => {
-    const el = render(
+    const el = renderWithSWR(
       <MemoryRouter initialEntries={['/search?query=world']}>
         <Route path="/search">
           <SearchComponent />
@@ -19,7 +19,7 @@ test('SearchComponent', async () => {
     const results: SearchResult[] = [
       {
         Type: 'movie',
-        imdbID: '10000',
+        imdbID: 10000,
         Year: 2019,
         title: 'Hello',
       },

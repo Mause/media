@@ -1,8 +1,8 @@
-import { act, render } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import React from 'react';
-import { DownloadComponent, swrConfig } from './streaming';
+import { DownloadComponent } from './streaming';
 import { Route, Router } from 'react-router-dom';
-import { mock, wait, useMoxios } from './test.utils';
+import { mock, wait, useMoxios, renderWithSWR } from './test.utils';
 import { createMemoryHistory } from 'history';
 import moxios from 'moxios';
 
@@ -17,14 +17,12 @@ test('DownloadComponent', async () => {
     };
     history.push('/download', state);
 
-    const el = render(
-      swrConfig(() => (
-        <Router history={history}>
-          <Route path="/download">
-            <DownloadComponent />
-          </Route>
-        </Router>
-      ))(),
+    const el = renderWithSWR(
+      <Router history={history}>
+        <Route path="/download">
+          <DownloadComponent />
+        </Route>
+      </Router>,
     );
 
     expect(el.container).toMatchSnapshot();
