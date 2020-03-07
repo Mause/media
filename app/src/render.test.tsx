@@ -2,7 +2,7 @@ import { act, render } from '@testing-library/react';
 import React from 'react';
 import { Movies, TVShows, Progress } from './render';
 import { MemoryRouter } from 'react-router-dom';
-import { useMoxios } from './test.utils';
+import { useMoxios, renderWithSWR } from './test.utils';
 import {
   MovieResponse,
   Torrents,
