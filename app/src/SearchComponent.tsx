@@ -16,7 +16,9 @@ export function SearchComponent() {
   const { search } = useLocation();
   const { query } = qs.parse(search.slice(1));
 
-  const { data: results } = useSWR<SearchResult[]>('search', { query });
+  const { data: results } = useSWR<SearchResult[]>(
+    'search?' + qs.stringify({ query }),
+  );
   return (
     <div>
       <SearchBox />

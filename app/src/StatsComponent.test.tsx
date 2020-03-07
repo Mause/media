@@ -1,14 +1,14 @@
-import { render, wait } from '@testing-library/react';
+import { wait } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { StatsComponent, StatsResponse } from './StatsComponent';
-import { mock, useMoxios } from './test.utils';
+import { mock, useMoxios, renderWithSWR } from './test.utils';
 
 useMoxios();
 
 test('render', async () => {
   await act(async () => {
-    const el = render(<StatsComponent />);
+    const el = renderWithSWR(<StatsComponent />);
 
     await mock<StatsResponse[]>('/api/stats', [
       { user: 'Mause', values: { episode: 1, movie: 1 } },
