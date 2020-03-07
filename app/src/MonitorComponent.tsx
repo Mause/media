@@ -29,6 +29,11 @@ export function MonitorComponent() {
                   >
                     Search
                   </MenuItem>
+                  <MenuItem
+                    onClick={() => history.push(`/monitor/delete/${t.id}`)}
+                  >
+                    Delete
+                  </MenuItem>
                 </ContextMenu>
               </li>
             );
