@@ -1,8 +1,8 @@
 import { act, render } from '@testing-library/react';
 import React from 'react';
 import { Movies, TVShows, Progress } from './render';
-import { Route, MemoryRouter } from 'react-router-dom';
-import { mock, wait, useMoxios, renderWithSWR } from './test.utils';
+import { MemoryRouter } from 'react-router-dom';
+import { useMoxios } from './test.utils';
 import {
   MovieResponse,
   Torrents,

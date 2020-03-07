@@ -1,14 +1,8 @@
 import * as Sentry from '@sentry/browser';
 import React from 'react';
 import Helmet from 'react-helmet';
-import ReactLoading from 'react-loading';
-import { RouteProps, Redirect } from 'react-router';
-import {
-  BrowserRouter as Router,
-  Route,
-  useLocation,
-  Switch,
-} from 'react-router-dom';
+import { RouteProps } from 'react-router';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
 import {
   EpisodeSelectComponent,
@@ -18,7 +12,7 @@ import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
-import { load, usePost, MLink } from './utils';
+import { load, MLink } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { Link as MaterialLink, Link, Grid } from '@material-ui/core';
 import { SWRConfig } from 'swr';
