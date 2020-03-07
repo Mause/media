@@ -550,7 +550,7 @@ def validate_movie_id(tmdb_id: str) -> Dict:
 
 
 @api.route('/api/monitor')
-class MonitorResource(Resource):
+class MonitorsResource(Resource):
     @api.expect(api.model('MonitorPost', {'tmdb_id': fields.Integer}))
     @api.marshal_with(
         api.model('MonitorCreated', {'id': fields.Integer}),
@@ -579,6 +579,13 @@ class MonitorResource(Resource):
     )
     def get(self):
         return db.session.query(Monitor).all()
+
+
+@api.route('/api/monitor/<int:ident>')
+class MonitorResource(Resource):
+    def delete(self, ident: int):
+        db.session.query(Monitor).filter_by(id=ident)
+        return {}
 
 
 @app.route('/download/<type>')
