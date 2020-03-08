@@ -65,6 +65,7 @@ from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .db import (
     Download,
     EpisodeDetails,
+    MediaType,
     Monitor,
     MovieDetails,
     Role,
@@ -508,28 +509,42 @@ def api_download() -> str:
     return jsonify()
 
 
-def validate_movie_id(tmdb_id: str) -> Dict:
+def validate_id(type: MediaType, tmdb_id: str) -> Dict:
     try:
-        return get_movie(tmdb_id)
+        return get_movie(tmdb_id) if type == MediaType.MOVIE else get_tv(tmdb_id)
     except HTTPError as e:
         if e.response.status_code == 404:
-            return api.abort(422, f'Movie not found: {tmdb_id}')
+            return api.abort(422, f'{type.name} not found: {tmdb_id}')
         else:
             raise
 
 
 @api.route('/api/monitor')
 class MonitorsResource(Resource):
-    @api.expect(api.model('MonitorPost', {'tmdb_id': fields.Integer}))
+    @api.expect(
+        api.model(
+            'MonitorPost',
+            {
+                'tmdb_id': fields.Integer(required=True),
+                'type': fields.String(
+                    enum=list(MediaType.__members__.keys()), required=True
+                ),
+            },
+        ),
+        validate=True,
+    )
     @api.marshal_with(
         api.model('MonitorCreated', {'id': fields.Integer}),
         code=201,
         description='Created',
     )
     def post(self):
+        type = MediaType(request.json['type'])
         tmdb_id = request.json['tmdb_id']
-        movie = validate_movie_id(tmdb_id)
-        c = Monitor(tmdb_id=tmdb_id, added_by=current_user, title=movie['title'])
+        media = validate_id(type, tmdb_id)
+        c = Monitor(
+            tmdb_id=tmdb_id, added_by=current_user, type=type, title=media['title'],
+        )
         db.session.add(c)
         db.session.commit()
         return c, 201
@@ -541,6 +556,7 @@ class MonitorsResource(Resource):
                 'id': fields.Integer,
                 'tmdb_id': fields.Integer,
                 'title': fields.String,
+                'type': fields.String('type.name'),
                 'added_by': fields.String('added_by.username'),
             },
         ),
