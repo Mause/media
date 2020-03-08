@@ -313,7 +313,7 @@ def test_delete_monitor(responses, test_client):
     ls = test_client.get('/api/monitor').json
     assert ls == []
 
-    r = test_client.post('/api/monitor', json={'tmdb_id': 5})
+    r = test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     assert r.status == '201 CREATED'
 
     ls = test_client.get('/api/monitor').json
