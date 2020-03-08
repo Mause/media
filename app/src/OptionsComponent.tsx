@@ -22,7 +22,7 @@ export interface ITorrent {
   category: string;
 }
 
-function DisplayTorrent({
+export function DisplayTorrent({
   torrent,
   torrents,
   tmdb_id,
