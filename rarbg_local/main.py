@@ -9,7 +9,7 @@ from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from dataclasses import dataclass, field
 from functools import lru_cache, wraps
 from itertools import chain, zip_longest
-from os.path import exists, join, normpath
+from os.path import join
 from pathlib import Path
 from typing import (
     Callable,
@@ -25,7 +25,7 @@ from typing import (
 )
 from urllib.parse import parse_qsl, urlencode, urlparse
 
-from dataclasses_json import DataClassJsonMixin, config, dataclass_json
+from dataclasses_json import DataClassJsonMixin, config
 from flask import (
     Blueprint,
     Flask,
