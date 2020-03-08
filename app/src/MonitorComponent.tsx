@@ -55,15 +55,22 @@ export function MonitorAddComponent() {
   return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
 }
 
-export function MonitorDeleteComponent() {
-  const { id } = useParams();
+function useDelete(path: string) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    Axios.delete(`/api/monitor/${id}`, { withCredentials: true }).then(() =>
+    Axios.delete(`/api/${path}`, { withCredentials: true }).then(() =>
       setDone(true),
     );
-  }, [id]);
+  }, [path]);
+
+  return done;
+}
+
+export function MonitorDeleteComponent() {
+  const { id } = useParams();
+
+  const done = useDelete(`monitor/${id}`);
 
   return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
 }
