@@ -15,9 +15,9 @@ export interface DownloadState {
 }
 
 export function DownloadComponent() {
-  const { state } = useLocation<{ download: DownloadCall[] }>();
+  const { state } = useLocation<DownloadState>();
 
-  const [done] = usePost('download', state.download);
+  const [done] = usePost('download', state);
 
   return done ? <Redirect to="/" /> : <ReactLoading color="#000000" />;
 }
