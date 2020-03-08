@@ -20,6 +20,7 @@ export interface ITorrent {
   seeders: number;
   download: string;
   category: string;
+  episode_info: { seasonnum?: string; epnum?: string };
 }
 
 export function DisplayTorrent({
