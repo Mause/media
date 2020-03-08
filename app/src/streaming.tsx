@@ -24,6 +24,7 @@ import {
 import { ManualAddComponent } from './ManualAddComponent';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { DownloadComponent } from './DownloadComponent';
+import { DownloadAllComponent } from './DownloadAllComponent';
 
 Sentry.init({
   dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
@@ -179,6 +180,12 @@ function Routes() {
         title="TV Options"
       >
         <OptionsComponent type="series" />
+      </RouteWithTitle>
+      <RouteWithTitle
+        path="/select/:tmdb_id/season/:season/download_all"
+        title="Download Season"
+      >
+        <DownloadAllComponent />
       </RouteWithTitle>
       <RouteWithTitle
         path="/select/:tmdb_id/season/:season"

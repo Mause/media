@@ -106,9 +106,7 @@ function EpisodeSelectComponent() {
           {season.episodes.map(episode => (
             <li key={episode.id} value={episode.episode_number}>
               <Link
-                to={`/select/${tmdb_id}/season/${seasonNumber}/episode/${
-                  episode.episode_number
-                }/options`}
+                to={`/select/${tmdb_id}/season/${seasonNumber}/episode/${episode.episode_number}/options`}
               >
                 {episode.name}
               </Link>
@@ -118,9 +116,9 @@ function EpisodeSelectComponent() {
       ) : (
         <ReactLoading type="balls" color="#000" />
       )}
-      <a href={`/select/${tmdb_id}/season/${seasonNumber}/download_all`}>
+      <MLink href={`/select/${tmdb_id}/season/${seasonNumber}/download_all`}>
         Download season
-      </a>
+      </MLink>
       <br />
     </div>
   );
