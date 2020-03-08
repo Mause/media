@@ -1,4 +1,3 @@
-import inspect
 import json
 import logging
 import os
@@ -7,7 +6,7 @@ import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from dataclasses import dataclass, field
-from functools import lru_cache, wraps
+from functools import lru_cache
 from itertools import chain, zip_longest
 from os.path import join
 from pathlib import Path
@@ -225,16 +224,6 @@ def serve_index(path=None):
 @app.route('/manifest.json')
 def serve_manifest():
     return send_from_directory('../app/build/', 'manifest.json')
-
-
-def query_args(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        rargs = request.args
-        return func(*args, **kwargs, **{arg: rargs.get(arg, None) for arg in args_spec})
-
-    args_spec = inspect.getfullargspec(func).args
-    return wrapper
 
 
 def eventstream(func: Callable):
@@ -569,56 +558,6 @@ class MonitorResource(Resource):
         query.delete()
         db.session.commit()
         return {}
-
-
-@app.route('/download/<type>')
-def download(type: str) -> WResponse:
-    precondition(type, 'Type must be provided')
-
-    args = request.args
-
-    imdb_id = args['imdb_id']
-
-    season = args.get('season')
-    episode = None
-
-    titles: List[str] = args.getlist('titles')
-    magnets: List[str] = args.getlist('magnet')
-
-    is_tv = type == 'series'
-    tv_id = resolve_id(imdb_id, 'tv' if is_tv else type)
-    item = get_tv(tv_id) if is_tv else get_movie(tv_id)
-
-    if is_tv:
-        subpath = f'tv_shows/{item["name"]}/Season {season}'
-    else:
-        subpath = 'movies'
-
-    for title, magnet in zip_longest(titles, magnets):
-        if is_tv:
-            season, episode = extract_marker(magnet)
-        add_single(
-            magnet=magnet,
-            subpath=subpath,
-            imdb_id=imdb_id,
-            tmdb_id=item['id'],
-            episode=episode,
-            season=season,
-            is_tv=is_tv,
-            title=title if is_tv else item['title'],
-            show_title=item["name"] if is_tv else None,
-        )
-
-    if 'application/json' in request.headers['accept']:
-        return jsonify({})
-    else:
-        return redirect(url_for('.serve_index'))
-
-
-class ManualForm(FlaskForm):
-    magnet = StringField(
-        'Magnet link', validators=[DataRequired(), Regexp(r'^magnet:')]
-    )
 
 
 def add_single(

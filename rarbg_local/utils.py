@@ -1,5 +1,5 @@
 from functools import lru_cache as _lru_cache
-from typing import Callable, Dict, List, Optional, Set, TypeVar
+from typing import Callable, List, Optional, Set, TypeVar
 
 from apispec.ext.marshmallow import MarshmallowPlugin
 from flask_restx import Api, Resource
