@@ -564,7 +564,7 @@ class MonitorsResource(Resource):
 @api.route('/api/monitor/<int:ident>')
 class MonitorResource(Resource):
     def delete(self, ident: int):
-        db.session.query(Monitor).filter_by(id=ident)
+        db.session.query(Monitor).filter_by(id=ident).delete()
         return {}
 
 

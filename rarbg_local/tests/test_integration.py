@@ -306,3 +306,22 @@ def test_foreign_key_integrity(flask_app: Flask):
         ins = Download.__table__.insert().values(id=1, movie_id=99)
         with raises(IntegrityError):
             session.execute(ins)
+
+
+def test_delete_monitor(responses, test_client):
+    themoviedb(responses, '/movie/5', {'title': 'Hello World'})
+    ls = test_client.get('/api/monitor').json
+    assert ls == []
+
+    r = test_client.post('/api/monitor', json={'tmdb_id': 5})
+    assert r.status == '201 CREATED'
+
+    ls = test_client.get('/api/monitor').json
+
+    ident = ls[0]['id']
+
+    r = test_client.delete(f'/api/monitor/{ident}')
+    assert r.status == '200 OK'
+
+    ls = test_client.get('/api/monitor').json
+    assert ls == []
