@@ -50,7 +50,7 @@ export function MonitorComponent() {
 export function MonitorAddComponent() {
   const { tmdb_id } = useParams();
 
-  const [done] = usePost('monitor', { tmdb_id });
+  const [done] = usePost('monitor', { tmdb_id, type: 'MOVIE' });
 
   return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
 }
