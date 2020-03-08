@@ -6,12 +6,14 @@ import { Loading } from './render';
 import { EpisodeSelectBreadcrumbs } from './SeasonSelectComponent';
 import { MLink } from './utils';
 import { DownloadCall } from './DownloadComponent';
+import { Torrents } from './streaming';
 
 type T = [string, ITorrent[]][];
 
 function DownloadAllComponent() {
   const { tmdb_id, season } = useParams<{ tmdb_id: string; season: string }>();
 
+  const { data: torrents } = useSWR<Torrents>('torrents');
   const { data, isValidating } = useSWR<{
     packs: ITorrent[];
     complete: T;
@@ -29,7 +31,12 @@ function DownloadAllComponent() {
             data.packs &&
             data.packs.map(t => (
               <li key={t.download}>
-                <DisplayTorrent torrent={t} tmdb_id={tmdb_id} season={season} />
+                <DisplayTorrent
+                  torrents={torrents}
+                  torrent={t}
+                  tmdb_id={tmdb_id}
+                  season={season}
+                />
               </li>
             ))}
         </ul>
@@ -39,12 +46,14 @@ function DownloadAllComponent() {
         items={data && data.complete}
         season={season}
         tmdb_id={tmdb_id}
+        torrents={torrents}
       />
       <Individual
         label="Incomplete Sets"
         items={data && data.incomplete}
         season={season}
         tmdb_id={tmdb_id}
+        torrents={torrents}
       />
     </div>
   );
@@ -66,6 +75,7 @@ function Individual(props: {
   items?: T;
   season: string;
   tmdb_id: string;
+  torrents?: Torrents;
 }) {
   return (
     <div>
@@ -81,6 +91,7 @@ function Individual(props: {
                 {torrents.map(t => (
                   <li key={t.download}>
                     <DisplayTorrent
+                      torrents={props.torrents}
                       torrent={t}
                       tmdb_id={props.tmdb_id}
                       season={props.season}
