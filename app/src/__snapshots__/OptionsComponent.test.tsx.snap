@@ -174,6 +174,7 @@ exports[`OptionsComponent 2`] = `
         Auto selection: 
         <span>
           <a
+            class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
             href="/download"
           >
             title
@@ -183,7 +184,6 @@ exports[`OptionsComponent 2`] = `
             5
           </small>
            
-          
         </span>
       </p>
       <ul>
@@ -194,6 +194,7 @@ exports[`OptionsComponent 2`] = `
           <li>
             <span>
               <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
                 href="/download"
               >
                 title
@@ -203,7 +204,6 @@ exports[`OptionsComponent 2`] = `
                 5
               </small>
                
-              
             </span>
           </li>
         </div>
@@ -301,6 +301,7 @@ exports[`OptionsComponent 3`] = `
         Auto selection: 
         <span>
           <a
+            class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
             href="/download"
           >
             title
@@ -310,7 +311,6 @@ exports[`OptionsComponent 3`] = `
             5
           </small>
            
-          
         </span>
       </p>
       <ul>
@@ -321,6 +321,7 @@ exports[`OptionsComponent 3`] = `
           <li>
             <span>
               <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
                 href="/download"
               >
                 title
@@ -330,7 +331,6 @@ exports[`OptionsComponent 3`] = `
                 5
               </small>
                
-              
             </span>
           </li>
         </div>

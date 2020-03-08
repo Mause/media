@@ -49,14 +49,12 @@ export function DisplayTorrent({
   let url = { pathname: '/download', state };
   return (
     <span>
-      <Link to={url}>{torrent.title}</Link>
+      <MLink to={url}>{torrent.title}</MLink>
       &nbsp;
       <small>{torrent.seeders}</small>
       &nbsp;
-      {torrents && getHash(torrent.download)! in torrents ? (
+      {torrents && getHash(torrent.download)! in torrents && (
         <small>downloaded</small>
-      ) : (
-        ''
       )}
     </span>
   );

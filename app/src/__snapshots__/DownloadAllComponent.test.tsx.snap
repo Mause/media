@@ -190,6 +190,7 @@ exports[`DownloadAllComponent 2`] = `
         <li>
           <span>
             <a
+              class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
               href="/download"
             >
               Hello World
@@ -199,7 +200,6 @@ exports[`DownloadAllComponent 2`] = `
               5
             </small>
              
-            
           </span>
         </li>
       </ul>
