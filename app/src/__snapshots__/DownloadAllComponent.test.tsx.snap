@@ -1,0 +1,221 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DownloadAllComponent 1`] = `
+<div>
+  <div>
+    <nav
+      aria-label="breadcrumb"
+      class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+    >
+      <ol
+        class="MuiBreadcrumbs-ol"
+      >
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <nav
+            class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            <ol
+              class="MuiBreadcrumbs-ol"
+            >
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-hidden="true"
+                class="MuiBreadcrumbs-separator"
+              >
+                /
+              </li>
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1"
+                >
+                  Search Results
+                </p>
+              </li>
+            </ol>
+          </nav>
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <a
+            class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+            href="/select/1/season"
+          />
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+            data-testid="title"
+          >
+            Season 
+            1
+          </p>
+        </li>
+      </ol>
+    </nav>
+    <div>
+      <h3>
+        Packs
+      </h3>
+      <ul />
+    </div>
+    <div>
+      <h3>
+        Complete Sets
+      </h3>
+      <ul />
+    </div>
+    <div>
+      <h3>
+        Incomplete Sets
+      </h3>
+      <ul />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DownloadAllComponent 2`] = `
+<div>
+  <div>
+    <nav
+      aria-label="breadcrumb"
+      class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+    >
+      <ol
+        class="MuiBreadcrumbs-ol"
+      >
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <nav
+            class="MuiTypography-root MuiBreadcrumbs-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            <ol
+              class="MuiBreadcrumbs-ol"
+            >
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-hidden="true"
+                class="MuiBreadcrumbs-separator"
+              >
+                /
+              </li>
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1"
+                >
+                  Search Results
+                </p>
+              </li>
+            </ol>
+          </nav>
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <a
+            class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+            href="/select/1/season"
+          />
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextPrimary"
+            data-testid="title"
+          >
+            Season 
+            1
+          </p>
+        </li>
+      </ol>
+    </nav>
+    <div>
+      <h3>
+        Packs
+      </h3>
+      <ul>
+        <li>
+          <span>
+            <a
+              href="/download"
+            >
+              Hello World
+            </a>
+             
+            <small>
+              5
+            </small>
+             
+            
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h3>
+        Complete Sets
+      </h3>
+      <ul />
+    </div>
+    <div>
+      <h3>
+        Incomplete Sets
+      </h3>
+      <ul />
+    </div>
+  </div>
+</div>
+`;
