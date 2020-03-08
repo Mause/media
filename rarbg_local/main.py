@@ -88,7 +88,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .transmission_proxy import get_torrent, torrent_add
-from .utils import non_null, precondition, schema_to_openapi
+from .utils import as_resource, non_null, precondition, schema_to_openapi
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -460,20 +460,6 @@ class DownloadSchema(DataClassJsonMixin):
     )
     season: Optional[str] = None
     episode: Optional[str] = None
-
-
-def as_resource(methods: List[str] = ['GET']):
-    def wrapper(func: Callable):
-        return type(
-            func.__name__,
-            (Resource,),
-            {
-                method.lower(): lambda self, *args, **kwargs: func(*args, **kwargs)
-                for method in methods
-            },
-        )
-
-    return wrapper
 
 
 @api.errorhandler(ValidationError)

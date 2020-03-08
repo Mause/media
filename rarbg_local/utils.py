@@ -1,8 +1,8 @@
 from functools import lru_cache as _lru_cache
-from typing import Dict, Optional, Set, TypeVar
+from typing import Callable, Dict, List, Optional, Set, TypeVar
 
 from apispec.ext.marshmallow import MarshmallowPlugin
-from flask_restx import Api
+from flask_restx import Api, Resource
 from flask_restx.model import SchemaModel
 from marshmallow import Schema
 
@@ -49,3 +49,17 @@ def schema_to_openapi(api: Api, name: str, schema: Schema) -> SchemaModel:
     if schema.many:
         s = [s]
     return s
+
+
+def as_resource(methods: List[str] = ['GET']):
+    def wrapper(func: Callable):
+        return type(
+            func.__name__,
+            (Resource,),
+            {
+                method.lower(): lambda self, *args, **kwargs: func(*args, **kwargs)
+                for method in methods
+            },
+        )
+
+    return wrapper
