@@ -397,8 +397,9 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-@app.route('/select/<imdb_id>/season/<season>/download_all')
-def download_all_episodes(imdb_id: str, season: str) -> str:
+@api.route('/api/select/<imdb_id>/season/<season>/download_all')
+@as_resource()
+def download_all_episodes(imdb_id: str, season: str) -> Dict:
     def build_download_link(imdb_id: str, season: str, result_set: List[Dict]) -> str:
         def get_title(title: str) -> str:
             _, i_episode = extract_marker(title)
@@ -438,17 +439,10 @@ def download_all_episodes(imdb_id: str, season: str) -> str:
         grouped_results.items(), lambda rset: len(rset[1]) == len(episodes)
     )
 
-    return render_template(
-        'download_all.html',
-        info=get_tv(imdb_id),
-        season=season,
-        imdb_id=get_tv_imdb_id(imdb_id),
+    return dict(
         packs=packs,
-        super_results=[
-            ('Complete', complete_or_not.get(True, [])),
-            ('Incomplete', complete_or_not.get(False, [])),
-        ],
-        build_download_link=build_download_link,
+        complete=complete_or_not.get(True, []),
+        incomplete=complete_or_not.get(False, []),
     )
 
 
