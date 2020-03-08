@@ -42,7 +42,7 @@ export function load<T>(path: string, params?: any): Promise<T> {
   return Axios.get<T>(`/api/${path}`, {
     params: qs.parse(params),
     withCredentials: true,
-  }).then(t => t.data);
+  }).then(t => t && t.data);
 }
 
 export function useLoad<T>(path: string, params: any = null) {
