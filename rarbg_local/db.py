@@ -1,3 +1,4 @@
+import enum
 from datetime import datetime
 from functools import lru_cache
 from typing import List, Optional, Type, TypeVar, Union
@@ -8,6 +9,7 @@ from flask_user import UserMixin, current_user
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import joinedload, relationship
 from sqlalchemy.sql import ClauseElement, func
+from sqlalchemy.types import Enum
 from sqlalchemy_repr import RepresentableBase
 
 from .utils import precondition
@@ -130,6 +132,11 @@ class UserRoles(db.Model):  # type: ignore
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
 
+class MediaType(enum.Enum):
+    MOVIE = 0
+    EPISODE = 1
+
+
 class Monitor(db.Model):  # type: ignore
     id = db.Column(db.Integer(), primary_key=True)
     tmdb_id = Column(Integer)
@@ -138,6 +145,12 @@ class Monitor(db.Model):  # type: ignore
     added_by = relationship('User')
 
     title = Column(String, nullable=False)
+    type = Column(
+        Enum(MediaType),
+        default=MediaType.MOVIE.name,
+        nullable=False,
+        server_default=MediaType.MOVIE.name,
+    )
 
 
 def create_download(
