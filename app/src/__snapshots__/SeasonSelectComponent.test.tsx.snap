@@ -94,6 +94,7 @@ exports[`EpisodeSelectComponent render 1`] = `
       </li>
     </ol>
     <a
+      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
       href="/select/1/season/1/download_all"
     >
       Download season
