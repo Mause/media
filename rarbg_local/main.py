@@ -567,6 +567,7 @@ class MonitorResource(Resource):
         query = db.session.query(Monitor).filter_by(id=ident)
         precondition(query.count() > 0, 'Nothing to delete')
         query.delete()
+        db.session.commit()
         return {}
 
 
