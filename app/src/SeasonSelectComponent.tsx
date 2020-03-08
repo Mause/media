@@ -116,7 +116,7 @@ function EpisodeSelectComponent() {
       ) : (
         <ReactLoading type="balls" color="#000" />
       )}
-      <MLink href={`/select/${tmdb_id}/season/${seasonNumber}/download_all`}>
+      <MLink to={`/select/${tmdb_id}/season/${seasonNumber}/download_all`}>
         Download season
       </MLink>
       <br />
