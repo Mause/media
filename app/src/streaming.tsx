@@ -208,7 +208,7 @@ function Routes() {
       <RouteWithTitle path="/stats" title="Stats">
         <StatsComponent />
       </RouteWithTitle>
-      <RouteWithTitle path="/monitor/delete/:tmdb_id" title="Monitor">
+      <RouteWithTitle path="/monitor/delete/:id" title="Monitor">
         <MonitorDeleteComponent />
       </RouteWithTitle>
       <RouteWithTitle path="/monitor/add/:tmdb_id" title="Monitor">
