@@ -539,7 +539,7 @@ class MonitorsResource(Resource):
         description='Created',
     )
     def post(self):
-        type = MediaType(request.json['type'])
+        type = MediaType[request.json['type']]
         tmdb_id = request.json['tmdb_id']
         media = validate_id(type, tmdb_id)
         c = Monitor(
