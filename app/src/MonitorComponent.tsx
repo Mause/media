@@ -21,7 +21,7 @@ export function MonitorComponent() {
           {data.map(m => {
             let id = `monitor_${m.id}`;
             return (
-              <li>
+              <li key={m.id}>
                 {m.title}&nbsp;
                 {contextMenuTrigger(id)}
                 <ContextMenu id={id}>
