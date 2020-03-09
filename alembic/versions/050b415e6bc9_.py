@@ -41,19 +41,17 @@ def upgrade():
         'users',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('is_active', sa.Boolean(), server_default='1', nullable=False),
-        sa.Column(
-            'username', sa.String(length=255, collation='NOCASE'), nullable=False
-        ),
+        sa.Column('username', sa.String(length=255, collation='en_AU'), nullable=False),
         sa.Column('password', sa.String(length=255), server_default='', nullable=False),
         sa.Column(
             'first_name',
-            sa.String(length=100, collation='NOCASE'),
+            sa.String(length=100, collation='en_AU'),
             server_default='',
             nullable=False,
         ),
         sa.Column(
             'last_name',
-            sa.String(length=100, collation='NOCASE'),
+            sa.String(length=100, collation='en_AU'),
             server_default='',
             nullable=False,
         ),
