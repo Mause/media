@@ -6,6 +6,7 @@
       }
     }
   },
+  "env": { "HEROKU": "TRUE" },
   "addons": ["heroku-postgresql:hobby-dev", "cloudamqp:lemur"],
   "buildpacks": [
     {
