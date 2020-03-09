@@ -730,7 +730,7 @@ StatsResponse = api.model(
 @api.route('/api/stats')
 @api.response(200, 'OK', [StatsResponse])
 @as_resource()
-@api.marshal_with([StatsResponse])
+@api.marshal_with(StatsResponse)
 def api_stats():
     keys = User.username, Download.type
     query = (

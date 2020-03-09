@@ -325,3 +325,7 @@ def test_delete_monitor(responses, test_client):
 
     ls = test_client.get('/api/monitor').json
     assert ls == []
+
+
+def test_stats(test_client):
+    test_client.get('/api/stats')
