@@ -543,7 +543,7 @@ class MonitorsResource(Resource):
         tmdb_id = request.json['tmdb_id']
         media = validate_id(type, tmdb_id)
         c = Monitor(
-            tmdb_id=tmdb_id, added_by=current_user, type=type, title=media['title'],
+            tmdb_id=tmdb_id, added_by=current_user, type=type, title=media['title']
         )
         db.session.add(c)
         db.session.commit()
@@ -556,8 +556,8 @@ class MonitorsResource(Resource):
                 'id': fields.Integer,
                 'tmdb_id': fields.Integer,
                 'title': fields.String,
-                'type': fields.String('type.name'),
-                'added_by': fields.String('added_by.username'),
+                'type': fields.String(attribute='type.name'),
+                'added_by': fields.String(attribute='added_by.username'),
             },
         ),
         as_list=True,

@@ -318,6 +318,15 @@ def test_delete_monitor(responses, test_client):
 
     ls = test_client.get('/api/monitor').json
 
+    assert ls == [
+        {
+            'type': 'MOVIE',
+            'title': 'Hello World',
+            'tmdb_id': 5,
+            'id': 1,
+            'added_by': 'python',
+        }
+    ]
     ident = ls[0]['id']
 
     r = test_client.delete(f'/api/monitor/{ident}')
