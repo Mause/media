@@ -32,7 +32,17 @@ export function MonitorComponent() {
             let id = `monitor_${m.id}`;
             return (
               <li key={m.id}>
-                {m.title}&nbsp;
+                <i
+                  className={
+                    'fa ' +
+                    (m.type === MediaType.MOVIE
+                      ? 'fa-ticket-alt'
+                      : 'fa-tv-retro')
+                  }
+                />
+                &nbsp;
+                {m.title}
+                &nbsp;
                 {contextMenuTrigger(id)}
                 <ContextMenu id={id}>
                   <MenuItem
