@@ -46,7 +46,13 @@ export function MonitorComponent() {
                 {contextMenuTrigger(id)}
                 <ContextMenu id={id}>
                   <MenuItem
-                    onClick={() => history.push(`/select/${m.tmdb_id}/options`)}
+                    onClick={() =>
+                      history.push(
+                        m.type === MediaType.MOVIE
+                          ? `/select/${m.tmdb_id}/options`
+                          : `/select/${m.tmdb_id}/season`,
+                      )
+                    }
                   >
                     Search
                   </MenuItem>
