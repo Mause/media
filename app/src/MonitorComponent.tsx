@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import React, { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
-import { Redirect, useParams, useHistory } from 'react-router-dom';
+import { Redirect, useParams, useHistory, useLocation } from 'react-router-dom';
 import { usePost } from './utils';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
 import { contextMenuTrigger } from './render';
@@ -69,10 +69,11 @@ export function MonitorComponent() {
 
 export function MonitorAddComponent() {
   const { tmdb_id } = useParams();
+  const { state } = useLocation<{ type: MediaType }>();
 
   const [done] = usePost('monitor', {
     tmdb_id: Number(tmdb_id),
-    type: 'MOVIE',
+    type: state ? state.type : MediaType.MOVIE,
   });
 
   return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
