@@ -2,9 +2,7 @@ import { act, render } from '@testing-library/react';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
-import { Route, Router } from 'react-router-dom';
-import { mock, wait, useMoxios } from './test.utils';
-import { createMemoryHistory } from 'history';
+import { wait, useMoxios } from './test.utils';
 import moxios from 'moxios';
 import axios from 'axios';
 import ErrorBoundary from 'react-error-boundary';
@@ -32,7 +30,7 @@ test('AxiosErrorCatcher', async () => {
   await act(async () => {
     let lerror;
     const el = render(
-      <ErrorBoundary onError={(error, stack) => (lerror = error)}>
+      <ErrorBoundary onError={error => (lerror = error)}>
         <AxiosErrorCatcher>
           <Fake />
         </AxiosErrorCatcher>
