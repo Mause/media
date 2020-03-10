@@ -7,10 +7,20 @@ import { ContextMenu, MenuItem } from 'react-contextmenu';
 import { contextMenuTrigger } from './render';
 import Axios from 'axios';
 
+export enum MediaType {
+  'MOVIE' = 'MOVIE',
+  'TV' = 'TV',
+}
+
+export interface Monitor {
+  title: string;
+  id: number;
+  type: MediaType;
+  tmdb_id: string;
+}
+
 export function MonitorComponent() {
-  const { data } = useSWR<{ title: string; id: number; tmdb_id: string }[]>(
-    'monitor',
-  );
+  const { data } = useSWR<Monitor[]>('monitor');
   const history = useHistory();
 
   return (
