@@ -281,7 +281,7 @@ function shouldCollapse(
     const i_i = +i;
     const seasonMeta = data.seasons[i_i];
     if (seasonMeta) {
-      const hasNext = !!data.seasons[i_i + 1];
+      const hasNext = true; // !!data.seasons[i_i + 1];
 
       const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
       const hasAllEpisodes = _.isEqual(
