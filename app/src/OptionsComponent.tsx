@@ -177,7 +177,14 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           </Link>
         </li>
         <li>
-          <Link to={`/monitor/add/${tmdb_id}`}>Add to monitor</Link>
+          <Link
+            to={{
+              pathname: `/monitor/add/${tmdb_id}`,
+              state: { type: type === 'movie' ? 'MOVIE' : 'TV' },
+            }}
+          >
+            Add to monitor
+          </Link>
         </li>
       </ul>
     </div>
