@@ -509,9 +509,13 @@ def api_download() -> str:
     return jsonify()
 
 
-def validate_id(type: MediaType, tmdb_id: str) -> Dict:
+def validate_id(type: MediaType, tmdb_id: str) -> str:
     try:
-        return get_movie(tmdb_id) if type == MediaType.MOVIE else get_tv(tmdb_id)
+        return (
+            get_movie(tmdb_id)['title']
+            if type == MediaType.MOVIE
+            else get_tv(tmdb_id)['name']
+        )
     except HTTPError as e:
         if e.response.status_code == 404:
             return api.abort(422, f'{type.name} not found: {tmdb_id}')
@@ -542,9 +546,7 @@ class MonitorsResource(Resource):
         type = MediaType[request.json['type']]
         tmdb_id = request.json['tmdb_id']
         media = validate_id(type, tmdb_id)
-        c = Monitor(
-            tmdb_id=tmdb_id, added_by=current_user, type=type, title=media['title']
-        )
+        c = Monitor(tmdb_id=tmdb_id, added_by=current_user, type=type, title=media)
         db.session.add(c)
         db.session.commit()
         return c, 201
