@@ -34,10 +34,9 @@ export function MonitorComponent() {
               <li key={m.id}>
                 <i
                   className={
-                    'fa ' +
-                    (m.type === MediaType.MOVIE
-                      ? 'fa-ticket-alt'
-                      : 'fa-tv-retro')
+                    m.type === MediaType.MOVIE
+                      ? 'fa fa-ticket-alt'
+                      : 'fas fa-tv'
                   }
                 />
                 &nbsp;
