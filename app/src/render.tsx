@@ -13,6 +13,12 @@ import Collapsible from 'react-collapsible';
 import { Link, useHistory } from 'react-router-dom';
 import { TV } from './SeasonSelectComponent';
 import useSWR from 'swr';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faSearch,
+  faSpinner,
+  faCheckCircle,
+} from '@fortawesome/free-solid-svg-icons';
 
 export function Loading({
   loading,
@@ -21,8 +27,15 @@ export function Loading({
   loading: boolean;
   large?: boolean;
 }) {
-  const cls = ['fas fa-spinner fa-spin', large ? '' : 'fa-xs'].join(' ');
-  return loading ? <i className={cls} /> : <></>;
+  return loading ? (
+    <FontAwesomeIcon
+      spin={true}
+      icon={faSpinner}
+      size={large ? undefined : 'xs'}
+    />
+  ) : (
+    <></>
+  );
 }
 
 function openPlex(item: { download: { imdb_id: string } }) {
@@ -112,7 +125,7 @@ export function Progress({
 
   let { eta, percentDone } = prog;
   if (percentDone === 1) {
-    return <i className="fas fa-check-circle" />;
+    return <FontAwesomeIcon icon={faCheckCircle} />;
   } else {
     let etaDescr =
       eta > 0
@@ -252,7 +265,7 @@ function Season({
           Season {i} {collapse && '(Complete) '}
           &nbsp;
           <Link to={`/select/${tmdb_id}/season/${i}`}>
-            <i className="fas fa-search" />
+            <FontAwesomeIcon icon={faSearch} />
           </Link>
         </h4>
       }

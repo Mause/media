@@ -6,6 +6,8 @@ import { usePost } from './utils';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
 import { contextMenuTrigger } from './render';
 import Axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 
 export enum MediaType {
   'MOVIE' = 'MOVIE',
@@ -32,12 +34,8 @@ export function MonitorComponent() {
             let id = `monitor_${m.id}`;
             return (
               <li key={m.id}>
-                <i
-                  className={
-                    m.type === MediaType.MOVIE
-                      ? 'fa fa-ticket-alt'
-                      : 'fas fa-tv'
-                  }
+                <FontAwesomeIcon
+                  icon={m.type === MediaType.MOVIE ? faTicketAlt : faTv}
                 />
                 &nbsp;
                 {m.title}
