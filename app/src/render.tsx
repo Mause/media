@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
   faSpinner,
+  faList,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -49,13 +50,12 @@ export function contextMenuTrigger(id: string) {
     <ContextMenuTrigger
       {...props}
       id={id}
-      renderTag="i"
       attributes={{
-        className: 'fas fa-list',
-        style: { cursor: 'pointer' },
+        style: { cursor: 'pointer', display: 'inline' },
       }}
-      children={''}
-    />
+    >
+      <FontAwesomeIcon icon={faList} />
+    </ContextMenuTrigger>
   );
 }
 
