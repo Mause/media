@@ -25,7 +25,7 @@ export function MonitorComponent() {
 
   return (
     <div>
-      <h3>Monitored movies</h3>
+      <h3>Monitored Media</h3>
       {data ? (
         <ul>
           {data.map(m => {

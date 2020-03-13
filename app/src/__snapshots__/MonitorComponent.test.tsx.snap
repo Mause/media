@@ -4,7 +4,7 @@ exports[`MonitorComponent view 1`] = `
 <div>
   <div>
     <h3>
-      Monitored movies
+      Monitored Media
     </h3>
     <ul>
       <li>
