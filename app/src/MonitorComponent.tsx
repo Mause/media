@@ -7,7 +7,7 @@ import { ContextMenu, MenuItem } from 'react-contextmenu';
 import { contextMenuTrigger } from './render';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 
 export enum MediaType {
   'MOVIE' = 'MOVIE',
