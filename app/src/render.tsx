@@ -293,7 +293,7 @@ export function shouldCollapse(
   let collapse = false;
   if (data) {
     const i_i = +i;
-    const seasonMeta = data.seasons[i_i];
+    const seasonMeta = data.seasons[i_i - 1];
     if (seasonMeta) {
       const hasNext = true; // !!data.seasons[i_i + 1];
 
