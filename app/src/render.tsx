@@ -294,7 +294,7 @@ export function shouldCollapse(
   let collapse = false;
   if (data) {
     const i_i = +i;
-    const seasonMeta = data.seasons.find(s => s.season_number == i_i);
+    const seasonMeta = data.seasons.find(s => s.season_number === i_i);
     if (seasonMeta) {
       const hasNext = true; // !!data.seasons[i_i + 1];
 
