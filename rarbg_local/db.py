@@ -133,8 +133,8 @@ class UserRoles(db.Model):  # type: ignore
 
 
 class MediaType(enum.Enum):
-    MOVIE = 0
-    TV = 1
+    MOVIE = 'MOVIE'
+    TV = 'TV'
 
 
 class Monitor(db.Model):  # type: ignore
