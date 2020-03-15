@@ -59,6 +59,10 @@ def unwrap(f):
     return f
 
 
+def ismethod(func):
+    return '.' in getattr(func, '__qualname__', '')
+
+
 def expect(api: Api, name: str, schema: Schema):
     def wrapper(func):
         @api.expect(schema_to_openapi(api, name, schema), validate=True)
@@ -66,7 +70,7 @@ def expect(api: Api, name: str, schema: Schema):
         def decorator(*args, **kwargs):
             rq = schema.load(request.json)
 
-            if hasattr(unwrap(func), '__qualname__'):
+            if ismethod(unwrap(func)):
                 return func(args[0], rq, *args[1:], **kwargs)
             else:
                 return func(rq, *args, **kwargs)
