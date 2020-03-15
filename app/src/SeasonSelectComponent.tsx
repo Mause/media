@@ -1,4 +1,4 @@
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import _ from 'lodash';
 import React from 'react';
 import ReactLoading from 'react-loading';
@@ -56,7 +56,7 @@ function SeasonSelectComponent() {
         <ul>
           {_.range(1, tv.number_of_seasons + 1).map(i => (
             <li key={i}>
-              <Link to={`/select/${tmdb_id}/season/${i}`}>Season {i}</Link>
+              <MLink to={`/select/${tmdb_id}/season/${i}`}>Season {i}</MLink>
             </li>
           ))}
         </ul>
@@ -105,11 +105,11 @@ function EpisodeSelectComponent() {
         <ol>
           {season.episodes.map(episode => (
             <li key={episode.id} value={episode.episode_number}>
-              <Link
+              <MLink
                 to={`/select/${tmdb_id}/season/${seasonNumber}/episode/${episode.episode_number}/options`}
               >
                 {episode.name}
-              </Link>
+              </MLink>
             </li>
           ))}
         </ol>

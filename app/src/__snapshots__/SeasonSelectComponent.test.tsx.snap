@@ -87,6 +87,7 @@ exports[`EpisodeSelectComponent render 1`] = `
         value="1"
       >
         <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/select/1/season/1/episode/1/options"
         >
           Episode 1
@@ -172,6 +173,7 @@ exports[`SeasonSelectComponent  render 1`] = `
     <ul>
       <li>
         <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/select/1/season/1"
         >
           Season 
