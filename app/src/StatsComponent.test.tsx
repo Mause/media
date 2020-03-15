@@ -1,8 +1,7 @@
-import { wait } from '@testing-library/react';
 import React from 'react';
-import { act } from 'react-dom/test-utils';
 import { StatsComponent, StatsResponse } from './StatsComponent';
-import { mock, useMoxios, renderWithSWR } from './test.utils';
+import { mock, useMoxios, renderWithSWR, wait } from './test.utils';
+import { act } from '@testing-library/react';
 
 useMoxios();
 
@@ -13,10 +12,8 @@ test('render', async () => {
     await mock<StatsResponse[]>('/api/stats', [
       { user: 'Mause', values: { episode: 1, movie: 1 } },
     ]);
-
     await wait();
 
-    expect(el.findByText('Mause')).toBeTruthy();
     expect(el.container).toMatchSnapshot();
   });
 });
