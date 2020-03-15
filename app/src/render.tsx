@@ -285,7 +285,7 @@ function Season({
   );
 }
 
-function shouldCollapse(
+export function shouldCollapse(
   i: string,
   data: TV | undefined,
   serie: SeriesResponse,

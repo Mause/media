@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react';
 import React from 'react';
-import { Movies, TVShows, Progress } from './render';
+import { Movies, TVShows, Progress, shouldCollapse } from './render';
 import { MemoryRouter } from 'react-router-dom';
 import { useMoxios, renderWithSWR } from './test.utils';
 import {
@@ -111,5 +111,42 @@ describe('Progress', () => {
     });
     el.rerender(fn());
     expect(el.container).toMatchSnapshot();
+  });
+});
+
+describe('shouldCollapse', () => {
+  const tv = {
+    number_of_seasons: 1,
+    seasons: [
+      {
+        episode_count: 1,
+      },
+    ],
+    title: '',
+  };
+  const serie: SeriesResponse = {
+    seasons: {
+      '1': [
+        {
+          download: { id: 1, title: '', imdb_id: '', transmission_id: '' },
+          id: 1,
+          episode: 1,
+          season: 1,
+          show_title: '',
+        },
+      ],
+    },
+    title: '',
+    imdb_id: '',
+    tmdb_id: '',
+  };
+
+  it('true', async () => {
+    expect(shouldCollapse('1', tv, serie)).toBe(true);
+  });
+
+  it('false', async () => {
+    const serie2 = { ...serie, seasons: { '1': [] } };
+    expect(shouldCollapse('1', tv, serie2)).toBe(false);
   });
 });
