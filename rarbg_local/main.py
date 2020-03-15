@@ -45,7 +45,6 @@ from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_restx import Api, Resource, fields
 from flask_restx.reqparse import RequestParser
 from flask_user import UserManager, current_user, login_required, roles_required
-from flask_wtf import FlaskForm
 from marshmallow.exceptions import ValidationError
 from marshmallow.fields import String
 from marshmallow.validate import Regexp as MarshRegexp
@@ -84,7 +83,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .transmission_proxy import get_torrent, torrent_add
-from .utils import as_resource, expect, non_null, precondition, schema_to_openapi
+from .utils import as_resource, expect, non_null, precondition
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -140,7 +139,6 @@ def create_app(config):
     api.init_app(papp)
     if not papp.config.get('TESTING', False):
         CORS(papp, supports_credentials=True)
-        # SSLify(papp)
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
         engine = db.get_engine(papp, None)
