@@ -138,11 +138,15 @@ describe('shouldCollapse', () => {
     show_title: '',
   };
 
-  it('true', async () => {
+  it('true', () => {
     expect(shouldCollapse('1', tv, [episode])).toBe(true);
   });
 
-  it('false', async () => {
+  it('false', () => {
     expect(shouldCollapse('1', tv, [])).toBe(false);
+  });
+
+  it('true', () => {
+    expect(shouldCollapse('1', tv, [episode, episode])).toBe(true);
   });
 });

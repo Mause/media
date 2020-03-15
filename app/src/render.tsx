@@ -300,7 +300,8 @@ export function shouldCollapse(
 
       const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
       const hasNumbers = _.map(episodes, 'episode');
-      const hasAllEpisodes = _.isEqual(hasNumbers, episodeNumbers);
+      const hasAllEpisodes =
+        _.difference(episodeNumbers, hasNumbers).length === 0;
       collapse = hasNext && hasAllEpisodes;
     }
   }
