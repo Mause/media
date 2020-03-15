@@ -163,7 +163,9 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           <ul>{bits}</ul>
         </div>
       ) : (
-        <div>No results</div>
+        <div>
+          <p>No results</p>
+        </div>
       )}
       <ul>
         <li>
