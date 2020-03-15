@@ -752,7 +752,12 @@ TvResponse = api.model(
         'title': fields.String,
         'imdb_id': fields.String,
         'seasons': fields.List(
-            fields.Nested(api.model('SeasonMeta', {'episode_count': fields.Integer}))
+            fields.Nested(
+                api.model(
+                    'SeasonMeta',
+                    {'episode_count': fields.Integer, 'season_number': fields.Integer},
+                )
+            )
         ),
     },
 )

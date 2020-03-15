@@ -11,7 +11,7 @@ import { MLink } from './utils';
 export interface TV {
   number_of_seasons: number;
   title: string;
-  seasons: { episode_count: number }[];
+  seasons: { episode_count: number; season_number: number }[];
 }
 
 export function Shared() {
