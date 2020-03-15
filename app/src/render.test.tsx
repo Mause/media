@@ -8,6 +8,7 @@ import {
   Torrents,
   TorrentFile,
   SeriesResponse,
+  EpisodeResponse,
 } from './streaming';
 
 useMoxios();
@@ -119,34 +120,29 @@ describe('shouldCollapse', () => {
     number_of_seasons: 1,
     seasons: [
       {
+        season_number: 0,
+        episode_count: 2,
+      },
+      {
         episode_count: 1,
+        season_number: 1,
       },
     ],
     title: '',
   };
-  const serie: SeriesResponse = {
-    seasons: {
-      '1': [
-        {
-          download: { id: 1, title: '', imdb_id: '', transmission_id: '' },
-          id: 1,
-          episode: 1,
-          season: 1,
-          show_title: '',
-        },
-      ],
-    },
-    title: '',
-    imdb_id: '',
-    tmdb_id: '',
+  const episode: EpisodeResponse = {
+    download: { id: 1, title: '', imdb_id: '', transmission_id: '' },
+    id: 1,
+    episode: 1,
+    season: 1,
+    show_title: '',
   };
 
   it('true', async () => {
-    expect(shouldCollapse('1', tv, serie)).toBe(true);
+    expect(shouldCollapse('1', tv, [episode])).toBe(true);
   });
 
   it('false', async () => {
-    const serie2 = { ...serie, seasons: { '1': [] } };
-    expect(shouldCollapse('1', tv, serie2)).toBe(false);
+    expect(shouldCollapse('1', tv, [])).toBe(false);
   });
 });

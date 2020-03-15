@@ -229,13 +229,14 @@ function Series({
         </ContextMenu>
       </h3>
       {_.sortBy(Object.keys(serie.seasons), parseInt).map(i => {
-        let collapse = shouldCollapse(i, data, serie);
+        const season = serie.seasons[i];
+        let collapse = shouldCollapse(i, data, season);
 
         return (
           <Season
             key={i}
             i={i}
-            season={serie.seasons[i]}
+            season={season}
             tmdb_id={serie.tmdb_id}
             torrents={torrents}
             collapse={collapse}
@@ -288,20 +289,18 @@ function Season({
 export function shouldCollapse(
   i: string,
   data: TV | undefined,
-  serie: SeriesResponse,
+  episodes: EpisodeResponse[],
 ): boolean {
   let collapse = false;
   if (data) {
     const i_i = +i;
-    const seasonMeta = data.seasons[i_i - 1];
+    const seasonMeta = data.seasons.find(s => s.season_number == i_i);
     if (seasonMeta) {
       const hasNext = true; // !!data.seasons[i_i + 1];
 
       const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
-      const hasAllEpisodes = _.isEqual(
-        _.map(serie.seasons[i], 'episode'),
-        episodeNumbers,
-      );
+      const hasNumbers = _.map(episodes, 'episode');
+      const hasAllEpisodes = _.isEqual(hasNumbers, episodeNumbers);
       collapse = hasNext && hasAllEpisodes;
     }
   }
