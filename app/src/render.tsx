@@ -281,8 +281,34 @@ function Season({
             <Progress torrents={torrents} item={episode} />
           </li>
         ))}
+        <NextEpisodeAirs tmdb_id={tmdb_id} season={i} />
       </ol>
     </Collapsible>
+  );
+}
+
+function NextEpisodeAirs(props: { tmdb_id: string; season: string }) {
+  const { data } = useSWR<{ episodes: { name: string; air_date: string }[] }>(
+    `tv/${props.tmdb_id}/season/${props.season}`,
+  );
+
+  if (!data) {
+    return <></>;
+  }
+
+  const now = Moment();
+  const nextEpisode = data.episodes.find(episode =>
+    Moment(episode.air_date).isSameOrAfter(now, 'day'),
+  );
+  if (!nextEpisode) {
+    return <></>;
+  }
+
+  const dt = Moment(nextEpisode.air_date).format('DD/MM/YYYY');
+  return (
+    <small>
+      Next episode "{nextEpisode.name}" on {dt}
+    </small>
   );
 }
 
