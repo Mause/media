@@ -93,6 +93,7 @@ exports[`OptionsComponent 1`] = `
     <ul>
       <li>
         <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/manual"
         >
           Add manually
@@ -100,6 +101,7 @@ exports[`OptionsComponent 1`] = `
       </li>
       <li>
         <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/monitor/add/1"
         >
           Add to monitor
@@ -236,6 +238,7 @@ exports[`OptionsComponent 2`] = `
     <ul>
       <li>
         <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/manual"
         >
           Add manually
@@ -243,6 +246,7 @@ exports[`OptionsComponent 2`] = `
       </li>
       <li>
         <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/monitor/add/1"
         >
           Add to monitor
@@ -363,6 +367,7 @@ exports[`OptionsComponent 3`] = `
     <ul>
       <li>
         <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/manual"
         >
           Add manually
@@ -370,6 +375,7 @@ exports[`OptionsComponent 3`] = `
       </li>
       <li>
         <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/monitor/add/1"
         >
           Add to monitor

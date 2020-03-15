@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
 import qs from 'qs';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { SearchBox } from './IndexComponent';
 import useSWR from 'swr';
+import { MLink } from './utils';
 
 export interface SearchResult {
   Type: string;
@@ -26,7 +27,7 @@ export function SearchComponent() {
         {results ? (
           results.map(result => (
             <li key={result.imdbID}>
-              <Link
+              <MLink
                 to={{
                   pathname:
                     result.Type === 'movie'
@@ -36,7 +37,7 @@ export function SearchComponent() {
                 }}
               >
                 {result.title} ({result.Year ? result.Year : 'Unknown year'})
-              </Link>
+              </MLink>
             </li>
           ))
         ) : (

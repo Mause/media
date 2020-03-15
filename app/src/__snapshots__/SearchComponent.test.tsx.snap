@@ -16,6 +16,7 @@ exports[`SearchComponent 1`] = `
     <ul>
       <li>
         <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/select/10000/options"
         >
           Hello

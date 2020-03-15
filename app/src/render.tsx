@@ -10,7 +10,7 @@ import { String } from 'typescript-string-operations';
 import Moment from 'moment';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import Collapsible from 'react-collapsible';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { TV } from './SeasonSelectComponent';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,6 +20,7 @@ import {
   faList,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
+import { MLink } from './utils';
 
 export function Loading({
   loading,
@@ -264,9 +265,9 @@ function Season({
         <h4>
           Season {i} {collapse && '(Complete) '}
           &nbsp;
-          <Link to={`/select/${tmdb_id}/season/${i}`}>
+          <MLink to={`/select/${tmdb_id}/season/${i}`}>
             <FontAwesomeIcon icon={faSearch} />
-          </Link>
+          </MLink>
         </h4>
       }
       open={!collapse}

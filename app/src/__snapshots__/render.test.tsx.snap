@@ -190,6 +190,7 @@ exports[`TVShows 1`] = `
                
                
               <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
                 href="/select/1/season/1"
               >
                 <svg

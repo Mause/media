@@ -167,24 +167,24 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       )}
       <ul>
         <li>
-          <Link
+          <MLink
             to={{
               pathname: '/manual',
               state: { tmdb_id, season, episode },
             }}
           >
             Add manually
-          </Link>
+          </MLink>
         </li>
         <li>
-          <Link
+          <MLink
             to={{
               pathname: `/monitor/add/${tmdb_id}`,
               state: { type: type === 'movie' ? 'MOVIE' : 'TV' },
             }}
           >
             Add to monitor
-          </Link>
+          </MLink>
         </li>
       </ul>
     </div>
