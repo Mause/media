@@ -3,7 +3,7 @@ import qs from 'qs';
 import React, { useState, useEffect } from 'react';
 import { subscribe, MLink } from './utils';
 import { Torrents } from './streaming';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { Loading } from './render';
 import { Breadcrumbs, Typography } from '@material-ui/core';
