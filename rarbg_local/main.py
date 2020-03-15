@@ -783,6 +783,7 @@ TvSeasonResponse = api.model(
                     'name': fields.String,
                     'id': fields.Integer,
                     'episode_number': fields.Integer,
+                    'air_date': fields.Date,
                 },
             ),
             as_list=True,
