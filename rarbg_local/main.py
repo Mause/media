@@ -84,7 +84,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .transmission_proxy import get_torrent, torrent_add
-from .utils import as_resource, non_null, precondition, schema_to_openapi
+from .utils import as_resource, expect, non_null, precondition, schema_to_openapi
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -455,14 +455,9 @@ def api_diagnostics():
 
 @api.route('/api/download')
 @api.response(200, 'OK', {})
-@api.expect(
-    schema_to_openapi(api, 'Download', DownloadSchema.schema(many=True)), validate=True
-)
 @as_resource(['POST'])
-def api_download() -> str:
-    schema = DownloadSchema.schema(many=True, unknown='EXCLUDE')
-
-    things: List[DownloadSchema] = schema.load(request.json)
+@expect(api, 'Download', DownloadSchema.schema(many=True))
+def api_download(things) -> str:
     for thing in things:
         is_tv = thing.season is not None
 
@@ -519,30 +514,25 @@ def validate_id(type: MediaType, tmdb_id: str) -> str:
             raise
 
 
+@dataclass
+class MonitorPost(DataClassJsonMixin):
+    tmdb_id: int
+    type: MediaType
+
+
 @api.route('/api/monitor')
 class MonitorsResource(Resource):
-    @api.expect(
-        api.model(
-            'MonitorPost',
-            {
-                'tmdb_id': fields.Integer(required=True),
-                'type': fields.String(
-                    enum=list(MediaType.__members__.keys()), required=True
-                ),
-            },
-        ),
-        validate=True,
-    )
+    @expect(api, 'MonitorPost', MonitorPost.schema())
     @api.marshal_with(
         api.model('MonitorCreated', {'id': fields.Integer}),
         code=201,
         description='Created',
     )
-    def post(self):
-        type = MediaType[request.json['type']]
-        tmdb_id = request.json['tmdb_id']
-        media = validate_id(type, tmdb_id)
-        c = Monitor(tmdb_id=tmdb_id, added_by=current_user, type=type, title=media)
+    def post(self, rq):
+        media = validate_id(rq.type, rq.tmdb_id)
+        c = Monitor(
+            tmdb_id=rq.tmdb_id, added_by=current_user, type=rq.type, title=media
+        )
         db.session.add(c)
         db.session.commit()
         return c, 201
