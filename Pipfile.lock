@@ -107,13 +107,6 @@
             ],
             "version": "==1.4"
         },
-        "cachetools": {
-            "hashes": [
-                "sha256:9a52dd97a85f257f4e4127f15818e71a0c7899f121b34591fcc1173ea79a0198",
-                "sha256:b304586d357c43221856be51d73387f93e2a961598a9b6b6670664746f3b6c6c"
-            ],
-            "version": "==4.0.0"
-        },
         "certifi": {
             "hashes": [
                 "sha256:017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3",
@@ -196,11 +189,11 @@
         },
         "dataclasses-json": {
             "hashes": [
-                "sha256:2d20a1deb0745b5976174d1a7c397771a84a081abda9deed9619fcdba82c332d",
-                "sha256:62555a73d803d2ef8a6b891825e5d0cc2f77dff9c427375ec75f3b5a9608a349"
+                "sha256:65ac9ae2f7ec152ee01bf42c8c024736d4cd6f6fb761502dec92bd553931e3d9",
+                "sha256:dbb53ebbac30ef45f44f5f436b21bd5726a80a14e1a193958864229100271372"
             ],
             "index": "pypi",
-            "version": "==0.4.1"
+            "version": "==0.4.2"
         },
         "dill": {
             "hashes": [
