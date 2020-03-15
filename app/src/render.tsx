@@ -307,7 +307,7 @@ function NextEpisodeAirs(props: { tmdb_id: string; season: string }) {
   const dt = Moment(nextEpisode.air_date).format('DD/MM/YYYY');
   return (
     <small>
-      Next episode "{nextEpisode.name}" on {dt}
+      Next episode "{nextEpisode.name}" airs on {dt}
     </small>
   );
 }
