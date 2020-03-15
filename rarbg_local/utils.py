@@ -1,7 +1,9 @@
 from functools import lru_cache as _lru_cache
+from functools import wraps
 from typing import Callable, List, Optional, Set, TypeVar
 
 from apispec.ext.marshmallow import MarshmallowPlugin
+from flask import request
 from flask_restx import Api, Resource
 from flask_restx.model import SchemaModel
 from marshmallow import Schema
@@ -49,6 +51,29 @@ def schema_to_openapi(api: Api, name: str, schema: Schema) -> SchemaModel:
     if schema.many:
         s = [s]
     return s
+
+
+def unwrap(f):
+    while hasattr(f, '__wrapped__'):
+        f = f.__wrapped__
+    return f
+
+
+def expect(api: Api, name: str, schema: Schema):
+    def wrapper(func):
+        @api.expect(schema_to_openapi(api, name, schema), validate=True)
+        @wraps(func)
+        def decorator(*args, **kwargs):
+            rq = schema.load(request.json)
+
+            if hasattr(unwrap(func), '__qualname__'):
+                return func(args[0], rq, *args[1:], **kwargs)
+            else:
+                return func(rq, *args, **kwargs)
+
+        return decorator
+
+    return wrapper
 
 
 def as_resource(methods: List[str] = ['GET']):
