@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, act, wait } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { mock, useMoxios, renderWithSWR } from './test.utils';
+import { mock, useMoxios, renderWithSWR, wait } from './test.utils';
 
 useMoxios();
 
