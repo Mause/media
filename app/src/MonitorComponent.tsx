@@ -7,7 +7,7 @@ import { ContextMenu, MenuItem } from 'react-contextmenu';
 import { contextMenuTrigger } from './render';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 
 export enum MediaType {
   'MOVIE' = 'MOVIE',
@@ -15,6 +15,7 @@ export enum MediaType {
 }
 
 export interface Monitor {
+  status?: boolean;
   title: string;
   id: number;
   type: MediaType;
@@ -39,6 +40,11 @@ export function MonitorComponent() {
                 />
                 &nbsp;
                 {m.title}
+                &nbsp;
+                <FontAwesomeIcon
+                  icon={faCircle}
+                  className={m.status ? 'green' : 'red'}
+                />
                 &nbsp;
                 {contextMenuTrigger(id)}
                 <ContextMenu id={id}>
