@@ -19,7 +19,6 @@ sqlalchemy-stubs = "*"
 
 [packages]
 flask = "*"
-flask-wtf = "*"
 requests = "*"
 sqlalchemy = "*"
 sqlalchemy-repr = "*"
@@ -39,7 +38,6 @@ sentry-sdk = {extras = ["flask"],version = "*"}
 alembic = "*"
 plexapi = "*"
 flask-cors = "*"
-flask-sslify = "*"
 flask-restx = "*"
 werkzeug = "==0.*"
 apispec = "*"

@@ -7,7 +7,7 @@ from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from dataclasses import dataclass, field
 from functools import lru_cache
-from itertools import chain, zip_longest
+from itertools import chain
 from os.path import join
 from pathlib import Path
 from typing import (
@@ -19,7 +19,6 @@ from typing import (
     Tuple,
     TypedDict,
     TypeVar,
-    Union,
     cast,
 )
 from urllib.parse import parse_qsl, urlencode, urlparse
@@ -45,7 +44,6 @@ from flask_cors import CORS
 from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_restx import Api, Resource, fields
 from flask_restx.reqparse import RequestParser
-from flask_sslify import SSLify
 from flask_user import UserManager, current_user, login_required, roles_required
 from flask_wtf import FlaskForm
 from marshmallow.exceptions import ValidationError
@@ -58,8 +56,6 @@ from requests.exceptions import ConnectionError, HTTPError
 from sqlalchemy import event, func
 from sqlalchemy.orm.session import make_transient
 from werkzeug.wrappers import Response as WResponse
-from wtforms import StringField
-from wtforms.validators import DataRequired, Regexp
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .db import (
