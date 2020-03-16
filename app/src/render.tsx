@@ -17,6 +17,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
   faSpinner,
+  faArrowUp,
+  faArrowDown,
   faList,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
@@ -260,15 +262,27 @@ function Season({
   season: EpisodeResponse[];
   tmdb_id: string;
 }) {
+  const common = (
+    <>
+      Season {i} {collapse && '(Complete) '}
+      &nbsp;
+      <MLink to={`/select/${tmdb_id}/season/${i}`}>
+        <FontAwesomeIcon icon={faSearch} />
+      </MLink>
+    </>
+  );
   return (
     <Collapsible
       trigger={
         <h4>
-          Season {i} {collapse && '(Complete) '}
-          &nbsp;
-          <MLink to={`/select/${tmdb_id}/season/${i}`}>
-            <FontAwesomeIcon icon={faSearch} />
-          </MLink>
+          {common}
+          <FontAwesomeIcon icon={faArrowUp} />
+        </h4>
+      }
+      triggerWhenOpen={
+        <h4>
+          {common}
+          <FontAwesomeIcon icon={faArrowDown} />
         </h4>
       }
       open={!collapse}
