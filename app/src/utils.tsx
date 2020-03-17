@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactElement } from 'react';
 import Axios from 'axios';
 import { useState, useEffect } from 'react';
 import MaterialLink from '@material-ui/core/Link';
@@ -14,7 +14,7 @@ export function MLink<S>(props: {
   children: React.ReactNode;
   to: LocationDescriptor<S>;
   color?: TypographyTypeMap['props']['color'];
-}): ReactNode {
+}): ReactElement {
   return <MaterialLink component={Link} {...props} />;
 }
 
