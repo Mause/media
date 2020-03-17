@@ -43,6 +43,7 @@ werkzeug = "==0.*"
 apispec = "*"
 flask-login = "==0.5.0"
 appdynamics = "*"
+appdynamics-bindeps-linux-x64 = "*"
 
 [requires]
 python_version = "3.8"
