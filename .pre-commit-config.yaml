@@ -41,7 +41,6 @@ repos:
           - .eslintrc
           - --ext
           - .js,.jsx,.ts,.tsx
-          - app/src
           - --fix
         files: ".*(\\.js|\\.jsx|\\.ts|\\.tsx)$"
         verbose: true
