@@ -83,7 +83,7 @@ export function Movies({
       </h2>
       <Collapsible trigger={<h4>Finished downloads</h4>}>
         <ul>
-          {(sortedMovies[true] || []).map(movie => (
+          {(sortedMovies.true || []).map(movie => (
             <li key={movie.id}>
               <span>{movie.download.title}</span>
             </li>
@@ -91,7 +91,7 @@ export function Movies({
         </ul>
       </Collapsible>
       <ul>
-        {(sortedMovies[false] || []).map(movie => (
+        {(sortedMovies.false || []).map(movie => (
           <li key={movie.id}>
             <span>{movie.download.title}</span>
             &nbsp;
