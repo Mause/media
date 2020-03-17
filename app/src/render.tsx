@@ -77,6 +77,18 @@ export function Movies({
     movie => !!(torrents && getProgress(movie, torrents)?.percentDone === 1),
   );
 
+  const head = (icon: IconDefinition) => (
+    <h4>
+      Finished downloads ({sortedMovies.true.length}){' '}
+      <FontAwesomeIcon
+        icon={icon}
+        size="2x"
+        style={{ cursor: 'pointer' }}
+        transform={{ y: 2 }}
+      />
+    </h4>
+  );
+
   return (
     <div className="colA">
       <h2>
@@ -84,7 +96,8 @@ export function Movies({
       </h2>
       {sortedMovies?.true?.length ? (
         <Collapsible
-          trigger={<h4>Finished downloads ({sortedMovies.true.length})</h4>}
+          trigger={head(faCaretDown)}
+          triggerWhenOpen={head(faCaretUp)}
         >
           <ul>
             {(sortedMovies.true || []).map(movie => (
