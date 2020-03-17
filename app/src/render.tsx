@@ -264,21 +264,18 @@ function Series({
           </MenuItem>
         </ContextMenu>
       </h3>
-      {_.sortBy(Object.keys(serie.seasons), parseInt).map(i => {
-        const season = serie.seasons[i];
-        const collapse = shouldCollapse(i, data, season);
-
-        return (
+      {_.sortBy(_.toPairs(serie.seasons), ([key]) => parseInt(key)).map(
+        ([i, season]) => (
           <Season
             key={i}
             i={i}
             season={season}
             tmdb_id={serie.tmdb_id}
             torrents={torrents}
-            collapse={collapse}
+            collapse={shouldCollapse(i, data, season)}
           />
-        );
-      })}
+        ),
+      )}
     </div>
   );
 }
