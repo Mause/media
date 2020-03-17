@@ -45,15 +45,6 @@ export function load<T>(path: string, params?: any): Promise<T> {
   }).then(t => t && t.data);
 }
 
-export function useLoad<T>(path: string, params: any = null) {
-  const sparams = params ? qs.stringify(params) : null;
-  const [data, setData] = useState<T>();
-  useEffect(() => {
-    load<T>(path, sparams).then(setData);
-  }, [path, sparams]);
-  return data;
-}
-
 export function usePost<T>(url: string, body: any): [boolean, T?] {
   const [done, setDone] = useState<[boolean, T?]>([false, undefined]);
 
