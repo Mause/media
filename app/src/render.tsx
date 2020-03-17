@@ -17,12 +17,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
   faSpinner,
-  faArrowUp,
-  faArrowDown,
+  faCaretUp,
+  faCaretDown,
   faList,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { MLink } from './utils';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 export function Loading({
   loading,
@@ -282,29 +283,26 @@ function Season({
   season: EpisodeResponse[];
   tmdb_id: string;
 }) {
-  const common = (
-    <>
+  const head = (icon: IconDefinition) => (
+    <h4>
       Season {i} {collapse && '(Complete) '}
       &nbsp;
       <MLink to={`/select/${tmdb_id}/season/${i}`}>
         <FontAwesomeIcon icon={faSearch} />
       </MLink>
-    </>
+      &nbsp;
+      <FontAwesomeIcon
+        icon={icon}
+        size="2x"
+        style={{ cursor: 'pointer' }}
+        transform={{ y: 2 }}
+      />
+    </h4>
   );
   return (
     <Collapsible
-      trigger={
-        <h4>
-          {common}
-          <FontAwesomeIcon icon={faArrowUp} />
-        </h4>
-      }
-      triggerWhenOpen={
-        <h4>
-          {common}
-          <FontAwesomeIcon icon={faArrowDown} />
-        </h4>
-      }
+      trigger={head(faCaretDown)}
+      triggerWhenOpen={head(faCaretUp)}
       open={!collapse}
     >
       <ol>
