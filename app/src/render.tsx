@@ -73,7 +73,7 @@ export function Movies({
 }) {
   const sortedMovies = _.groupBy(
     movies,
-    movie => !!(torrents && getProgress(movie, torrents).percentDone === 1),
+    movie => !!(torrents && getProgress(movie, torrents)?.percentDone === 1),
   );
 
   return (
