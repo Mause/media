@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f3180693b85f48a5e1c50777a2fa1c2cc8b6a519d1589070d2e09ffcaa33ede0"
+            "sha256": "1cd7e283788903496d8e097ddaa7b6224cf4a701fea61c9a99ea851802b68e23"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -74,6 +74,13 @@
             ],
             "index": "pypi",
             "version": "==10.0"
+        },
+        "appdynamics-proxysupport-linux-x64": {
+            "hashes": [
+                "sha256:d7499c1b58a61a58e5bb8d2ad5df0e0bc13ec517af2c46b3d223f4e327e5b9d8"
+            ],
+            "index": "pypi",
+            "version": "==1.8.0.212.1"
         },
         "async-timeout": {
             "hashes": [
