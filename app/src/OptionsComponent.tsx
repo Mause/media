@@ -201,7 +201,7 @@ function useSubscribe<T>(url: string) {
 
   useEffect(() => {
     const items: T[] = [];
-    subscribe(
+    subscribe<T>(
       url,
       data => {
         items.push(data);
