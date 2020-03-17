@@ -26,15 +26,16 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 
-Sentry.init({
-  dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
-  release: process.env.HEROKU_SLUG_COMMIT,
-  environment:
-    process.env.NODE_ENV === 'production' ? 'production' : 'development',
-});
-Sentry.configureScope(scope => {
-  scope.setUser((window as any).USER);
-});
+if (process.env.NODE_ENV === 'production') {
+  Sentry.init({
+    dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
+    release: process.env.HEROKU_SLUG_COMMIT,
+    environment: 'development',
+  });
+  Sentry.configureScope(scope => {
+    scope.setUser((window as any).USER);
+  });
+}
 
 export interface IndexResponse {
   series: SeriesResponse[];
