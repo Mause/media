@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Axios from 'axios';
 import { useState, useEffect } from 'react';
-import qs from 'qs';
 import MaterialLink from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
 import { LocationDescriptor } from 'history';
@@ -15,13 +14,13 @@ export function MLink<S>(props: {
   children: React.ReactNode;
   to: LocationDescriptor<S>;
   color?: TypographyTypeMap['props']['color'];
-}) {
+}): ReactNode {
   return <MaterialLink component={Link} {...props} />;
 }
 
-export function subscribe(
+export function subscribe<T>(
   path: string,
-  callback: (a: any) => void,
+  callback: (a: T) => void,
   end: (() => void) | null = null,
 ): void {
   const es = new EventSource(path, {
@@ -38,14 +37,15 @@ export function subscribe(
   });
 }
 
-export function load<T>(path: string, params?: any): Promise<T> {
-  return Axios.get<T>(`/api/${path}`, {
-    params: qs.parse(params),
+export async function load<T>(path: string, params?: string): Promise<T> {
+  const t = await Axios.get<T>(`/api/${path}`, {
+    params,
     withCredentials: true,
-  }).then(t => t && t.data);
+  });
+  return t && t.data;
 }
 
-export function usePost<T>(url: string, body: any): [boolean, T?] {
+export function usePost<T>(url: string, body: object): [boolean, T?] {
   const [done, setDone] = useState<[boolean, T?]>([false, undefined]);
 
   useEffect(() => {
