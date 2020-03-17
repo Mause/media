@@ -14,7 +14,7 @@ import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, MLink } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
-import { Link as MaterialLink, Link, Grid } from '@material-ui/core';
+import { Link, Grid } from '@material-ui/core';
 import { SWRConfig } from 'swr';
 import {
   MonitorComponent,
@@ -108,9 +108,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function ExtMLink(props: { href: string; children: string }) {
   return (
-    <MaterialLink href={props.href} target="_blank" rel="noopener noreferrer">
+    <Link href={props.href} target="_blank" rel="noopener noreferrer">
       {props.children}
-    </MaterialLink>
+    </Link>
   );
 }
 
