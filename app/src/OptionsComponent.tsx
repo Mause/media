@@ -46,7 +46,7 @@ export function DisplayTorrent({
       },
     ],
   };
-  let url = { pathname: '/download', state };
+  const url = { pathname: '/download', state };
   return (
     <span>
       <MLink to={url}>{torrent.title}</MLink>

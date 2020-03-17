@@ -32,7 +32,7 @@ export function MonitorComponent() {
       {data ? (
         <ul>
           {data.map(m => {
-            let id = `monitor_${m.id}`;
+            const id = `monitor_${m.id}`;
             return (
               <li key={m.id}>
                 <FontAwesomeIcon

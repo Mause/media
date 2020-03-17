@@ -140,11 +140,11 @@ export function Progress({
   const prog = getProgress(item, torrents);
   if (!prog) return null;
 
-  let { eta, percentDone } = prog;
+  const { eta, percentDone } = prog;
   if (percentDone === 1) {
     return <FontAwesomeIcon icon={faCheckCircle} />;
   } else {
-    let etaDescr =
+    const etaDescr =
       eta > 0
         ? Moment()
             .add(eta, 'seconds')
@@ -246,7 +246,7 @@ function Series({
       </h3>
       {_.sortBy(Object.keys(serie.seasons), parseInt).map(i => {
         const season = serie.seasons[i];
-        let collapse = shouldCollapse(i, data, season);
+        const collapse = shouldCollapse(i, data, season);
 
         return (
           <Season

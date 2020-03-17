@@ -13,7 +13,7 @@ useMoxios();
 
 test('SeasonSelectComponent  render', async () => {
   await act(async () => {
-    let el = renderWithSWR(
+    const el = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/season']}>
         <Route path="/select/:tmdb_id/season">
           <SeasonSelectComponent />
@@ -35,7 +35,7 @@ test('SeasonSelectComponent  render', async () => {
 
 test('EpisodeSelectComponent render', async () => {
   await act(async () => {
-    let el = renderWithSWR(
+    const el = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/season/1']}>
         <Route path="/select/:tmdb_id/season/:season">
           <EpisodeSelectComponent />
