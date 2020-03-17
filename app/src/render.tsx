@@ -71,13 +71,27 @@ export function Movies({
   torrents?: Torrents;
   loading: boolean;
 }) {
+  movies = _.groupBy(
+    movies,
+    movie => !!(torrents && getProgress(movie, torrents).percentDone === 1),
+  );
+
   return (
     <div className="colA">
       <h2>
         Movies <Loading loading={loading} />
       </h2>
+      <Collapsible trigger={<h4>Finished downloads</h4>}>
+        <ul>
+          {(movies[true] || []).map(movie => (
+            <li key={movie.id}>
+              <span>{movie.download.title}</span>
+            </li>
+          ))}
+        </ul>
+      </Collapsible>
       <ul>
-        {movies.map(movie => (
+        {(movies[false] || []).map(movie => (
           <li key={movie.id}>
             <span>{movie.download.title}</span>
             &nbsp;
