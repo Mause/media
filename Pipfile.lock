@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "34a9e0bc40b4fbd17087692ae502c976ce29b3b83a1c017e1a5bacb0673c4149"
+            "sha256": "85430919e887b644e031b9f7d2645b29f460c2ffb748bff1513fde17808d0d2e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -55,6 +55,13 @@
             ],
             "index": "pypi",
             "version": "==3.3.0"
+        },
+        "appdynamics": {
+            "hashes": [
+                "sha256:770bbd08f5fe97090956a680e520621fc7f0580471af04fbb80216b2044f3af5"
+            ],
+            "index": "pypi",
+            "version": "==4.5.8.0"
         },
         "async-timeout": {
             "hashes": [
