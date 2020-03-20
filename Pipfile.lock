@@ -1047,11 +1047,11 @@
         },
         "pytest-html": {
             "hashes": [
-                "sha256:0317a0a589db59c26091ab6068b3edac8d9bc1a8bb9727ade48f806797346956",
-                "sha256:8645a8616c8ed7414678e0aeebc3b2fd7d44268773ef5e7289289ad8632c9e91"
+                "sha256:6a4ac391e105e391208e3eb9bd294a60dd336447fd8e1acddff3a6de7f4e57c5",
+                "sha256:9e4817e8be8ddde62e8653c8934d0f296b605da3d2277a052f762c56a8b32df2"
             ],
             "index": "pypi",
-            "version": "==2.1.0"
+            "version": "==2.1.1"
         },
         "pytest-metadata": {
             "hashes": [
