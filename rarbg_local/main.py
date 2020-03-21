@@ -528,11 +528,17 @@ class MonitorsResource(Resource):
     )
     def post(self, rq):
         media = validate_id(rq.type, rq.tmdb_id)
-        c = Monitor(
-            tmdb_id=rq.tmdb_id, added_by=current_user, type=rq.type, title=media
+        c = (
+            db.session.query(Monitor)
+            .filter_by(tmdb_id=rq.tmdb_id, type=rq.type)
+            .one_or_none()
         )
-        db.session.add(c)
-        db.session.commit()
+        if not c:
+            c = Monitor(
+                tmdb_id=rq.tmdb_id, added_by=current_user, type=rq.type, title=media
+            )
+            db.session.add(c)
+            db.session.commit()
         return c, 201
 
     @api.marshal_with(
