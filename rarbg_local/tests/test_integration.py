@@ -41,17 +41,6 @@ def flask_app() -> Generator[Flask, None, None]:
         yield app
 
 
-@fixture(scope='function')
-def responses():
-    mock = RequestsMock()
-    try:
-        mock.start()
-        yield mock
-
-    finally:
-        mock.stop()
-
-
 @fixture
 def test_client(
     clear_cache, flask_app: Flask, user: User

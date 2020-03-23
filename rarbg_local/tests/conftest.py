@@ -1,6 +1,7 @@
 import json
 
 from pytest import fixture, hookimpl
+from responses import RequestsMock
 
 
 def themoviedb(responses, path, response, query=''):
@@ -39,3 +40,14 @@ def pytest_runtest_makereport(item, call):
     # set a report attribute for each phase of a call, which can
     # be "setup", "call", "teardown"
     setattr(item, "rep_" + rep.when, rep)
+
+
+@fixture(scope='function')
+def responses():
+    mock = RequestsMock()
+    try:
+        mock.start()
+        yield mock
+
+    finally:
+        mock.stop()
