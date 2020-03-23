@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # Keep package.json (& lockfiles) up to date as soon as
+  # new versions are published to the npm registry
+  - package-ecosystem: "npm"
+    directory: "/app"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "pypi"
+    directory: "/"
+    schedule:
+      interval: "daily"
