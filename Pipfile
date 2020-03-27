@@ -45,6 +45,7 @@ flask-login = "==0.5.0"
 appdynamics = "*"
 appdynamics-bindeps-linux-x64 = "*"
 appdynamics-proxysupport-linux-x64 = "*"
+fuzzywuzzy = {extras = ["speedup"],version = "*"}
 
 [requires]
 python_version = "3.8"
