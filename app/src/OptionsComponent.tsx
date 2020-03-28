@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import qs from 'qs';
 import React, { useState, useEffect } from 'react';
-import { subscribe, MLink } from './utils';
+import { subscribe, MLink, ExtMLink } from './utils';
 import { Torrents } from './streaming';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -177,6 +177,11 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           >
             Add manually
           </MLink>
+        </li>
+        <li>
+          <ExtMLink href={`/api/horriblesubs/tv/${tmdb_id}?episode=${episode}`}>
+            Try horriblesubs
+          </ExtMLink>
         </li>
         <li>
           <MLink
