@@ -91,7 +91,7 @@ logging.getLogger("pika").setLevel(logging.WARNING)
 app = Blueprint('rarbg_local', __name__)
 
 Api.specs_url = '/swagger.json'
-api = Api(doc='/doc/')
+api = Api(doc='/doc/', validate=True)
 
 K = TypeVar('K')
 V = TypeVar('V')

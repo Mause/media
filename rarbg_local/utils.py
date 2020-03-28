@@ -65,7 +65,7 @@ def ismethod(func):
 
 def expect(api: Api, name: str, schema: Schema):
     def wrapper(func):
-        @api.expect(schema_to_openapi(api, name, schema), validate=True)
+        @api.expect(schema_to_openapi(api, name, schema))
         @wraps(func)
         def decorator(*args, **kwargs):
             rq = schema.load(request.json)
