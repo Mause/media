@@ -17,7 +17,13 @@ export interface DownloadState {
 export function DownloadComponent() {
   const { state } = useLocation<DownloadState>();
 
-  const [done] = usePost('download', state.downloads);
+  const [done] = usePost(
+    'download',
+    state.downloads.map(item => ({
+      ...item,
+      tmdb_id: Number(item.tmdb_id),
+    })),
+  );
 
   return done ? <Redirect to="/" /> : <ReactLoading color="#000000" />;
 }
