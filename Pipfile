@@ -47,6 +47,7 @@ appdynamics-bindeps-linux-x64 = "*"
 appdynamics-proxysupport-linux-x64 = "*"
 fuzzywuzzy = {extras = ["speedup"],version = "*"}
 cachetools = "*"
+lxml = "*"
 
 [requires]
 python_version = "3.8"
