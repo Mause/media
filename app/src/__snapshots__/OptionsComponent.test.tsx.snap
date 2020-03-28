@@ -102,6 +102,16 @@ exports[`OptionsComponent 1`] = `
       <li>
         <a
           class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          href="/api/horriblesubs/tv/1?episode=undefined"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Try horriblesubs
+        </a>
+      </li>
+      <li>
+        <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/monitor/add/1"
         >
           Add to monitor
@@ -247,6 +257,16 @@ exports[`OptionsComponent 2`] = `
       <li>
         <a
           class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          href="/api/horriblesubs/tv/1?episode=undefined"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Try horriblesubs
+        </a>
+      </li>
+      <li>
+        <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="/monitor/add/1"
         >
           Add to monitor
@@ -371,6 +391,16 @@ exports[`OptionsComponent 3`] = `
           href="/manual"
         >
           Add manually
+        </a>
+      </li>
+      <li>
+        <a
+          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          href="/api/horriblesubs/tv/1?episode=undefined"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Try horriblesubs
         </a>
       </li>
       <li>

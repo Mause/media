@@ -59,8 +59,8 @@ export function usePost<T>(url: string, body: object): [boolean, T?] {
 
 export function ExtMLink(props: { href: string; children: string }) {
   return (
-    <Link href={props.href} target="_blank" rel="noopener noreferrer">
+    <MaterialLink href={props.href} target="_blank" rel="noopener noreferrer">
       {props.children}
-    </Link>
+    </MaterialLink>
   );
 }
