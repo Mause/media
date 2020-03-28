@@ -838,16 +838,16 @@ SearchResponse = api.model(
 
 
 @api.route('/api/search')
-@api.expect(
-    RequestParser().add_argument(
-        'query', type=str, help='Search query', location='args'
-    )
-)
 @api.response(200, 'OK', [SearchResponse])
 @as_resource()
 @api.marshal_with(SearchResponse, as_list=True)
-def api_search():
-    return search_themoviedb(request.args['query'])
+@query_params(
+    RequestParser().add_argument(
+        'query', type=str, help='Search query', location='args', required=True
+    )
+)
+def api_search(self, query: str):
+    return search_themoviedb(query)
 
 
 def get_keyed_torrents() -> Dict[str, Dict]:
