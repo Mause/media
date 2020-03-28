@@ -72,7 +72,12 @@ from .db import (
     get_episodes,
     get_movies,
 )
-from .horriblesubs import get_all_shows, get_downloads, get_show_id
+from .horriblesubs import (
+    HorriblesubsDownloadType,
+    get_all_shows,
+    get_downloads,
+    get_show_id,
+)
 from .rarbg import RarbgTorrent, get_rarbg, get_rarbg_iter
 from .tmdb import (
     get_json,
@@ -266,7 +271,7 @@ def horriblesubs(type: str, tmdb_id: int, episode: int):
     if not show_id:
         return api.abort()
 
-    downloads = get_downloads(int(show_id), 'show')
+    downloads = get_downloads(int(show_id), HorriblesubsDownloadType.SHOW)
 
     key = '{:02d}'.format(int(request.args['episode']))
     if key in downloads:

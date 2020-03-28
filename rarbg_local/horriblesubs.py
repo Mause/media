@@ -1,6 +1,7 @@
 import re
+from enum import Enum
 from functools import lru_cache
-from typing import Dict, Literal, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 from cachetools.func import ttl_cache
 from lxml.html import fromstring
@@ -9,6 +10,11 @@ from requests_toolbelt.sessions import BaseUrlSession
 session = BaseUrlSession('https://horriblesubs.info/')
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
+
+
+class HorriblesubsDownloadType(Enum):
+    SHOW = 'show'
+    BATCH = 'batch'
 
 
 @ttl_cache()
@@ -44,7 +50,7 @@ def get_latest():
 
 
 @ttl_cache()
-def get_downloads(showid: int, type: Literal['show', 'batch']):
+def get_downloads(showid: int, type: HorriblesubsDownloadType):
     def internal():
         page = 0
         while True:
@@ -58,7 +64,7 @@ def get_downloads(showid: int, type: Literal['show', 'batch']):
     return dict(internal())
 
 
-def _get_downloads(showid: int, type: Literal['show', 'batch'], page: int):
+def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
     def process(div):
         ten_eighty = div.xpath(
             './/div[contains(@class, "link-1080p")]/span/a[@title="Magnet Link"]/@href'
@@ -68,7 +74,12 @@ def _get_downloads(showid: int, type: Literal['show', 'batch'], page: int):
 
     r = session.get(
         '/api.php',
-        params={'method': 'getshows', 'type': type, 'showid': showid, 'nextid': page},
+        params={
+            'method': 'getshows',
+            'type': type.name,
+            'showid': showid,
+            'nextid': page,
+        },
     )
     html = fromstring(r.content)
 
