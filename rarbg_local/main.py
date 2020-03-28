@@ -6,7 +6,7 @@ import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from dataclasses import dataclass, field
-from functools import lru_cache
+from functools import lru_cache, wraps
 from itertools import chain
 from os.path import join
 from pathlib import Path
@@ -230,6 +230,18 @@ def eventstream(func: Callable):
             ),
             mimetype="text/event-stream",
         )
+
+    return decorator
+
+
+def query_params(validator):
+    def decorator(func):
+        @wraps(func)
+        @api.expect(validator)
+        def wrapper(*args, **kwargs):
+            return func(*args, **kwargs, **validator.parse_args(strict=True))
+
+        return wrapper
 
     return decorator
 
