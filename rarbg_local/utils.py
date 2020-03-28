@@ -86,9 +86,9 @@ def as_resource(methods: List[str] = ['GET']):
             func.__name__,
             (Resource,),
             {
-                method.lower(): wraps(
+                method.lower(): wraps(func)(
                     lambda self, *args, **kwargs: func(*args, **kwargs)
-                )(func)
+                )
                 for method in methods
             },
         )
