@@ -8,7 +8,7 @@ import { MLink } from './utils';
 import { DownloadCall } from './DownloadComponent';
 import { Torrents } from './streaming';
 
-type T = [string, ITorrent[]][];
+type MapType = [string, ITorrent[]][];
 
 function DownloadAllComponent() {
   const { tmdb_id, season } = useParams<{ tmdb_id: string; season: string }>();
@@ -16,8 +16,8 @@ function DownloadAllComponent() {
   const { data: torrents } = useSWR<Torrents>('torrents');
   const { data, isValidating } = useSWR<{
     packs: ITorrent[];
-    complete: T;
-    incomplete: T;
+    complete: MapType;
+    incomplete: MapType;
   }>(`select/${tmdb_id}/season/${season}/download_all`);
 
   return (
@@ -72,7 +72,7 @@ function download_all(tmdb_id: string, torrents: ITorrent[]) {
 
 function Individual(props: {
   label: string;
-  items?: T;
+  items?: MapType;
   season: string;
   tmdb_id: string;
   torrents?: Torrents;
