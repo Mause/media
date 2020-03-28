@@ -1,6 +1,8 @@
 import re
+from functools import lru_cache
 from typing import Dict, Literal, Optional, Tuple
 
+from cachetools.func import ttl_cache
 from lxml.html import fromstring
 from requests_toolbelt.sessions import BaseUrlSession
 
@@ -9,6 +11,7 @@ session = BaseUrlSession('https://horriblesubs.info/')
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
 
 
+@ttl_cache()
 def get_all_shows() -> Dict[str, str]:
     shows = fromstring(session.get('/shows/').content)
     shows = shows.xpath('.//div[@class="ind-show"]/a')
@@ -16,6 +19,7 @@ def get_all_shows() -> Dict[str, str]:
     return {show.attrib['title']: show.attrib['href'] for show in shows}
 
 
+@lru_cache()
 def get_show_id(path: str) -> Optional[str]:
     html = session.get(path).text
     m = SHOWID_RE.search(html)
@@ -39,6 +43,7 @@ def get_latest():
     return parse(html)
 
 
+@ttl_cache()
 def get_downloads(showid: int, type: Literal['show', 'batch']):
     def internal():
         page = 0

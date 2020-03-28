@@ -5,6 +5,7 @@ from typing import Dict, List, Literal, Optional
 
 import backoff
 import requests
+from cachetools.func import ttl_cache
 from requests_toolbelt.sessions import BaseUrlSession
 
 from .utils import lru_cache, precondition
@@ -41,7 +42,7 @@ def get_year(result: Dict[str, str]) -> Optional[int]:
     return date.fromisoformat(data).year if data else None
 
 
-@lru_cache()
+@ttl_cache()
 def search_themoviedb(s: str) -> List[Dict]:
     MAP = {'tv': 'series', 'movie': 'movie'}
     r = tmdb.get('search/multi', params={'query': s})
@@ -88,7 +89,7 @@ def get_movie(id: str):
     return get_json(f'movie/{id}')
 
 
-@lru_cache()
+@ttl_cache()
 def get_tv(id: str):
     return get_json(f'tv/{id}')
 
@@ -106,7 +107,7 @@ def get_imdb_id(type: str, id: str) -> str:
     return get_json(f'{type}/{id}/external_ids')['imdb_id']
 
 
-@lru_cache()
+@ttl_cache()
 def get_tv_episodes(id: str, season: str):
     return get_json(f'tv/{id}/season/{season}')
 
