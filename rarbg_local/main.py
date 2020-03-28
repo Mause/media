@@ -880,7 +880,7 @@ SearchResponse = api.model(
         'query', type=str, help='Search query', location='args', required=True
     )
 )
-def api_search(self, query: str):
+def api_search(query: str):
     return search_themoviedb(query)
 
 

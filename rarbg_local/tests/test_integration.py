@@ -118,7 +118,7 @@ def test_download_movie(test_client, responses, add_torrent):
     magnet = 'magnet:...'
 
     res = test_client.post(
-        '/api/download', json=[{'magnet': magnet, 'tmdb_id': '533985'}]
+        '/api/download', json=[{'magnet': magnet, 'tmdb_id': 533985}]
     )
     assert res.status == '200 OK'
 
@@ -141,7 +141,7 @@ def test_download(test_client, responses, add_torrent):
 
     res = test_client.post(
         '/api/download',
-        json=[{'magnet': magnet, 'tmdb_id': '95792', 'season': '1', 'episode': '2'}],
+        json=[{'magnet': magnet, 'tmdb_id': 95792, 'season': '1', 'episode': '2'}],
     )
     assert res.status == '200 OK'
 
@@ -163,7 +163,7 @@ def test_download_season_pack(test_client, responses, add_torrent):
     magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
 
     res = test_client.post(
-        '/api/download', json=[{'magnet': magnet, 'tmdb_id': '90000', 'season': '1'}]
+        '/api/download', json=[{'magnet': magnet, 'tmdb_id': 90000, 'season': '1'}]
     )
     assert res.status == '200 OK'
 
