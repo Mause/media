@@ -12,7 +12,7 @@ import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
-import { load, MLink } from './utils';
+import { load, MLink, ExtMLink } from './utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { Link, Grid } from '@material-ui/core';
 import { SWRConfig } from 'swr';
@@ -105,14 +105,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-function ExtMLink(props: { href: string; children: string }) {
-  return (
-    <Link href={props.href} target="_blank" rel="noopener noreferrer">
-      {props.children}
-    </Link>
-  );
-}
 
 function ParentComponentInt() {
   const classes = useStyles();
