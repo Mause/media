@@ -1,10 +1,8 @@
 from pathlib import Path
 
-from pytest import mark
+from responses import RequestsMock
 
-from ..horriblesubs import get_downloads, get_latest
-
-pytestmark = mark.skip
+from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
 
 
 def load_html(filename):
@@ -38,17 +36,24 @@ def test_parse(responses):
     }
 
 
-def test_get_downloads(responses):
+def mock(responses: RequestsMock, url: str, html: str) -> None:
+    responses.add('GET', url + '&nextid=0', body=load_html(html))
     responses.add(
-        'GET',
-        'https://horriblesubs.info/api.php?method=getshows&type=batch&showid=1',
-        body=load_html('results.html'),
+        'GET', url + '&nextid=1', body='There are no batches for this show yet'
     )
 
-    batches = get_downloads(1, 'batch')
+
+def test_get_downloads(responses):
+    mock(
+        responses,
+        'https://horriblesubs.info/api.php?method=getshows&type=batch&showid=1',
+        'results.html',
+    )
+
+    batches = get_downloads(1, HorriblesubsDownloadType.BATCH)
 
     assert batches == {
-        "": "magnet:"
+        "01-12": "magnet:"
         + "?xt=urn:btih:2UIBW66DGKSND7QKUBFE5WOGS2SCY2ZE"
         + "&tr=udp://tracker.coppersurfer.tk:6969/announce"
         + "&tr=udp://tracker.internetwarriors.net:1337/announce"
@@ -65,14 +70,14 @@ def test_get_downloads(responses):
     }
 
 
-def test_get_downloads_single(responses):
-    responses.add(
-        'GET',
+def test_get_downloads_single(responses: RequestsMock):
+    mock(
+        responses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=1',
-        body=load_html('show.html'),
+        'show.html',
     )
 
-    magnets = get_downloads(1, 'show')
+    magnets = get_downloads(1, HorriblesubsDownloadType.SHOW)
 
     m = (
         lambda torrent_hash: f'magnet:?xt=urn:btih:{torrent_hash}&tr=udp://tracker.coppersurfer.tk:6969/announce&tr=udp://tracker.internetwarriors.net:1337/announce&tr=udp://tracker.leechersparadise.org:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://open.stealth.si:80/announce&tr=udp://p4p.arenabg.com:1337/announce&tr=udp://mgtracker.org:6969/announce&tr=udp://tracker.tiny-vps.com:6969/announce&tr=udp://peerfect.org:6969/announce&tr=http://share.camoe.cn:8080/announce&tr=http://t.nyaatracker.com:80/announce&tr=https://open.kickasstracker.com:443/announce'

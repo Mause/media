@@ -76,14 +76,20 @@ def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
         '/api.php',
         params={
             'method': 'getshows',
-            'type': type.name,
+            'type': type.value,
             'showid': showid,
             'nextid': page,
         },
     )
+    if r.text.strip() == 'There are no batches for this show yet':
+        return ()
+
     html = fromstring(r.content)
 
-    torrents = html.xpath('.//div[contains(@class, "rls-info-container")]')
+    if type == HorriblesubsDownloadType.BATCH:
+        torrents = [html]
+    else:
+        torrents = html.xpath('.//div[contains(@class, "rls-info-container")]')
     return (process(div) for div in torrents)
 
 
