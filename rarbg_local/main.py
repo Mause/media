@@ -45,6 +45,7 @@ from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_restx import Api, Resource, fields
 from flask_restx.reqparse import RequestParser
 from flask_user import UserManager, current_user, login_required, roles_required
+from fuzzywuzzy import fuzz
 from marshmallow.exceptions import ValidationError
 from marshmallow.fields import String
 from marshmallow.validate import Regexp as MarshRegexp
@@ -71,6 +72,7 @@ from .db import (
     get_episodes,
     get_movies,
 )
+from .horriblesubs import get_all_shows, get_downloads, get_show_id
 from .rarbg import RarbgTorrent, get_rarbg, get_rarbg_iter
 from .tmdb import (
     get_json,
@@ -244,6 +246,33 @@ def query_params(validator):
         return wrapper
 
     return decorator
+
+
+@api.route('/api/horriblesubs/<type>/<tmdb_id>')
+@as_resource()
+@query_params(
+    RequestParser().add_argument('episode', type=int, location='args', required=True)
+)
+def horriblesubs(type: str, tmdb_id: int, episode: int):
+    tv = get_tv(tmdb_id)
+
+    shows = get_all_shows()
+
+    item = max(shows.keys(), key=lambda key: fuzz.ratio(key, tv['name']))
+    if fuzz.ratio(item, tv['name']) < 95:
+        return api.abort(404, message='Did not find item in horriblesubs')
+
+    show_id = get_show_id(shows[item])
+    if not show_id:
+        return api.abort()
+
+    downloads = get_downloads(int(show_id), 'show')
+
+    key = '{:02d}'.format(int(request.args['episode']))
+    if key in downloads:
+        return [{"download": downloads[key]}]
+    else:
+        return api.abort(404, 'Episode not found')
 
 
 @app.route('/stream/<type>/<imdb_id>')
