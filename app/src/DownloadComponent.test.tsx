@@ -32,6 +32,9 @@ test('DownloadComponent', async () => {
     expect(el.container).toMatchSnapshot();
 
     await moxios.stubOnce('POST', /\/api\/download/, {});
+    expect(JSON.parse(moxios.requests.mostRecent().config.data)).toEqual([
+      { magnet: '...', tmdb_id: 10000 },
+    ]);
     await wait();
 
     expect(el.container).toMatchSnapshot();
