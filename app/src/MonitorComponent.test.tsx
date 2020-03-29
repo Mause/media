@@ -11,6 +11,7 @@ import React from 'react';
 import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import * as _ from 'lodash';
+import { expectLastRequestBody } from './utils';
 
 useMoxios();
 
@@ -55,12 +56,13 @@ describe('MonitorComponent', () => {
       );
 
       await wait();
-      const request = moxios.requests.mostRecent();
-      expect(JSON.parse(request.config.data)).toEqual({
+      expectLastRequestBody().toEqual({
         type: 'MOVIE',
         tmdb_id: 5,
       });
-      await request.respondWith({ status: 200, response: {} });
+      await moxios.requests
+        .mostRecent()
+        .respondWith({ status: 200, response: {} });
 
       expect(_.map(hist.entries, 'pathname')).toEqual(['/', '/monitor']);
     });

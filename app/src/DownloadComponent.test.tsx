@@ -5,6 +5,7 @@ import { Route, Router } from 'react-router-dom';
 import { wait, useMoxios, renderWithSWR } from './test.utils';
 import { createMemoryHistory } from 'history';
 import moxios from 'moxios';
+import { expectLastRequestBody } from './utils';
 
 useMoxios();
 
@@ -32,9 +33,7 @@ test('DownloadComponent', async () => {
     expect(el.container).toMatchSnapshot();
 
     await moxios.stubOnce('POST', /\/api\/download/, {});
-    expect(JSON.parse(moxios.requests.mostRecent().config.data)).toEqual([
-      { magnet: '...', tmdb_id: 10000 },
-    ]);
+    expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
     await wait();
 
     expect(el.container).toMatchSnapshot();

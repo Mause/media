@@ -64,3 +64,7 @@ export function ExtMLink(props: { href: string; children: string }) {
     </MaterialLink>
   );
 }
+
+export function expectLastRequestBody() {
+  return expect(JSON.parse(moxios.requests.mostRecent().config.data));
+}
