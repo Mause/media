@@ -53,7 +53,7 @@ def search_themoviedb(s: str) -> List[Dict]:
             'Year': get_year(result),
             'imdbID': result['id'],
         }
-        for result in r.json()['results']
+        for result in r.json().get('results', [])
         if result['media_type'] in MAP
     ]
 
