@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import MaterialLink from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
 import { LocationDescriptor } from 'history';
-
 import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@material-ui/core';
+import moxios from 'moxios';
 
 axiosRetry(Axios, { retries: 3 });
 
