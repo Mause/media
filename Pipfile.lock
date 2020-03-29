@@ -58,22 +58,22 @@
         },
         "appdynamics": {
             "hashes": [
-                "sha256:770bbd08f5fe97090956a680e520621fc7f0580471af04fbb80216b2044f3af5"
+                "sha256:3dfec6ccb25445fa5b050d3691c9d56bac4262aa5b971690144f3343760ddc83"
             ],
             "index": "pypi",
-            "version": "==4.5.8.0"
+            "version": "==20.3.0"
         },
         "appdynamics-bindeps-linux-x64": {
             "hashes": [
-                "sha256:22ed096249312ccbe0bdecd0113989fe52f3f94722dc84a9fc13dde6ee643e37",
-                "sha256:2d808c2a584c4183139b20c0418856d3b5d6cf1bde9bf926b445a71ccebe8ff3",
-                "sha256:34027393b8e2f4b4ddaa611d3e0e959f702447320b051df082efa924e5f56a32",
-                "sha256:5b34b40f592a21d72cfee2bdba937398a68096be01f731d830801417eb40d02f",
-                "sha256:b4fb9111b9b06181f6cb700271d979caec10fd50125491ae5ee66fa456cdb381",
-                "sha256:d9d99359d747b19e4c0f0d18eff63746b728ce1652b110c22406a4a99f481cd8"
+                "sha256:04ef7dd006c23fd5bb5b83afbe45bf409283da564b2b45d6ec675a1aeb5b293c",
+                "sha256:160435c121f1234bd21c6602996354db84a371cb00e56f45d2a735aa415d279a",
+                "sha256:8c8676ef49c5c48d1748d3670dbc6775dc9c3876d863fdf86fc66bc3c72ed9a1",
+                "sha256:95ef0a5d8f2b3ba5788f2792feabb8f9824e9d2641670494986de22098be355b",
+                "sha256:b623c42dc81238a9c6119632755fe5bcdf4ea07cbf20c3058cbcd8f9664e5601",
+                "sha256:f06bd26874decdbe7c6f3625812a3dafe2a2410484d0aa0e4730627bf88c64d9"
             ],
             "index": "pypi",
-            "version": "==10.0"
+            "version": "==11.0"
         },
         "appdynamics-proxysupport-linux-x64": {
             "hashes": [
@@ -643,10 +643,10 @@
         },
         "tqdm": {
             "hashes": [
-                "sha256:0d8b5afb66e23d80433102e9bd8b5c8b65d34c2a2255b2de58d97bd2ea8170fd",
-                "sha256:f35fb121bafa030bd94e74fcfd44f3c2830039a2ddef7fc87ef1c2d205237b24"
+                "sha256:4f882b23c492e7060f50d83af86f163b67e4cfbe35dfe12077e748c56282f438",
+                "sha256:f0fc945df434e5e612fb7eb93bf29e924940913590450c3760f198dd75a2cd19"
             ],
-            "version": "==4.43.0"
+            "version": "==4.44.0"
         },
         "typing-extensions": {
             "hashes": [
