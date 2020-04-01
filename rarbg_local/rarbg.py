@@ -60,6 +60,7 @@ class RarbgTorrent(TypedDict):
     category: str
     seeders: int
     title: str
+    download: str
 
 
 def get_rarbg(base_url: str, type, **kwargs) -> List[RarbgTorrent]:
