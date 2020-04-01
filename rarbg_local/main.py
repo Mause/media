@@ -77,6 +77,7 @@ from .horriblesubs import (
     get_all_shows,
     get_downloads,
     get_show_id,
+    search_for_tv,
 )
 from .rarbg import RarbgTorrent, get_rarbg, get_rarbg_iter
 from .tmdb import (
@@ -274,15 +275,10 @@ def horriblesubs(type: str, tmdb_id: int, episode: int):
             data={'closest': closest[:10], 'requested': tv['name']},
         )
 
-    show_id = get_show_id(shows[item])
-    if not show_id:
-        return api.abort()
+    downloads = search_for_tv(get_tv_imdb_id(tmdb_id), 1, episode)
 
-    downloads = get_downloads(int(show_id), HorriblesubsDownloadType.SHOW)
-
-    key = '{:02d}'.format(int(request.args['episode']))
     if key in downloads:
-        return [{"download": downloads[key]}]
+        return downloads
     else:
         return api.abort(404, 'Episode not found')
 

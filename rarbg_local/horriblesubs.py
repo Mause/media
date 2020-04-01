@@ -4,8 +4,11 @@ from functools import lru_cache
 from typing import Dict, Optional, Tuple
 
 from cachetools.func import ttl_cache
+from fuzzywuzzy import fuzz
 from lxml.html import fromstring
 from requests_toolbelt.sessions import BaseUrlSession
+
+from .tmdb import get_tv, resolve_id
 
 session = BaseUrlSession('https://horriblesubs.info/')
 
@@ -66,11 +69,21 @@ def get_downloads(showid: int, type: HorriblesubsDownloadType):
 
 def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
     def process(div):
-        ten_eighty = div.xpath(
-            './/div[contains(@class, "link-1080p")]/span/a[@title="Magnet Link"]/@href'
-        )
-        assert len(ten_eighty) == 1, ten_eighty
-        return div.attrib['id'], ten_eighty[0]
+        def fn(res: str):
+            t = div.xpath(
+                f'.//div[contains(@class, "link-{res}")]/span/a[@title="Magnet Link"]/@href'
+            )
+            return t[0] if t else None
+
+        return [
+            {
+                'episode': div.attrib['id'],
+                'resolution': resolution,
+                'download': fn(resolution),
+            }
+            for resolution in {'1080', '720', '480'}
+            if fn(resolution)
+        ]
 
     r = session.get(
         '/api.php',
@@ -104,3 +117,22 @@ def search(showid: int, search_term: str):
             'value': search_term,
         },
     )
+
+
+def search_for_tv(imdb_id, season, episode):
+    if season != 1:
+        return []
+
+    tmdb_id = resolve_id(imdb_id, 'tv')
+
+    tv = get_tv(tmdb_id)
+
+    shows = get_all_shows()
+
+    show = max(shows.keys(), key=lambda key: fuzz.ratio(key, tv['name']) > 95)
+    if fuzz.ratio(show, tv['name']) < 95:
+        return []
+
+    show_id = get_show_id(show)
+
+    return get_downloads(show_id, 'show').get('{:02d}'.format(episode), [])
