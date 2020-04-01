@@ -75,7 +75,7 @@ def resolve_id(imdb_id: str, type: ThingType) -> str:
 
     if type:
         res = results[f'{type}_results']
-        precondition(res, f'No results for {imdb_id}')
+        precondition(res, f'No results for {imdb_id} as a {type}')
         res = res[0]
     else:
         res = next((item for item in chain.from_iterable(results.values())), None)
