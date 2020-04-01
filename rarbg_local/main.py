@@ -263,9 +263,16 @@ def horriblesubs(type: str, tmdb_id: int, episode: int):
 
     shows = get_all_shows()
 
-    item = max(shows.keys(), key=lambda key: fuzz.ratio(key, tv['name']))
+    key = lambda key: fuzz.ratio(key, tv['name'])
+    closest = sorted(shows.keys(), key=key)
+
+    item = max(shows.keys(), key=key)
     if fuzz.ratio(item, tv['name']) < 95:
-        return api.abort(404, message='Did not find item in horriblesubs')
+        return api.abort(
+            404,
+            message='Did not find item in horriblesubs',
+            data={'closest': closest[:10], 'requested': tv['name']},
+        )
 
     show_id = get_show_id(shows[item])
     if not show_id:
