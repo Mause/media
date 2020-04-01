@@ -5,7 +5,7 @@ import re
 import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from functools import lru_cache, wraps
 from itertools import chain
 from os.path import join
@@ -79,6 +79,7 @@ from .horriblesubs import (
     get_show_id,
     search_for_tv,
 )
+from .providers import search_for_tv
 from .rarbg import RarbgTorrent, get_rarbg, get_rarbg_iter
 from .tmdb import (
     get_json,
@@ -288,6 +289,17 @@ def horriblesubs(type: str, tmdb_id: int, episode: int):
 def stream(type: str, imdb_id: str):
     if not imdb_id.isdigit():
         return abort(422)
+
+    if type == 'series':
+        return (
+            asdict(item)
+            for item in search_for_tv(
+                get_tv_imdb_id(imdb_id),
+                int(request.args['season']),
+                int(request.args['episode']),
+            )
+        )
+
     return chain.from_iterable(
         get_rarbg_iter(
             current_app.config['TORRENT_API_URL'],
