@@ -1,6 +1,7 @@
 import re
 from enum import Enum
 from functools import lru_cache
+from itertools import chain
 from typing import Dict, Optional, Tuple
 
 from cachetools.func import ttl_cache
@@ -54,17 +55,14 @@ def get_latest():
 
 @ttl_cache()
 def get_downloads(showid: int, type: HorriblesubsDownloadType):
-    def internal():
-        page = 0
-        while True:
-            downloads = list(_get_downloads(showid, type, page))
-            if downloads:
-                yield from downloads
-                page += 1
-            else:
-                break
-
-    return dict(internal())
+    page = 0
+    while True:
+        downloads = list(_get_downloads(showid, type, page))
+        if downloads:
+            yield from downloads
+            page += 1
+        else:
+            break
 
 
 def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
@@ -103,7 +101,7 @@ def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
         torrents = [html]
     else:
         torrents = html.xpath('.//div[contains(@class, "rls-info-container")]')
-    return (process(div) for div in torrents)
+    return chain.from_iterable(process(div) for div in torrents)
 
 
 def search(showid: int, search_term: str):
