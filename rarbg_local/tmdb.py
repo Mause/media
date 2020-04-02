@@ -1,7 +1,7 @@
 from datetime import date
 from enum import Enum
 from itertools import chain
-from typing import Dict, List, Literal, Optional
+from typing import Dict, List, Literal, Optional, Union
 
 import backoff
 import requests
@@ -94,16 +94,16 @@ def get_tv(id: str):
     return get_json(f'tv/{id}')
 
 
-def get_movie_imdb_id(tv_id: str) -> str:
-    return get_imdb_id('movie', tv_id)
+def get_movie_imdb_id(movie_id: Union[int, str]) -> str:
+    return get_imdb_id('movie', movie_id)
 
 
-def get_tv_imdb_id(tv_id: str) -> str:
+def get_tv_imdb_id(tv_id: Union[int, str]) -> str:
     return get_imdb_id('tv', tv_id)
 
 
 @lru_cache()
-def get_imdb_id(type: str, id: str) -> str:
+def get_imdb_id(type: str, id: Union[int, str]) -> str:
     return get_json(f'{type}/{id}/external_ids')['imdb_id']
 
 
