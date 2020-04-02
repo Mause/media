@@ -276,7 +276,7 @@ def horriblesubs(type: str, tmdb_id: int, episode: int):
             data={'closest': closest[:10], 'requested': tv['name']},
         )
 
-    downloads = search_for_tv(get_tv_imdb_id(tmdb_id), 1, episode)
+    downloads = search_for_tv(get_tv_imdb_id(str(tmdb_id)), 1, episode)
 
     if key in downloads:
         return downloads
