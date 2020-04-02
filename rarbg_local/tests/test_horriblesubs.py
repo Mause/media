@@ -75,7 +75,7 @@ def test_get_downloads(responses):
     ]
 
 
-def test_get_downloads_single(responses: RequestsMock):
+def test_get_downloads_single(responses: RequestsMock, snapshot):
     mock(
         responses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=1',
@@ -83,61 +83,5 @@ def test_get_downloads_single(responses: RequestsMock):
     )
 
     magnets = list(get_downloads(1, HorriblesubsDownloadType.SHOW))
-    assert magnets == [
-        # '01': m('magnet'),  # test data is missing this one
-        {
-            'episode': '02',
-            'download': magnet_link('VSBAG4BJNDVDWI2GLWOQ3UYIJAFI35Y6'),
-            'resolution': '1080',
-        },
-        {
-            'episode': '03',
-            'download': magnet_link('PZMGSAST532KUYJ2LYR7PEEHNTP6E5FU'),
-            'resolution': '1080',
-        },
-        {
-            'episode': '04',
-            'download': magnet_link('JX2JEXQ4XPYZBE4VOE7RBY2IQMGDIUME'),
-            'resolution': '1080',
-        },
-        {
-            'episode': '05',
-            'download': magnet_link('RFZF4JPSNNAERZZEOXVUEJGZVPOUVPVO'),
-            'resolution': '1080',
-        },
-        {
-            'episode': '06',
-            'download': magnet_link('B3IR74HLUAVMVKPS6HD3K2DJKJSTRY2F'),
-            'resolution': '1080',
-        },
-        {
-            'episode': '07',
-            'download': magnet_link('MQMIBASXNTVLVBQ5AAHTDNFUGWXEAP7B'),
-            'resolution': '1080',
-        },
-        {
-            'episode': '08',
-            'download': magnet_link('RLQFPJ6AZD44E65VFIRW6RIO3GPPMDD6'),
-            'resolution': '1080',
-        },
-        {
-            'episode': '09',
-            'download': magnet_link('SXDC7L2CAMC5KXVLKNUWOCP4CZQ7HHFC'),
-            'resolution': '1080',
-        },
-        {
-            'episode': '10',
-            'download': magnet_link('E7I3GTBL6NUBAUZYUL7PRZDG6J2SPRF7'),
-            'resolution': '1080',
-        },
-        {
-            'episode': '11',
-            'download': magnet_link('ANBB2EMKEPST3FTCHCZ3OBVS557REHXW'),
-            'resolution': '1080',
-        },
-        {
-            'episode': '12',
-            'download': magnet_link('5QRG6LYP3FZALFH4MYQTVVFP63XMQ4WX'),
-            'resolution': '1080',
-        },
-    ]
+
+    snapshot.assert_match(magnets)
