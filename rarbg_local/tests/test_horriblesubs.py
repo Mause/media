@@ -43,6 +43,10 @@ def mock(responses: RequestsMock, url: str, html: str) -> None:
     )
 
 
+def magnet_link(torrent_hash):
+    return f'magnet:?xt=urn:btih:{torrent_hash}&tr=udp://tracker.coppersurfer.tk:6969/announce&tr=udp://tracker.internetwarriors.net:1337/announce&tr=udp://tracker.leechersparadise.org:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://open.stealth.si:80/announce&tr=udp://p4p.arenabg.com:1337/announce&tr=udp://mgtracker.org:6969/announce&tr=udp://tracker.tiny-vps.com:6969/announce&tr=udp://peerfect.org:6969/announce&tr=http://share.camoe.cn:8080/announce&tr=http://t.nyaatracker.com:80/announce&tr=https://open.kickasstracker.com:443/announce'
+
+
 def test_get_downloads(responses):
     mock(
         responses,
@@ -50,24 +54,25 @@ def test_get_downloads(responses):
         'results.html',
     )
 
-    batches = get_downloads(1, HorriblesubsDownloadType.BATCH)
+    batches = list(get_downloads(1, HorriblesubsDownloadType.BATCH))
 
-    assert batches == {
-        "01-12": "magnet:"
-        + "?xt=urn:btih:2UIBW66DGKSND7QKUBFE5WOGS2SCY2ZE"
-        + "&tr=udp://tracker.coppersurfer.tk:6969/announce"
-        + "&tr=udp://tracker.internetwarriors.net:1337/announce"
-        + "&tr=udp://tracker.leechersparadise.org:6969/announce"
-        + "&tr=udp://tracker.opentrackr.org:1337/announce"
-        + "&tr=udp://open.stealth.si:80/announce"
-        + "&tr=udp://p4p.arenabg.com:1337/announce"
-        + "&tr=udp://mgtracker.org:6969/announce"
-        + "&tr=udp://tracker.tiny-vps.com:6969/announce"
-        + "&tr=udp://peerfect.org:6969/announce"
-        + "&tr=http://share.camoe.cn:8080/announce"
-        + "&tr=http://t.nyaatracker.com:80/announce"
-        + "&tr=https://open.kickasstracker.com:443/announce"
-    }
+    assert batches == [
+        {
+            "episode": "01-12",
+            "resolution": "1080",
+            "download": magnet_link("2UIBW66DGKSND7QKUBFE5WOGS2SCY2ZE"),
+        },
+        {
+            'download': magnet_link('VO6CAWGQEKD2NVRMR3R2ZLU74LC5DFSC'),
+            'episode': '01-12',
+            'resolution': '720',
+        },
+        {
+            'download': magnet_link('ACKN4HMMEZQVZQRWFQNGCOTSPKAPEJGI'),
+            'episode': '01-12',
+            'resolution': '480',
+        },
+    ]
 
 
 def test_get_downloads_single(responses: RequestsMock):
@@ -77,23 +82,62 @@ def test_get_downloads_single(responses: RequestsMock):
         'show.html',
     )
 
-    magnets = get_downloads(1, HorriblesubsDownloadType.SHOW)
-
-    m = (
-        lambda torrent_hash: f'magnet:?xt=urn:btih:{torrent_hash}&tr=udp://tracker.coppersurfer.tk:6969/announce&tr=udp://tracker.internetwarriors.net:1337/announce&tr=udp://tracker.leechersparadise.org:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://open.stealth.si:80/announce&tr=udp://p4p.arenabg.com:1337/announce&tr=udp://mgtracker.org:6969/announce&tr=udp://tracker.tiny-vps.com:6969/announce&tr=udp://peerfect.org:6969/announce&tr=http://share.camoe.cn:8080/announce&tr=http://t.nyaatracker.com:80/announce&tr=https://open.kickasstracker.com:443/announce'
-    )
-
-    assert magnets == {
+    magnets = list(get_downloads(1, HorriblesubsDownloadType.SHOW))
+    assert magnets == [
         # '01': m('magnet'),  # test data is missing this one
-        '02': m('VSBAG4BJNDVDWI2GLWOQ3UYIJAFI35Y6'),
-        '03': m('PZMGSAST532KUYJ2LYR7PEEHNTP6E5FU'),
-        '04': m('JX2JEXQ4XPYZBE4VOE7RBY2IQMGDIUME'),
-        '05': m('RFZF4JPSNNAERZZEOXVUEJGZVPOUVPVO'),
-        '06': m('B3IR74HLUAVMVKPS6HD3K2DJKJSTRY2F'),
-        '07': m('MQMIBASXNTVLVBQ5AAHTDNFUGWXEAP7B'),
-        '08': m('RLQFPJ6AZD44E65VFIRW6RIO3GPPMDD6'),
-        '09': m('SXDC7L2CAMC5KXVLKNUWOCP4CZQ7HHFC'),
-        '10': m('E7I3GTBL6NUBAUZYUL7PRZDG6J2SPRF7'),
-        '11': m('ANBB2EMKEPST3FTCHCZ3OBVS557REHXW'),
-        '12': m('5QRG6LYP3FZALFH4MYQTVVFP63XMQ4WX'),
-    }
+        {
+            'episode': '02',
+            'download': magnet_link('VSBAG4BJNDVDWI2GLWOQ3UYIJAFI35Y6'),
+            'resolution': '1080',
+        },
+        {
+            'episode': '03',
+            'download': magnet_link('PZMGSAST532KUYJ2LYR7PEEHNTP6E5FU'),
+            'resolution': '1080',
+        },
+        {
+            'episode': '04',
+            'download': magnet_link('JX2JEXQ4XPYZBE4VOE7RBY2IQMGDIUME'),
+            'resolution': '1080',
+        },
+        {
+            'episode': '05',
+            'download': magnet_link('RFZF4JPSNNAERZZEOXVUEJGZVPOUVPVO'),
+            'resolution': '1080',
+        },
+        {
+            'episode': '06',
+            'download': magnet_link('B3IR74HLUAVMVKPS6HD3K2DJKJSTRY2F'),
+            'resolution': '1080',
+        },
+        {
+            'episode': '07',
+            'download': magnet_link('MQMIBASXNTVLVBQ5AAHTDNFUGWXEAP7B'),
+            'resolution': '1080',
+        },
+        {
+            'episode': '08',
+            'download': magnet_link('RLQFPJ6AZD44E65VFIRW6RIO3GPPMDD6'),
+            'resolution': '1080',
+        },
+        {
+            'episode': '09',
+            'download': magnet_link('SXDC7L2CAMC5KXVLKNUWOCP4CZQ7HHFC'),
+            'resolution': '1080',
+        },
+        {
+            'episode': '10',
+            'download': magnet_link('E7I3GTBL6NUBAUZYUL7PRZDG6J2SPRF7'),
+            'resolution': '1080',
+        },
+        {
+            'episode': '11',
+            'download': magnet_link('ANBB2EMKEPST3FTCHCZ3OBVS557REHXW'),
+            'resolution': '1080',
+        },
+        {
+            'episode': '12',
+            'download': magnet_link('5QRG6LYP3FZALFH4MYQTVVFP63XMQ4WX'),
+            'resolution': '1080',
+        },
+    ]
