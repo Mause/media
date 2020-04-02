@@ -48,6 +48,7 @@ appdynamics-proxysupport-linux-x64 = "*"
 fuzzywuzzy = {extras = ["speedup"],version = "*"}
 cachetools = "*"
 lxml = "*"
+bs4 = "*"
 
 [requires]
 python_version = "3.8"
