@@ -81,7 +81,7 @@ def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
                 'resolution': resolution,
                 'download': fn(resolution),
             }
-            for resolution in {'1080', '720', '480'}
+            for resolution in ('1080', '720', '480')
             if fn(resolution)
         ]
 
