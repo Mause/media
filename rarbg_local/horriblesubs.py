@@ -131,7 +131,7 @@ def search_for_tv(imdb_id, season, episode):
     if fuzz.ratio(show, tv['name']) < 95:
         return []
 
-    show_id = get_show_id(show)
+    show_id = get_show_id(shows[show])
 
     key = f'{episode:02d}'
 
