@@ -97,7 +97,7 @@ def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
 
     html = fromstring(r.content)
 
-    if type == HorriblesubsDownloadType.BATCH:
+    if html.attrib.get('class') == 'rls-info-container':
         torrents = [html]
     else:
         torrents = html.xpath('.//div[contains(@class, "rls-info-container")]')
