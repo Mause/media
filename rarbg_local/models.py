@@ -3,7 +3,7 @@ from typing import Optional
 
 from dataclasses_json import DataClassJsonMixin
 
-CONVERT = {'720': 'x264/720', '1080': 'x264/1080', 'x264': 'x264/1080'}
+CONVERT = {'720': 'TV Episodes', '1080': 'TV HD Episodes', 'x264': 'TV HD Episodes'}
 
 
 @dataclass
