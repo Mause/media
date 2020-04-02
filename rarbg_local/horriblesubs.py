@@ -133,4 +133,6 @@ def search_for_tv(imdb_id, season, episode):
 
     show_id = get_show_id(show)
 
-    return get_downloads(show_id, 'show').get('{:02d}'.format(episode), [])
+    key = f'{episode:02d}'
+
+    return (item for item in get_downloads(show_id, 'show') if item['episode'] == key)
