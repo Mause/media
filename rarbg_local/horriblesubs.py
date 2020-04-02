@@ -117,11 +117,9 @@ def search(showid: int, search_term: str):
     )
 
 
-def search_for_tv(imdb_id, season, episode):
+def search_for_tv(tmdb_id, season, episode):
     if season != 1:
         return []
-
-    tmdb_id = resolve_id(imdb_id, 'tv')
 
     tv = get_tv(tmdb_id)
 

@@ -10,7 +10,7 @@ from .rarbg import get_rarbg_iter
 class Provider(ABC):
     @abstractmethod
     def search_for_tv(
-        self, imdb_id: str, season: int, episode: int
+        self, imdb_id: str, tmdb_id: int, season: int, episode: int
     ) -> Iterable[ITorrent]:
         raise NotImplementedError()
 
@@ -20,7 +20,12 @@ class Provider(ABC):
 
 
 class RarbgProvider(Provider):
-    def search_for_tv(self, imdb_id, season, episode) -> Iterable[ITorrent]:
+    def search_for_tv(
+        self, imdb_id, tmdb_id: int, season, episode
+    ) -> Iterable[ITorrent]:
+        if not imdb_id:
+            return []
+
         for item in chain.from_iterable(
             get_rarbg_iter(
                 'https://torrentapi.org/pubapi_v2.php',
@@ -55,7 +60,10 @@ class RarbgProvider(Provider):
 
 
 class KickassProvider(Provider):
-    def search_for_tv(self, imdb_id, season, episode) -> Iterable[ITorrent]:
+    def search_for_tv(self, imdb_id, tmdb_id, season, episode) -> Iterable[ITorrent]:
+        if not imdb_id:
+            return []
+
         for item in kickass.search_for_tv(imdb_id, season, episode):
             yield ITorrent(
                 source='Kickass',
@@ -79,8 +87,10 @@ class KickassProvider(Provider):
 
 
 class HorriblesubsProvider(Provider):
-    def search_for_tv(self, imdb_id, season, episode) -> Iterable[ITorrent]:
-        for item in horriblesubs.search_for_tv(imdb_id, season, episode):
+    def search_for_tv(
+        self, imdb_id, tmdb_id: int, season, episode
+    ) -> Iterable[ITorrent]:
+        for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
             yield ITorrent(
                 source='HorribleSubs',
                 title='',
@@ -97,9 +107,10 @@ class HorriblesubsProvider(Provider):
 PROVIDERS = [HorriblesubsProvider(), RarbgProvider(), KickassProvider()]
 
 
-def search_for_tv(imdb_id: str, season, episode):
+def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int):
     return chain.from_iterable(
-        provider.search_for_tv(imdb_id, season, episode) for provider in PROVIDERS
+        provider.search_for_tv(imdb_id, tmdb_id, season, episode)
+        for provider in PROVIDERS
     )
 
 
