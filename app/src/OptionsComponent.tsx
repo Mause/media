@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import qs from 'qs';
 import React, { useState, useEffect } from 'react';
-import { subscribe, MLink, ExtMLink } from './utils';
+import { subscribe, MLink } from './utils';
 import { Torrents } from './streaming';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
