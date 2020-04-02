@@ -179,11 +179,6 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           </MLink>
         </li>
         <li>
-          <ExtMLink href={`/api/horriblesubs/tv/${tmdb_id}?episode=${episode}`}>
-            Try horriblesubs
-          </ExtMLink>
-        </li>
-        <li>
           <MLink
             to={{
               pathname: `/monitor/add/${tmdb_id}`,

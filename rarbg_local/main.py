@@ -72,13 +72,6 @@ from .db import (
     get_episodes,
     get_movies,
 )
-from .horriblesubs import (
-    HorriblesubsDownloadType,
-    get_all_shows,
-    get_downloads,
-    get_show_id,
-    search_for_tv,
-)
 from .providers import search_for_tv
 from .rarbg import RarbgTorrent, get_rarbg, get_rarbg_iter
 from .tmdb import (
@@ -253,35 +246,6 @@ def query_params(validator):
         return wrapper
 
     return decorator
-
-
-@api.route('/api/horriblesubs/<type>/<tmdb_id>')
-@as_resource()
-@query_params(
-    RequestParser().add_argument('episode', type=int, location='args', required=True)
-)
-def horriblesubs(type: str, tmdb_id: int, episode: int):
-    tv = get_tv(tmdb_id)
-
-    shows = get_all_shows()
-
-    key = lambda key: fuzz.ratio(key, tv['name'])
-    closest = sorted(shows.keys(), key=key)
-
-    item = max(shows.keys(), key=key)
-    if fuzz.ratio(item, tv['name']) < 95:
-        return api.abort(
-            404,
-            message='Did not find item in horriblesubs',
-            data={'closest': closest[:10], 'requested': tv['name']},
-        )
-
-    downloads = search_for_tv(get_tv_imdb_id(str(tmdb_id)), 1, episode)
-
-    if key in downloads:
-        return downloads
-    else:
-        return api.abort(404, 'Episode not found')
 
 
 @app.route('/stream/<type>/<imdb_id>')
