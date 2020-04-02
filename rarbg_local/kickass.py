@@ -1,8 +1,10 @@
-# https://katcr.co/name/search/steven-universe/i3061046/1/1/#1080
-
+import re
+import string
 
 import requests
 from bs4 import BeautifulSoup
+
+from .tmdb import get_tv, resolve_id
 
 
 def fetch(url):
@@ -27,7 +29,27 @@ def fetch(url):
             }
 
 
-def search(tmdb_id: str, season: str, episode: str):
-    return fetch(
-        f'https://katcr.co/name/search/steven-universe/i{tmdb_id.lstrip("t")}/{season}/{episode}'
-    )
+def tokenise(name):
+    name = name.lower()
+    name = re.sub(f'[{string.punctuation}]', '', name)
+    name = name.replace(' ', '-')
+
+    return name
+
+
+def _search_url(tmdb_id: str, name: str):
+    name = tokenise(name)
+
+    return f'https://katcr.co/name/search/{name}/i{tmdb_id.lstrip("t")}'
+
+
+def search_for_tv(tmdb_id: str, season: str, episode: str):
+    name = get_tv(resolve_id(tmdb_id, 'tv'))['name']
+
+    return fetch(_search_url(tmdb_id, name) + f'/{season}/{episode}')
+
+
+def search_for_movie(tmdb_id):
+    name = get_tv(resolve_id(tmdb_id, 'tv'))['name']
+
+    return fetch(_search_url(tmdb_id, name))

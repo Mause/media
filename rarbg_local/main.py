@@ -52,6 +52,7 @@ from marshmallow.validate import Regexp as MarshRegexp
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
+from rarbg_local.providers import search_for_movie
 from requests.exceptions import ConnectionError, HTTPError
 from sqlalchemy import event, func
 from sqlalchemy.orm.session import make_transient
@@ -263,21 +264,8 @@ def stream(type: str, imdb_id: str):
                 int(request.args['episode']),
             )
         )
-
-    return chain.from_iterable(
-        get_rarbg_iter(
-            current_app.config['TORRENT_API_URL'],
-            type,
-            search_imdb=get_movie_imdb_id(imdb_id)
-            if type == 'movie'
-            else get_tv_imdb_id(imdb_id),
-            search_string='S{:02d}E{:02d}'.format(
-                int(request.args['season']), int(request.args['episode'])
-            )
-            if type == 'series'
-            else None,
-        )
-    )
+    else:
+        return search_for_movie(get_movie_imdb_id(imdb_id), int(imdb_id))
 
 
 @app.route('/delete/<type>/<id>')
