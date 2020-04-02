@@ -1,9 +1,16 @@
 from dataclasses import dataclass
+from enum import Enum
 from typing import Optional
 
 from dataclasses_json import DataClassJsonMixin
 
 CONVERT = {'720': 'TV Episodes', '1080': 'TV HD Episodes', 'x264': 'TV HD Episodes'}
+
+
+class ProviderSource(Enum):
+    KICKASS = 'KICKASS'
+    HORRIBLESUBS = 'HORRIBLESUBS'
+    RARBG = 'RARBG'
 
 
 @dataclass
@@ -14,7 +21,7 @@ class EpisodeInfo(DataClassJsonMixin):
 
 @dataclass
 class ITorrent(DataClassJsonMixin):
-    source: str
+    source: ProviderSource
     title: str
     seeders: int
     download: str

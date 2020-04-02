@@ -3,7 +3,7 @@ from itertools import chain
 from typing import Iterable
 
 from . import horriblesubs, kickass
-from .models import EpisodeInfo, ITorrent
+from .models import EpisodeInfo, ITorrent, ProviderSource
 from .rarbg import get_rarbg_iter
 
 
@@ -35,7 +35,7 @@ class RarbgProvider(Provider):
             )
         ):
             yield ITorrent(
-                source='Rarbg',
+                source=ProviderSource.RARBG,
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['download'],
@@ -50,7 +50,7 @@ class RarbgProvider(Provider):
             )
         ):
             yield ITorrent(
-                source='Rarbg',
+                source=ProviderSource.RARBG,
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['download'],
@@ -66,7 +66,7 @@ class KickassProvider(Provider):
 
         for item in kickass.search_for_tv(imdb_id, season, episode):
             yield ITorrent(
-                source='Kickass',
+                source=ProviderSource.KICKASS,
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['magnet'],
@@ -77,7 +77,7 @@ class KickassProvider(Provider):
     def search_for_movie(self, imdb_id, tmdb_id):
         for item in kickass.search_for_movie(tmdb_id):
             yield ITorrent(
-                source='Kickass',
+                source=ProviderSource.KICKASS,
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['magnet'],
@@ -92,7 +92,7 @@ class HorriblesubsProvider(Provider):
     ) -> Iterable[ITorrent]:
         for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
             yield ITorrent(
-                source='HorribleSubs',
+                source=ProviderSource.HORRIBLESUBS,
                 title='',
                 seeders=0,
                 download=item,
