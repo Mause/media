@@ -37,5 +37,4 @@ class ITorrent(DataClassJsonMixin):
     episode_info: EpisodeInfo
 
     def __post_init__(self):
-        if self.category not in CONVERT.values():
-            self.category = CONVERT[self.category]
+        self.category = CONVERT.get(self.category, self.category)
