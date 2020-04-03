@@ -89,16 +89,17 @@ class KickassProvider(Provider):
 
 class HorriblesubsProvider(Provider):
     def search_for_tv(
-        self, imdb_id, tmdb_id: int, season, episode
+        self, imdb_id: str, tmdb_id: int, season: int, episode: int
     ) -> Iterable[ITorrent]:
+        name = get_tv(tmdb_id)['name']
         for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.HORRIBLESUBS,
-                title=get_tv(tmdb_id)['name'] + ' ' + item['resolution'],
+                title=f'{name} {item["resolution"]} S{season:02d}E{episode:02d}',
                 seeders=0,
                 download=item['download'],
                 category=item['resolution'],
-                episode_info=EpisodeInfo(season, episode),
+                episode_info=EpisodeInfo(str(season), str(episode)),
             )
 
     def search_for_movie(self, imdb_id, tmdb_id):
