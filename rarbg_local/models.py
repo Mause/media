@@ -5,6 +5,8 @@ from typing import Optional
 from dataclasses_json import DataClassJsonMixin
 
 CONVERT = {
+    '480': 'TV Episodes',
+    '480p': 'TV Episodes',
     '720': 'TV Episodes',
     '720p': 'TV Episodes',
     '1080': 'TV HD Episodes',
