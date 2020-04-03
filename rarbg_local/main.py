@@ -220,9 +220,18 @@ def serve_index(path=None):
     return send_from_directory('../app/build/', 'index.html')
 
 
-@app.route('/manifest.json')
-def serve_manifest():
-    return send_from_directory('../app/build/', 'manifest.json')
+for filename in (
+    'manifest.json',
+    'asset-manifest.json',
+    'logo192.png',
+    'logo512.png',
+    'robots.txt',
+    'favicon.ico',
+):
+
+    @app.route(f'/{filename}')
+    def serve_manifest():
+        return send_from_directory('../app/build/', filename)
 
 
 def eventstream(func: Callable):
