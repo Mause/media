@@ -9,7 +9,7 @@ from fuzzywuzzy import fuzz
 from lxml.html import fromstring
 from requests_toolbelt.sessions import BaseUrlSession
 
-from .tmdb import get_tv, resolve_id
+from .tmdb import get_tv
 
 session = BaseUrlSession('https://horriblesubs.info/')
 

@@ -22,7 +22,7 @@ class Provider(ABC):
 
 class RarbgProvider(Provider):
     def search_for_tv(
-        self, imdb_id, tmdb_id: int, season, episode
+        self, imdb_id: str, tmdb_id: int, season: int, episode: int
     ) -> Iterable[ITorrent]:
         if not imdb_id:
             return []
@@ -41,10 +41,10 @@ class RarbgProvider(Provider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=item['category'],
-                episode_info=EpisodeInfo(season, episode),
+                episode_info=EpisodeInfo(str(season), str(episode)),
             )
 
-    def search_for_movie(self, imdb_id, tmdb_id) -> Iterable[ITorrent]:
+    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
         for item in chain.from_iterable(
             get_rarbg_iter(
                 'https://torrentapi.org/pubapi_v2.php', 'movie', search_imdb=imdb_id
@@ -61,22 +61,24 @@ class RarbgProvider(Provider):
 
 
 class KickassProvider(Provider):
-    def search_for_tv(self, imdb_id, tmdb_id, season, episode) -> Iterable[ITorrent]:
+    def search_for_tv(
+        self, imdb_id: str, tmdb_id: int, season: int, episode: int
+    ) -> Iterable[ITorrent]:
         if not imdb_id:
             return []
 
-        for item in kickass.search_for_tv(imdb_id, season, episode):
+        for item in kickass.search_for_tv(imdb_id, tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=item['resolution'],
-                episode_info=EpisodeInfo(season, episode),
+                episode_info=EpisodeInfo(str(season), str(episode)),
             )
 
-    def search_for_movie(self, imdb_id, tmdb_id):
-        for item in kickass.search_for_movie(tmdb_id):
+    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
+        for item in kickass.search_for_movie(imdb_id, tmdb_id):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],
@@ -102,7 +104,7 @@ class HorriblesubsProvider(Provider):
                 episode_info=EpisodeInfo(str(season), str(episode)),
             )
 
-    def search_for_movie(self, imdb_id, tmdb_id):
+    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
         return []
 
 

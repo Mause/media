@@ -4,7 +4,7 @@ import string
 import requests
 from bs4 import BeautifulSoup
 
-from .tmdb import get_tv, resolve_id
+from .tmdb import get_movie, get_tv, resolve_id
 
 
 def fetch(url):
@@ -43,13 +43,13 @@ def _search_url(tmdb_id: str, name: str):
     return f'https://katcr.co/name/search/{name}/i{tmdb_id.lstrip("t")}'
 
 
-def search_for_tv(tmdb_id: str, season: str, episode: str):
-    name = get_tv(resolve_id(tmdb_id, 'tv'))['name']
+def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int):
+    name = get_tv(tmdb_id)['name']
 
-    return fetch(_search_url(tmdb_id, name) + f'/{season}/{episode}')
+    return fetch(_search_url(imdb_id, name) + f'/{season}/{episode}')
 
 
-def search_for_movie(tmdb_id):
-    name = get_tv(resolve_id(tmdb_id, 'tv'))['name']
+def search_for_movie(imdb_id: str, tmdb_id: int):
+    name = get_movie(tmdb_id)['title']
 
-    return fetch(_search_url(tmdb_id, name))
+    return fetch(_search_url(imdb_id, name))
