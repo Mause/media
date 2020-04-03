@@ -6,6 +6,7 @@ import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from dataclasses import asdict, dataclass, field
+from enum import Enum
 from functools import lru_cache, wraps
 from itertools import chain
 from os.path import join
@@ -226,9 +227,18 @@ def serve_manifest():
 
 def eventstream(func: Callable):
     def decorator(*args, **kwargs):
+        def default(obj):
+            if isinstance(obj, Enum):
+                return obj.name
+
+            raise Exception()
+
         return Response(
             chain(
-                (f'data: {json.dumps(rset)}\n\n' for rset in func(*args, **kwargs)),
+                (
+                    f'data: {json.dumps(rset, default=default)}\n\n'
+                    for rset in func(*args, **kwargs)
+                ),
                 ['data:\n\n'],
             ),
             mimetype="text/event-stream",
