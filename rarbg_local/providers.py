@@ -8,6 +8,36 @@ from .rarbg import get_rarbg_iter
 from .tmdb import get_tv
 
 
+def tv_convert(key):
+    return {
+        '480': 'TV Episodes',
+        '480p': 'TV Episodes',
+        '720': 'TV Episodes',
+        '720p': 'TV Episodes',
+        '1080': 'TV HD Episodes',
+        '1080p': 'TV HD Episodes',
+        'x264': 'TV HD Episodes',
+    }.get(key, key)
+
+
+def movie_convert(key):
+    return {
+        None: "XVID",
+        None: "x264",
+        '720': "x264/720",
+        '720p': "x264/720",
+        None: "XVID/720",
+        None: "BD Remux",
+        None: "Full BD",
+        '1080p': "x264/1080",
+        '1080': "x264/1080",
+        None: "x264/4k",
+        None: "x265/4k",
+        None: "x264/3D",
+        None: "x265/4k/HDR",
+    }.get(key, key)
+
+
 class Provider(ABC):
     @abstractmethod
     def search_for_tv(
@@ -40,7 +70,7 @@ class RarbgProvider(Provider):
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['download'],
-                category=item['category'],
+                category=tv_convert(item['category']),
                 episode_info=EpisodeInfo(str(season), str(episode)),
             )
 
@@ -55,7 +85,7 @@ class RarbgProvider(Provider):
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['download'],
-                category=item['category'],
+                category=movie_convert(item['category']),
                 episode_info=EpisodeInfo(None, None),
             )
 
@@ -73,7 +103,7 @@ class KickassProvider(Provider):
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['magnet'],
-                category=item['resolution'],
+                category=tv_convert(item['resolution']),
                 episode_info=EpisodeInfo(str(season), str(episode)),
             )
 
@@ -84,7 +114,7 @@ class KickassProvider(Provider):
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['magnet'],
-                category=item['resolution'],
+                category=movie_convert(item['resolution']),
                 episode_info=EpisodeInfo(None, None),
             )
 
@@ -100,7 +130,7 @@ class HorriblesubsProvider(Provider):
                 title=f'{name} {item["resolution"]} S{season:02d}E{episode:02d}',
                 seeders=0,
                 download=item['download'],
-                category=item['resolution'],
+                category=tv_convert(item['resolution']),
                 episode_info=EpisodeInfo(str(season), str(episode)),
             )
 

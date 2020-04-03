@@ -4,16 +4,6 @@ from typing import Optional
 
 from dataclasses_json import DataClassJsonMixin
 
-CONVERT = {
-    '480': 'TV Episodes',
-    '480p': 'TV Episodes',
-    '720': 'TV Episodes',
-    '720p': 'TV Episodes',
-    '1080': 'TV HD Episodes',
-    '1080p': 'TV HD Episodes',
-    'x264': 'TV HD Episodes',
-}
-
 
 class ProviderSource(Enum):
     KICKASS = 'KICKASS'
@@ -35,6 +25,3 @@ class ITorrent(DataClassJsonMixin):
     download: str
     category: str
     episode_info: EpisodeInfo
-
-    def __post_init__(self):
-        self.category = CONVERT.get(self.category, self.category)
