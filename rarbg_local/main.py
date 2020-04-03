@@ -75,7 +75,7 @@ from .db import (
     get_movies,
 )
 from .providers import search_for_tv
-from .rarbg import RarbgTorrent, get_rarbg, get_rarbg_iter
+from .rarbg import RarbgTorrent, get_rarbg
 from .tmdb import (
     get_json,
     get_movie,
@@ -259,23 +259,19 @@ def query_params(validator):
     return decorator
 
 
-@app.route('/stream/<type>/<imdb_id>')
+@api.route('/stream/<type>/<tmdb_id>')
+@as_resource()
+@query_params(
+    RequestParser().add_argument('season', type=int).add_argument('episode', type=int)
+)
 @eventstream
-def stream(type: str, imdb_id: str):
-    if not imdb_id.isdigit():
-        return abort(422)
-
+def stream(type: str, tmdb_id: str, season=None, episode=None):
     if type == 'series':
-        return (
-            asdict(item)
-            for item in search_for_tv(
-                get_tv_imdb_id(imdb_id),
-                int(request.args['season']),
-                int(request.args['episode']),
-            )
-        )
+        items = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode)
     else:
-        return search_for_movie(get_movie_imdb_id(imdb_id), int(imdb_id))
+        items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
+
+    return (asdict(item) for item in items)
 
 
 @app.route('/delete/<type>/<id>')
