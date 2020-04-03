@@ -189,7 +189,9 @@ exports[`DownloadAllComponent 2`] = `
       <ul>
         <li>
           <span>
-            <strong>
+            <strong
+              title="HORRIBLESUBS"
+            >
               H
             </strong>
              

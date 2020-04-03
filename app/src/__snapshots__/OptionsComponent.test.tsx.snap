@@ -199,7 +199,9 @@ exports[`OptionsComponent 2`] = `
       <p>
         Auto selection: 
         <span>
-          <strong>
+          <strong
+            title="RARBG"
+          >
             R
           </strong>
            
@@ -223,7 +225,9 @@ exports[`OptionsComponent 2`] = `
           </h3>
           <li>
             <span>
-              <strong>
+              <strong
+                title="RARBG"
+              >
                 R
               </strong>
                
@@ -336,7 +340,9 @@ exports[`OptionsComponent 3`] = `
       <p>
         Auto selection: 
         <span>
-          <strong>
+          <strong
+            title="RARBG"
+          >
             R
           </strong>
            
@@ -360,7 +366,9 @@ exports[`OptionsComponent 3`] = `
           </h3>
           <li>
             <span>
-              <strong>
+              <strong
+                title="RARBG"
+              >
                 R
               </strong>
                
