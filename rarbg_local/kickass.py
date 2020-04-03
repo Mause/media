@@ -1,13 +1,14 @@
 import re
 import string
+from typing import Any, Dict, Iterable
 
 import requests
 from bs4 import BeautifulSoup
 
-from .tmdb import get_movie, get_tv, resolve_id
+from .tmdb import get_movie, get_tv
 
 
-def fetch(url):
+def fetch(url: str) -> Iterable[Dict[str, Any]]:
     soup = BeautifulSoup(requests.get(url).content, "lxml")
 
     for i in soup.find_all(
@@ -29,7 +30,7 @@ def fetch(url):
             }
 
 
-def tokenise(name):
+def tokenise(name: str) -> str:
     name = name.lower()
     name = re.sub(f'[{string.punctuation}]', '', name)
     name = name.replace(' ', '-')
@@ -37,19 +38,15 @@ def tokenise(name):
     return name
 
 
-def _search_url(tmdb_id: str, name: str):
-    name = tokenise(name)
-
-    return f'https://katcr.co/name/search/{name}/i{tmdb_id.lstrip("t")}'
-
-
 def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int):
     name = get_tv(tmdb_id)['name']
 
-    return fetch(_search_url(imdb_id, name) + f'/{season}/{episode}')
+    return fetch(
+        f'https://katcr.co/name/search/{tokenise(name)}/i{imdb_id.lstrip("t")}/{season}/{episode}'
+    )
 
 
 def search_for_movie(imdb_id: str, tmdb_id: int):
     name = get_movie(tmdb_id)['title']
 
-    return fetch(_search_url(imdb_id, name))
+    return fetch(f'https://katcr.co/name/{tokenise(name)}/i{imdb_id.lstrip("t")}')
