@@ -5,6 +5,7 @@ from typing import Iterable
 from . import horriblesubs, kickass
 from .models import EpisodeInfo, ITorrent, ProviderSource
 from .rarbg import get_rarbg_iter
+from .tmdb import get_tv
 
 
 class Provider(ABC):
@@ -93,10 +94,10 @@ class HorriblesubsProvider(Provider):
         for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.HORRIBLESUBS,
-                title='',
+                title=get_tv(tmdb_id)['name'] + ' ' + item['resolution'],
                 seeders=0,
-                download=item,
-                category='1080p',
+                download=item['download'],
+                category=item['resolution'],
                 episode_info=EpisodeInfo(season, episode),
             )
 
