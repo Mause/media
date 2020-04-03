@@ -16,6 +16,7 @@ function getHash(magnet: string) {
 }
 
 export interface ITorrent {
+  source: 'KICKASS' | 'RARBG' | 'HORRIBLESUBS';
   title: string;
   seeders: number;
   download: string;
@@ -49,6 +50,8 @@ export function DisplayTorrent({
   const url = { pathname: '/download', state };
   return (
     <span>
+      <strong>{torrent.source.substring(0, 1)}</strong>
+      &nbsp;
       <MLink to={url}>{torrent.title}</MLink>
       &nbsp;
       <small>{torrent.seeders}</small>

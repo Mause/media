@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { mock, useMoxios, renderWithSWR, wait } from './test.utils';
@@ -37,6 +37,7 @@ test('OptionsComponent', async () => {
     expect(el.container).toMatchSnapshot();
 
     const torrent: ITorrent = {
+      source: 'RARBG',
       title: 'title',
       seeders: 5,
       download: 'magnet:...',

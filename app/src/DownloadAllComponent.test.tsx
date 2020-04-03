@@ -21,6 +21,7 @@ test('DownloadAllComponent', async () => {
 
     const packs: ITorrent[] = [
       {
+        source: 'HORRIBLESUBS',
         category: 'Movie',
         download: 'magnet:....',
         episode_info: { seasonnum: '1', epnum: '1' },
