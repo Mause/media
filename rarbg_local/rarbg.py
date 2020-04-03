@@ -1,8 +1,7 @@
-# coding: utf-8
-
 import json
 import logging
 from itertools import chain
+from json.decoder import JSONDecodeError
 from typing import Dict, Iterator, List, TypedDict
 
 import backoff
@@ -92,18 +91,13 @@ def _get(base_url: str, **kwargs: str) -> List[Dict]:
         raise TooManyRequests()
 
     r.raise_for_status()
-    print(r.request.url)
-    from json.decoder import JSONDecodeError
 
     try:
         res = r.json()
     except JSONDecodeError as e:
         raise Exception(r, r.reason, r.headers, r.request.url, r.text) from e
 
-    print(res.keys())
-
     error = res.get('error')
-
     if res.get('error_code') == 4:
         logging.info('Token expired, reacquiring')
         session.params['token'] = get_token(base_url)
