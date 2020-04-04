@@ -228,7 +228,10 @@ for filename in (
     'robots.txt',
     'favicon.ico',
 ):
-    app.route(f'/{filename}')(lambda: send_from_directory('../app/build/', filename))
+
+    @app.route(f'/{filename}', endpoint=filename.replace('.', '_'))
+    def serve_file():
+        return send_from_directory('../app/build/', filename)
 
 
 def eventstream(func: Callable):
