@@ -228,10 +228,7 @@ for filename in (
     'robots.txt',
     'favicon.ico',
 ):
-
-    @app.route(f'/{filename}')
-    def serve_manifest():
-        return send_from_directory('../app/build/', filename)
+    app.route(f'/{filename}')(lambda: send_from_directory('../app/build/', filename))
 
 
 def eventstream(func: Callable):
