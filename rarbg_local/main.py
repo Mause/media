@@ -344,17 +344,17 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-@api.route('/api/select/<imdb_id>/season/<season>/download_all')
+@api.route('/api/select/<tmdb_id>/season/<season>/download_all')
 @as_resource()
-def download_all_episodes(imdb_id: str, season: str) -> Dict:
+def download_all_episodes(tmdb_id: str, season: str) -> Dict:
     results = get_rarbg(
         current_app.config['TORRENT_API_URL'],
         'series',
-        search_imdb=get_tv_imdb_id(imdb_id),
+        search_imdb=get_tv_imdb_id(tmdb_id),
         search_string=f'S{int(season):02d}',
     )
 
-    episodes = get_tv_episodes(imdb_id, season)['episodes']
+    episodes = get_tv_episodes(tmdb_id, season)['episodes']
 
     packs_or_not = groupby(
         results, lambda result: extract_marker(result['title'])[1] is None
