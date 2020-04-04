@@ -22,7 +22,7 @@ from typing import (
     TypeVar,
     cast,
 )
-from urllib.parse import parse_qsl, urlencode, urlparse
+from urllib.parse import urlencode
 
 from dataclasses_json import DataClassJsonMixin, config
 from flask import (
@@ -46,7 +46,6 @@ from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_restx import Api, Resource, fields
 from flask_restx.reqparse import RequestParser
 from flask_user import UserManager, current_user, login_required, roles_required
-from fuzzywuzzy import fuzz
 from marshmallow.exceptions import ValidationError
 from marshmallow.fields import String
 from marshmallow.validate import Regexp as MarshRegexp
@@ -75,7 +74,7 @@ from .db import (
     get_movies,
 )
 from .providers import search_for_tv
-from .rarbg import RarbgTorrent, get_rarbg
+from .rarbg import get_rarbg
 from .tmdb import (
     get_json,
     get_movie,
@@ -304,70 +303,6 @@ def categorise(string: str) -> str:
         return string
 
 
-def select_options(
-    type: str,
-    imdb_id: str,
-    title: str,
-    display_title: str = None,
-    search_string: str = None,
-    **extra,
-) -> str:
-    def build_download_link(option):
-        return url_for(
-            '.download',
-            type=type,
-            magnet=option['download'],
-            imdb_id=imdb_id,
-            titles=[title],
-            **extra,
-        )
-
-    def already_downloaded(result):
-        t = get_keyed_torrents()
-        url = urlparse(result['download'])
-        hash_string = dict(parse_qsl(url.query))['xt'].split(':')[-1]
-
-        return hash_string in t
-
-    manual_link = url_for(
-        '.manual', type=type, imdb_id=imdb_id, titles=[title], **extra
-    )
-
-    display_title = display_title or title
-
-    query = {'search_string': search_string, 'search_imdb': imdb_id}
-    print(query)
-    results = get_rarbg(current_app.config['TORRENT_API_URL'], type, **query)
-
-    with open('ranking.json') as fh:
-        ranking = json.load(fh)
-
-    categorized = list(
-        groupby(results, lambda result: categorise(result['category'])).items()
-    )
-    categorized = sorted(
-        categorized, key=lambda pair: ranking.index(pair[0]), reverse=True
-    )
-    ten_eighty = dict(categorized).get(
-        'x264/1080' if type == 'movie' else 'TV HD Episodes', []
-    )
-    auto: Optional[RarbgTorrent] = None
-    if ten_eighty:
-        auto = max(ten_eighty, key=lambda torrent: torrent['seeders'])
-
-    return render_template(
-        'select_options.html',
-        results=categorized,
-        imdb_id=imdb_id,
-        auto=auto,
-        type=type,
-        display_title=display_title,
-        build_download_link=build_download_link,
-        already_downloaded=already_downloaded,
-        manual_link=manual_link,
-    )
-
-
 full_marker_re = re.compile(r'(S(\d{2})E(\d{2}))')
 partial_marker_re = re.compile(r'(S(\d{2}))')
 season_re = re.compile(r'\W(S\d{2})\W')
@@ -412,22 +347,6 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
 @api.route('/api/select/<imdb_id>/season/<season>/download_all')
 @as_resource()
 def download_all_episodes(imdb_id: str, season: str) -> Dict:
-    def build_download_link(imdb_id: str, season: str, result_set: List[Dict]) -> str:
-        def get_title(title: str) -> str:
-            _, i_episode = extract_marker(title)
-            if i_episode is None:
-                return f'Season {season}'
-            return episodes[int(i_episode) - 1]['name']
-
-        return url_for(
-            '.download',
-            type='series',
-            imdb_id=imdb_id,
-            season=season,
-            titles=[get_title(r['title']) for r in result_set],
-            magnet=[r['download'] for r in result_set],
-        )
-
     results = get_rarbg(
         current_app.config['TORRENT_API_URL'],
         'series',
@@ -909,11 +828,6 @@ def redirect_to_imdb(type_: str, ident: str, season: str = None, episode: str = 
         imdb_id = get_tv_imdb_id(ident)
 
     return redirect(f'https://www.imdb.com/title/{imdb_id}')
-
-
-@app.route('/endpoints.json')
-def endpoints() -> Response:
-    return jsonify([r.rule for r in current_app.url_map._rules])
 
 
 if __name__ == '__main__':
