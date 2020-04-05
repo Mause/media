@@ -386,7 +386,7 @@ DownloadAllResponse = api.model(
 @as_resource()
 @api.marshal_with(DownloadAllResponse)
 def download_all_episodes(tmdb_id: str, season: str) -> Dict:
-    results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season), None)
+    results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
     episodes = get_tv_episodes(tmdb_id, season)['episodes']
 
