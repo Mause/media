@@ -7,6 +7,7 @@ from flask import request
 from flask_restx import Api, Resource
 from flask_restx.model import SchemaModel
 from marshmallow import Schema
+from marshmallow_enum import EnumField
 
 T = TypeVar('T')
 _caches: Set[_lru_cache] = set()  # type: ignore
@@ -42,8 +43,16 @@ def precondition(res: Optional[T], message: str) -> None:
         raise AssertionError(message)
 
 
+def enum_field(field, ret):
+    if isinstance(field, EnumField):
+        return {'enum': [value.name for value in field.enum]}
+    return {}
+
+
 mp = MarshmallowPlugin()
-mp.converter = mp.Converter("3.0.2", None, None)
+mp.converter = mp.Converter("3.0.2", resolver, Spec())
+mp.converter.field_mapping[EnumField] = ('string', None)
+mp.converter.attribute_functions.append(enum_field)
 
 
 def schema_to_openapi(api: Api, name: str, schema: Schema) -> SchemaModel:

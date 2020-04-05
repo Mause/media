@@ -1,8 +1,14 @@
+from dataclasses import dataclass
+from enum import Enum
 from typing import Dict, List
 
 import pytest
+from dataclasses_json import DataClassJsonMixin
+from flask_restx import Api
 
 from ..main import normalise
+from ..schema import schema
+from ..utils import schema_to_openapi
 
 episodes: List[Dict] = [
     {'name': '1:23:45', 'episode_number': 1},
@@ -30,3 +36,20 @@ episodes: List[Dict] = [
 )
 def test_normalise(original, expected):
     assert normalise(episodes, original) == expected
+
+
+def test_schema_to_openapi():
+    class Enumerable(Enum):
+        A, B = 0, 1
+
+    @dataclass
+    class D(DataClassJsonMixin):
+        field: Enumerable
+
+    sc = schema(D)
+    api = Api()
+    result = schema_to_openapi(api, 'D', sc)
+    assert result._schema == {
+        'type': 'object',
+        'properties': {'field': {'type': 'string', 'enum': ['A', 'B']}},
+    }
