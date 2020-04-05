@@ -52,7 +52,6 @@ from marshmallow.validate import Regexp as MarshRegexp
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
-from rarbg_local.providers import search_for_movie
 from requests.exceptions import ConnectionError, HTTPError
 from sqlalchemy import event, func
 from sqlalchemy.orm.session import make_transient
@@ -73,7 +72,7 @@ from .db import (
     get_episodes,
     get_movies,
 )
-from .providers import search_for_tv
+from .providers import ProviderSource, search_for_movie, search_for_tv
 from .rarbg import get_rarbg
 from .tmdb import (
     get_json,
