@@ -72,8 +72,10 @@ from .db import (
     get_episodes,
     get_movies,
 )
+from .models import EpisodeInfo, ITorrent
 from .providers import ProviderSource, search_for_movie, search_for_tv
 from .rarbg import get_rarbg
+from .schema import TTuple, schema
 from .tmdb import (
     get_json,
     get_movie,
@@ -85,7 +87,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .transmission_proxy import get_torrent, torrent_add
-from .utils import as_resource, expect, non_null, precondition
+from .utils import as_resource, expect, non_null, precondition, schema_to_openapi
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -97,6 +99,8 @@ api = Api(doc='/doc/', validate=True)
 
 K = TypeVar('K')
 V = TypeVar('V')
+
+schema_to_openapi(api, 'EpisodeInfo', schema(EpisodeInfo))
 
 
 @lru_cache()
@@ -344,42 +348,52 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
+IITorrent = api.model(
+    'ITorrent',
+    {
+        'source': fields.String(
+            attribute='source.name', enum=('RARBG', 'KICKASS', 'HORRIBLESUBS')
+        ),
+        'download': fields.String,
+        'seeders': fields.Integer,
+        'category': fields.String,
+        'title': fields.String,
+        'episode_info': api.model(
+            'EpisodeInfo', {'seasonnum': fields.String, 'epnum': fields.String}
+        ),
+    },
+)
+DownloadAllResponse = api.model(
+    'DownloadAllResponse',
+    {
+        'packs': fields.List(fields.Nested(IITorrent)),
+        'complete': fields.List(
+            TTuple([fields.String, fields.List(fields.Nested(IITorrent))])
+        ),
+        'incomplete': fields.List(
+            TTuple([fields.String, fields.List(fields.Nested(IITorrent))])
+        ),
+    },
+)
+
+
 @api.route('/api/select/<tmdb_id>/season/<season>/download_all')
 @as_resource()
+@api.marshal_with(DownloadAllResponse)
 def download_all_episodes(tmdb_id: str, season: str) -> Dict:
-    rresults = get_rarbg(
-        current_app.config['TORRENT_API_URL'],
-        'series',
-        search_imdb=get_tv_imdb_id(tmdb_id),
-        search_string=f'S{int(season):02d}',
-    )
-    results = [
-        {
-            'title': item['title'],
-            'seeders': item['seeders'],
-            'download': item['download'],
-            'category': item['category'],
-            'episode_info': {
-                'seasonnum': item['episode_info']['seasonnum'],
-                'epnum': item['episode_info']['epnum'],
-            },
-            'source': ProviderSource.RARBG,
-        }
-        for item in rresults
-    ]
+    results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season), None)
 
     episodes = get_tv_episodes(tmdb_id, season)['episodes']
 
     packs_or_not = groupby(
-        results, lambda result: extract_marker(cast(str, result['title']))[1] is None
+        results, lambda result: extract_marker(result.title)[1] is None
     )
     packs = sorted(
-        packs_or_not.get(True, []), key=lambda result: result['seeders'], reverse=True
+        packs_or_not.get(True, []), key=lambda result: result.seeders, reverse=True
     )
 
     grouped_results = groupby(
-        packs_or_not.get(False, []),
-        lambda result: normalise(episodes, cast(str, result['title'])),
+        packs_or_not.get(False, []), lambda result: normalise(episodes, result.title)
     )
     complete_or_not = groupby(
         grouped_results.items(), lambda rset: len(rset[1]) == len(episodes)
@@ -416,7 +430,7 @@ def api_diagnostics():
 @api.route('/api/download')
 @api.response(200, 'OK', {})
 @as_resource(['POST'])
-@expect(api, 'Download', DownloadSchema.schema(many=True))
+@expect(api, 'Download', schema(DownloadSchema, many=True))
 def api_download(things) -> str:
     for thing in things:
         is_tv = thing.season is not None
@@ -482,7 +496,7 @@ class MonitorPost(DataClassJsonMixin):
 
 @api.route('/api/monitor')
 class MonitorsResource(Resource):
-    @expect(api, 'MonitorPost', MonitorPost.schema())
+    @expect(api, 'MonitorPost', schema(MonitorPost))
     @api.marshal_with(
         api.model('MonitorCreated', {'id': fields.Integer}),
         code=201,

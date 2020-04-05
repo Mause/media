@@ -57,12 +57,14 @@ class RarbgProvider(Provider):
         if not imdb_id:
             return []
 
+        search_string = f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
+
         for item in chain.from_iterable(
             get_rarbg_iter(
                 'https://torrentapi.org/pubapi_v2.php',
                 'series',
                 search_imdb=imdb_id,
-                search_string=f'S{season:02d}E{episode:02d}',
+                search_string=search_string,
             )
         ):
             yield ITorrent(
@@ -95,6 +97,10 @@ class KickassProvider(Provider):
         self, imdb_id: str, tmdb_id: int, season: int, episode: int
     ) -> Iterable[ITorrent]:
         if not imdb_id:
+            return []
+
+        # TODO: support downloading seasons
+        if episode is None:
             return []
 
         for item in kickass.search_for_tv(imdb_id, tmdb_id, season, episode):
