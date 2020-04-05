@@ -124,10 +124,12 @@ class HorriblesubsProvider(Provider):
         self, imdb_id: str, tmdb_id: int, season: int, episode: int
     ) -> Iterable[ITorrent]:
         name = get_tv(tmdb_id)['name']
+        template = f'HorribleSubs {name} S{season:02d}E{episode:02d}'
+
         for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.HORRIBLESUBS,
-                title=f'{name} {item["resolution"]} S{season:02d}E{episode:02d}',
+                title=template + item["resolution"],
                 seeders=0,
                 download=item['download'],
                 category=tv_convert(item['resolution']),
