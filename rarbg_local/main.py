@@ -348,24 +348,39 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
 @api.route('/api/select/<tmdb_id>/season/<season>/download_all')
 @as_resource()
 def download_all_episodes(tmdb_id: str, season: str) -> Dict:
-    results = get_rarbg(
+    rresults = get_rarbg(
         current_app.config['TORRENT_API_URL'],
         'series',
         search_imdb=get_tv_imdb_id(tmdb_id),
         search_string=f'S{int(season):02d}',
     )
+    results = [
+        {
+            'title': item['title'],
+            'seeders': item['seeders'],
+            'download': item['download'],
+            'category': item['category'],
+            'episode_info': {
+                'seasonnum': item['episode_info']['seasonnum'],
+                'epnum': item['episode_info']['epnum'],
+            },
+            'source': ProviderSource.RARBG,
+        }
+        for item in rresults
+    ]
 
     episodes = get_tv_episodes(tmdb_id, season)['episodes']
 
     packs_or_not = groupby(
-        results, lambda result: extract_marker(result['title'])[1] is None
+        results, lambda result: extract_marker(cast(str, result['title']))[1] is None
     )
     packs = sorted(
         packs_or_not.get(True, []), key=lambda result: result['seeders'], reverse=True
     )
 
     grouped_results = groupby(
-        packs_or_not.get(False, []), lambda result: normalise(episodes, result['title'])
+        packs_or_not.get(False, []),
+        lambda result: normalise(episodes, cast(str, result['title'])),
     )
     complete_or_not = groupby(
         grouped_results.items(), lambda rset: len(rset[1]) == len(episodes)
