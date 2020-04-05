@@ -94,13 +94,9 @@ class RarbgProvider(Provider):
 
 class KickassProvider(Provider):
     def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int
+        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
         if not imdb_id:
-            return []
-
-        # TODO: support downloading seasons
-        if episode is None:
             return []
 
         for item in kickass.search_for_tv(imdb_id, tmdb_id, season, episode):
