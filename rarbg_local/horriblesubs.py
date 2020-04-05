@@ -131,10 +131,8 @@ def search_for_tv(tmdb_id, season, episode):
 
     show_id = get_show_id(shows[show])
 
-    key = f'{episode:02d}'
-
-    return (
-        item
-        for item in get_downloads(show_id, HorriblesubsDownloadType.SHOW)
-        if item['episode'] == key
-    )
+    results = get_downloads(show_id, HorriblesubsDownloadType.SHOW)
+    if episode is None:
+        return results
+    else:
+        return (item for item in results if item['episode'] == f'{episode:02d}')
