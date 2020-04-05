@@ -41,7 +41,7 @@ def movie_convert(key):
 class Provider(ABC):
     @abstractmethod
     def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int
+        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
         raise NotImplementedError()
 
@@ -52,7 +52,7 @@ class Provider(ABC):
 
 class RarbgProvider(Provider):
     def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int
+        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
         if not imdb_id:
             return []
@@ -123,7 +123,7 @@ class KickassProvider(Provider):
 
 class HorriblesubsProvider(Provider):
     def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int
+        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
         name = get_tv(tmdb_id)['name']
         template = f'HorribleSubs {name} S{season:02d}E{episode:02d}'
@@ -145,7 +145,7 @@ class HorriblesubsProvider(Provider):
 PROVIDERS = [HorriblesubsProvider(), RarbgProvider(), KickassProvider()]
 
 
-def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int):
+def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
     return chain.from_iterable(
         provider.search_for_tv(imdb_id, tmdb_id, season, episode)
         for provider in PROVIDERS
