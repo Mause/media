@@ -363,8 +363,10 @@ IITorrent = api.model(
         'seeders': fields.Integer,
         'category': fields.String,
         'title': fields.String,
-        'episode_info': api.model(
-            'EpisodeInfo', {'seasonnum': fields.String, 'epnum': fields.String}
+        'episode_info': fields.Nested(
+            api.model(
+                'EpisodeInfo', {'seasonnum': fields.String, 'epnum': fields.String}
+            )
         ),
     },
 )
