@@ -234,6 +234,7 @@ for filename in (
 
 
 def eventstream(func: Callable):
+    @wraps(func)
     def decorator(*args, **kwargs):
         def default(obj):
             if isinstance(obj, Enum):
