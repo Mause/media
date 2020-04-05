@@ -5,10 +5,9 @@ import pytest
 from ..main import normalise
 
 episodes: List[Dict] = [
-    {'name': '1:23:45'},
-    {},
-    {'name': 'Open Wide, O Earth'},
-    {'name': 'The Happiness of All Mankind'},
+    {'name': '1:23:45', 'episode_number': 1},
+    {'name': 'Open Wide, O Earth', 'episode_number': 3},
+    {'name': 'The Happiness of All Mankind', 'episode_number': 4},
 ]
 
 
