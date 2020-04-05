@@ -325,13 +325,18 @@ def normalise(episodes: List[Dict], title: str) -> Optional[str]:
 
     full, _, i_episode = sel.groups()
 
-    print(title, sel.groups())
-
-    episode = episodes[int(i_episode, 10) - 1]
+    episode = next(
+        (
+            episode
+            for episode in episodes
+            if episode['episode_number'] == int(i_episode, 10)
+        ),
+        None,
+    )
+    assert episode
 
     to_replace = punctuation_re.sub(' ', episode['name'])
     to_replace = '.'.join(to_replace.split())
-    print('to_replace', to_replace)
     title = re.sub(to_replace, 'TITLE', title, re.I)
 
     title = title.replace(full, 'S00E00')
