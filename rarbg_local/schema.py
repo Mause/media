@@ -1,11 +1,12 @@
-from typing import Type
+from types import MethodType
+from typing import Type, cast
 
 from dataclasses_json import DataClassJsonMixin
 from flask_restx import fields
 
 
 def schema(clazz: Type, **kwargs):
-    clx = type(DataClassJsonMixin.schema.__func__(clazz))
+    clx = type(cast(MethodType, DataClassJsonMixin.schema).__func__(clazz))
     return type(clazz.__name__ + 'Schema', (clx,), {})(**kwargs)
 
 
