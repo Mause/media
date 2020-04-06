@@ -2,7 +2,7 @@ from functools import lru_cache as _lru_cache
 from functools import wraps
 from typing import Callable, List, Optional, Set, TypeVar
 
-from apispec.ext.marshmallow import MarshmallowPlugin
+from apispec.ext.marshmallow import MarshmallowPlugin, resolver
 from flask import request
 from flask_restx import Api, Resource
 from flask_restx.model import SchemaModel
@@ -50,7 +50,7 @@ def enum_field(field, ret):
 
 
 mp = MarshmallowPlugin()
-mp.converter = mp.Converter("3.0.2", resolver, Spec())
+mp.converter = mp.Converter("3.0.2", resolver, None)
 mp.converter.field_mapping[EnumField] = ('string', None)
 mp.converter.attribute_functions.append(enum_field)
 
