@@ -26,7 +26,9 @@ def fetch(url: str) -> Iterable[Dict[str, Any]]:
                 'title': title.strip(),
                 'magnet': magnet,
                 'resolution': resolution,
-                'seeders': int(row.find('td', {'data-title': "Seed"}).text),
+                'seeders': int(
+                    row.find('td', {'data-title': "Seed"}).text.replace(',', '')
+                ),
             }
 
 
