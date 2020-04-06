@@ -31,3 +31,8 @@ jobs:
           pipenv run pytest
         env:
           CLOUDAMQP_URL: "https://hello"
+      - name: Archive test report
+        uses: actions/upload-artifact@v1
+        with:
+          name: report.html
+          path: rarbg_local/report.html
