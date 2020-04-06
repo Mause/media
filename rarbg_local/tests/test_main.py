@@ -4,11 +4,12 @@ from typing import Dict, List
 
 import pytest
 from dataclasses_json import DataClassJsonMixin
-from flask_restx import Api
+from flask import Flask
+from flask_restx import Api, Swagger, fields
 
 from ..main import normalise
-from ..schema import schema
-from ..utils import schema_to_openapi
+from ..schema import TTuple, schema
+from ..utils import as_resource, schema_to_openapi
 
 episodes: List[Dict] = [
     {'name': '1:23:45', 'episode_number': 1},
@@ -52,4 +53,44 @@ def test_schema_to_openapi():
     assert result._schema == {
         'type': 'object',
         'properties': {'field': {'type': 'string', 'enum': ['A', 'B']}},
+    }
+
+
+def test_ttuple():
+    api = Api()
+
+    TestModel = api.model(
+        'TestModel',
+        {'field': TTuple([fields.String(example='hello'), fields.Integer(example=1)])},
+    )
+
+    swagger = Swagger(api)
+
+    app = Flask('fake')
+    app.config['SERVER_NAME'] = 'what'
+    app.route('/', endpoint='root')(None)
+
+    @api.route('/api')
+    @api.expect(TestModel)
+    @as_resource()
+    def fake():
+        ...
+
+    with app.app_context():
+        swagger_def = swagger.as_dict()
+
+    TestModel = swagger_def['definitions']['TestModel']
+
+    assert TestModel == {
+        'type': 'object',
+        'properties': {
+            'field': {
+                'example': ['hello', 1],
+                'type': 'array',
+                'items': [
+                    {'type': 'string', 'example': 'hello'},
+                    {'type': 'integer', 'example': 1},
+                ],
+            }
+        },
     }

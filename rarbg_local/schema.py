@@ -12,12 +12,18 @@ def schema(clazz: Type, **kwargs):
 
 class TTuple(fields.Raw):
     def __init__(self, items):
-        super().__init__()
         self.items = [item() if isinstance(item, type) else item for item in items]
+        self.__schema_example__ = [
+            item.example or item.__schema_example__ for item in self.items
+        ]
+        self.__schema_type__ = 'array'
+        super().__init__()
 
     @property
     def __schema__(self):
-        return [item.__schema__ for item in self.items]
+        schema = super().__schema__
+        schema.update({"items": [item.__schema__ for item in self.items]})
+        return schema
 
     def output(self, idx, data):
         return [
