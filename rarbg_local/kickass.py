@@ -43,12 +43,13 @@ def tokenise(name: str) -> str:
 def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
     name = get_tv(tmdb_id)['name']
 
-    url = f'https://katcr.co/name/search/{tokenise(name)}/i{imdb_id.lstrip("t")}/{season}/{episode}'
     if episode is None:
         key = f'S{season:02d}'
         return (item for item in base(name, imdb_id) if key in item['title'])
     else:
-        return fetch(url)
+        return fetch(
+            f'https://katcr.co/name/search/{tokenise(name)}/i{imdb_id.lstrip("t")}/{season}/{episode}'
+        )
 
 
 def base(name, imdb_id):
