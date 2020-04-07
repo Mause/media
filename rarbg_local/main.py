@@ -232,7 +232,7 @@ for filename in (
 ):
 
     @app.route(f'/{filename}', endpoint=filename.replace('.', '_'))
-    def serve_file():
+    def serve_file(filename=filename):
         return send_from_directory('../app/build/', filename)
 
 

@@ -349,3 +349,9 @@ def test_delete_monitor(responses, test_client):
 
 def test_stats(test_client):
     test_client.get('/api/stats')
+
+
+def test_manifest(test_client):
+    r = test_client.get('/manifest.json')
+
+    assert 'name' in r.json
