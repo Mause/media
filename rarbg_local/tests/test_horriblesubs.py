@@ -3,6 +3,9 @@ from pathlib import Path
 from responses import RequestsMock
 
 from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
+from ..providers import HorriblesubsProvider
+from . import test_integration
+from .conftest import themoviedb
 
 
 def load_html(filename):
@@ -85,3 +88,22 @@ def test_get_downloads_single(responses: RequestsMock, snapshot):
     magnets = list(get_downloads(1, HorriblesubsDownloadType.SHOW))
 
     snapshot.assert_match(magnets)
+
+
+def test_provider(responses: RequestsMock, snapshot):
+    mock(
+        responses,
+        'https://horriblesubs.info/api.php?method=getshows&type=show&showid=264',
+        'show.html',
+    )
+    responses.add('GET', 'https://horriblesubs.info/shows/', load_html('shows.html'))
+    responses.add(
+        'GET',
+        'https://horriblesubs.info/shows/little-busters',
+        load_html('show_page.html'),
+    )
+    themoviedb(responses, '/tv/1', {'name': 'Little Busters!'})
+
+    results = list(HorriblesubsProvider().search_for_tv(None, 1, 1, 2))
+
+    snapshot.assert_match(results)

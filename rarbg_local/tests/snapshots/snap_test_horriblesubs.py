@@ -173,3 +173,5 @@ snapshots['test_get_downloads_single 1'] = [
         'resolution': '480',
     },
 ]
+
+snapshots['test_provider 1'] = []
