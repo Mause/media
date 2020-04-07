@@ -131,7 +131,7 @@ class HorriblesubsProvider(Provider):
         for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.HORRIBLESUBS,
-                title=f'{template}E{item["episode"]:02d} {item["resolution"]}',
+                title=f'{template}E{int(item["episode"], 10):02d} {item["resolution"]}',
                 seeders=0,
                 download=item['download'],
                 category=tv_convert(item['resolution']),
