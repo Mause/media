@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from itertools import chain
-from typing import Iterable
+from typing import Iterable, Optional
 
 from . import horriblesubs, kickass
 from .models import EpisodeInfo, ITorrent, ProviderSource
@@ -123,7 +123,7 @@ class KickassProvider(Provider):
 
 class HorriblesubsProvider(Provider):
     def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+        self, imdb_id: Optional[str], tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
         name = get_tv(tmdb_id)['name']
         template = f'HorribleSubs {name} S{season:02d}'
