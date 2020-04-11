@@ -219,21 +219,10 @@ def before():
 @app.route('/')
 @app.route('/<path:path>')
 def serve_index(path=None):
-    return send_from_directory('../app/build/', 'index.html')
-
-
-for filename in (
-    'manifest.json',
-    'asset-manifest.json',
-    'logo192.png',
-    'logo512.png',
-    'robots.txt',
-    'favicon.ico',
-):
-
-    @app.route(f'/{filename}', endpoint=filename.replace('.', '_'))
-    def serve_file(filename=filename):
-        return send_from_directory('../app/build/', filename)
+    try:
+        return send_from_directory('../app/build/', path)
+    except FileNotFoundError:
+        return send_from_directory('../app/build/', 'index.html')
 
 
 def eventstream(func: Callable):
