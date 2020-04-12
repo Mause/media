@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/browser';
 import React from 'react';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet';
 import { RouteProps } from 'react-router';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
