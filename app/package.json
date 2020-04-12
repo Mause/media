@@ -29,7 +29,7 @@
     "react-contextmenu": "^2.13.0",
     "react-dom": "^16.13.1",
     "react-error-boundary": "^1.2.5",
-    "react-helmet": "^5.2.1",
+    "react-helmet": "^6.0.0",
     "react-loading": "^2.0.3",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
