@@ -219,10 +219,10 @@ def before():
 @app.route('/')
 @app.route('/<path:path>')
 def serve_index(path=None):
-    try:
-        return send_from_directory('../app/build/', path)
-    except FileNotFoundError:
+    if path is None:
         return send_from_directory('../app/build/', 'index.html')
+    else:
+        return send_from_directory('../app/build/', path)
 
 
 def eventstream(func: Callable):
