@@ -665,10 +665,10 @@
         },
         "sqlalchemy-repr": {
             "hashes": [
-                "sha256:1477fa65ab437bc7f4ebc92a3b259120cd7c0f53146290f60f1d2aeafcdc5c45"
+                "sha256:060272575376e8a906e964cf10de5b40fd3f814db9c61e1269cb5cc15befffb2"
             ],
             "index": "pypi",
-            "version": "==0.0.1"
+            "version": "==0.0.2"
         },
         "stringcase": {
             "hashes": [
