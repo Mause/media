@@ -55,6 +55,7 @@ from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError, HTTPError
 from sqlalchemy import event, func
 from sqlalchemy.orm.session import make_transient
+from werkzeug.exceptions import NotFound
 from werkzeug.wrappers import Response as WResponse
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
@@ -219,10 +220,13 @@ def before():
 @app.route('/')
 @app.route('/<path:path>')
 def serve_index(path=None):
-    if path is None:
-        return send_from_directory('../app/build/', 'index.html')
-    else:
-        return send_from_directory('../app/build/', path)
+    if path:
+        try:
+            return send_from_directory('../app/build/', path)
+        except NotFound:
+            pass
+
+    return send_from_directory('../app/build/', 'index.html')
 
 
 def eventstream(func: Callable):
