@@ -825,8 +825,14 @@ def get_keyed_torrents() -> Dict[str, Dict]:
 def _get_keyed_torrents() -> Dict[str, Dict]:
     try:
         return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
-    except (ConnectionError, ConnectionRefusedError, TimeoutError, FutureTimeoutError):
-        error = 'Unable to connect to transmission'
+    except (
+        ConnectionError,
+        ConnectionRefusedError,
+        TimeoutError,
+        FutureTimeoutError,
+    ) as e:
+        logging.exception('Unable to connect to transmission')
+        error = 'Unable to connect to transmission: ' + str(e)
         return abort(500, error, jsonify({'message': error}))
 
 
