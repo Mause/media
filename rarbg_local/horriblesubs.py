@@ -125,7 +125,9 @@ def search_for_tv(tmdb_id, season, episode):
 
     shows = get_all_shows()
 
-    show = max(shows.keys(), key=lambda key: fuzz.ratio(key, tv['name']) > 95)
+    show = max(
+        shows.keys(), key=lambda key: fuzz.ratio(key.lower(), tv['name'].lower()) > 95
+    )
     if fuzz.ratio(show, tv['name']) < 95:
         return []
 
