@@ -833,14 +833,14 @@ def _get_keyed_torrents() -> Dict[str, Dict]:
     ) as e:
         logging.exception('Unable to connect to transmission')
         error = 'Unable to connect to transmission: ' + str(e)
-        return abort(500, error, jsonify({'message': error}))
+        return api.abort(500, error)
 
 
 @app.route('/redirect/plex/<tmdb_id>')
 def redirect_to_plex(tmdb_id: str):
     dat = get_imdb_in_plex(tmdb_id)
     if not dat:
-        return abort(404, 'Not found in plex')
+        return api.abort(404, 'Not found in plex')
 
     server_id = get_plex().machineIdentifier
 
