@@ -10,6 +10,15 @@ snapshots['test_swagger 1'] = {
     'basePath': '/',
     'consumes': ['application/json'],
     'definitions': {
+        'Download': {
+            'properties': {
+                'episode': {'nullable': True, 'type': 'string'},
+                'magnet': {'pattern': '^magnet:', 'type': 'string'},
+                'season': {'nullable': True, 'type': 'string'},
+                'tmdb_id': {'format': 'int32', 'type': 'integer'},
+            },
+            'type': 'object',
+        },
         'DownloadAllResponse': {
             'properties': {
                 'complete': {
@@ -86,6 +95,13 @@ snapshots['test_swagger 1'] = {
             'type': 'object',
         },
         'MonitorCreated': {'properties': {'id': {'type': 'integer'}}, 'type': 'object'},
+        'MonitorPost': {
+            'properties': {
+                'tmdb_id': {'format': 'int32', 'type': 'integer'},
+                'type': {'enum': ['MOVIE', 'TV'], 'type': 'string'},
+            },
+            'type': 'object',
+        },
         'SearchResponse': {
             'properties': {
                 'Type': {
@@ -153,15 +169,7 @@ snapshots['test_swagger 1'] = {
                         'name': 'payload',
                         'required': True,
                         'schema': {
-                            'items': {
-                                'properties': {
-                                    'episode': {'nullable': True, 'type': 'string'},
-                                    'magnet': {'pattern': '^magnet:', 'type': 'string'},
-                                    'season': {'nullable': True, 'type': 'string'},
-                                    'tmdb_id': {'format': 'int32', 'type': 'integer'},
-                                },
-                                'type': 'object',
-                            },
+                            'items': {'$ref': '#/definitions/Download'},
                             'type': 'array',
                         },
                     }
@@ -204,12 +212,18 @@ snapshots['test_swagger 1'] = {
                 'operationId': 'post_monitors_resource',
                 'parameters': [
                     {
+                        'in': 'body',
+                        'name': 'payload',
+                        'required': True,
+                        'schema': {'$ref': '#/definitions/MonitorPost'},
+                    },
+                    {
                         'description': 'An optional fields mask',
                         'format': 'mask',
                         'in': 'header',
                         'name': 'X-Fields',
                         'type': 'string',
-                    }
+                    },
                 ],
                 'responses': {
                     '201': {
