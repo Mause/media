@@ -33,6 +33,7 @@ jobs:
           CLOUDAMQP_URL: "https://hello"
       - name: Archive test report
         uses: actions/upload-artifact@v1
+        if: always()
         with:
           name: report.html
           path: report.html
