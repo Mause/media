@@ -7,12 +7,13 @@ from flask import Flask, Request
 from flask.globals import _request_ctx_stack
 from flask.testing import FlaskClient
 from flask_login import FlaskLoginClient, login_user
+from flask_restx.swagger import Swagger
 from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
 from ..db import Download, Role, User, create_episode, db
-from ..main import create_app
+from ..main import api, create_app
 from ..utils import cache_clear
 from .conftest import themoviedb
 
@@ -364,3 +365,9 @@ def test_manifest(test_client):
     r = test_client.get('/manifest.json')
 
     assert 'name' in r.json
+
+
+def test_swagger(flask_app, snapshot):
+    with flask_app.test_request_context():
+        swagger = Swagger(api).as_dict()
+        snapshot.assert_match(swagger)
