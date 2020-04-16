@@ -28,7 +28,7 @@ jobs:
           pipenv run mypy rarbg_local
       - name: Test with pytest
         run: |
-          pipenv run pytest
+          pipenv run pytest -vv
         env:
           CLOUDAMQP_URL: "https://hello"
       - name: Archive test report
