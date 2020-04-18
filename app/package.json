@@ -35,7 +35,8 @@
     "react-scripts": "3.4.1",
     "swr": "^0.2.0",
     "typescript": "~3.8.3",
-    "typescript-string-operations": "^1.3.2"
+    "typescript-string-operations": "^1.3.2",
+    "use-socketio": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -47,11 +48,7 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -64,6 +61,7 @@
     "@types/qs": "^6.9.0",
     "@types/react-helmet": "^5.0.15",
     "@types/react-router-dom": "^5.1.4",
+    "@types/socket.io-client": "^1.4.32",
     "colors.css": "^3.0.0",
     "jest-junit": "^10.0.0",
     "moxios": "^0.4.0"
