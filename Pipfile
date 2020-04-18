@@ -50,6 +50,7 @@ fuzzywuzzy = {extras = ["speedup"],version = "*"}
 cachetools = "*"
 lxml = "*"
 bs4 = "*"
+flask-socketio = "*"
 
 [requires]
 python_version = "3.8"

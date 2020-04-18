@@ -43,6 +43,7 @@ from flask_cors import CORS
 from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_restx import Api, Resource, fields
 from flask_restx.reqparse import RequestParser
+from flask_socketio import SocketIO, send
 from flask_user import UserManager, current_user, login_required, roles_required
 from marshmallow.exceptions import ValidationError
 from marshmallow.fields import String
@@ -95,6 +96,8 @@ app = Blueprint('rarbg_local', __name__)
 Api.specs_url = '/swagger.json'
 api = Api(doc='/doc/', validate=True)
 
+sockets = SocketIO(cors_allowed_origins='*')
+
 K = TypeVar('K')
 V = TypeVar('V')
 
@@ -143,6 +146,7 @@ def create_app(config):
     api.init_app(papp)
     if not papp.config.get('TESTING', False):
         CORS(papp, supports_credentials=True)
+    sockets.init_app(papp)
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
         engine = db.get_engine(papp, None)
@@ -268,12 +272,24 @@ def query_params(validator):
 )
 @eventstream
 def stream(type: str, tmdb_id: str, season=None, episode=None):
+    return _stream(type, tmdb_id, season, episode)
+
+
+def _stream(type: str, tmdb_id: str, season=None, episode=None):
     if type == 'series':
         items = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode)
     else:
         items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
     return (asdict(item) for item in items)
+
+
+@sockets.on('message')
+def socket_stream(message):
+    request = json.loads(message)
+
+    for item in _stream(**request):
+        send(json.dumps(item, default=lambda enu: enu.name))
 
 
 @app.route('/delete/<type>/<id>')

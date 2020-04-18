@@ -25,6 +25,7 @@ import { ManualAddComponent } from './ManualAddComponent';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
+import { Websocket } from './Websocket';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -165,6 +166,9 @@ const ParentComponent = swrConfig(ParentComponentInt);
 function Routes() {
   return (
     <Switch>
+      <RouteWithTitle path="/websocket/:tmdbId" title="Websocket">
+        <Websocket />
+      </RouteWithTitle>
       <RouteWithTitle path="/select/:tmdb_id/options" title="Movie Options">
         <OptionsComponent type="movie" />
       </RouteWithTitle>
