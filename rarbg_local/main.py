@@ -10,7 +10,6 @@ from enum import Enum
 from functools import lru_cache, wraps
 from itertools import chain
 from os.path import join
-from pathlib import Path
 from typing import (
     Callable,
     Dict,
@@ -29,7 +28,6 @@ from flask import (
     Blueprint,
     Flask,
     Response,
-    abort,
     current_app,
     g,
     get_flashed_messages,
@@ -75,7 +73,6 @@ from .db import (
 )
 from .models import EpisodeInfo, ITorrent
 from .providers import ProviderSource, search_for_movie, search_for_tv
-from .rarbg import get_rarbg
 from .schema import TTuple, schema
 from .tmdb import (
     get_json,
