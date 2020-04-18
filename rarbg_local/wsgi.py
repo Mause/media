@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 if 'TIMBERIO_APIKEY' in os.environ:
     timber_handler = timber.TimberHandler(
-        api_key=os.environ['TIMBERIO_APIKEY'], source_id='rarbg-interface'
+        api_key=os.environ['TIMBERIO_APIKEY'], source_id='media'
     )
     logger.addHandler(timber_handler)
 
