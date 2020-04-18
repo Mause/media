@@ -68,7 +68,7 @@ def test_ttuple():
 
     app = Flask('fake')
     app.config['SERVER_NAME'] = 'what'
-    app.route('/', endpoint='root')(None)
+    app.route('/', endpoint='root')(lambda: '')
 
     @api.route('/api')
     @api.expect(TestModel)
