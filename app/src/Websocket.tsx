@@ -61,7 +61,13 @@ function Websocket() {
 }
 
 const IOWebsocket = () => (
-  <SocketIOProvider url="http://localhost:5000">
+  <SocketIOProvider
+    url={
+      window.location.hostname.includes('localhost')
+        ? 'http://localhost:5000'
+        : '/'
+    }
+  >
     <Websocket />
   </SocketIOProvider>
 );
