@@ -10,6 +10,7 @@ from enum import Enum
 from functools import lru_cache, wraps
 from itertools import chain
 from os.path import join
+from pathlib import Path
 from typing import (
     Callable,
     Dict,
@@ -72,8 +73,8 @@ from .db import (
     get_episodes,
     get_movies,
 )
-from .models import EpisodeInfo, ITorrent
-from .providers import ProviderSource, search_for_movie, search_for_tv
+from .models import EpisodeInfo
+from .providers import search_for_movie, search_for_tv
 from .schema import TTuple, schema
 from .tmdb import (
     get_json,
