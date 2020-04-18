@@ -12,7 +12,9 @@ from .main import create_app
 logger = logging.getLogger(__name__)
 
 if 'TIMBERIO_APIKEY' in os.environ:
-    timber_handler = timber.TimberHandler(api_key=os.environ['TIMBERIO_APIKEY'])
+    timber_handler = timber.TimberHandler(
+        api_key=os.environ['TIMBERIO_APIKEY'], source_id='rarbg-interface'
+    )
     logger.addHandler(timber_handler)
 
 
