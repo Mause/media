@@ -1,11 +1,20 @@
 import json
+import logging
 import os
 
 import sentry_sdk
+import timber
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
 from .main import create_app
+
+logger = logging.getLogger(__name__)
+
+if 'TIMBERIO_APIKEY' in os.environ:
+    timber_handler = timber.TimberHandler(api_key=os.environ['TIMBERIO_APIKEY'])
+    logger.addHandler(timber_handler)
+
 
 if 'SENTRY_DSN' in os.environ:
     sentry_sdk.init(
