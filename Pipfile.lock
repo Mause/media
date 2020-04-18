@@ -1396,7 +1396,6 @@
             "hashes": [
                 "sha256:00cfe8605fb97f5a59d52baab78e6070e72c12ca64f51151695407cc0eb8a431",
                 "sha256:c8364ec469084046c779c9a11ae6340094e8a0bf1d844330fc55c1cefe67c172"
-<<<<<<< Updated upstream
             ],
             "version": "==20.0.17"
         },
@@ -1408,8 +1407,6 @@
                 "sha256:d5a58b318628bd48605a4810ee9ba030ec4423dee730d45f031bd082cf36ad8b",
                 "sha256:f864b1e910e6803aa8f3ed9c371b145f0b6fd191f5fbefea011ac7ed4258734d",
                 "sha256:fa1c8479781c91e6b814ef006f6e099b6550eba12601a8617475fb514fc09365"
-=======
->>>>>>> Stashed changes
             ],
             "version": "==20.0.17"
         },
