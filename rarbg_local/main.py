@@ -863,7 +863,3 @@ def redirect_to_imdb(type_: str, ident: str, season: str = None, episode: str = 
         imdb_id = get_tv_imdb_id(ident)
 
     return redirect(f'https://www.imdb.com/title/{imdb_id}')
-
-
-if __name__ == '__main__':
-    create_app({}).run(debug=True, host='0.0.0.0')
