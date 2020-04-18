@@ -52,6 +52,7 @@ lxml = "*"
 bs4 = "*"
 flask-socketio = "*"
 timber = "*"
+eventlet = "*"
 
 [requires]
 python_version = "3.8"
