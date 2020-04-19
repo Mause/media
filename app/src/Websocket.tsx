@@ -33,7 +33,7 @@ function useMessages<T>(initMessage: object) {
 function Websocket() {
   const { tmdbId } = useParams();
   const { search } = useLocation();
-  const query = qs.parse(search);
+  const query = qs.parse(search.slice(1));
 
   const initMessage = query.season
     ? {
