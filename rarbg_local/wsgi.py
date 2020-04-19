@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 
 if 'TIMBERIO_APIKEY' in os.environ:
     timber_handler = timber.TimberHandler(
-        api_key=os.environ['TIMBERIO_APIKEY'], source_id='36442'
+        api_key=os.environ.get('TIMBERIO_APIKEY', ''),
+        source_id='36442',
+        raise_exceptions=True,
     )
     logger.addHandler(timber_handler)
 
