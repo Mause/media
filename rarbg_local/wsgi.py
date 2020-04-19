@@ -18,12 +18,11 @@ logger = logging.getLogger()
 class T:
     thread: Thread
 
-    @property
-    def is_active(self):
-        return self.thread.is_active
+    def is_alive(self):
+        return self.thread.is_alive()
 
     def start(self):
-        if not self.thread.is_active:
+        if not self.thread.is_alive:
             return self.thread.start()
 
 
