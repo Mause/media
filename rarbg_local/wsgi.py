@@ -22,7 +22,7 @@ class T:
         return self.thread.is_alive()
 
     def start(self):
-        if not self.thread.is_alive:
+        if not self.thread.is_alive():
             return self.thread.start()
 
 
