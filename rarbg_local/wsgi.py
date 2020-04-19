@@ -9,7 +9,7 @@ from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
 from .main import create_app
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 if 'TIMBERIO_APIKEY' in os.environ:
     timber_handler = timber.TimberHandler(
