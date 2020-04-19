@@ -1,6 +1,8 @@
 import json
 import logging
 import os
+from dataclasses import dataclass
+from threading import Thread
 
 import sentry_sdk
 import timber
@@ -11,12 +13,27 @@ from .main import create_app
 
 logger = logging.getLogger()
 
+
+@dataclass
+class T:
+    thread: Thread
+
+    @property
+    def is_active(self):
+        return self.thread.is_active
+
+    def start(self):
+        if not self.thread.is_active:
+            return self.thread.start()
+
+
 if 'TIMBERIO_APIKEY' in os.environ:
     timber_handler = timber.TimberHandler(
         api_key=os.environ['TIMBERIO_APIKEY'],
         source_id=os.environ['TIMBERIO_SOURCEID'],
         raise_exceptions=True,
     )
+    timber_handler.flush_thread = T(timber_handler.flush_thread)
     logger.addHandler(timber_handler)
 
 
