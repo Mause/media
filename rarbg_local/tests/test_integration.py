@@ -349,7 +349,9 @@ def test_delete_monitor(responses, test_client):
 
 
 def test_stats(test_client):
-    test_client.get('/api/stats')
+    assert test_client.get('/api/stats').json == [
+        {'user': 'python', 'values': {'episode': None, 'movie': None}}
+    ]
 
 
 @patch('rarbg_local.main.get_torrent')
