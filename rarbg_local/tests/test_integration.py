@@ -353,11 +353,20 @@ def test_stats(test_client):
 
 
 @patch('rarbg_local.main.get_torrent')
-def test_torrents(get_torrent, test_client):
+def test_torrents_error(get_torrent, test_client):
     get_torrent.side_effect = TimeoutError('Timeout!')
     torrents = test_client.get('/api/torrents')
     assert torrents.status_code == 500
     assert torrents.json == {'message': 'Unable to connect to transmission: Timeout!'}
+
+
+@patch('rarbg_local.main.get_torrent')
+def test_torrents(get_torrent, test_client):
+    get_torrent.return_value = {
+        'arguments': {'torrents': [{'hashString': '00000', 'filename': 'movie.mov'}]}
+    }
+    torrents = test_client.get('/api/torrents')
+    assert torrents.json == {'00000': {'hashString': '00000', 'filename': 'movie.mov'}}
 
 
 @mark.skip
