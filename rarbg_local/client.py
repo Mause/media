@@ -9,7 +9,7 @@ import dill
 import pika
 from pika.adapters.blocking_connection import BlockingChannel
 
-from .config import parameters
+from .config import get_parameters
 
 SERVER_QUEUE = 'rpc.server.queue'
 
@@ -42,7 +42,7 @@ class Proxy:
 
 
 def get_client():
-    conn = pika.BlockingConnection(parameters)
+    conn = pika.BlockingConnection(get_parameters())
     channel = conn.channel()
 
     def recieve(ch, method_frame, properties, body):
