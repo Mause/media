@@ -29,8 +29,12 @@ if 'TIMBERIO_APIKEY' in os.environ:
         raise_exceptions=True,
     )
     timber_handler.flush_thread.start()
+    timber_handler.addFilter(
+        lambda record: not (
+            'logs.timber.io' in record.message and record.levelno == logging.DEBUG
+        )
+    )
     logger.addHandler(timber_handler)
-
 
 if 'SENTRY_DSN' in os.environ:
     sentry_sdk.init(
