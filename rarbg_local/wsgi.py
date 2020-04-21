@@ -1,5 +1,7 @@
-import eventlet
-eventlet.monkey_patch()
+# import eventlet
+#  --worker-class eventlet -w 1
+#
+# eventlet.monkey_patch()
 
 import json
 import logging
