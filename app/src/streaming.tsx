@@ -13,7 +13,6 @@ import { SearchComponent } from './SearchComponent';
 import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
-import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { Link, Grid } from '@material-ui/core';
 import { SWRConfig } from 'swr';
 import {
@@ -153,9 +152,7 @@ function ParentComponentInt() {
           );
         }}
       >
-        <AxiosErrorCatcher>
-          <Routes />
-        </AxiosErrorCatcher>
+        <Routes />
       </ErrorBoundary>
     </Router>
   );
