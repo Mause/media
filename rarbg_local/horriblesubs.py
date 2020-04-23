@@ -150,3 +150,7 @@ def search_for_tv(tmdb_id, season, episode):
         return results
     else:
         return (item for item in results if item['episode'] == f'{episode:02d}')
+
+
+if __name__ == '__main__':
+    print(list(search_for_tv('95550', 1, 1)))
