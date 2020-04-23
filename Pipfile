@@ -53,6 +53,7 @@ bs4 = "*"
 flask-socketio = "*"
 timber = "*"
 eventlet = "*"
+email-validator = "*"
 
 [requires]
 python_version = "3.8"
