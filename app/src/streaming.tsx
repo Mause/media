@@ -137,9 +137,21 @@ function ParentComponentInt() {
 
       <ErrorBoundary
         onError={reportError}
-        FallbackComponent={(props: FallbackProps) => (
-          <div>An error has occured: {props.error!!.message}</div>
-        )}
+        FallbackComponent={(props: FallbackProps) => {
+          return (
+            <div>
+              An error has occured:
+              <code>
+                <pre>
+                  {props.error!!.message}
+                  {props.componentStack?.toString().split('\n').map(
+                    line => <span key={line}>{line}<br /></span>
+                  )}
+                </pre>
+              </code>
+            </div>
+          );
+        }}
       >
         <AxiosErrorCatcher>
           <Routes />
