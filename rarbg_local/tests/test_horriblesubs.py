@@ -103,6 +103,16 @@ def test_provider(responses: RequestsMock, snapshot):
         'https://horriblesubs.info/shows/little-busters',
         load_html('show_page.html'),
     )
+    responses.add(
+        'GET',
+        'https://api.jikan.moe/v3/search/anime',
+        json={'results': [{'mal_id': '12345'}]},
+    )
+    responses.add(
+        'GET',
+        'https://api.jikan.moe/v3/anime/12345',
+        json={'title': 'Busters that are little', 'title_synonyms': []},
+    )
     themoviedb(responses, '/tv/1', {'name': 'Little Busters!'})
 
     results = list(map(asdict, HorriblesubsProvider().search_for_tv(None, 1, 1, 2)))

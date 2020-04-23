@@ -2,7 +2,7 @@ import re
 from enum import Enum
 from functools import lru_cache
 from itertools import chain
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Set, Tuple
 
 from cachetools.func import ttl_cache
 from fuzzywuzzy import fuzz
@@ -12,6 +12,7 @@ from requests_toolbelt.sessions import BaseUrlSession
 from .tmdb import get_tv
 
 session = BaseUrlSession('https://horriblesubs.info/')
+jikan = BaseUrlSession('https://api.jikan.moe/v3/')
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
 
@@ -117,18 +118,29 @@ def search(showid: int, search_term: str):
     )
 
 
+@ttl_cache()
+def get_names(tmdb_id: int) -> Set[str]:
+    tv = get_tv(tmdb_id)
+    results = jikan.get('search/anime', params={'q': tv['name'], 'limit': 1}).json()[
+        'results'
+    ]
+    result = jikan.get(f'anime/{results[0]["mal_id"]}').json()
+
+    return set([tv['name'], result['title']] + result['title_synonyms'])
+
+
 def search_for_tv(tmdb_id, season, episode):
     if season != 1:
         return []
 
-    tv = get_tv(tmdb_id)
-
     shows = get_all_shows()
 
-    show = max(
-        shows.keys(), key=lambda key: fuzz.ratio(key.lower(), tv['name'].lower()) > 95
-    )
-    if fuzz.ratio(show, tv['name']) < 95:
+    names = get_names(tmdb_id)
+
+    closeness = lambda key: max(fuzz.ratio(key.lower(), name.lower()) for name in names)
+
+    show = max(shows.keys(), key=lambda key: closeness(key) > 95)
+    if closeness(show) < 95:
         return []
 
     show_id = get_show_id(shows[show])
@@ -138,3 +150,7 @@ def search_for_tv(tmdb_id, season, episode):
         return results
     else:
         return (item for item in results if item['episode'] == f'{episode:02d}')
+
+
+if __name__ == '__main__':
+    print(list(search_for_tv('95550', 1, 1)))
