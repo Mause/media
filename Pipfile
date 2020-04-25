@@ -17,6 +17,8 @@ webdriver-manager = "*"
 pre-commit = "*"
 sqlalchemy-stubs = "*"
 snapshottest = "*"
+black = "*"
+flake8 = "*"
 
 [packages]
 flask = "*"
@@ -54,6 +56,10 @@ flask-socketio = "*"
 timber = "*"
 eventlet = "*"
 email-validator = "*"
+retry = "*"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
