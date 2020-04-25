@@ -8,33 +8,18 @@ import logging
 import os
 
 import sentry_sdk
-import timber
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
+from .logger import get_timber_handler
 from .main import create_app
 
 logger = logging.getLogger()
 
 
-class CustomTimberHandler(timber.TimberHandler):
-    def _is_main_process(self):
-        return False
-
-
 if 'TIMBERIO_APIKEY' in os.environ:
-    timber_handler = CustomTimberHandler(
-        api_key=os.environ['TIMBERIO_APIKEY'],
-        source_id=os.environ['TIMBERIO_SOURCEID'],
-        raise_exceptions=True,
-    )
-    timber_handler.flush_thread.start()
-    timber_handler.addFilter(
-        lambda record: not (
-            'logs.timber.io' in record.message and record.levelno == logging.DEBUG
-        )
-    )
-    logger.addHandler(timber_handler)
+    logger.addHandler(get_timber_handler())
+
 
 if 'SENTRY_DSN' in os.environ:
     sentry_sdk.init(
