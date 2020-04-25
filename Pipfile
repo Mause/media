@@ -33,8 +33,6 @@ gunicorn = "*"
 psycopg2-binary = "*"
 dataclasses-json = "*"
 flask-user = "*"
-dill = "*"
-pika = "*"
 flask-admin = "*"
 flask-jsontools = "*"
 sentry-sdk = {extras = ["flask"],version = "*"}
@@ -56,7 +54,7 @@ flask-socketio = "*"
 timber = "*"
 eventlet = "*"
 email-validator = "*"
-retry = "*"
+mause-rpc = "*"
 
 [requires]
 python_version = "3.8"

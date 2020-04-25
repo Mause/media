@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "59a868b54f1d96598965f8f7ce67d5410cd789343fa96fc02073a32484abbc6e"
+            "sha256": "5ff79d031b77f24513f6ceeb42b3a77267ecd07b0e715bb4c2a19252ad995a56"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -257,7 +257,7 @@
             "hashes": [
                 "sha256:42d8ef819367516592a825746a18073ced42ca169ab1f5f4044134703e7a049c"
             ],
-            "index": "pypi",
+            "markers": "python_version >= '2.6' and python_version != '3.0'",
             "version": "==0.3.1.1"
         },
         "dnspython": {
@@ -545,6 +545,14 @@
             ],
             "version": "==1.5.1"
         },
+        "mause-rpc": {
+            "hashes": [
+                "sha256:b3bdd86047437429ec44128ca322f759e0e63229f10a2c13a5de212a97b2f3d3",
+                "sha256:f69c0652e3be5cdd347df468243cc244a883bc0355fc733bca6486eaa120eca2"
+            ],
+            "index": "pypi",
+            "version": "==0.0.5"
+        },
         "monotonic": {
             "hashes": [
                 "sha256:23953d55076df038541e648a53676fb24980f7a1be290cdda21300b3bc21dfb0",
@@ -617,7 +625,6 @@
                 "sha256:4e1a1a6585a41b2341992ec32aadb7a919d649eb82904fd8e4a4e0871c8cf3af",
                 "sha256:9fa76ba4b65034b878b2b8de90ff8660a59d925b087c5bb88f8fdbb4b64a1dbf"
             ],
-            "index": "pypi",
             "version": "==1.1.0"
         },
         "plexapi": {
@@ -751,7 +758,6 @@
                 "sha256:ccddf89761fa2c726ab29391837d4327f819ea14d244c232a1d24c67a2f98606",
                 "sha256:f8bfa8b99b69c4506d6f5bd3b0aabf77f98cdb17f3c9fc3f5ca820033336fba4"
             ],
-            "index": "pypi",
             "version": "==0.9.2"
         },
         "sentry-sdk": {
