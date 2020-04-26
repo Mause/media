@@ -19,6 +19,7 @@ import {
 import MockDate from 'mockdate';
 
 useMoxios();
+afterEach(() => MockDate.reset());
 
 test('Movies', () => {
   const movies: MovieResponse[] = [
@@ -123,11 +124,9 @@ describe('Progress', () => {
 });
 
 describe('NextEpisodeAirs', () => {
-  beforeEach(() => MockDate.set('2020-04-04'));
-  afterEach(() => MockDate.reset());
-
   it('works', async () => {
     await act(async () => {
+      MockDate.set('2020-04-04');
       const tmdb_id = '10000';
       const season = '1';
       const el = renderWithSWR(
