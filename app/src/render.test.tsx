@@ -16,6 +16,7 @@ import {
   SeriesResponse,
   EpisodeResponse,
 } from './streaming';
+import MockDate from 'mockdate';
 
 useMoxios();
 
@@ -121,25 +122,25 @@ describe('Progress', () => {
   });
 });
 
-it('NextEpisodeAirs', async () => {
-  await act(async () => {
-    jest.mock('moment', () => () => ({
-      isSameOrAfter: () => true,
-      format: () => '04/04/2020',
-    }));
+describe('NextEpisodeAirs', () => {
+  beforeEach(() => MockDate.set('2020-04-04'));
+  afterEach(() => MockDate.reset());
 
-    const tmdb_id = '10000';
-    const season = '1';
-    const el = renderWithSWR(
-      <NextEpisodeAirs season={season} tmdb_id={tmdb_id} />,
-    );
+  it('works', async () => {
+    await act(async () => {
+      const tmdb_id = '10000';
+      const season = '1';
+      const el = renderWithSWR(
+        <NextEpisodeAirs season={season} tmdb_id={tmdb_id} />,
+      );
 
-    await mock(`tv/${tmdb_id}/season/${season}`, {
-      episodes: [{ name: 'EP2', air_date: '2020-04-04', episode_number: 2 }],
+      await mock(`tv/${tmdb_id}/season/${season}`, {
+        episodes: [{ name: 'EP2', air_date: '2020-04-24', episode_number: 2 }],
+      });
+      await wait();
+
+      expect(el.container).toMatchSnapshot();
     });
-    await wait();
-
-    expect(el.container).toMatchSnapshot();
   });
 });
 

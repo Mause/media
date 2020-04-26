@@ -48,7 +48,11 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -64,6 +68,7 @@
     "@types/socket.io-client": "^1.4.32",
     "colors.css": "^3.0.0",
     "jest-junit": "^10.0.0",
+    "mockdate": "^2.0.5",
     "moxios": "^0.4.0"
   },
   "prettier": {

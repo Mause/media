@@ -77,7 +77,7 @@ exports[`Movies 1`] = `
 </div>
 `;
 
-exports[`NextEpisodeAirs 1`] = `
+exports[`NextEpisodeAirs works 1`] = `
 <div>
   <small>
     Episode 
