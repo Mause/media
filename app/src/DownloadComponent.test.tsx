@@ -2,12 +2,12 @@ import { act } from '@testing-library/react';
 import React from 'react';
 import { DownloadComponent, DownloadState } from './DownloadComponent';
 import { Route, Router } from 'react-router-dom';
-import { wait, useMoxios, renderWithSWR } from './test.utils';
+import { wait, usesMoxios, renderWithSWR } from './test.utils';
 import { createMemoryHistory } from 'history';
 import moxios from 'moxios';
 import { expectLastRequestBody } from './utils';
 
-useMoxios();
+usesMoxios();
 
 test('DownloadComponent', async () => {
   await act(async () => {

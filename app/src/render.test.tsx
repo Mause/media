@@ -8,7 +8,7 @@ import {
   NextEpisodeAirs,
 } from './render';
 import { MemoryRouter } from 'react-router-dom';
-import { useMoxios, renderWithSWR, mock, wait } from './test.utils';
+import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
 import {
   MovieResponse,
   Torrents,
@@ -18,7 +18,7 @@ import {
 } from './streaming';
 import MockDate from 'mockdate';
 
-useMoxios();
+usesMoxios();
 afterEach(() => MockDate.reset());
 
 test('Movies', () => {

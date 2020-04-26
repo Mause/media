@@ -1,4 +1,4 @@
-import { useMoxios, renderWithSWR, mock, wait } from './test.utils';
+import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
 import { act } from 'react-dom/test-utils';
 import moxios from 'moxios';
 import {
@@ -13,7 +13,7 @@ import { createMemoryHistory } from 'history';
 import * as _ from 'lodash';
 import { expectLastRequestBody } from './utils';
 
-useMoxios();
+usesMoxios();
 
 describe('MonitorComponent', () => {
   it('view', async () => {

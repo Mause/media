@@ -7,9 +7,9 @@ import {
   SeasonSelectComponent,
   TV,
 } from './SeasonSelectComponent';
-import { mock, useMoxios, wait, renderWithSWR } from './test.utils';
+import { mock, usesMoxios, wait, renderWithSWR } from './test.utils';
 
-useMoxios();
+usesMoxios();
 
 test('SeasonSelectComponent  render', async () => {
   await act(async () => {

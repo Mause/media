@@ -2,12 +2,12 @@ import { act, render } from '@testing-library/react';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
-import { wait, useMoxios } from './test.utils';
+import { wait, usesMoxios } from './test.utils';
 import moxios from 'moxios';
 import axios from 'axios';
 import ErrorBoundary from 'react-error-boundary';
 
-useMoxios();
+usesMoxios();
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -19,10 +19,13 @@ afterEach(() => {
 
 function Fake() {
   const [fire, setFire] = useState(false);
-  useEffect(() => {
-    if (fire) axios.get('/');
-    else setFire(true);
-  }, [fire]);
+  useEffect(
+    () => {
+      if (fire) axios.get('/');
+      else setFire(true);
+    },
+    [fire],
+  );
   return <div>Thing</div>;
 }
 

@@ -2,9 +2,9 @@ import React from 'react';
 import { act } from '@testing-library/react';
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { mock, useMoxios, renderWithSWR, wait } from './test.utils';
+import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
 
-useMoxios();
+usesMoxios();
 
 const sources: ES[] = [];
 type CB = (event: { data: string }) => void;

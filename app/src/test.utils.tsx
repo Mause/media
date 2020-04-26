@@ -17,7 +17,7 @@ export function renderWithSWR(el: ReactElement) {
   return render(swrConfig(() => el)());
 }
 
-export function useMoxios() {
+export function usesMoxios() {
   beforeEach(() => {
     moxios.install();
   });
