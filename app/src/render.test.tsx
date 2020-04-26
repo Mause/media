@@ -1,8 +1,14 @@
 import { act, render } from '@testing-library/react';
 import React from 'react';
-import { Movies, TVShows, Progress, shouldCollapse } from './render';
+import {
+  Movies,
+  TVShows,
+  Progress,
+  shouldCollapse,
+  NextEpisodeAirs,
+} from './render';
 import { MemoryRouter } from 'react-router-dom';
-import { useMoxios, renderWithSWR } from './test.utils';
+import { useMoxios, renderWithSWR, mock, wait } from './test.utils';
 import {
   MovieResponse,
   Torrents,
@@ -111,6 +117,28 @@ describe('Progress', () => {
       length: 4,
     });
     el.rerender(fn());
+    expect(el.container).toMatchSnapshot();
+  });
+});
+
+it('NextEpisodeAirs', async () => {
+  await act(async () => {
+    jest.mock('moment', () => () => ({
+      isSameOrAfter: () => true,
+      format: () => '04/04/2020',
+    }));
+
+    const tmdb_id = '10000';
+    const season = '1';
+    const el = renderWithSWR(
+      <NextEpisodeAirs season={season} tmdb_id={tmdb_id} />,
+    );
+
+    await mock(`tv/${tmdb_id}/season/${season}`, {
+      episodes: [{ name: 'EP2', air_date: '2020-04-04', episode_number: 2 }],
+    });
+    await wait();
+
     expect(el.container).toMatchSnapshot();
   });
 });

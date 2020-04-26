@@ -77,6 +77,19 @@ exports[`Movies 1`] = `
 </div>
 `;
 
+exports[`NextEpisodeAirs 1`] = `
+<div>
+  <small>
+    Episode 
+    2
+     "
+    EP2
+    " airs on 
+    24/04/2020
+  </small>
+</div>
+`;
+
 exports[`Progress complex 1`] = `<div />`;
 
 exports[`Progress complex 2`] = `

@@ -329,7 +329,7 @@ function Season({
   );
 }
 
-function NextEpisodeAirs(props: { tmdb_id: string; season: string }) {
+export function NextEpisodeAirs(props: { tmdb_id: string; season: string }) {
   const { data } = useSWR<{ episodes: { name: string; air_date: string; episode_number: number }[] }>(
     `tv/${props.tmdb_id}/season/${props.season}`,
   );
