@@ -3,7 +3,7 @@ from functools import lru_cache
 from typing import TYPE_CHECKING
 
 from mause_rpc.client import get_client
-from pika.configuration import URLParameters
+from pika.connection import URLParameters
 
 if TYPE_CHECKING:
     from .transmission import torrent_add, get_torrent
