@@ -205,10 +205,10 @@
         },
         "click": {
             "hashes": [
-                "sha256:8a18b4ea89d8820c5d0c7da8a64b2c324b4dabb695804dbfea19b9be9d88c0cc",
-                "sha256:e345d143d80bf5ee7534056164e5e112ea5e22716bbb1ce727941f4c8b471b9a"
+                "sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a",
+                "sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc"
             ],
-            "version": "==7.1.1"
+            "version": "==7.1.2"
         },
         "cryptography": {
             "hashes": [
@@ -523,11 +523,11 @@
         },
         "mause-rpc": {
             "hashes": [
-                "sha256:5ae75dc93628de29e3a25fbdeceea99de5910b77681fa79767b0268fb2a69e1a",
-                "sha256:b00b79c9b6c1b8db0be9b724e6647a99eeddaa41c66a003832f21f10a28cd6ca"
+                "sha256:6cbeec92b06f059c1c2a9827c2b516cfd0f9c2e75c3e7d1e1514d73062b25b06",
+                "sha256:b08cb057fae40545e074ebebf72efe9157db329c3b22d33b2a51c5468db20188"
             ],
             "index": "pypi",
-            "version": "==0.0.12"
+            "version": "==0.0.13"
         },
         "monotonic": {
             "hashes": [
@@ -929,10 +929,10 @@
         },
         "click": {
             "hashes": [
-                "sha256:8a18b4ea89d8820c5d0c7da8a64b2c324b4dabb695804dbfea19b9be9d88c0cc",
-                "sha256:e345d143d80bf5ee7534056164e5e112ea5e22716bbb1ce727941f4c8b471b9a"
+                "sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a",
+                "sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc"
             ],
-            "version": "==7.1.1"
+            "version": "==7.1.2"
         },
         "colorama": {
             "hashes": [
