@@ -5,7 +5,7 @@ import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { wait, usesMoxios } from './test.utils';
 import moxios from 'moxios';
 import axios from 'axios';
-import ErrorBoundary from 'react-error-boundary';
+import { ErrorBoundary } from 'react-error-boundary';
 
 usesMoxios();
 
