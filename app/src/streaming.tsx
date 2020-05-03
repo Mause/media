@@ -10,7 +10,7 @@ import {
 } from './SeasonSelectComponent';
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
-import ErrorBoundary, { FallbackProps } from 'react-error-boundary';
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
 import { Link, Grid } from '@material-ui/core';
