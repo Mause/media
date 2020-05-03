@@ -86,7 +86,7 @@ from .tmdb import (
     resolve_id,
     search_themoviedb,
 )
-from .transmission_proxy import get_torrent, torrent_add
+from .transmission_proxy import get_torrent, torrent_add, transmission
 from .utils import as_resource, expect, non_null, precondition, schema_to_openapi
 
 logging.basicConfig(level=logging.DEBUG)
@@ -438,7 +438,7 @@ def validation(error):
 @api.route('/diagnostics')
 @as_resource()
 def api_diagnostics():
-    return {}
+    return {'consumers': transmission().channel.consumer_tags}
 
 
 @api.route('/api/download')
