@@ -100,7 +100,9 @@ def logged_in(flask_app, test_client, user):
             _request_ctx_stack.pop()
 
 
-def test_basic_auth(flask_app, user):
+@patch('rarbg_local.main.transmission')
+def test_basic_auth(transmission, flask_app, user):
+    transmission.return_value.channel.consumer_tags = ['ctag1']
     with flask_app.test_client() as client:
         r = client.get(
             '/diagnostics',
@@ -109,7 +111,7 @@ def test_basic_auth(flask_app, user):
             },
         )
         assert r.status_code == 200
-        assert r.json == {}
+        assert r.json == {'consumers': ['ctag1']}
 
 
 def test_download_movie(test_client, responses, add_torrent):

@@ -1,11 +1,11 @@
 import os
-from functools import _lru_cache_wrapper, lru_cache
-from typing import TYPE_CHECKING
+from functools import lru_cache
+from typing import TYPE_CHECKING, Callable
 
 from mause_rpc.client import Client, get_client
 from pika.connection import URLParameters
 
-transmission: _lru_cache_wrapper[Client]
+transmission: Callable[[], Client]
 
 if TYPE_CHECKING:
     from .transmission import torrent_add, get_torrent
