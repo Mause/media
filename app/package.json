@@ -62,7 +62,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.150",
     "@types/moxios": "^0.4.9",
-    "@types/qs": "^6.9.0",
+    "@types/qs": "^6.9.2",
     "@types/react-helmet": "^5.0.15",
     "@types/react-router-dom": "^5.1.5",
     "@types/socket.io-client": "^1.4.32",
