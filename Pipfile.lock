@@ -524,11 +524,11 @@
         },
         "mause-rpc": {
             "hashes": [
-                "sha256:144cec492eba4708853649710ab4740fff51e778cfd404964e1fc741925fd078",
-                "sha256:be4372a1962ac4f2bc46ea70fc7ee5f93be0eb938ba33e6c4788fdc0b007d8b8"
+                "sha256:567801e4f26af98bef942d5aa5deab8ab07bb3c5bdb48754a265e601fca3ed7f",
+                "sha256:80759e7a4d18faed54c6f31e949cf9f98f33efad08a2f4cadd51165983692fc8"
             ],
             "index": "pypi",
-            "version": "==0.0.16"
+            "version": "==0.0.17"
         },
         "monotonic": {
             "hashes": [
