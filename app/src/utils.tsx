@@ -45,16 +45,33 @@ export async function load<T>(path: string, params?: string): Promise<T> {
   return t && t.data;
 }
 
-export function usePost<T>(url: string, body: object): [boolean, T?] {
-  const [done, setDone] = useState<[boolean, T?]>([false, undefined]);
+export function usePost<T>(
+  url: string,
+  body: object,
+): { done: boolean; data?: T; error?: Error } {
+  const [done, setDone] = useState<boolean>(false);
+  const [error, setError] = useState<Error>();
+  const [data, setData] = useState<T>();
 
-  useEffect(() => {
-    Axios.post<T>('/api/' + url, body, {
-      withCredentials: true,
-    }).then(res => setDone([true, res.data]));
-  }, [url, body]);
+  useEffect(
+    () => {
+      Axios.post<T>('/api/' + url, body, {
+        withCredentials: true,
+      }).then(
+        res => {
+          setDone(true);
+          setData(res.data);
+        },
+        error => {
+          setDone(true);
+          setError(error);
+        },
+      );
+    },
+    [url, body],
+  );
 
-  return done;
+  return { done, error, data };
 }
 
 export function ExtMLink(props: { href: string; children: string }) {

@@ -17,7 +17,7 @@ export interface DownloadState {
 export function DownloadComponent() {
   const { state } = useLocation<DownloadState>();
 
-  const [done] = usePost(
+  const { done } = usePost(
     'download',
     state.downloads.map(item => ({
       ...item,

@@ -80,7 +80,7 @@ export function MonitorAddComponent() {
   const { tmdb_id } = useParams();
   const { state } = useLocation<{ type: MediaType }>();
 
-  const [done] = usePost('monitor', {
+  const { done } = usePost('monitor', {
     tmdb_id: Number(tmdb_id),
     type: state ? state.type : MediaType.MOVIE,
   });
@@ -91,11 +91,14 @@ export function MonitorAddComponent() {
 function useDelete(path: string) {
   const [done, setDone] = useState(false);
 
-  useEffect(() => {
-    Axios.delete(`/api/${path}`, { withCredentials: true }).then(() =>
-      setDone(true),
-    );
-  }, [path]);
+  useEffect(
+    () => {
+      Axios.delete(`/api/${path}`, { withCredentials: true }).then(() =>
+        setDone(true),
+      );
+    },
+    [path],
+  );
 
   return done;
 }
