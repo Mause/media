@@ -438,7 +438,10 @@ def validation(error):
 @api.route('/diagnostics')
 @as_resource()
 def api_diagnostics():
-    return {'consumers': transmission().channel.consumer_tags}
+    return {
+        'consumers': transmission().channel.consumer_tags,
+        'client_is_alive': transmission()._thread.is_alive(),
+    }
 
 
 @api.route('/api/download')
