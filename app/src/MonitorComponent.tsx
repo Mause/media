@@ -8,6 +8,7 @@ import { contextMenuTrigger } from './render';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
+import { DisplayError } from './IndexComponent';
 
 export enum MediaType {
   'MOVIE' = 'MOVIE',
@@ -80,10 +81,14 @@ export function MonitorAddComponent() {
   const { tmdb_id } = useParams();
   const { state } = useLocation<{ type: MediaType }>();
 
-  const { done } = usePost('monitor', {
+  const { done, error } = usePost('monitor', {
     tmdb_id: Number(tmdb_id),
     type: state ? state.type : MediaType.MOVIE,
   });
+
+  if (error) {
+    return <DisplayError error={error} />;
+  }
 
   return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
 }

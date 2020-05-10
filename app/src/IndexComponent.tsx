@@ -33,7 +33,7 @@ function IndexComponent() {
   );
 }
 
-function DisplayError(props: { error: Error }) {
+export function DisplayError(props: { error: Error }) {
   let message = 'Unable to connect to transmission: ' + props.error.toString();
 
   if ((props.error as any).isAxiosError) {
