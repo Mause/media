@@ -41,18 +41,14 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -67,6 +63,7 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/socket.io-client": "^1.4.32",
     "colors.css": "^3.0.0",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-junit": "^10.0.0",
     "mockdate": "^2.0.5",
     "moxios": "^0.4.0"
