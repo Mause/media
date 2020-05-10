@@ -103,6 +103,7 @@ def logged_in(flask_app, test_client, user):
 @patch('rarbg_local.main.transmission')
 def test_basic_auth(transmission, flask_app, user):
     transmission.return_value.channel.consumer_tags = ['ctag1']
+    transmission.return_value._thread.is_alive.return_value = True
     with flask_app.test_client() as client:
         r = client.get(
             '/diagnostics',
@@ -111,7 +112,7 @@ def test_basic_auth(transmission, flask_app, user):
             },
         )
         assert r.status_code == 200
-        assert r.json == {'consumers': ['ctag1']}
+        assert r.json == {'consumers': ['ctag1'], 'client_is_alive': True}
 
 
 def test_download_movie(test_client, responses, add_torrent):
