@@ -9,34 +9,36 @@ import { expectLastRequestBody } from './utils';
 
 usesMoxios();
 
-test('DownloadComponent', async () => {
-  await act(async () => {
-    const history = createMemoryHistory();
-    const state: DownloadState = {
-      downloads: [
-        {
-          tmdb_id: '10000',
-          magnet: '...',
-        },
-      ],
-    };
-    history.push('/download', state);
+describe('DownloadComponent', () => {
+  it('success', async () => {
+    await act(async () => {
+      const history = createMemoryHistory();
+      const state: DownloadState = {
+        downloads: [
+          {
+            tmdb_id: '10000',
+            magnet: '...',
+          },
+        ],
+      };
+      history.push('/download', state);
 
-    const el = renderWithSWR(
-      <Router history={history}>
-        <Route path="/download">
-          <DownloadComponent />
-        </Route>
-      </Router>,
-    );
+      const el = renderWithSWR(
+        <Router history={history}>
+          <Route path="/download">
+            <DownloadComponent />
+          </Route>
+        </Router>,
+      );
 
-    expect(el.container).toMatchSnapshot();
+      expect(el.container).toMatchSnapshot();
 
-    await moxios.stubOnce('POST', /\/api\/download/, {});
-    expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
-    await wait();
+      await moxios.stubOnce('POST', /\/api\/download/, {});
+      expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
+      await wait();
 
-    expect(el.container).toMatchSnapshot();
-    expect(history.length).toBe(2);
+      expect(el.container).toMatchSnapshot();
+      expect(history.length).toBe(2);
+    });
   });
 });
