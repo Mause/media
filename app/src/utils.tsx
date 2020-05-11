@@ -7,8 +7,9 @@ import { LocationDescriptor } from 'history';
 import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@material-ui/core';
 import moxios from 'moxios';
+import { unstable_batchedUpdates } from 'react-dom';
 
-axiosRetry(Axios, { retries: 3 });
+// axiosRetry(Axios, { retries: 3 });
 
 export function MLink<S>(props: {
   children: React.ReactNode;
@@ -59,12 +60,16 @@ export function usePost<T>(
         withCredentials: true,
       }).then(
         res => {
-          setDone(true);
-          setData(res.data);
+          unstable_batchedUpdates(() => {
+            setDone(true);
+            setData(res.data);
+          });
         },
         error => {
-          setDone(true);
-          setError(error);
+          unstable_batchedUpdates(() => {
+            setDone(true);
+            setError(error);
+          });
         },
       );
     },
