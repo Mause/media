@@ -7,6 +7,7 @@ import { EpisodeSelectBreadcrumbs } from './SeasonSelectComponent';
 import { MLink } from './utils';
 import { DownloadCall } from './DownloadComponent';
 import { Torrents } from './streaming';
+import { DisplayError } from './IndexComponent';
 
 type MapType = [string, ITorrent[]][];
 
@@ -14,7 +15,7 @@ function DownloadAllComponent() {
   const { tmdb_id, season } = useParams<{ tmdb_id: string; season: string }>();
 
   const { data: torrents } = useSWR<Torrents>('torrents');
-  const { data, isValidating } = useSWR<{
+  const { data, isValidating, error } = useSWR<{
     packs: ITorrent[];
     complete: MapType;
     incomplete: MapType;
@@ -22,6 +23,7 @@ function DownloadAllComponent() {
 
   return (
     <div>
+      {error && <DisplayError error={error} />}
       <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id} season={season} />
       <Loading loading={isValidating} />
       <div>
