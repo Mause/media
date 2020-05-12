@@ -41,4 +41,37 @@ describe('DownloadComponent', () => {
       expect(history.length).toBe(2);
     });
   });
+  it('failure', async () => {
+    await act(async () => {
+      const history = createMemoryHistory();
+      const state: DownloadState = {
+        downloads: [
+          {
+            tmdb_id: '10000',
+            magnet: '...',
+          },
+        ],
+      };
+      history.push('/download', state);
+
+      const el = renderWithSWR(
+        <Router history={history}>
+          <Route path="/download">
+            <DownloadComponent />
+          </Route>
+        </Router>,
+      );
+
+      expect(el.container).toMatchSnapshot();
+
+      await moxios.stubFailure('POST', /\/api\/download/, {
+        status: 500,
+        response: { body: {}, message: 'an error has occured' },
+      });
+
+      expect(el.container).toMatchSnapshot();
+
+      expect(await el.findByTestId('errorMessage')).toHaveTextContent('an error has occured');
+    });
+  });
 });
