@@ -29,7 +29,7 @@ flask-sqlalchemy = "*"
 aiohttp = "*"
 requests-toolbelt = "*"
 backoff = "*"
-gunicorn = "*"
+gunicorn = {extras = ["gevent"], version = "*"}
 psycopg2-binary = "*"
 dataclasses-json = "*"
 flask-user = "*"

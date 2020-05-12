@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5ff79d031b77f24513f6ceeb42b3a77267ecd07b0e715bb4c2a19252ad995a56"
+            "sha256": "cf5045a4c02d40f8152b27ac33ffa04254d15bfdd056192156eca07f261bd392"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -377,6 +377,33 @@
             ],
             "index": "pypi",
             "version": "==0.18.0"
+        },
+        "gevent": {
+            "hashes": [
+                "sha256:00b03601b8dd1ee2aa07811cb60a4befe36173b15d91c6e207e37f8d77dd6fac",
+                "sha256:0acc15ba2ac2a555529ad82d5a28fc85dbb6b2ff947657d67bebfd352e2b5c14",
+                "sha256:15eae3cd450dac7dae7f4ac59e01db1378965c9ef565c39c5ae78c5a888f9ac9",
+                "sha256:1dc7f1f6bc1f67d625e4272b01e717eba0b4fa024d2ff7934c8d320674d6f7fa",
+                "sha256:1dd95433be45e1115053878366e3f5332ae99c39cb345be23851327c062b9f4a",
+                "sha256:28b7d83b4327ceb79668eca2049bf4b9ce66d5ace18a88335e3035b573f889fd",
+                "sha256:31dc5d4ab8172cc00c4ff17cb18edee633babd961f64bf54214244d769bc3a74",
+                "sha256:38db524ea88d81d596b2cbb6948fced26654a15fec40ea4529224e239a6f45e8",
+                "sha256:3ff477b6d275396123faf8ce2d5b82f96d85ba264e0b9d4b56a2bac49d1b9adc",
+                "sha256:4d2729dd4bf9c4d0f29482f53cdf9fc90a498aebb5cd7ae8b45d35657437d2ac",
+                "sha256:52e5cd607749ed3b8aa0272cacf2c11deec61fca4c3bec57a9fea8c49316627d",
+                "sha256:5c604179cebcc57f10505d8db177b92a715907815a464b066e7eba322d1c33ac",
+                "sha256:88c76df4967c5229f853aa67ad1b394d9e4f985b0359c9bc9879416bba3e7c68",
+                "sha256:929c33df8e9bcbe31906024fcd21580bd018196dbd3249eb5b2f19d63e11092d",
+                "sha256:92edc18a357473e01a4e4a82c073ed3c99ceca6e3ce93c23668dd4a2401f07dc",
+                "sha256:937d36730f2b0dee3387712074b1f15b802e2e074a3d7c6dcaf70521236d607c",
+                "sha256:9b4e940fc6071afebb86ba5f48dbb5f1fc3cb96ebeb8cf145eb5b499e9c6ee33",
+                "sha256:a7805934e8ce81610b61f806572c3d504cedd698cc8c9460d78d2893ba598c4a",
+                "sha256:d07a2afe4215731eb57d5b257a2e7e7e170d8a7ae1f02f6d0682cd3403debea9",
+                "sha256:e01d5373528e4ebdde66dc47a608d225fa3c4408ccd828d26c49b7ff75d82bd9",
+                "sha256:efd9546468502a30ddd4699c3124ccb9d3099130f9b5ae1e2a54ad5b46e86120",
+                "sha256:fcb64f3a28420d1b872b7ef41b12e8a1a4dcadfc8eff3c09993ab0cdf52584a1"
+            ],
+            "version": "==20.5.0"
         },
         "greenlet": {
             "hashes": [
