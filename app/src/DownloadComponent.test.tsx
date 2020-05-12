@@ -62,16 +62,14 @@ describe('DownloadComponent', () => {
         </Router>,
       );
 
-      expect(el.container).toMatchSnapshot();
-
       await moxios.stubFailure('POST', /\/api\/download/, {
         status: 500,
         response: { body: {}, message: 'an error has occured' },
       });
 
-      expect(el.container).toMatchSnapshot();
-
-      expect(await el.findByTestId('errorMessage')).toHaveTextContent('an error has occured');
+      expect(await el.findByTestId('errorMessage')).toHaveTextContent(
+        'an error has occured',
+      );
     });
   });
 });
