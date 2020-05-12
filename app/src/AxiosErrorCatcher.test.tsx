@@ -33,7 +33,10 @@ test('AxiosErrorCatcher', async () => {
   await act(async () => {
     let lerror;
     const el = render(
-      <ErrorBoundary onError={error => (lerror = error)}>
+      <ErrorBoundary
+        fallback={<div>error</div>}
+        onError={error => (lerror = error)}
+      >
         <AxiosErrorCatcher>
           <Fake />
         </AxiosErrorCatcher>
