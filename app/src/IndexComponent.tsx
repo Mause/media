@@ -34,16 +34,16 @@ function IndexComponent() {
 }
 
 export function DisplayError(props: { error: Error }) {
-  let message = 'Unable to connect to transmission: ' + props.error.toString();
-
-  if ((props.error as any).isAxiosError) {
-    message = _.get(props.error, 'response.data.message') || message;
-  }
+  const message =
+    _.get(props.error, 'response.data.message') ||
+    'Unable to connect to transmission: ' + props.error.toString();
 
   return (
     <div>
       <br />
-      <Alert color="warning">{message}</Alert>
+      <Alert color="warning">
+        <span data-testid="errorMessage">{message}</span>
+      </Alert>
     </div>
   );
 }
