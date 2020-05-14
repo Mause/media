@@ -215,12 +215,18 @@ exports[`DownloadAllComponent 2`] = `
         Complete Sets
       </h3>
       <ul />
+      <p>
+        No results found
+      </p>
     </div>
     <div>
       <h3>
         Incomplete Sets
       </h3>
       <ul />
+      <p>
+        No results found
+      </p>
     </div>
   </div>
 </div>

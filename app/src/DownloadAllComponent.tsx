@@ -105,6 +105,7 @@ function Individual(props: {
             </div>
           ))}
       </ul>
+      {props.items && !props.items.length && <p>No results found</p>}
     </div>
   );
 }
