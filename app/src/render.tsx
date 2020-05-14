@@ -353,7 +353,7 @@ export function NextEpisodeAirs(props: { tmdb_id: string; season: string; season
   if (ep_num === nextEpisode.name) { // unoriginal episode names
     message = `${ep_num} ${message}`;
   } else {
-    message = ep_num + ` ${nextEpisode.name} ` + message;
+    message = ep_num + ` "${nextEpisode.name}" ` + message;
   }
 
   return (
