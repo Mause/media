@@ -347,15 +347,33 @@ export function NextEpisodeAirs(props: { tmdb_id: string; season: string;season_
     return <></>;
   }
 
-  const dt = Moment(nextEpisode.air_date).format('DD/MM/YYYY');
+  const message = getMessage(nextEpisode.air_date);
   return (
     <small>
-      Episode {nextEpisode.episode_number} "{nextEpisode.name}" airs on {dt}&nbsp;
+      Episode {nextEpisode.episode_number} "{nextEpisode.name}" {message}&nbsp;
       <MLink to={`/select/${props.tmdb_id}/season/${props.season}/episode/${nextEpisode.episode_number}`}>
         <FontAwesomeIcon icon={faSearch} />
       </MLink>
     </small>
   );
+}
+
+function getMessage(air_date: string) {
+  const now = Moment().startOf('day');
+  const dt = Moment(air_date);
+  const dts = dt.format('DD/MM/YYYY');
+
+  let message;
+  if (now.isSame(dt)) {
+    message = 'airs today';
+  }
+  else if (dt.isAfter(now)) {
+    message = 'airs on ' + dts;
+  }
+  else {
+    message = 'aired on ' + dts;
+  }
+  return message;
 }
 
 export function shouldCollapse(
