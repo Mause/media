@@ -58,20 +58,27 @@ export function usePost<T>(
     () => {
       Axios.post<T>('/api/' + url, body, {
         withCredentials: true,
-      }).then(
-        res => {
-          unstable_batchedUpdates(() => {
-            setDone(true);
-            setData(res.data);
-          });
-        },
-        error => {
+      })
+        .then(
+          res => {
+            unstable_batchedUpdates(() => {
+              setDone(true);
+              setData(res.data);
+            });
+          },
+          error => {
+            unstable_batchedUpdates(() => {
+              setDone(true);
+              setError(error);
+            });
+          },
+        )
+        .catch(error => {
           unstable_batchedUpdates(() => {
             setDone(true);
             setError(error);
           });
-        },
-      );
+        });
     },
     [url, body],
   );
