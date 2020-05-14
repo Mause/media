@@ -349,8 +349,8 @@ export function NextEpisodeAirs(props: { tmdb_id: string; season: string; season
 
   let message = getMessage(nextEpisode.air_date);
 
-  let ep_num = `Episode ${nextEpisode.episode_number}`
-  if (ep_num == nextEpisode.name) { // unoriginal episode names
+  const ep_num = `Episode ${nextEpisode.episode_number}`
+  if (ep_num === nextEpisode.name) { // unoriginal episode names
     message = `${ep_num} ${message}`;
   } else {
     message = ep_num + ` ${nextEpisode.name} ` + message;
