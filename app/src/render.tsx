@@ -359,7 +359,7 @@ export function NextEpisodeAirs(props: { tmdb_id: string; season: string; season
   return (
     <small>
       {message}&nbsp;
-      <MLink to={`/select/${props.tmdb_id}/season/${props.season}/episode/${nextEpisode.episode_number}`}>
+      <MLink to={`/select/${props.tmdb_id}/season/${props.season}/episode/${nextEpisode.episode_number}/options`}>
         <FontAwesomeIcon icon={faSearch} />
       </MLink>
     </small>

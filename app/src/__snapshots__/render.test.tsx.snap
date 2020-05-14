@@ -84,7 +84,7 @@ exports[`NextEpisodeAirs works 1`] = `
      
     <a
       class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
-      href="/select/10000/season/1/episode/2"
+      href="/select/10000/season/1/episode/2/options"
     >
       <svg
         aria-hidden="true"
