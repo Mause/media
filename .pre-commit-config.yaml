@@ -25,7 +25,7 @@ repos:
     hooks:
       - id: autoflake
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.2.1
+    rev: v2.4.1
     hooks:
       - id: pyupgrade
   - repo: https://github.com/psf/black
@@ -33,7 +33,7 @@ repos:
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v7.0.0-alpha.3
+    rev: v7.0.0
     hooks:
       - id: eslint
         args:
