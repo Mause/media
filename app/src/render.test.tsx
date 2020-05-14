@@ -130,7 +130,9 @@ describe('NextEpisodeAirs', () => {
       const tmdb_id = '10000';
       const season = '1';
       const el = renderWithSWR(
-        <NextEpisodeAirs season={season} tmdb_id={tmdb_id} />,
+        <MemoryRouter>
+          <NextEpisodeAirs season={season} tmdb_id={tmdb_id} season_episodes={[{ episode: 1 }]} />,
+        </MemoryRouter>
       );
 
       await mock(`tv/${tmdb_id}/season/${season}`, {

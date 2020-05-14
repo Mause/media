@@ -349,7 +349,10 @@ export function NextEpisodeAirs(props: { tmdb_id: string; season: string }) {
   const dt = Moment(nextEpisode.air_date).format('DD/MM/YYYY');
   return (
     <small>
-      Episode {nextEpisode.episode_number} "{nextEpisode.name}" airs on {dt}
+      Episode {nextEpisode.episode_number} "{nextEpisode.name}" airs on {dt}&nbsp;
+      <MLink to={`/select/${props.tmdb_id}/season/${props.season}/episode/${nextEpisode.episode_number}`}>
+        <FontAwesomeIcon icon={faSearch} />
+      </MLink>
     </small>
   );
 }
