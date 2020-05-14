@@ -1,5 +1,255 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`DownloadComponent failure 1`] = `
+<div>
+  <div
+    style="fill: #000000; height: 64px; width: 64px;"
+  >
+    <svg
+      class="icon-loading"
+      viewBox="0 0 32 32"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+  
+      <path
+        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
+        transform="translate(-8 0)"
+      >
+         
+    
+        <animatetransform
+          attributeName="transform"
+          begin="0"
+          calcMode="spline"
+          dur="0.8s"
+          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
+          keyTimes="0;.25;1"
+          repeatCount="indefinite"
+          type="translate"
+          values="-8 0; 2 0; 2 0;"
+        />
+        
+  
+      </path>
+      
+  
+      <path
+        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
+        transform="translate(2 0)"
+      >
+         
+    
+        <animatetransform
+          attributeName="transform"
+          begin="0"
+          calcMode="spline"
+          dur="0.8s"
+          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
+          keyTimes="0;.35;1"
+          repeatCount="indefinite"
+          type="translate"
+          values="2 0; 12 0; 12 0;"
+        />
+        
+  
+      </path>
+      
+  
+      <path
+        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
+        transform="translate(12 0)"
+      >
+         
+    
+        <animatetransform
+          attributeName="transform"
+          begin="0"
+          calcMode="spline"
+          dur="0.8s"
+          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
+          keyTimes="0;.45;1"
+          repeatCount="indefinite"
+          type="translate"
+          values="12 0; 22 0; 22 0;"
+        />
+        
+  
+      </path>
+      
+  
+      <path
+        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
+        transform="translate(24 0)"
+      >
+         
+    
+        <animatetransform
+          attributeName="transform"
+          begin="0"
+          calcMode="spline"
+          dur="0.8s"
+          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
+          keyTimes="0;.55;1"
+          repeatCount="indefinite"
+          type="translate"
+          values="22 0; 32 0; 32 0;"
+        />
+        
+  
+      </path>
+      
+
+    </svg>
+    
+
+  </div>
+</div>
+`;
+
+exports[`DownloadComponent failure 2`] = `
+<div>
+  <div
+    style="fill: #000000; height: 64px; width: 64px;"
+  >
+    <svg
+      class="icon-loading"
+      viewBox="0 0 32 32"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+  
+      <path
+        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
+        transform="translate(-8 0)"
+      >
+         
+    
+        <animatetransform
+          attributeName="transform"
+          begin="0"
+          calcMode="spline"
+          dur="0.8s"
+          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
+          keyTimes="0;.25;1"
+          repeatCount="indefinite"
+          type="translate"
+          values="-8 0; 2 0; 2 0;"
+        />
+        
+  
+      </path>
+      
+  
+      <path
+        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
+        transform="translate(2 0)"
+      >
+         
+    
+        <animatetransform
+          attributeName="transform"
+          begin="0"
+          calcMode="spline"
+          dur="0.8s"
+          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
+          keyTimes="0;.35;1"
+          repeatCount="indefinite"
+          type="translate"
+          values="2 0; 12 0; 12 0;"
+        />
+        
+  
+      </path>
+      
+  
+      <path
+        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
+        transform="translate(12 0)"
+      >
+         
+    
+        <animatetransform
+          attributeName="transform"
+          begin="0"
+          calcMode="spline"
+          dur="0.8s"
+          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
+          keyTimes="0;.45;1"
+          repeatCount="indefinite"
+          type="translate"
+          values="12 0; 22 0; 22 0;"
+        />
+        
+  
+      </path>
+      
+  
+      <path
+        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
+        transform="translate(24 0)"
+      >
+         
+    
+        <animatetransform
+          attributeName="transform"
+          begin="0"
+          calcMode="spline"
+          dur="0.8s"
+          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
+          keyTimes="0;.55;1"
+          repeatCount="indefinite"
+          type="translate"
+          values="22 0; 32 0; 32 0;"
+        />
+        
+  
+      </path>
+      
+
+    </svg>
+    
+
+  </div>
+</div>
+`;
+
+exports[`DownloadComponent failure 3`] = `
+<div>
+  <div>
+    <br />
+    <div
+      class="MuiPaper-root MuiAlert-root MuiAlert-standardWarning MuiPaper-elevation0"
+      role="alert"
+    >
+      <div
+        class="MuiAlert-icon"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.76,4 13.5,4.11 14.2, 4.31L15.77,2.74C14.61,2.26 13.34,2 12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0, 0 22,12M7.91,10.08L6.5,11.5L11,16L21,6L19.59,4.58L11,13.17L7.91,10.08Z"
+          />
+        </svg>
+      </div>
+      <div
+        class="MuiAlert-message"
+      >
+        <span
+          data-testid="errorMessage"
+        >
+          Unable to connect to transmission: Error: Request failed with status code 500
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`DownloadComponent success 1`] = `
 <div>
   <div
