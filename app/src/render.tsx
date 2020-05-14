@@ -329,7 +329,7 @@ function Season({
   );
 }
 
-export function NextEpisodeAirs(props: { tmdb_id: string; season: string;season_episodes: { episode: number    }[] }) {
+export function NextEpisodeAirs(props: { tmdb_id: string; season: string; season_episodes: { episode: number }[] }) {
   const { data } = useSWR<{ episodes: { name: string; air_date: string; episode_number: number }[] }>(
     `tv/${props.tmdb_id}/season/${props.season}`,
   );
@@ -347,10 +347,18 @@ export function NextEpisodeAirs(props: { tmdb_id: string; season: string;season_
     return <></>;
   }
 
-  const message = getMessage(nextEpisode.air_date);
+  let message = getMessage(nextEpisode.air_date);
+
+  let ep_num = `Episode ${nextEpisode.episode_number}`
+  if (ep_num == nextEpisode.name) { // unoriginal episode names
+    message = `${ep_num} ${message}`;
+  } else {
+    message = ep_num + ` ${nextEpisode.name} ` + message;
+  }
+
   return (
     <small>
-      Episode {nextEpisode.episode_number} "{nextEpisode.name}" {message}&nbsp;
+      {message}&nbsp;
       <MLink to={`/select/${props.tmdb_id}/season/${props.season}/episode/${nextEpisode.episode_number}`}>
         <FontAwesomeIcon icon={faSearch} />
       </MLink>
