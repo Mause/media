@@ -323,13 +323,13 @@ function Season({
             <Progress torrents={torrents} item={episode} />
           </li>
         ))}
-        <NextEpisodeAirs tmdb_id={tmdb_id} season={i} />
+        <NextEpisodeAirs tmdb_id={tmdb_id} season={i} season_episodes={season} />
       </ol>
     </Collapsible>
   );
 }
 
-export function NextEpisodeAirs(props: { tmdb_id: string; season: string }) {
+export function NextEpisodeAirs(props: { tmdb_id: string; season: string;season_episodes: { episode: number    }[] }) {
   const { data } = useSWR<{ episodes: { name: string; air_date: string; episode_number: number }[] }>(
     `tv/${props.tmdb_id}/season/${props.season}`,
   );
@@ -338,9 +338,10 @@ export function NextEpisodeAirs(props: { tmdb_id: string; season: string }) {
     return <></>;
   }
 
-  const now = Moment();
+  const lastEpisode = _.last(props.season_episodes)!.episode
+
   const nextEpisode = data.episodes.find(episode =>
-    Moment(episode.air_date).isSameOrAfter(now, 'day'),
+    episode.episode_number === (lastEpisode + 1)
   );
   if (!nextEpisode) {
     return <></>;

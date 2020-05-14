@@ -16,10 +16,8 @@ import {
   SeriesResponse,
   EpisodeResponse,
 } from './streaming';
-import MockDate from 'mockdate';
 
 usesMoxios();
-afterEach(() => MockDate.reset());
 
 test('Movies', () => {
   const movies: MovieResponse[] = [
@@ -126,13 +124,16 @@ describe('Progress', () => {
 describe('NextEpisodeAirs', () => {
   it('works', async () => {
     await act(async () => {
-      MockDate.set('2020-04-04');
       const tmdb_id = '10000';
       const season = '1';
       const el = renderWithSWR(
         <MemoryRouter>
-          <NextEpisodeAirs season={season} tmdb_id={tmdb_id} season_episodes={[{ episode: 1 }]} />,
-        </MemoryRouter>
+          <NextEpisodeAirs
+            season={season}
+            tmdb_id={tmdb_id}
+            season_episodes={[{ episode: 1 }]}
+          />,
+        </MemoryRouter>,
       );
 
       await mock(`tv/${tmdb_id}/season/${season}`, {
