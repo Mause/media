@@ -1,4 +1,4 @@
-import { act } from '@testing-library/react';
+import { act, RenderResult } from '@testing-library/react';
 import React from 'react';
 import { DownloadComponent, DownloadState } from './DownloadComponent';
 import { Route, Router } from 'react-router-dom';
@@ -42,19 +42,20 @@ describe('DownloadComponent', () => {
     });
   });
   it('failure', async () => {
-    await act(async () => {
-      const history = createMemoryHistory();
-      const state: DownloadState = {
-        downloads: [
-          {
-            tmdb_id: '10000',
-            magnet: '...',
-          },
-        ],
-      };
-      history.push('/download', state);
+    const history = createMemoryHistory();
+    const state: DownloadState = {
+      downloads: [
+        {
+          tmdb_id: '10000',
+          magnet: '...',
+        },
+      ],
+    };
+    history.push('/download', state);
 
-      const el = renderWithSWR(
+    let el: RenderResult;
+    await act(async () => {
+      el = renderWithSWR(
         <Router history={history}>
           <Route path="/download">
             <DownloadComponent />
@@ -66,10 +67,10 @@ describe('DownloadComponent', () => {
         status: 500,
         response: { body: {}, message: 'an error has occured' },
       });
-
-      expect(await el.findByTestId('errorMessage')).toHaveTextContent(
-        'an error has occured',
-      );
     });
+
+    expect(await el!.findByTestId('errorMessage')).toHaveTextContent(
+      'an error has occured',
+    );
   });
 });
