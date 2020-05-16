@@ -54,7 +54,6 @@ def get_latest():
     return parse(html)
 
 
-@ttl_cache()
 def get_downloads(showid: int, type: HorriblesubsDownloadType):
     page = 0
     while True:
