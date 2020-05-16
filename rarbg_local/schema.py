@@ -25,8 +25,7 @@ class TTuple(fields.Raw):
         schema.update({"items": [item.__schema__ for item in self.items]})
         return schema
 
-    def output(self, idx, data):
-        return [
-            field.output(idx, subdata)
-            for idx, (field, subdata) in enumerate(zip(self.items, data))
-        ]
+    def output(self, key, data):
+        data = fields.get_value(key, data)
+
+        return [field.output(idx, data) for idx, field in enumerate(self.items)]
