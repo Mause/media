@@ -123,9 +123,20 @@ def get_names(tmdb_id: int) -> Set[str]:
     results = jikan.get('search/anime', params={'q': tv['name'], 'limit': 1}).json()[
         'results'
     ]
+    if not results:
+        return {tv['name']}
+
+    result = results[0]
+    if closeness(tv['name'], [result['title']]) < 95:
+        return {tv['name']}
+
     result = jikan.get(f'anime/{results[0]["mal_id"]}').json()
 
     return set([tv['name'], result['title']] + result['title_synonyms'])
+
+
+def closeness(key, names):
+    return max(fuzz.ratio(key.lower(), name.lower()) for name in names)
 
 
 def search_for_tv(tmdb_id, season, episode):
@@ -136,10 +147,8 @@ def search_for_tv(tmdb_id, season, episode):
 
     names = get_names(tmdb_id)
 
-    closeness = lambda key: max(fuzz.ratio(key.lower(), name.lower()) for name in names)
-
-    show = max(shows.keys(), key=lambda key: closeness(key) > 95)
-    if closeness(show) < 95:
+    show = max(shows.keys(), key=lambda key: closeness(key, names) > 95)
+    if closeness(show, names) < 95:
         return []
 
     show_id = get_show_id(shows[show])
