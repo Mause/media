@@ -4,9 +4,8 @@ repos:
     rev: 2.0.5
     hooks:
       - id: prettier
-        language: system
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.5.0
+    rev: v3.0.1
     hooks:
       - id: check-yaml
       - id: check-json
@@ -25,7 +24,7 @@ repos:
     hooks:
       - id: autoflake
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.4.1
+    rev: v2.4.3
     hooks:
       - id: pyupgrade
   - repo: https://github.com/psf/black
@@ -48,7 +47,13 @@ repos:
           - file
         additional_dependencies:
           - eslint@6.8.0
+          - "eslint-config-react-app@5.2.1"
+          - babel-eslint@10.1.0
+          - eslint-plugin-flowtype@5.0.3
+          - eslint-plugin-import@2.20.2
+          - eslint-plugin-jsx-a11y@6.2.3
+          - eslint-plugin-react@7.20.0
+          - eslint-plugin-react-hooks@4.0.2
           - "typescript@3.8.3"
           - "@typescript-eslint/eslint-plugin@2.23.0"
           - "@typescript-eslint/parser@2.23.0"
-        language: system
