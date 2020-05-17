@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "cf5045a4c02d40f8152b27ac33ffa04254d15bfdd056192156eca07f261bd392"
+            "sha256": "99aa7b11305b7138369948ead6ac2e1dc921017d1b34037a2eeeb88fee6ca999"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -55,6 +55,13 @@
             ],
             "index": "pypi",
             "version": "==3.3.0"
+        },
+        "appdirs": {
+            "hashes": [
+                "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41",
+                "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"
+            ],
+            "version": "==1.4.4"
         },
         "appdynamics": {
             "hashes": [
@@ -134,6 +141,13 @@
                 "sha256:d4e96ac9b0c3a6d3f0caae2e4124e6055c5dcafde8e2f831ff194c104f0775a0"
             ],
             "version": "==4.9.0"
+        },
+        "begins": {
+            "hashes": [
+                "sha256:1aebcdc04a36d64d6462f38fc0ece62fa1b96262db5a7a680eec782b75ceee66",
+                "sha256:98864dc7593ce438074ed30e4c030dcb37e795376726d9150d557ed9d868ef55"
+            ],
+            "version": "==0.9"
         },
         "blinker": {
             "hashes": [
@@ -864,6 +878,14 @@
                 "sha256:88206b0eb87e6d677d424843ac5209e3fb9d0190d0ee169599165ec25e9d9115"
             ],
             "version": "==1.25.9"
+        },
+        "walter": {
+            "hashes": [
+                "sha256:36f2d010bd7261781576199d0fd5b948b2a3d2b29fd022e72931f3293ee01c79",
+                "sha256:bc1ea414f3c721cdca4f3af749f43acae1d5bb694dcfef99b1912bba5e15a358"
+            ],
+            "index": "pypi",
+            "version": "==1.2"
         },
         "werkzeug": {
             "hashes": [
