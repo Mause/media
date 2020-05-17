@@ -106,7 +106,7 @@ def test_provider(responses: RequestsMock, snapshot):
     responses.add(
         'GET',
         'https://api.jikan.moe/v3/search/anime',
-        json={'results': [{'mal_id': '12345'}]},
+        json={'results': [{'title': 'Busters that are little', 'mal_id': '12345'}]},
     )
     responses.add(
         'GET',
