@@ -61,7 +61,7 @@
     "@types/qs": "^6.9.2",
     "@types/react-helmet": "^6.0.0",
     "@types/react-router-dom": "^5.1.5",
-    "@types/socket.io-client": "^1.4.32",
+    "@types/socket.io-client": "^1.4.33",
     "colors.css": "^3.0.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-junit": "^10.0.0",
