@@ -55,6 +55,7 @@ timber = "*"
 eventlet = "*"
 email-validator = "*"
 mause-rpc = "*"
+walter = "*"
 
 [requires]
 python_version = "3.8"
