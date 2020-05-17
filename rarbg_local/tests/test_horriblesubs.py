@@ -106,12 +106,15 @@ def test_provider(responses: RequestsMock, snapshot):
     responses.add(
         'GET',
         'https://api.jikan.moe/v3/search/anime',
-        json={'results': [{'title': 'Busters that are little', 'mal_id': '12345'}]},
+        json={'results': [{'title': 'Little Busters!', 'mal_id': '12345'}]},
     )
     responses.add(
         'GET',
         'https://api.jikan.moe/v3/anime/12345',
-        json={'title': 'Busters that are little', 'title_synonyms': []},
+        json={
+            'title': 'Little Busters!',
+            'title_synonyms': ['Busters that are little'],
+        },
     )
     themoviedb(responses, '/tv/1', {'name': 'Little Busters!'})
 
