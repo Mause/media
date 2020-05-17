@@ -22,11 +22,15 @@ export function MLink<S>(props: {
 export function subscribe<T>(
   path: string,
   callback: (a: T) => void,
+  error: (e: Error) => void,
   end: (() => void) | null = null,
 ): void {
   const es = new EventSource(path, {
     withCredentials: true,
   });
+  es.onerror = (event: Event) => {
+    error((event as unknown) as Error);
+  };
   es.addEventListener('message', ({ data }) => {
     if (!data) {
       if (end) {
@@ -54,34 +58,31 @@ export function usePost<T>(
   const [error, setError] = useState<Error>();
   const [data, setData] = useState<T>();
 
-  useEffect(
-    () => {
-      Axios.post<T>('/api/' + url, body, {
-        withCredentials: true,
-      })
-        .then(
-          res => {
-            unstable_batchedUpdates(() => {
-              setDone(true);
-              setData(res.data);
-            });
-          },
-          error => {
-            unstable_batchedUpdates(() => {
-              setDone(true);
-              setError(error);
-            });
-          },
-        )
-        .catch(error => {
+  useEffect(() => {
+    Axios.post<T>('/api/' + url, body, {
+      withCredentials: true,
+    })
+      .then(
+        (res) => {
+          unstable_batchedUpdates(() => {
+            setDone(true);
+            setData(res.data);
+          });
+        },
+        (error) => {
           unstable_batchedUpdates(() => {
             setDone(true);
             setError(error);
           });
+        },
+      )
+      .catch((error) => {
+        unstable_batchedUpdates(() => {
+          setDone(true);
+          setError(error);
         });
-    },
-    [url, body],
-  );
+      });
+  }, [url, body]);
 
   return { done, error, data };
 }

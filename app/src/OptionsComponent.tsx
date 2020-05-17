@@ -9,6 +9,7 @@ import { Loading } from './render';
 import { Breadcrumbs, Typography } from '@material-ui/core';
 import { Shared } from './SeasonSelectComponent';
 import { DownloadState } from './DownloadComponent';
+import { DisplayError } from './IndexComponent';
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
@@ -101,7 +102,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     (season ? 'tv' : 'movie') + '/' + tmdb_id,
   );
   const { data: torrents } = useSWR<Torrents>('torrents');
-  const { items: results, loading } = useSubscribe<ITorrent>(
+  const { items: results, loading, error } = useSubscribe<ITorrent>(
     `/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
   );
   const dt = (result: ITorrent) => (
@@ -124,7 +125,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   ).map(([category, results]) => (
     <div key={category}>
       <h3>{remove(category)}</h3>
-      {_.sortBy(results, i => -i.seeders).map(result => (
+      {_.sortBy(results, (i) => -i.seeders).map((result) => (
         <li key={result.title}>{dt(result)}</li>
       ))}
     </div>
@@ -160,6 +161,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       <div style={{ textAlign: 'center' }}>
         <Loading loading={loading} large={true} />
       </div>
+      {error && <DisplayError error={error} />}
       {bits.length || loading ? (
         <div>
           <p>Auto selection: {auto ? dt(auto) : 'None'}</p>
@@ -200,19 +202,21 @@ function useSubscribe<T>(url: string) {
   const [subscription, setSubscription] = useState<{
     items: T[];
     loading: boolean;
-  }>({ loading: true, items: [] });
+    error?: Error;
+  }>({ loading: true, items: [], error: undefined });
 
   useEffect(() => {
     const items: T[] = [];
     subscribe<T>(
       url,
-      data => {
+      (data) => {
         items.push(data);
         setSubscription({
           items,
           loading: true,
         });
       },
+      (error) => setSubscription({ error, loading: false, items }),
       () => setSubscription({ loading: false, items }),
     );
   }, [url]);
