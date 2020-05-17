@@ -41,7 +41,7 @@ describe('DownloadComponent', () => {
       expect(history.length).toBe(2);
     });
   });
-  it('failure', async () => {
+  it.skip('failure', async () => {
     const history = createMemoryHistory();
     const state: DownloadState = {
       downloads: [
