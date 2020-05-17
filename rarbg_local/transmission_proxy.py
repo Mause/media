@@ -1,9 +1,10 @@
-import os
 from functools import lru_cache
 from typing import TYPE_CHECKING, Callable
 
 from mause_rpc.client import Client, get_client
 from pika.connection import URLParameters
+
+from .config import CLOUDAMQP_URL
 
 transmission: Callable[[], Client]
 
@@ -11,9 +12,7 @@ if TYPE_CHECKING:
     from .transmission import torrent_add, get_torrent
 else:
     transmission = lru_cache()(
-        lambda: get_client(
-            'rpc.server.queue', URLParameters(os.environ['CLOUDAMQP_URL'])
-        )
+        lambda: get_client('rpc.server.queue', URLParameters(CLOUDAMQP_URL))
     )
 
     def __getattr__(name):
