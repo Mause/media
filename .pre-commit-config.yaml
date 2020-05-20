@@ -40,7 +40,6 @@ repos:
           - .eslintrc
           - --ext
           - .js,.jsx,.ts,.tsx
-          - --fix
         files: ".*(\\.js|\\.jsx|\\.ts|\\.tsx)$"
         verbose: true
         types:
