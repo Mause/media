@@ -367,18 +367,22 @@ export function NextEpisodeAirs(props: { tmdb_id: string; season: string; season
 }
 
 function getMessage(air_date: string) {
-  const now = Moment().startOf('day');
+  const today = Moment().startOf('day');
+  const tomorrow = today.add(1, 'day');
+  const yesterday = today.subtract(1, 'day');
   const dt = Moment(air_date);
   const dts = dt.format('DD/MM/YYYY');
 
   let message;
-  if (now.isSame(dt)) {
+  if (today.isSame(dt)) {
     message = 'airs today';
-  }
-  else if (dt.isAfter(now)) {
+  } else if (dt.isSame(yesterday)) {
+    message = 'aired yesterday';
+  } else if (dt.isSame(tomorrow)) {
+    message = 'airs tomorrow';
+  } else if (dt.isAfter(today)) {
     message = 'airs on ' + dts;
-  }
-  else {
+  } else {
     message = 'aired on ' + dts;
   }
   return message;
