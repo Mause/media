@@ -1536,10 +1536,10 @@
         },
         "webdriver-manager": {
             "hashes": [
-                "sha256:2ecefc13f50453a7b143b50a7a1cacc8ef8e2de75572a392978566ffbcab95ac"
+                "sha256:89ff57f52b166e47ac157924c4d46926abc44bf510a7b9e905dd2a615e775586"
             ],
             "index": "pypi",
-            "version": "==2.5.1"
+            "version": "==2.5.2"
         },
         "werkzeug": {
             "hashes": [
