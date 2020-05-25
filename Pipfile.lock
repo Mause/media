@@ -714,10 +714,10 @@
         },
         "python-engineio": {
             "hashes": [
-                "sha256:222926adb4bc6e03a8fc8e0ef2a3309f030c1c3f8e0fcc94c9ba214574565f02",
-                "sha256:2481732d93646998f7372ef0ecf003af7817b82720b881db173c3d50b4887916"
+                "sha256:2da5e1e5565e170a17169d1a76eb6a099cc96f0a25a5b1e0f9785f151485daea",
+                "sha256:5423045623f094df67ace05d53737b88e39395ac3b1129798a31be2dbc6011cf"
             ],
-            "version": "==3.12.1"
+            "version": "==3.13.0"
         },
         "python-levenshtein": {
             "hashes": [
@@ -727,10 +727,10 @@
         },
         "python-socketio": {
             "hashes": [
-                "sha256:149b98c33f8c3d09273fb4ebeb83781e4dc9411b56b27d9f058bec1bd1ed74b7",
-                "sha256:81280cbbb7018d8ecdd006bf6025979733d347c0f2612282c1e21f6ed7d3b55b"
+                "sha256:358d8fbbc029c4538ea25bcaa283e47f375be0017fcba829de8a3a731c9df25a",
+                "sha256:d437f797c44b6efba2f201867cf02b8c96b97dff26d4e4281ac08b45817cd522"
             ],
-            "version": "==4.5.1"
+            "version": "==4.6.0"
         },
         "pytz": {
             "hashes": [
@@ -1017,11 +1017,11 @@
         },
         "flake8": {
             "hashes": [
-                "sha256:6c1193b0c3f853ef763969238f6c81e9e63ace9d024518edc020d5f1d6d93195",
-                "sha256:ea6623797bf9a52f4c9577d780da0bb17d65f870213f7b5bcc9fca82540c31d5"
+                "sha256:c69ac1668e434d37a2d2880b3ca9aafd54b3a10a3ac1ab101d22f29e29cf8634",
+                "sha256:ccaa799ef9893cebe69fdfefed76865aeaefbb94cb8545617b2298786a4de9a5"
             ],
             "index": "pypi",
-            "version": "==3.8.1"
+            "version": "==3.8.2"
         },
         "flask": {
             "hashes": [
