@@ -59,7 +59,7 @@ from werkzeug.exceptions import NotFound
 from werkzeug.wrappers import Response as WResponse
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
-from .config import PLEX_PASSWORD, PLEX_USERNAME
+from .config import PLEX_PASSWORD, PLEX_USERNAME, check_config
 from .db import (
     Download,
     EpisodeDetails,
@@ -125,6 +125,9 @@ def cache_busting_url_for(endpoint, **values):
 
 
 def create_app(config):
+
+    check_config()
+
     papp = Flask(__name__, static_folder='../app/build/static')
     papp.register_blueprint(app)
     papp.config.update(
