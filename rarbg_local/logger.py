@@ -1,7 +1,8 @@
 import logging
-import os
 
 import timber
+
+from .config import TIMBERIO_APIKEY, TIMBERIO_SOURCEID
 
 
 class CustomTimberHandler(timber.TimberHandler):
@@ -11,9 +12,7 @@ class CustomTimberHandler(timber.TimberHandler):
 
 def get_timber_handler():
     timber_handler = CustomTimberHandler(
-        api_key=os.environ['TIMBERIO_APIKEY'],
-        source_id=os.environ['TIMBERIO_SOURCEID'],
-        raise_exceptions=True,
+        api_key=TIMBERIO_APIKEY, source_id=TIMBERIO_SOURCEID, raise_exceptions=True,
     )
     timber_handler.flush_thread.start()
     timber_handler.addFilter(

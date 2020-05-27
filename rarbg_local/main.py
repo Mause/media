@@ -59,6 +59,7 @@ from werkzeug.exceptions import NotFound
 from werkzeug.wrappers import Response as WResponse
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
+from .config import PLEX_PASSWORD, PLEX_USERNAME, check_config
 from .db import (
     Download,
     EpisodeDetails,
@@ -107,7 +108,7 @@ schema_to_openapi(api, 'EpisodeInfo', schema(EpisodeInfo))
 
 @lru_cache()
 def get_plex() -> PlexServer:
-    acct = MyPlexAccount(os.environ['PLEX_USERNAME'], os.environ['PLEX_PASSWORD'])
+    acct = MyPlexAccount(PLEX_USERNAME, PLEX_PASSWORD)
     novell = acct.resource('Novell')
     novell.connections = [c for c in novell.connections if not c.local]
     return novell.connect(ssl=True)
@@ -124,6 +125,9 @@ def cache_busting_url_for(endpoint, **values):
 
 
 def create_app(config):
+
+    check_config()
+
     papp = Flask(__name__, static_folder='../app/build/static')
     papp.register_blueprint(app)
     papp.config.update(
