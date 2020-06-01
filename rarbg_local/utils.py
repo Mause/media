@@ -1,6 +1,6 @@
 from functools import lru_cache as _lru_cache
 from functools import wraps
-from typing import Callable, List, Optional, Set, TypeVar
+from typing import Callable, Optional, Set, TypeVar
 
 from apispec.ext.marshmallow import MarshmallowPlugin, resolver
 from flask import request
@@ -89,7 +89,11 @@ def expect(api: Api, name: str, schema: Schema):
     return wrapper
 
 
-def as_resource(methods: List[str] = ['GET']):
+def as_resource(methods: Set[str] = None):
+    '''
+    Methods default to {'GET'}
+    '''
+
     def wrapper(func: Callable):
         return type(
             func.__name__,
@@ -98,7 +102,7 @@ def as_resource(methods: List[str] = ['GET']):
                 method.lower(): wraps(func)(
                     lambda self, *args, **kwargs: func(*args, **kwargs)
                 )
-                for method in methods
+                for method in (methods or {'GET'})
             },
         )
 

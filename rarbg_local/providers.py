@@ -22,19 +22,19 @@ def tv_convert(key):
 
 def movie_convert(key):
     return {
-        None: "XVID",
-        None: "x264",
+        # None: "XVID",
+        # None: "x264",
         '720': "x264/720",
         '720p': "x264/720",
-        None: "XVID/720",
-        None: "BD Remux",
-        None: "Full BD",
+        # None: "XVID/720",
+        # None: "BD Remux",
+        # None: "Full BD",
         '1080p': "x264/1080",
         '1080': "x264/1080",
-        None: "x264/4k",
-        None: "x265/4k",
-        None: "x264/3D",
-        None: "x265/4k/HDR",
+        # None: "x264/4k",
+        # None: "x265/4k",
+        # None: "x264/3D",
+        # None: "x265/4k/HDR",
     }.get(key, key)
 
 

@@ -5,7 +5,6 @@ from responses import RequestsMock
 
 from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
 from ..providers import HorriblesubsProvider
-from . import test_integration
 from .conftest import themoviedb
 
 
