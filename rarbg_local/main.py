@@ -446,7 +446,7 @@ def api_diagnostics():
 
 @api.route('/api/download')
 @api.response(200, 'OK', {})
-@as_resource(['POST'])
+@as_resource({'POST'})
 @expect(api, 'Download', schema(DownloadSchema, many=True))
 def api_download(things) -> str:
     for thing in things:
