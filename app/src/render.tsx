@@ -50,7 +50,7 @@ function openPlex(item: { download: { imdb_id: string } }) {
 export function contextMenuTrigger(id: string) {
   return (
     <ContextMenuTrigger
-      mountButton={0}
+      mouseButton={0}
       id={id}
       attributes={{
         style: { cursor: 'pointer', display: 'inline' },
