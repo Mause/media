@@ -167,8 +167,6 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
 
     futures = executor.map(worker, functions)
 
-    print(len(functions), 'jobs')
-
     while getattr(s, '_value') != len(functions):
         try:
             yield queue.get_nowait()
