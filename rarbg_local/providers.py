@@ -175,6 +175,9 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
         except Empty:
             pass
 
+    while not queue.empty():
+        yield queue.get()
+
     list(futures)  # throw exceptions in this thread
 
 
