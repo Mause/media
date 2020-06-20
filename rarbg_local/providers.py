@@ -176,9 +176,7 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
     list(futures)  # throw exceptions in this thread
 
 
-def search_for_tv(
-    imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
-):
+def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
     return threadable(
         [provider.search_for_tv for provider in PROVIDERS],
         (imdb_id, tmdb_id, season, episode),
