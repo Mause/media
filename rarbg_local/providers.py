@@ -167,14 +167,11 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
 
     futures = executor.map(worker, functions)
 
-    while getattr(s, '_value') != len(functions):
+    while getattr(s, '_value') != len(functions) or not queue.empty():
         try:
             yield queue.get_nowait()
         except Empty:
             pass
-
-    while not queue.empty():
-        yield queue.get()
 
     list(futures)  # throw exceptions in this thread
 
