@@ -152,7 +152,7 @@ PROVIDERS = [HorriblesubsProvider(), RarbgProvider(), KickassProvider()]
 
 
 def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
-    def worker(function: ProviderSource) -> None:
+    def worker(function: ProviderType) -> None:
         try:
             current_thread().setName(function.__name__)
 
