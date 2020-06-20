@@ -162,14 +162,12 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
             s.release()
 
     s = Semaphore(0)
-
+    queue: Queue[T] = Queue()
     executor = ThreadPoolExecutor(len(functions))
 
     futures = executor.map(worker, functions)
 
     print(len(functions), 'jobs')
-
-    queue: Queue[T] = Queue()
 
     while getattr(s, '_value') != len(functions):
         try:
