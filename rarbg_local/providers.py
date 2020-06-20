@@ -1,11 +1,17 @@
 from abc import ABC, abstractmethod
+from concurrent.futures import ThreadPoolExecutor
 from itertools import chain
-from typing import Iterable, Optional
+from queue import Empty, Queue
+from threading import Semaphore, current_thread
+from typing import Callable, Iterable, List, Optional, Tuple, TypeVar
 
 from . import horriblesubs, kickass
 from .models import EpisodeInfo, ITorrent, ProviderSource
 from .rarbg import get_rarbg_iter
 from .tmdb import get_tv
+
+T = TypeVar('T')
+ProviderType = Callable[..., Iterable[T]]
 
 
 def tv_convert(key):
@@ -145,16 +151,47 @@ class HorriblesubsProvider(Provider):
 PROVIDERS = [HorriblesubsProvider(), RarbgProvider(), KickassProvider()]
 
 
-def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
-    return chain.from_iterable(
-        provider.search_for_tv(imdb_id, tmdb_id, season, episode)
-        for provider in PROVIDERS
+def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
+    def worker(function: ProviderSource) -> None:
+        try:
+            current_thread().setName(function.__name__)
+
+            for item in function(*args):
+                queue.put(item)
+        finally:
+            s.release()
+
+    s = Semaphore(0)
+
+    executor = ThreadPoolExecutor(len(functions))
+
+    futures = executor.map(worker, functions)
+
+    print(len(functions), 'jobs')
+
+    queue: Queue[T] = Queue()
+
+    while getattr(s, '_value') != len(functions):
+        try:
+            yield queue.get_nowait()
+        except Empty:
+            pass
+
+    list(futures)  # throw exceptions in this thread
+
+
+def search_for_tv(
+    imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+):
+    return threadable(
+        [provider.search_for_tv for provider in PROVIDERS],
+        (imdb_id, tmdb_id, season, episode),
     )
 
 
 def search_for_movie(imdb_id: str, tmdb_id: int):
-    return chain.from_iterable(
-        provider.search_for_movie(imdb_id, tmdb_id) for provider in PROVIDERS
+    return threadable(
+        [provider.search_for_movie for provider in PROVIDERS], (imdb_id, tmdb_id)
     )
 
 
