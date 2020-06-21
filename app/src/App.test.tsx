@@ -3,6 +3,9 @@ import { render } from '@testing-library/react';
 import App from './App';
 import { appUpdated, CallbackMountPoint } from './serviceWorkerCallback';
 import { act } from 'react-dom/test-utils';
+import { usesMoxios } from './test.utils';
+
+usesMoxios();
 
 test('renders learn react link', () => {
   const el = render(<App />);
