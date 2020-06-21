@@ -19,17 +19,20 @@ test('renders app update notification', async () => {
 
   expect(CallbackMountPoint.onAppUpdate).toBeTruthy();
 
-  expect(window.document.body).toMatchSnapshot();
+  expect(getAlertMessage()).toBeFalsy();
 
   await act(async () => {
     appUpdated();
   });
 
-  expect(
-    window.document.body.getElementsByClassName('MuiAlert-message')[0],
-  ).toHaveTextContent(
+  expect(getAlertMessage()).toHaveTextContent(
     'A new version of the app is available, please refresh to update!',
   );
-
-  expect(window.document.body).toMatchSnapshot();
 });
+
+function getAlertMessage(): Element | null {
+  const messages = window.document.body.getElementsByClassName(
+    'MuiAlert-message',
+  );
+  return messages.length ? messages[0] : null;
+}
