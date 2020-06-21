@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, List
+from unittest.mock import MagicMock
 
 import pytest
 from dataclasses_json import DataClassJsonMixin
@@ -8,6 +9,7 @@ from flask import Flask
 from flask_restx import Api, Swagger, fields
 
 from ..main import normalise
+from ..providers import threadable
 from ..schema import TTuple, schema
 from ..utils import as_resource, schema_to_openapi
 
@@ -94,3 +96,12 @@ def test_ttuple():
             }
         },
     }
+
+
+def test_threadable():
+    m = MagicMock(__name__='Test Thing', return_value=[3])
+
+    results: List[int] = list(threadable([m], (1, 2)))
+
+    assert results == [3]
+    m.assert_called_with(1, 2)
