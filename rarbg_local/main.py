@@ -431,9 +431,19 @@ class DownloadSchema(DataClassJsonMixin):
     episode: Optional[str] = None
 
 
+class RealValidationError(Exception):
+    def __init__(self, messages):
+        self.messages = messages
+
+
 @api.errorhandler(ValidationError)
 def validation(error):
-    return jsonify(error.messages), 422
+    raise RealValidationError(error.messages)
+
+
+@api.errorhandler(RealValidationError)
+def real_validation(error):
+    return {'message': error.messages}, 422
 
 
 @api.route('/diagnostics')
