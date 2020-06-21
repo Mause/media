@@ -432,6 +432,7 @@ snapshots['test_swagger 1'] = {
         'ParseError': {'description': "When a mask can't be parsed"},
         'ValidationError': {},
     },
+    'securityDefinitions': {'basic': {'type': 'basic'}},
     'swagger': '2.0',
     'tags': [{'description': 'Default namespace', 'name': 'default'}],
 }

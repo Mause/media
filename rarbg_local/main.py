@@ -95,7 +95,8 @@ logging.getLogger("pika").setLevel(logging.WARNING)
 app = Blueprint('rarbg_local', __name__)
 
 Api.specs_url = '/swagger.json'
-api = Api(doc='/doc/', validate=True)
+authorizations = {'basic': {'type': 'basic',}}
+api = Api(doc='/doc/', validate=True, authorizations=authorizations)
 
 sockets = SocketIO(cors_allowed_origins='*')
 
