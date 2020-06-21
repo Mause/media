@@ -431,17 +431,17 @@ class DownloadSchema(DataClassJsonMixin):
     episode: Optional[str] = None
 
 
-class RealValidationError(Exception):
+class ValidationErrorWrapper(Exception):
     def __init__(self, messages):
         self.messages = messages
 
 
 @api.errorhandler(ValidationError)
 def validation(error):
-    raise RealValidationError(error.messages)
+    raise ValidationErrorWrapper(error.messages)
 
 
-@api.errorhandler(RealValidationError)
+@api.errorhandler(ValidationErrorWrapper)
 def real_validation(error):
     return {'message': error.messages}, 422
 

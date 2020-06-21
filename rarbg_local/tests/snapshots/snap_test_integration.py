@@ -431,6 +431,7 @@ snapshots['test_swagger 1'] = {
         'MaskError': {'description': 'When any error occurs on mask'},
         'ParseError': {'description': "When a mask can't be parsed"},
         'ValidationError': {},
+        'ValidationErrorWrapper': {},
     },
     'securityDefinitions': {'basic': {'type': 'basic'}},
     'swagger': '2.0',
