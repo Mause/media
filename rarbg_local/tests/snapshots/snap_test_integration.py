@@ -433,6 +433,7 @@ snapshots['test_swagger 1'] = {
         'ValidationError': {},
         'ValidationErrorWrapper': {},
     },
+    'security': [{'basic': []}],
     'securityDefinitions': {'basic': {'type': 'basic'}},
     'swagger': '2.0',
     'tags': [{'description': 'Default namespace', 'name': 'default'}],
