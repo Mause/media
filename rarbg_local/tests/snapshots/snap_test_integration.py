@@ -84,6 +84,19 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
+        'IndexResponse': {
+            'properties': {
+                'movies': {
+                    'items': {'$ref': '#/definitions/MovieDetails'},
+                    'type': 'array',
+                },
+                'series': {
+                    'items': {'$ref': '#/definitions/SeriesDetails'},
+                    'type': 'array',
+                },
+            },
+            'type': 'object',
+        },
         'Monitor': {
             'properties': {
                 'added_by': {'type': 'string'},
@@ -102,6 +115,7 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
+        'MovieDetails': {'properties': {'id': {'type': 'string'}}, 'type': 'object'},
         'SearchResponse': {
             'properties': {
                 'Type': {
@@ -119,6 +133,18 @@ snapshots['test_swagger 1'] = {
             'properties': {
                 'episode_count': {'type': 'integer'},
                 'season_number': {'type': 'integer'},
+            },
+            'type': 'object',
+        },
+        'SeriesDetails': {
+            'properties': {
+                'imdb_id': {'type': 'string'},
+                'seasons': {
+                    'additionalProperties': {'items': {}, 'type': 'array'},
+                    'type': 'object',
+                },
+                'title': {'type': 'string'},
+                'tmdb_id': {'format': 'int32', 'type': 'integer'},
             },
             'type': 'object',
         },
@@ -181,7 +207,21 @@ snapshots['test_swagger 1'] = {
         '/api/index': {
             'get': {
                 'operationId': 'get_api_index',
-                'responses': {'200': {'description': 'Success'}},
+                'parameters': [
+                    {
+                        'description': 'An optional fields mask',
+                        'format': 'mask',
+                        'in': 'header',
+                        'name': 'X-Fields',
+                        'type': 'string',
+                    }
+                ],
+                'responses': {
+                    '200': {
+                        'description': 'Success',
+                        'schema': {'$ref': '#/definitions/IndexResponse'},
+                    }
+                },
                 'tags': ['default'],
             }
         },

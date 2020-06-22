@@ -708,6 +708,21 @@ has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
 
 @api.route('/api/index')
 @as_resource()
+@api.marshal_with(
+    api.model(
+        'IndexResponse',
+        {
+            'series': fields.List(
+                fields.Nested(
+                    schema_to_openapi(api, 'SeriesDetails', schema(SeriesDetails))
+                )
+            ),
+            'movies': fields.List(
+                fields.Nested(api.model('MovieDetails', {'id': fields.String})),
+            ),
+        },
+    )
+)
 @jsonapi
 def api_index():
     return {'series': resolve_series(), 'movies': get_movies()}
