@@ -679,7 +679,8 @@ def resolve_show(show: List[EpisodeDetails]) -> Dict[int, List[EpisodeDetails]]:
     }
 
 
-class SeriesDetails(TypedDict):
+@dataclass
+class SeriesDetails(DataClassJsonMixin):
     seasons: Dict[int, List[EpisodeDetails]]
     title: str
     imdb_id: str
@@ -690,12 +691,12 @@ def resolve_series() -> List[SeriesDetails]:
     episodes = get_episodes()
 
     return [
-        {
-            'title': show[0].show_title,
-            'seasons': resolve_show(show),
-            'imdb_id': show[0].download.imdb_id,
-            'tmdb_id': show[0].download.tmdb_id or resolve_id(imdb_id, 'tv'),
-        }
+        SeriesDetails(
+            title=show[0].show_title,
+            seasons=resolve_show(show),
+            imdb_id=show[0].download.imdb_id,
+            tmdb_id=show[0].download.tmdb_id or resolve_id(imdb_id, 'tv'),
+        )
         for imdb_id, show in groupby(
             episodes, lambda episode: episode.download.tmdb_id
         ).items()
