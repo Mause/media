@@ -10,7 +10,7 @@
     "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
-    "@sentry/browser": "^5.18.0",
+    "@sentry/react": "^5.18.0",
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^10.3.0",
     "@testing-library/user-event": "^12.0.7",
@@ -48,7 +48,11 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
