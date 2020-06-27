@@ -1,12 +1,15 @@
 from base64 import b64encode
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Generator
 from unittest.mock import MagicMock, Mock, patch
 
+from dataclasses_json import DataClassJsonMixin
 from flask import Flask, Request
 from flask.globals import _request_ctx_stack
 from flask.testing import FlaskClient
 from flask_login import FlaskLoginClient, login_user
+from flask_restx import Api, fields, marshal
 from flask_restx.swagger import Swagger
 from pytest import fixture, mark, raises
 from responses import RequestsMock
@@ -14,7 +17,8 @@ from sqlalchemy.exc import IntegrityError
 
 from ..db import Download, Role, User, create_episode, create_movie, db
 from ..main import api, create_app
-from ..utils import cache_clear
+from ..schema import schema
+from ..utils import cache_clear, schema_to_marshal
 from .conftest import themoviedb
 
 HASH_STRING = '00000000000000000'
@@ -211,6 +215,24 @@ def test_index(responses, test_client, flask_app, get_torrent, logged_in, snapsh
     assert res.status == '200 OK'
 
     snapshot.assert_match(res.json)
+
+
+def test_serial(snapshot):
+    @dataclass
+    class Inner(DataClassJsonMixin):
+        id: int
+
+    @dataclass
+    class Return(DataClassJsonMixin):
+        series: Dict[str, Inner]
+
+    data = {'series': {'helo': {'id': 1}}}
+
+    Data = schema_to_marshal(Api(), 'Return', schema(Return))
+
+    res = marshal(data, Data)
+
+    snapshot.assert_match(res)
 
 
 def test_search(responses, test_client):

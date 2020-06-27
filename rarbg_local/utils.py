@@ -4,9 +4,10 @@ from typing import Callable, Optional, Set, TypeVar
 
 from apispec.ext.marshmallow import MarshmallowPlugin, resolver
 from flask import request
-from flask_restx import Api, Resource
+from flask_restx import Api, Resource, fields
 from flask_restx.model import SchemaModel
 from marshmallow import Schema
+from marshmallow import fields as mfields
 from marshmallow_enum import EnumField
 
 T = TypeVar('T')
@@ -60,6 +61,32 @@ def schema_to_openapi(api: Api, name: str, schema: Schema) -> SchemaModel:
     if schema.many:
         s = [s]
     return s
+
+
+def convert(api, field):
+    if isinstance(field, mfields.List):
+        return fields.List(convert(api, field.inner))
+    elif isinstance(field, mfields.Nested):
+        return fields.Nested(convert(api, field.nested))
+    elif isinstance(field, Schema):
+        return api.model(
+            field.__class__.__name__,
+            {name: convert(api, value) for name, value in field.fields.items()},
+        )
+    elif isinstance(field, type) and issubclass(field, mfields.SchemaABC):
+        return convert(api, field())
+    elif isinstance(field, mfields.Integer):
+        return fields.Integer()
+    elif isinstance(field, mfields.String):
+        return fields.String()
+    elif isinstance(field, mfields.Dict):
+        return fields.Nested({'*': fields.Wildcard(convert(api, field.value_field))})
+    else:
+        raise Exception(field)
+
+
+def schema_to_marshal(api: Api, name: str, schema: Schema):
+    return convert(api, schema)
 
 
 def unwrap(f):

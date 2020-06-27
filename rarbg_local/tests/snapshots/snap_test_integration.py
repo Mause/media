@@ -6,6 +6,8 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
+snapshots['test_serial 1'] = {'series': {'helo': {'id': 1}}}
+
 snapshots['test_swagger 1'] = {
     'basePath': '/',
     'consumes': ['application/json'],
