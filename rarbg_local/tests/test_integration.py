@@ -12,7 +12,7 @@ from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
-from ..db import Download, Role, User, create_episode, db
+from ..db import Download, Role, User, create_episode, create_movie, db
 from ..main import api, create_app
 from ..utils import cache_clear
 from .conftest import themoviedb
@@ -186,7 +186,7 @@ def shallow(d: Dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 
-def test_index(responses, test_client, flask_app, get_torrent, logged_in):
+def test_index(responses, test_client, flask_app, get_torrent, logged_in, snapshot):
     create_episode(
         transmission_id=HASH_STRING,
         imdb_id='tt000000',
@@ -197,51 +197,20 @@ def test_index(responses, test_client, flask_app, get_torrent, logged_in):
         show_title='Programming',
         timestamp=datetime(2020, 4, 21),
     )
+    create_movie(
+        transmission_id='000000000000000000',
+        imdb_id='tt0000001',
+        tmdb_id=2,
+        title='Other world',
+        timestamp=datetime(2020, 4, 20),
+    )
     db.session.commit()
 
     res = test_client.get('/api/index')
 
     assert res.status == '200 OK'
 
-    js = res.json
-
-    assert set(js.keys()) == {'movies', 'series'}
-    assert js['movies'] == []
-    assert len(js['series']) == 1
-
-    series = js['series'][0]
-
-    assert shallow(series) == {
-        'imdb_id': 'tt000000',
-        'title': 'Programming',
-        'tmdb_id': 1,
-    }
-    (episode,) = series['seasons']['1']
-    assert shallow(episode) == {
-        'show_title': 'Programming',
-        'episode': 1,
-        'season': 1,
-        'id': 1,
-    }
-    assert shallow(episode['download']) == {
-        'tmdb_id': 1,
-        'transmission_id': HASH_STRING,
-        'added_by_id': 1,
-        'imdb_id': 'tt000000',
-        'movie_id': None,
-        'timestamp': 'Tue, 21 Apr 2020 00:00:00 GMT',
-        'episode_id': 1,
-        'id': 1,
-        'type': 'episode',
-        'title': 'Hello world',
-    }
-    assert shallow(episode['download']['added_by']) == {
-        'active': True,
-        'first_name': '',
-        'id': 1,
-        'last_name': '',
-        'username': 'python',
-    }
+    snapshot.assert_match(res.json)
 
 
 def test_search(responses, test_client):

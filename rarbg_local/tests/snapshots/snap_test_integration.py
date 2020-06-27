@@ -478,3 +478,40 @@ snapshots['test_swagger 1'] = {
     'swagger': '2.0',
     'tags': [{'description': 'Default namespace', 'name': 'default'}],
 }
+
+snapshots['test_index 1'] = {
+    'movies': [
+        {
+            'download': {
+                'added_by': {
+                    'active': True,
+                    'first_name': '',
+                    'id': 1,
+                    'last_name': '',
+                    'username': 'python',
+                },
+                'added_by_id': 1,
+                'episode_id': None,
+                'id': 2,
+                'imdb_id': 'tt0000001',
+                'movie_id': 1,
+                'timestamp': 'Mon, 20 Apr 2020 00:00:00 GMT',
+                'title': 'Other world',
+                'tmdb_id': 2,
+                'transmission_id': '000000000000000000',
+                'type': 'movie',
+            },
+            'id': 1,
+        }
+    ],
+    'series': [
+        {
+            'imdb_id': 'tt000000',
+            'seasons': {
+                '1': [{'episode': 1, 'id': 1, 'season': 1, 'show_title': 'Programming'}]
+            },
+            'title': 'Programming',
+            'tmdb_id': 1,
+        }
+    ],
+}

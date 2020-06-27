@@ -179,7 +179,12 @@ def create_download(
 
 
 def create_movie(
-    *, transmission_id: str, imdb_id: str, title: str, tmdb_id: int
+    *,
+    transmission_id: str,
+    imdb_id: str,
+    title: str,
+    tmdb_id: int,
+    timestamp: datetime = None,
 ) -> None:
     md = MovieDetails()
     db.session.add(md)
@@ -191,6 +196,7 @@ def create_movie(
             type='movie',
             tmdb_id=tmdb_id,
             details=md,
+            timestamp=timestamp,
         )
     )
 
