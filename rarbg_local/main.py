@@ -46,6 +46,8 @@ from flask_restx import Api, Resource, fields
 from flask_restx.reqparse import RequestParser
 from flask_socketio import SocketIO, send
 from flask_user import UserManager, current_user, login_required, roles_required
+from marshmallow import Schema
+from marshmallow import fields as mfields
 from marshmallow.exceptions import ValidationError
 from marshmallow.fields import String
 from marshmallow.validate import Regexp as MarshRegexp
@@ -73,7 +75,7 @@ from .db import (
     get_episodes,
     get_movies,
 )
-from .models import EpisodeInfo
+from .models import EpisodeInfo, IndexResponse, SeriesDetails
 from .providers import search_for_movie, search_for_tv
 from .schema import TTuple, schema
 from .tmdb import (
@@ -87,7 +89,14 @@ from .tmdb import (
     search_themoviedb,
 )
 from .transmission_proxy import get_torrent, torrent_add, transmission
-from .utils import as_resource, expect, non_null, precondition, schema_to_openapi
+from .utils import (
+    as_resource,
+    expect,
+    non_null,
+    precondition,
+    schema_to_marshal,
+    schema_to_openapi,
+)
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -669,34 +678,33 @@ def resolve_season(episodes):
     ]
 
 
-def resolve_show(show: List[EpisodeDetails]) -> Dict[int, List[EpisodeDetails]]:
+def resolve_show(show: List[EpisodeDetails]) -> Dict[str, List[EpisodeDetails]]:
     seasons = groupby(show, lambda episode: episode.season)
     return {
-        number: resolve_season(
+        str(number): resolve_season(
             sorted(season, key=lambda episode: episode.episode or -1)
         )
         for number, season in seasons.items()
     }
 
 
-@dataclass
-class SeriesDetails(DataClassJsonMixin):
-    seasons: Dict[int, List[EpisodeDetails]]
-    title: str
-    imdb_id: str
-    tmdb_id: int
+def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
+    ep = show[0]
+    d = ep.download
+
+    return SeriesDetails(
+        title=ep.show_title,
+        seasons=resolve_show(show),
+        imdb_id=d.imdb_id,
+        tmdb_id=d.tmdb_id or resolve_id(imdb_id, 'tv'),
+    )
 
 
 def resolve_series() -> List[SeriesDetails]:
     episodes = get_episodes()
 
     return [
-        SeriesDetails(
-            title=show[0].show_title,
-            seasons=resolve_show(show),
-            imdb_id=show[0].download.imdb_id,
-            tmdb_id=show[0].download.tmdb_id or resolve_id(imdb_id, 'tv'),
-        )
+        make_series_details(imdb_id, show)
         for imdb_id, show in groupby(
             episodes, lambda episode: episode.download.tmdb_id
         ).items()
@@ -708,24 +716,9 @@ has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
 
 @api.route('/api/index')
 @as_resource()
-@api.marshal_with(
-    api.model(
-        'IndexResponse',
-        {
-            'series': fields.List(
-                fields.Nested(
-                    schema_to_openapi(api, 'SeriesDetails', schema(SeriesDetails))
-                )
-            ),
-            'movies': fields.List(
-                fields.Nested(api.model('MovieDetails', {'id': fields.String})),
-            ),
-        },
-    )
-)
-@jsonapi
+@api.marshal_with(schema_to_marshal(api, 'IndexResponse', schema(IndexResponse)))
 def api_index():
-    return {'series': resolve_series(), 'movies': get_movies()}
+    return IndexResponse(series=resolve_series(), movies=get_movies())
 
 
 StatsResponse = api.model(

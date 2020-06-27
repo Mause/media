@@ -2,7 +2,7 @@ from functools import lru_cache as _lru_cache
 from functools import wraps
 from typing import Callable, Optional, Set, TypeVar
 
-from apispec.ext.marshmallow import MarshmallowPlugin, resolver
+from apispec.ext.marshmallow import MarshmallowPlugin, make_schema_key, resolver
 from flask import request
 from flask_restx import Api, Resource, fields
 from flask_restx.model import SchemaModel
@@ -50,43 +50,67 @@ def enum_field(field, ret):
     return {}
 
 
+class Spec:
+    api: Api
+
+    def __init__(self):
+        self.components = self
+        self._schemas = self
+
+    def schema(self, name, schema):
+        self.api.schema_model(name, schema)
+        mp.converter.refs[make_schema_key(schema)] = name
+
+    def __contains__(self, name):
+        return name in self.api.models
+
+
+spec = Spec()
+
 mp = MarshmallowPlugin()
-mp.converter = mp.Converter("3.0.2", resolver, None)
+mp.converter = mp.Converter("3.0.2", resolver, spec)
 mp.converter.field_mapping[EnumField] = ('string', None)
 mp.converter.attribute_functions.append(enum_field)
 
 
 def schema_to_openapi(api: Api, name: str, schema: Schema) -> SchemaModel:
+    spec.api = api
     s = api.schema_model(name, mp.schema_helper(name, None, schema=schema))
     if schema.many:
         s = [s]
     return s
 
 
-def convert(api, field):
+def convert(api, name, field):
     if isinstance(field, mfields.List):
-        return fields.List(convert(api, field.inner))
+        return fields.List(convert(api, name, field.inner))
     elif isinstance(field, mfields.Nested):
-        return fields.Nested(convert(api, field.nested))
+        return fields.Nested(convert(api, name, field.nested))
     elif isinstance(field, Schema):
         return api.model(
             field.__class__.__name__,
-            {name: convert(api, value) for name, value in field.fields.items()},
+            {name: convert(api, name, value) for name, value in field.fields.items()},
         )
     elif isinstance(field, type) and issubclass(field, mfields.SchemaABC):
-        return convert(api, field())
+        return convert(api, name, field())
     elif isinstance(field, mfields.Integer):
         return fields.Integer()
     elif isinstance(field, mfields.String):
         return fields.String()
     elif isinstance(field, mfields.Dict):
-        return fields.Nested({'*': fields.Wildcard(convert(api, field.value_field))})
+        return fields.Nested(
+            api.model(
+                name, {'*': fields.Wildcard(convert(api, name, field.value_field))}
+            )
+        )
+    elif isinstance(field, mfields.DateTime):
+        return fields.String()
     else:
         raise Exception(field)
 
 
 def schema_to_marshal(api: Api, name: str, schema: Schema):
-    return convert(api, schema)
+    return convert(api, name, schema)
 
 
 def unwrap(f):

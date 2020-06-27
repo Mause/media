@@ -6,6 +6,51 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
+snapshots['test_index 1'] = {
+    'movies': [
+        {
+            'download': {
+                'added_by': {'username': 'python'},
+                'id': 2,
+                'imdb_id': 'tt0000001',
+                'timestamp': '2020-04-20 00:00:00',
+                'title': 'Other world',
+                'tmdb_id': 2,
+                'transmission_id': '000000000000000000',
+                'type': 'movie',
+            },
+            'id': 1,
+        }
+    ],
+    'series': [
+        {
+            'imdb_id': 'tt000000',
+            'seasons': {
+                '1': [
+                    {
+                        'download': {
+                            'added_by': {'username': 'python'},
+                            'id': 1,
+                            'imdb_id': 'tt000000',
+                            'timestamp': '2020-04-21 00:00:00',
+                            'title': 'Hello world',
+                            'tmdb_id': 1,
+                            'transmission_id': '00000000000000000',
+                            'type': 'episode',
+                        },
+                        'episode': 1,
+                        'id': 1,
+                        'season': 1,
+                        'show_title': 'Programming',
+                    }
+                ]
+            },
+            'title': 'Programming',
+            'tmdb_id': 1,
+        }
+    ],
+}
+
 snapshots['test_serial 1'] = {'series': {'helo': {'id': 1}}}
 
 snapshots['test_swagger 1'] = {
@@ -55,12 +100,35 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
+        'DownloadSchema': {
+            'properties': {
+                'added_by': {'$ref': '#/definitions/UserSchema'},
+                'id': {'type': 'integer'},
+                'imdb_id': {'type': 'string'},
+                'timestamp': {'type': 'string'},
+                'title': {'type': 'string'},
+                'tmdb_id': {'type': 'integer'},
+                'transmission_id': {'type': 'string'},
+                'type': {'type': 'string'},
+            },
+            'type': 'object',
+        },
         'Episode': {
             'properties': {
                 'air_date': {'format': 'date', 'type': 'string'},
                 'episode_number': {'type': 'integer'},
                 'id': {'type': 'integer'},
                 'name': {'type': 'string'},
+            },
+            'type': 'object',
+        },
+        'EpisodeDetailsSchema': {
+            'properties': {
+                'download': {'$ref': '#/definitions/DownloadSchema'},
+                'episode': {'type': 'integer'},
+                'id': {'type': 'integer'},
+                'season': {'type': 'integer'},
+                'show_title': {'type': 'string'},
             },
             'type': 'object',
         },
@@ -86,14 +154,14 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
-        'IndexResponse': {
+        'IndexResponseSchema': {
             'properties': {
                 'movies': {
-                    'items': {'$ref': '#/definitions/MovieDetails'},
+                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
                     'type': 'array',
                 },
                 'series': {
-                    'items': {'$ref': '#/definitions/SeriesDetails'},
+                    'items': {'$ref': '#/definitions/SeriesdetailsSchema'},
                     'type': 'array',
                 },
             },
@@ -117,7 +185,13 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
-        'MovieDetails': {'properties': {'id': {'type': 'string'}}, 'type': 'object'},
+        'MovieDetailsSchema': {
+            'properties': {
+                'download': {'$ref': '#/definitions/DownloadSchema'},
+                'id': {'type': 'integer'},
+            },
+            'type': 'object',
+        },
         'SearchResponse': {
             'properties': {
                 'Type': {
@@ -138,15 +212,12 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
-        'SeriesDetails': {
+        'SeriesdetailsSchema': {
             'properties': {
                 'imdb_id': {'type': 'string'},
-                'seasons': {
-                    'additionalProperties': {'items': {}, 'type': 'array'},
-                    'type': 'object',
-                },
+                'seasons': {'$ref': '#/definitions/seasons'},
                 'title': {'type': 'string'},
-                'tmdb_id': {'format': 'int32', 'type': 'integer'},
+                'tmdb_id': {'type': 'integer'},
             },
             'type': 'object',
         },
@@ -181,6 +252,21 @@ snapshots['test_swagger 1'] = {
                 'episodes': {
                     'items': {'$ref': '#/definitions/Episode'},
                     'type': 'array',
+                }
+            },
+            'type': 'object',
+        },
+        'UserSchema': {
+            'properties': {'username': {'type': 'string'}},
+            'type': 'object',
+        },
+        'seasons': {
+            'properties': {
+                '*': {
+                    'additionalProperties': {
+                        '$ref': '#/definitions/EpisodeDetailsSchema'
+                    },
+                    'type': 'object',
                 }
             },
             'type': 'object',
@@ -221,7 +307,7 @@ snapshots['test_swagger 1'] = {
                 'responses': {
                     '200': {
                         'description': 'Success',
-                        'schema': {'$ref': '#/definitions/IndexResponse'},
+                        'schema': {'$ref': '#/definitions/IndexResponseSchema'},
                     }
                 },
                 'tags': ['default'],
@@ -479,41 +565,4 @@ snapshots['test_swagger 1'] = {
     'securityDefinitions': {'basic': {'type': 'basic'}},
     'swagger': '2.0',
     'tags': [{'description': 'Default namespace', 'name': 'default'}],
-}
-
-snapshots['test_index 1'] = {
-    'movies': [
-        {
-            'download': {
-                'added_by': {
-                    'active': True,
-                    'first_name': '',
-                    'id': 1,
-                    'last_name': '',
-                    'username': 'python',
-                },
-                'added_by_id': 1,
-                'episode_id': None,
-                'id': 2,
-                'imdb_id': 'tt0000001',
-                'movie_id': 1,
-                'timestamp': 'Mon, 20 Apr 2020 00:00:00 GMT',
-                'title': 'Other world',
-                'tmdb_id': 2,
-                'transmission_id': '000000000000000000',
-                'type': 'movie',
-            },
-            'id': 1,
-        }
-    ],
-    'series': [
-        {
-            'imdb_id': 'tt000000',
-            'seasons': {
-                '1': [{'episode': 1, 'id': 1, 'season': 1, 'show_title': 'Programming'}]
-            },
-            'title': 'Programming',
-            'tmdb_id': 1,
-        }
-    ],
 }
