@@ -422,7 +422,7 @@ def download_all_episodes(tmdb_id: str, season: str) -> Dict:
 
 
 @dataclass
-class DownloadSchema(DataClassJsonMixin):
+class DownloadPostSchema(DataClassJsonMixin):
     tmdb_id: int
     magnet: str = field(
         metadata=config(mm_field=String(validate=MarshRegexp(r'^magnet:')))
@@ -458,7 +458,7 @@ def api_diagnostics():
 @api.route('/api/download')
 @api.response(200, 'OK', {})
 @as_resource({'POST'})
-@expect(api, 'Download', schema(DownloadSchema, many=True))
+@expect(api, 'Download', schema(DownloadPostSchema, many=True))
 def api_download(things) -> str:
     for thing in things:
         is_tv = thing.season is not None
