@@ -45,6 +45,8 @@ def movie_convert(key):
 
 
 class Provider(ABC):
+    name: str
+
     @abstractmethod
     def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
@@ -57,6 +59,8 @@ class Provider(ABC):
 
 
 class RarbgProvider(Provider):
+    name = 'rarbg'
+
     def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
@@ -99,6 +103,8 @@ class RarbgProvider(Provider):
 
 
 class KickassProvider(Provider):
+    name = 'kickass'
+
     def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
@@ -128,6 +134,8 @@ class KickassProvider(Provider):
 
 
 class HorriblesubsProvider(Provider):
+    name = 'horriblesubs'
+
     def search_for_tv(
         self, imdb_id: Optional[str], tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
