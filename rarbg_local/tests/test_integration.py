@@ -1,3 +1,4 @@
+import json
 from base64 import b64encode
 from dataclasses import dataclass
 from datetime import datetime
@@ -19,7 +20,7 @@ from ..db import Download, Role, User, create_episode, create_movie, db
 from ..main import api, create_app
 from ..schema import schema
 from ..utils import cache_clear, schema_to_marshal
-from .conftest import themoviedb
+from .conftest import add_json, themoviedb
 
 HASH_STRING = '00000000000000000'
 
@@ -376,3 +377,61 @@ def test_swagger(flask_app, snapshot):
     with flask_app.test_request_context():
         swagger = Swagger(api).as_dict()
         snapshot.assert_match(swagger)
+
+
+def test_stream(test_client, responses):
+    themoviedb(responses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
+    root = 'https://torrentapi.org/pubapi_v2.php?mode=search&ranked=0&limit=100&format=json_extended&app_id=Sonarr'
+    add_json(responses, 'GET', root + '&get_token=get_token', {'token': 'aaaaaaa'})
+
+    for i in ['41', '49', '18']:
+        add_json(
+            responses,
+            'GET',
+            f'{root}&token=aaaaaaa&search_imdb=tt00000&search_string=S01E01&category={i}',
+            {
+                'torrent_results': [
+                    {'seeders': i, 'title': i, 'download': '', 'category': ''}
+                ]
+            },
+        )
+
+    r = test_client.get('/stream/series/1?season=1&episode=1')
+
+    assert r.status == '200 OK', r.get_json()
+
+    data = r.get_data(True).split('\n\n')
+    assert data
+    assert data.pop(-1) == ''
+    assert data.pop(-1) == 'data:'
+
+    datum = [json.loads(line[len('data: ') :]) for line in data]
+
+    datum = sorted(datum, key=lambda item: item['seeders'])
+
+    assert datum == [
+        {
+            'source': 'RARBG',
+            'seeders': '18',
+            'title': '18',
+            'download': '',
+            'category': '',
+            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+        },
+        {
+            'source': 'RARBG',
+            'seeders': '41',
+            'title': '41',
+            'download': '',
+            'category': '',
+            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+        },
+        {
+            'source': 'RARBG',
+            'seeders': '49',
+            'title': '49',
+            'download': '',
+            'category': '',
+            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+        },
+    ]
