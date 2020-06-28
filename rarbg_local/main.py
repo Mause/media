@@ -76,7 +76,7 @@ from .db import (
     get_movies,
 )
 from .models import EpisodeInfo, IndexResponse, SeriesDetails
-from .providers import search_for_movie, search_for_tv
+from .providers import PROVIDERS, search_for_movie, search_for_tv
 from .schema import TTuple, schema
 from .tmdb import (
     get_json,
@@ -279,10 +279,13 @@ def query_params(validator):
 @api.route('/stream/<type>/<tmdb_id>')
 @as_resource()
 @query_params(
-    RequestParser().add_argument('season', type=int).add_argument('episode', type=int)
+    RequestParser()
+    .add_argument('season', type=int)
+    .add_argument('episode', type=int)
+    .add_argument('source', choices=[p.name for p in PROVIDERS])
 )
 @eventstream
-def stream(type: str, tmdb_id: str, season=None, episode=None):
+def stream(type: str, tmdb_id: str, source, season=None, episode=None):
     return _stream(type, tmdb_id, season, episode)
 
 

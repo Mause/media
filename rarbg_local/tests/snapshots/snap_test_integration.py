@@ -550,6 +550,13 @@ snapshots['test_swagger 1'] = {
                 'parameters': [
                     {'in': 'query', 'name': 'season', 'type': 'integer'},
                     {'in': 'query', 'name': 'episode', 'type': 'integer'},
+                    {
+                        'collectionFormat': 'multi',
+                        'enum': ['horriblesubs', 'rarbg', 'kickass'],
+                        'in': 'query',
+                        'name': 'source',
+                        'type': 'string',
+                    },
                 ],
                 'responses': {'200': {'description': 'Success'}},
                 'tags': ['default'],
