@@ -202,6 +202,12 @@ snapshots['test_swagger 1'] = {
                 'Year': {'type': 'integer'},
                 'imdbID': {'type': 'integer'},
                 'title': {'type': 'string'},
+                'type': {
+                    'enum': ('movie', 'episode'),
+                    'example': 'movie',
+                    'type': 'string',
+                },
+                'year': {'type': 'integer'},
             },
             'type': 'object',
         },

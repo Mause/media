@@ -832,7 +832,9 @@ SearchResponse = api.model(
     {
         'title': fields.String,
         "Type": fields.String(enum=('movie', 'episode')),
+        "type": fields.String(attribute='Type', enum=('movie', 'episode')),
         "Year": fields.Integer,
+        "year": fields.Integer(attribute='Year'),
         "imdbID": fields.Integer,
     },
 )

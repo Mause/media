@@ -256,7 +256,14 @@ def test_search(responses, test_client):
     res = test_client.get('/api/search?query=chernobyl')
     assert res.status == '200 OK'
     assert res.json == [
-        {'Type': 'series', 'imdbID': 10000, 'title': 'Chernobyl', 'Year': 2019}
+        {
+            'Type': 'series',
+            'imdbID': 10000,
+            'title': 'Chernobyl',
+            'Year': 2019,
+            'year': 2019,
+            'type': 'series',
+        }
     ]
 
 
