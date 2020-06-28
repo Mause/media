@@ -76,7 +76,7 @@ from .db import (
     get_movies,
 )
 from .models import EpisodeInfo, IndexResponse, SeriesDetails
-from .providers import PROVIDERS, search_for_movie, search_for_tv
+from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .schema import TTuple, schema
 from .tmdb import (
     get_json,
@@ -285,8 +285,24 @@ def query_params(validator):
     .add_argument('source', choices=[p.name for p in PROVIDERS])
 )
 @eventstream
-def stream(type: str, tmdb_id: str, source, season=None, episode=None):
-    return _stream(type, tmdb_id, season, episode)
+def stream(type: str, tmdb_id: str, source=None, season=None, episode=None):
+    if source:
+        provider = next(
+            (provider for provider in PROVIDERS if provider.name == source), None,
+        )
+        if not provider:
+            return api.abort(422)
+    else:
+        provider = FakeProvider()
+
+    if type == 'series':
+        items = provider.search_for_tv(
+            get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode
+        )
+    else:
+        items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
+
+    return (asdict(item) for item in items)
 
 
 def _stream(type: str, tmdb_id: str, season=None, episode=None):
