@@ -23,6 +23,10 @@ jobs:
         if: endsWith(matrix.python-version, '-dev')
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install dev dependencies
+        if: endsWith(matrix.python-version, '-dev')
+        run: |
+          apt install libxml2-dev libxslt-dev
       - name: Cache pipenv virtualenv
         id: cache-pipenv
         uses: actions/cache@v2
