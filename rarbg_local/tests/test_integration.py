@@ -403,7 +403,7 @@ def test_stream(test_client, responses):
             },
         )
 
-    r = test_client.get('/stream/series/1?season=1&episode=1')
+    r = test_client.get('/stream/series/1?season=1&episode=1&source=rarbg')
 
     assert r.status == '200 OK', r.get_json()
 
