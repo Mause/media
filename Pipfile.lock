@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ee0994ebf3191fc5a58f32239c759a5cfb01de583079fd74eab848ca49bcb551"
+            "sha256": "33f62545fd1d3df83f8fe034c712f608601390fea1c36f17622406a74bc17bf5"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -55,32 +55,6 @@
             ],
             "index": "pypi",
             "version": "==3.3.1"
-        },
-        "appdynamics": {
-            "hashes": [
-                "sha256:3dfec6ccb25445fa5b050d3691c9d56bac4262aa5b971690144f3343760ddc83"
-            ],
-            "index": "pypi",
-            "version": "==20.3.0"
-        },
-        "appdynamics-bindeps-linux-x64": {
-            "hashes": [
-                "sha256:04ef7dd006c23fd5bb5b83afbe45bf409283da564b2b45d6ec675a1aeb5b293c",
-                "sha256:160435c121f1234bd21c6602996354db84a371cb00e56f45d2a735aa415d279a",
-                "sha256:8c8676ef49c5c48d1748d3670dbc6775dc9c3876d863fdf86fc66bc3c72ed9a1",
-                "sha256:95ef0a5d8f2b3ba5788f2792feabb8f9824e9d2641670494986de22098be355b",
-                "sha256:b623c42dc81238a9c6119632755fe5bcdf4ea07cbf20c3058cbcd8f9664e5601",
-                "sha256:f06bd26874decdbe7c6f3625812a3dafe2a2410484d0aa0e4730627bf88c64d9"
-            ],
-            "index": "pypi",
-            "version": "==11.0"
-        },
-        "appdynamics-proxysupport-linux-x64": {
-            "hashes": [
-                "sha256:d7499c1b58a61a58e5bb8d2ad5df0e0bc13ec517af2c46b3d223f4e327e5b9d8"
-            ],
-            "index": "pypi",
-            "version": "==1.8.0.212.1"
         },
         "async-timeout": {
             "hashes": [
