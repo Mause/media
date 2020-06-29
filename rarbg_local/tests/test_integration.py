@@ -367,10 +367,30 @@ def test_torrents_error(get_torrent, test_client):
 @patch('rarbg_local.main.get_torrent')
 def test_torrents(get_torrent, test_client):
     get_torrent.return_value = {
-        'arguments': {'torrents': [{'hashString': '00000', 'filename': 'movie.mov'}]}
+        'arguments': {
+            'torrents': [
+                {
+                    'hashString': '00000',
+                    'files': [
+                        {'name': 'movie.mov', 'bytesCompleted': 30, 'length': 30}
+                    ],
+                    'id': 360,
+                    'eta': -1,
+                    'percentDone': 1,
+                }
+            ]
+        }
     }
     torrents = test_client.get('/api/torrents')
-    assert torrents.json == {'00000': {'hashString': '00000', 'filename': 'movie.mov'}}
+    assert torrents.json == {
+        '00000': {
+            'hashString': '00000',
+            'files': [{'name': 'movie.mov', 'bytesCompleted': 30, 'length': 30}],
+            'eta': -1,
+            'id': 360,
+            'percentDone': 1.0,
+        }
+    }
 
 
 @mark.skip
