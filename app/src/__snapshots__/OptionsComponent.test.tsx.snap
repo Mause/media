@@ -209,7 +209,7 @@ exports[`OptionsComponent 2`] = `
             class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
             href="/download"
           >
-            title
+            title 0
           </a>
            
           <small>
@@ -235,7 +235,49 @@ exports[`OptionsComponent 2`] = `
                 class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
                 href="/download"
               >
-                title
+                title 0
+              </a>
+               
+              <small>
+                5
+              </small>
+               
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong
+                title="HORRIBLESUBS"
+              >
+                H
+              </strong>
+               
+              <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                href="/download"
+              >
+                title 1
+              </a>
+               
+              <small>
+                5
+              </small>
+               
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong
+                title="KICKASS"
+              >
+                K
+              </strong>
+               
+              <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                href="/download"
+              >
+                title 2
               </a>
                
               <small>
@@ -350,7 +392,7 @@ exports[`OptionsComponent 3`] = `
             class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
             href="/download"
           >
-            title
+            title 0
           </a>
            
           <small>
@@ -376,7 +418,49 @@ exports[`OptionsComponent 3`] = `
                 class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
                 href="/download"
               >
-                title
+                title 0
+              </a>
+               
+              <small>
+                5
+              </small>
+               
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong
+                title="HORRIBLESUBS"
+              >
+                H
+              </strong>
+               
+              <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                href="/download"
+              >
+                title 1
+              </a>
+               
+              <small>
+                5
+              </small>
+               
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong
+                title="KICKASS"
+              >
+                K
+              </strong>
+               
+              <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                href="/download"
+              >
+                title 2
               </a>
                
               <small>

@@ -102,7 +102,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     (season ? 'tv' : 'movie') + '/' + tmdb_id,
   );
   const { data: torrents } = useSWR<Torrents>('torrents');
-  const { items: results, loading, error } = useSubscribe<ITorrent>(
+  const { items: results, loading, errors } = useSubscribes<ITorrent>(
     `/api/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
   );
   const dt = (result: ITorrent) => (
@@ -161,7 +161,9 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       <div style={{ textAlign: 'center' }}>
         <Loading loading={loading} large={true} />
       </div>
-      {error && <DisplayError error={error} />}
+      {errors.map((error) => (
+        <DisplayError key={error.toString()} error={error} />
+      ))}
       {bits.length || loading ? (
         <div>
           <p>Auto selection: {auto ? dt(auto) : 'None'}</p>
@@ -198,7 +200,9 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   );
 }
 
-function useSubscribe<T>(url: string) {
+function useSubscribe<T>(
+  url: string,
+): { items: T[]; loading: boolean; error?: Error } {
   const [subscription, setSubscription] = useState<{
     items: T[];
     loading: boolean;
@@ -222,6 +226,26 @@ function useSubscribe<T>(url: string) {
   }, [url]);
 
   return subscription;
+}
+
+function useSubscribes<T>(
+  url: string,
+): { items: T[]; loading: boolean; errors: Error[] } {
+  const providers = [
+    useSubscribe<T>(url + '&source=rarbg'),
+    useSubscribe<T>(url + '&source=horriblesubs'),
+    useSubscribe<T>(url + '&source=kickass'),
+  ];
+
+  return {
+    items: providers
+      .map((t) => t.items || [])
+      .reduce((a, b) => a.concat(b), []),
+    loading: providers.some((t) => t.loading),
+    errors: providers
+      .map((t) => t.error)
+      .filter((e) => e !== undefined) as Error[],
+  };
 }
 
 export { OptionsComponent };

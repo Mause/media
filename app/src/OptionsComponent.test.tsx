@@ -42,15 +42,28 @@ test('OptionsComponent', async () => {
       seeders: 5,
       download: 'magnet:...',
       category: 'Movies/x264/1080',
+      episode_info: { seasonnum: '1', epnum: '1' },
     };
 
-    const cb = sources[0]!.ls!;
+    expect(sources).toHaveLength(3);
 
-    cb({ data: JSON.stringify(torrent) });
+    let i = 0;
+    const source_names = ['RARBG', 'HORRIBLESUBS', 'KICKASS'];
+    for (const source of sources) {
+      source!.ls!({
+        data: JSON.stringify({
+          ...torrent,
+          source: source_names[i],
+          title: 'title ' + i++,
+        }),
+      });
+    }
 
     expect(el.container).toMatchSnapshot();
 
-    cb({ data: '' });
+    for (const source of sources) {
+      source!.ls!({ data: '' });
+    }
 
     expect(el.container).toMatchSnapshot();
   });
