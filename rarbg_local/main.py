@@ -850,9 +850,34 @@ def api_tv_season(tmdb_id: str, season: str):
     return get_tv_episodes(tmdb_id, season)
 
 
+InnerTorrent = api.model(
+    'InnerTorrent',
+    {
+        'eta': fields.Integer,
+        'hashString': fields.String,
+        'id': fields.Integer,
+        'percentDone': fields.Float,
+        'files': fields.List(
+            fields.Nested(
+                api.model(
+                    'InnerTorrentFile',
+                    {
+                        'bytesCompleted': fields.Integer,
+                        'length': fields.Integer,
+                        'name': fields.String,
+                    },
+                )
+            )
+        ),
+    },
+)
+
+
 @api.route('/torrents')
 @as_resource()
-@jsonapi
+@api.marshal_with(
+    api.model('TorrentsResponse', {'*': fields.Wildcard(fields.Nested(InnerTorrent))})
+)
 def api_torrents():
     return get_keyed_torrents()
 

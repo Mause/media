@@ -167,6 +167,27 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
+        'InnerTorrent': {
+            'properties': {
+                'eta': {'type': 'integer'},
+                'files': {
+                    'items': {'$ref': '#/definitions/InnerTorrentFile'},
+                    'type': 'array',
+                },
+                'hashString': {'type': 'string'},
+                'id': {'type': 'integer'},
+                'percentDone': {'type': 'number'},
+            },
+            'type': 'object',
+        },
+        'InnerTorrentFile': {
+            'properties': {
+                'bytesCompleted': {'type': 'integer'},
+                'length': {'type': 'integer'},
+                'name': {'type': 'string'},
+            },
+            'type': 'object',
+        },
         'Monitor': {
             'properties': {
                 'added_by': {'type': 'string'},
@@ -238,6 +259,15 @@ snapshots['test_swagger 1'] = {
             'properties': {
                 'user': {'type': 'string'},
                 'values': {'$ref': '#/definitions/Stats'},
+            },
+            'type': 'object',
+        },
+        'TorrentsResponse': {
+            'properties': {
+                '*': {
+                    'additionalProperties': {'$ref': '#/definitions/InnerTorrent'},
+                    'type': 'object',
+                }
             },
             'type': 'object',
         },
@@ -510,7 +540,21 @@ snapshots['test_swagger 1'] = {
         '/torrents': {
             'get': {
                 'operationId': 'get_api_torrents',
-                'responses': {'200': {'description': 'Success'}},
+                'parameters': [
+                    {
+                        'description': 'An optional fields mask',
+                        'format': 'mask',
+                        'in': 'header',
+                        'name': 'X-Fields',
+                        'type': 'string',
+                    }
+                ],
+                'responses': {
+                    '200': {
+                        'description': 'Success',
+                        'schema': {'$ref': '#/definitions/TorrentsResponse'},
+                    }
+                },
                 'tags': ['default'],
             }
         },
