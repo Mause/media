@@ -340,7 +340,7 @@ snapshots['test_swagger 1'] = {
                         },
                     }
                 },
-                'tags': ['default'],
+                'tags': ['api/monitor'],
             },
             'post': {
                 'operationId': 'post_monitors_resource',
@@ -365,14 +365,14 @@ snapshots['test_swagger 1'] = {
                         'schema': {'$ref': '#/definitions/MonitorCreated'},
                     }
                 },
-                'tags': ['default'],
+                'tags': ['api/monitor'],
             },
         },
         '/api/monitor/{ident}': {
             'delete': {
                 'operationId': 'delete_monitor_resource',
                 'responses': {'200': {'description': 'Success'}},
-                'tags': ['default'],
+                'tags': ['api/monitor'],
             },
             'parameters': [
                 {'in': 'path', 'name': 'ident', 'required': True, 'type': 'integer'}
@@ -577,5 +577,8 @@ snapshots['test_swagger 1'] = {
     'security': [{'basic': []}],
     'securityDefinitions': {'basic': {'type': 'basic'}},
     'swagger': '2.0',
-    'tags': [{'description': 'Default namespace', 'name': 'default'}],
+    'tags': [
+        {'description': 'Default namespace', 'name': 'default'},
+        {'description': 'Contains media monitor resources', 'name': 'api/monitor'},
+    ],
 }

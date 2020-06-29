@@ -550,10 +550,13 @@ class MonitorPost(DataClassJsonMixin):
     type: MediaType
 
 
-@api.route('/api/monitor')
+monitor = api.namespace('api/monitor', 'Contains media monitor resources')
+
+
+@monitor.route('')
 class MonitorsResource(Resource):
-    @expect(api, 'MonitorPost', schema(MonitorPost))
-    @api.marshal_with(
+    @expect(monitor, 'MonitorPost', schema(MonitorPost))
+    @monitor.marshal_with(
         api.model('MonitorCreated', {'id': fields.Integer}),
         code=201,
         description='Created',
@@ -573,8 +576,8 @@ class MonitorsResource(Resource):
             db.session.commit()
         return c, 201
 
-    @api.marshal_with(
-        api.model(
+    @monitor.marshal_with(
+        monitor.model(
             'Monitor',
             {
                 'id': fields.Integer,
@@ -590,7 +593,7 @@ class MonitorsResource(Resource):
         return db.session.query(Monitor).all()
 
 
-@api.route('/api/monitor/<int:ident>')
+@monitor.route('/<int:ident>')
 class MonitorResource(Resource):
     def delete(self, ident: int):
         query = db.session.query(Monitor).filter_by(id=ident)
