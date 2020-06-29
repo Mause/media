@@ -54,7 +54,7 @@ snapshots['test_index 1'] = {
 snapshots['test_serial 1'] = {'series': {'helo': {'id': 1}}}
 
 snapshots['test_swagger 1'] = {
-    'basePath': '/',
+    'basePath': '/api',
     'consumes': ['application/json'],
     'definitions': {
         'Download': {
@@ -280,7 +280,14 @@ snapshots['test_swagger 1'] = {
     },
     'info': {'title': 'API', 'version': '1.0'},
     'paths': {
-        '/api/download': {
+        '/diagnostics': {
+            'get': {
+                'operationId': 'get_api_diagnostics',
+                'responses': {'200': {'description': 'Success'}},
+                'tags': ['default'],
+            }
+        },
+        '/download': {
             'post': {
                 'operationId': 'post_api_download',
                 'parameters': [
@@ -298,7 +305,7 @@ snapshots['test_swagger 1'] = {
                 'tags': ['default'],
             }
         },
-        '/api/index': {
+        '/index': {
             'get': {
                 'operationId': 'get_api_index',
                 'parameters': [
@@ -319,7 +326,7 @@ snapshots['test_swagger 1'] = {
                 'tags': ['default'],
             }
         },
-        '/api/monitor': {
+        '/monitor': {
             'get': {
                 'operationId': 'get_monitors_resource',
                 'parameters': [
@@ -340,7 +347,7 @@ snapshots['test_swagger 1'] = {
                         },
                     }
                 },
-                'tags': ['api/monitor'],
+                'tags': ['monitor'],
             },
             'post': {
                 'operationId': 'post_monitors_resource',
@@ -365,20 +372,20 @@ snapshots['test_swagger 1'] = {
                         'schema': {'$ref': '#/definitions/MonitorCreated'},
                     }
                 },
-                'tags': ['api/monitor'],
+                'tags': ['monitor'],
             },
         },
-        '/api/monitor/{ident}': {
+        '/monitor/{ident}': {
             'delete': {
                 'operationId': 'delete_monitor_resource',
                 'responses': {'200': {'description': 'Success'}},
-                'tags': ['api/monitor'],
+                'tags': ['monitor'],
             },
             'parameters': [
                 {'in': 'path', 'name': 'ident', 'required': True, 'type': 'integer'}
             ],
         },
-        '/api/movie/{tmdb_id}': {
+        '/movie/{tmdb_id}': {
             'get': {
                 'operationId': 'get_api_movie',
                 'parameters': [
@@ -394,7 +401,7 @@ snapshots['test_swagger 1'] = {
                 'tags': ['default'],
             }
         },
-        '/api/search': {
+        '/search': {
             'get': {
                 'operationId': 'get_api_search',
                 'parameters': [
@@ -425,7 +432,7 @@ snapshots['test_swagger 1'] = {
                 'tags': ['default'],
             }
         },
-        '/api/select/{tmdb_id}/season/{season}/download_all': {
+        '/select/{tmdb_id}/season/{season}/download_all': {
             'get': {
                 'operationId': 'get_download_all_episodes',
                 'parameters': [
@@ -450,7 +457,7 @@ snapshots['test_swagger 1'] = {
                 {'in': 'path', 'name': 'season', 'required': True, 'type': 'string'},
             ],
         },
-        '/api/stats': {
+        '/stats': {
             'get': {
                 'operationId': 'get_api_stats',
                 'parameters': [
@@ -471,14 +478,36 @@ snapshots['test_swagger 1'] = {
                 'tags': ['default'],
             }
         },
-        '/api/torrents': {
+        '/stream/{type}/{tmdb_id}': {
+            'get': {
+                'operationId': 'get_stream',
+                'parameters': [
+                    {'in': 'query', 'name': 'season', 'type': 'integer'},
+                    {'in': 'query', 'name': 'episode', 'type': 'integer'},
+                    {
+                        'collectionFormat': 'multi',
+                        'enum': ['horriblesubs', 'rarbg', 'kickass'],
+                        'in': 'query',
+                        'name': 'source',
+                        'type': 'string',
+                    },
+                ],
+                'responses': {'200': {'description': 'Success'}},
+                'tags': ['default'],
+            },
+            'parameters': [
+                {'in': 'path', 'name': 'type', 'required': True, 'type': 'string'},
+                {'in': 'path', 'name': 'tmdb_id', 'required': True, 'type': 'string'},
+            ],
+        },
+        '/torrents': {
             'get': {
                 'operationId': 'get_api_torrents',
                 'responses': {'200': {'description': 'Success'}},
                 'tags': ['default'],
             }
         },
-        '/api/tv/{tmdb_id}': {
+        '/tv/{tmdb_id}': {
             'get': {
                 'operationId': 'get_api_tv',
                 'parameters': [
@@ -506,7 +535,7 @@ snapshots['test_swagger 1'] = {
                 'tags': ['default'],
             }
         },
-        '/api/tv/{tmdb_id}/season/{season}': {
+        '/tv/{tmdb_id}/season/{season}': {
             'get': {
                 'operationId': 'get_api_tv_season',
                 'parameters': [
@@ -537,35 +566,6 @@ snapshots['test_swagger 1'] = {
                 {'in': 'path', 'name': 'season', 'required': True, 'type': 'integer'}
             ],
         },
-        '/diagnostics': {
-            'get': {
-                'operationId': 'get_api_diagnostics',
-                'responses': {'200': {'description': 'Success'}},
-                'tags': ['default'],
-            }
-        },
-        '/stream/{type}/{tmdb_id}': {
-            'get': {
-                'operationId': 'get_stream',
-                'parameters': [
-                    {'in': 'query', 'name': 'season', 'type': 'integer'},
-                    {'in': 'query', 'name': 'episode', 'type': 'integer'},
-                    {
-                        'collectionFormat': 'multi',
-                        'enum': ['horriblesubs', 'rarbg', 'kickass'],
-                        'in': 'query',
-                        'name': 'source',
-                        'type': 'string',
-                    },
-                ],
-                'responses': {'200': {'description': 'Success'}},
-                'tags': ['default'],
-            },
-            'parameters': [
-                {'in': 'path', 'name': 'type', 'required': True, 'type': 'string'},
-                {'in': 'path', 'name': 'tmdb_id', 'required': True, 'type': 'string'},
-            ],
-        },
     },
     'produces': ['application/json'],
     'responses': {
@@ -579,6 +579,6 @@ snapshots['test_swagger 1'] = {
     'swagger': '2.0',
     'tags': [
         {'description': 'Default namespace', 'name': 'default'},
-        {'description': 'Contains media monitor resources', 'name': 'api/monitor'},
+        {'description': 'Contains media monitor resources', 'name': 'monitor'},
     ],
 }
