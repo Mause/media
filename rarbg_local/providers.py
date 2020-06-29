@@ -199,7 +199,7 @@ def search_for_movie(imdb_id: str, tmdb_id: int):
 
 class FakeProvider(Provider):
     def search_for_tv(self, *args, **kwargs):
-        return (search_for_tv(*args, **kwargs),)
+        return search_for_tv(*args, **kwargs)
 
     def search_for_movie(self, *args, **kwargs):
         return search_for_movie(*args, **kwargs)
