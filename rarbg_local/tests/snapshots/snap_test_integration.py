@@ -539,7 +539,7 @@ snapshots['test_swagger 1'] = {
                         'schema': {'$ref': '#/definitions/TvResponse'},
                     }
                 },
-                'tags': ['default'],
+                'tags': ['tv'],
             }
         },
         '/tv/{tmdb_id}/season/{season}': {
@@ -567,7 +567,7 @@ snapshots['test_swagger 1'] = {
                         'schema': {'$ref': '#/definitions/TvSeasonResponse'},
                     }
                 },
-                'tags': ['default'],
+                'tags': ['tv'],
             },
             'parameters': [
                 {'in': 'path', 'name': 'season', 'required': True, 'type': 'integer'}
@@ -587,5 +587,6 @@ snapshots['test_swagger 1'] = {
     'tags': [
         {'description': 'Default namespace', 'name': 'default'},
         {'description': 'Contains media monitor resources', 'name': 'monitor'},
+        {'name': 'tv'},
     ],
 }

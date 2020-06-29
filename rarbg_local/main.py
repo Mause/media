@@ -808,22 +808,24 @@ TvResponse = api.model(
     },
 )
 
+tv_ns = api.namespace('tv')
 
-@api.route('/tv/<int:tmdb_id>')
-@api.response(200, 'OK', TvResponse)
+
+@tv_ns.route('/<int:tmdb_id>')
+@tv_ns.response(200, 'OK', TvResponse)
 @as_resource()
-@api.marshal_with(TvResponse)
+@tv_ns.marshal_with(TvResponse)
 @has_tmdb_id
 def api_tv(tmdb_id: str):
     tv = get_tv(tmdb_id)
     return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv['name']}
 
 
-TvSeasonResponse = api.model(
+TvSeasonResponse = tv_ns.model(
     'TvSeasonResponse',
     {
         'episodes': fields.Nested(
-            api.model(
+            tv_ns.model(
                 'Episode',
                 {
                     'name': fields.String,
@@ -838,10 +840,10 @@ TvSeasonResponse = api.model(
 )
 
 
-@api.route('/tv/<int:tmdb_id>/season/<int:season>')
-@api.response(200, 'OK', TvSeasonResponse)
+@tv_ns.route('/<int:tmdb_id>/season/<int:season>')
+@tv_ns.response(200, 'OK', TvSeasonResponse)
 @as_resource()
-@api.marshal_with(TvSeasonResponse)
+@tv_ns.marshal_with(TvSeasonResponse)
 @has_tmdb_id
 def api_tv_season(tmdb_id: str, season: str):
     return get_tv_episodes(tmdb_id, season)
