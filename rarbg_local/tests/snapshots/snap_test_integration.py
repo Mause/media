@@ -496,7 +496,14 @@ snapshots['test_swagger 1'] = {
                 'tags': ['default'],
             },
             'parameters': [
-                {'in': 'path', 'name': 'type', 'required': True, 'type': 'string'},
+                {
+                    'choices': ('series', 'movie'),
+                    'description': None,
+                    'in': 'path',
+                    'name': 'type',
+                    'required': True,
+                    'type': 'string',
+                },
                 {'in': 'path', 'name': 'tmdb_id', 'required': True, 'type': 'string'},
             ],
         },
