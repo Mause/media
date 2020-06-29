@@ -26,7 +26,7 @@ jobs:
       - name: Install dev dependencies
         if: endsWith(matrix.python-version, '-dev')
         run: |
-          apt install libxml2-dev libxslt-dev
+          sudo apt install libxml2-dev libxslt-dev
       - name: Cache pipenv virtualenv
         id: cache-pipenv
         uses: actions/cache@v2
