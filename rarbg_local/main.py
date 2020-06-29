@@ -282,6 +282,7 @@ def query_params(validator):
 
 
 @api.route('/stream/<type>/<tmdb_id>')
+@api.param('type', enum=['series', 'movie'])
 @as_resource()
 @query_params(
     RequestParser()

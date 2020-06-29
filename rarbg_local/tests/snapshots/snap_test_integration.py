@@ -497,8 +497,8 @@ snapshots['test_swagger 1'] = {
             },
             'parameters': [
                 {
-                    'choices': ('series', 'movie'),
                     'description': None,
+                    'enum': ['series', 'movie'],
                     'in': 'path',
                     'name': 'type',
                     'required': True,
