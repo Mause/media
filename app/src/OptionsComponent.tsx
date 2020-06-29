@@ -103,7 +103,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   );
   const { data: torrents } = useSWR<Torrents>('torrents');
   const { items: results, loading, error } = useSubscribe<ITorrent>(
-    `/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
+    `/api/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
   );
   const dt = (result: ITorrent) => (
     <DisplayTorrent

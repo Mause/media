@@ -103,9 +103,14 @@ logging.getLogger("pika").setLevel(logging.WARNING)
 
 app = Blueprint('rarbg_local', __name__)
 
-Api.specs_url = '/swagger.json'
 authorizations = {'basic': {'type': 'basic',}}
-api = Api(doc='/doc/', validate=True, authorizations=authorizations, security='basic')
+api = Api(
+    prefix='/api',
+    doc='/doc',
+    validate=True,
+    authorizations=authorizations,
+    security='basic',
+)
 
 sockets = SocketIO(cors_allowed_origins='*')
 
@@ -277,6 +282,7 @@ def query_params(validator):
 
 
 @api.route('/stream/<type>/<tmdb_id>')
+@api.param('type', enum=['series', 'movie'])
 @as_resource()
 @query_params(
     RequestParser()
@@ -420,7 +426,7 @@ DownloadAllResponse = api.model(
 )
 
 
-@api.route('/api/select/<tmdb_id>/season/<season>/download_all')
+@api.route('/select/<tmdb_id>/season/<season>/download_all')
 @as_resource()
 @api.marshal_with(DownloadAllResponse)
 def download_all_episodes(tmdb_id: str, season: str) -> Dict:
@@ -483,7 +489,7 @@ def api_diagnostics():
     }
 
 
-@api.route('/api/download')
+@api.route('/download')
 @api.response(200, 'OK', {})
 @as_resource({'POST'})
 @expect(api, 'Download', schema(DownloadPostSchema, many=True))
@@ -550,7 +556,7 @@ class MonitorPost(DataClassJsonMixin):
     type: MediaType
 
 
-monitor = api.namespace('api/monitor', 'Contains media monitor resources')
+monitor = api.namespace('monitor', 'Contains media monitor resources')
 
 
 @monitor.route('')
@@ -736,7 +742,7 @@ def resolve_series() -> List[SeriesDetails]:
 has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
 
 
-@api.route('/api/index')
+@api.route('/index')
 @as_resource()
 @api.marshal_with(schema_to_marshal(api, 'IndexResponse', schema(IndexResponse)))
 def api_index():
@@ -754,7 +760,7 @@ StatsResponse = api.model(
 )
 
 
-@api.route('/api/stats')
+@api.route('/stats')
 @api.response(200, 'OK', [StatsResponse])
 @as_resource()
 @api.marshal_with(StatsResponse)
@@ -777,7 +783,7 @@ def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
     return items[0] if items else None
 
 
-@api.route('/api/movie/<int:tmdb_id>')
+@api.route('/movie/<int:tmdb_id>')
 @as_resource()
 @jsonapi
 @has_tmdb_id
@@ -803,22 +809,24 @@ TvResponse = api.model(
     },
 )
 
+tv_ns = api.namespace('tv')
 
-@api.route('/api/tv/<int:tmdb_id>')
-@api.response(200, 'OK', TvResponse)
+
+@tv_ns.route('/<int:tmdb_id>')
+@tv_ns.response(200, 'OK', TvResponse)
 @as_resource()
-@api.marshal_with(TvResponse)
+@tv_ns.marshal_with(TvResponse)
 @has_tmdb_id
 def api_tv(tmdb_id: str):
     tv = get_tv(tmdb_id)
     return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv['name']}
 
 
-TvSeasonResponse = api.model(
+TvSeasonResponse = tv_ns.model(
     'TvSeasonResponse',
     {
         'episodes': fields.Nested(
-            api.model(
+            tv_ns.model(
                 'Episode',
                 {
                     'name': fields.String,
@@ -833,16 +841,16 @@ TvSeasonResponse = api.model(
 )
 
 
-@api.route('/api/tv/<int:tmdb_id>/season/<int:season>')
-@api.response(200, 'OK', TvSeasonResponse)
+@tv_ns.route('/<int:tmdb_id>/season/<int:season>')
+@tv_ns.response(200, 'OK', TvSeasonResponse)
 @as_resource()
-@api.marshal_with(TvSeasonResponse)
+@tv_ns.marshal_with(TvSeasonResponse)
 @has_tmdb_id
 def api_tv_season(tmdb_id: str, season: str):
     return get_tv_episodes(tmdb_id, season)
 
 
-@api.route('/api/torrents')
+@api.route('/torrents')
 @as_resource()
 @jsonapi
 def api_torrents():
@@ -862,7 +870,7 @@ SearchResponse = api.model(
 )
 
 
-@api.route('/api/search')
+@api.route('/search')
 @api.response(200, 'OK', [SearchResponse])
 @as_resource()
 @api.marshal_with(SearchResponse, as_list=True)

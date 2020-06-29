@@ -111,7 +111,7 @@ def test_basic_auth(transmission, flask_app, user):
     transmission.return_value._thread.is_alive.return_value = True
     with flask_app.test_client() as client:
         r = client.get(
-            '/diagnostics',
+            '/api/diagnostics',
             headers={
                 'Authorization': 'Basic ' + b64encode(b'python:is-great!').decode()
             },
@@ -403,7 +403,7 @@ def test_stream(test_client, responses):
             },
         )
 
-    r = test_client.get('/stream/series/1?season=1&episode=1&source=rarbg')
+    r = test_client.get('/api/stream/series/1?season=1&episode=1&source=rarbg')
 
     assert r.status == '200 OK', r.get_json()
 
