@@ -1,15 +1,23 @@
 import re
 import string
+import logging
 from typing import Any, Dict, Iterable
 
 import requests
+from requests.exceptions import ConnectionError
 from bs4 import BeautifulSoup
 
 from .tmdb import get_movie, get_tv
 
 
 def fetch(url: str) -> Iterable[Dict[str, Any]]:
-    soup = BeautifulSoup(requests.get(url).content, "lxml")
+    try:
+        r = requests.get(url)
+    except ConnectionError:
+        logging.exception('Failed to reach kickass')
+        return
+
+    soup = BeautifulSoup(r.content, "lxml")
 
     for i in soup.find_all(
         'div', {'class': 'tab_content', 'id': lambda id: id != 'comments'}
