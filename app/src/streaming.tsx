@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/react';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { RouteProps } from 'react-router';
@@ -25,14 +25,18 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import { Websocket } from './Websocket';
+import { Integrations as ApmIntegrations } from '@sentry/apm';
+import { useProfiler } from '@sentry/react';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
     release: process.env.HEROKU_SLUG_COMMIT,
     environment: 'development',
+    integrations: [new ApmIntegrations.Tracing()],
+    tracesSampleRate: 0.25, // must be present and non-zero
   });
-  Sentry.configureScope(scope => {
+  Sentry.configureScope((scope) => {
     scope.setUser((window as any).USER);
   });
 }
@@ -88,7 +92,7 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
 }
 
 function reportError(error: Error, componentStack: string) {
-  Sentry.withScope(scope => {
+  Sentry.withScope((scope) => {
     scope.setExtras({ stack: componentStack });
     const eventId = Sentry.captureException(error);
     Sentry.showReportDialog({ eventId: eventId });
@@ -107,6 +111,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function ParentComponentInt() {
+  useProfiler('ParentComponentInt');
   const classes = useStyles();
   return (
     <Router>
@@ -143,9 +148,15 @@ function ParentComponentInt() {
               <code>
                 <pre>
                   {props.error!!.message}
-                  {props.componentStack?.toString().split('\n').map(
-                    line => <span key={line}>{line}<br /></span>
-                  )}
+                  {props.componentStack
+                    ?.toString()
+                    .split('\n')
+                    .map((line) => (
+                      <span key={line}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
                 </pre>
               </code>
             </div>
