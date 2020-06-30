@@ -105,8 +105,13 @@ def logged_in(flask_app, test_client, user):
             _request_ctx_stack.pop()
 
 
-@patch('rarbg_local.main.transmission')
-def test_basic_auth(transmission, flask_app, user):
+@patch('rarbg_local.health.transmission')
+def test_basic_auth(transmission, flask_app, user, responses):
+    responses.add('HEAD', 'https://horriblesubs.info')
+    responses.add('HEAD', 'https://torrentapi.org')
+    responses.add('HEAD', 'https://katcr.co')
+    responses.add('GET', 'https://api.jikan.moe/v3', body='{}')
+
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
     with flask_app.test_client() as client:
@@ -117,7 +122,29 @@ def test_basic_auth(transmission, flask_app, user):
             },
         )
         assert r.status_code == 200
-        assert r.json == {'consumers': ['ctag1'], 'client_is_alive': True}
+
+        js = r.json
+        js.pop('hostname')
+        js.pop('timestamp')
+        assert js.pop('status') == 'success'
+
+        results = js.pop('results')
+        for r in results:
+            r.pop('response_time')
+            r.pop('timestamp')
+            r.pop('expires')
+
+        assert results == [
+            {
+                'checker': 'transmission_connectivity',
+                'output': {'consumers': ['ctag1'], 'client_is_alive': True,},
+                'passed': True,
+            },
+            {'checker': 'jikan', 'output': {}, 'passed': True,},
+            {'checker': 'katcr', 'output': 'kickass', 'passed': True,},
+            {'checker': 'rarbg', 'output': 'rarbg', 'passed': True,},
+            {'checker': 'horriblesubs', 'output': 'horriblesubs', 'passed': True,},
+        ]
 
 
 def test_download_movie(test_client, responses, add_torrent):
