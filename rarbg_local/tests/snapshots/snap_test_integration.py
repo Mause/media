@@ -242,7 +242,12 @@ snapshots['test_swagger 1'] = {
         'SeriesdetailsSchema': {
             'properties': {
                 'imdb_id': {'type': 'string'},
-                'seasons': {'$ref': '#/definitions/seasons'},
+                'seasons': {
+                    'additionalProperties': {
+                        '$ref': '#/definitions/EpisodeDetailsSchema'
+                    },
+                    'type': 'object',
+                },
                 'title': {'type': 'string'},
                 'tmdb_id': {'type': 'integer'},
             },
@@ -294,17 +299,6 @@ snapshots['test_swagger 1'] = {
         },
         'UserSchema': {
             'properties': {'username': {'type': 'string'}},
-            'type': 'object',
-        },
-        'seasons': {
-            'properties': {
-                '*': {
-                    'additionalProperties': {
-                        '$ref': '#/definitions/EpisodeDetailsSchema'
-                    },
-                    'type': 'object',
-                }
-            },
             'type': 'object',
         },
     },

@@ -29,3 +29,19 @@ class TTuple(fields.Raw):
         data = fields.get_value(key, data)
 
         return [field.output(idx, data) for idx, field in enumerate(self.items)]
+
+
+class DDict(fields.Wildcard):
+    __schema_type__ = 'object'
+
+    def __init__(self, container):
+        super().__init__(container)
+        self.__schema_example__ = {
+            'additionalField1': self.container.example
+            or self.container.__schema_example__
+        }
+
+    def output(self, key, data, ordered=False):
+        data = fields.get_value(key, data)
+
+        return {key: self.container.output(key, data) for key in data}
