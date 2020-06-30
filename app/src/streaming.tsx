@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === 'production') {
     release: process.env.HEROKU_SLUG_COMMIT,
     environment: 'development',
     integrations: [new ApmIntegrations.Tracing()],
-    tracesSampleRate: 0.25, // must be present and non-zero
+    tracesSampleRate: 0.75, // must be present and non-zero
   });
   Sentry.configureScope((scope) => {
     scope.setUser((window as any).USER);
