@@ -102,7 +102,7 @@ def convert(api, name, field):
     elif isinstance(field, mfields.Dict):
         return DDict(convert(api, name, field.value_field))
     elif isinstance(field, mfields.DateTime):
-        return fields.String()
+        return fields.DateTime()
     else:
         raise Exception(field)
 

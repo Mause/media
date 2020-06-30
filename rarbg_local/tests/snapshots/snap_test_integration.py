@@ -105,7 +105,7 @@ snapshots['test_swagger 1'] = {
                 'added_by': {'$ref': '#/definitions/UserSchema'},
                 'id': {'type': 'integer'},
                 'imdb_id': {'type': 'string'},
-                'timestamp': {'type': 'string'},
+                'timestamp': {'format': 'date-time', 'type': 'string'},
                 'title': {'type': 'string'},
                 'tmdb_id': {'type': 'integer'},
                 'transmission_id': {'type': 'string'},
