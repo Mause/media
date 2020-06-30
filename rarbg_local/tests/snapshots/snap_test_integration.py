@@ -13,7 +13,7 @@ snapshots['test_index 1'] = {
                 'added_by': {'username': 'python'},
                 'id': 2,
                 'imdb_id': 'tt0000001',
-                'timestamp': '2020-04-20 00:00:00',
+                'timestamp': '2020-04-20T00:00:00',
                 'title': 'Other world',
                 'tmdb_id': 2,
                 'transmission_id': '000000000000000000',
@@ -32,7 +32,7 @@ snapshots['test_index 1'] = {
                             'added_by': {'username': 'python'},
                             'id': 1,
                             'imdb_id': 'tt000000',
-                            'timestamp': '2020-04-21 00:00:00',
+                            'timestamp': '2020-04-21T00:00:00',
                             'title': 'Hello world',
                             'tmdb_id': 1,
                             'transmission_id': '00000000000000000',
@@ -242,12 +242,7 @@ snapshots['test_swagger 1'] = {
         'SeriesdetailsSchema': {
             'properties': {
                 'imdb_id': {'type': 'string'},
-                'seasons': {
-                    'additionalProperties': {
-                        '$ref': '#/definitions/EpisodeDetailsSchema'
-                    },
-                    'type': 'object',
-                },
+                'seasons': {'$ref': '#/definitions/seasons'},
                 'title': {'type': 'string'},
                 'tmdb_id': {'type': 'integer'},
             },
@@ -299,6 +294,17 @@ snapshots['test_swagger 1'] = {
         },
         'UserSchema': {
             'properties': {'username': {'type': 'string'}},
+            'type': 'object',
+        },
+        'seasons': {
+            'properties': {
+                '*': {
+                    'additionalProperties': {
+                        '$ref': '#/definitions/EpisodeDetailsSchema'
+                    },
+                    'type': 'object',
+                }
+            },
             'type': 'object',
         },
     },

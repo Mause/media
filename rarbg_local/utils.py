@@ -100,7 +100,12 @@ def convert(api, name, field):
     elif isinstance(field, mfields.String):
         return fields.String()
     elif isinstance(field, mfields.Dict):
-        return DDict(convert(api, name, field.value_field))
+        # return DDict(convert(api, name, field.value_field))
+        return fields.Nested(
+            api.model(
+                name, {'*': fields.Wildcard(convert(api, name, field.value_field))}
+            )
+        )
     elif isinstance(field, mfields.DateTime):
         return fields.DateTime()
     else:
