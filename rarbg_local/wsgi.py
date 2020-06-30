@@ -26,6 +26,7 @@ if 'SENTRY_DSN' in os.environ:
         os.environ['SENTRY_DSN'],
         integrations=[FlaskIntegration(), SqlalchemyIntegration()],
         release=os.environ['HEROKU_SLUG_COMMIT'],
+        traces_sample_rate = 0.75
     )
 
 
