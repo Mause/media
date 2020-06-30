@@ -75,6 +75,7 @@ from .db import (
     get_episodes,
     get_movies,
 )
+from .health import health
 from .models import EpisodeInfo, IndexResponse, SeriesDetails
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .schema import TTuple, schema
@@ -483,10 +484,8 @@ def real_validation(error):
 @api.route('/diagnostics')
 @as_resource()
 def api_diagnostics():
-    return {
-        'consumers': transmission().channel.consumer_tags,
-        'client_is_alive': transmission()._thread.is_alive(),
-    }
+    message, code, headers = health.run()
+    return json.loads(message), code, headers
 
 
 @api.route('/download')

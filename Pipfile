@@ -53,6 +53,7 @@ timber = "*"
 eventlet = "*"
 email-validator = "*"
 mause-rpc = "*"
+py-healthcheck = "*"
 
 [requires]
 python_version = "3"
