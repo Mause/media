@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "90e3593087be1cbcab9b1d2d57b9dc63c192486ee192ab5c8f085871723fc646"
+            "sha256": "6b83d22323d4a1b7be7b25455f109c30bac87a68585ff23821dc0e49e76cb51e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -171,7 +171,7 @@
                 "sha256:e577934fc5f8779c554639376beeaa5657d54349096ef24abe8c74c5d9c117c3",
                 "sha256:f2b0fa0c01d8a0c7483afd9f31d7ecf2d71760ca24499c8697aeb5ca37dc090c"
             ],
-            "markers": "platform_python_implementation == 'CPython' and sys_platform == 'win32'",
+            "index": "pypi",
             "version": "==1.14.0"
         },
         "chardet": {

@@ -54,6 +54,7 @@ eventlet = "*"
 email-validator = "*"
 mause-rpc = "*"
 py-healthcheck = "*"
+cffi = "*"
 
 [requires]
 python_version = "3"
