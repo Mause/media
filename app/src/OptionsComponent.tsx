@@ -116,7 +116,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   );
   const grouped = _.groupBy(results, 'category');
   const auto = _.maxBy(
-    grouped['Movies/x264/1080'] || grouped['TV HD Episodes'] || [],
+    grouped['x264/1080'] || grouped['TV HD Episodes'] || [],
     'seeders',
   );
   const bits = _.sortBy(

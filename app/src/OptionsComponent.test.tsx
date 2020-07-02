@@ -41,7 +41,7 @@ test('OptionsComponent', async () => {
       title: 'title',
       seeders: 5,
       download: 'magnet:...',
-      category: 'Movies/x264/1080',
+      category: 'x264/1080',
       episode_info: { seasonnum: '1', epnum: '1' },
     };
 
