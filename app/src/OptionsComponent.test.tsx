@@ -1,5 +1,5 @@
 import React from 'react';
-import { act } from '@testing-library/react';
+import { act, RenderResult } from '@testing-library/react';
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
@@ -27,17 +27,58 @@ class ES {
 
 Object.defineProperty(window, 'EventSource', { value: ES });
 
-test('OptionsComponent', async () => {
-  await act(async () => {
-    const el = renderWithSWR(
-      <MemoryRouter initialEntries={['/select/1/options']}>
-        <Route path="/select/:tmdb_id/options">
-          <OptionsComponent type="movie" />
-        </Route>
-      </MemoryRouter>,
+describe('OptionsComponent', () => {
+  it('failure', async () => {
+    let el: RenderResult;
+
+    await act(async () => {
+      el = renderWithSWR(
+        <MemoryRouter initialEntries={['/select/1/options']}>
+          <Route path="/select/:tmdb_id/options">
+            <OptionsComponent type="movie" />
+          </Route>
+        </MemoryRouter>,
+      );
+      await mock('movie/1', { title: 'Hello World' });
+      await wait();
+    });
+
+    console.assert(el);
+
+    expect(el).toBeTruthy();
+
+    expect(el.container).toMatchSnapshot();
+
+    await act(async () => {
+      for (const source of sources) {
+        source.onerror!(new Event('message'));
+      }
+    });
+
+    expect(
+      (await el.findAllByTestId('errorMessage')).map((t) => t.textContent),
+    ).toEqual(
+      expect.arrayContaining([
+        'Error occured whilst loading options from rarbg: [object Event]',
+        'Error occured whilst loading options from horriblesubs: [object Event]',
+        'Error occured whilst loading options from kickass: [object Event]',
+      ]),
     );
-    await mock('movie/1', { title: 'Hello World' });
-    await wait();
+
+    expect(el.container).toMatchSnapshot();
+  });
+  it('success', async () => {
+    let el;
+    await act(async () => {
+      el = renderWithSWR(
+        <MemoryRouter initialEntries={['/select/1/options']}>
+          <Route path="/select/:tmdb_id/options">
+            <OptionsComponent type="movie" />
+          </Route>
+        </MemoryRouter>,
+      );
+      mock('movie/1', { title: 'Hello World' });
+    });
 
     expect(el.container).toMatchSnapshot();
 
@@ -54,21 +95,25 @@ test('OptionsComponent', async () => {
 
     let i = 0;
     const source_names = ['RARBG', 'HORRIBLESUBS', 'KICKASS'];
-    for (const source of sources) {
-      source!.ls!({
-        data: JSON.stringify({
-          ...torrent,
-          source: source_names[i],
-          title: 'title ' + i++,
-        }),
-      });
-    }
+    await act(async () => {
+      for (const source of sources) {
+        source!.ls!({
+          data: JSON.stringify({
+            ...torrent,
+            source: source_names[i],
+            title: 'title ' + i++,
+          }),
+        });
+      }
+    });
 
     expect(el.container).toMatchSnapshot();
 
-    for (const source of sources) {
-      source!.ls!({ data: '' });
-    }
+    await act(async () => {
+      for (const source of sources) {
+        source!.ls!({ data: '' });
+      }
+    });
 
     expect(el.container).toMatchSnapshot();
   });

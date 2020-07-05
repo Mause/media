@@ -161,8 +161,12 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       <div style={{ textAlign: 'center' }}>
         <Loading loading={loading} large={true} />
       </div>
-      {errors.map((error) => (
-        <DisplayError key={error.toString()} error={error} />
+      {Object.entries(errors).map(([key, error]) => (
+        <DisplayError
+          key={key}
+          message={`Error occured whilst loading options from ${key}`}
+          error={error}
+        />
       ))}
       {bits.length || loading ? (
         <div>
@@ -230,11 +234,12 @@ function useSubscribe<T>(
 
 function useSubscribes<T>(
   url: string,
-): { items: T[]; loading: boolean; errors: Error[] } {
+): { items: T[]; loading: boolean; errors: { [key: string]: Error } } {
+  const p = ['rarbg', 'horriblesubs', 'kickass'];
   const providers = [
-    useSubscribe<T>(url + '&source=rarbg'),
-    useSubscribe<T>(url + '&source=horriblesubs'),
-    useSubscribe<T>(url + '&source=kickass'),
+    useSubscribe<T>(url + '&source=' + p[0]),
+    useSubscribe<T>(url + '&source=' + p[1]),
+    useSubscribe<T>(url + '&source=' + p[2]),
   ];
 
   return {
@@ -242,9 +247,9 @@ function useSubscribes<T>(
       .map((t) => t.items || [])
       .reduce((a, b) => a.concat(b), []),
     loading: providers.some((t) => t.loading),
-    errors: providers
-      .map((t) => t.error)
-      .filter((e) => e !== undefined) as Error[],
+    errors: _.fromPairs(
+      providers.filter((t) => t.error).map((t, i) => [p[i], t.error]),
+    ) as { [key: string]: Error },
   };
 }
 
