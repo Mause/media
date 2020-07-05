@@ -69,7 +69,7 @@ def test_ttuple():
     swagger = Swagger(api)
 
     app = Flask('fake')
-    app.config['SERVER_NAME'] = 'what'
+    app.config.update({'SERVER_NAME': 'what', 'RESTX_INCLUDE_ALL_MODELS': False})
     app.route('/', endpoint='root')(lambda: '')
 
     @api.route('/api')
