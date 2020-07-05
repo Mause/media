@@ -33,10 +33,12 @@ function IndexComponent() {
   );
 }
 
-export function DisplayError(props: { error: Error }) {
+export function DisplayError(props: { error: Error; message?: string }) {
   const message =
     _.get(props.error, 'response.data.message') ||
-    'Unable to connect to transmission: ' + props.error.toString();
+    (props.message || 'Unable to connect to transmission') +
+      ': ' +
+      props.error.toString();
 
   return (
     <div>
@@ -59,7 +61,7 @@ export function SearchBox() {
 
   return (
     <form onSubmit={search}>
-      <input name="query" onChange={e => setQuery(e.target.value)} />
+      <input name="query" onChange={(e) => setQuery(e.target.value)} />
       &nbsp;
       <input type="submit" value="Search" />
     </form>
