@@ -24,7 +24,7 @@ mypy = "*"
 [packages]
 flask = "*"
 requests = "*"
-sqlalchemy = "*"
+sqlalchemy = "==1.3.17"
 sqlalchemy-repr = "*"
 flask-sqlalchemy = "*"
 aiohttp = "*"
