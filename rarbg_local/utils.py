@@ -10,8 +10,6 @@ from marshmallow import Schema
 from marshmallow import fields as mfields
 from marshmallow_enum import EnumField
 
-from .schema import DDict
-
 T = TypeVar('T')
 _caches: Set[_lru_cache] = set()  # type: ignore
 
@@ -100,12 +98,12 @@ def convert(api, name, field):
     elif isinstance(field, mfields.String):
         return fields.String()
     elif isinstance(field, mfields.Dict):
-        # return DDict(convert(api, name, field.value_field))
-        return fields.Nested(
-            api.model(
-                name, {'*': fields.Wildcard(convert(api, name, field.value_field))}
-            )
-        )
+        return fields.Dict(convert(api, name, field.value_field))
+        # return fields.Nested(
+        #     api.model(
+        #         name, {'*': fields.Wildcard(convert(api, name, field.value_field))}
+        #     )
+        # )
     elif isinstance(field, mfields.DateTime):
         return fields.DateTime()
     else:

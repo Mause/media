@@ -78,7 +78,7 @@ from .db import (
 from .health import health
 from .models import EpisodeInfo, IndexResponse, SeriesDetails
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
-from .schema import TTuple, schema
+from .schema import schema
 from .tmdb import (
     get_json,
     get_movie,
@@ -418,10 +418,10 @@ DownloadAllResponse = api.model(
     {
         'packs': fields.List(fields.Nested(IITorrent)),
         'complete': fields.List(
-            TTuple([fields.String, fields.List(fields.Nested(IITorrent))])
+            fields.Tuple([fields.String, fields.List(fields.Nested(IITorrent))])
         ),
         'incomplete': fields.List(
-            TTuple([fields.String, fields.List(fields.Nested(IITorrent))])
+            fields.Tuple([fields.String, fields.List(fields.Nested(IITorrent))])
         ),
     },
 )
