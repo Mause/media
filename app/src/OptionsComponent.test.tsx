@@ -3,6 +3,7 @@ import { act } from '@testing-library/react';
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
+import _ from 'lodash';
 
 usesMoxios();
 
@@ -10,6 +11,7 @@ const sources: ES[] = [];
 type CB = (event: { data: string }) => void;
 
 class ES {
+  public onerror?: (event: Event) => void;
   public ls?: CB;
   constructor() {
     sources.push(this);
@@ -17,7 +19,10 @@ class ES {
   addEventListener(name: string, ls: CB) {
     this.ls = ls;
   }
-  close() {}
+  removeEventListener(name: string, ls: CB) {}
+  close() {
+    _.remove(sources, this);
+  }
 }
 
 Object.defineProperty(window, 'EventSource', { value: ES });

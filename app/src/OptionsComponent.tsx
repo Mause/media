@@ -211,7 +211,7 @@ function useSubscribe<T>(
 
   useEffect(() => {
     const items: T[] = [];
-    subscribe<T>(
+    return subscribe<T>(
       url,
       (data) => {
         items.push(data);

@@ -24,22 +24,30 @@ export function subscribe<T>(
   callback: (a: T) => void,
   error: (e: Error) => void,
   end: (() => void) | null = null,
-): void {
+): () => void {
   const es = new EventSource(path, {
     withCredentials: true,
   });
   es.onerror = (event: Event) => {
     error((event as unknown) as Error);
   };
-  es.addEventListener('message', ({ data }) => {
+  const internal_callback = ({ data }: { data: string }) => {
     if (!data) {
       if (end) {
         end();
       }
-      return es.close();
+      es.close();
+    } else {
+      callback(JSON.parse(data));
     }
-    callback(JSON.parse(data));
-  });
+  };
+  es.addEventListener('message', internal_callback);
+
+  return () => {
+    es.close();
+    es.onerror = null;
+    es.removeEventListener('message', internal_callback);
+  };
 }
 
 export async function load<T>(path: string, params?: string): Promise<T> {
