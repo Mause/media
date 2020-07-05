@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6b83d22323d4a1b7be7b25455f109c30bac87a68585ff23821dc0e49e76cb51e"
+            "sha256": "6214462c0bf93a388fdb8d6e5461edee32781e0a32a0c9cd0028f3ff8155b82e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -299,12 +299,8 @@
             "version": "==0.9.1"
         },
         "flask-restx": {
-            "hashes": [
-                "sha256:a1653da19ca0b5e5c2ea59bd5f4639a7749e6a9b882f459de1814ed37872253b",
-                "sha256:ca87a1808333f4ec5a50a5740b44e6cd3879a4b940d559df3996877ec4a2f2a5"
-            ],
-            "index": "pypi",
-            "version": "==0.2.0"
+            "git": "https://github.com/Mause/flask-restx",
+            "ref": "c6b43ba6c9fc86c4249bfbe350925ee65b57232d"
         },
         "flask-socketio": {
             "hashes": [
