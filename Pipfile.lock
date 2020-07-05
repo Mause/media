@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6214462c0bf93a388fdb8d6e5461edee32781e0a32a0c9cd0028f3ff8155b82e"
+            "sha256": "6e05eb7728e310888346c533926637958a9a74914c51d169052018fdd78127b5"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -300,7 +300,7 @@
         },
         "flask-restx": {
             "git": "https://github.com/Mause/flask-restx",
-            "ref": "c6b43ba6c9fc86c4249bfbe350925ee65b57232d"
+            "ref": "6140534c7e4a154cc5c6b1d65e7ff350c3df7456"
         },
         "flask-socketio": {
             "hashes": [
