@@ -131,7 +131,19 @@ def monitor_delete(monitor_id: int):
 
 @monitor_ns.post('', tags=['monitor'], response_model=MonitorGet)
 def monitor_post(monitor: MonitorPost):
-    m = db.Monitor(**monitor.vars())
+    title = (
+        get_tv(monitor.tmdb_id)['name']
+        if monitor.type == FMediaType.TV
+        else get_movie(monitor.tmdb_id)['title']
+    )
+
+    v = {
+        **monitor.dict(),
+        'type': monitor.type.name,
+        'title': title,
+        "added_by": db.session.query(User).first(),
+    }
+    m = Monitor(**v)
 
     db.session.add(m)
     db.session.commit()
