@@ -3,13 +3,45 @@ from datetime import date
 from enum import Enum
 from typing import List, Optional
 
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, Depends, FastAPI, HTTPException
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from flask_user import UserManager
 from pydantic import BaseModel, validator
 
-from .db import Monitor, db
+from .db import Monitor, User, db
 from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
 
 app = FastAPI()
+
+
+class FakeApp:
+    import_name = __name__
+
+    def __init__(self, fastapi_app):
+        self.debug = True
+        self.config = {
+            'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+            'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
+            'SQLALCHEMY_ECHO': True,
+        }
+        self.extensions = {}
+
+    def teardown_appcontext(self, func):
+        pass
+
+
+fake_app = FakeApp(app)
+db.init_app(fake_app)
+db.app = fake_app
+
+engine = db.get_engine(fake_app, None)
+con = engine.raw_connection().connection
+con.create_collation("en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1)
+
+db.create_all()
+
+user_manager = UserManager(None, db, User)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
 class MediaType(Enum):
@@ -129,7 +161,7 @@ monitor_ns = APIRouter()
 
 
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
-def monitor_get():
+def monitor_get(token: str = Depends(oauth2_scheme)):
     return db.session.query(Monitor).all()
 
 
@@ -138,8 +170,20 @@ def monitor_delete(monitor_id: int):
     ...
 
 
+@app.post("/token")
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = db.session.query(User).filter_by(username=form_data.username).one_or_none()
+
+    if user_manager.verify_password(
+        form_data.password, user.password if user else None
+    ):
+        return {"access_token": user.username, "token_type": "bearer"}
+
+    raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+
 @monitor_ns.post('', tags=['monitor'], response_model=MonitorGet)
-def monitor_post(monitor: MonitorPost):
+def monitor_post(monitor: MonitorPost, token: str = Depends(oauth2_scheme)):
     title = (
         get_tv(monitor.tmdb_id)['name']
         if monitor.type == FMediaType.TV
