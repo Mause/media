@@ -1,4 +1,5 @@
 import re
+from datetime import date
 from enum import Enum
 from typing import List, Optional
 
@@ -6,6 +7,7 @@ from fastapi import APIRouter, FastAPI
 from pydantic import BaseModel, validator
 
 from .db import Monitor, db
+from .tmdb import get_tv, get_tv_episodes, get_tv_imdb_id
 
 app = FastAPI()
 
@@ -76,4 +78,42 @@ def monitor_post(monitor: MonitorPost):
     return m
 
 
+tv_ns = APIRouter()
+
+
+class SeasonMeta(BaseModel):
+    episode_count: int
+    season_number: int
+
+
+class TvResponse(BaseModel):
+    number_of_seasons: int
+    title: str
+    imdb_id: str
+    seasons: List[SeasonMeta]
+
+
+@tv_ns.get('/<tmdb_id>', tags=['tv'], response_model=TvResponse)
+def api_tv(tmdb_id: int):
+    tv = get_tv(tmdb_id)
+    return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv['name']}
+
+
+class Episode(BaseModel):
+    name: str
+    id: int
+    episode_number: int
+    air_date: Optional[date]
+
+
+class TvSeasonResponse(BaseModel):
+    episodes: List[Episode]
+
+
+@tv_ns.get('/<tmdb_id>/season/<season>', tags=['tv'], response_model=TvSeasonResponse)
+def api_tv_season(tmdb_id: int, season: int):
+    return get_tv_episodes(tmdb_id, season)
+
+
+app.include_router(tv_ns, prefix='/tv')
 app.include_router(monitor, prefix='/monitor')
