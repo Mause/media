@@ -26,6 +26,42 @@ class DownloadResponse(Orm):
     id: int
 
 
+@app.get('/user/unauthorized')
+def user():
+    pass
+
+
+@app.get('/delete/<type>/<id>')
+def delete(type: MediaType, id: int):
+    pass
+
+
+@app.get('/redirect/plex/<tmdb_id>')
+def redirect_plex():
+    pass
+
+
+@app.get('/redirect/<type_>/<ident>')
+@app.get('/redirect/<type_>/<ident>/<season>/<episode>')
+def redirect(type_: MediaType, ident: int, season: int = None, episode: int = None):
+    pass
+
+
+@app.get('/stream/<type>/<tmdb_id>')
+def stream():
+    pass
+
+
+@app.get('/select/<tmdb_id>/season/<season>/download_all')
+def select(tmdb_id: int, season: int):
+    pass
+
+
+@app.get('/diagnostics')
+def diagnostics():
+    pass
+
+
 class DownloadPost(Orm):
     magnet: str
     tmdb_id: int
@@ -42,6 +78,31 @@ class ITorrent(BaseModel):
 @app.post('/download', response_model=DownloadResponse)
 def download_post(download: DownloadPost):
     ...
+
+
+@app.get('/index')
+def index():
+    pass
+
+
+@app.get('/stats')
+def stats():
+    pass
+
+
+@app.get('/movie/<tmdb_id>')
+def movie(tmdb_id: int):
+    pass
+
+
+@app.get('/torrents')
+def torrents():
+    pass
+
+
+@app.get('/search')
+def search(query: str):
+    pass
 
 
 class MonitorPost(Orm):
