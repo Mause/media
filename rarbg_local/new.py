@@ -2,7 +2,7 @@ import re
 from enum import Enum
 from typing import List, Optional
 
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 from pydantic import BaseModel, validator
 
 app = FastAPI()
@@ -51,16 +51,22 @@ class MonitorGet(MonitorPost):
     added_by: str
 
 
-@monitor.get('', tags=['monitor'], response_model=List[MonitorGet])
+monitor_ns = APIRouter()
+
+
+@monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
 def monitor_get():
     return db.session.query(Monitor).all()
 
 
-@app.delete('/monitor/<monitor_id>', tags=['monitor'])
+@monitor_ns.delete('/<monitor_id>', tags=['monitor'])
 def monitor_delete(monitor_id: int):
     ...
 
 
-@app.post('/monitor', tags=['monitor'], response_model=MonitorGet)
+@monitor_ns.post('', tags=['monitor'], response_model=MonitorGet)
 def monitor_post(monitor: MonitorPost):
     ...
+
+
+app.include_router(monitor, prefix='/monitor')
