@@ -1,9 +1,15 @@
+from enum import Enum
 from typing import Optional
 
 from fastapi import FastAPI
 from pydantic import BaseModel
 
 app = FastAPI()
+
+
+class MediaType(Enum):
+    SERIES = 'series'
+    MOVIE = 'movie'
 
 
 class Orm(BaseModel):
