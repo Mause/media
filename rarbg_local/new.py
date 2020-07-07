@@ -37,12 +37,26 @@ def download_post(download: DownloadPost):
     ...
 
 
-class Monitor(Orm):
-    id: int
+class MonitorPost(Orm):
     tmdb_id: int
     type: MediaType
 
 
-@app.post('/monitor', tags=['monitor'], response_model=List[Monitor])
+class MonitorGet(MonitorPost):
+    id: int
+    title: str
+
+
+@app.get('/monitor', tags=['monitor'], response_model=List[MonitorGet])
 def monitor_get():
+    ...
+
+
+@app.delete('/monitor/<monitor_id>', tags=['monitor'])
+def monitor_delete(monitor_id: int):
+    ...
+
+
+@app.post('/monitor', tags=['monitor'], response_model=MonitorGet)
+def monitor_post(monitor: MonitorPost):
     ...
