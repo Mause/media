@@ -7,7 +7,7 @@ from fastapi import APIRouter, FastAPI
 from pydantic import BaseModel, validator
 
 from .db import Monitor, db
-from .tmdb import get_tv, get_tv_episodes, get_tv_imdb_id
+from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
 
 app = FastAPI()
 
