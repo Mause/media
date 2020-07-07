@@ -5,6 +5,8 @@ from typing import List, Optional
 from fastapi import APIRouter, FastAPI
 from pydantic import BaseModel, validator
 
+from .db import Monitor, db
+
 app = FastAPI()
 
 
@@ -66,7 +68,12 @@ def monitor_delete(monitor_id: int):
 
 @monitor_ns.post('', tags=['monitor'], response_model=MonitorGet)
 def monitor_post(monitor: MonitorPost):
-    ...
+    m = db.Monitor(**monitor.vars())
+
+    db.session.add(m)
+    db.session.commit()
+
+    return m
 
 
 app.include_router(monitor, prefix='/monitor')
