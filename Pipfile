@@ -55,6 +55,7 @@ email-validator = "*"
 mause-rpc = "*"
 py-healthcheck = "*"
 cffi = "*"
+fastapi = "*"
 
 [requires]
 python_version = "3"
