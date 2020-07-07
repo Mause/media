@@ -48,6 +48,7 @@ class MonitorPost(Orm):
 class MonitorGet(MonitorPost):
     id: int
     title: str
+    added_by: str
 
 
 @monitor.get('', tags=['monitor'], response_model=List[MonitorGet])
