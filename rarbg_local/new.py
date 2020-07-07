@@ -16,6 +16,8 @@ class DownloadResponse(Orm):
 class DownloadPost(Orm):
     magnet: str
     tmdb_id: int
+    season: Optional[int] = None
+    episode: Optional[int] = None
 
 
 @app.post('/download', response_model=DownloadResponse)
