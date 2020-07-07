@@ -2,6 +2,7 @@ from enum import Enum
 from typing import List, Optional
 
 from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -59,4 +60,18 @@ def monitor_delete(monitor_id: int):
 
 @app.post('/monitor', tags=['monitor'], response_model=MonitorGet)
 def monitor_post(monitor: MonitorPost):
+    ...
+
+
+@app.get(
+    '/stream/<type>/<tmdb_id>',
+    response_class=StreamingResponse,
+    responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
+)
+def stream(
+    type: MediaType,
+    tmdb_id: int,
+    season: Optional[int] = None,
+    episode: Optional[int] = None,
+):
     ...
