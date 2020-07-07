@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -28,6 +28,21 @@ class DownloadPost(Orm):
     episode: Optional[int] = None
 
 
+class ITorrent(BaseModel):
+    download: str
+
+
 @app.post('/download', response_model=DownloadResponse)
 def download_post(download: DownloadPost):
+    ...
+
+
+class Monitor(Orm):
+    id: int
+    tmdb_id: int
+    type: MediaType
+
+
+@app.post('/monitor', tags=['monitor'], response_model=List[Monitor])
+def monitor_get():
     ...
