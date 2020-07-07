@@ -1,8 +1,9 @@
+import re
 from enum import Enum
 from typing import List, Optional
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 app = FastAPI()
 
@@ -26,6 +27,8 @@ class DownloadPost(Orm):
     tmdb_id: int
     season: Optional[int] = None
     episode: Optional[int] = None
+
+    _valid_magnet = validator('magnet')(lambda field: re.search(r'^magnet:', field))
 
 
 class ITorrent(BaseModel):
