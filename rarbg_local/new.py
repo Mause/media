@@ -50,9 +50,9 @@ class MonitorGet(MonitorPost):
     title: str
 
 
-@app.get('/monitor', tags=['monitor'], response_model=List[MonitorGet])
+@monitor.get('', tags=['monitor'], response_model=List[MonitorGet])
 def monitor_get():
-    ...
+    return db.session.query(Monitor).all()
 
 
 @app.delete('/monitor/<monitor_id>', tags=['monitor'])
