@@ -115,10 +115,14 @@ class MonitorPost(Orm):
     type: FMediaType
 
 
+class UserShim(Orm):
+    username: str
+
+
 class MonitorGet(MonitorPost):
     id: int
     title: str
-    added_by: str
+    added_by: UserShim
 
 
 monitor_ns = APIRouter()
