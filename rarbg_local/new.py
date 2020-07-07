@@ -116,4 +116,4 @@ def api_tv_season(tmdb_id: int, season: int):
 
 
 app.include_router(tv_ns, prefix='/tv')
-app.include_router(monitor, prefix='/monitor')
+app.include_router(monitor_ns, prefix='/monitor')
