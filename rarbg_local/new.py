@@ -105,9 +105,14 @@ def search(query: str):
     pass
 
 
+class FMediaType(Enum):
+    MOVIE = 'movie'
+    TV = 'tv'
+
+
 class MonitorPost(Orm):
     tmdb_id: int
-    type: MediaType
+    type: FMediaType
 
 
 class MonitorGet(MonitorPost):
