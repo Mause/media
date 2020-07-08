@@ -3,6 +3,7 @@ from datetime import date
 from enum import Enum
 from typing import List, Optional
 
+from fastapi.responses import StreamingResponse
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from flask_user import UserManager
@@ -79,6 +80,10 @@ def redirect(type_: MediaType, ident: int, season: int = None, episode: int = No
     pass
 
 
+class ITorrent(BaseModel):
+    download: str
+
+
 @app.get(
     '/stream/<type>/<tmdb_id>',
     response_class=StreamingResponse,
@@ -110,10 +115,6 @@ class DownloadPost(Orm):
     episode: Optional[int] = None
 
     _valid_magnet = validator('magnet')(lambda field: re.search(r'^magnet:', field))
-
-
-class ITorrent(BaseModel):
-    download: str
 
 
 @app.post('/download', response_model=DownloadResponse)
