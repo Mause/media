@@ -117,10 +117,6 @@ class DownloadPost(Orm):
     _valid_magnet = validator('magnet')(lambda field: re.search(r'^magnet:', field))
 
 
-class ITorrent(BaseModel):
-    download: str
-
-
 @app.post('/download', response_model=DownloadResponse)
 def download_post(download: DownloadPost):
     ...
