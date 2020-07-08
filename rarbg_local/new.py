@@ -172,6 +172,20 @@ class MonitorGet(MonitorPost):
 monitor_ns = APIRouter()
 
 
+class UserCreate(BaseModel):
+    username: str
+    password: str
+
+
+@app.post('/create_user', response_model=UserShim, tags=['user'])
+def create_user(item: UserCreate):
+    user = User(username=item.username, password=password_manager.hash(item.password),)
+    db.session.add(user)
+    db.session.commit()
+
+    return user
+
+
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
 def monitor_get(token: str = Depends(oauth2_scheme)):
     return db.session.query(Monitor).all()
