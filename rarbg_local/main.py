@@ -744,7 +744,7 @@ has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
 
 @api.route('/index')
 @as_resource()
-@api.marshal_with(schema_to_marshal(api, 'IndexResponse', schema(IndexResponse)))
+# @api.marshal_with(schema_to_marshal(api, 'IndexResponse', schema(IndexResponse)))
 def api_index():
     return IndexResponse(series=resolve_series(), movies=get_movies())
 
