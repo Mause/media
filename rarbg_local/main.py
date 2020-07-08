@@ -414,6 +414,7 @@ IITorrent = api.model(
         ),
     },
 )
+'''
 DownloadAllResponse = api.model(
     'DownloadAllResponse',
     {
@@ -426,11 +427,12 @@ DownloadAllResponse = api.model(
         ),
     },
 )
+'''
 
 
 @api.route('/select/<tmdb_id>/season/<season>/download_all')
 @as_resource()
-@api.marshal_with(DownloadAllResponse)
+# @api.marshal_with(DownloadAllResponse)
 def download_all_episodes(tmdb_id: str, season: str) -> Dict:
     results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
