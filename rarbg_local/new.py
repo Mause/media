@@ -1,7 +1,7 @@
 import re
 from datetime import date
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
@@ -12,6 +12,7 @@ from flask_user.password_manager import PasswordManager
 from pydantic import BaseModel, validator
 
 from .db import Monitor, Role, Roles, User, db, get_or_create
+from .providers import ProviderSource
 from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
 
 app = FastAPI()
@@ -83,8 +84,18 @@ def redirect(type_: MediaType, ident: int, season: int = None, episode: int = No
     pass
 
 
+class EpisodeInfo(BaseModel):
+    seasonnum: str
+    epnum: str
+
+
 class ITorrent(BaseModel):
+    source: ProviderSource
     download: str
+    seeders: int
+    category: str
+    title: str
+    episode_info: EpisodeInfo
 
 
 @app.get(
@@ -101,7 +112,15 @@ def stream(
     ...
 
 
-@app.get('/select/<tmdb_id>/season/<season>/download_all')
+class DownloadAllResponse(BaseModel):
+    packs: List[ITorrent]
+    complete: List[Tuple[str, List[ITorrent]]]
+    incomplete: List[Tuple[str, List[ITorrent]]]
+
+
+@app.get(
+    '/select/<tmdb_id>/season/<season>/download_all', response_model=DownloadAllResponse
+)
 def select(tmdb_id: int, season: int):
     pass
 
