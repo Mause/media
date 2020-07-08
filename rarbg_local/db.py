@@ -116,6 +116,9 @@ class Role(db.Model):  # type: ignore
 
 
 class _Roles:
+    Admin: Role
+    Member: Role
+
     @lru_cache()
     def __getattr__(self, name):
         return get_or_create(Role, name=name)
