@@ -10,7 +10,7 @@ from flask_user import UserManager
 from flask_user.password_manager import PasswordManager
 from pydantic import BaseModel, validator
 
-from .db import Monitor, User, db
+from .db import Monitor, Role, Roles, User, db, get_or_create
 from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
 
 app = FastAPI()
@@ -186,6 +186,24 @@ def create_user(item: UserCreate):
     return user
 
 
+class PromoteCreate(BaseModel):
+    username: str
+    roles: List[str]
+
+
+@app.post('/promote', tags=['user'])
+def promote(req: PromoteCreate, calling_user: User = Depends(get_current_user)):
+    if Roles.Admin not in calling_user.roles:
+        raise HTTPException(403, 'Insufficient caller rights')
+
+    user = db.session.query(User).filter_by(username=req.username).one_or_none()
+    if user:
+        user.roles = [get_or_create(Role, name=role) for role in req.roles]
+        db.session.commit()
+    else:
+        raise HTTPException(422, "User does not exist")
+
+
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
 def monitor_get(token: str = Depends(oauth2_scheme)):
     return db.session.query(Monitor).all()
@@ -207,7 +225,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 @monitor_ns.post('', tags=['monitor'], response_model=MonitorGet)
-def monitor_post(monitor: MonitorPost, token: str = Depends(oauth2_scheme)):
+def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_user)):
     title = (
         get_tv(monitor.tmdb_id)['name']
         if monitor.type == FMediaType.TV
