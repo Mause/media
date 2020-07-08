@@ -149,14 +149,30 @@ def index():
     pass
 
 
-@app.get('/stats')
+class Stats(BaseModel):
+    episode: int
+    movie: int
+
+
+class StatsResponse(BaseModel):
+    user: str
+    values: Stats
+
+
+@app.get('/stats', response_model=List[StatsResponse])
 def stats():
-    pass
+    ...
 
 
-@app.get('/movie/<tmdb_id>')
+class MovieResponse(BaseModel):
+    title: str
+    imdb_id: str
+
+
+@app.get('/movie/<tmdb_id>', response_model=MovieResponse)
 def movie(tmdb_id: int):
-    pass
+    movie = get_movie(tmdb_id)
+    return {"title": movie['title'], "imdb_id": movie['imdb_id']}
 
 
 @app.get('/torrents')
@@ -164,9 +180,16 @@ def torrents():
     pass
 
 
-@app.get('/search')
-def search(query: str):
-    pass
+class SearchResponse(BaseModel):
+    title: str
+    type: MediaType
+    year: int
+    imdbID: int
+
+
+@app.get('/search', response_model=List[SearchResponse])
+async def search(query: str):
+    ...
 
 
 class FMediaType(Enum):
@@ -244,7 +267,11 @@ def monitor_get(user: User = Depends(get_current_user)):
 
 @monitor_ns.delete('/<monitor_id>', tags=['monitor'])
 def monitor_delete(monitor_id: int):
-    ...
+    query = db.session.query(Monitor).filter_by(id=ident)
+    precondition(query.count() > 0, 'Nothing to delete')
+    query.delete()
+    db.session.commit()
+    return {}
 
 
 @app.post("/token", tags=['user'])
