@@ -80,6 +80,10 @@ def redirect(type_: MediaType, ident: int, season: int = None, episode: int = No
     pass
 
 
+class ITorrent(BaseModel):
+    download: str
+
+
 @app.get(
     '/stream/<type>/<tmdb_id>',
     response_class=StreamingResponse,
