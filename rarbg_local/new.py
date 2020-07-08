@@ -3,10 +3,11 @@ from datetime import date
 from enum import Enum
 from typing import List, Optional
 
-from fastapi.responses import StreamingResponse
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from flask_user import UserManager
+from flask_user.password_manager import PasswordManager
 from pydantic import BaseModel, validator
 
 from .db import Monitor, User, db
@@ -41,7 +42,8 @@ con.create_collation("en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1)
 
 db.create_all()
 
-user_manager = UserManager(None, db, User)
+app.user_manager = UserManager(None, db, User)
+password_manager = PasswordManager(app).password_crypt_context
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
@@ -180,13 +182,11 @@ def monitor_delete(monitor_id: int):
     ...
 
 
-@app.post("/token")
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+@app.post("/token", tags=['user'])
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = db.session.query(User).filter_by(username=form_data.username).one_or_none()
 
-    if user_manager.verify_password(
-        form_data.password, user.password if user else None
-    ):
+    if password_manager.verify(form_data.password, user.password if user else None):
         return {"access_token": user.username, "token_type": "bearer"}
 
     raise HTTPException(status_code=400, detail="Incorrect username or password")
