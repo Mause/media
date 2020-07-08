@@ -3,9 +3,10 @@ from datetime import date
 from enum import Enum
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException
+from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from flask_login.utils import decode_cookie
 from flask_user import UserManager
 from flask_user.password_manager import PasswordManager
 from pydantic import BaseModel, validator
@@ -186,6 +187,19 @@ def create_user(item: UserCreate):
     return user
 
 
+def get_current_user(remember_token: str = Cookie(None)) -> Optional[User]:
+    user = None
+    if remember_token:
+        user_id = decode_cookie(remember_token)
+
+        user = db.session.query(User).filter_by(username=user_id).one_or_none()
+
+    if user:
+        return user
+    else:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
 class PromoteCreate(BaseModel):
     username: str
     roles: List[str]
@@ -205,7 +219,7 @@ def promote(req: PromoteCreate, calling_user: User = Depends(get_current_user)):
 
 
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
-def monitor_get(token: str = Depends(oauth2_scheme)):
+def monitor_get(user: User = Depends(get_current_user)):
     return db.session.query(Monitor).all()
 
 
