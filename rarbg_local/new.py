@@ -16,6 +16,7 @@ from pydantic import BaseModel, validator
 from .db import Monitor, Role, Roles, User, db, get_or_create
 from .providers import ProviderSource
 from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
+from .utils import precondition
 
 app = FastAPI()
 
@@ -269,7 +270,7 @@ def monitor_get(user: User = Depends(get_current_user)):
 
 @monitor_ns.delete('/<monitor_id>', tags=['monitor'])
 def monitor_delete(monitor_id: int):
-    query = db.session.query(Monitor).filter_by(id=ident)
+    query = db.session.query(Monitor).filter_by(id=monitor_id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
     db.session.commit()
