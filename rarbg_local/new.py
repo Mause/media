@@ -1,11 +1,13 @@
 import re
+from asyncio import get_event_loop
 from datetime import date
 from enum import Enum
-from typing import List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from flask import Response
 from flask_login.utils import decode_cookie
 from flask_user import UserManager
 from flask_user.password_manager import PasswordManager
@@ -345,3 +347,34 @@ def api_tv_season(tmdb_id: int, season: int):
 
 app.include_router(tv_ns, prefix='/tv')
 app.include_router(monitor_ns, prefix='/monitor')
+
+
+def call_sync(method='GET', path='/monitor', query_string='', headers=None):
+    response: Dict[str, Any] = {}
+
+    async def send(message):
+        response.update(message)
+
+    get_event_loop().run_until_complete(
+        app(
+            {
+                'type': 'http',
+                'path': path,
+                'method': method,
+                'query_string': query_string,
+                'headers': headers or [],
+            },
+            lambda: [],
+            send,
+        )
+    )
+
+    response.pop('type')
+    if 'body' in response:
+        response['response'] = response.pop('body')
+
+    return Response(**response)
+
+
+if __name__ == "__main__":
+    print(call_sync())
