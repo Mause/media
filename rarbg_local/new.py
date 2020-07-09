@@ -267,7 +267,7 @@ def promote(req: PromoteCreate, calling_user: User = Depends(get_current_user)):
 
 
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
-def monitor_get(user: User = Depends(get_current_user)):
+async def monitor_get(user: User = Depends(get_current_user)):
     return db.session.query(Monitor).all()
 
 
