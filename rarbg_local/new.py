@@ -12,6 +12,7 @@ from flask_login.utils import decode_cookie
 from flask_user import UserManager, current_user
 from flask_user.password_manager import PasswordManager
 from pydantic import BaseModel, validator
+from secure_cookie.cookie import SecureCookie
 
 from .db import MediaType as FMediaType
 from .db import Monitor, Role, Roles, User, db, get_or_create
@@ -230,7 +231,13 @@ def create_user(item: UserCreate):
     return user
 
 
-def get_current_user(remember_token: str = Cookie(None)) -> Optional[User]:
+def get_current_user(
+    remember_token: str = Cookie(None), session: str = Cookie(None)
+) -> Optional[User]:
+    if session:
+        sc = SecureCookie.unserialize(session, 'hkfircsc')
+        return db.session.query(User).get(sc['_user_id'])
+
     try:
         return current_user._get_current_object()
     except Exception:
