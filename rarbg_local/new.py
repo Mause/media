@@ -373,6 +373,8 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None):
     response.pop('type')
     if 'body' in response:
         response['response'] = response.pop('body')
+    response['headers'] = dict(response['headers'])
+    response['mimetype'] = response['headers'].pop(b'content-type').decode()
 
     return Response(**response)
 
