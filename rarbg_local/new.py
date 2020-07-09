@@ -13,6 +13,7 @@ from flask_user import UserManager
 from flask_user.password_manager import PasswordManager
 from pydantic import BaseModel, validator
 
+from .db import MediaType as FMediaType
 from .db import Monitor, Role, Roles, User, db, get_or_create
 from .providers import ProviderSource
 from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
@@ -193,11 +194,6 @@ class SearchResponse(BaseModel):
 @app.get('/search', response_model=List[SearchResponse])
 async def search(query: str):
     ...
-
-
-class FMediaType(Enum):
-    MOVIE = 'movie'
-    TV = 'tv'
 
 
 class MonitorPost(Orm):
