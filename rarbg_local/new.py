@@ -9,7 +9,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from flask import Response
 from flask_login.utils import decode_cookie
-from flask_user import UserManager
+from flask_user import UserManager, current_user
 from flask_user.password_manager import PasswordManager
 from pydantic import BaseModel, validator
 
@@ -231,6 +231,11 @@ def create_user(item: UserCreate):
 
 
 def get_current_user(remember_token: str = Cookie(None)) -> Optional[User]:
+    try:
+        return current_user._get_current_object()
+    except Exception:
+        pass
+
     user = None
     if remember_token:
         user_id = decode_cookie(remember_token)
