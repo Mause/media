@@ -77,6 +77,7 @@ from .db import (
 )
 from .health import health
 from .models import EpisodeInfo, IndexResponse, SeriesDetails
+from .new import call_sync
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .schema import schema
 from .tmdb import (
@@ -584,6 +585,7 @@ class MonitorsResource(Resource):
             db.session.commit()
         return c, 201
 
+    '''
     @monitor.marshal_with(
         monitor.model(
             'Monitor',
@@ -597,8 +599,10 @@ class MonitorsResource(Resource):
         ),
         as_list=True,
     )
+    '''
+
     def get(self):
-        return db.session.query(Monitor).all()
+        return call_sync('GET', '/monitor', '', request.headers.items())
 
 
 @monitor.route('/<int:ident>')
