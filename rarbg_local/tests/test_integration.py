@@ -349,7 +349,7 @@ def test_foreign_key_integrity(flask_app: Flask):
             session.execute(ins)
 
 
-def test_delete_monitor(responses, test_client):
+def test_delete_monitor(responses, test_client, logged_in):
     themoviedb(responses, '/movie/5', {'title': 'Hello World'})
     ls = test_client.get('/api/monitor').json
     assert ls == []
