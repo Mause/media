@@ -38,15 +38,17 @@ class FakeApp:
         pass
 
 
-fake_app = FakeApp(app)
-db.init_app(fake_app)
-db.app = fake_app
+def startup():
+    fake_app = FakeApp(app)
+    db.init_app(fake_app)
+    db.app = fake_app
 
-engine = db.get_engine(fake_app, None)
-con = engine.raw_connection().connection
-con.create_collation("en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1)
+    engine = db.get_engine(fake_app, None)
+    con = engine.raw_connection().connection
+    con.create_collation("en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1)
 
-db.create_all()
+    db.create_all()
+
 
 app.user_manager = UserManager(None, db, User)
 password_manager = PasswordManager(app).password_crypt_context
