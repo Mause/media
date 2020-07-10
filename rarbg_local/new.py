@@ -3,14 +3,17 @@ from asyncio import get_event_loop
 from datetime import date
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
+from unittest.mock import MagicMock
 
 from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from flask import Response
+from flask import Response, current_app
+from flask.sessions import SecureCookieSessionInterface
 from flask_login.utils import decode_cookie
 from flask_user import UserManager, current_user
 from flask_user.password_manager import PasswordManager
+from flask_user.token_manager import TokenManager
 from pydantic import BaseModel, validator
 from secure_cookie.cookie import SecureCookie
 
@@ -32,6 +35,7 @@ class FakeApp:
             'SQLALCHEMY_TRACK_MODIFICATIONS': False,
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'SQLALCHEMY_ECHO': True,
+            'SECRET_KEY': 'hkfircsc',
         }
         self.extensions = {}
 
@@ -52,6 +56,7 @@ def startup():
 
 
 app.user_manager = UserManager(None, db, User)
+verify_token = TokenManager(FakeApp(None)).verify_token
 password_manager = PasswordManager(app).password_crypt_context
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
@@ -231,12 +236,15 @@ def create_user(item: UserCreate):
     return user
 
 
-def get_current_user(
+async def get_current_user(
     remember_token: str = Cookie(None), session: str = Cookie(None)
 ) -> Optional[User]:
     if session:
-        sc = SecureCookie.unserialize(session, 'hkfircsc')
-        return db.session.query(User).get(sc['_user_id'])
+        request = MagicMock(cookies={'session': session})
+        sess = SecureCookieSessionInterface().open_session(current_app, request)
+        user_id = sess['_user_id']
+        user_id, _ = verify_token(user_id)
+        return db.session.query(User).get(user_id)
 
     try:
         return current_user._get_current_object()
@@ -366,19 +374,24 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None):
     async def send(message):
         response.update(message)
 
-    get_event_loop().run_until_complete(
-        app(
+    async def call():
+
+        headerz = [
+            (key.encode().lower(), value.encode()) for key, value in list(headers or [])
+        ]
+        await app(
             {
                 'type': 'http',
                 'path': path,
                 'method': method,
                 'query_string': query_string,
-                'headers': headers or [],
+                'headers': headerz,
             },
             lambda: [],
             send,
         )
-    )
+
+    get_event_loop().run_until_complete(call())
 
     response.pop('type')
     if 'body' in response:
