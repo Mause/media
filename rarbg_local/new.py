@@ -15,6 +15,7 @@ from flask_user import UserManager, current_user
 from flask_user.password_manager import PasswordManager
 from flask_user.token_manager import TokenManager
 from pydantic import BaseModel, validator
+from pydantic.utils import GetterDict
 from secure_cookie.cookie import SecureCookie
 
 from .db import MediaType as FMediaType
@@ -216,7 +217,17 @@ class UserShim(Orm):
 class MonitorGet(MonitorPost):
     id: int
     title: str
-    added_by: UserShim
+    added_by: str
+
+    class Config:
+        class GD(GetterDict):
+            def get(self, name, default):
+                v = super().get(name, default)
+                if name == 'added_by':
+                    v = v.username
+                return v
+
+        getter_dict = GD
 
 
 monitor_ns = APIRouter()
