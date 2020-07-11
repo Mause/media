@@ -1,12 +1,19 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 from typing import Dict, List, Optional
 
 from dataclasses_json import DataClassJsonMixin, config
 from marshmallow import Schema
 from marshmallow import fields as mfields
+from pydantic import BaseModel
 
 from .db import EpisodeDetails, MovieDetails
+
+
+class Orm(BaseModel):
+    class Config:
+        orm_mode = True
 
 
 class ProviderSource(Enum):
@@ -31,49 +38,41 @@ class ITorrent(DataClassJsonMixin):
     episode_info: EpisodeInfo
 
 
-class UserSchema(Schema):
-    username = mfields.String()
+class UserSchema(Orm):
+    username: str
 
 
-class DownloadSchema(Schema):
-    id = mfields.Integer()
-    tmdb_id = mfields.Integer()
-    transmission_id = mfields.String()
-    imdb_id = mfields.String()
-    type = mfields.String()
-    title = mfields.String()
-    timestamp = mfields.DateTime()
-    added_by = mfields.Nested(UserSchema)
+class DownloadSchema(Orm):
+    id: int
+    tmdb_id: int
+    transmission_id: str
+    imdb_id: str
+    type: str
+    title: str
+    timestamp: datetime
+    added_by: UserSchema
 
 
-class EpisodeDetailsSchema(Schema):
-    id = mfields.Integer()
-    download = mfields.Nested(DownloadSchema)
-    show_title = mfields.String(nullable=False)
-    season = mfields.Integer(nullable=False)
-    episode = mfields.Integer()
+class EpisodeDetailsSchema(Orm):
+    id: int
+    download: DownloadSchema
+    show_title: str
+    season: int
+    episode: int
 
 
-@dataclass
-class SeriesDetails(DataClassJsonMixin):
+class SeriesDetails(Orm):
     title: str
     imdb_id: str
     tmdb_id: int
-    seasons: Dict[str, List[EpisodeDetails]] = field(
-        metadata=config(
-            mm_field=mfields.Dict(mfields.Integer, mfields.Nested(EpisodeDetailsSchema))
-        )
-    )
+    seasons: Dict[str, List[EpisodeDetailsSchema]]
 
 
-class MovieDetailsSchema(Schema):
-    id = mfields.Integer()
-    download = mfields.Nested(DownloadSchema)
+class MovieDetailsSchema(Orm):
+    id: int
+    download: DownloadSchema
 
 
-@dataclass
-class IndexResponse(DataClassJsonMixin):
+class IndexResponse(Orm):
     series: List[SeriesDetails]
-    movies: List[MovieDetails] = field(
-        metadata=config(mm_field=mfields.List(mfields.Nested(MovieDetailsSchema,)))
-    )
+    movies: List[MovieDetailsSchema]
