@@ -377,9 +377,20 @@ def test_delete_monitor(responses, test_client, logged_in):
     assert ls == []
 
 
-def test_stats(test_client):
+def test_stats(test_client, logged_in):
+    create_movie(transmission_id='', imdb_id='', title='', tmdb_id=0)
+    create_episode(
+        transmission_id='',
+        imdb_id='',
+        title='',
+        tmdb_id=0,
+        season='1',
+        episode='1',
+        show_title='',
+    )
+
     assert test_client.get('/api/stats').json == [
-        {'user': 'python', 'values': {'episode': None, 'movie': None}}
+        {'user': 'python', 'values': {'episode': 1, 'movie': 1}}
     ]
 
 

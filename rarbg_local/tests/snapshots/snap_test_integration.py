@@ -302,16 +302,20 @@ snapshots['test_swagger 1'] = {
         },
         'Stats': {
             'properties': {
-                'episode': {'type': 'integer'},
-                'movie': {'type': 'integer'},
+                'user': {'title': 'User', 'type': 'string'},
+                'values': {'$ref': '#/definitions/Stats'},
             },
+            'required': ['user', 'values'],
+            'title': 'StatsResponse',
             'type': 'object',
         },
         'StatsResponse': {
             'properties': {
-                'user': {'type': 'string'},
+                'user': {'title': 'User', 'type': 'string'},
                 'values': {'$ref': '#/definitions/Stats'},
             },
+            'required': ['user', 'values'],
+            'title': 'StatsResponse',
             'type': 'object',
         },
         'TorrentsResponse': {
@@ -517,19 +521,13 @@ snapshots['test_swagger 1'] = {
         '/stats': {
             'get': {
                 'operationId': 'get_api_stats',
-                'parameters': [
-                    {
-                        'description': 'An optional fields mask',
-                        'format': 'mask',
-                        'in': 'header',
-                        'name': 'X-Fields',
-                        'type': 'string',
-                    }
-                ],
                 'responses': {
                     '200': {
                         'description': 'Success',
-                        'schema': {'$ref': '#/definitions/StatsResponse'},
+                        'schema': {
+                            'items': {'$ref': '#/definitions/StatsResponse'},
+                            'type': 'array',
+                        },
                     }
                 },
                 'tags': ['default'],

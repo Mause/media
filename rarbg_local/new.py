@@ -161,19 +161,23 @@ async def index():
     return IndexResponse(series=resolve_series(), movies=get_movies())
 
 
-class Stats(BaseModel):
-    episode: int
-    movie: int
+from sqlalchemy import event, func
 
-
-class StatsResponse(BaseModel):
-    user: str
-    values: Stats
+from .db import Download
+from .models import StatsResponse
 
 
 @app.get('/stats', response_model=List[StatsResponse])
-def stats():
-    ...
+async def stats():
+    from .main import groupby
+
+    keys = User.username, Download.type
+    query = db.session.query(*keys, func.count(name='count')).group_by(*keys)
+
+    return [
+        {"user": user, 'values': {type: value for _, type, value in values}}
+        for user, values in groupby(query, lambda row: row.username).items()
+    ]
 
 
 class MovieResponse(BaseModel):

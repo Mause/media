@@ -721,32 +721,16 @@ def api_index():
     return call_sync('GET', '/index', request.headers)
 
 
-StatsResponse = api.model(
-    'StatsResponse',
-    {
-        "user": fields.String,
-        "values": fields.Nested(
-            api.model('Stats', {'episode': fields.Integer, 'movie': fields.Integer})
-        ),
-    },
-)
+from .models import StatsResponse
 
 
 @api.route('/stats')
-@api.response(200, 'OK', [StatsResponse])
+@api.response(
+    200, 'Success', [api.schema_model('StatsResponse', rewrap(StatsResponse.schema()))]
+)
 @as_resource()
-@api.marshal_with(StatsResponse)
 def api_stats():
-    keys = User.username, Download.type
-    query = (
-        db.session.query(*keys, func.count(Download.added_by_id))
-        .outerjoin(Download)
-        .group_by(*keys)
-    )
-    return [
-        {"user": user, 'values': {type: value for _, type, value in values}}
-        for user, values in groupby(query.all(), lambda row: row[0]).items()
-    ]
+    return call_sync('GET', '/stats', request.headers)
 
 
 def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:

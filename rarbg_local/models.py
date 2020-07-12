@@ -98,3 +98,13 @@ class DownloadAllResponse(BaseModel):
     packs: List[ITorrent]
     complete: List[Tuple[str, List[ITorrent]]]
     incomplete: List[Tuple[str, List[ITorrent]]]
+
+
+class Stats(BaseModel):
+    episode: int = 0
+    movie: int = 0
+
+
+class StatsResponse(BaseModel):
+    user: str
+    values: Stats
