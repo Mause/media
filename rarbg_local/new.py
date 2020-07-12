@@ -14,8 +14,7 @@ from flask_login.utils import decode_cookie
 from flask_user import UserManager, current_user
 from flask_user.password_manager import PasswordManager
 from flask_user.token_manager import TokenManager
-from pydantic import BaseModel, validator
-from pydantic.utils import GetterDict
+from pydantic import BaseModel, Field, validator
 
 from .db import MediaType as FMediaType
 from .db import Monitor, Role, Roles, User, db, get_or_create
@@ -193,6 +192,12 @@ class SearchResponse(BaseModel):
     type: MediaType
     year: int
     imdbID: int
+
+    # deprecated
+    Year: int = Field(deprecated=True)
+    Type: MediaType = Field(deprecated=True)
+
+    Config = map_to({'Year': 'year', 'Type': 'type'})
 
 
 @app.get('/search', response_model=List[SearchResponse])

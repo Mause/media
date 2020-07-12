@@ -489,3 +489,9 @@ def test_stream(test_client, responses):
             'episode_info': {'seasonnum': '1', 'epnum': '1'},
         },
     ]
+
+
+def test_schema(snapshot):
+    from ..new import SearchResponse
+
+    snapshot.assert_match(SearchResponse.schema())

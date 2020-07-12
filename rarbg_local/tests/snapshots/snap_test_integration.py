@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 # snapshottest: v1 - https://goo.gl/zC4yUc
-from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
@@ -628,4 +626,18 @@ snapshots['test_swagger 1'] = {
         {'description': 'Contains media monitor resources', 'name': 'monitor'},
         {'name': 'tv'},
     ],
+}
+
+snapshots['test_schema 1'] = {
+    'properties': {
+        'Type': {'deprecated': True, 'enum': ['series', 'movie'], 'title': 'Type'},
+        'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
+        'imdbID': {'title': 'Imdbid', 'type': 'integer'},
+        'title': {'title': 'Title', 'type': 'string'},
+        'type': {'enum': ['series', 'movie'], 'title': 'Type'},
+        'year': {'title': 'Year', 'type': 'integer'},
+    },
+    'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
+    'title': 'SearchResponse',
+    'type': 'object',
 }

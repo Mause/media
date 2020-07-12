@@ -1,12 +1,14 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from functools import reduce
 from typing import Dict, List, Optional, TypeVar
 
 from dataclasses_json import DataClassJsonMixin, config
 from marshmallow import Schema
 from marshmallow import fields as mfields
 from pydantic import BaseModel
+from pydantic.utils import GetterDict
 
 from .db import EpisodeDetails, MovieDetails
 
