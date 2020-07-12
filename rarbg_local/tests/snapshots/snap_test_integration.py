@@ -68,7 +68,6 @@ snapshots['test_swagger 1'] = {
             'properties': {
                 'complete': {
                     'items': {
-                        'example': [None, None],
                         'items': [
                             {'type': 'string'},
                             {
@@ -78,11 +77,11 @@ snapshots['test_swagger 1'] = {
                         ],
                         'type': 'array',
                     },
+                    'title': 'Complete',
                     'type': 'array',
                 },
                 'incomplete': {
                     'items': {
-                        'example': [None, None],
                         'items': [
                             {'type': 'string'},
                             {
@@ -92,23 +91,34 @@ snapshots['test_swagger 1'] = {
                         ],
                         'type': 'array',
                     },
+                    'title': 'Incomplete',
                     'type': 'array',
                 },
-                'packs': {'items': {'$ref': '#/definitions/ITorrent'}, 'type': 'array'},
+                'packs': {
+                    'items': {'$ref': '#/definitions/ITorrent'},
+                    'title': 'Packs',
+                    'type': 'array',
+                },
             },
+            'required': ['packs', 'complete', 'incomplete'],
+            'title': 'DownloadAllResponse',
             'type': 'object',
         },
         'DownloadSchema': {
             'properties': {
-                'added_by': {'$ref': '#/definitions/UserSchema'},
-                'id': {'type': 'integer'},
-                'imdb_id': {'type': 'string'},
-                'timestamp': {'format': 'date-time', 'type': 'string'},
-                'title': {'type': 'string'},
-                'tmdb_id': {'type': 'integer'},
-                'transmission_id': {'type': 'string'},
-                'type': {'type': 'string'},
+                'movies': {
+                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
+                    'title': 'Movies',
+                    'type': 'array',
+                },
+                'series': {
+                    'items': {'$ref': '#/definitions/SeriesDetails'},
+                    'title': 'Series',
+                    'type': 'array',
+                },
             },
+            'required': ['series', 'movies'],
+            'title': 'IndexResponse',
             'type': 'object',
         },
         'Episode': {
@@ -122,47 +132,116 @@ snapshots['test_swagger 1'] = {
         },
         'EpisodeDetailsSchema': {
             'properties': {
-                'download': {'$ref': '#/definitions/DownloadSchema'},
-                'episode': {'type': 'integer'},
-                'id': {'type': 'integer'},
-                'season': {'type': 'integer'},
-                'show_title': {'type': 'string'},
+                'movies': {
+                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
+                    'title': 'Movies',
+                    'type': 'array',
+                },
+                'series': {
+                    'items': {'$ref': '#/definitions/SeriesDetails'},
+                    'title': 'Series',
+                    'type': 'array',
+                },
             },
+            'required': ['series', 'movies'],
+            'title': 'IndexResponse',
             'type': 'object',
         },
         'EpisodeInfo': {
             'properties': {
-                'epnum': {'type': 'string'},
-                'seasonnum': {'type': 'string'},
+                'complete': {
+                    'items': {
+                        'items': [
+                            {'type': 'string'},
+                            {
+                                'items': {'$ref': '#/definitions/ITorrent'},
+                                'type': 'array',
+                            },
+                        ],
+                        'type': 'array',
+                    },
+                    'title': 'Complete',
+                    'type': 'array',
+                },
+                'incomplete': {
+                    'items': {
+                        'items': [
+                            {'type': 'string'},
+                            {
+                                'items': {'$ref': '#/definitions/ITorrent'},
+                                'type': 'array',
+                            },
+                        ],
+                        'type': 'array',
+                    },
+                    'title': 'Incomplete',
+                    'type': 'array',
+                },
+                'packs': {
+                    'items': {'$ref': '#/definitions/ITorrent'},
+                    'title': 'Packs',
+                    'type': 'array',
+                },
             },
+            'required': ['packs', 'complete', 'incomplete'],
+            'title': 'DownloadAllResponse',
             'type': 'object',
         },
         'ITorrent': {
             'properties': {
-                'category': {'type': 'string'},
-                'download': {'type': 'string'},
-                'episode_info': {'$ref': '#/definitions/EpisodeInfo'},
-                'seeders': {'type': 'integer'},
-                'source': {
-                    'enum': ('RARBG', 'KICKASS', 'HORRIBLESUBS'),
-                    'example': 'RARBG',
-                    'type': 'string',
+                'complete': {
+                    'items': {
+                        'items': [
+                            {'type': 'string'},
+                            {
+                                'items': {'$ref': '#/definitions/ITorrent'},
+                                'type': 'array',
+                            },
+                        ],
+                        'type': 'array',
+                    },
+                    'title': 'Complete',
+                    'type': 'array',
                 },
-                'title': {'type': 'string'},
+                'incomplete': {
+                    'items': {
+                        'items': [
+                            {'type': 'string'},
+                            {
+                                'items': {'$ref': '#/definitions/ITorrent'},
+                                'type': 'array',
+                            },
+                        ],
+                        'type': 'array',
+                    },
+                    'title': 'Incomplete',
+                    'type': 'array',
+                },
+                'packs': {
+                    'items': {'$ref': '#/definitions/ITorrent'},
+                    'title': 'Packs',
+                    'type': 'array',
+                },
             },
+            'required': ['packs', 'complete', 'incomplete'],
+            'title': 'DownloadAllResponse',
             'type': 'object',
         },
         'IndexResponseSchema': {
             'properties': {
                 'movies': {
                     'items': {'$ref': '#/definitions/MovieDetailsSchema'},
+                    'title': 'Movies',
                     'type': 'array',
                 },
                 'series': {
-                    'items': {'$ref': '#/definitions/SeriesdetailsSchema'},
+                    'items': {'$ref': '#/definitions/SeriesDetails'},
+                    'title': 'Series',
                     'type': 'array',
                 },
             },
+            'required': ['series', 'movies'],
+            'title': 'IndexResponse',
             'type': 'object',
         },
         'InnerTorrent': {
@@ -188,12 +267,14 @@ snapshots['test_swagger 1'] = {
         },
         'Monitor': {
             'properties': {
-                'added_by': {'type': 'string'},
-                'id': {'type': 'integer'},
-                'title': {'type': 'string'},
-                'tmdb_id': {'type': 'integer'},
-                'type': {'type': 'string'},
+                'added_by': {'title': 'Added By', 'type': 'string'},
+                'id': {'title': 'Id', 'type': 'integer'},
+                'title': {'title': 'Title', 'type': 'string'},
+                'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
+                'type': {'enum': ['MOVIE', 'TV'], 'title': 'Type'},
             },
+            'required': ['tmdb_id', 'type', 'id', 'title', 'added_by'],
+            'title': 'MonitorGet',
             'type': 'object',
         },
         'MonitorCreated': {'properties': {'id': {'type': 'integer'}}, 'type': 'object'},
@@ -206,9 +287,19 @@ snapshots['test_swagger 1'] = {
         },
         'MovieDetailsSchema': {
             'properties': {
-                'download': {'$ref': '#/definitions/DownloadSchema'},
-                'id': {'type': 'integer'},
+                'movies': {
+                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
+                    'title': 'Movies',
+                    'type': 'array',
+                },
+                'series': {
+                    'items': {'$ref': '#/definitions/SeriesDetails'},
+                    'title': 'Series',
+                    'type': 'array',
+                },
             },
+            'required': ['series', 'movies'],
+            'title': 'IndexResponse',
             'type': 'object',
         },
         'SearchResponse': {
@@ -237,19 +328,21 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
-        'SeriesdetailsSchema': {
+        'SeriesDetails': {
             'properties': {
-                'imdb_id': {'type': 'string'},
-                'seasons': {
-                    'additionalProperties': {
-                        '$ref': '#/definitions/EpisodeDetailsSchema'
-                    },
-                    'example': {'additionalProperty1': None},
-                    'type': 'object',
+                'movies': {
+                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
+                    'title': 'Movies',
+                    'type': 'array',
                 },
-                'title': {'type': 'string'},
-                'tmdb_id': {'type': 'integer'},
+                'series': {
+                    'items': {'$ref': '#/definitions/SeriesDetails'},
+                    'title': 'Series',
+                    'type': 'array',
+                },
             },
+            'required': ['series', 'movies'],
+            'title': 'IndexResponse',
             'type': 'object',
         },
         'Stats': {
@@ -297,7 +390,20 @@ snapshots['test_swagger 1'] = {
             'type': 'object',
         },
         'UserSchema': {
-            'properties': {'username': {'type': 'string'}},
+            'properties': {
+                'movies': {
+                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
+                    'title': 'Movies',
+                    'type': 'array',
+                },
+                'series': {
+                    'items': {'$ref': '#/definitions/SeriesDetails'},
+                    'title': 'Series',
+                    'type': 'array',
+                },
+            },
+            'required': ['series', 'movies'],
+            'title': 'IndexResponse',
             'type': 'object',
         },
     },
@@ -331,15 +437,6 @@ snapshots['test_swagger 1'] = {
         '/index': {
             'get': {
                 'operationId': 'get_api_index',
-                'parameters': [
-                    {
-                        'description': 'An optional fields mask',
-                        'format': 'mask',
-                        'in': 'header',
-                        'name': 'X-Fields',
-                        'type': 'string',
-                    }
-                ],
                 'responses': {
                     '200': {
                         'description': 'Success',
@@ -352,15 +449,6 @@ snapshots['test_swagger 1'] = {
         '/monitor': {
             'get': {
                 'operationId': 'get_monitors_resource',
-                'parameters': [
-                    {
-                        'description': 'An optional fields mask',
-                        'format': 'mask',
-                        'in': 'header',
-                        'name': 'X-Fields',
-                        'type': 'string',
-                    }
-                ],
                 'responses': {
                     '200': {
                         'description': 'Success',
@@ -458,15 +546,6 @@ snapshots['test_swagger 1'] = {
         '/select/{tmdb_id}/season/{season}/download_all': {
             'get': {
                 'operationId': 'get_download_all_episodes',
-                'parameters': [
-                    {
-                        'description': 'An optional fields mask',
-                        'format': 'mask',
-                        'in': 'header',
-                        'name': 'X-Fields',
-                        'type': 'string',
-                    }
-                ],
                 'responses': {
                     '200': {
                         'description': 'Success',

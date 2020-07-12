@@ -295,7 +295,7 @@ def test_search(responses, test_client):
 
 
 def test_delete_cascade(test_client: FlaskClient, logged_in):
-    from ..main import db, get_episodes, Download
+    from ..main import Download, db, get_episodes
 
     e = create_episode(
         transmission_id='1',
@@ -338,7 +338,7 @@ def test_select_season(
 
 
 def test_foreign_key_integrity(flask_app: Flask):
-    from ..main import db, Download
+    from ..main import Download, db
 
     with flask_app.app_context():
         session = db.session
@@ -466,7 +466,7 @@ def test_stream(test_client, responses):
     assert datum == [
         {
             'source': 'RARBG',
-            'seeders': '18',
+            'seeders': 18,
             'title': '18',
             'download': '',
             'category': '',
@@ -474,7 +474,7 @@ def test_stream(test_client, responses):
         },
         {
             'source': 'RARBG',
-            'seeders': '41',
+            'seeders': 41,
             'title': '41',
             'download': '',
             'category': '',
@@ -482,7 +482,7 @@ def test_stream(test_client, responses):
         },
         {
             'source': 'RARBG',
-            'seeders': '49',
+            'seeders': 49,
             'title': '49',
             'download': '',
             'category': '',

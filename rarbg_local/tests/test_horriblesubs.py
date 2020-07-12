@@ -1,4 +1,3 @@
-from dataclasses import asdict
 from pathlib import Path
 
 from responses import RequestsMock
@@ -117,6 +116,8 @@ def test_provider(responses: RequestsMock, snapshot):
     )
     themoviedb(responses, '/tv/1', {'name': 'Little Busters!'})
 
-    results = list(map(asdict, HorriblesubsProvider().search_for_tv(None, 1, 1, 2)))
+    results = [
+        item.dict() for item in HorriblesubsProvider().search_for_tv(None, 1, 1, 2)
+    ]
 
     snapshot.assert_match(results)

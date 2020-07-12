@@ -1,8 +1,7 @@
-from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from functools import reduce
-from typing import Dict, List, Optional, TypeVar
+from typing import Dict, List, Optional, Tuple, TypeVar
 
 from dataclasses_json import DataClassJsonMixin, config
 from marshmallow import Schema
@@ -41,14 +40,12 @@ class ProviderSource(Enum):
     RARBG = 'RARBG'
 
 
-@dataclass
-class EpisodeInfo(DataClassJsonMixin):
+class EpisodeInfo(BaseModel):
     seasonnum: Optional[str]
     epnum: Optional[str]
 
 
-@dataclass
-class ITorrent(DataClassJsonMixin):
+class ITorrent(BaseModel):
     source: ProviderSource
     title: str
     seeders: int
@@ -95,3 +92,9 @@ class MovieDetailsSchema(Orm):
 class IndexResponse(Orm):
     series: List[SeriesDetails]
     movies: List[MovieDetailsSchema]
+
+
+class DownloadAllResponse(BaseModel):
+    packs: List[ITorrent]
+    complete: List[Tuple[str, List[ITorrent]]]
+    incomplete: List[Tuple[str, List[ITorrent]]]

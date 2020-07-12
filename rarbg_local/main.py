@@ -5,7 +5,7 @@ import re
 import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from enum import Enum
 from functools import lru_cache, wraps
 from itertools import chain
@@ -76,8 +76,8 @@ from .db import (
     get_movies,
 )
 from .health import health
-from .models import EpisodeInfo, IndexResponse, SeriesDetails
-from .new import call_sync
+from .models import DownloadAllResponse, EpisodeInfo, IndexResponse, SeriesDetails
+from .new import MonitorGet, call_sync
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .schema import schema
 from .tmdb import (
@@ -119,8 +119,6 @@ sockets = SocketIO(cors_allowed_origins='*')
 K = TypeVar('K')
 V = TypeVar('V')
 
-schema_to_openapi(api, 'EpisodeInfo', schema(EpisodeInfo))
-
 
 @lru_cache()
 def get_plex() -> PlexServer:
@@ -157,7 +155,7 @@ def create_app(config):
             'USER_ENABLE_EMAIL': False,  # Disable email authentication
             'USER_ENABLE_USERNAME': True,  # Enable username authentication
             'USER_UNAUTHORIZED_ENDPOINT': 'rarbg_local.unauthorized',
-            'RESTX_INCLUDE_ALL_MODELS': False,
+            'RESTX_INCLUDE_ALL_MODELS': True,
             **(config if isinstance(config, dict) else {}),
         }
     )
@@ -311,7 +309,7 @@ def stream(type: str, tmdb_id: str, source=None, season=None, episode=None):
     else:
         items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
-    return (asdict(item) for item in items)
+    return (item.dict() for item in items)
 
 
 def _stream(type: str, tmdb_id: str, season=None, episode=None):
@@ -320,7 +318,7 @@ def _stream(type: str, tmdb_id: str, season=None, episode=None):
     else:
         items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
-    return (asdict(item) for item in items)
+    return (item.dict() for item in items)
 
 
 @sockets.on('message')
@@ -398,42 +396,19 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-IITorrent = api.model(
-    'ITorrent',
-    {
-        'source': fields.String(
-            attribute='source.name', enum=('RARBG', 'KICKASS', 'HORRIBLESUBS')
-        ),
-        'download': fields.String,
-        'seeders': fields.Integer,
-        'category': fields.String,
-        'title': fields.String,
-        'episode_info': fields.Nested(
-            api.model(
-                'EpisodeInfo', {'seasonnum': fields.String, 'epnum': fields.String}
-            )
-        ),
-    },
-)
-'''
-DownloadAllResponse = api.model(
-    'DownloadAllResponse',
-    {
-        'packs': fields.List(fields.Nested(IITorrent)),
-        'complete': fields.List(
-            fields.Tuple([fields.String, fields.List(fields.Nested(IITorrent))])
-        ),
-        'incomplete': fields.List(
-            fields.Tuple([fields.String, fields.List(fields.Nested(IITorrent))])
-        ),
-    },
-)
-'''
+def rewrap(schema):
+    for name, subschema in schema.pop('definitions').items():
+        api.schema_model(name, schema)
+    return schema
 
 
 @api.route('/select/<tmdb_id>/season/<season>/download_all')
 @as_resource()
-# @api.marshal_with(DownloadAllResponse)
+@api.response(
+    200,
+    'Success',
+    api.schema_model('DownloadAllResponse', rewrap(DownloadAllResponse.schema())),
+)
 def download_all_episodes(tmdb_id: str, season: str) -> Dict:
     results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
@@ -585,22 +560,9 @@ class MonitorsResource(Resource):
             db.session.commit()
         return c, 201
 
-    '''
-    @monitor.marshal_with(
-        monitor.model(
-            'Monitor',
-            {
-                'id': fields.Integer,
-                'tmdb_id': fields.Integer,
-                'title': fields.String,
-                'type': fields.String(attribute='type.name'),
-                'added_by': fields.String(attribute='added_by.username'),
-            },
-        ),
-        as_list=True,
+    @monitor.response(
+        200, 'Success', [api.schema_model('Monitor', MonitorGet.schema())]
     )
-    '''
-
     def get(self):
         return call_sync('GET', '/monitor', '', request.headers.items())
 
@@ -750,6 +712,11 @@ has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
 
 @api.route('/index')
 @as_resource()
+@api.response(
+    200,
+    'Success',
+    api.schema_model('IndexResponseSchema', rewrap(IndexResponse.schema())),
+)
 # @api.marshal_with(schema_to_marshal(api, 'IndexResponse', schema(IndexResponse)))
 def api_index():
     return json.loads(

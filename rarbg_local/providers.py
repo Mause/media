@@ -83,7 +83,7 @@ class RarbgProvider(Provider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=tv_convert(item['category']),
-                episode_info=EpisodeInfo(str(season), str(episode)),
+                episode_info=EpisodeInfo(seasonnum=str(season), epnum=str(episode)),
             )
 
     def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
@@ -98,7 +98,7 @@ class RarbgProvider(Provider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=movie_convert(item['category']),
-                episode_info=EpisodeInfo(None, None),
+                episode_info=EpisodeInfo(),
             )
 
 
@@ -118,7 +118,7 @@ class KickassProvider(Provider):
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=tv_convert(item['resolution']),
-                episode_info=EpisodeInfo(str(season), str(episode)),
+                episode_info=EpisodeInfo(seasonnum=str(season), epnum=str(episode)),
             )
 
     def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
@@ -129,7 +129,7 @@ class KickassProvider(Provider):
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=movie_convert(item['resolution']),
-                episode_info=EpisodeInfo(None, None),
+                episode_info=EpisodeInfo(),
             )
 
 
@@ -149,7 +149,9 @@ class HorriblesubsProvider(Provider):
                 seeders=0,
                 download=item['download'],
                 category=tv_convert(item['resolution']),
-                episode_info=EpisodeInfo(str(season), str(item['episode'])),
+                episode_info=EpisodeInfo(
+                    seasonnum=str(season), epnum=str(item['episode'])
+                ),
             )
 
     def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
