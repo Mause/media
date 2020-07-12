@@ -18,7 +18,7 @@ from pydantic import BaseModel, Field, validator
 
 from .db import MediaType as FMediaType
 from .db import Monitor, Role, Roles, User, db, get_or_create
-from .models import Orm, map_to
+from .models import IndexResponse, Orm, map_to
 from .providers import ProviderSource
 from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
 from .utils import precondition
@@ -154,9 +154,11 @@ def download_post(download: DownloadPost):
     ...
 
 
-@app.get('/index')
-def index():
-    pass
+@app.get('/index', response_model=IndexResponse)
+async def index():
+    from .main import get_movies, resolve_series
+
+    return IndexResponse(series=resolve_series(), movies=get_movies())
 
 
 class Stats(BaseModel):

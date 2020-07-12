@@ -717,11 +717,8 @@ has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
     'Success',
     api.schema_model('IndexResponseSchema', rewrap(IndexResponse.schema())),
 )
-# @api.marshal_with(schema_to_marshal(api, 'IndexResponse', schema(IndexResponse)))
 def api_index():
-    return json.loads(
-        IndexResponse(series=resolve_series(), movies=get_movies()).json()
-    )
+    return call_sync('GET', '/index', request.headers)
 
 
 StatsResponse = api.model(
