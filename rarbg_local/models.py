@@ -58,7 +58,7 @@ class EpisodeDetailsSchema(Orm):
     download: DownloadSchema
     show_title: str
     season: int
-    episode: int
+    episode: Optional[int]
 
 
 class SeriesDetails(Orm):
