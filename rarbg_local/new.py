@@ -29,6 +29,8 @@ app = FastAPI()
 class FakeApp:
     import_name = __name__
 
+    user_manager: UserManager
+
     def __init__(self, fastapi_app):
         self.debug = True
         self.config = {
@@ -55,9 +57,10 @@ def startup():
     db.create_all()
 
 
-app.user_manager = UserManager(None, db, User)
-verify_token = TokenManager(FakeApp(None)).verify_token
-password_manager = PasswordManager(app).password_crypt_context
+fake = FakeApp(None)
+fake.user_manager = UserManager(None, db, User)
+verify_token = TokenManager(fake).verify_token
+password_manager = PasswordManager(fake).password_crypt_context
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
