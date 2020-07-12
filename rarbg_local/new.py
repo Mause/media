@@ -3,16 +3,22 @@ from asyncio import get_event_loop
 from datetime import date
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
+from unittest.mock import MagicMock
 
 from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from flask import Response
+from flask import Response, current_app
+from flask.sessions import SecureCookieSessionInterface
 from flask_login.utils import decode_cookie
-from flask_user import UserManager
+from flask_user import UserManager, current_user
 from flask_user.password_manager import PasswordManager
+from flask_user.token_manager import TokenManager
 from pydantic import BaseModel, validator
+from pydantic.utils import GetterDict
+from secure_cookie.cookie import SecureCookie
 
+from .db import MediaType as FMediaType
 from .db import Monitor, Role, Roles, User, db, get_or_create
 from .providers import ProviderSource
 from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
@@ -30,6 +36,7 @@ class FakeApp:
             'SQLALCHEMY_TRACK_MODIFICATIONS': False,
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'SQLALCHEMY_ECHO': True,
+            'SECRET_KEY': 'hkfircsc',
         }
         self.extensions = {}
 
@@ -37,17 +44,20 @@ class FakeApp:
         pass
 
 
-fake_app = FakeApp(app)
-db.init_app(fake_app)
-db.app = fake_app
+def startup():
+    fake_app = FakeApp(app)
+    db.init_app(fake_app)
+    db.app = fake_app
 
-engine = db.get_engine(fake_app, None)
-con = engine.raw_connection().connection
-con.create_collation("en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1)
+    engine = db.get_engine(fake_app, None)
+    con = engine.raw_connection().connection
+    con.create_collation("en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1)
 
-db.create_all()
+    db.create_all()
+
 
 app.user_manager = UserManager(None, db, User)
+verify_token = TokenManager(FakeApp(None)).verify_token
 password_manager = PasswordManager(app).password_crypt_context
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
@@ -195,11 +205,6 @@ async def search(query: str):
     ...
 
 
-class FMediaType(Enum):
-    MOVIE = 'movie'
-    TV = 'tv'
-
-
 class MonitorPost(Orm):
     tmdb_id: int
     type: FMediaType
@@ -212,7 +217,17 @@ class UserShim(Orm):
 class MonitorGet(MonitorPost):
     id: int
     title: str
-    added_by: UserShim
+    added_by: str
+
+    class Config:
+        class GD(GetterDict):
+            def get(self, name, default):
+                v = super().get(name, default)
+                if name == 'added_by':
+                    v = v.username
+                return v
+
+        getter_dict = GD
 
 
 monitor_ns = APIRouter()
@@ -232,7 +247,21 @@ def create_user(item: UserCreate):
     return user
 
 
-def get_current_user(remember_token: str = Cookie(None)) -> Optional[User]:
+async def get_current_user(
+    remember_token: str = Cookie(None), session: str = Cookie(None)
+) -> Optional[User]:
+    if session:
+        request = MagicMock(cookies={'session': session})
+        sess = SecureCookieSessionInterface().open_session(current_app, request)
+        user_id = sess['_user_id']
+        user_id, _ = verify_token(user_id)
+        return db.session.query(User).get(user_id)
+
+    try:
+        return current_user._get_current_object()
+    except Exception:
+        pass
+
     user = None
     if remember_token:
         user_id = decode_cookie(remember_token)
@@ -264,7 +293,7 @@ def promote(req: PromoteCreate, calling_user: User = Depends(get_current_user)):
 
 
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
-def monitor_get(user: User = Depends(get_current_user)):
+async def monitor_get(user: User = Depends(get_current_user)):
     return db.session.query(Monitor).all()
 
 
@@ -356,23 +385,30 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None):
     async def send(message):
         response.update(message)
 
-    get_event_loop().run_until_complete(
-        app(
+    async def call():
+
+        headerz = [
+            (key.encode().lower(), value.encode()) for key, value in list(headers or [])
+        ]
+        await app(
             {
                 'type': 'http',
                 'path': path,
                 'method': method,
                 'query_string': query_string,
-                'headers': headers or [],
+                'headers': headerz,
             },
             lambda: [],
             send,
         )
-    )
+
+    get_event_loop().run_until_complete(call())
 
     response.pop('type')
     if 'body' in response:
         response['response'] = response.pop('body')
+    response['headers'] = dict(response['headers'])
+    response['mimetype'] = response['headers'].pop(b'content-type').decode()
 
     return Response(**response)
 
