@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, TypeVar
 
 from dataclasses_json import DataClassJsonMixin, config
 from marshmallow import Schema
@@ -14,6 +14,23 @@ from .db import EpisodeDetails, MovieDetails
 class Orm(BaseModel):
     class Config:
         orm_mode = True
+
+
+T = TypeVar('T')
+
+
+def map_to(config: Dict[str, str]) -> type:
+    class Config:
+        class getter_dict(GetterDict):
+            def get(self, name: str, default: T) -> T:
+                if name in config:
+                    first, *parts = config[name].split('.')
+                    return reduce(getattr, parts, super().get(first, default))
+                else:
+                    v = super().get(name, default)
+                return v
+
+    return Config
 
 
 class ProviderSource(Enum):

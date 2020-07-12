@@ -218,15 +218,7 @@ class MonitorGet(MonitorPost):
     title: str
     added_by: str
 
-    class Config:
-        class GD(GetterDict):
-            def get(self, name, default):
-                v = super().get(name, default)
-                if name == 'added_by':
-                    v = v.username
-                return v
-
-        getter_dict = GD
+    Config = map_to({'added_by': 'added_by.username'})
 
 
 monitor_ns = APIRouter()
