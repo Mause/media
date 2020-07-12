@@ -16,7 +16,6 @@ from flask_user.password_manager import PasswordManager
 from flask_user.token_manager import TokenManager
 from pydantic import BaseModel, validator
 from pydantic.utils import GetterDict
-from secure_cookie.cookie import SecureCookie
 
 from .db import MediaType as FMediaType
 from .db import Monitor, Role, Roles, User, db, get_or_create
