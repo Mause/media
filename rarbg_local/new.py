@@ -19,6 +19,7 @@ from pydantic.utils import GetterDict
 
 from .db import MediaType as FMediaType
 from .db import Monitor, Role, Roles, User, db, get_or_create
+from .models import Orm, map_to
 from .providers import ProviderSource
 from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
 from .utils import precondition
@@ -64,11 +65,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 class MediaType(Enum):
     SERIES = 'series'
     MOVIE = 'movie'
-
-
-class Orm(BaseModel):
-    class Config:
-        orm_mode = True
 
 
 class DownloadResponse(Orm):
