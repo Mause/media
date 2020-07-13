@@ -54,6 +54,7 @@ from marshmallow.validate import Regexp as MarshRegexp
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
+from pydantic import BaseModel
 from requests.exceptions import ConnectionError, HTTPError
 from sqlalchemy import event, func
 from sqlalchemy.orm.session import make_transient
@@ -76,7 +77,13 @@ from .db import (
     get_movies,
 )
 from .health import health
-from .models import DownloadAllResponse, EpisodeInfo, IndexResponse, SeriesDetails
+from .models import (
+    DownloadAllResponse,
+    EpisodeInfo,
+    IndexResponse,
+    SeriesDetails,
+    StatsResponse,
+)
 from .new import MonitorGet, call_sync
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .schema import schema
@@ -396,19 +403,16 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-def rewrap(schema):
-    for name, subschema in schema.pop('definitions').items():
+def rewrap(schema: BaseModel):
+    s = schema.schema()
+    for name, subschema in s.pop('definitions', {}).items():
         api.schema_model(name, schema)
-    return schema
+    return api.schema_model(schema.__name__, s)
 
 
 @api.route('/select/<tmdb_id>/season/<season>/download_all')
 @as_resource()
-@api.response(
-    200,
-    'Success',
-    api.schema_model('DownloadAllResponse', rewrap(DownloadAllResponse.schema())),
-)
+@api.response(200, 'Success', rewrap(DownloadAllResponse))
 def download_all_episodes(tmdb_id: str, season: str) -> Dict:
     results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
@@ -560,9 +564,7 @@ class MonitorsResource(Resource):
             db.session.commit()
         return c, 201
 
-    @monitor.response(
-        200, 'Success', [api.schema_model('Monitor', MonitorGet.schema())]
-    )
+    @monitor.response(200, 'Success', [rewrap(MonitorGet)])
     def get(self):
         return call_sync('GET', '/monitor', '', request.headers.items())
 
@@ -712,22 +714,13 @@ has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
 
 @api.route('/index')
 @as_resource()
-@api.response(
-    200,
-    'Success',
-    api.schema_model('IndexResponseSchema', rewrap(IndexResponse.schema())),
-)
+@api.response(200, 'Success', rewrap(IndexResponse))
 def api_index():
     return call_sync('GET', '/index', request.headers)
 
 
-from .models import StatsResponse
-
-
 @api.route('/stats')
-@api.response(
-    200, 'Success', [api.schema_model('StatsResponse', rewrap(StatsResponse.schema()))]
-)
+@api.response(200, 'Success', [rewrap(StatsResponse)])
 @as_resource()
 def api_stats():
     return call_sync('GET', '/stats', request.headers)
