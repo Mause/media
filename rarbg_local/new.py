@@ -168,7 +168,9 @@ class DownloadPost(Orm):
     season: Optional[int] = None
     episode: Optional[int] = None
 
-    _valid_magnet = validator('magnet')(lambda field: re.search(r'^magnet:', field))
+    @validator('magnet', allow_reuse=True)
+    def _valid_magnet(field):
+        return re.search(r'^magnet:', field)
 
 
 @app.post('/download', response_model=DownloadResponse)
