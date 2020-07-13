@@ -9,7 +9,9 @@ from marshmallow import fields as mfields
 from pydantic import BaseModel
 from pydantic.utils import GetterDict
 
-from .db import EpisodeDetails, MovieDetails
+from .db import EpisodeDetails
+from .db import MediaType as FMediaType
+from .db import MovieDetails
 
 
 class Orm(BaseModel):
@@ -108,3 +110,20 @@ class Stats(BaseModel):
 class StatsResponse(BaseModel):
     user: str
     values: Stats
+
+
+class MonitorPost(Orm):
+    tmdb_id: int
+    type: FMediaType
+
+
+class UserShim(Orm):
+    username: str
+
+
+class MonitorGet(MonitorPost):
+    id: int
+    title: str
+    added_by: str
+
+    Config = map_to({'added_by': 'added_by.username'})

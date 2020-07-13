@@ -518,51 +518,17 @@ def api_download(things) -> str:
     return jsonify()
 
 
-def validate_id(type: MediaType, tmdb_id: str) -> str:
-    try:
-        return (
-            get_movie(tmdb_id)['title']
-            if type == MediaType.MOVIE
-            else get_tv(tmdb_id)['name']
-        )
-    except HTTPError as e:
-        if e.response.status_code == 404:
-            return api.abort(422, f'{type.name} not found: {tmdb_id}')
-        else:
-            raise
-
-
-@dataclass
-class MonitorPost(DataClassJsonMixin):
-    tmdb_id: int
-    type: MediaType
-
-
 monitor = api.namespace('monitor', 'Contains media monitor resources')
+
+from .models import MonitorGet, MonitorPost
 
 
 @monitor.route('')
 class MonitorsResource(Resource):
-    @expect(monitor, 'MonitorPost', schema(MonitorPost))
-    @monitor.marshal_with(
-        api.model('MonitorCreated', {'id': fields.Integer}),
-        code=201,
-        description='Created',
-    )
-    def post(self, rq):
-        media = validate_id(rq.type, rq.tmdb_id)
-        c = (
-            db.session.query(Monitor)
-            .filter_by(tmdb_id=rq.tmdb_id, type=rq.type)
-            .one_or_none()
-        )
-        if not c:
-            c = Monitor(
-                tmdb_id=rq.tmdb_id, added_by=current_user, type=rq.type, title=media
-            )
-            db.session.add(c)
-            db.session.commit()
-        return c, 201
+    @monitor.expect(rewrap(MonitorPost))
+    @monitor.response(model=rewrap(MonitorGet), code=201, description='Created')
+    def post(self):
+        return call_sync('GET', '/monitor', '', request.headers, body=request.raw)
 
     @monitor.response(200, 'Success', [rewrap(MonitorGet)])
     def get(self):

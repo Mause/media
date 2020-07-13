@@ -8,17 +8,39 @@ from unittest.mock import MagicMock
 from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from flask import Response, current_app
+from flask import Blueprint, Response, current_app, request
 from flask.sessions import SecureCookieSessionInterface
 from flask_login.utils import decode_cookie
 from flask_user import UserManager, current_user
 from flask_user.password_manager import PasswordManager
 from flask_user.token_manager import TokenManager
-from pydantic import BaseModel, Field, validator
+from pydantic import (
+    UUID4,
+    AnyUrl,
+    BaseModel,
+    BaseSettings,
+    EmailStr,
+    Field,
+    SecretStr,
+    validator,
+)
+from requests.exceptions import HTTPError
+from sqlalchemy import func
+from sqlalchemy.orm.query import Query
+from sqlalchemy.orm.session import Session
 
+from .db import Download
 from .db import MediaType as FMediaType
 from .db import Monitor, Role, Roles, User, db, get_or_create
-from .models import IndexResponse, Orm, map_to
+from .models import (
+    IndexResponse,
+    MonitorGet,
+    MonitorPost,
+    Orm,
+    StatsResponse,
+    UserShim,
+    map_to,
+)
 from .providers import ProviderSource
 from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
 from .utils import precondition
@@ -161,12 +183,6 @@ async def index():
     return IndexResponse(series=resolve_series(), movies=get_movies())
 
 
-from sqlalchemy import event, func
-
-from .db import Download
-from .models import StatsResponse
-
-
 @app.get('/stats', response_model=List[StatsResponse])
 async def stats():
     from .main import groupby
@@ -212,23 +228,6 @@ class SearchResponse(BaseModel):
 @app.get('/search', response_model=List[SearchResponse])
 async def search(query: str):
     ...
-
-
-class MonitorPost(Orm):
-    tmdb_id: int
-    type: FMediaType
-
-
-class UserShim(Orm):
-    username: str
-
-
-class MonitorGet(MonitorPost):
-    id: int
-    title: str
-    added_by: str
-
-    Config = map_to({'added_by': 'added_by.username'})
 
 
 monitor_ns = APIRouter()
@@ -317,26 +316,35 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     raise HTTPException(status_code=400, detail="Incorrect username or password")
 
 
+def validate_id(type: FMediaType, tmdb_id: int) -> str:
+    try:
+        return (
+            get_movie(tmdb_id)['title']
+            if type == MediaType.MOVIE
+            else get_tv(tmdb_id)['name']
+        )
+    except HTTPError as e:
+        if e.response.status_code == 404:
+            raise HTTPException(422, f'{type.name} not found: {tmdb_id}')
+        else:
+            raise
+
+
 @monitor_ns.post('', tags=['monitor'], response_model=MonitorGet)
 def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_user)):
-    title = (
-        get_tv(monitor.tmdb_id)['name']
-        if monitor.type == FMediaType.TV
-        else get_movie(monitor.tmdb_id)['title']
+    media = validate_id(monitor.type, monitor.tmdb_id)
+    c = (
+        db.session.query(Monitor)
+        .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+        .one_or_none()
     )
-
-    v = {
-        **monitor.dict(),
-        'type': monitor.type.name,
-        'title': title,
-        "added_by": db.session.query(User).first(),
-    }
-    m = Monitor(**v)
-
-    db.session.add(m)
-    db.session.commit()
-
-    return m
+    if not c:
+        c = Monitor(
+            tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
+        )
+        db.session.add(c)
+        db.session.commit()
+    return c, 201
 
 
 tv_ns = APIRouter()
@@ -380,7 +388,7 @@ app.include_router(tv_ns, prefix='/tv')
 app.include_router(monitor_ns, prefix='/monitor')
 
 
-def call_sync(method='GET', path='/monitor', query_string='', headers=None):
+def call_sync(method='GET', path='/monitor', query_string='', headers=None, body=None):
     response: Dict[str, Any] = {}
 
     async def send(message):
@@ -399,7 +407,7 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None):
                 'query_string': query_string,
                 'headers': headerz,
             },
-            lambda: [],
+            lambda: [body],
             send,
         )
 
