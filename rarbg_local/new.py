@@ -322,7 +322,7 @@ def validate_id(type: FMediaType, tmdb_id: int) -> str:
     try:
         return (
             get_movie(tmdb_id)['title']
-            if type == MediaType.MOVIE
+            if type == FMediaType.MOVIE
             else get_tv(tmdb_id)['name']
         )
     except HTTPError as e:
