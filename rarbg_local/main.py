@@ -528,7 +528,7 @@ class MonitorsResource(Resource):
     @monitor.expect(rewrap(MonitorPost))
     @monitor.response(model=rewrap(MonitorGet), code=201, description='Created')
     def post(self):
-        return call_sync('GET', '/monitor', '', request.headers, body=request.raw)
+        return call_sync('POST', '/monitor', '', request.headers, body=request.data)
 
     @monitor.response(200, 'Success', [rewrap(MonitorGet)])
     def get(self):
