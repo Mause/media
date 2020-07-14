@@ -406,7 +406,7 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
 def rewrap(schema: BaseModel):
     s = schema.schema()
     for name, subschema in s.pop('definitions', {}).items():
-        api.schema_model(name, schema)
+        api.schema_model(name, subschema)
     return api.schema_model(schema.__name__, s)
 
 
