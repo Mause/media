@@ -396,6 +396,12 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
     async def send(message):
         response.update(message)
 
+    async def recieve():
+        if body:
+            return {'type': 'http.request', 'body': body}
+        else:
+            return None
+
     async def call():
 
         headerz = [
@@ -409,7 +415,7 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
                 'query_string': query_string,
                 'headers': headerz,
             },
-            lambda: [body],
+            recieve,
             send,
         )
 
