@@ -4,8 +4,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['test_serial 1'] = {'series': {'helo': {'id': 1}}}
-
 snapshots['test_swagger 1'] = {
     'basePath': '/api',
     'consumes': ['application/json'],
@@ -59,23 +57,6 @@ snapshots['test_swagger 1'] = {
             'title': 'DownloadAllResponse',
             'type': 'object',
         },
-        'DownloadSchema': {
-            'properties': {
-                'movies': {
-                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
-                    'title': 'Movies',
-                    'type': 'array',
-                },
-                'series': {
-                    'items': {'$ref': '#/definitions/SeriesDetails'},
-                    'title': 'Series',
-                    'type': 'array',
-                },
-            },
-            'required': ['series', 'movies'],
-            'title': 'IndexResponse',
-            'type': 'object',
-        },
         'Episode': {
             'properties': {
                 'air_date': {'format': 'date', 'type': 'string'},
@@ -85,104 +66,7 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
-        'EpisodeDetailsSchema': {
-            'properties': {
-                'movies': {
-                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
-                    'title': 'Movies',
-                    'type': 'array',
-                },
-                'series': {
-                    'items': {'$ref': '#/definitions/SeriesDetails'},
-                    'title': 'Series',
-                    'type': 'array',
-                },
-            },
-            'required': ['series', 'movies'],
-            'title': 'IndexResponse',
-            'type': 'object',
-        },
-        'EpisodeInfo': {
-            'properties': {
-                'complete': {
-                    'items': {
-                        'items': [
-                            {'type': 'string'},
-                            {
-                                'items': {'$ref': '#/definitions/ITorrent'},
-                                'type': 'array',
-                            },
-                        ],
-                        'type': 'array',
-                    },
-                    'title': 'Complete',
-                    'type': 'array',
-                },
-                'incomplete': {
-                    'items': {
-                        'items': [
-                            {'type': 'string'},
-                            {
-                                'items': {'$ref': '#/definitions/ITorrent'},
-                                'type': 'array',
-                            },
-                        ],
-                        'type': 'array',
-                    },
-                    'title': 'Incomplete',
-                    'type': 'array',
-                },
-                'packs': {
-                    'items': {'$ref': '#/definitions/ITorrent'},
-                    'title': 'Packs',
-                    'type': 'array',
-                },
-            },
-            'required': ['packs', 'complete', 'incomplete'],
-            'title': 'DownloadAllResponse',
-            'type': 'object',
-        },
-        'ITorrent': {
-            'properties': {
-                'complete': {
-                    'items': {
-                        'items': [
-                            {'type': 'string'},
-                            {
-                                'items': {'$ref': '#/definitions/ITorrent'},
-                                'type': 'array',
-                            },
-                        ],
-                        'type': 'array',
-                    },
-                    'title': 'Complete',
-                    'type': 'array',
-                },
-                'incomplete': {
-                    'items': {
-                        'items': [
-                            {'type': 'string'},
-                            {
-                                'items': {'$ref': '#/definitions/ITorrent'},
-                                'type': 'array',
-                            },
-                        ],
-                        'type': 'array',
-                    },
-                    'title': 'Incomplete',
-                    'type': 'array',
-                },
-                'packs': {
-                    'items': {'$ref': '#/definitions/ITorrent'},
-                    'title': 'Packs',
-                    'type': 'array',
-                },
-            },
-            'required': ['packs', 'complete', 'incomplete'],
-            'title': 'DownloadAllResponse',
-            'type': 'object',
-        },
-        'IndexResponseSchema': {
+        'IndexResponse': {
             'properties': {
                 'movies': {
                     'items': {'$ref': '#/definitions/MovieDetailsSchema'},
@@ -220,7 +104,7 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
-        'Monitor': {
+        'MonitorGet': {
             'properties': {
                 'added_by': {'title': 'Added By', 'type': 'string'},
                 'id': {'title': 'Id', 'type': 'integer'},
@@ -232,29 +116,13 @@ snapshots['test_swagger 1'] = {
             'title': 'MonitorGet',
             'type': 'object',
         },
-        'MonitorCreated': {'properties': {'id': {'type': 'integer'}}, 'type': 'object'},
         'MonitorPost': {
             'properties': {
-                'tmdb_id': {'format': 'int32', 'type': 'integer'},
-                'type': {'enum': ['MOVIE', 'TV'], 'type': 'string'},
+                'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
+                'type': {'enum': ['MOVIE', 'TV'], 'title': 'Type'},
             },
-            'type': 'object',
-        },
-        'MovieDetailsSchema': {
-            'properties': {
-                'movies': {
-                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
-                    'title': 'Movies',
-                    'type': 'array',
-                },
-                'series': {
-                    'items': {'$ref': '#/definitions/SeriesDetails'},
-                    'title': 'Series',
-                    'type': 'array',
-                },
-            },
-            'required': ['series', 'movies'],
-            'title': 'IndexResponse',
+            'required': ['tmdb_id', 'type'],
+            'title': 'MonitorPost',
             'type': 'object',
         },
         'SearchResponse': {
@@ -281,32 +149,6 @@ snapshots['test_swagger 1'] = {
                 'episode_count': {'type': 'integer'},
                 'season_number': {'type': 'integer'},
             },
-            'type': 'object',
-        },
-        'SeriesDetails': {
-            'properties': {
-                'movies': {
-                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
-                    'title': 'Movies',
-                    'type': 'array',
-                },
-                'series': {
-                    'items': {'$ref': '#/definitions/SeriesDetails'},
-                    'title': 'Series',
-                    'type': 'array',
-                },
-            },
-            'required': ['series', 'movies'],
-            'title': 'IndexResponse',
-            'type': 'object',
-        },
-        'Stats': {
-            'properties': {
-                'user': {'title': 'User', 'type': 'string'},
-                'values': {'$ref': '#/definitions/Stats'},
-            },
-            'required': ['user', 'values'],
-            'title': 'StatsResponse',
             'type': 'object',
         },
         'StatsResponse': {
@@ -348,23 +190,6 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
-        'UserSchema': {
-            'properties': {
-                'movies': {
-                    'items': {'$ref': '#/definitions/MovieDetailsSchema'},
-                    'title': 'Movies',
-                    'type': 'array',
-                },
-                'series': {
-                    'items': {'$ref': '#/definitions/SeriesDetails'},
-                    'title': 'Series',
-                    'type': 'array',
-                },
-            },
-            'required': ['series', 'movies'],
-            'title': 'IndexResponse',
-            'type': 'object',
-        },
     },
     'info': {'title': 'API', 'version': '1.0'},
     'paths': {
@@ -399,7 +224,7 @@ snapshots['test_swagger 1'] = {
                 'responses': {
                     '200': {
                         'description': 'Success',
-                        'schema': {'$ref': '#/definitions/IndexResponseSchema'},
+                        'schema': {'$ref': '#/definitions/IndexResponse'},
                     }
                 },
                 'tags': ['default'],
@@ -412,7 +237,7 @@ snapshots['test_swagger 1'] = {
                     '200': {
                         'description': 'Success',
                         'schema': {
-                            'items': {'$ref': '#/definitions/Monitor'},
+                            'items': {'$ref': '#/definitions/MonitorGet'},
                             'type': 'array',
                         },
                     }
@@ -427,19 +252,12 @@ snapshots['test_swagger 1'] = {
                         'name': 'payload',
                         'required': True,
                         'schema': {'$ref': '#/definitions/MonitorPost'},
-                    },
-                    {
-                        'description': 'An optional fields mask',
-                        'format': 'mask',
-                        'in': 'header',
-                        'name': 'X-Fields',
-                        'type': 'string',
-                    },
+                    }
                 ],
                 'responses': {
                     '201': {
                         'description': 'Created',
-                        'schema': {'$ref': '#/definitions/MonitorCreated'},
+                        'schema': {'$ref': '#/definitions/MonitorGet'},
                     }
                 },
                 'tags': ['monitor'],
