@@ -7,6 +7,7 @@ from dataclasses_json import DataClassJsonMixin, config
 from marshmallow import Schema
 from marshmallow import fields as mfields
 from pydantic import BaseModel
+from pydantic.main import _missing
 from pydantic.utils import GetterDict
 
 from .db import EpisodeDetails
@@ -28,7 +29,10 @@ def map_to(config: Dict[str, str]) -> type:
             def get(self, name: str, default: T) -> T:
                 if name in config:
                     first, *parts = config[name].split('.')
-                    return reduce(getattr, parts, super().get(first, default))
+                    v = super().get(first, default)
+                    if v is _missing:
+                        return v
+                    return reduce(getattr, parts, v)
                 else:
                     v = super().get(name, default)
                 return v
