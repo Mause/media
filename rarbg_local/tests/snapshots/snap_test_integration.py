@@ -57,6 +57,34 @@ snapshots['test_swagger 1'] = {
             'title': 'DownloadAllResponse',
             'type': 'object',
         },
+        'DownloadSchema': {
+            'properties': {
+                'added_by': {'$ref': '#/definitions/UserSchema'},
+                'id': {'title': 'Id', 'type': 'integer'},
+                'imdb_id': {'title': 'Imdb Id', 'type': 'string'},
+                'timestamp': {
+                    'format': 'date-time',
+                    'title': 'Timestamp',
+                    'type': 'string',
+                },
+                'title': {'title': 'Title', 'type': 'string'},
+                'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
+                'transmission_id': {'title': 'Transmission Id', 'type': 'string'},
+                'type': {'title': 'Type', 'type': 'string'},
+            },
+            'required': [
+                'id',
+                'tmdb_id',
+                'transmission_id',
+                'imdb_id',
+                'type',
+                'title',
+                'timestamp',
+                'added_by',
+            ],
+            'title': 'DownloadSchema',
+            'type': 'object',
+        },
         'Episode': {
             'properties': {
                 'air_date': {'format': 'date', 'type': 'string'},
@@ -64,6 +92,46 @@ snapshots['test_swagger 1'] = {
                 'id': {'type': 'integer'},
                 'name': {'type': 'string'},
             },
+            'type': 'object',
+        },
+        'EpisodeDetailsSchema': {
+            'properties': {
+                'download': {'$ref': '#/definitions/DownloadSchema'},
+                'episode': {'title': 'Episode', 'type': 'integer'},
+                'id': {'title': 'Id', 'type': 'integer'},
+                'season': {'title': 'Season', 'type': 'integer'},
+                'show_title': {'title': 'Show Title', 'type': 'string'},
+            },
+            'required': ['id', 'download', 'show_title', 'season'],
+            'title': 'EpisodeDetailsSchema',
+            'type': 'object',
+        },
+        'EpisodeInfo': {
+            'properties': {
+                'epnum': {'title': 'Epnum', 'type': 'string'},
+                'seasonnum': {'title': 'Seasonnum', 'type': 'string'},
+            },
+            'title': 'EpisodeInfo',
+            'type': 'object',
+        },
+        'ITorrent': {
+            'properties': {
+                'category': {'title': 'Category', 'type': 'string'},
+                'download': {'title': 'Download', 'type': 'string'},
+                'episode_info': {'$ref': '#/definitions/EpisodeInfo'},
+                'seeders': {'title': 'Seeders', 'type': 'integer'},
+                'source': {'$ref': '#/definitions/ProviderSource'},
+                'title': {'title': 'Title', 'type': 'string'},
+            },
+            'required': [
+                'source',
+                'title',
+                'seeders',
+                'download',
+                'category',
+                'episode_info',
+            ],
+            'title': 'ITorrent',
             'type': 'object',
         },
         'IndexResponse': {
@@ -104,13 +172,18 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
+        'MediaType': {
+            'description': 'An enumeration.',
+            'enum': ['MOVIE', 'TV'],
+            'title': 'MediaType',
+        },
         'MonitorGet': {
             'properties': {
                 'added_by': {'title': 'Added By', 'type': 'string'},
                 'id': {'title': 'Id', 'type': 'integer'},
                 'title': {'title': 'Title', 'type': 'string'},
                 'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
-                'type': {'enum': ['MOVIE', 'TV'], 'title': 'Type'},
+                'type': {'$ref': '#/definitions/MediaType'},
             },
             'required': ['tmdb_id', 'type', 'id', 'title', 'added_by'],
             'title': 'MonitorGet',
@@ -119,11 +192,25 @@ snapshots['test_swagger 1'] = {
         'MonitorPost': {
             'properties': {
                 'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
-                'type': {'enum': ['MOVIE', 'TV'], 'title': 'Type'},
+                'type': {'$ref': '#/definitions/MediaType'},
             },
             'required': ['tmdb_id', 'type'],
             'title': 'MonitorPost',
             'type': 'object',
+        },
+        'MovieDetailsSchema': {
+            'properties': {
+                'download': {'$ref': '#/definitions/DownloadSchema'},
+                'id': {'title': 'Id', 'type': 'integer'},
+            },
+            'required': ['id', 'download'],
+            'title': 'MovieDetailsSchema',
+            'type': 'object',
+        },
+        'ProviderSource': {
+            'description': 'An enumeration.',
+            'enum': ['KICKASS', 'HORRIBLESUBS', 'RARBG'],
+            'title': 'ProviderSource',
         },
         'SearchResponse': {
             'properties': {
@@ -149,6 +236,32 @@ snapshots['test_swagger 1'] = {
                 'episode_count': {'type': 'integer'},
                 'season_number': {'type': 'integer'},
             },
+            'type': 'object',
+        },
+        'SeriesDetails': {
+            'properties': {
+                'imdb_id': {'title': 'Imdb Id', 'type': 'string'},
+                'seasons': {
+                    'additionalProperties': {
+                        'items': {'$ref': '#/definitions/EpisodeDetailsSchema'},
+                        'type': 'array',
+                    },
+                    'title': 'Seasons',
+                    'type': 'object',
+                },
+                'title': {'title': 'Title', 'type': 'string'},
+                'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
+            },
+            'required': ['title', 'imdb_id', 'tmdb_id', 'seasons'],
+            'title': 'SeriesDetails',
+            'type': 'object',
+        },
+        'Stats': {
+            'properties': {
+                'episode': {'default': 0, 'title': 'Episode', 'type': 'integer'},
+                'movie': {'default': 0, 'title': 'Movie', 'type': 'integer'},
+            },
+            'title': 'Stats',
             'type': 'object',
         },
         'StatsResponse': {
@@ -188,6 +301,12 @@ snapshots['test_swagger 1'] = {
                     'type': 'array',
                 }
             },
+            'type': 'object',
+        },
+        'UserSchema': {
+            'properties': {'username': {'title': 'Username', 'type': 'string'}},
+            'required': ['username'],
+            'title': 'UserSchema',
             'type': 'object',
         },
     },
@@ -479,12 +598,19 @@ snapshots['test_swagger 1'] = {
 }
 
 snapshots['test_schema 1'] = {
+    'definitions': {
+        'MediaType': {
+            'description': 'An enumeration.',
+            'enum': ['series', 'movie'],
+            'title': 'MediaType',
+        }
+    },
     'properties': {
-        'Type': {'deprecated': True, 'enum': ['series', 'movie'], 'title': 'Type'},
+        'Type': {'$ref': '#/definitions/MediaType'},
         'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
         'imdbID': {'title': 'Imdbid', 'type': 'integer'},
         'title': {'title': 'Title', 'type': 'string'},
-        'type': {'enum': ['series', 'movie'], 'title': 'Type'},
+        'type': {'$ref': '#/definitions/MediaType'},
         'year': {'title': 'Year', 'type': 'integer'},
     },
     'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
