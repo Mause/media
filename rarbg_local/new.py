@@ -332,8 +332,8 @@ def validate_id(type: FMediaType, tmdb_id: int) -> str:
             raise
 
 
-@monitor_ns.post('', tags=['monitor'], response_model=MonitorGet)
-def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_user)):
+@monitor_ns.post('', tags=['monitor'], response_model=MonitorGet, status_code=201)
+async def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_user)):
     media = validate_id(monitor.type, monitor.tmdb_id)
     c = (
         db.session.query(Monitor)
@@ -346,7 +346,7 @@ def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_user)):
         )
         db.session.add(c)
         db.session.commit()
-    return c, 201
+    return c
 
 
 tv_ns = APIRouter()
