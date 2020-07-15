@@ -245,6 +245,7 @@ def test_index(responses, test_client, flask_app, get_torrent, logged_in, snapsh
     snapshot.assert_match(res.json)
 
 
+@mark.skip
 def test_serial(snapshot):
     @dataclass
     class Inner(DataClassJsonMixin):
