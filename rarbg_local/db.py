@@ -166,7 +166,7 @@ def create_download(
     details: Union[MovieDetails, EpisodeDetails],
     id: int = None,
     timestamp: datetime = None,
-):
+) -> Download:
     precondition(not imdb_id or imdb_id.startswith('tt'), f'Invalid imdb_id: {imdb_id}')
     return Download(
         transmission_id=transmission_id,

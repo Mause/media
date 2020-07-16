@@ -6,7 +6,7 @@ from typing import Dict, List, Optional, Tuple, TypeVar
 from dataclasses_json import DataClassJsonMixin, config
 from marshmallow import Schema
 from marshmallow import fields as mfields
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 from pydantic.main import _missing
 from pydantic.utils import GetterDict
 
@@ -131,3 +131,10 @@ class MonitorGet(MonitorPost):
     added_by: str
 
     Config = map_to({'added_by': 'added_by.username'})
+
+
+class DownloadPost(BaseModel):
+    tmdb_id: int
+    magnet: constr(regex=r'^magnet:')
+    season: Optional[str] = None
+    episode: Optional[str] = None

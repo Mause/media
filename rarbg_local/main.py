@@ -5,7 +5,6 @@ import re
 import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from dataclasses import dataclass, field
 from enum import Enum
 from functools import lru_cache, wraps
 from itertools import chain
@@ -42,7 +41,7 @@ from flask import (
 from flask_admin import Admin
 from flask_cors import CORS
 from flask_jsontools import DynamicJSONEncoder, jsonapi
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Resource, SchemaModel, fields
 from flask_restx.reqparse import RequestParser
 from flask_socketio import SocketIO, send
 from flask_user import UserManager, current_user, login_required, roles_required
@@ -403,7 +402,7 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-def rewrap(schema: BaseModel):
+def rewrap(schema: BaseModel) -> SchemaModel:
     s = schema.schema()
     for name, subschema in s.pop('definitions', {}).items():
         api.schema_model(name, subschema)
@@ -414,39 +413,11 @@ def rewrap(schema: BaseModel):
 @as_resource()
 @api.response(200, 'Success', rewrap(DownloadAllResponse))
 def download_all_episodes(tmdb_id: str, season: str) -> Dict:
-    results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
-
-    episodes = get_tv_episodes(tmdb_id, season)['episodes']
-
-    packs_or_not = groupby(
-        results, lambda result: extract_marker(result.title)[1] is None
+    return call_sync(
+        'GET',
+        f'/select/{tmdb_id}/season/{season}/download_all',
+        headers=request.headers,
     )
-    packs = sorted(
-        packs_or_not.get(True, []), key=lambda result: result.seeders, reverse=True
-    )
-
-    grouped_results = groupby(
-        packs_or_not.get(False, []), lambda result: normalise(episodes, result.title)
-    )
-    complete_or_not = groupby(
-        grouped_results.items(), lambda rset: len(rset[1]) == len(episodes)
-    )
-
-    return dict(
-        packs=packs,
-        complete=complete_or_not.get(True, []),
-        incomplete=complete_or_not.get(False, []),
-    )
-
-
-@dataclass
-class DownloadPostSchema(DataClassJsonMixin):
-    tmdb_id: int
-    magnet: str = field(
-        metadata=config(mm_field=String(validate=MarshRegexp(r'^magnet:')))
-    )
-    season: Optional[str] = None
-    episode: Optional[str] = None
 
 
 class ValidationErrorWrapper(Exception):
@@ -471,51 +442,15 @@ def api_diagnostics():
     return json.loads(message), code, headers
 
 
+from .models import DownloadPost
+
+
 @api.route('/download')
 @api.response(200, 'OK', {})
 @as_resource({'POST'})
-@expect(api, 'Download', schema(DownloadPostSchema, many=True))
-def api_download(things) -> str:
-    for thing in things:
-        is_tv = thing.season is not None
-
-        item = get_tv(thing.tmdb_id) if is_tv else get_movie(thing.tmdb_id)
-        if is_tv:
-            subpath = f'tv_shows/{item["name"]}/Season {thing.season}'
-        else:
-            subpath = 'movies'
-
-        show_title = None
-        if thing.season is not None:
-            if thing.episode is None:
-                title = f'Season {thing.season}'
-            else:
-                idx = int(thing.episode) - 1
-                title = get_tv_episodes(thing.tmdb_id, thing.season)['episodes'][idx][
-                    'name'
-                ]
-            show_title = item['name']
-        else:
-            title = item['title']
-
-        add_single(
-            magnet=thing.magnet,
-            imdb_id=(
-                get_tv_imdb_id(str(thing.tmdb_id))
-                if is_tv
-                else get_movie_imdb_id(str(thing.tmdb_id))
-            )
-            or '',
-            subpath=subpath,
-            tmdb_id=thing.tmdb_id,
-            season=thing.season,
-            episode=thing.episode,
-            title=title,
-            show_title=show_title,
-            is_tv=is_tv,
-        )
-
-    return jsonify()
+@api.expect([rewrap(DownloadPost)])
+def api_download() -> str:
+    return call_sync('POST', '/download', headers=request.headers, body=request.data)
 
 
 monitor = api.namespace('monitor', 'Contains media monitor resources')

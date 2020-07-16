@@ -1,4 +1,3 @@
-import re
 from asyncio import get_event_loop
 from datetime import date
 from enum import Enum
@@ -33,6 +32,7 @@ from .db import Download
 from .db import MediaType as FMediaType
 from .db import Monitor, Role, Roles, User, db, get_or_create
 from .models import (
+    DownloadPost,
     IndexResponse,
     MonitorGet,
     MonitorPost,
@@ -41,8 +41,8 @@ from .models import (
     UserShim,
     map_to,
 )
-from .providers import ProviderSource
-from .tmdb import get_movie, get_tv, get_tv_episodes, get_tv_imdb_id
+from .providers import ProviderSource, search_for_tv
+from .tmdb import get_movie, get_movie_imdb_id, get_tv, get_tv_episodes, get_tv_imdb_id
 from .utils import precondition
 
 app = FastAPI()
@@ -153,8 +153,32 @@ class DownloadAllResponse(BaseModel):
 @app.get(
     '/select/<tmdb_id>/season/<season>/download_all', response_model=DownloadAllResponse
 )
-def select(tmdb_id: int, season: int):
-    pass
+async def select(tmdb_id: int, season: int):
+    from .main import groupby
+
+    results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
+
+    episodes = get_tv_episodes(tmdb_id, season)['episodes']
+
+    packs_or_not = groupby(
+        results, lambda result: extract_marker(result.title)[1] is None
+    )
+    packs = sorted(
+        packs_or_not.get(True, []), key=lambda result: result.seeders, reverse=True
+    )
+
+    grouped_results = groupby(
+        packs_or_not.get(False, []), lambda result: normalise(episodes, result.title)
+    )
+    complete_or_not = groupby(
+        grouped_results.items(), lambda rset: len(rset[1]) == len(episodes)
+    )
+
+    return dict(
+        packs=packs,
+        complete=complete_or_not.get(True, []),
+        incomplete=complete_or_not.get(False, []),
+    )
 
 
 @app.get('/diagnostics')
@@ -162,20 +186,50 @@ def diagnostics():
     pass
 
 
-class DownloadPost(Orm):
-    magnet: str
-    tmdb_id: int
-    season: Optional[int] = None
-    episode: Optional[int] = None
+@app.post('/download')
+async def download_post(things: List[DownloadPost]) -> Dict:
+    from .main import add_single
 
-    @validator('magnet', allow_reuse=True)
-    def _valid_magnet(field):
-        return re.search(r'^magnet:', field)
+    for thing in things:
+        is_tv = thing.season is not None
 
+        item = get_tv(thing.tmdb_id) if is_tv else get_movie(thing.tmdb_id)
+        if is_tv:
+            subpath = f'tv_shows/{item["name"]}/Season {thing.season}'
+        else:
+            subpath = 'movies'
 
-@app.post('/download', response_model=DownloadResponse)
-def download_post(download: DownloadPost):
-    ...
+        show_title = None
+        if thing.season is not None:
+            if thing.episode is None:
+                title = f'Season {thing.season}'
+            else:
+                idx = int(thing.episode) - 1
+                title = get_tv_episodes(thing.tmdb_id, thing.season)['episodes'][idx][
+                    'name'
+                ]
+            show_title = item['name']
+        else:
+            title = item['title']
+
+        add_single(
+            magnet=thing.magnet,
+            imdb_id=(
+                get_tv_imdb_id(str(thing.tmdb_id))
+                if is_tv
+                else get_movie_imdb_id(str(thing.tmdb_id))
+            )
+            or '',
+            subpath=subpath,
+            tmdb_id=thing.tmdb_id,
+            season=thing.season,
+            episode=thing.episode,
+            title=title,
+            show_title=show_title,
+            is_tv=is_tv,
+        )
+
+    return {}
 
 
 @app.get('/index', response_model=IndexResponse)
@@ -198,6 +252,20 @@ async def stats():
     ]
 
 
+class Settings(BaseSettings):
+    CLOUDAMQP_APIKEY: UUID4
+    CLOUDAMQP_URL: AnyUrl
+    DATABASE_URL: AnyUrl
+    PLEX_USERNAME: EmailStr
+    PLEX_PASSWORD: SecretStr
+
+    TIMBERIO_APIKEY: SecretStr
+    TIMBERIO_SOURCEID: int
+
+
+settings = Settings()
+
+
 class MovieResponse(BaseModel):
     title: str
     imdb_id: str
@@ -207,6 +275,18 @@ class MovieResponse(BaseModel):
 def movie(tmdb_id: int):
     movie = get_movie(tmdb_id)
     return {"title": movie['title'], "imdb_id": movie['imdb_id']}
+
+
+class FakeBlueprint(Blueprint):
+    def __init__(self):
+        super().__init__('fastapi', __name__)
+
+    def register(self, fapp, options, first_registration):
+        state = self.make_setup_state(fapp, options, first_registration)
+        for route in app.routes:
+            state.add_url_rule(
+                route.path, view_func=magic, methods=route.methods, endpoint=route
+            )
 
 
 @app.get('/torrents')
@@ -419,7 +499,15 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
             send,
         )
 
-    get_event_loop().run_until_complete(call())
+    from asyncio import new_event_loop, set_event_loop
+
+    # breakpoint()
+    try:
+        el = get_event_loop()
+    except RuntimeError:
+        el = new_event_loop()
+        set_event_loop(el)
+    el.run_until_complete(call())
 
     response.pop('type')
     if 'body' in response:

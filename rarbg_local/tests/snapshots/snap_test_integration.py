@@ -2,7 +2,6 @@
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots['test_swagger 1'] = {
