@@ -2,21 +2,13 @@
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots['test_swagger 1'] = {
     'basePath': '/api',
     'consumes': ['application/json'],
     'definitions': {
-        'Download': {
-            'properties': {
-                'episode': {'nullable': True, 'type': 'string'},
-                'magnet': {'pattern': '^magnet:', 'type': 'string'},
-                'season': {'nullable': True, 'type': 'string'},
-                'tmdb_id': {'format': 'int32', 'type': 'integer'},
-            },
-            'type': 'object',
-        },
         'DownloadAllResponse': {
             'properties': {
                 'complete': {
@@ -55,6 +47,17 @@ snapshots['test_swagger 1'] = {
             },
             'required': ['packs', 'complete', 'incomplete'],
             'title': 'DownloadAllResponse',
+            'type': 'object',
+        },
+        'DownloadPost': {
+            'properties': {
+                'episode': {'title': 'Episode', 'type': 'string'},
+                'magnet': {'pattern': '^magnet:', 'title': 'Magnet', 'type': 'string'},
+                'season': {'title': 'Season', 'type': 'string'},
+                'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
+            },
+            'required': ['tmdb_id', 'magnet'],
+            'title': 'DownloadPost',
             'type': 'object',
         },
         'DownloadSchema': {
@@ -120,7 +123,10 @@ snapshots['test_swagger 1'] = {
                 'download': {'title': 'Download', 'type': 'string'},
                 'episode_info': {'$ref': '#/definitions/EpisodeInfo'},
                 'seeders': {'title': 'Seeders', 'type': 'integer'},
-                'source': {'$ref': '#/definitions/ProviderSource'},
+                'source': {
+                    'enum': ['KICKASS', 'HORRIBLESUBS', 'RARBG'],
+                    'title': 'Source',
+                },
                 'title': {'title': 'Title', 'type': 'string'},
             },
             'required': [
@@ -172,18 +178,13 @@ snapshots['test_swagger 1'] = {
             },
             'type': 'object',
         },
-        'MediaType': {
-            'description': 'An enumeration.',
-            'enum': ['MOVIE', 'TV'],
-            'title': 'MediaType',
-        },
         'MonitorGet': {
             'properties': {
                 'added_by': {'title': 'Added By', 'type': 'string'},
                 'id': {'title': 'Id', 'type': 'integer'},
                 'title': {'title': 'Title', 'type': 'string'},
                 'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
-                'type': {'$ref': '#/definitions/MediaType'},
+                'type': {'enum': ['MOVIE', 'TV'], 'title': 'Type'},
             },
             'required': ['tmdb_id', 'type', 'id', 'title', 'added_by'],
             'title': 'MonitorGet',
@@ -192,7 +193,7 @@ snapshots['test_swagger 1'] = {
         'MonitorPost': {
             'properties': {
                 'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
-                'type': {'$ref': '#/definitions/MediaType'},
+                'type': {'enum': ['MOVIE', 'TV'], 'title': 'Type'},
             },
             'required': ['tmdb_id', 'type'],
             'title': 'MonitorPost',
@@ -206,11 +207,6 @@ snapshots['test_swagger 1'] = {
             'required': ['id', 'download'],
             'title': 'MovieDetailsSchema',
             'type': 'object',
-        },
-        'ProviderSource': {
-            'description': 'An enumeration.',
-            'enum': ['KICKASS', 'HORRIBLESUBS', 'RARBG'],
-            'title': 'ProviderSource',
         },
         'SearchResponse': {
             'properties': {
@@ -328,7 +324,7 @@ snapshots['test_swagger 1'] = {
                         'name': 'payload',
                         'required': True,
                         'schema': {
-                            'items': {'$ref': '#/definitions/Download'},
+                            'items': {'$ref': '#/definitions/DownloadPost'},
                             'type': 'array',
                         },
                     }
@@ -598,19 +594,12 @@ snapshots['test_swagger 1'] = {
 }
 
 snapshots['test_schema 1'] = {
-    'definitions': {
-        'MediaType': {
-            'description': 'An enumeration.',
-            'enum': ['series', 'movie'],
-            'title': 'MediaType',
-        }
-    },
     'properties': {
-        'Type': {'$ref': '#/definitions/MediaType'},
+        'Type': {'deprecated': True, 'enum': ['series', 'movie'], 'title': 'Type'},
         'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
         'imdbID': {'title': 'Imdbid', 'type': 'integer'},
         'title': {'title': 'Title', 'type': 'string'},
-        'type': {'$ref': '#/definitions/MediaType'},
+        'type': {'enum': ['series', 'movie'], 'title': 'Type'},
         'year': {'title': 'Year', 'type': 'integer'},
     },
     'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],

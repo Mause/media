@@ -442,6 +442,7 @@ def test_manifest(test_client):
 def test_swagger(flask_app, snapshot):
     with flask_app.test_request_context():
         swagger = Swagger(api).as_dict()
+        assert 'GenericRepr' not in repr(swagger)
         snapshot.assert_match(swagger)
 
 
