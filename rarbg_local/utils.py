@@ -39,9 +39,10 @@ def non_null(thing: Optional[T]) -> T:
     return thing
 
 
-def precondition(res: Optional[T], message: str) -> None:
+def precondition(res: Optional[T], message: str) -> T:
     if not res:
         raise AssertionError(message)
+    return res
 
 
 def enum_field(field, ret):

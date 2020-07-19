@@ -1,11 +1,14 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 from cachetools import TTLCache
+from fastapi import Depends, HTTPException
 from flask import current_app, request
 from jwkaas import JWKaas
+from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 
 from .db import User, db
+from .utils import precondition
 
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
 
@@ -39,12 +42,21 @@ def bearer_auth(rest: str) -> Optional[User]:
     return db.session.query(User).filter_by(email=us['email']).one_or_none()
 
 
-def auth_hook(_: Any) -> Optional[User]:
+def get_auth() -> Optional[Tuple[str, str]]:
     try:
         auth_type, rest = request.headers['authorization'].split(' ', 1)
         auth_type = auth_type.lower()
     except:
         return None
+    else:
+        return auth_type, rest
+
+
+def auth_hook(_: Any) -> Optional[User]:
+    at = get_auth()
+    if not at:
+        return None
+    auth_type, rest = at
 
     if auth_type == 'basic':
         return basic_auth()
@@ -65,3 +77,15 @@ def basic_auth() -> Optional[User]:
         return user
     else:
         return None
+
+
+def Scopes(requested: List[str]) -> Depends:
+    def scopes() -> List[str]:
+        auth_type, rest = precondition(get_auth(), 'missing auth')
+        scopes = my_jwkaas.get_token_info(rest)['scopes']
+
+        if not all(r in scopes for r in requested):
+            raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
+        return scopes
+
+    return Depends(scopes)
