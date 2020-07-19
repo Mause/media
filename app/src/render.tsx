@@ -315,7 +315,7 @@ function Season({
     >
       <ol>
         {season.map(episode => (
-          <li key={episode.episode} value={episode.episode}>
+          <li key={episode.id} value={episode.episode}>
             <span>{episode.download.title}</span>
             &nbsp;
             <Progress torrents={torrents} item={episode} />
