@@ -2589,7 +2589,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/history@npm:*":
+"@types/history@npm:*, @types/history@npm:4.7.5":
   version: 4.7.5
   resolution: "@types/history@npm:4.7.5"
   checksum: c62e216239e27178b016a15c6833c42414d34a0f82831a089db47f1d4be144018c8015777e5c478d8828c5a0ddec509892d70a9f26faf2f972d31f9d9f70fba9
@@ -3399,6 +3399,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.11.1
     "@testing-library/react": ^10.4.7
     "@testing-library/user-event": ^12.0.11
+    "@types/history": 4.7.5
     "@types/jest": ^26.0.4
     "@types/lodash": ^4.14.157
     "@types/moxios": ^0.4.9
