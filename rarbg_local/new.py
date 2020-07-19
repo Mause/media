@@ -154,7 +154,7 @@ class DownloadAllResponse(BaseModel):
     '/select/<tmdb_id>/season/<season>/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: int, season: int):
-    from .main import groupby
+    from .main import extract_marker, groupby, normalise
 
     results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
