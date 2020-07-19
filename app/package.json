@@ -70,6 +70,7 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/socket.io-client": "^1.4.33",
     "colors.css": "^3.0.0",
+    "history": "^5.0.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-junit": "^11.0.1",
     "mockdate": "^3.0.2",
