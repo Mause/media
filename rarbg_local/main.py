@@ -61,6 +61,7 @@ from werkzeug.exceptions import NotFound
 from werkzeug.wrappers import Response as WResponse
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
+from .auth import auth_hook
 from .db import (
     Download,
     EpisodeDetails,
@@ -185,7 +186,7 @@ def create_app(config):
 
     db.create_all(app=papp)
     UserManager(papp, db, User)
-    papp.login_manager.request_loader(basic_auth)
+    papp.login_manager.request_loader(auth_hook)
 
     papp.json_encoder = DynamicJSONEncoder
 
@@ -212,19 +213,6 @@ def create_app(config):
         _fk_pragma_on_connect(engine, None)
 
     return papp
-
-
-def basic_auth(header):
-    auth = request.authorization
-    if not auth or auth.type != 'basic':
-        return None
-
-    user = db.session.query(User).filter_by(username=auth['username']).one_or_none()
-
-    if current_app.user_manager.verify_password(
-        auth['password'], user.password if user else None
-    ):
-        return user
 
 
 @app.route('/user/unauthorized')
