@@ -8,7 +8,7 @@ from pika.connection import URLParameters
 transmission: Callable[[], Client]
 
 if TYPE_CHECKING:
-    from .transmission import torrent_add, get_torrent
+    from .transmission import get_torrent, torrent_add
 else:
     transmission = lru_cache()(
         lambda: get_client(
