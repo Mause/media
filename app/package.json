@@ -24,6 +24,7 @@
     "axios": "^0.19.2",
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
+    "prop-types": "^15.7.2",
     "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-collapsible": "^2.8.0",
