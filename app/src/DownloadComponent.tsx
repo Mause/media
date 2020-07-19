@@ -19,7 +19,7 @@ export function DownloadComponent() {
 
   const { done, error } = usePost(
     'download',
-    state.downloads.map(item => ({
+    state.downloads.map((item: DownloadCall) => ({
       ...item,
       tmdb_id: Number(item.tmdb_id),
     })),
