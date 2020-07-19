@@ -50,10 +50,15 @@ export function subscribe<T>(
   };
 }
 
-export async function load<T>(path: string, params?: string): Promise<T> {
+export async function load<T>(
+  path: string,
+  params?: string,
+  headers?: any,
+): Promise<T> {
   const t = await Axios.get<T>(`/api/${path}`, {
     params,
     withCredentials: true,
+    headers,
   });
   return t && t.data;
 }
