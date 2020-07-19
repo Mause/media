@@ -57,6 +57,7 @@ py-healthcheck = "*"
 cffi = "*"
 fastapi = "*"
 python-multipart = "*"
+jwkaas = "*"
 
 [requires]
 python_version = "3"
