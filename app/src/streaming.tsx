@@ -1,8 +1,12 @@
 import * as Sentry from '@sentry/react';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { RouteProps } from 'react-router';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  RouteProps,
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
 import {
   EpisodeSelectComponent,

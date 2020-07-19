@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
-import { Redirect } from 'react-router';
-import { useLocation } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import { usePost } from './utils';
 import { DisplayError } from './IndexComponent';
 
