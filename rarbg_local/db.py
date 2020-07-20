@@ -135,7 +135,7 @@ class UserRoles(db.Model):  # type: ignore
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
 
-class MediaType(enum.Enum):
+class MonitorMediaType(enum.Enum):
     MOVIE = 'MOVIE'
     TV = 'TV'
 
@@ -149,10 +149,10 @@ class Monitor(db.Model):  # type: ignore
 
     title = Column(String, nullable=False)
     type = Column(
-        Enum(MediaType),
-        default=MediaType.MOVIE.name,
+        Enum(MonitorMediaType),
+        default=MonitorMediaType.MOVIE.name,
         nullable=False,
-        server_default=MediaType.MOVIE.name,
+        server_default=MonitorMediaType.MOVIE.name,
     )
 
 

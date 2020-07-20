@@ -29,9 +29,16 @@ from sqlalchemy import func
 from sqlalchemy.orm.query import Query
 from sqlalchemy.orm.session import Session
 
-from .db import Download
-from .db import MediaType as FMediaType
-from .db import Monitor, Role, Roles, User, db, get_or_create
+from .db import (
+    Download,
+    Monitor,
+    MonitorMediaType,
+    Role,
+    Roles,
+    User,
+    db,
+    get_or_create,
+)
 from .models import (
     DownloadPost,
     IndexResponse,
@@ -395,11 +402,11 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     raise HTTPException(status_code=400, detail="Incorrect username or password")
 
 
-def validate_id(type: FMediaType, tmdb_id: int) -> str:
+def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
     try:
         return (
             get_movie(tmdb_id)['title']
-            if type == FMediaType.MOVIE
+            if type == MonitorMediaType.MOVIE
             else get_tv(tmdb_id)['name']
         )
     except HTTPError as e:

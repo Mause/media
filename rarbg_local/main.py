@@ -66,8 +66,8 @@ from .auth import auth_hook
 from .db import (
     Download,
     EpisodeDetails,
-    MediaType,
     Monitor,
+    MonitorMediaType,
     MovieDetails,
     Role,
     User,

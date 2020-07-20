@@ -10,9 +10,7 @@ from pydantic import BaseModel, constr
 from pydantic.main import _missing
 from pydantic.utils import GetterDict
 
-from .db import EpisodeDetails
-from .db import MediaType as FMediaType
-from .db import MovieDetails
+from .db import EpisodeDetails, MonitorMediaType, MovieDetails
 
 
 class Orm(BaseModel):
@@ -118,7 +116,7 @@ class StatsResponse(BaseModel):
 
 class MonitorPost(Orm):
     tmdb_id: int
-    type: FMediaType
+    type: MonitorMediaType
 
 
 class UserShim(Orm):
