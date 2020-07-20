@@ -447,7 +447,7 @@ def test_swagger(flask_app, snapshot):
 
 
 def test_movie(test_client, snapshot, responses):
-    themoviedb(responses, '/movie/1', {})
+    themoviedb(responses, '/movie/1', {'title': 'Hello', 'imdb_id': 'tt0000000'})
     r = test_client.get('/api/movie/1')
     assert r.status == '200 OK'
 
