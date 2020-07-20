@@ -101,18 +101,18 @@ def user():
     pass
 
 
-@app.get('/delete/<type>/<id>')
+@app.get('/delete/{type}/{id}')
 def delete(type: MediaType, id: int):
     pass
 
 
-@app.get('/redirect/plex/<tmdb_id>')
+@app.get('/redirect/plex/{tmdb_id}')
 def redirect_plex():
     pass
 
 
-@app.get('/redirect/<type_>/<ident>')
-@app.get('/redirect/<type_>/<ident>/<season>/<episode>')
+@app.get('/redirect/{type_}/{ident}')
+@app.get('/redirect/{type_}/{ident}/{season}/{episode}')
 def redirect(type_: MediaType, ident: int, season: int = None, episode: int = None):
     pass
 
@@ -132,7 +132,7 @@ class ITorrent(BaseModel):
 
 
 @app.get(
-    '/stream/<type>/<tmdb_id>',
+    '/stream/{type}/{tmdb_id}',
     response_class=StreamingResponse,
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
@@ -152,7 +152,7 @@ class DownloadAllResponse(BaseModel):
 
 
 @app.get(
-    '/select/<tmdb_id>/season/<season>/download_all', response_model=DownloadAllResponse
+    '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: int, season: int):
     from .main import extract_marker, groupby, normalise
@@ -258,7 +258,7 @@ class MovieResponse(BaseModel):
     imdb_id: str
 
 
-@app.get('/movie/<tmdb_id>', response_model=MovieResponse)
+@app.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
 def movie(tmdb_id: int):
     movie = get_movie(tmdb_id)
     return {"title": movie['title'], "imdb_id": movie['imdb_id']}
@@ -376,7 +376,7 @@ async def monitor_get(user: User = Depends(get_current_user)):
     return db.session.query(Monitor).all()
 
 
-@monitor_ns.delete('/<monitor_id>', tags=['monitor'])
+@monitor_ns.delete('/{monitor_id}', tags=['monitor'])
 def monitor_delete(monitor_id: int):
     query = db.session.query(Monitor).filter_by(id=monitor_id)
     precondition(query.count() > 0, 'Nothing to delete')
@@ -441,7 +441,7 @@ class TvResponse(BaseModel):
     seasons: List[SeasonMeta]
 
 
-@tv_ns.get('/<tmdb_id>', tags=['tv'], response_model=TvResponse)
+@tv_ns.get('/{tmdb_id}', tags=['tv'], response_model=TvResponse)
 def api_tv(tmdb_id: int):
     tv = get_tv(tmdb_id)
     return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv['name']}
@@ -458,7 +458,7 @@ class TvSeasonResponse(BaseModel):
     episodes: List[Episode]
 
 
-@tv_ns.get('/<tmdb_id>/season/<season>', tags=['tv'], response_model=TvSeasonResponse)
+@tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)
 def api_tv_season(tmdb_id: int, season: int):
     return get_tv_episodes(tmdb_id, season)
 
