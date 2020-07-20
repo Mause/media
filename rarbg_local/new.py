@@ -277,6 +277,12 @@ def movie(tmdb_id: int):
     return {"title": movie['title'], "imdb_id": movie['imdb_id']}
 
 
+def magic():
+    return call_sync(
+        request.method, request.path, '', headers=request.headers, body=request.data
+    )
+
+
 class FakeBlueprint(Blueprint):
     def __init__(self):
         super().__init__('fastapi', __name__)
