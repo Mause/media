@@ -80,12 +80,13 @@ from .db import (
 from .health import health
 from .models import (
     DownloadAllResponse,
+    DownloadPost,
     EpisodeInfo,
     IndexResponse,
     SeriesDetails,
     StatsResponse,
 )
-from .new import MonitorGet, call_sync
+from .new import MonitorGet, call_sync, magic
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .schema import schema
 from .tmdb import (
@@ -431,7 +432,10 @@ def api_diagnostics():
     return json.loads(message), code, headers
 
 
-from .models import DownloadPost
+@api.route('/openapi.json')
+@as_resource()
+def api_openapi():
+    return magic()
 
 
 @api.route('/download')
