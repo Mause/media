@@ -265,7 +265,11 @@ def movie(tmdb_id: int):
 
 def magic():
     return call_sync(
-        request.method, request.path, '', headers=request.headers, body=request.data
+        request.method,
+        '/' + request.path.split('/', 2)[-1],
+        '',
+        headers=request.headers,
+        body=request.data,
     )
 
 
