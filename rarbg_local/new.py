@@ -252,20 +252,6 @@ async def stats():
     ]
 
 
-class Settings(BaseSettings):
-    CLOUDAMQP_APIKEY: UUID4
-    CLOUDAMQP_URL: AnyUrl
-    DATABASE_URL: AnyUrl
-    PLEX_USERNAME: EmailStr
-    PLEX_PASSWORD: SecretStr
-
-    TIMBERIO_APIKEY: SecretStr
-    TIMBERIO_SOURCEID: int
-
-
-settings = Settings()
-
-
 class MovieResponse(BaseModel):
     title: str
     imdb_id: str
