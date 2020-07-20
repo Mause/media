@@ -3,6 +3,7 @@ from datetime import date
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 from unittest.mock import MagicMock
+from urllib.parse import urlencode
 
 from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
@@ -267,7 +268,7 @@ def magic():
     return call_sync(
         request.method,
         '/' + request.path.split('/', 2)[-1],
-        '',
+        urlencode(request.args),
         headers=request.headers,
         body=request.data,
     )
