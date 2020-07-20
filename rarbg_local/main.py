@@ -17,6 +17,7 @@ from typing import (
     List,
     Optional,
     Tuple,
+    Type,
     TypedDict,
     TypeVar,
     cast,
@@ -390,7 +391,7 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-def rewrap(schema: BaseModel) -> SchemaModel:
+def rewrap(schema: Type[BaseModel]) -> SchemaModel:
     s = schema.schema()
     for name, subschema in s.pop('definitions', {}).items():
         api.schema_model(name, subschema)

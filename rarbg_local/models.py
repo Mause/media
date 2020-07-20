@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from functools import reduce
-from typing import Dict, List, Optional, Tuple, TypeVar
+from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar
 
 from dataclasses_json import DataClassJsonMixin, config
 from marshmallow import Schema
@@ -23,10 +23,10 @@ class Orm(BaseModel):
 T = TypeVar('T')
 
 
-def map_to(config: Dict[str, str]) -> type:
+def map_to(config: Dict[str, str]) -> Type:
     class Config:
         class getter_dict(GetterDict):
-            def get(self, name: str, default: T) -> T:
+            def get(self, name: Any, default: Any = None) -> Any:
                 if name in config:
                     first, *parts = config[name].split('.')
                     v = super().get(first, default)
@@ -135,6 +135,6 @@ class MonitorGet(MonitorPost):
 
 class DownloadPost(BaseModel):
     tmdb_id: int
-    magnet: constr(regex=r'^magnet:')
+    magnet: constr(regex=r'^magnet:')  # type: ignore
     season: Optional[str] = None
     episode: Optional[str] = None

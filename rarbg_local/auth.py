@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import requests
 from cachetools import TTLCache
@@ -79,7 +79,7 @@ def basic_auth() -> Optional[User]:
         return None
 
 
-def Scopes(requested: List[str]) -> Depends:
+def Scopes(requested: List[str]) -> Callable:
     def scopes() -> List[str]:
         auth_type, rest = precondition(get_auth(), 'missing auth')
         scopes = my_jwkaas.get_token_info(rest)['scopes']
