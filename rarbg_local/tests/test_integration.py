@@ -446,6 +446,13 @@ def test_swagger(flask_app, snapshot):
         snapshot.assert_match(swagger)
 
 
+def test_openapi(test_client, snapshot):
+    r = test_client.get('/api/openapi.json')
+    assert r.status == '200 OK'
+
+    snapshot.assert_match(r.get_json())
+
+
 def test_stream(test_client, responses):
     themoviedb(responses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
     root = 'https://torrentapi.org/pubapi_v2.php?mode=search&ranked=0&limit=100&format=json_extended&app_id=Sonarr'
