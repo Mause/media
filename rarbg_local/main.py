@@ -628,11 +628,8 @@ def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
 
 @api.route('/movie/<int:tmdb_id>')
 @as_resource()
-@jsonapi
-@has_tmdb_id
 def api_movie(tmdb_id: str):
-    movie = get_movie(tmdb_id)
-    return {"title": movie['title'], "imdb_id": movie['imdb_id']}
+    return magic()
 
 
 TvResponse = api.model(
