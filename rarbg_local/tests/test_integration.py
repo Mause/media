@@ -446,6 +446,14 @@ def test_swagger(flask_app, snapshot):
         snapshot.assert_match(swagger)
 
 
+def test_movie(test_client, snapshot, responses):
+    themoviedb(responses, '/movie/1', {})
+    r = test_client.get('/api/movie/1')
+    assert r.status == '200 OK'
+
+    snapshot.assert_match(r.get_json())
+
+
 def test_openapi(test_client, snapshot):
     r = test_client.get('/api/openapi.json')
     assert r.status == '200 OK'
