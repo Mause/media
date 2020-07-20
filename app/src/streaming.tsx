@@ -17,7 +17,7 @@ import { SearchComponent } from './SearchComponent';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
-import { Link, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { SWRConfig } from 'swr';
 import {
   MonitorComponent,
@@ -31,6 +31,8 @@ import { DownloadAllComponent } from './DownloadAllComponent';
 import { Websocket } from './Websocket';
 import { Integrations as ApmIntegrations } from '@sentry/apm';
 import { useProfiler } from '@sentry/react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Link as MaterialLink } from '@material-ui/core';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -114,9 +116,31 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const Login = () => {
+  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
+
+  if (isAuthenticated) {
+    return (
+      <MaterialLink href="#" onClick={() => logout({})}>
+        Logout
+      </MaterialLink>
+    );
+  } else {
+    return (
+      <MaterialLink href="#" onClick={loginWithRedirect}>
+        Login
+      </MaterialLink>
+    );
+  }
+};
+
 function ParentComponentInt() {
   useProfiler('ParentComponentInt');
   const classes = useStyles();
+
+  const auth = useAuth0();
+  console.log(auth.user);
+
   return (
     <Router>
       <h1>Media</h1>
@@ -135,8 +159,13 @@ function ParentComponentInt() {
           <Grid item xs="auto">
             <ExtMLink href="https://app.plex.tv">Plex</ExtMLink>
           </Grid>
+          {auth.user && (
+            <Grid item xs="auto">
+              {auth.user.name}
+            </Grid>
+          )}
           <Grid item xs="auto">
-            <Link href="/user/sign-out">Logout</Link>
+            <Login />
           </Grid>
         </Grid>
       </nav>
