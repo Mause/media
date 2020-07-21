@@ -51,7 +51,14 @@ from .models import (
     map_to,
 )
 from .providers import ProviderSource, search_for_tv
-from .tmdb import get_movie, get_movie_imdb_id, get_tv, get_tv_episodes, get_tv_imdb_id
+from .tmdb import (
+    get_movie,
+    get_movie_imdb_id,
+    get_tv,
+    get_tv_episodes,
+    get_tv_imdb_id,
+    search_themoviedb,
+)
 from .utils import precondition
 
 app = FastAPI()
@@ -318,12 +325,13 @@ class SearchResponse(BaseModel):
     Year: int = Field(deprecated=True)
     Type: MediaType = Field(deprecated=True)
 
-    Config = map_to({'Year': 'year', 'Type': 'type'})
+    Config = map_to({'year': 'Year', 'type': 'Type'})
 
 
 @app.get('/search', response_model=List[SearchResponse])
 async def search(query: str):
-    ...
+    # dirty hack to make aliasing work
+    return [type('SearchResponse', (), v)() for v in search_themoviedb(query)]
 
 
 monitor_ns = APIRouter()
