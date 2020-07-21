@@ -58,6 +58,7 @@ cffi = "*"
 fastapi = "*"
 python-multipart = "*"
 jwkaas = "*"
+aniso8601 = "*"
 
 [requires]
 python_version = "3"
