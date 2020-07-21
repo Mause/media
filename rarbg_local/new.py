@@ -1,3 +1,4 @@
+import re
 from asyncio import get_event_loop
 from datetime import date
 from enum import Enum
@@ -283,6 +284,10 @@ def magic(*args, **kwargs):
     )
 
 
+def translate(path: str) -> str:
+    return re.sub(r'\{([^}]*)\}', lambda m: '<' + m.group(1).split(':')[0] + '>', path)
+
+
 class FakeBlueprint(Blueprint):
     def __init__(self):
         super().__init__('fastapi', __name__)
@@ -291,7 +296,10 @@ class FakeBlueprint(Blueprint):
         state = self.make_setup_state(fapp, options, first_registration)
         for route in app.routes:
             state.add_url_rule(
-                route.path, view_func=magic, methods=route.methods, endpoint=route
+                translate(route.path),
+                view_func=magic,
+                methods=route.methods,
+                endpoint=route,
             )
 
 
