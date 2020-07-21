@@ -35,6 +35,8 @@ def map_to(config: Dict[str, str]) -> Type:
                     v = super().get(name, default)
                 return v
 
+        orm_mode = True
+
     return Config
 
 
