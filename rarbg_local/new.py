@@ -271,7 +271,9 @@ def movie(tmdb_id: int):
     return {"title": movie['title'], "imdb_id": movie['imdb_id']}
 
 
-def magic():
+def magic(*args, **kwargs):
+    # we ignore the arguments flask tries to give us
+
     return call_sync(
         request.method,
         '/' + request.path.split('/', 2)[-1],
