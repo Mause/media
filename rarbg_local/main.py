@@ -428,8 +428,7 @@ def real_validation(error):
 @api.route('/diagnostics')
 @as_resource()
 def api_diagnostics():
-    message, code, headers = health.run()
-    return json.loads(message), code, headers
+    return health.run()
 
 
 @api.route('/openapi.json')

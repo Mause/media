@@ -197,9 +197,12 @@ async def select(tmdb_id: int, season: int):
     )
 
 
+from .health import health
+
+
 @app.get('/diagnostics')
 def diagnostics():
-    pass
+    return health.run()
 
 
 @app.post('/download')
