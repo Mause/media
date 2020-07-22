@@ -502,7 +502,7 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
         if body:
             return {'type': 'http.request', 'body': body}
         else:
-            return None
+            return {'type': 'http.disconnect'}
 
     async def call():
 
