@@ -202,7 +202,7 @@ from .health import health
 
 @app.get('/diagnostics')
 def diagnostics():
-    return health.run()
+    return health.run()[0]
 
 
 @app.post('/download')
