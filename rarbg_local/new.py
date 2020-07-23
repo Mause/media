@@ -1,5 +1,5 @@
 import re
-from asyncio import get_event_loop
+from asyncio import get_event_loop, new_event_loop, set_event_loop
 from datetime import date
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
@@ -524,9 +524,6 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
             send,
         )
 
-    from asyncio import new_event_loop, set_event_loop
-
-    # breakpoint()
     try:
         el = get_event_loop()
     except RuntimeError:
