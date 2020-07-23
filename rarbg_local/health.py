@@ -3,8 +3,7 @@ from healthcheck import HealthCheck
 
 from .transmission_proxy import transmission
 
-
-health = HealthCheck(success_handler=lambda a:a, failure_handler=lambda a:a)
+health = HealthCheck(success_handler=lambda a: a, failure_handler=lambda a: a)
 
 
 @health.add_check

@@ -1,11 +1,11 @@
+import logging
 import re
 import string
-import logging
 from typing import Any, Dict, Iterable
 
 import requests
-from requests.exceptions import ConnectionError
 from bs4 import BeautifulSoup
+from requests.exceptions import ConnectionError
 
 from .tmdb import get_movie, get_tv
 
