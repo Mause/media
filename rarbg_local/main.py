@@ -621,7 +621,7 @@ def api_index():
 @api.response(200, 'Success', [rewrap(StatsResponse)])
 @as_resource()
 def api_stats():
-    return call_sync('GET', '/stats', request.headers)
+    return magic()
 
 
 def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
