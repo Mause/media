@@ -852,6 +852,32 @@ snapshots['test_openapi 1'] = {
                 'title': 'IndexResponse',
                 'type': 'object',
             },
+            'InnerTorrent': {
+                'properties': {
+                    'eta': {'title': 'Eta', 'type': 'integer'},
+                    'files': {
+                        'items': {'$ref': '#/components/schemas/InnerTorrentFile'},
+                        'title': 'Files',
+                        'type': 'array',
+                    },
+                    'hashString': {'title': 'Hashstring', 'type': 'string'},
+                    'id': {'title': 'Id', 'type': 'integer'},
+                    'percentDone': {'title': 'Percentdone', 'type': 'number'},
+                },
+                'required': ['eta', 'hashString', 'id', 'percentDone', 'files'],
+                'title': 'InnerTorrent',
+                'type': 'object',
+            },
+            'InnerTorrentFile': {
+                'properties': {
+                    'bytesCompleted': {'title': 'Bytescompleted', 'type': 'integer'},
+                    'length': {'title': 'Length', 'type': 'integer'},
+                    'name': {'title': 'Name', 'type': 'string'},
+                },
+                'required': ['bytesCompleted', 'length', 'name'],
+                'title': 'InnerTorrentFile',
+                'type': 'object',
+            },
             'MediaType': {
                 'description': 'An enumeration.',
                 'enum': ['series', 'movie'],
@@ -1688,7 +1714,17 @@ snapshots['test_openapi 1'] = {
                 'operationId': 'torrents_torrents_get',
                 'responses': {
                     '200': {
-                        'content': {'application/json': {'schema': {}}},
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    'additionalProperties': {
+                                        '$ref': '#/components/schemas/InnerTorrent'
+                                    },
+                                    'title': 'Response Torrents Torrents Get',
+                                    'type': 'object',
+                                }
+                            }
+                        },
                         'description': 'Successful Response',
                     }
                 },

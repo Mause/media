@@ -313,9 +313,24 @@ class FakeBlueprint(Blueprint):
             )
 
 
-@app.get('/torrents')
-def torrents():
-    pass
+class InnerTorrent(BaseModel):
+    class InnerTorrentFile(BaseModel):
+        bytesCompleted: int
+        length: int
+        name: str
+
+    eta: int
+    hashString: str
+    id: int
+    percentDone: float
+    files: List[InnerTorrentFile]
+
+
+@app.get('/torrents', response_model=Dict[str, InnerTorrent])
+async def torrents():
+    from .main import get_keyed_torrents
+
+    return get_keyed_torrents()
 
 
 class SearchResponse(BaseModel):
