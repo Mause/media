@@ -123,12 +123,7 @@ def test_basic_auth(transmission, flask_app, user, responses):
         )
         assert r.status_code == 200
 
-        js = r.json
-        js.pop('hostname')
-        js.pop('timestamp')
-        assert js.pop('status') == 'success'
-
-        results = js.pop('results')
+        results = r.json
         for r in results:
             r.pop('response_time')
             r.pop('timestamp')
