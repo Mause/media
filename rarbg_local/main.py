@@ -86,7 +86,7 @@ from .models import (
     SeriesDetails,
     StatsResponse,
 )
-from .new import MonitorGet, call_sync, magic
+from .new import FakeBlueprint, MonitorGet, call_sync, magic
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .schema import schema
 from .tmdb import (
@@ -147,9 +147,13 @@ def cache_busting_url_for(endpoint, **values):
     return url_for(endpoint, **values)
 
 
-def create_app(config):
+def create_app(config: Dict):
+    config = config if isinstance(config, dict) else {}
+    enable_new = config.get('ENABLE_NEW', False)
     papp = Flask(__name__, static_folder='../app/build/static')
     papp.register_blueprint(app)
+    if enable_new:
+        papp.register_blueprint(FakeBlueprint(), url_prefix='/api')
     papp.config.update(
         {
             'SECRET_KEY': 'hkfircsc',
@@ -165,11 +169,12 @@ def create_app(config):
             'USER_ENABLE_USERNAME': True,  # Enable username authentication
             'USER_UNAUTHORIZED_ENDPOINT': 'rarbg_local.unauthorized',
             'RESTX_INCLUDE_ALL_MODELS': True,
-            **(config if isinstance(config, dict) else {}),
+            **config,
         }
     )
     db.init_app(papp)
-    api.init_app(papp)
+    if not enable_new:
+        api.init_app(papp)
     if not papp.config.get('TESTING', False):
         CORS(papp, supports_credentials=True)
     sockets.init_app(papp)
