@@ -40,6 +40,7 @@ from .db import (
     db,
     get_or_create,
 )
+from .health import health
 from .models import (
     DownloadPost,
     IndexResponse,
@@ -195,9 +196,6 @@ async def select(tmdb_id: int, season: int):
         complete=complete_or_not.get(True, []),
         incomplete=complete_or_not.get(False, []),
     )
-
-
-from .health import health
 
 
 @app.get('/diagnostics')

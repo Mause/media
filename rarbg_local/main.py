@@ -84,6 +84,8 @@ from .models import (
     DownloadPost,
     EpisodeInfo,
     IndexResponse,
+    MonitorGet,
+    MonitorPost,
     SeriesDetails,
     StatsResponse,
 )
@@ -452,8 +454,6 @@ def api_download() -> str:
 
 
 monitor = api.namespace('monitor', 'Contains media monitor resources')
-
-from .models import MonitorGet, MonitorPost
 
 
 @monitor.route('')
