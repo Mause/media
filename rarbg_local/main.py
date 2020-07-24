@@ -30,7 +30,7 @@ from flask import (
 )
 from flask_admin import Admin
 from flask_cors import CORS
-from flask_restx import Api, Resource, SchemaModel, fields
+from flask_restx import Api, Resource, SchemaModel
 from flask_restx.reqparse import RequestParser
 from flask_socketio import SocketIO, send
 from flask_user import UserManager, login_required, roles_required
@@ -50,7 +50,6 @@ from .auth import auth_hook
 from .db import (
     Download,
     EpisodeDetails,
-    Monitor,
     MovieDetails,
     Role,
     User,
@@ -63,23 +62,20 @@ from .health import health
 from .models import (
     DownloadAllResponse,
     DownloadPost,
-    EpisodeInfo,
     IndexResponse,
     MonitorGet,
     MonitorPost,
     SeriesDetails,
     StatsResponse,
 )
-from .new import FakeBlueprint, call_sync, magic
+from .new import FakeBlueprint, magic
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .tmdb import (
     get_json,
     get_movie_imdb_id,
-    get_tv,
     get_tv_episodes,
     get_tv_imdb_id,
     resolve_id,
-    search_themoviedb,
 )
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import as_resource, non_null, precondition
@@ -381,11 +377,7 @@ def rewrap(schema: Type[BaseModel]) -> SchemaModel:
 @as_resource()
 @api.response(200, 'Success', rewrap(DownloadAllResponse))
 def download_all_episodes(tmdb_id: str, season: str) -> Dict:
-    return call_sync(
-        'GET',
-        f'/select/{tmdb_id}/season/{season}/download_all',
-        headers=request.headers,
-    )
+    return magic()
 
 
 class ValidationErrorWrapper(Exception):
@@ -420,7 +412,7 @@ def api_openapi():
 @as_resource({'POST'})
 @api.expect([rewrap(DownloadPost)])
 def api_download() -> str:
-    return call_sync('POST', '/download', headers=request.headers, body=request.data)
+    return magic()
 
 
 monitor = api.namespace('monitor', 'Contains media monitor resources')
@@ -431,21 +423,17 @@ class MonitorsResource(Resource):
     @monitor.expect(rewrap(MonitorPost))
     @monitor.response(model=rewrap(MonitorGet), code=201, description='Created')
     def post(self):
-        return call_sync('POST', '/monitor', '', request.headers, body=request.data)
+        return magic()
 
     @monitor.response(200, 'Success', [rewrap(MonitorGet)])
     def get(self):
-        return call_sync('GET', '/monitor', '', request.headers.items())
+        return magic()
 
 
 @monitor.route('/<int:ident>')
 class MonitorResource(Resource):
     def delete(self, ident: int):
-        query = db.session.query(Monitor).filter_by(id=ident)
-        precondition(query.count() > 0, 'Nothing to delete')
-        query.delete()
-        db.session.commit()
-        return {}
+        return magic()
 
 
 def add_single(
@@ -585,7 +573,7 @@ has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
 @as_resource()
 @api.response(200, 'Success', rewrap(IndexResponse))
 def api_index():
-    return call_sync('GET', '/index', request.headers)
+    return magic()
 
 
 @api.route('/stats')
@@ -607,85 +595,19 @@ def api_movie(tmdb_id: str):
     return magic()
 
 
-TvResponse = api.model(
-    'TvResponse',
-    {
-        'number_of_seasons': fields.Integer,
-        'title': fields.String,
-        'imdb_id': fields.String,
-        'seasons': fields.List(
-            fields.Nested(
-                api.model(
-                    'SeasonMeta',
-                    {'episode_count': fields.Integer, 'season_number': fields.Integer},
-                )
-            )
-        ),
-    },
-)
-
 tv_ns = api.namespace('tv')
 
 
 @tv_ns.route('/<int:tmdb_id>')
-@tv_ns.response(200, 'OK', TvResponse)
 @as_resource()
-@tv_ns.marshal_with(TvResponse)
-@has_tmdb_id
-def api_tv(tmdb_id: str):
-    tv = get_tv(tmdb_id)
-    return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv['name']}
-
-
-TvSeasonResponse = tv_ns.model(
-    'TvSeasonResponse',
-    {
-        'episodes': fields.Nested(
-            tv_ns.model(
-                'Episode',
-                {
-                    'name': fields.String,
-                    'id': fields.Integer,
-                    'episode_number': fields.Integer,
-                    'air_date': fields.Date,
-                },
-            ),
-            as_list=True,
-        )
-    },
-)
+def api_tv():
+    return magic()
 
 
 @tv_ns.route('/<int:tmdb_id>/season/<int:season>')
-@tv_ns.response(200, 'OK', TvSeasonResponse)
 @as_resource()
-@tv_ns.marshal_with(TvSeasonResponse)
-@has_tmdb_id
-def api_tv_season(tmdb_id: str, season: str):
-    return get_tv_episodes(tmdb_id, season)
-
-
-InnerTorrent = api.model(
-    'InnerTorrent',
-    {
-        'eta': fields.Integer,
-        'hashString': fields.String,
-        'id': fields.Integer,
-        'percentDone': fields.Float,
-        'files': fields.List(
-            fields.Nested(
-                api.model(
-                    'InnerTorrentFile',
-                    {
-                        'bytesCompleted': fields.Integer,
-                        'length': fields.Integer,
-                        'name': fields.String,
-                    },
-                )
-            )
-        ),
-    },
-)
+def api_tv_season():
+    return magic()
 
 
 @api.route('/torrents')
@@ -694,30 +616,10 @@ def api_torrents():
     return magic()
 
 
-SearchResponse = api.model(
-    'SearchResponse',
-    {
-        'title': fields.String,
-        "Type": fields.String(enum=('movie', 'episode')),
-        "type": fields.String(attribute='Type', enum=('movie', 'episode')),
-        "Year": fields.Integer,
-        "year": fields.Integer(attribute='Year'),
-        "imdbID": fields.Integer,
-    },
-)
-
-
 @api.route('/search')
-@api.response(200, 'OK', [SearchResponse])
 @as_resource()
-@api.marshal_with(SearchResponse, as_list=True)
-@query_params(
-    RequestParser().add_argument(
-        'query', type=str, help='Search query', location='args', required=True
-    )
-)
-def api_search(query: str):
-    return search_themoviedb(query)
+def api_search():
+    return magic()
 
 
 def get_keyed_torrents() -> Dict[str, Dict]:

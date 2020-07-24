@@ -2,13 +2,9 @@ from typing import Dict, List
 from unittest.mock import MagicMock
 
 import pytest
-from dataclasses_json import DataClassJsonMixin
-from flask import Flask
-from flask_restx import Api, Swagger, fields
 
 from ..main import normalise
 from ..providers import threadable
-from ..utils import as_resource, schema_to_openapi
 
 episodes: List[Dict] = [
     {'name': '1:23:45', 'episode_number': 1},

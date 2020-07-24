@@ -18,8 +18,6 @@ from flask_user.token_manager import TokenManager
 from pydantic import BaseModel, Field
 from requests.exceptions import HTTPError
 from sqlalchemy import func
-from sqlalchemy.orm.query import Query
-from sqlalchemy.orm.session import Session
 
 from .db import (
     Download,
