@@ -15,16 +15,7 @@ from flask_login.utils import decode_cookie
 from flask_user import UserManager, current_user
 from flask_user.password_manager import PasswordManager
 from flask_user.token_manager import TokenManager
-from pydantic import (
-    UUID4,
-    AnyUrl,
-    BaseModel,
-    BaseSettings,
-    EmailStr,
-    Field,
-    SecretStr,
-    validator,
-)
+from pydantic import BaseModel, Field
 from requests.exceptions import HTTPError
 from sqlalchemy import func
 from sqlalchemy.orm.query import Query
@@ -38,9 +29,9 @@ from .db import (
     Roles,
     User,
     db,
+    get_movies,
     get_or_create,
 )
-from .health import health
 from .models import (
     DownloadPost,
     IndexResponse,
@@ -254,7 +245,7 @@ async def download_post(things: List[DownloadPost]) -> Dict:
 
 @app.get('/index', response_model=IndexResponse)
 async def index():
-    from .main import get_movies, resolve_series
+    from .main import resolve_series
 
     return IndexResponse(series=resolve_series(), movies=get_movies())
 

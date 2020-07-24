@@ -10,21 +10,9 @@ from functools import lru_cache, wraps
 from itertools import chain
 from os.path import join
 from pathlib import Path
-from typing import (
-    Callable,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Tuple,
-    Type,
-    TypedDict,
-    TypeVar,
-    cast,
-)
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, cast
 from urllib.parse import urlencode
 
-from dataclasses_json import DataClassJsonMixin, config
 from fastapi.exceptions import HTTPException
 from flask import (
     Blueprint,
@@ -42,21 +30,16 @@ from flask import (
 )
 from flask_admin import Admin
 from flask_cors import CORS
-from flask_jsontools import DynamicJSONEncoder, jsonapi
 from flask_restx import Api, Resource, SchemaModel, fields
 from flask_restx.reqparse import RequestParser
 from flask_socketio import SocketIO, send
-from flask_user import UserManager, current_user, login_required, roles_required
-from marshmallow import Schema
-from marshmallow import fields as mfields
+from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
-from marshmallow.fields import String
-from marshmallow.validate import Regexp as MarshRegexp
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from pydantic import BaseModel
-from requests.exceptions import ConnectionError, HTTPError
+from requests.exceptions import ConnectionError
 from sqlalchemy import event, func
 from sqlalchemy.orm.session import make_transient
 from werkzeug.exceptions import NotFound
@@ -68,7 +51,6 @@ from .db import (
     Download,
     EpisodeDetails,
     Monitor,
-    MonitorMediaType,
     MovieDetails,
     Role,
     User,
@@ -76,7 +58,6 @@ from .db import (
     create_movie,
     db,
     get_episodes,
-    get_movies,
 )
 from .health import health
 from .models import (
@@ -89,12 +70,10 @@ from .models import (
     SeriesDetails,
     StatsResponse,
 )
-from .new import FakeBlueprint, MonitorGet, call_sync, magic
+from .new import FakeBlueprint, call_sync, magic
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
-from .schema import schema
 from .tmdb import (
     get_json,
-    get_movie,
     get_movie_imdb_id,
     get_tv,
     get_tv_episodes,
@@ -102,15 +81,8 @@ from .tmdb import (
     resolve_id,
     search_themoviedb,
 )
-from .transmission_proxy import get_torrent, torrent_add, transmission
-from .utils import (
-    as_resource,
-    expect,
-    non_null,
-    precondition,
-    schema_to_marshal,
-    schema_to_openapi,
-)
+from .transmission_proxy import get_torrent, torrent_add
+from .utils import as_resource, non_null, precondition
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -197,8 +169,6 @@ def create_app(config: Dict):
     db.create_all(app=papp)
     UserManager(papp, db, User)
     papp.login_manager.request_loader(auth_hook)
-
-    papp.json_encoder = DynamicJSONEncoder
 
     admin = Admin(papp, name='Media')
     admin.add_view(UserAdmin(User, db.session))

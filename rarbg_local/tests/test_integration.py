@@ -18,8 +18,7 @@ from sqlalchemy.exc import IntegrityError
 
 from ..db import Download, Role, User, create_episode, create_movie, db
 from ..main import api, create_app
-from ..schema import schema
-from ..utils import cache_clear, schema_to_marshal
+from ..utils import cache_clear
 from .conftest import add_json, themoviedb
 
 HASH_STRING = '00000000000000000'

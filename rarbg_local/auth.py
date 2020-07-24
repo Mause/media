@@ -5,7 +5,7 @@ from cachetools import TTLCache
 from fastapi import Depends, HTTPException
 from flask import current_app, request
 from jwkaas import JWKaas
-from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
+from starlette.status import HTTP_401_UNAUTHORIZED
 
 from .db import User, db
 from .utils import precondition

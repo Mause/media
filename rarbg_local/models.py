@@ -3,14 +3,11 @@ from enum import Enum
 from functools import reduce
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar
 
-from dataclasses_json import DataClassJsonMixin, config
-from marshmallow import Schema
-from marshmallow import fields as mfields
 from pydantic import BaseModel, constr
 from pydantic.main import _missing
 from pydantic.utils import GetterDict
 
-from .db import EpisodeDetails, MonitorMediaType, MovieDetails
+from .db import MonitorMediaType
 
 
 class Orm(BaseModel):
