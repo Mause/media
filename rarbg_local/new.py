@@ -420,7 +420,7 @@ async def monitor_get(user: User = Depends(get_current_user)):
 
 
 @monitor_ns.delete('/{monitor_id}', tags=['monitor'])
-def monitor_delete(monitor_id: int):
+async def monitor_delete(monitor_id: int):
     query = db.session.query(Monitor).filter_by(id=monitor_id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
