@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import requests
@@ -12,13 +13,16 @@ from .utils import precondition
 
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
 
-my_jwkaas = JWKaas(
-    ['https://localhost:3000/api/v2', f'{AUTH0_DOMAIN}userinfo'],
-    AUTH0_DOMAIN,
-    jwks_url=f'{AUTH0_DOMAIN}.well-known/jwks.json',
-)
-
 t = TTLCache(maxsize=10, ttl=3600)
+
+
+@lru_cache()
+def get_my_jwkaas():
+    return JWKaas(
+        ['https://localhost:3000/api/v2', f'{AUTH0_DOMAIN}userinfo'],
+        AUTH0_DOMAIN,
+        jwks_url=f'{AUTH0_DOMAIN}.well-known/jwks.json',
+    )
 
 
 def get_user_info(token_info: Dict[str, Any], rest: str) -> Dict:
@@ -33,7 +37,7 @@ def get_user_info(token_info: Dict[str, Any], rest: str) -> Dict:
 
 
 def bearer_auth(rest: str) -> Optional[User]:
-    token_info = my_jwkaas.get_token_info(rest)
+    token_info = get_my_jwkaas().get_token_info(rest)
     if token_info is None:
         return None
 
@@ -82,7 +86,7 @@ def basic_auth() -> Optional[User]:
 def Scopes(requested: List[str]) -> Callable:
     def scopes() -> List[str]:
         auth_type, rest = precondition(get_auth(), 'missing auth')
-        scopes = my_jwkaas.get_token_info(rest)['scopes']
+        scopes = get_my_jwkaas().get_token_info(rest)['scopes']
 
         if not all(r in scopes for r in requested):
             raise HTTPException(status_code=HTTP_401_UNAUTHORIZED)
