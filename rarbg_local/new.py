@@ -152,13 +152,16 @@ class ITorrent(BaseModel):
     response_class=StreamingResponse,
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
-def stream(
+async def stream(
     type: MediaType,
     tmdb_id: int,
     season: Optional[int] = None,
     episode: Optional[int] = None,
 ):
-    ...
+    async def t():
+        yield b''
+
+    return StreamingResponse(t(), headers={'content-type': 'text/event-stream'})
 
 
 class DownloadAllResponse(BaseModel):
@@ -545,6 +548,7 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
     el.run_until_complete(call())
 
     response.pop('type')
+    response.pop('more_body', None)
     if 'body' in response:
         response['response'] = response.pop('body')
     response['headers'] = dict(response['headers'])
