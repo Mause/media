@@ -30,6 +30,7 @@ from .db import (
     get_movies,
     get_or_create,
 )
+from .health import health
 from .models import (
     DownloadPost,
     IndexResponse,

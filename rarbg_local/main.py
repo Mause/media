@@ -10,7 +10,7 @@ from functools import lru_cache, wraps
 from itertools import chain
 from os.path import join
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, cast
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, cast
 from urllib.parse import urlencode
 
 from fastapi.exceptions import HTTPException
@@ -30,7 +30,7 @@ from flask import (
 )
 from flask_admin import Admin
 from flask_cors import CORS
-from flask_restx import Api, Resource, SchemaModel
+from flask_restx import Api, Resource
 from flask_restx.reqparse import RequestParser
 from flask_socketio import SocketIO, send
 from flask_user import UserManager, login_required, roles_required
@@ -38,7 +38,6 @@ from marshmallow.exceptions import ValidationError
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
-from pydantic import BaseModel
 from requests.exceptions import ConnectionError
 from sqlalchemy import event, func
 from sqlalchemy.orm.session import make_transient
@@ -59,15 +58,7 @@ from .db import (
     get_episodes,
 )
 from .health import health
-from .models import (
-    DownloadAllResponse,
-    DownloadPost,
-    IndexResponse,
-    MonitorGet,
-    MonitorPost,
-    SeriesDetails,
-    StatsResponse,
-)
+from .models import SeriesDetails
 from .new import FakeBlueprint, magic
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .tmdb import (
@@ -366,33 +357,10 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-def rewrap(schema: Type[BaseModel]) -> SchemaModel:
-    s = schema.schema()
-    for name, subschema in s.pop('definitions', {}).items():
-        api.schema_model(name, subschema)
-    return api.schema_model(schema.__name__, s)
-
-
 @api.route('/select/<tmdb_id>/season/<season>/download_all')
 @as_resource()
-@api.response(200, 'Success', rewrap(DownloadAllResponse))
 def download_all_episodes(tmdb_id: str, season: str) -> Dict:
     return magic()
-
-
-class ValidationErrorWrapper(Exception):
-    def __init__(self, messages):
-        self.messages = messages
-
-
-@api.errorhandler(ValidationError)
-def validation(error):
-    raise ValidationErrorWrapper(error.messages)
-
-
-@api.errorhandler(ValidationErrorWrapper)
-def real_validation(error):
-    return {'message': error.messages}, 422
 
 
 @api.route('/diagnostics')
@@ -408,9 +376,7 @@ def api_openapi():
 
 
 @api.route('/download')
-@api.response(200, 'OK', {})
 @as_resource({'POST'})
-@api.expect([rewrap(DownloadPost)])
 def api_download() -> str:
     return magic()
 
@@ -420,12 +386,9 @@ monitor = api.namespace('monitor', 'Contains media monitor resources')
 
 @monitor.route('')
 class MonitorsResource(Resource):
-    @monitor.expect(rewrap(MonitorPost))
-    @monitor.response(model=rewrap(MonitorGet), code=201, description='Created')
     def post(self):
         return magic()
 
-    @monitor.response(200, 'Success', [rewrap(MonitorGet)])
     def get(self):
         return magic()
 
@@ -571,13 +534,11 @@ has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
 
 @api.route('/index')
 @as_resource()
-@api.response(200, 'Success', rewrap(IndexResponse))
 def api_index():
     return magic()
 
 
 @api.route('/stats')
-@api.response(200, 'Success', [rewrap(StatsResponse)])
 @as_resource()
 def api_stats():
     return magic()

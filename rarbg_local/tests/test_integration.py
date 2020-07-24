@@ -1,6 +1,5 @@
 import json
 from base64 import b64encode
-from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Generator
 from unittest.mock import MagicMock, Mock, patch
@@ -237,25 +236,6 @@ def test_index(responses, test_client, flask_app, get_torrent, logged_in, snapsh
     assert res.status == '200 OK'
 
     snapshot.assert_match(res.json)
-
-
-@mark.skip
-def test_serial(snapshot):
-    @dataclass
-    class Inner(DataClassJsonMixin):
-        id: int
-
-    @dataclass
-    class Return(DataClassJsonMixin):
-        series: Dict[str, Inner]
-
-    data = {'series': {'helo': {'id': 1}}}
-
-    Data = schema_to_marshal(Api(), 'Return', schema(Return))
-
-    res = marshal(data, Data)
-
-    snapshot.assert_match(res)
 
 
 def test_search(responses, test_client):
