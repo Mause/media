@@ -395,7 +395,7 @@ def test_torrents_error(get_torrent, test_client):
     get_torrent.side_effect = TimeoutError('Timeout!')
     torrents = test_client.get('/api/torrents')
     assert torrents.status_code == 500
-    assert torrents.json == {'message': 'Unable to connect to transmission: Timeout!'}
+    assert torrents.json == {'detail': 'Unable to connect to transmission: Timeout!'}
 
 
 @patch('rarbg_local.main.get_torrent')

@@ -25,6 +25,7 @@ from typing import (
 from urllib.parse import urlencode
 
 from dataclasses_json import DataClassJsonMixin, config
+from fastapi.exceptions import HTTPException
 from flask import (
     Blueprint,
     Flask,
@@ -719,11 +720,8 @@ InnerTorrent = api.model(
 
 @api.route('/torrents')
 @as_resource()
-@api.marshal_with(
-    api.model('TorrentsResponse', {'*': fields.Wildcard(fields.Nested(InnerTorrent))})
-)
 def api_torrents():
-    return get_keyed_torrents()
+    return magic()
 
 
 SearchResponse = api.model(
@@ -766,7 +764,7 @@ def _get_keyed_torrents() -> Dict[str, Dict]:
     except (ConnectionError, TimeoutError, FutureTimeoutError,) as e:
         logging.exception('Unable to connect to transmission')
         error = 'Unable to connect to transmission: ' + str(e)
-        return api.abort(500, error)
+        raise HTTPException(500, error)
 
 
 @app.route('/redirect/plex/<tmdb_id>')
