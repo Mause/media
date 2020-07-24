@@ -132,15 +132,6 @@ snapshots['test_swagger 1'] = {
             'title': 'DownloadSchema',
             'type': 'object',
         },
-        'Episode': {
-            'properties': {
-                'air_date': {'format': 'date', 'type': 'string'},
-                'episode_number': {'type': 'integer'},
-                'id': {'type': 'integer'},
-                'name': {'type': 'string'},
-            },
-            'type': 'object',
-        },
         'EpisodeDetailsSchema': {
             'properties': {
                 'download': {'$ref': '#/definitions/DownloadSchema'},
@@ -198,27 +189,6 @@ snapshots['test_swagger 1'] = {
             'title': 'IndexResponse',
             'type': 'object',
         },
-        'InnerTorrent': {
-            'properties': {
-                'eta': {'type': 'integer'},
-                'files': {
-                    'items': {'$ref': '#/definitions/InnerTorrentFile'},
-                    'type': 'array',
-                },
-                'hashString': {'type': 'string'},
-                'id': {'type': 'integer'},
-                'percentDone': {'type': 'number'},
-            },
-            'type': 'object',
-        },
-        'InnerTorrentFile': {
-            'properties': {
-                'bytesCompleted': {'type': 'integer'},
-                'length': {'type': 'integer'},
-                'name': {'type': 'string'},
-            },
-            'type': 'object',
-        },
         'MonitorGet': {
             'properties': {
                 'added_by': {'title': 'Added By', 'type': 'string'},
@@ -259,32 +229,6 @@ snapshots['test_swagger 1'] = {
             'enum': ['KICKASS', 'HORRIBLESUBS', 'RARBG'],
             'title': 'ProviderSource',
         },
-        'SearchResponse': {
-            'properties': {
-                'Type': {
-                    'enum': ('movie', 'episode'),
-                    'example': 'movie',
-                    'type': 'string',
-                },
-                'Year': {'type': 'integer'},
-                'imdbID': {'type': 'integer'},
-                'title': {'type': 'string'},
-                'type': {
-                    'enum': ('movie', 'episode'),
-                    'example': 'movie',
-                    'type': 'string',
-                },
-                'year': {'type': 'integer'},
-            },
-            'type': 'object',
-        },
-        'SeasonMeta': {
-            'properties': {
-                'episode_count': {'type': 'integer'},
-                'season_number': {'type': 'integer'},
-            },
-            'type': 'object',
-        },
         'SeriesDetails': {
             'properties': {
                 'imdb_id': {'title': 'Imdb Id', 'type': 'string'},
@@ -318,36 +262,6 @@ snapshots['test_swagger 1'] = {
             },
             'required': ['user', 'values'],
             'title': 'StatsResponse',
-            'type': 'object',
-        },
-        'TorrentsResponse': {
-            'properties': {
-                '*': {
-                    'additionalProperties': {'$ref': '#/definitions/InnerTorrent'},
-                    'type': 'object',
-                }
-            },
-            'type': 'object',
-        },
-        'TvResponse': {
-            'properties': {
-                'imdb_id': {'type': 'string'},
-                'number_of_seasons': {'type': 'integer'},
-                'seasons': {
-                    'items': {'$ref': '#/definitions/SeasonMeta'},
-                    'type': 'array',
-                },
-                'title': {'type': 'string'},
-            },
-            'type': 'object',
-        },
-        'TvSeasonResponse': {
-            'properties': {
-                'episodes': {
-                    'items': {'$ref': '#/definitions/Episode'},
-                    'type': 'array',
-                }
-            },
             'type': 'object',
         },
         'UserSchema': {
@@ -459,31 +373,7 @@ snapshots['test_swagger 1'] = {
         '/search': {
             'get': {
                 'operationId': 'get_api_search',
-                'parameters': [
-                    {
-                        'description': 'Search query',
-                        'in': 'query',
-                        'name': 'query',
-                        'required': True,
-                        'type': 'string',
-                    },
-                    {
-                        'description': 'An optional fields mask',
-                        'format': 'mask',
-                        'in': 'header',
-                        'name': 'X-Fields',
-                        'type': 'string',
-                    },
-                ],
-                'responses': {
-                    '200': {
-                        'description': 'Success',
-                        'schema': {
-                            'items': {'$ref': '#/definitions/SearchResponse'},
-                            'type': 'array',
-                        },
-                    }
-                },
+                'responses': {'200': {'description': 'Success'}},
                 'tags': ['default'],
             }
         },
@@ -549,81 +439,29 @@ snapshots['test_swagger 1'] = {
         '/torrents': {
             'get': {
                 'operationId': 'get_api_torrents',
-                'parameters': [
-                    {
-                        'description': 'An optional fields mask',
-                        'format': 'mask',
-                        'in': 'header',
-                        'name': 'X-Fields',
-                        'type': 'string',
-                    }
-                ],
-                'responses': {
-                    '200': {
-                        'description': 'Success',
-                        'schema': {'$ref': '#/definitions/TorrentsResponse'},
-                    }
-                },
+                'responses': {'200': {'description': 'Success'}},
                 'tags': ['default'],
             }
         },
         '/tv/{tmdb_id}': {
             'get': {
                 'operationId': 'get_api_tv',
-                'parameters': [
-                    {
-                        'description': 'The Movie Database ID',
-                        'in': 'path',
-                        'name': 'tmdb_id',
-                        'required': True,
-                        'type': 'integer',
-                    },
-                    {
-                        'description': 'An optional fields mask',
-                        'format': 'mask',
-                        'in': 'header',
-                        'name': 'X-Fields',
-                        'type': 'string',
-                    },
-                ],
-                'responses': {
-                    '200': {
-                        'description': 'Success',
-                        'schema': {'$ref': '#/definitions/TvResponse'},
-                    }
-                },
+                'responses': {'200': {'description': 'Success'}},
                 'tags': ['tv'],
-            }
+            },
+            'parameters': [
+                {'in': 'path', 'name': 'tmdb_id', 'required': True, 'type': 'integer'}
+            ],
         },
         '/tv/{tmdb_id}/season/{season}': {
             'get': {
                 'operationId': 'get_api_tv_season',
-                'parameters': [
-                    {
-                        'description': 'The Movie Database ID',
-                        'in': 'path',
-                        'name': 'tmdb_id',
-                        'required': True,
-                        'type': 'integer',
-                    },
-                    {
-                        'description': 'An optional fields mask',
-                        'format': 'mask',
-                        'in': 'header',
-                        'name': 'X-Fields',
-                        'type': 'string',
-                    },
-                ],
-                'responses': {
-                    '200': {
-                        'description': 'Success',
-                        'schema': {'$ref': '#/definitions/TvSeasonResponse'},
-                    }
-                },
+                'responses': {'200': {'description': 'Success'}},
                 'tags': ['tv'],
             },
             'parameters': [
-                {'in': 'path', 'name': 'season', 'required': True, 'type': 'integer'}
+                {'in': 'path', 'name': 'tmdb_id', 'required': True, 'type': 'integer'},
+                {'in': 'path', 'name': 'season', 'required': True, 'type': 'integer'},
             ],
         },
     },
