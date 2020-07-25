@@ -529,9 +529,6 @@ def resolve_series() -> List[SeriesDetails]:
     ]
 
 
-has_tmdb_id = api.doc(params={'tmdb_id': 'The Movie Database ID'})
-
-
 @api.route('/index')
 @as_resource()
 def api_index():

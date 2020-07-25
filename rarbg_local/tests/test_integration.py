@@ -4,12 +4,10 @@ from datetime import datetime
 from typing import Dict, Generator
 from unittest.mock import MagicMock, Mock, patch
 
-from dataclasses_json import DataClassJsonMixin
 from flask import Flask, Request
 from flask.globals import _request_ctx_stack
 from flask.testing import FlaskClient
 from flask_login import FlaskLoginClient, login_user
-from flask_restx import Api, marshal
 from flask_restx.swagger import Swagger
 from pytest import fixture, mark, raises
 from responses import RequestsMock
