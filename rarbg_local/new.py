@@ -1,5 +1,5 @@
 import re
-from asyncio import get_event_loop, new_event_loop, set_event_loop
+from asyncio import get_event_loop, new_event_loop, set_event_loop, sleep
 from datetime import date
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
@@ -505,13 +505,22 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
     response: Dict[str, Any] = {}
 
     async def send(message):
+        body = message.pop('body', None)
+        if body:
+            if 'body' in response:
+                response['body'] += body
+            else:
+                response['body'] = body
         response.update(message)
 
     async def recieve():
         if body:
             return {'type': 'http.request', 'body': body}
-        else:
+        elif 'body' in response and not response['more_body']:
             return {'type': 'http.disconnect'}
+        else:
+            await sleep(0)
+            return {'type': 'http.*'}
 
     async def call():
 
