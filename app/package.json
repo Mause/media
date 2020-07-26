@@ -59,7 +59,7 @@
     ]
   },
   "devDependencies": {
-    "@types/history": "4.7.6",
+    "@types/history": "4.7.7",
     "@types/jest": "^26.0.4",
     "@types/lodash": "^4.14.157",
     "@types/moxios": "^0.4.9",
