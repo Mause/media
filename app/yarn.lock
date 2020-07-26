@@ -1329,15 +1329,6 @@
     "@sentry/utils" "5.20.1"
     tslib "^1.9.3"
 
-"@sentry/browser@5.19.2":
-  version "5.19.2"
-  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-5.19.2.tgz#8bad445b8d1efd50e6510bb43b3018b941f6e5cb"
-  dependencies:
-    "@sentry/core" "5.19.2"
-    "@sentry/types" "5.19.2"
-    "@sentry/utils" "5.19.2"
-    tslib "^1.9.3"
-
 "@sentry/browser@5.20.1":
   version "5.20.1"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-5.20.1.tgz#be59522d0914d58309e1367d997d4b3cd5385d7e"
@@ -1345,16 +1336,6 @@
     "@sentry/core" "5.20.1"
     "@sentry/types" "5.20.1"
     "@sentry/utils" "5.20.1"
-    tslib "^1.9.3"
-
-"@sentry/core@5.19.2":
-  version "5.19.2"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-5.19.2.tgz#99a64ef0e55230fc02a083c48fa07ada85de4929"
-  dependencies:
-    "@sentry/hub" "5.19.2"
-    "@sentry/minimal" "5.19.2"
-    "@sentry/types" "5.19.2"
-    "@sentry/utils" "5.19.2"
     tslib "^1.9.3"
 
 "@sentry/core@5.20.1":
@@ -1367,28 +1348,12 @@
     "@sentry/utils" "5.20.1"
     tslib "^1.9.3"
 
-"@sentry/hub@5.19.2":
-  version "5.19.2"
-  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-5.19.2.tgz#ab7f3d2d253c3441b2833a530b17c6de2418b2c7"
-  dependencies:
-    "@sentry/types" "5.19.2"
-    "@sentry/utils" "5.19.2"
-    tslib "^1.9.3"
-
 "@sentry/hub@5.20.1":
   version "5.20.1"
   resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-5.20.1.tgz#05e83ba972a96e9d7225a64c7d3728aa9fcefc4e"
   dependencies:
     "@sentry/types" "5.20.1"
     "@sentry/utils" "5.20.1"
-    tslib "^1.9.3"
-
-"@sentry/minimal@5.19.2":
-  version "5.19.2"
-  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-5.19.2.tgz#0fc2fdf9911a0cb31b52f7ccad061b74785724a3"
-  dependencies:
-    "@sentry/hub" "5.19.2"
-    "@sentry/types" "5.19.2"
     tslib "^1.9.3"
 
 "@sentry/minimal@5.20.1":
@@ -1399,30 +1364,20 @@
     "@sentry/types" "5.20.1"
     tslib "^1.9.3"
 
-"@sentry/react@^5.19.2":
-  version "5.19.2"
-  resolved "https://registry.yarnpkg.com/@sentry/react/-/react-5.19.2.tgz#54a7a6366edde7755a0b75e6f410382b9940561b"
+"@sentry/react@^5.20.1":
+  version "5.20.1"
+  resolved "https://registry.yarnpkg.com/@sentry/react/-/react-5.20.1.tgz#b6da27a87e3301f9eb7e5960f8b5591f4ce4d811"
   dependencies:
-    "@sentry/browser" "5.19.2"
-    "@sentry/types" "5.19.2"
-    "@sentry/utils" "5.19.2"
+    "@sentry/browser" "5.20.1"
+    "@sentry/minimal" "5.20.1"
+    "@sentry/types" "5.20.1"
+    "@sentry/utils" "5.20.1"
     hoist-non-react-statics "^3.3.2"
     tslib "^1.9.3"
-
-"@sentry/types@5.19.2":
-  version "5.19.2"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.19.2.tgz#ead586f0b64b91c396d3521b938ca25f7b59d655"
 
 "@sentry/types@5.20.1":
   version "5.20.1"
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.20.1.tgz#ccc4fa4c9d0f94d93014b04e674762d5d5cd30a2"
-
-"@sentry/utils@5.19.2":
-  version "5.19.2"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-5.19.2.tgz#f2819d9de5abc33173019e81955904247e4a8246"
-  dependencies:
-    "@sentry/types" "5.19.2"
-    tslib "^1.9.3"
 
 "@sentry/utils@5.20.1":
   version "5.20.1"
