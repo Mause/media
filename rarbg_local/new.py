@@ -21,8 +21,10 @@ from sqlalchemy import func
 
 from .db import (
     Download,
+    EpisodeDetails,
     Monitor,
     MonitorMediaType,
+    MovieDetails,
     Role,
     Roles,
     User,
@@ -109,7 +111,14 @@ def user():
 
 @app.get('/delete/{type}/{id}')
 def delete(type: MediaType, id: int):
-    pass
+    query = db.session.query(
+        EpisodeDetails if type == 'series' else MovieDetails
+    ).filter_by(id=id)
+    precondition(query.count() > 0, 'Nothing to delete')
+    query.delete()
+    db.session.commit()
+
+    return {}
 
 
 @app.get('/redirect/plex/{tmdb_id}')

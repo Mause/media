@@ -292,14 +292,7 @@ def socket_stream(message):
 
 @app.route('/delete/<type>/<id>')
 def delete(type: str, id: str) -> WResponse:
-    query = db.session.query(
-        EpisodeDetails if type == 'series' else MovieDetails
-    ).filter_by(id=id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    db.session.commit()
-
-    return jsonify()
+    return magic()
 
 
 def categorise(string: str) -> str:
