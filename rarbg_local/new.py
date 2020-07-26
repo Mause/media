@@ -2,7 +2,9 @@ import re
 from asyncio import get_event_loop, new_event_loop, set_event_loop, sleep
 from datetime import date
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from functools import wraps
+from itertools import chain
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 from unittest.mock import MagicMock
 from urllib.parse import urlencode
 
@@ -152,21 +154,51 @@ class ITorrent(BaseModel):
     episode_info: EpisodeInfo
 
 
+def eventstream(func: Callable[..., Iterable[BaseModel]]):
+    @wraps(func)
+    async def decorator(*args, **kwargs):
+        sr = StreamingResponse(
+            chain(
+                (f'data: {rset.json()}\n\n' for rset in func(*args, **kwargs)),
+                ['data:\n\n'],
+            ),
+            media_type="text/event-stream",
+        )
+        return sr
+
+    return decorator
+
+
 @app.get(
     '/stream/{type}/{tmdb_id}',
     response_class=StreamingResponse,
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
-async def stream(
-    type: MediaType,
-    tmdb_id: int,
-    season: Optional[int] = None,
-    episode: Optional[int] = None,
+@eventstream
+def stream(
+    type: str,
+    tmdb_id: str,
+    source: ProviderSource = None,
+    season: int = None,
+    episode: int = None,
 ):
-    async def t():
-        yield b''
+    if source:
+        provider = next(
+            (provider for provider in PROVIDERS if provider.name == source.value), None,
+        )
+        if not provider:
+            raise HTTPException(422, 'Invalid provider')
+    else:
+        provider = FakeProvider()
 
-    return StreamingResponse(t(), headers={'content-type': 'text/event-stream'})
+    if type == 'series':
+        items = provider.search_for_tv(
+            get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
+        )
+    else:
+        items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
+
+    return list(items)
 
 
 class DownloadAllResponse(BaseModel):
