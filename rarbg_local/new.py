@@ -13,8 +13,8 @@ from urllib.parse import urlencode
 from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from flask import _app_ctx_stack  # ignore: type
-from flask import _request_ctx_stack  # ignore: type
+from flask import _app_ctx_stack  # type: ignore
+from flask import _request_ctx_stack  # type: ignore
 from flask import Blueprint, Response, current_app, request
 from flask.sessions import SecureCookieSessionInterface
 from flask_login.utils import decode_cookie
