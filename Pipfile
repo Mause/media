@@ -59,6 +59,7 @@ fastapi = "*"
 python-multipart = "*"
 jwkaas = "*"
 aniso8601 = "*"
+pytz = "*"
 
 [requires]
 python_version = "3"
