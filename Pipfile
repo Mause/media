@@ -40,7 +40,6 @@ sentry-sdk = {extras = ["flask"],version = "*"}
 alembic = "*"
 plexapi = "*"
 flask-cors = "*"
-flask-restx = {git = "https://github.com/python-restx/flask-restx"}
 werkzeug = "==1.*"
 apispec = "*"
 flask-login = "==0.5.0"
@@ -59,6 +58,8 @@ fastapi = "*"
 python-multipart = "*"
 jwkaas = "*"
 aniso8601 = "*"
+pytz = "*"
+flask-restx = "*"
 
 [requires]
 python_version = "3"
