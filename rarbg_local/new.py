@@ -557,10 +557,10 @@ def _stream(type: str, tmdb_id: str, season=None, episode=None):
 async def websocket_stream(websocket: WebSocket):
     await websocket.accept()
 
-    request = websocket.receive_json()
+    request = await websocket.receive_json()
 
     for item in _stream(**request):
-        websocket.send_json(item)
+        await websocket.send_json(item)
 
 
 app.include_router(tv_ns, prefix='/tv')
