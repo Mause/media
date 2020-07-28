@@ -322,13 +322,13 @@ def movie(tmdb_id: int):
 
 def magic(*args, **kwargs):
     # we ignore the arguments flask tries to give us
+    rq = request._get_current_object()
 
+    path = rq.path
+    if path.startswith('/api'):
+        path = '/' + path.split('/', 2)[-1]
     return call_sync(
-        request.method,
-        '/' + request.path.split('/', 2)[-1],
-        urlencode(request.args),
-        headers=request.headers,
-        body=request.data,
+        rq.method, path, urlencode(rq.args), headers=rq.headers, body=rq.data,
     )
 
 
