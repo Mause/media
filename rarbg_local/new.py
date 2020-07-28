@@ -120,7 +120,7 @@ def user():
 @app.get('/delete/{type}/{id}')
 async def delete(type: MediaType, id: int):
     query = db.session.query(
-        EpisodeDetails if type == 'series' else MovieDetails
+        EpisodeDetails if type == MediaType.SERIES else MovieDetails
     ).filter_by(id=id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
