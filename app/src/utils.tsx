@@ -3,17 +3,19 @@ import Axios from 'axios';
 import { useState, useEffect } from 'react';
 import MaterialLink from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
-import { LocationDescriptor } from 'history';
+import * as RRD from 'react-router-dom';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@material-ui/core';
 import moxios from 'moxios';
 import { unstable_batchedUpdates } from 'react-dom';
+import { To, State } from 'history';
 
 // axiosRetry(Axios, { retries: 3 });
 
-export function MLink<S>(props: {
+export function MLink(props: {
   children: React.ReactNode;
-  to: LocationDescriptor<S>;
+  to: To;
+  state?: State;
   color?: TypographyTypeMap['props']['color'];
 }): ReactElement {
   return <MaterialLink component={Link} {...props} />;
@@ -110,4 +112,9 @@ export function ExtMLink(props: { href: string; children: string }) {
 
 export function expectLastRequestBody() {
   return expect(JSON.parse(moxios.requests.mostRecent().config.data));
+}
+
+export function useLocation<T>() {
+  const location = RRD.useLocation();
+  return { ...location, state: (location.state as any) as T };
 }

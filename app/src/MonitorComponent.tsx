@@ -1,8 +1,8 @@
 import useSWR from 'swr';
 import React, { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
-import { Redirect, useParams, useHistory, useLocation } from 'react-router-dom';
-import { usePost } from './utils';
+import { Navigate, useParams, useNavigate } from 'react-router-dom';
+import { usePost, useLocation } from './utils';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
 import { contextMenuTrigger } from './render';
 import Axios from 'axios';
@@ -25,14 +25,14 @@ export interface Monitor {
 
 export function MonitorComponent() {
   const { data } = useSWR<Monitor[]>('monitor');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <div>
       <h3>Monitored Media</h3>
       {data ? (
         <ul>
-          {data.map(m => {
+          {data.map((m) => {
             const id = `monitor_${m.id}`;
             return (
               <li key={m.id}>
@@ -51,7 +51,7 @@ export function MonitorComponent() {
                 <ContextMenu id={id}>
                   <MenuItem
                     onClick={() =>
-                      history.push(
+                      navigate(
                         m.type === MediaType.MOVIE
                           ? `/select/${m.tmdb_id}/options`
                           : `/select/${m.tmdb_id}/season`,
@@ -60,9 +60,7 @@ export function MonitorComponent() {
                   >
                     Search
                   </MenuItem>
-                  <MenuItem
-                    onClick={() => history.push(`/monitor/delete/${m.id}`)}
-                  >
+                  <MenuItem onClick={() => navigate(`/monitor/delete/${m.id}`)}>
                     Delete
                   </MenuItem>
                 </ContextMenu>
@@ -90,20 +88,17 @@ export function MonitorAddComponent() {
     return <DisplayError error={error} />;
   }
 
-  return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
+  return done ? <Navigate to="/monitor" /> : <ReactLoading color="#000000" />;
 }
 
 function useDelete(path: string) {
   const [done, setDone] = useState(false);
 
-  useEffect(
-    () => {
-      Axios.delete(`/api/${path}`, { withCredentials: true }).then(() =>
-        setDone(true),
-      );
-    },
-    [path],
-  );
+  useEffect(() => {
+    Axios.delete(`/api/${path}`, { withCredentials: true }).then(() =>
+      setDone(true),
+    );
+  }, [path]);
 
   return done;
 }
@@ -113,5 +108,5 @@ export function MonitorDeleteComponent() {
 
   const done = useDelete(`monitor/${id}`);
 
-  return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
+  return done ? <Navigate to="/monitor" /> : <ReactLoading color="#000000" />;
 }

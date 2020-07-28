@@ -25,16 +25,15 @@ export function SearchComponent() {
       <SearchBox />
       <ul>
         {results ? (
-          results.map(result => (
+          results.map((result) => (
             <li key={result.imdbID}>
               <MLink
-                to={{
-                  pathname:
-                    result.Type === 'movie'
-                      ? `/select/${result.imdbID}/options`
-                      : `/select/${result.imdbID}/season`,
-                  state: { query },
-                }}
+                to={
+                  result.Type === 'movie'
+                    ? `/select/${result.imdbID}/options`
+                    : `/select/${result.imdbID}/season`
+                }
+                state={{ query }}
               >
                 {result.title} ({result.Year ? result.Year : 'Unknown year'})
               </MLink>

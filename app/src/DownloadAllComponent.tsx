@@ -12,7 +12,7 @@ import { DisplayError } from './IndexComponent';
 type MapType = [string, ITorrent[]][];
 
 function DownloadAllComponent() {
-  const { tmdb_id, season } = useParams<{ tmdb_id: string; season: string }>();
+  const { tmdb_id, season } = useParams();
 
   const { data: torrents } = useSWR<Torrents>('torrents');
   const { data, isValidating, error } = useSWR<{
@@ -31,7 +31,7 @@ function DownloadAllComponent() {
         <ul>
           {data &&
             data.packs &&
-            data.packs.map(t => (
+            data.packs.map((t) => (
               <li key={t.download}>
                 <DisplayTorrent
                   torrents={torrents}
@@ -62,14 +62,14 @@ function DownloadAllComponent() {
 }
 
 function download_all(tmdb_id: string, torrents: ITorrent[]) {
-  const downloads: DownloadCall[] = torrents.map(t => ({
+  const downloads: DownloadCall[] = torrents.map((t) => ({
     tmdb_id,
     magnet: t.download,
     season: t.episode_info.seasonnum,
     episode: t.episode_info.epnum,
   }));
 
-  return { pathname: '/download', state: { downloads } };
+  return { to: '/download', state: { downloads } };
 }
 
 function Individual(props: {
@@ -87,10 +87,10 @@ function Individual(props: {
           props.items.map(([name, torrents]) => (
             <div key={name}>
               <h4>
-                <MLink to={download_all(props.tmdb_id, torrents)}>{name}</MLink>
+                <MLink {...download_all(props.tmdb_id, torrents)}>{name}</MLink>
               </h4>
               <ul>
-                {torrents.map(t => (
+                {torrents.map((t) => (
                   <li key={t.download}>
                     <DisplayTorrent
                       torrents={props.torrents}

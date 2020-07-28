@@ -1,4 +1,4 @@
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import React from 'react';
 import ReactLoading from 'react-loading';
@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import useSWR from 'swr';
 import qs from 'qs';
-import { MLink } from './utils';
+import { MLink, useLocation } from './utils';
 
 export interface TV {
   number_of_seasons: number;
@@ -54,7 +54,7 @@ function SeasonSelectComponent() {
         <ReactLoading type="balls" color="#000000" />
       ) : (
         <ul>
-          {_.range(1, tv.number_of_seasons + 1).map(i => (
+          {_.range(1, tv.number_of_seasons + 1).map((i) => (
             <li key={i}>
               <MLink to={`/select/${tmdb_id}/season/${i}`}>Season {i}</MLink>
             </li>
@@ -103,7 +103,7 @@ function EpisodeSelectComponent() {
       <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={seasonNumber!} />
       {season ? (
         <ol>
-          {season.episodes.map(episode => (
+          {season.episodes.map((episode) => (
             <li key={episode.id} value={episode.episode_number}>
               <MLink
                 to={`/select/${tmdb_id}/season/${seasonNumber}/episode/${episode.episode_number}/options`}

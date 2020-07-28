@@ -2,11 +2,11 @@ import * as Sentry from '@sentry/react';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import {
-  RouteProps,
   BrowserRouter as Router,
   Route,
-  Switch,
+  Routes as Switch,
 } from 'react-router-dom';
+import { RouteProps } from 'react-router';
 import { IndexComponent } from './IndexComponent';
 import {
   EpisodeSelectComponent,
@@ -92,7 +92,7 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Route {...props} strict={true} />
+      <Route {...props} />
     </>
   );
 }
