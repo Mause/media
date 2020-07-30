@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/Mause/rarbg_local#readme",
   "engines": {
-    "yarn": "berry",
+    "yarn": "2.1.1",
     "node": "12.14.1"
   }
 }
