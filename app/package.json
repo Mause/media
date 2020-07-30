@@ -81,5 +81,8 @@
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all"
-  }
+  },
+  "workspaces": [
+    "client"
+  ]
 }
