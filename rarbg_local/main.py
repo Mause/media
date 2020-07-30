@@ -551,13 +551,13 @@ tv_ns = api.namespace('tv')
 
 @tv_ns.route('/<int:tmdb_id>')
 @as_resource()
-def api_tv():
+def api_tv(tmdb_id: int):
     return magic()
 
 
 @tv_ns.route('/<int:tmdb_id>/season/<int:season>')
 @as_resource()
-def api_tv_season():
+def api_tv_season(tmdb_id: int, season: int):
     return magic()
 
 
