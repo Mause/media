@@ -22,5 +22,4 @@ build: clean
 		-o $(OUTPUT)
 
 prod:
-	cd app && yarn --version
-	cd app && yarn install && yarn build
+	cd app && yarn build
