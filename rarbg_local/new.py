@@ -4,11 +4,10 @@ from asyncio import get_event_loop, new_event_loop, set_event_loop, sleep
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from enum import Enum
-from queue import Empty, Queue
-from threading import Event
-from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from itertools import chain
+from queue import Empty, Queue
+from threading import Event
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 from unittest.mock import MagicMock
 from urllib.parse import urlencode
@@ -581,8 +580,8 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
     response: Dict[str, Any] = {}
 
     async def send(message):
-        logging.info('received message %s', message)
         type_ = message['type']
+        logging.info('received message of type %s', type_)
 
         if type_ == 'http.response.start':
             response.update(message)
@@ -646,15 +645,11 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
     def genny():
         while not last_event.is_set():
             try:
-                i = body_queue.get_nowait()
-                logging.info('response chunk %s', i)
-                yield i
+                yield body_queue.get_nowait()
             except Empty:
                 pass
         while not body_queue.empty():
-            i = body_queue.get()
-            logging.info('response chunk %s', i)
-            yield i
+            yield body_queue.get()
 
     response['response'] = genny()
 
