@@ -572,6 +572,8 @@ try:
 except RuntimeError:
     el = new_event_loop()
     set_event_loop(el)
+from concurrent.futures import ThreadPoolExecutor
+executor = ThreadPoolExecutor(10)
 executor.submit(el.run_forever)
 
 def call_sync(method='GET', path='/monitor', query_string='', headers=None, body=None):
