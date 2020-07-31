@@ -567,6 +567,13 @@ app.include_router(tv_ns, prefix='/tv')
 app.include_router(monitor_ns, prefix='/monitor')
 
 
+try:
+    el = get_event_loop()
+except RuntimeError:
+    el = new_event_loop()
+    set_event_loop(el)
+executor.submit(el.run_forever)
+
 def call_sync(method='GET', path='/monitor', query_string='', headers=None, body=None):
     response: Dict[str, Any] = {}
 
@@ -605,11 +612,6 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
             send,
         )
 
-    try:
-        el = get_event_loop()
-    except RuntimeError:
-        el = new_event_loop()
-        set_event_loop(el)
     el.call_soon_threadsafe(call)
 
     response.pop('type')
