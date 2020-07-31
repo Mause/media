@@ -289,7 +289,7 @@ def test_delete_cascade(test_client: FlaskClient, logged_in):
 
     res = test_client.get(f'/delete/series/{e.id}')
     assert res.status_code == 200
-    assert res.data == b'{}\n'
+    assert res.json == {}
 
     session.commit()
 

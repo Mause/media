@@ -7,10 +7,13 @@ from enum import Enum
 from queue import Empty, Queue
 from threading import Event
 from typing import Any, Dict, List, Optional, Tuple
+from functools import wraps
+from itertools import chain
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 from unittest.mock import MagicMock
 from urllib.parse import urlencode
 
-from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException
+from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException, WebSocket
 from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from flask import _app_ctx_stack  # type: ignore
@@ -27,8 +30,10 @@ from sqlalchemy import func
 
 from .db import (
     Download,
+    EpisodeDetails,
     Monitor,
     MonitorMediaType,
+    MovieDetails,
     Role,
     Roles,
     User,
@@ -47,7 +52,13 @@ from .models import (
     UserShim,
     map_to,
 )
-from .providers import ProviderSource, search_for_tv
+from .providers import (
+    PROVIDERS,
+    FakeProvider,
+    ProviderSource,
+    search_for_movie,
+    search_for_tv,
+)
 from .tmdb import (
     get_movie,
     get_movie_imdb_id,
@@ -56,7 +67,7 @@ from .tmdb import (
     get_tv_imdb_id,
     search_themoviedb,
 )
-from .utils import precondition
+from .utils import non_null, precondition
 
 app = FastAPI()
 
@@ -114,8 +125,15 @@ def user():
 
 
 @app.get('/delete/{type}/{id}')
-def delete(type: MediaType, id: int):
-    pass
+async def delete(type: MediaType, id: int):
+    query = db.session.query(
+        EpisodeDetails if type == MediaType.SERIES else MovieDetails
+    ).filter_by(id=id)
+    precondition(query.count() > 0, 'Nothing to delete')
+    query.delete()
+    db.session.commit()
+
+    return {}
 
 
 @app.get('/redirect/plex/{tmdb_id}')
@@ -143,21 +161,51 @@ class ITorrent(BaseModel):
     episode_info: EpisodeInfo
 
 
+def eventstream(func: Callable[..., Iterable[BaseModel]]):
+    @wraps(func)
+    async def decorator(*args, **kwargs):
+        sr = StreamingResponse(
+            chain(
+                (f'data: {rset.json()}\n\n' for rset in func(*args, **kwargs)),
+                ['data:\n\n'],
+            ),
+            media_type="text/event-stream",
+        )
+        return sr
+
+    return decorator
+
+
 @app.get(
     '/stream/{type}/{tmdb_id}',
     response_class=StreamingResponse,
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
-async def stream(
-    type: MediaType,
-    tmdb_id: int,
-    season: Optional[int] = None,
-    episode: Optional[int] = None,
+@eventstream
+def stream(
+    type: str,
+    tmdb_id: str,
+    source: ProviderSource = None,
+    season: int = None,
+    episode: int = None,
 ):
-    async def t():
-        yield b''
+    if source:
+        provider = next(
+            (provider for provider in PROVIDERS if provider.name == source.value), None,
+        )
+        if not provider:
+            raise HTTPException(422, 'Invalid provider')
+    else:
+        provider = FakeProvider()
 
-    return StreamingResponse(t(), headers={'content-type': 'text/event-stream'})
+    if type == 'series':
+        items = provider.search_for_tv(
+            get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
+        )
+    else:
+        items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
+
+    return list(items)
 
 
 class DownloadAllResponse(BaseModel):
@@ -281,13 +329,13 @@ def movie(tmdb_id: int):
 
 def magic(*args, **kwargs):
     # we ignore the arguments flask tries to give us
+    rq = request._get_current_object()
 
+    path = rq.path
+    if path.startswith('/api'):
+        path = '/' + path.split('/', 2)[-1]
     return call_sync(
-        request.method,
-        '/' + request.path.split('/', 2)[-1],
-        urlencode(request.args),
-        headers=request.headers,
-        body=request.data,
+        rq.method, path, urlencode(rq.args), headers=rq.headers, body=rq.data,
     )
 
 
@@ -305,7 +353,7 @@ class FakeBlueprint(Blueprint):
             state.add_url_rule(
                 translate(route.path),
                 view_func=magic,
-                methods=route.methods,
+                methods=getattr(route, 'methods', {'GET'}),
                 endpoint=route,
             )
 
@@ -501,6 +549,25 @@ class TvSeasonResponse(BaseModel):
 @tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)
 def api_tv_season(tmdb_id: int, season: int):
     return get_tv_episodes(tmdb_id, season)
+
+
+def _stream(type: str, tmdb_id: str, season=None, episode=None):
+    if type == 'series':
+        items = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode)
+    else:
+        items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
+
+    return (item.dict() for item in items)
+
+
+@app.websocket("/ws")
+async def websocket_stream(websocket: WebSocket):
+    await websocket.accept()
+
+    request = await websocket.receive_json()
+
+    for item in _stream(**request):
+        await websocket.send_json(item)
 
 
 app.include_router(tv_ns, prefix='/tv')

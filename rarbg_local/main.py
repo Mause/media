@@ -292,14 +292,7 @@ def socket_stream(message):
 
 @app.route('/delete/<type>/<id>')
 def delete(type: str, id: str) -> WResponse:
-    query = db.session.query(
-        EpisodeDetails if type == 'series' else MovieDetails
-    ).filter_by(id=id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    db.session.commit()
-
-    return jsonify()
+    return magic()
 
 
 def categorise(string: str) -> str:
@@ -558,13 +551,13 @@ tv_ns = api.namespace('tv')
 
 @tv_ns.route('/<int:tmdb_id>')
 @as_resource()
-def api_tv():
+def api_tv(tmdb_id: int):
     return magic()
 
 
 @tv_ns.route('/<int:tmdb_id>/season/<int:season>')
 @as_resource()
-def api_tv_season():
+def api_tv_season(tmdb_id: int, season: int):
     return magic()
 
 
