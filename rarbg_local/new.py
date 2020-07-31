@@ -610,7 +610,7 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
     except RuntimeError:
         el = new_event_loop()
         set_event_loop(el)
-    el.run_until_complete(call())
+    el.call_soon_threadsafe(call)
 
     response.pop('type')
     response.pop('more_body', None)
