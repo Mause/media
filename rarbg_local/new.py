@@ -1,7 +1,12 @@
+import logging
 import re
 from asyncio import get_event_loop, new_event_loop, set_event_loop, sleep
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from enum import Enum
+from queue import Empty, Queue
+from threading import Event
+from typing import Any, Dict, List, Optional, Tuple
 from functools import wraps
 from itertools import chain
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
@@ -11,6 +16,8 @@ from urllib.parse import urlencode
 from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException, WebSocket
 from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from flask import _app_ctx_stack  # type: ignore
+from flask import _request_ctx_stack  # type: ignore
 from flask import Blueprint, Response, current_app, request
 from flask.sessions import SecureCookieSessionInterface
 from flask_login.utils import decode_cookie
@@ -567,22 +574,36 @@ app.include_router(tv_ns, prefix='/tv')
 app.include_router(monitor_ns, prefix='/monitor')
 
 
+executor = ThreadPoolExecutor(10)
+
+
 def call_sync(method='GET', path='/monitor', query_string='', headers=None, body=None):
     response: Dict[str, Any] = {}
 
     async def send(message):
-        body = message.pop('body', None)
-        if body:
-            if 'body' in response:
-                response['body'] += body
+        logging.info('received message %s', message)
+        type_ = message['type']
+
+        if type_ == 'http.response.start':
+            response.update(message)
+            first_event.set()
+        elif type_ == 'http.response.body':
+            body = message.pop('body', None)
+            if body:
+                body_queue.put(body)
+
+            if 'more_body' in message:
+                if not message['more_body']:
+                    last_event.set()
             else:
-                response['body'] = body
-        response.update(message)
+                last_event.set()
+        else:
+            raise Exception('unknown message type: ' + type_)
 
     async def recieve():
         if body:
             return {'type': 'http.request', 'body': body}
-        elif 'body' in response and not response['more_body']:
+        elif last_event.is_set():
             return {'type': 'http.disconnect'}
         else:
             await sleep(0)
@@ -605,17 +626,42 @@ def call_sync(method='GET', path='/monitor', query_string='', headers=None, body
             send,
         )
 
-    try:
-        el = get_event_loop()
-    except RuntimeError:
-        el = new_event_loop()
-        set_event_loop(el)
-    el.run_until_complete(call())
+    rq = _request_ctx_stack.top
+    appc = _app_ctx_stack.top
+
+    def worker():
+        _request_ctx_stack.push(rq)
+        _app_ctx_stack.push(appc)
+        try:
+            el = get_event_loop()
+        except RuntimeError:
+            el = new_event_loop()
+            set_event_loop(el)
+        el.run_until_complete(call())
+
+    first_event = Event()
+    last_event = Event()
+    body_queue: Queue[Dict] = Queue()
+
+    def genny():
+        while not last_event.is_set():
+            try:
+                i = body_queue.get_nowait()
+                logging.info('response chunk %s', i)
+                yield i
+            except Empty:
+                pass
+        while not body_queue.empty():
+            i = body_queue.get()
+            logging.info('response chunk %s', i)
+            yield i
+
+    response['response'] = genny()
+
+    executor.submit(worker)
+    first_event.wait()  # wait until we have the status, headers
 
     response.pop('type')
-    response.pop('more_body', None)
-    if 'body' in response:
-        response['response'] = response.pop('body')
     response['headers'] = dict(response['headers'])
     response['mimetype'] = response['headers'].pop(b'content-type').decode()
 
