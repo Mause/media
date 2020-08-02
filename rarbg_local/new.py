@@ -8,7 +8,7 @@ from functools import wraps
 from itertools import chain
 from queue import Empty, Queue
 from threading import Event
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 from unittest.mock import MagicMock
 from urllib.parse import urlencode
 
@@ -43,9 +43,11 @@ from .db import (
 from .health import health
 from .models import (
     DownloadPost,
+    EpisodeDetailsSchema,
     IndexResponse,
     MonitorGet,
     MonitorPost,
+    MovieDetailsSchema,
     Orm,
     StatsResponse,
     UserShim,
@@ -249,9 +251,15 @@ def diagnostics():
     return health.run()[0]
 
 
-@app.post('/download')
-async def download_post(things: List[DownloadPost]) -> Dict:
+@app.post(
+    '/download', response_model=List[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
+)
+async def download_post(
+    things: List[DownloadPost],
+) -> List[Union[MovieDetails, EpisodeDetails]]:
     from .main import add_single
+
+    results: List[Union[MovieDetails, EpisodeDetails]] = []
 
     for thing in things:
         is_tv = thing.season is not None
@@ -275,24 +283,28 @@ async def download_post(things: List[DownloadPost]) -> Dict:
         else:
             title = item['title']
 
-        add_single(
-            magnet=thing.magnet,
-            imdb_id=(
-                get_tv_imdb_id(str(thing.tmdb_id))
-                if is_tv
-                else get_movie_imdb_id(str(thing.tmdb_id))
+        results.append(
+            add_single(
+                magnet=thing.magnet,
+                imdb_id=(
+                    get_tv_imdb_id(str(thing.tmdb_id))
+                    if is_tv
+                    else get_movie_imdb_id(str(thing.tmdb_id))
+                )
+                or '',
+                subpath=subpath,
+                tmdb_id=thing.tmdb_id,
+                season=thing.season,
+                episode=thing.episode,
+                title=title,
+                show_title=show_title,
+                is_tv=is_tv,
             )
-            or '',
-            subpath=subpath,
-            tmdb_id=thing.tmdb_id,
-            season=thing.season,
-            episode=thing.episode,
-            title=title,
-            show_title=show_title,
-            is_tv=is_tv,
         )
 
-    return {}
+    db.session.commit()
+
+    return results
 
 
 @app.get('/index', response_model=IndexResponse)

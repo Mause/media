@@ -188,7 +188,7 @@ def create_movie(
     title: str,
     tmdb_id: int,
     timestamp: datetime = None,
-) -> None:
+) -> MovieDetails:
     md = MovieDetails()
     db.session.add(md)
     db.session.add(
@@ -202,6 +202,7 @@ def create_movie(
             timestamp=timestamp,
         )
     )
+    return md
 
 
 def create_episode(

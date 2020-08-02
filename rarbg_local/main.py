@@ -10,7 +10,7 @@ from functools import lru_cache, wraps
 from itertools import chain
 from os.path import join
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, cast
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
 from urllib.parse import urlencode
 
 from fastapi.exceptions import HTTPException
@@ -403,7 +403,7 @@ def add_single(
     episode: Optional[str],
     title: str,
     show_title: Optional[str],
-) -> None:
+) -> Union[MovieDetails, EpisodeDetails]:
     res = torrent_add(magnet, subpath)
     arguments = res['arguments']
     print(arguments)
@@ -427,7 +427,7 @@ def add_single(
     if not already:
         if is_tv:
             precondition(season, 'Season must be provided for tv type')
-            create_episode(
+            return create_episode(
                 transmission_id=transmission_id,
                 imdb_id=imdb_id,
                 season=non_null(season),
@@ -437,14 +437,17 @@ def add_single(
                 show_title=non_null(show_title),
             )
         else:
-            create_movie(
+            return create_movie(
                 transmission_id=transmission_id,
                 imdb_id=imdb_id,
                 tmdb_id=tmdb_id,
                 title=title,
             )
 
-        db.session.commit()
+    if is_tv:
+        return already.movie
+    else:
+        return already.episode
 
 
 def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
