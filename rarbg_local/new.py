@@ -70,7 +70,17 @@ from .tmdb import (
 )
 from .utils import non_null, precondition
 
-app = FastAPI()
+app = FastAPI(
+    servers=[
+        {
+            "url": "{protocol}://localhost:5000/api",
+            "description": "Development",
+            "variables": {"protocol": {"enum": ["http", "https"], "default": "https"}},
+        },
+        {"url": "https://media-staging.herokuapps.com/api", "description": "Staging"},
+        {"url": "https://media.mause.me/api", "description": "Production"},
+    ]
+)
 
 
 class FakeApp:
