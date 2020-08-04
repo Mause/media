@@ -8,6 +8,7 @@ import requests
 from cachetools.func import ttl_cache
 from requests_toolbelt.sessions import BaseUrlSession
 
+from .models import TvSeasonResponse
 from .utils import lru_cache, precondition
 
 tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
@@ -108,8 +109,8 @@ def get_imdb_id(type: str, id: Union[int, str]) -> str:
 
 
 @ttl_cache()
-def get_tv_episodes(id: str, season: str):
-    return get_json(f'tv/{id}/season/{season}')
+def get_tv_episodes(id: str, season: str) -> TvSeasonResponse:
+    return TvSeasonResponse(**get_json(f'tv/{id}/season/{season}'))
 
 
 class ReleaseType(Enum):

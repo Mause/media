@@ -1,8 +1,8 @@
+from .models import TvSeasonResponse
 import logging
 import re
 from asyncio import get_event_loop, new_event_loop, set_event_loop, sleep
 from concurrent.futures import ThreadPoolExecutor
-from datetime import date
 from enum import Enum
 from functools import wraps
 from itertools import chain
@@ -233,7 +233,7 @@ async def select(tmdb_id: int, season: int):
 
     results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
-    episodes = get_tv_episodes(tmdb_id, season)['episodes']
+    episodes = get_tv_episodes(tmdb_id, season).episodes
 
     packs_or_not = groupby(
         results, lambda result: extract_marker(result.title)[1] is None
@@ -285,10 +285,18 @@ async def download_post(
             if thing.episode is None:
                 title = f'Season {thing.season}'
             else:
-                idx = int(thing.episode) - 1
-                title = get_tv_episodes(thing.tmdb_id, thing.season)['episodes'][idx][
-                    'name'
-                ]
+                episodes = get_tv_episodes(thing.tmdb_id, thing.season).episodes
+                episode = next(
+                    (
+                        episode
+                        for episode in episodes
+                        if episode.episode_number == thing.episode
+                    ),
+                    None,
+                )
+                precondition(episode, 'Could not find episode')
+                title = episode.name
+
             show_title = item['name']
         else:
             title = item['title']
@@ -554,17 +562,6 @@ class TvResponse(BaseModel):
 def api_tv(tmdb_id: int):
     tv = get_tv(tmdb_id)
     return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv['name']}
-
-
-class Episode(BaseModel):
-    name: str
-    id: int
-    episode_number: int
-    air_date: Optional[date]
-
-
-class TvSeasonResponse(BaseModel):
-    episodes: List[Episode]
 
 
 @tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)

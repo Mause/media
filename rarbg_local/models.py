@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from enum import Enum
 from functools import reduce
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar
@@ -135,3 +135,14 @@ class DownloadPost(BaseModel):
     magnet: constr(regex=r'^magnet:')  # type: ignore
     season: Optional[str] = None
     episode: Optional[str] = None
+
+
+class Episode(BaseModel):
+    name: str
+    id: int
+    episode_number: int
+    air_date: Optional[date]
+
+
+class TvSeasonResponse(BaseModel):
+    episodes: List[Episode]
