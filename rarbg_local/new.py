@@ -320,6 +320,7 @@ async def download_post(
             )
         )
 
+    db.session.add_all(results)
     db.session.commit()
 
     return results

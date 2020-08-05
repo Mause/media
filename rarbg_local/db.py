@@ -190,17 +190,14 @@ def create_movie(
     timestamp: datetime = None,
 ) -> MovieDetails:
     md = MovieDetails()
-    db.session.add(md)
-    db.session.add(
-        create_download(
-            transmission_id=transmission_id,
-            imdb_id=imdb_id,
-            title=title,
-            type='movie',
-            tmdb_id=tmdb_id,
-            details=md,
-            timestamp=timestamp,
-        )
+    create_download(
+        transmission_id=transmission_id,
+        imdb_id=imdb_id,
+        title=title,
+        type='movie',
+        tmdb_id=tmdb_id,
+        details=md,
+        timestamp=timestamp,
     )
     return md
 
@@ -219,18 +216,15 @@ def create_episode(
     timestamp: datetime = None,
 ) -> EpisodeDetails:
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
-    db.session.add(ed)
-    db.session.add(
-        create_download(
-            transmission_id=transmission_id,
-            imdb_id=imdb_id,
-            tmdb_id=tmdb_id,
-            title=title,
-            type='episode',
-            details=ed,
-            id=download_id,
-            timestamp=timestamp,
-        )
+    create_download(
+        transmission_id=transmission_id,
+        imdb_id=imdb_id,
+        tmdb_id=tmdb_id,
+        title=title,
+        type='episode',
+        details=ed,
+        id=download_id,
+        timestamp=timestamp,
     )
     return ed
 
