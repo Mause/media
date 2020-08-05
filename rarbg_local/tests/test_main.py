@@ -1,15 +1,16 @@
-from typing import Dict, List
+from typing import List
 from unittest.mock import MagicMock
 
 import pytest
 
 from ..main import normalise
+from ..models import Episode
 from ..providers import threadable
 
-episodes: List[Dict] = [
-    {'name': '1:23:45', 'episode_number': 1},
-    {'name': 'Open Wide, O Earth', 'episode_number': 3},
-    {'name': 'The Happiness of All Mankind', 'episode_number': 4},
+episodes: List[Episode] = [
+    Episode(name='1:23:45', episode_number=1, id=1),
+    Episode(name='Open Wide, O Earth', episode_number=3, id=3),
+    Episode(name='The Happiness of All Mankind', episode_number=4, id=4),
 ]
 
 

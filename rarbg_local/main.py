@@ -310,7 +310,10 @@ season_re = re.compile(r'\W(S\d{2})\W')
 punctuation_re = re.compile(f'[{string.punctuation} ]')
 
 
-def normalise(episodes: List[Dict], title: str) -> Optional[str]:
+from .models import Episode
+
+
+def normalise(episodes: List[Episode], title: str) -> Optional[str]:
     sel = full_marker_re.search(title)
     if not sel:
         sel = season_re.search(title)
@@ -326,13 +329,13 @@ def normalise(episodes: List[Dict], title: str) -> Optional[str]:
         (
             episode
             for episode in episodes
-            if episode['episode_number'] == int(i_episode, 10)
+            if episode.episode_number == int(i_episode, 10)
         ),
         None,
     )
     assert episode
 
-    to_replace = punctuation_re.sub(' ', episode['name'])
+    to_replace = punctuation_re.sub(' ', episode.name)
     to_replace = '.'.join(to_replace.split())
     title = re.sub(to_replace, 'TITLE', title, re.I)
 
@@ -480,7 +483,9 @@ def resolve_season(episodes):
             id=-1,
             download=Download(
                 id=-1,
-                transmission_id=f'{download.transmission_id}.{episode["episode_number"]}',
+                transmission_id=(
+                    f'{download.transmission_id}.{episode["episode_number"]}'
+                ),
                 title=episode['name'],
                 **common,
             ),

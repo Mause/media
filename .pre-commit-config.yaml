@@ -30,7 +30,7 @@ repos:
         args:
           - --py3-plus
   - repo: https://github.com/psf/black
-    rev: 19.10b0
+    rev: b59a524
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/mirrors-eslint
