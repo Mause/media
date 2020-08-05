@@ -13,7 +13,7 @@ from .utils import precondition
 
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
 
-t: TTLCache[Dict] = TTLCache(maxsize=10, ttl=3600)
+t = TTLCache(maxsize=10, ttl=3600)
 
 
 @lru_cache()
