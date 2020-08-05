@@ -1,4 +1,3 @@
-from .models import TvSeasonResponse
 import logging
 import re
 from asyncio import get_event_loop, new_event_loop, set_event_loop, sleep
@@ -50,6 +49,7 @@ from .models import (
     MovieDetailsSchema,
     Orm,
     StatsResponse,
+    TvSeasonResponse,
     UserShim,
     map_to,
 )
@@ -294,7 +294,7 @@ async def download_post(
                     ),
                     None,
                 )
-                precondition(episode, 'Could not find episode')
+                assert episode, f'Could not find episode: {thing}'
                 title = episode.name
 
             show_title = item['name']
