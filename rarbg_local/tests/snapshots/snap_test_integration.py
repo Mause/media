@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 # snapshottest: v1 - https://goo.gl/zC4yUc
-from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
@@ -11,44 +9,18 @@ snapshots['test_index 1'] = {
         {
             'download': {
                 'added_by': {'username': 'python'},
-                'id': 2,
-                'imdb_id': 'tt0000001',
-                'timestamp': '2020-04-20T00:00:00',
-                'title': 'Other world',
-                'tmdb_id': 2,
-                'transmission_id': '000000000000000000',
+                'id': 1,
+                'imdb_id': 'tt8425034',
+                'timestamp': '2020-08-05T10:37:38',
+                'title': 'Bit',
+                'tmdb_id': 533985,
+                'transmission_id': '00000000000000000',
                 'type': 'movie',
             },
             'id': 1,
         }
     ],
-    'series': [
-        {
-            'imdb_id': 'tt000000',
-            'seasons': {
-                '1': [
-                    {
-                        'download': {
-                            'added_by': {'username': 'python'},
-                            'id': 1,
-                            'imdb_id': 'tt000000',
-                            'timestamp': '2020-04-21T00:00:00',
-                            'title': 'Hello world',
-                            'tmdb_id': 1,
-                            'transmission_id': '00000000000000000',
-                            'type': 'episode',
-                        },
-                        'episode': 1,
-                        'id': 1,
-                        'season': 1,
-                        'show_title': 'Programming',
-                    }
-                ]
-            },
-            'title': 'Programming',
-            'tmdb_id': 1,
-        }
-    ],
+    'series': [],
 }
 
 snapshots['test_schema 1'] = {
@@ -581,7 +553,24 @@ snapshots['test_openapi 1'] = {
                 },
                 'responses': {
                     '200': {
-                        'content': {'application/json': {'schema': {}}},
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    'items': {
+                                        'anyOf': [
+                                            {
+                                                '$ref': '#/components/schemas/MovieDetailsSchema'
+                                            },
+                                            {
+                                                '$ref': '#/components/schemas/EpisodeDetailsSchema'
+                                            },
+                                        ]
+                                    },
+                                    'title': 'Response Download Post Download Post',
+                                    'type': 'array',
+                                }
+                            }
+                        },
                         'description': 'Successful Response',
                     },
                     '422': {
@@ -880,7 +869,9 @@ snapshots['test_openapi 1'] = {
         },
         '/redirect/{type_}/{ident}/{season}/{episode}': {
             'get': {
-                'operationId': 'redirect_redirect__type____ident___season___episode__get',
+                'operationId': (
+                    'redirect_redirect__type____ident___season___episode__get'
+                ),
                 'parameters': [
                     {
                         'in': 'path',
@@ -968,7 +959,9 @@ snapshots['test_openapi 1'] = {
         },
         '/select/{tmdb_id}/season/{season}/download_all': {
             'get': {
-                'operationId': 'select_select__tmdb_id__season__season__download_all_get',
+                'operationId': (
+                    'select_select__tmdb_id__season__season__download_all_get'
+                ),
                 'parameters': [
                     {
                         'in': 'path',
@@ -1038,13 +1031,19 @@ snapshots['test_openapi 1'] = {
                         'in': 'path',
                         'name': 'type',
                         'required': True,
-                        'schema': {'$ref': '#/components/schemas/MediaType'},
+                        'schema': {'title': 'Type', 'type': 'string'},
                     },
                     {
                         'in': 'path',
                         'name': 'tmdb_id',
                         'required': True,
-                        'schema': {'title': 'Tmdb Id', 'type': 'integer'},
+                        'schema': {'title': 'Tmdb Id', 'type': 'string'},
+                    },
+                    {
+                        'in': 'query',
+                        'name': 'source',
+                        'required': False,
+                        'schema': {'$ref': '#/components/schemas/ProviderSource'},
                     },
                     {
                         'in': 'query',
@@ -1229,6 +1228,15 @@ snapshots['test_openapi 1'] = {
             }
         },
     },
+    'servers': [
+        {
+            'description': 'Development',
+            'url': '{protocol}://localhost:5000/api',
+            'variables': {'protocol': {'default': 'https', 'enum': ['http', 'https']}},
+        },
+        {'description': 'Staging', 'url': 'https://media-staging.herokuapps.com/api'},
+        {'description': 'Production', 'url': 'https://media.mause.me/api'},
+    ],
 }
 
 snapshots['test_movie 1'] = {'imdb_id': 'tt0000000', 'title': 'Hello'}
