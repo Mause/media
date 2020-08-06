@@ -161,7 +161,12 @@ def test_download(test_client, responses, add_torrent):
     themoviedb(
         responses,
         '/tv/95792/season/1',
-        {'episodes': [{'id': 1, 'name': "Pikachu is Born!", 'episode_number': 1}, {'id': 2, 'name': "Satoshi, Go, and Lugia Go!", 'episode_number':2}]},
+        {
+            'episodes': [
+                {'id': 1, 'name': "Pikachu is Born!", 'episode_number': 1},
+                {'id': 2, 'name': "Satoshi, Go, and Lugia Go!", 'episode_number': 2},
+            ]
+        },
     )
 
     magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
@@ -351,16 +356,25 @@ def test_delete_monitor(responses, test_client, logged_in):
 
 
 def test_stats(test_client, logged_in):
-    create_movie(transmission_id='', imdb_id='', title='', tmdb_id=0)
-    create_episode(
-        transmission_id='',
-        imdb_id='',
-        title='',
-        tmdb_id=0,
-        season='1',
-        episode='1',
-        show_title='',
+    session = db.session
+    session.add_all(
+        [
+            create_movie(transmission_id='', imdb_id='', title='', tmdb_id=0),
+            create_episode(
+                transmission_id='',
+                imdb_id='',
+                title='',
+                tmdb_id=0,
+                season='1',
+                episode='1',
+                show_title='',
+            ),
+        ]
     )
+
+    from ..new import app, get_db
+
+    app.dependency_overrides[get_db] = lambda: session
 
     assert test_client.get('/api/stats').json == [
         {'user': 'python', 'values': {'episode': 1, 'movie': 1}}

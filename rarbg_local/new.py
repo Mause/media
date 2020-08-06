@@ -25,6 +25,7 @@ from flask_user.token_manager import TokenManager
 from pydantic import BaseModel, Field
 from requests.exceptions import HTTPError
 from sqlalchemy import func
+from sqlalchemy.orm.session import Session
 
 from .db import (
     Download,
@@ -128,6 +129,10 @@ class MediaType(Enum):
 
 class DownloadResponse(Orm):
     id: int
+
+
+def get_db():
+    return db.session.registry()
 
 
 @app.get('/user/unauthorized')
@@ -334,11 +339,11 @@ async def index():
 
 
 @app.get('/stats', response_model=List[StatsResponse])
-async def stats():
+async def stats(session: Session = Depends(get_db)):
     from .main import groupby
 
     keys = User.username, Download.type
-    query = db.session.query(*keys, func.count(name='count')).group_by(*keys)
+    query = session.query(*keys, func.count(name='count')).group_by(*keys)
 
     return [
         {"user": user, 'values': {type: value for _, type, value in values}}
