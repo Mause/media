@@ -20,6 +20,7 @@ snapshottest = "*"
 black = "*"
 flake8 = "*"
 mypy = "*"
+factory-boy = "*"
 
 [packages]
 flask = "*"
