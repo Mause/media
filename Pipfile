@@ -60,6 +60,7 @@ jwkaas = "*"
 aniso8601 = "*"
 pytz = "*"
 flask-restx = "*"
+factory-boy = "*"
 
 [requires]
 python_version = "3"
