@@ -11,7 +11,7 @@ snapshots['test_index 1'] = {
                 'added_by': {'username': 'python'},
                 'id': 1,
                 'imdb_id': 'tt8425034',
-                'timestamp': '2020-08-05T10:37:38',
+                'timestamp': '2020-08-07T05:53:50',
                 'title': 'Bit',
                 'tmdb_id': 533985,
                 'transmission_id': '00000000000000000',
@@ -23,26 +23,7 @@ snapshots['test_index 1'] = {
     'series': [],
 }
 
-snapshots['test_schema 1'] = {
-    'definitions': {
-        'MediaType': {
-            'description': 'An enumeration.',
-            'enum': ['series', 'movie'],
-            'title': 'MediaType',
-        }
-    },
-    'properties': {
-        'Type': {'$ref': '#/definitions/MediaType'},
-        'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
-        'imdbID': {'title': 'Imdbid', 'type': 'integer'},
-        'title': {'title': 'Title', 'type': 'string'},
-        'type': {'$ref': '#/definitions/MediaType'},
-        'year': {'title': 'Year', 'type': 'integer'},
-    },
-    'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
-    'title': 'SearchResponse',
-    'type': 'object',
-}
+snapshots['test_movie 1'] = {'imdb_id': 'tt0000000', 'title': 'Hello'}
 
 snapshots['test_openapi 1'] = {
     'components': {
@@ -1239,4 +1220,23 @@ snapshots['test_openapi 1'] = {
     ],
 }
 
-snapshots['test_movie 1'] = {'imdb_id': 'tt0000000', 'title': 'Hello'}
+snapshots['test_schema 1'] = {
+    'definitions': {
+        'MediaType': {
+            'description': 'An enumeration.',
+            'enum': ['series', 'movie'],
+            'title': 'MediaType',
+        }
+    },
+    'properties': {
+        'Type': {'$ref': '#/definitions/MediaType'},
+        'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
+        'imdbID': {'title': 'Imdbid', 'type': 'integer'},
+        'title': {'title': 'Title', 'type': 'string'},
+        'type': {'$ref': '#/definitions/MediaType'},
+        'year': {'title': 'Year', 'type': 'integer'},
+    },
+    'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
+    'title': 'SearchResponse',
+    'type': 'object',
+}

@@ -214,25 +214,40 @@ def shallow(d: Dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 
-def test_index(responses, test_client, flask_app, get_torrent, logged_in, snapshot):
-    create_episode(
-        transmission_id=HASH_STRING,
-        imdb_id='tt000000',
-        season='1',
-        tmdb_id=1,
-        episode='1',
-        title='Hello world',
-        show_title='Programming',
-        timestamp=datetime(2020, 4, 21),
+@fixture
+def session():
+    from ..new import app, get_db
+
+    session = db.session.registry()
+    app.dependency_overrides[get_db] = lambda: session
+    return session
+
+
+def test_index(
+    responses, test_client, flask_app, get_torrent, logged_in, snapshot, session
+):
+    session.add_all(
+        [
+            create_episode(
+                transmission_id=HASH_STRING,
+                imdb_id='tt000000',
+                season='1',
+                tmdb_id=1,
+                episode='1',
+                title='Hello world',
+                show_title='Programming',
+                timestamp=datetime(2020, 4, 21),
+            ),
+            create_movie(
+                transmission_id='000000000000000000',
+                imdb_id='tt0000001',
+                tmdb_id=2,
+                title='Other world',
+                timestamp=datetime(2020, 4, 20),
+            ),
+        ]
     )
-    create_movie(
-        transmission_id='000000000000000000',
-        imdb_id='tt0000001',
-        tmdb_id=2,
-        title='Other world',
-        timestamp=datetime(2020, 4, 20),
-    )
-    db.session.commit()
+    session.commit()
 
     res = test_client.get('/api/index')
 
@@ -355,8 +370,7 @@ def test_delete_monitor(responses, test_client, logged_in):
     assert ls == []
 
 
-def test_stats(test_client, logged_in):
-    session = db.session
+def test_stats(test_client, logged_in, session):
     session.add_all(
         [
             create_movie(transmission_id='', imdb_id='', title='', tmdb_id=0),
@@ -371,10 +385,6 @@ def test_stats(test_client, logged_in):
             ),
         ]
     )
-
-    from ..new import app, get_db
-
-    app.dependency_overrides[get_db] = lambda: session
 
     assert test_client.get('/api/stats').json == [
         {'user': 'python', 'values': {'episode': 1, 'movie': 1}}
