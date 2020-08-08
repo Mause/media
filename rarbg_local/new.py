@@ -332,10 +332,10 @@ async def download_post(
 
 
 @app.get('/index', response_model=IndexResponse)
-async def index():
+async def index(session: Session = Depends(get_db)):
     from .main import resolve_series
 
-    return IndexResponse(series=resolve_series(), movies=get_movies())
+    return IndexResponse(series=resolve_series(session), movies=get_movies(session))
 
 
 @app.get('/stats', response_model=List[StatsResponse])

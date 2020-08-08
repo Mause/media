@@ -7,7 +7,7 @@ from flask_jsontools import JsonSerializableBase
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserMixin, current_user
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
-from sqlalchemy.orm import joinedload, relationship
+from sqlalchemy.orm import Session, joinedload, relationship
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
 from sqlalchemy_repr import RepresentableBase
@@ -229,16 +229,16 @@ def create_episode(
     return ed
 
 
-def get_all(model: Type[T]) -> List[T]:
-    return db.session.query(model).options(joinedload('download')).all()
+def get_all(session: Session, model: Type[T]) -> List[T]:
+    return session.query(model).options(joinedload('download')).all()
 
 
-def get_episodes() -> List[EpisodeDetails]:
-    return get_all(EpisodeDetails)
+def get_episodes(session: Session) -> List[EpisodeDetails]:
+    return get_all(session, EpisodeDetails)
 
 
-def get_movies() -> List[MovieDetails]:
-    return get_all(MovieDetails)
+def get_movies(session: Session) -> List[MovieDetails]:
+    return get_all(session, MovieDetails)
 
 
 def get_or_create(model: Type[T], defaults=None, **kwargs) -> T:

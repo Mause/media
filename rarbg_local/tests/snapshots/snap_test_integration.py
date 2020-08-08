@@ -4,25 +4,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['test_index 1'] = {
-    'movies': [
-        {
-            'download': {
-                'added_by': {'username': 'python'},
-                'id': 1,
-                'imdb_id': 'tt8425034',
-                'timestamp': '2020-08-07T05:53:50',
-                'title': 'Bit',
-                'tmdb_id': 533985,
-                'transmission_id': '00000000000000000',
-                'type': 'movie',
-            },
-            'id': 1,
-        }
-    ],
-    'series': [],
-}
-
 snapshots['test_movie 1'] = {'imdb_id': 'tt0000000', 'title': 'Hello'}
 
 snapshots['test_openapi 1'] = {
@@ -1239,4 +1220,49 @@ snapshots['test_schema 1'] = {
     'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
     'title': 'SearchResponse',
     'type': 'object',
+}
+
+snapshots['test_index 1'] = {
+    'movies': [
+        {
+            'download': {
+                'added_by': {'username': 'python'},
+                'id': 2,
+                'imdb_id': 'tt0000001',
+                'timestamp': '2020-04-20T00:00:00',
+                'title': 'Other world',
+                'tmdb_id': 2,
+                'transmission_id': '000000000000000000',
+                'type': 'movie',
+            },
+            'id': 1,
+        }
+    ],
+    'series': [
+        {
+            'imdb_id': 'tt000000',
+            'seasons': {
+                '1': [
+                    {
+                        'download': {
+                            'added_by': {'username': 'python'},
+                            'id': 1,
+                            'imdb_id': 'tt000000',
+                            'timestamp': '2020-04-21T00:00:00',
+                            'title': 'Hello world',
+                            'tmdb_id': 1,
+                            'transmission_id': '00000000000000000',
+                            'type': 'episode',
+                        },
+                        'episode': 1,
+                        'id': 1,
+                        'season': 1,
+                        'show_title': 'Programming',
+                    }
+                ]
+            },
+            'title': 'Programming',
+            'tmdb_id': 1,
+        }
+    ],
 }
