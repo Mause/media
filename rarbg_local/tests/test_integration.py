@@ -288,7 +288,7 @@ def test_search(responses, test_client):
     ]
 
 
-def test_delete_cascade(test_client: FlaskClient, logged_in):
+def test_delete_cascade(test_client: FlaskClient, logged_in, session):
     from ..main import Download, db, get_episodes
 
     e = create_episode(
@@ -300,12 +300,10 @@ def test_delete_cascade(test_client: FlaskClient, logged_in):
         title='Title',
         show_title='',
     )
-
-    session = db.session
-
+    session.add(e)
     session.commit()
 
-    assert len(get_episodes()) == 1
+    assert len(get_episodes(session)) == 1
     assert len(session.query(Download).all()) == 1
 
     res = test_client.get(f'/delete/series/{e.id}')
@@ -314,7 +312,7 @@ def test_delete_cascade(test_client: FlaskClient, logged_in):
 
     session.commit()
 
-    assert len(get_episodes()) == 0
+    assert len(get_episodes(session)) == 0
     assert len(session.query(Download).all()) == 0
 
 
