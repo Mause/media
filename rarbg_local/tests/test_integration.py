@@ -77,13 +77,13 @@ def add_torrent():
 
 
 @fixture
-def user(flask_app):
+def user(flask_app, session):
     u = User(
         username='python', password=flask_app.user_manager.hash_password('is-great!')
     )
     u.roles = [Role(name='Member')]
-    db.session.add(u)
-    db.session.commit()
+    session.add(u)
+    session.commit()
     return u
 
 
@@ -218,6 +218,7 @@ def shallow(d: Dict):
 def session():
     from ..new import app, get_db
 
+    db.session.remove()
     session = db.session.registry()
     app.dependency_overrides[get_db] = lambda: session
     return session
