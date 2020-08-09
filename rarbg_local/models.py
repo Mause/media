@@ -1,9 +1,9 @@
-from datetime import datetime, date
+from datetime import date, datetime
 from enum import Enum
 from functools import reduce
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar
 
-from pydantic import BaseModel, constr
+from pydantic import BaseModel, Field, constr
 from pydantic.main import _missing
 from pydantic.utils import GetterDict
 
@@ -146,3 +146,65 @@ class Episode(BaseModel):
 
 class TvSeasonResponse(BaseModel):
     episodes: List[Episode]
+
+
+class PromoteCreate(BaseModel):
+    username: str
+    roles: List[str]
+
+
+class SeasonMeta(BaseModel):
+    episode_count: int
+    season_number: int
+
+
+class TvResponse(BaseModel):
+    number_of_seasons: int
+    title: str
+    imdb_id: str
+    seasons: List[SeasonMeta]
+
+
+class MediaType(Enum):
+    SERIES = 'series'
+    MOVIE = 'movie'
+
+
+class SearchResponse(BaseModel):
+    title: str
+    type: MediaType
+    year: int
+    imdbID: int
+
+    # deprecated
+    Year: int = Field(deprecated=True)
+    Type: MediaType = Field(deprecated=True)
+
+    Config = map_to({'year': 'Year', 'type': 'Type'})
+
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+
+
+class DownloadResponse(Orm):
+    id: int
+
+
+class MovieResponse(BaseModel):
+    title: str
+    imdb_id: str
+
+
+class InnerTorrent(BaseModel):
+    class InnerTorrentFile(BaseModel):
+        bytesCompleted: int
+        length: int
+        name: str
+
+    eta: int
+    hashString: str
+    id: int
+    percentDone: float
+    files: List[InnerTorrentFile]

@@ -2,12 +2,11 @@ import logging
 import re
 from asyncio import get_event_loop, new_event_loop, set_event_loop, sleep
 from concurrent.futures import ThreadPoolExecutor
-from enum import Enum
 from functools import wraps
 from itertools import chain
 from queue import Empty, Queue
 from threading import Event
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 from unittest.mock import MagicMock
 from urllib.parse import urlencode
 
@@ -42,15 +41,24 @@ from .db import (
 )
 from .health import health
 from .models import (
+    DownloadAllResponse,
     DownloadPost,
     EpisodeDetailsSchema,
     IndexResponse,
+    InnerTorrent,
+    ITorrent,
+    MediaType,
     MonitorGet,
     MonitorPost,
     MovieDetailsSchema,
+    MovieResponse,
     Orm,
+    PromoteCreate,
+    SearchResponse,
     StatsResponse,
+    TvResponse,
     TvSeasonResponse,
+    UserCreate,
     UserShim,
     map_to,
 )
@@ -122,19 +130,6 @@ password_manager = PasswordManager(fake).password_crypt_context
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
-class MediaType(Enum):
-    SERIES = 'series'
-    MOVIE = 'movie'
-
-
-class DownloadResponse(Orm):
-    id: int
-
-
-def get_db():
-    return db.session.registry()
-
-
 @app.get('/user/unauthorized')
 def user():
     pass
@@ -161,20 +156,6 @@ def redirect_plex():
 @app.get('/redirect/{type_}/{ident}/{season}/{episode}')
 def redirect(type_: MediaType, ident: int, season: int = None, episode: int = None):
     pass
-
-
-class EpisodeInfo(BaseModel):
-    seasonnum: str
-    epnum: str
-
-
-class ITorrent(BaseModel):
-    source: ProviderSource
-    download: str
-    seeders: int
-    category: str
-    title: str
-    episode_info: EpisodeInfo
 
 
 def eventstream(func: Callable[..., Iterable[BaseModel]]):
@@ -222,12 +203,6 @@ def stream(
         items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
     return list(items)
-
-
-class DownloadAllResponse(BaseModel):
-    packs: List[ITorrent]
-    complete: List[Tuple[str, List[ITorrent]]]
-    incomplete: List[Tuple[str, List[ITorrent]]]
 
 
 @app.get(
@@ -351,11 +326,6 @@ async def stats(session: Session = Depends(get_db)):
     ]
 
 
-class MovieResponse(BaseModel):
-    title: str
-    imdb_id: str
-
-
 @app.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
 def movie(tmdb_id: int):
     movie = get_movie(tmdb_id)
@@ -393,37 +363,11 @@ class FakeBlueprint(Blueprint):
             )
 
 
-class InnerTorrent(BaseModel):
-    class InnerTorrentFile(BaseModel):
-        bytesCompleted: int
-        length: int
-        name: str
-
-    eta: int
-    hashString: str
-    id: int
-    percentDone: float
-    files: List[InnerTorrentFile]
-
-
 @app.get('/torrents', response_model=Dict[str, InnerTorrent])
 async def torrents():
     from .main import get_keyed_torrents
 
     return get_keyed_torrents()
-
-
-class SearchResponse(BaseModel):
-    title: str
-    type: MediaType
-    year: int
-    imdbID: int
-
-    # deprecated
-    Year: int = Field(deprecated=True)
-    Type: MediaType = Field(deprecated=True)
-
-    Config = map_to({'year': 'Year', 'type': 'Type'})
 
 
 @app.get('/search', response_model=List[SearchResponse])
@@ -433,11 +377,6 @@ async def search(query: str):
 
 
 monitor_ns = APIRouter()
-
-
-class UserCreate(BaseModel):
-    username: str
-    password: str
 
 
 @app.post('/create_user', response_model=UserShim, tags=['user'])
@@ -474,11 +413,6 @@ async def get_current_user(
         return user
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
-
-
-class PromoteCreate(BaseModel):
-    username: str
-    roles: List[str]
 
 
 @app.post('/promote', tags=['user'])
@@ -550,18 +484,6 @@ async def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_us
 
 
 tv_ns = APIRouter()
-
-
-class SeasonMeta(BaseModel):
-    episode_count: int
-    season_number: int
-
-
-class TvResponse(BaseModel):
-    number_of_seasons: int
-    title: str
-    imdb_id: str
-    seasons: List[SeasonMeta]
 
 
 @tv_ns.get('/{tmdb_id}', tags=['tv'], response_model=TvResponse)

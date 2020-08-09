@@ -6,6 +6,46 @@ snapshots = Snapshot()
 
 snapshots['test_movie 1'] = {'imdb_id': 'tt0000000', 'title': 'Hello'}
 
+snapshots['test_index 1'] = {
+    'movies': [
+        {
+            'download': {
+                'added_by': {'username': 'python'},
+                'id': 1,
+                'imdb_id': 'tt8425034',
+                'timestamp': '2020-08-09T07:55:05',
+                'title': 'Bit',
+                'tmdb_id': 533985,
+                'transmission_id': '00000000000000000',
+                'type': 'movie',
+            },
+            'id': 1,
+        }
+    ],
+    'series': [],
+}
+
+snapshots['test_schema 1'] = {
+    'definitions': {
+        'MediaType': {
+            'description': 'An enumeration.',
+            'enum': ['series', 'movie'],
+            'title': 'MediaType',
+        }
+    },
+    'properties': {
+        'Type': {'$ref': '#/definitions/MediaType'},
+        'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
+        'imdbID': {'title': 'Imdbid', 'type': 'integer'},
+        'title': {'title': 'Title', 'type': 'string'},
+        'type': {'$ref': '#/definitions/MediaType'},
+        'year': {'title': 'Year', 'type': 'integer'},
+    },
+    'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
+    'title': 'SearchResponse',
+    'type': 'object',
+}
+
 snapshots['test_openapi 1'] = {
     'components': {
         'schemas': {
@@ -141,7 +181,6 @@ snapshots['test_openapi 1'] = {
                     'epnum': {'title': 'Epnum', 'type': 'string'},
                     'seasonnum': {'title': 'Seasonnum', 'type': 'string'},
                 },
-                'required': ['seasonnum', 'epnum'],
                 'title': 'EpisodeInfo',
                 'type': 'object',
             },
@@ -167,10 +206,10 @@ snapshots['test_openapi 1'] = {
                 },
                 'required': [
                     'source',
-                    'download',
-                    'seeders',
-                    'category',
                     'title',
+                    'seeders',
+                    'download',
+                    'category',
                     'episode_info',
                 ],
                 'title': 'ITorrent',
