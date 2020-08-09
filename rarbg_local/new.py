@@ -295,7 +295,7 @@ async def download_post(
                     (
                         episode
                         for episode in episodes
-                        if episode.episode_number == thing.episode
+                        if str(episode.episode_number) == thing.episode
                     ),
                     None,
                 )
