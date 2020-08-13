@@ -21,7 +21,6 @@ from flask import (
     current_app,
     g,
     get_flashed_messages,
-    jsonify,
     redirect,
     render_template,
     request,
@@ -41,6 +40,8 @@ from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
 from sqlalchemy import event, func
 from sqlalchemy.orm.session import Session, make_transient
+from sqlalchemy import event
+from sqlalchemy.orm.session import make_transient
 from werkzeug.exceptions import NotFound
 from werkzeug.wrappers import Response as WResponse
 
@@ -58,7 +59,7 @@ from .db import (
     get_episodes,
 )
 from .health import health
-from .models import SeriesDetails
+from .models import Episode, SeriesDetails
 from .new import FakeBlueprint, magic
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .tmdb import (
@@ -76,7 +77,7 @@ logging.getLogger("pika").setLevel(logging.WARNING)
 
 app = Blueprint('rarbg_local', __name__)
 
-authorizations = {'basic': {'type': 'basic',}}
+authorizations = {'basic': {'type': 'basic'}}
 api = Api(
     prefix='/api',
     doc='/doc',
@@ -308,9 +309,6 @@ full_marker_re = re.compile(r'(S(\d{2})E(\d{2}))')
 partial_marker_re = re.compile(r'(S(\d{2}))')
 season_re = re.compile(r'\W(S\d{2})\W')
 punctuation_re = re.compile(f'[{string.punctuation} ]')
-
-
-from .models import Episode
 
 
 def normalise(episodes: List[Episode], title: str) -> Optional[str]:
