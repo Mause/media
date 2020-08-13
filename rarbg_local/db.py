@@ -7,7 +7,7 @@ from flask_jsontools import JsonSerializableBase
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserMixin, current_user
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
-from sqlalchemy.orm import joinedload, relationship
+from sqlalchemy.orm import Session, joinedload, relationship
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
 from sqlalchemy_repr import RepresentableBase
@@ -56,13 +56,13 @@ class EpisodeDetails(db.Model):  # type: ignore
         return self.episode is None
 
     def get_marker(self):
-        return f'S{self.season:02d}E{self.episode:02d}'
+        return f'S{int(self.season):02d}E{int(self.episode):02d}'
 
     def __repr__(self):
         return (
             self.show_title
             + ' '
-            + (self.get_marker() if self.episode else f'S{self.season:02d}')
+            + (self.get_marker() if self.episode else f'S{int(self.season):02d}')
         )
 
 
@@ -190,17 +190,14 @@ def create_movie(
     timestamp: datetime = None,
 ) -> MovieDetails:
     md = MovieDetails()
-    db.session.add(md)
-    db.session.add(
-        create_download(
-            transmission_id=transmission_id,
-            imdb_id=imdb_id,
-            title=title,
-            type='movie',
-            tmdb_id=tmdb_id,
-            details=md,
-            timestamp=timestamp,
-        )
+    create_download(
+        transmission_id=transmission_id,
+        imdb_id=imdb_id,
+        title=title,
+        type='movie',
+        tmdb_id=tmdb_id,
+        details=md,
+        timestamp=timestamp,
     )
     return md
 
@@ -219,32 +216,29 @@ def create_episode(
     timestamp: datetime = None,
 ) -> EpisodeDetails:
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
-    db.session.add(ed)
-    db.session.add(
-        create_download(
-            transmission_id=transmission_id,
-            imdb_id=imdb_id,
-            tmdb_id=tmdb_id,
-            title=title,
-            type='episode',
-            details=ed,
-            id=download_id,
-            timestamp=timestamp,
-        )
+    create_download(
+        transmission_id=transmission_id,
+        imdb_id=imdb_id,
+        tmdb_id=tmdb_id,
+        title=title,
+        type='episode',
+        details=ed,
+        id=download_id,
+        timestamp=timestamp,
     )
     return ed
 
 
-def get_all(model: Type[T]) -> List[T]:
-    return db.session.query(model).options(joinedload('download')).all()
+def get_all(session: Session, model: Type[T]) -> List[T]:
+    return session.query(model).options(joinedload('download')).all()
 
 
-def get_episodes() -> List[EpisodeDetails]:
-    return get_all(EpisodeDetails)
+def get_episodes(session: Session) -> List[EpisodeDetails]:
+    return get_all(session, EpisodeDetails)
 
 
-def get_movies() -> List[MovieDetails]:
-    return get_all(MovieDetails)
+def get_movies(session: Session) -> List[MovieDetails]:
+    return get_all(session, MovieDetails)
 
 
 def get_or_create(model: Type[T], defaults=None, **kwargs) -> T:

@@ -38,6 +38,8 @@ from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
+from sqlalchemy import event, func
+from sqlalchemy.orm.session import Session, make_transient
 from sqlalchemy import event
 from sqlalchemy.orm.session import make_transient
 from werkzeug.exceptions import NotFound
@@ -515,8 +517,8 @@ def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
     )
 
 
-def resolve_series() -> List[SeriesDetails]:
-    episodes = get_episodes()
+def resolve_series(session: Session) -> List[SeriesDetails]:
+    episodes = get_episodes(session)
 
     return [
         make_series_details(imdb_id, show)

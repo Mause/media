@@ -24,6 +24,7 @@ from flask_user.token_manager import TokenManager
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sqlalchemy import func
+from sqlalchemy.orm.session import Session
 
 from .db import (
     Download,
@@ -133,13 +134,13 @@ def user():
 
 
 @app.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int):
-    query = db.session.query(
+async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
+    query = session.query(
         EpisodeDetails if type == MediaType.SERIES else MovieDetails
     ).filter_by(id=id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
-    db.session.commit()
+    session.commit()
 
     return {}
 
@@ -267,7 +268,7 @@ async def download_post(
                     (
                         episode
                         for episode in episodes
-                        if episode.episode_number == thing.episode
+                        if str(episode.episode_number) == thing.episode
                     ),
                     None,
                 )
@@ -297,24 +298,25 @@ async def download_post(
             )
         )
 
+    db.session.add_all(results)
     db.session.commit()
 
     return results
 
 
 @app.get('/index', response_model=IndexResponse)
-async def index():
+async def index(session: Session = Depends(get_db)):
     from .main import resolve_series
 
-    return IndexResponse(series=resolve_series(), movies=get_movies())
+    return IndexResponse(series=resolve_series(session), movies=get_movies(session))
 
 
 @app.get('/stats', response_model=List[StatsResponse])
-async def stats():
+async def stats(session: Session = Depends(get_db)):
     from .main import groupby
 
     keys = User.username, Download.type
-    query = db.session.query(*keys, func.count(name='count')).group_by(*keys)
+    query = session.query(*keys, func.count(name='count')).group_by(*keys)
 
     return [
         {"user": user, 'values': {type: value for _, type, value in values}}

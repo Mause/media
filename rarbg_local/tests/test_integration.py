@@ -77,13 +77,13 @@ def add_torrent():
 
 
 @fixture
-def user(flask_app):
+def user(flask_app, session):
     u = User(
         username='python', password=flask_app.user_manager.hash_password('is-great!')
     )
     u.roles = [Role(name='Member')]
-    db.session.add(u)
-    db.session.commit()
+    session.add(u)
+    session.commit()
     return u
 
 
@@ -161,7 +161,12 @@ def test_download(test_client, responses, add_torrent):
     themoviedb(
         responses,
         '/tv/95792/season/1',
-        {'episodes': [{'id': 1, 'name': "Pikachu is Born!", 'episode_number': 1}, {'id': 2, 'name': "Satoshi, Go, and Lugia Go!", 'episode_number':2}]},
+        {
+            'episodes': [
+                {'id': 1, 'name': "Pikachu is Born!", 'episode_number': 1},
+                {'id': 2, 'name': "Satoshi, Go, and Lugia Go!", 'episode_number': 2},
+            ]
+        },
     )
 
     magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
@@ -209,25 +214,41 @@ def shallow(d: Dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 
-def test_index(responses, test_client, flask_app, get_torrent, logged_in, snapshot):
-    create_episode(
-        transmission_id=HASH_STRING,
-        imdb_id='tt000000',
-        season='1',
-        tmdb_id=1,
-        episode='1',
-        title='Hello world',
-        show_title='Programming',
-        timestamp=datetime(2020, 4, 21),
+@fixture
+def session():
+    from ..new import app, get_db
+
+    db.session.remove()
+    session = db.session.registry()
+    app.dependency_overrides[get_db] = lambda: session
+    return session
+
+
+def test_index(
+    responses, test_client, flask_app, get_torrent, logged_in, snapshot, session
+):
+    session.add_all(
+        [
+            create_episode(
+                transmission_id=HASH_STRING,
+                imdb_id='tt000000',
+                season='1',
+                tmdb_id=1,
+                episode='1',
+                title='Hello world',
+                show_title='Programming',
+                timestamp=datetime(2020, 4, 21),
+            ),
+            create_movie(
+                transmission_id='000000000000000000',
+                imdb_id='tt0000001',
+                tmdb_id=2,
+                title='Other world',
+                timestamp=datetime(2020, 4, 20),
+            ),
+        ]
     )
-    create_movie(
-        transmission_id='000000000000000000',
-        imdb_id='tt0000001',
-        tmdb_id=2,
-        title='Other world',
-        timestamp=datetime(2020, 4, 20),
-    )
-    db.session.commit()
+    session.commit()
 
     res = test_client.get('/api/index')
 
@@ -267,7 +288,7 @@ def test_search(responses, test_client):
     ]
 
 
-def test_delete_cascade(test_client: FlaskClient, logged_in):
+def test_delete_cascade(test_client: FlaskClient, logged_in, session):
     from ..main import Download, db, get_episodes
 
     e = create_episode(
@@ -279,12 +300,10 @@ def test_delete_cascade(test_client: FlaskClient, logged_in):
         title='Title',
         show_title='',
     )
-
-    session = db.session
-
+    session.add(e)
     session.commit()
 
-    assert len(get_episodes()) == 1
+    assert len(get_episodes(session)) == 1
     assert len(session.query(Download).all()) == 1
 
     res = test_client.get(f'/delete/series/{e.id}')
@@ -293,7 +312,7 @@ def test_delete_cascade(test_client: FlaskClient, logged_in):
 
     session.commit()
 
-    assert len(get_episodes()) == 0
+    assert len(get_episodes(session)) == 0
     assert len(session.query(Download).all()) == 0
 
 
@@ -350,16 +369,20 @@ def test_delete_monitor(responses, test_client, logged_in):
     assert ls == []
 
 
-def test_stats(test_client, logged_in):
-    create_movie(transmission_id='', imdb_id='', title='', tmdb_id=0)
-    create_episode(
-        transmission_id='',
-        imdb_id='',
-        title='',
-        tmdb_id=0,
-        season='1',
-        episode='1',
-        show_title='',
+def test_stats(test_client, logged_in, session):
+    session.add_all(
+        [
+            create_movie(transmission_id='', imdb_id='', title='', tmdb_id=0),
+            create_episode(
+                transmission_id='',
+                imdb_id='',
+                title='',
+                tmdb_id=0,
+                season='1',
+                episode='1',
+                show_title='',
+            ),
+        ]
     )
 
     assert test_client.get('/api/stats').json == [
