@@ -248,7 +248,8 @@ def diagnostics():
 )
 async def download_post(
     things: List[DownloadPost],
-    added_by:User=Depends(get_current_user),
+    added_by: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
     from .main import add_single
 
@@ -286,6 +287,7 @@ async def download_post(
 
         results.append(
             add_single(
+                session=session,
                 magnet=thing.magnet,
                 imdb_id=(
                     get_tv_imdb_id(str(thing.tmdb_id))
@@ -300,12 +302,12 @@ async def download_post(
                 title=title,
                 show_title=show_title,
                 is_tv=is_tv,
-                added_by=added_by
+                added_by=added_by,
             )
         )
 
-    db.session.add_all(results)
-    db.session.commit()
+    session.add_all(results)
+    session.commit()
 
     return results
 

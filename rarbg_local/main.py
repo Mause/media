@@ -383,6 +383,7 @@ class MonitorResource(Resource):
 
 def add_single(
     *,
+    session: Session,
     magnet: str,
     subpath: str,
     is_tv: bool,
@@ -392,7 +393,7 @@ def add_single(
     episode: Optional[str],
     title: str,
     show_title: Optional[str],
-    added_by:User,
+    added_by: User,
 ) -> Union[MovieDetails, EpisodeDetails]:
     res = torrent_add(magnet, subpath)
     arguments = res['arguments']
@@ -408,9 +409,7 @@ def add_single(
     )['hashString']
 
     already = (
-        db.session.query(Download)
-        .filter_by(transmission_id=transmission_id)
-        .one_or_none()
+        session.query(Download).filter_by(transmission_id=transmission_id).one_or_none()
     )
 
     print('already', already)
