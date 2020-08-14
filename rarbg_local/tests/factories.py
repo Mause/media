@@ -1,6 +1,8 @@
 import factory
+from factory.alchemy import SQLAlchemyModelFactory
 from factory.fuzzy import FuzzyChoice
 
+from ..db import Download, EpisodeDetails
 from ..models import (
     DownloadAllResponse,
     Episode,
@@ -59,3 +61,19 @@ class DownloadAllResponseFactory(factory.Factory):
     packs = ITorrentList
     complete = PackList
     incomplete = PackList
+
+
+class DownloadFactory(SQLAlchemyModelFactory):
+    class Meta:
+        model = Download
+        sqlalchemy_session = True
+
+
+class EpisodeDetailsFactory(SQLAlchemyModelFactory):
+    class Meta:
+        model = EpisodeDetails
+
+        sqlalchemy_session = True
+
+    show_title = factory.Faker('name')
+    download = factory.SubFactory(DownloadFactory)
