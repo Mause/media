@@ -306,7 +306,7 @@ def test_delete_cascade(test_client: FlaskClient, logged_in, session):
     assert len(get_episodes(session)) == 1
     assert len(session.query(Download).all()) == 1
 
-    res = test_client.get(f'/delete/series/{e.id}')
+    res = test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
     assert res.json == {}
 
