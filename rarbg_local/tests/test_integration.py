@@ -14,7 +14,7 @@ from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
 from ..db import Download, Role, User, create_episode, create_movie, db
-from ..main import api, create_app
+from ..main import create_app
 from ..utils import cache_clear
 from .conftest import add_json, themoviedb
 
@@ -432,14 +432,6 @@ def test_manifest(test_client):
     r = test_client.get('/manifest.json')
 
     assert 'name' in r.json
-
-
-@mark.skip
-def test_swagger(flask_app, snapshot):
-    with flask_app.test_request_context():
-        swagger = Swagger(api).as_dict()
-        assert 'GenericRepr' not in repr(swagger)
-        snapshot.assert_match(swagger)
 
 
 def test_movie(test_client, snapshot, responses):

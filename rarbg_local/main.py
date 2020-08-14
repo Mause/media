@@ -18,6 +18,7 @@ from flask import (
     Blueprint,
     Flask,
     Response,
+    abort,
     current_app,
     get_flashed_messages,
     redirect,
@@ -28,8 +29,6 @@ from flask import (
 )
 from flask_admin import Admin
 from flask_cors import CORS
-from flask_restx import Api
-from flask_restx.reqparse import RequestParser
 from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
 from plexapi.media import Media
@@ -72,15 +71,6 @@ logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
 
 app = Blueprint('rarbg_local', __name__)
-
-authorizations = {'basic': {'type': 'basic'}}
-api = Api(
-    prefix='/api',
-    doc='/doc',
-    validate=True,
-    authorizations=authorizations,
-    security='basic',
-)
 
 K = TypeVar('K')
 V = TypeVar('V')
@@ -220,48 +210,6 @@ def eventstream(function: Callable):
         )
 
     return decorator
-
-
-def query_params(validator):
-    def decorator(function):
-        @wraps(function)
-        @api.expect(validator)
-        def wrapper(*args, **kwargs):
-            return function(*args, **kwargs, **validator.parse_args(strict=True))
-
-        return wrapper
-
-    return decorator
-
-
-@api.route('/stream/<type>/<tmdb_id>')
-@api.param('type', enum=['series', 'movie'])
-@as_resource()
-@query_params(
-    RequestParser()
-    .add_argument('season', type=int)
-    .add_argument('episode', type=int)
-    .add_argument('source', choices=[p.name for p in PROVIDERS])
-)
-@eventstream
-def stream(type: str, tmdb_id: str, source=None, season=None, episode=None):
-    if source:
-        provider = next(
-            (provider for provider in PROVIDERS if provider.name == source), None,
-        )
-        if not provider:
-            return api.abort(422)
-    else:
-        provider = FakeProvider()
-
-    if type == 'series':
-        items = provider.search_for_tv(
-            get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode
-        )
-    else:
-        items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
-
-    return (item.dict() for item in items)
 
 
 def _stream(type: str, tmdb_id: str, season=None, episode=None):
@@ -484,7 +432,7 @@ def get_keyed_torrents() -> Dict[str, Dict]:
 def redirect_to_plex(tmdb_id: str):
     dat = get_imdb_in_plex(tmdb_id)
     if not dat:
-        return api.abort(404, 'Not found in plex')
+        return abort(404, 'Not found in plex')
 
     server_id = get_plex().machineIdentifier
 
