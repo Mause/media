@@ -31,7 +31,6 @@ from flask_admin import Admin
 from flask_cors import CORS
 from flask_restx import Api, Resource
 from flask_restx.reqparse import RequestParser
-from flask_socketio import SocketIO, send
 from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
 from plexapi.media import Media
@@ -86,8 +85,6 @@ api = Api(
     security='basic',
 )
 
-sockets = SocketIO(cors_allowed_origins='*')
-
 K = TypeVar('K')
 V = TypeVar('V')
 
@@ -141,7 +138,6 @@ def create_app(config: Dict):
     db.init_app(papp)
     if not papp.config.get('TESTING', False):
         CORS(papp, supports_credentials=True)
-    sockets.init_app(papp)
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
         engine = db.get_engine(papp, None)
@@ -282,14 +278,6 @@ def _stream(type: str, tmdb_id: str, season=None, episode=None):
         items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
     return (item.dict() for item in items)
-
-
-@sockets.on('message')
-def socket_stream(message):
-    request = json.loads(message)
-
-    for item in _stream(**request):
-        send(json.dumps(item, default=lambda enu: enu.name))
 
 
 @app.route('/delete/<type>/<id>')
