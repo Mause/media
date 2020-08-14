@@ -1,8 +1,9 @@
-import factory
-from factory.alchemy import SQLAlchemyModelFactory
-from factory.fuzzy import FuzzyChoice
+from datetime import datetime, timezone
 
-from ..db import Download, EpisodeDetails
+import factory
+from factory.fuzzy import FuzzyChoice, FuzzyDateTime
+
+from ..db import Download, EpisodeDetails, MovieDetails, User
 from ..models import (
     DownloadAllResponse,
     Episode,
@@ -63,17 +64,39 @@ class DownloadAllResponseFactory(factory.Factory):
     incomplete = PackList
 
 
-class DownloadFactory(SQLAlchemyModelFactory):
+class UserFactory(factory.Factory):
+    class Meta:
+        model = User
+
+    username = factory.Faker('name')
+
+
+class DownloadFactory(factory.Factory):
     class Meta:
         model = Download
-        sqlalchemy_session = True
+
+    added_by = factory.SubFactory(UserFactory)
+    title = factory.Faker('name')
+
+    tmdb_id = factory.Faker('numerify', text='######')
+    transmission_id = factory.Faker('uuid4')
+    imdb_id = factory.Faker('numerify', text='tt######')
+    timestamp = FuzzyDateTime(start_dt=datetime(2000, 1, 1, tzinfo=timezone.utc))
 
 
-class EpisodeDetailsFactory(SQLAlchemyModelFactory):
+class EpisodeDetailsFactory(factory.Factory):
     class Meta:
         model = EpisodeDetails
 
-        sqlalchemy_session = True
-
     show_title = factory.Faker('name')
-    download = factory.SubFactory(DownloadFactory)
+    download = factory.SubFactory(DownloadFactory, type='EPISODE')
+
+    season = factory.Faker('numerify', text='#')
+    episode = factory.Faker('numerify', text='#')
+
+
+class MovieDetailsFactory(factory.Factory):
+    class Meta:
+        model = MovieDetails
+
+    download = factory.SubFactory(DownloadFactory, type='MOVIE')
