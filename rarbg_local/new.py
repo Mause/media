@@ -125,9 +125,11 @@ def get_db():
 
 
 async def get_current_user(
-    remember_token: str = Cookie(None), session: str = Cookie(None)
+    remember_token: str = Cookie(None),
+    session: str = Cookie(None),
+    db_session: Session = Depends(get_db),
 ):
-    return await _get_current_user(remember_token, session)
+    return await _get_current_user(remember_token, session, db_session)
 
 
 @app.get('/user/unauthorized')
@@ -362,7 +364,9 @@ def create_user(item: UserCreate):
 
 
 async def _get_current_user(
-    remember_token: str = Cookie(None), session: str = Cookie(None)
+    remember_token: str = Cookie(None),
+    session: str = Cookie(None),
+    db_session: Session = Depends(get_db),
 ) -> Optional[User]:
     if session:
         request = MagicMock(cookies={'session': session})
@@ -374,7 +378,7 @@ async def _get_current_user(
         sess = SecureCookieSessionInterface().open_session(app, request)
         user_id = sess['_user_id']
         user_id, _ = verify_token(user_id)
-        return db.session.query(User).get(user_id)
+        return db_session.query(User).get(user_id)
 
     try:
         return current_user._get_current_object()
@@ -385,7 +389,7 @@ async def _get_current_user(
     if remember_token:
         user_id = decode_cookie(remember_token)
 
-        user = db.session.query(User).filter_by(username=user_id).one_or_none()
+        user = db_session.query(User).filter_by(username=user_id).one_or_none()
 
     if user:
         return user
@@ -407,16 +411,18 @@ def promote(req: PromoteCreate, calling_user: User = Depends(get_current_user)):
 
 
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
-async def monitor_get(user: User = Depends(get_current_user)):
-    return db.session.query(Monitor).all()
+async def monitor_get(
+    user: User = Depends(get_current_user), session: Session = Depends(get_db)
+):
+    return session.query(Monitor).all()
 
 
 @monitor_ns.delete('/{monitor_id}', tags=['monitor'])
-async def monitor_delete(monitor_id: int):
-    query = db.session.query(Monitor).filter_by(id=monitor_id)
+async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
+    query = session.query(Monitor).filter_by(id=monitor_id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
-    db.session.commit()
+    session.commit()
     return {}
 
 
@@ -445,10 +451,14 @@ def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
 
 
 @monitor_ns.post('', tags=['monitor'], response_model=MonitorGet, status_code=201)
-async def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_user)):
+async def monitor_post(
+    monitor: MonitorPost,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+):
     media = validate_id(monitor.type, monitor.tmdb_id)
     c = (
-        db.session.query(Monitor)
+        session.query(Monitor)
         .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
         .one_or_none()
     )
@@ -456,8 +466,8 @@ async def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_us
         c = Monitor(
             tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
         )
-        db.session.add(c)
-        db.session.commit()
+        session.add(c)
+        session.commit()
     return c
 
 
