@@ -19,7 +19,6 @@ from flask import (
     Flask,
     Response,
     current_app,
-    g,
     get_flashed_messages,
     redirect,
     render_template,
@@ -569,14 +568,6 @@ def api_search():
 
 
 def get_keyed_torrents() -> Dict[str, Dict]:
-    if hasattr(g, 'get_keyed_torrents'):
-        return g.get_keyed_torrents
-    else:
-        g.get_keyed_torrents = _get_keyed_torrents()
-        return g.get_keyed_torrents
-
-
-def _get_keyed_torrents() -> Dict[str, Dict]:
     try:
         return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
     except (ConnectionError, TimeoutError, FutureTimeoutError,) as e:
