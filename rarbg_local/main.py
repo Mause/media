@@ -28,7 +28,7 @@ from flask import (
 )
 from flask_admin import Admin
 from flask_cors import CORS
-from flask_restx import Api, Resource
+from flask_restx import Api
 from flask_restx.reqparse import RequestParser
 from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
@@ -40,7 +40,6 @@ from sqlalchemy import event
 from sqlalchemy.orm.session import Session, make_transient
 from werkzeug.exceptions import NotFound
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from werkzeug.wrappers import Response as WResponse
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .auth import auth_hook
@@ -55,7 +54,6 @@ from .db import (
     db,
     get_episodes,
 )
-from .health import health
 from .models import Episode, SeriesDetails
 from .new import app as fastapi_app
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
@@ -86,10 +84,6 @@ api = Api(
 
 K = TypeVar('K')
 V = TypeVar('V')
-
-
-def magic(*args, **kwargs):
-    raise NotImplementedError()
 
 
 @lru_cache()
@@ -279,11 +273,6 @@ def _stream(type: str, tmdb_id: str, season=None, episode=None):
     return (item.dict() for item in items)
 
 
-@app.route('/delete/<type>/<id>')
-def delete(type: str, id: str) -> WResponse:
-    return magic()
-
-
 def categorise(string: str) -> str:
     if string.startswith('Movies/'):
         return string[7:]
@@ -337,48 +326,6 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
         precondition(m, f'Cannot find marker in: {title}')
         return non_null(m).group(2), None
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
-
-
-@api.route('/select/<tmdb_id>/season/<season>/download_all')
-@as_resource()
-def download_all_episodes(tmdb_id: str, season: str) -> Dict:
-    return magic()
-
-
-@api.route('/diagnostics')
-@as_resource()
-def api_diagnostics():
-    return health.run()
-
-
-@api.route('/openapi.json')
-@as_resource()
-def api_openapi():
-    return magic()
-
-
-@api.route('/download')
-@as_resource({'POST'})
-def api_download() -> str:
-    return magic()
-
-
-monitor = api.namespace('monitor', 'Contains media monitor resources')
-
-
-@monitor.route('')
-class MonitorsResource(Resource):
-    def post(self):
-        return magic()
-
-    def get(self):
-        return magic()
-
-
-@monitor.route('/<int:ident>')
-class MonitorResource(Resource):
-    def delete(self, ident: int):
-        return magic()
 
 
 def add_single(
@@ -518,55 +465,10 @@ def resolve_series(session: Session) -> List[SeriesDetails]:
     ]
 
 
-@api.route('/index')
-@as_resource()
-def api_index():
-    return magic()
-
-
-@api.route('/stats')
-@as_resource()
-def api_stats():
-    return magic()
-
-
 def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
     guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
     items = get_plex().library.search(guid=guid)
     return items[0] if items else None
-
-
-@api.route('/movie/<int:tmdb_id>')
-@as_resource()
-def api_movie(tmdb_id: str):
-    return magic()
-
-
-tv_ns = api.namespace('tv')
-
-
-@tv_ns.route('/<int:tmdb_id>')
-@as_resource()
-def api_tv(tmdb_id: int):
-    return magic()
-
-
-@tv_ns.route('/<int:tmdb_id>/season/<int:season>')
-@as_resource()
-def api_tv_season(tmdb_id: int, season: int):
-    return magic()
-
-
-@api.route('/torrents')
-@as_resource()
-def api_torrents():
-    return magic()
-
-
-@api.route('/search')
-@as_resource()
-def api_search():
-    return magic()
 
 
 def get_keyed_torrents() -> Dict[str, Dict]:
