@@ -38,11 +38,10 @@ from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
-from sqlalchemy import event, func
-from sqlalchemy.orm.session import Session, make_transient
 from sqlalchemy import event
-from sqlalchemy.orm.session import make_transient
+from sqlalchemy.orm.session import Session, make_transient
 from werkzeug.exceptions import NotFound
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from werkzeug.wrappers import Response as WResponse
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
@@ -60,7 +59,7 @@ from .db import (
 )
 from .health import health
 from .models import Episode, SeriesDetails
-from .new import FakeBlueprint, magic
+from .new import app as fastapi_app
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .tmdb import (
     get_json,
@@ -71,6 +70,7 @@ from .tmdb import (
 )
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import as_resource, non_null, precondition
+from .wsgi_to_asgi import ASGItoWSGIAdapter
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -90,6 +90,10 @@ sockets = SocketIO(cors_allowed_origins='*')
 
 K = TypeVar('K')
 V = TypeVar('V')
+
+
+def magic(*args, **kwargs):
+    raise NotImplementedError()
 
 
 @lru_cache()
@@ -112,11 +116,10 @@ def cache_busting_url_for(endpoint, **values):
 
 def create_app(config: Dict):
     config = config if isinstance(config, dict) else {}
-    enable_new = config.get('ENABLE_NEW', False)
     papp = Flask(__name__, static_folder='../app/build/static')
     papp.register_blueprint(app)
-    if enable_new:
-        papp.register_blueprint(FakeBlueprint(), url_prefix='/api')
+    papp.wsgi_app = DispatcherMiddleware(papp.wsgi_app, {'/api': ASGItoWSGIAdapter(fastapi_app, True)})  # type: ignore
+
     papp.config.update(
         {
             'SECRET_KEY': 'hkfircsc',
@@ -136,8 +139,6 @@ def create_app(config: Dict):
         }
     )
     db.init_app(papp)
-    if not enable_new:
-        api.init_app(papp)
     if not papp.config.get('TESTING', False):
         CORS(papp, supports_credentials=True)
     sockets.init_app(papp)
@@ -209,8 +210,8 @@ def serve_index(path=None):
     return send_from_directory('../app/build/', 'index.html')
 
 
-def eventstream(func: Callable):
-    @wraps(func)
+def eventstream(function: Callable):
+    @wraps(function)
     def decorator(*args, **kwargs):
         def default(obj):
             if isinstance(obj, Enum):
@@ -222,7 +223,7 @@ def eventstream(func: Callable):
             chain(
                 (
                     f'data: {json.dumps(rset, default=default)}\n\n'
-                    for rset in func(*args, **kwargs)
+                    for rset in function(*args, **kwargs)
                 ),
                 ['data:\n\n'],
             ),
@@ -233,11 +234,11 @@ def eventstream(func: Callable):
 
 
 def query_params(validator):
-    def decorator(func):
-        @wraps(func)
+    def decorator(function):
+        @wraps(function)
         @api.expect(validator)
         def wrapper(*args, **kwargs):
-            return func(*args, **kwargs, **validator.parse_args(strict=True))
+            return function(*args, **kwargs, **validator.parse_args(strict=True))
 
         return wrapper
 
