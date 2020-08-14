@@ -392,6 +392,7 @@ def add_single(
     episode: Optional[str],
     title: str,
     show_title: Optional[str],
+    added_by:User,
 ) -> Union[MovieDetails, EpisodeDetails]:
     res = torrent_add(magnet, subpath)
     arguments = res['arguments']
@@ -424,6 +425,7 @@ def add_single(
                 title=title,
                 tmdb_id=tmdb_id,
                 show_title=non_null(show_title),
+                added_by=added_by,
             )
         else:
             return create_movie(
@@ -431,6 +433,7 @@ def add_single(
                 imdb_id=imdb_id,
                 tmdb_id=tmdb_id,
                 title=title,
+                added_by=added_by,
             )
 
     if is_tv:

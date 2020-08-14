@@ -248,6 +248,7 @@ def diagnostics():
 )
 async def download_post(
     things: List[DownloadPost],
+    added_by:User=Depends(get_current_user),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
     from .main import add_single
 
@@ -299,6 +300,7 @@ async def download_post(
                 title=title,
                 show_title=show_title,
                 is_tv=is_tv,
+                added_by=added_by
             )
         )
 
