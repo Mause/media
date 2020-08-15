@@ -1,4 +1,5 @@
 import json
+import logging
 from base64 import b64encode
 from datetime import datetime
 from typing import Dict, Generator
@@ -20,6 +21,8 @@ from .conftest import add_json, themoviedb
 from .factories import EpisodeDetailsFactory, MovieDetailsFactory, UserFactory
 
 HASH_STRING = '00000000000000000'
+
+logging.getLogger('faker.factory').disabled = True
 
 
 @fixture
