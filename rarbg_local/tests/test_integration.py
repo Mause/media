@@ -229,7 +229,7 @@ def session():
 
 
 def test_index(
-    responses, test_client, flask_app, get_torrent, logged_in, snapshot, session
+    responses, test_client, flask_app, get_torrent, logged_in, snapshot, session, user
 ):
     session.add_all(
         [
@@ -242,6 +242,7 @@ def test_index(
                 title='Hello world',
                 show_title='Programming',
                 timestamp=datetime(2020, 4, 21),
+                added_by=user,
             ),
             create_movie(
                 transmission_id='000000000000000000',
@@ -249,6 +250,7 @@ def test_index(
                 tmdb_id=2,
                 title='Other world',
                 timestamp=datetime(2020, 4, 20),
+                added_by=user,
             ),
         ]
     )
