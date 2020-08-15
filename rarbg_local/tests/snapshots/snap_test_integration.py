@@ -6,24 +6,6 @@ snapshots = Snapshot()
 
 snapshots['test_movie 1'] = {'imdb_id': 'tt0000000', 'title': 'Hello'}
 
-snapshots['test_index 1'] = {
-    'movies': [
-        {
-            'download': {
-                'added_by': {'username': 'python'},
-                'id': 1,
-                'imdb_id': 'tt8425034',
-                'timestamp': '2020-08-09T07:55:05',
-                'title': 'Bit',
-                'tmdb_id': 533985,
-                'transmission_id': '00000000000000000',
-                'type': 'movie',
-            },
-            'id': 1,
-        }
-    ],
-    'series': [],
-}
 
 snapshots['test_schema 1'] = {
     'definitions': {
@@ -322,7 +304,7 @@ snapshots['test_openapi 1'] = {
             },
             'ProviderSource': {
                 'description': 'An enumeration.',
-                'enum': ['KICKASS', 'HORRIBLESUBS', 'RARBG'],
+                'enum': ['kickass', 'horriblesubs', 'rarbg'],
                 'title': 'ProviderSource',
             },
             'SearchResponse': {
@@ -540,6 +522,20 @@ snapshots['test_openapi 1'] = {
         '/download': {
             'post': {
                 'operationId': 'download_post_download_post',
+                'parameters': [
+                    {
+                        'in': 'cookie',
+                        'name': 'remember_token',
+                        'required': False,
+                        'schema': {'title': 'Remember Token', 'type': 'string'},
+                    },
+                    {
+                        'in': 'cookie',
+                        'name': 'session',
+                        'required': False,
+                        'schema': {'title': 'Session', 'type': 'string'},
+                    },
+                ],
                 'requestBody': {
                     'content': {
                         'application/json': {
@@ -1230,6 +1226,7 @@ snapshots['test_openapi 1'] = {
         },
     },
     'servers': [
+        {'url': '/api'},
         {
             'description': 'Development',
             'url': '{protocol}://localhost:5000/api',
@@ -1238,27 +1235,6 @@ snapshots['test_openapi 1'] = {
         {'description': 'Staging', 'url': 'https://media-staging.herokuapps.com/api'},
         {'description': 'Production', 'url': 'https://media.mause.me/api'},
     ],
-}
-
-snapshots['test_schema 1'] = {
-    'definitions': {
-        'MediaType': {
-            'description': 'An enumeration.',
-            'enum': ['series', 'movie'],
-            'title': 'MediaType',
-        }
-    },
-    'properties': {
-        'Type': {'$ref': '#/definitions/MediaType'},
-        'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
-        'imdbID': {'title': 'Imdbid', 'type': 'integer'},
-        'title': {'title': 'Title', 'type': 'string'},
-        'type': {'$ref': '#/definitions/MediaType'},
-        'year': {'title': 'Year', 'type': 'integer'},
-    },
-    'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
-    'title': 'SearchResponse',
-    'type': 'object',
 }
 
 snapshots['test_index 1'] = {
