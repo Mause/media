@@ -14,7 +14,7 @@ from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
-from ..db import Download, Role, User, create_episode, create_movie, db
+from ..db import Download, Role, User, create_episode, create_movie
 from ..main import create_app
 from ..utils import cache_clear
 from .conftest import add_json, themoviedb
@@ -155,7 +155,7 @@ def test_download_movie(test_client, responses, add_torrent, session):
 
     add_torrent.assert_called_with(magnet, 'movies')
 
-    download = db.session.query(Download).first()
+    download = session.query(Download).first()
     assert download.title == 'Bit'
 
 
@@ -183,7 +183,7 @@ def test_download(test_client, responses, add_torrent, session):
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
 
-    download = db.session.query(Download).first()
+    download = session.query(Download).first()
     assert download
     assert download.title == 'Satoshi, Go, and Lugia Go!'
     assert download.episode
@@ -192,7 +192,7 @@ def test_download(test_client, responses, add_torrent, session):
     assert download.episode.show_title == 'Pocket Monsters'
 
 
-def test_download_season_pack(test_client, responses, add_torrent):
+def test_download_season_pack(test_client, responses, add_torrent, session):
     themoviedb(responses, '/tv/90000', {'name': 'Watchmen'})
     themoviedb(responses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
 
@@ -205,7 +205,7 @@ def test_download_season_pack(test_client, responses, add_torrent):
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Watchmen/Season 1')
 
-    download = db.session.query(Download).first()
+    download = session.query(Download).first()
     assert download
     assert download.title == 'Season 1'
     assert download.episode
@@ -220,6 +220,7 @@ def shallow(d: Dict):
 
 @fixture
 def session(request):
+    from ..db import db
     from ..new import app, get_db
 
     db.session.registry.scopefunc = lambda: request.function
@@ -295,7 +296,7 @@ def test_search(responses, test_client):
 
 
 def test_delete_cascade(test_client: FlaskClient, logged_in, session):
-    from ..main import Download, db, get_episodes
+    from ..main import Download, get_episodes
 
     e = EpisodeDetailsFactory()
     session.add(e)
