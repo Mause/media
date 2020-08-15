@@ -204,7 +204,7 @@ def stream(
     else:
         items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
-    return list(items)
+    return items
 
 
 @app.get(

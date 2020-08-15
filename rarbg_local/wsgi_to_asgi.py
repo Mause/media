@@ -42,9 +42,11 @@ def call_sync(app, scope, start_response, body):
         else:
             raise Exception('unknown message type: ' + type_)
 
+    body = [body.read()]
+
     async def recieve():
         if body:
-            return {'type': 'http.request', 'body': body.read()}
+            return {'type': 'http.request', 'body': body.pop()}
         elif last_event.is_set():
             return {'type': 'http.disconnect'}
         else:
