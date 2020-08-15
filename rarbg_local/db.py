@@ -165,7 +165,7 @@ def create_download(
     tmdb_id: int,
     details: Union[MovieDetails, EpisodeDetails],
     id: int = None,
-    added_by:User,
+    added_by: User,
     timestamp: datetime = None,
 ) -> Download:
     precondition(not imdb_id or imdb_id.startswith('tt'), f'Invalid imdb_id: {imdb_id}')
@@ -188,7 +188,7 @@ def create_movie(
     imdb_id: str,
     title: str,
     tmdb_id: int,
-    added_by:User,
+    added_by: User,
     timestamp: datetime = None,
 ) -> MovieDetails:
     md = MovieDetails()
