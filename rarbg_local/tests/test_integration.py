@@ -297,15 +297,7 @@ def test_search(responses, test_client):
 def test_delete_cascade(test_client: FlaskClient, logged_in, session):
     from ..main import Download, db, get_episodes
 
-    e = create_episode(
-        transmission_id='1',
-        imdb_id='tt000000',
-        tmdb_id=1,
-        season='1',
-        episode='1',
-        title='Title',
-        show_title='',
-    )
+    e = EpisodeDetailsFactory()
     session.add(e)
     session.commit()
 
