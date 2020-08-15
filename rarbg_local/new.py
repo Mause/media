@@ -323,12 +323,15 @@ async def index(session: Session = Depends(get_db)):
 async def stats(session: Session = Depends(get_db)):
     from .main import groupby
 
-    keys = User.username, Download.type
+    keys = Download.added_by_id, Download.type
     query = session.query(*keys, func.count(name='count')).group_by(*keys)
 
     return [
-        {"user": user, 'values': {type: value for _, type, value in values}}
-        for user, values in groupby(query, lambda row: row.username).items()
+        {
+            "user": User.query.get(added_by_id).username,
+            "values": {type.lower(): value for _, type, value in values},
+        }
+        for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
     ]
 
 

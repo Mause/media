@@ -17,6 +17,7 @@ from ..db import Download, Role, User, create_episode, create_movie, db
 from ..main import create_app
 from ..utils import cache_clear
 from .conftest import add_json, themoviedb
+from .factories import EpisodeDetailsFactory, MovieDetailsFactory, UserFactory
 
 HASH_STRING = '00000000000000000'
 
@@ -370,23 +371,21 @@ def test_delete_monitor(responses, test_client, logged_in, session):
 
 
 def test_stats(test_client, logged_in, session):
+    user1 = UserFactory(username='user1')
+    user2 = UserFactory(username='user2')
+
     session.add_all(
         [
-            create_movie(transmission_id='', imdb_id='', title='', tmdb_id=0),
-            create_episode(
-                transmission_id='',
-                imdb_id='',
-                title='',
-                tmdb_id=0,
-                season='1',
-                episode='1',
-                show_title='',
-            ),
+            EpisodeDetailsFactory(download__added_by=user1),
+            EpisodeDetailsFactory(download__added_by=user2),
+            MovieDetailsFactory(download__added_by=user1),
         ]
     )
+    session.commit()
 
     assert test_client.get('/api/stats').json == [
-        {'user': 'python', 'values': {'episode': 1, 'movie': 1}}
+        {'user': 'user1', 'values': {'episode': 1, 'movie': 1}},
+        {'user': 'user2', 'values': {'episode': 1, 'movie': 0}},
     ]
 
 
