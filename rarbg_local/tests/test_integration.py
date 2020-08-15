@@ -351,7 +351,7 @@ def test_delete_monitor(responses, test_client, logged_in, session):
     assert ls == []
 
     r = test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
-    assert r.status == '201 CREATED'
+    assert r.status == '201 Created'
 
     ls = test_client.get('/api/monitor').json
 
@@ -483,7 +483,7 @@ def test_stream(test_client, responses):
 
     assert datum == [
         {
-            'source': 'RARBG',
+            'source': 'rarbg',
             'seeders': 18,
             'title': '18',
             'download': '',
@@ -491,7 +491,7 @@ def test_stream(test_client, responses):
             'episode_info': {'seasonnum': '1', 'epnum': '1'},
         },
         {
-            'source': 'RARBG',
+            'source': 'rarbg',
             'seeders': 41,
             'title': '41',
             'download': '',
@@ -499,7 +499,7 @@ def test_stream(test_client, responses):
             'episode_info': {'seasonnum': '1', 'epnum': '1'},
         },
         {
-            'source': 'RARBG',
+            'source': 'rarbg',
             'seeders': 49,
             'title': '49',
             'download': '',
