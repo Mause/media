@@ -38,9 +38,9 @@ def map_to(config: Dict[str, str]) -> Type:
 
 
 class ProviderSource(Enum):
-    KICKASS = 'KICKASS'
-    HORRIBLESUBS = 'HORRIBLESUBS'
-    RARBG = 'RARBG'
+    KICKASS = 'kickass'
+    HORRIBLESUBS = 'horriblesubs'
+    RARBG = 'rarbg'
 
 
 class EpisodeInfo(BaseModel):
