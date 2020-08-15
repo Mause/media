@@ -1,4 +1,5 @@
 import json
+import logging
 from base64 import b64encode
 from datetime import datetime
 from typing import Dict, Generator
@@ -13,12 +14,15 @@ from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 
-from ..db import Download, Role, User, create_episode, create_movie, db
-from ..main import api, create_app
+from ..db import Download, Role, User, create_episode, create_movie
+from ..main import create_app
 from ..utils import cache_clear
 from .conftest import add_json, themoviedb
+from .factories import EpisodeDetailsFactory, MovieDetailsFactory, UserFactory
 
 HASH_STRING = '00000000000000000'
+
+logging.getLogger('faker.factory').disabled = True
 
 
 @fixture
@@ -138,7 +142,7 @@ def test_basic_auth(transmission, flask_app, user, responses):
         ]
 
 
-def test_download_movie(test_client, responses, add_torrent):
+def test_download_movie(test_client, responses, add_torrent, session):
     themoviedb(responses, '/movie/533985', {'title': 'Bit'})
     themoviedb(responses, '/movie/533985/external_ids', {'imdb_id': "tt8425034"})
 
@@ -151,11 +155,11 @@ def test_download_movie(test_client, responses, add_torrent):
 
     add_torrent.assert_called_with(magnet, 'movies')
 
-    download = db.session.query(Download).first()
+    download = session.query(Download).first()
     assert download.title == 'Bit'
 
 
-def test_download(test_client, responses, add_torrent):
+def test_download(test_client, responses, add_torrent, session):
     themoviedb(responses, '/tv/95792', {'name': 'Pocket Monsters'})
     themoviedb(responses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
     themoviedb(
@@ -179,7 +183,7 @@ def test_download(test_client, responses, add_torrent):
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
 
-    download = db.session.query(Download).first()
+    download = session.query(Download).first()
     assert download
     assert download.title == 'Satoshi, Go, and Lugia Go!'
     assert download.episode
@@ -188,7 +192,7 @@ def test_download(test_client, responses, add_torrent):
     assert download.episode.show_title == 'Pocket Monsters'
 
 
-def test_download_season_pack(test_client, responses, add_torrent):
+def test_download_season_pack(test_client, responses, add_torrent, session):
     themoviedb(responses, '/tv/90000', {'name': 'Watchmen'})
     themoviedb(responses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
 
@@ -201,7 +205,7 @@ def test_download_season_pack(test_client, responses, add_torrent):
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Watchmen/Season 1')
 
-    download = db.session.query(Download).first()
+    download = session.query(Download).first()
     assert download
     assert download.title == 'Season 1'
     assert download.episode
@@ -215,17 +219,18 @@ def shallow(d: Dict):
 
 
 @fixture
-def session():
+def session(request):
+    from ..db import db
     from ..new import app, get_db
 
-    db.session.remove()
+    db.session.registry.scopefunc = lambda: request.function
     session = db.session.registry()
     app.dependency_overrides[get_db] = lambda: session
     return session
 
 
 def test_index(
-    responses, test_client, flask_app, get_torrent, logged_in, snapshot, session
+    responses, test_client, flask_app, get_torrent, logged_in, snapshot, session, user
 ):
     session.add_all(
         [
@@ -238,6 +243,7 @@ def test_index(
                 title='Hello world',
                 show_title='Programming',
                 timestamp=datetime(2020, 4, 21),
+                added_by=user,
             ),
             create_movie(
                 transmission_id='000000000000000000',
@@ -245,6 +251,7 @@ def test_index(
                 tmdb_id=2,
                 title='Other world',
                 timestamp=datetime(2020, 4, 20),
+                added_by=user,
             ),
         ]
     )
@@ -289,24 +296,16 @@ def test_search(responses, test_client):
 
 
 def test_delete_cascade(test_client: FlaskClient, logged_in, session):
-    from ..main import Download, db, get_episodes
+    from ..main import Download, get_episodes
 
-    e = create_episode(
-        transmission_id='1',
-        imdb_id='tt000000',
-        tmdb_id=1,
-        season='1',
-        episode='1',
-        title='Title',
-        show_title='',
-    )
+    e = EpisodeDetailsFactory()
     session.add(e)
     session.commit()
 
     assert len(get_episodes(session)) == 1
     assert len(session.query(Download).all()) == 1
 
-    res = test_client.get(f'/delete/series/{e.id}')
+    res = test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
     assert res.json == {}
 
@@ -341,13 +340,13 @@ def test_foreign_key_integrity(flask_app: Flask):
             session.execute(ins)
 
 
-def test_delete_monitor(responses, test_client, logged_in):
+def test_delete_monitor(responses, test_client, logged_in, session):
     themoviedb(responses, '/movie/5', {'title': 'Hello World'})
     ls = test_client.get('/api/monitor').json
     assert ls == []
 
     r = test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
-    assert r.status == '201 CREATED'
+    assert r.status == '201 Created'
 
     ls = test_client.get('/api/monitor').json
 
@@ -370,23 +369,21 @@ def test_delete_monitor(responses, test_client, logged_in):
 
 
 def test_stats(test_client, logged_in, session):
+    user1 = UserFactory(username='user1')
+    user2 = UserFactory(username='user2')
+
     session.add_all(
         [
-            create_movie(transmission_id='', imdb_id='', title='', tmdb_id=0),
-            create_episode(
-                transmission_id='',
-                imdb_id='',
-                title='',
-                tmdb_id=0,
-                season='1',
-                episode='1',
-                show_title='',
-            ),
+            EpisodeDetailsFactory(download__added_by=user1),
+            EpisodeDetailsFactory(download__added_by=user2),
+            MovieDetailsFactory(download__added_by=user1),
         ]
     )
+    session.commit()
 
     assert test_client.get('/api/stats').json == [
-        {'user': 'python', 'values': {'episode': 1, 'movie': 1}}
+        {'user': 'user1', 'values': {'episode': 1, 'movie': 1}},
+        {'user': 'user2', 'values': {'episode': 1, 'movie': 0}},
     ]
 
 
@@ -432,14 +429,6 @@ def test_manifest(test_client):
     r = test_client.get('/manifest.json')
 
     assert 'name' in r.json
-
-
-@mark.skip
-def test_swagger(flask_app, snapshot):
-    with flask_app.test_request_context():
-        swagger = Swagger(api).as_dict()
-        assert 'GenericRepr' not in repr(swagger)
-        snapshot.assert_match(swagger)
 
 
 def test_movie(test_client, snapshot, responses):
@@ -489,7 +478,7 @@ def test_stream(test_client, responses):
 
     assert datum == [
         {
-            'source': 'RARBG',
+            'source': 'rarbg',
             'seeders': 18,
             'title': '18',
             'download': '',
@@ -497,7 +486,7 @@ def test_stream(test_client, responses):
             'episode_info': {'seasonnum': '1', 'epnum': '1'},
         },
         {
-            'source': 'RARBG',
+            'source': 'rarbg',
             'seeders': 41,
             'title': '41',
             'download': '',
@@ -505,7 +494,7 @@ def test_stream(test_client, responses):
             'episode_info': {'seasonnum': '1', 'epnum': '1'},
         },
         {
-            'source': 'RARBG',
+            'source': 'rarbg',
             'seeders': 49,
             'title': '49',
             'download': '',

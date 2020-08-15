@@ -1,21 +1,13 @@
-import logging
 import re
-from asyncio import get_event_loop, new_event_loop, set_event_loop, sleep
-from concurrent.futures import ThreadPoolExecutor
+from datetime import timedelta
 from functools import wraps
 from itertools import chain
-from queue import Empty, Queue
-from threading import Event
-from typing import Any, Callable, Dict, Iterable, List, Optional, Union
+from typing import Callable, Dict, Iterable, List, Optional, Union
 from unittest.mock import MagicMock
-from urllib.parse import urlencode
 
 from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException, WebSocket
 from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from flask import _app_ctx_stack  # type: ignore
-from flask import _request_ctx_stack  # type: ignore
-from flask import Blueprint, Response, current_app, request
 from flask.sessions import SecureCookieSessionInterface
 from flask_login.utils import decode_cookie
 from flask_user import UserManager, current_user
@@ -128,6 +120,18 @@ password_manager = PasswordManager(fake).password_crypt_context
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
+def get_db():
+    return db.session.registry()
+
+
+async def get_current_user(
+    remember_token: str = Cookie(None),
+    session: str = Cookie(None),
+    db_session: Session = Depends(get_db),
+):
+    return await _get_current_user(remember_token, session, db_session)
+
+
 @app.get('/user/unauthorized')
 def user():
     pass
@@ -200,7 +204,7 @@ def stream(
     else:
         items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
-    return list(items)
+    return items
 
 
 @app.get(
@@ -244,6 +248,8 @@ def diagnostics():
 )
 async def download_post(
     things: List[DownloadPost],
+    added_by: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
     from .main import add_single
 
@@ -281,6 +287,7 @@ async def download_post(
 
         results.append(
             add_single(
+                session=session,
                 magnet=thing.magnet,
                 imdb_id=(
                     get_tv_imdb_id(str(thing.tmdb_id))
@@ -295,11 +302,12 @@ async def download_post(
                 title=title,
                 show_title=show_title,
                 is_tv=is_tv,
+                added_by=added_by,
             )
         )
 
-    db.session.add_all(results)
-    db.session.commit()
+    session.add_all(results)
+    session.commit()
 
     return results
 
@@ -315,12 +323,15 @@ async def index(session: Session = Depends(get_db)):
 async def stats(session: Session = Depends(get_db)):
     from .main import groupby
 
-    keys = User.username, Download.type
+    keys = Download.added_by_id, Download.type
     query = session.query(*keys, func.count(name='count')).group_by(*keys)
 
     return [
-        {"user": user, 'values': {type: value for _, type, value in values}}
-        for user, values in groupby(query, lambda row: row.username).items()
+        {
+            "user": User.query.get(added_by_id).username,
+            "values": {type.lower(): value for _, type, value in values},
+        }
+        for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
     ]
 
 
@@ -330,35 +341,8 @@ def movie(tmdb_id: int):
     return {"title": movie['title'], "imdb_id": movie['imdb_id']}
 
 
-def magic(*args, **kwargs):
-    # we ignore the arguments flask tries to give us
-    rq = request._get_current_object()
-
-    path = rq.path
-    if path.startswith('/api'):
-        path = '/' + path.split('/', 2)[-1]
-    return call_sync(
-        rq.method, path, urlencode(rq.args), headers=rq.headers, body=rq.data,
-    )
-
-
 def translate(path: str) -> str:
     return re.sub(r'\{([^}]*)\}', lambda m: '<' + m.group(1).split(':')[0] + '>', path)
-
-
-class FakeBlueprint(Blueprint):
-    def __init__(self):
-        super().__init__('fastapi', __name__)
-
-    def register(self, fapp, options, first_registration):
-        state = self.make_setup_state(fapp, options, first_registration)
-        for route in app.routes:
-            state.add_url_rule(
-                translate(route.path),
-                view_func=magic,
-                methods=getattr(route, 'methods', {'GET'}),
-                endpoint=route,
-            )
 
 
 @app.get('/torrents', response_model=Dict[str, InnerTorrent])
@@ -386,15 +370,22 @@ def create_user(item: UserCreate):
     return user
 
 
-async def get_current_user(
-    remember_token: str = Cookie(None), session: str = Cookie(None)
+async def _get_current_user(
+    remember_token: str = Cookie(None),
+    session: str = Cookie(None),
+    db_session: Session = Depends(get_db),
 ) -> Optional[User]:
     if session:
         request = MagicMock(cookies={'session': session})
-        sess = SecureCookieSessionInterface().open_session(current_app, request)
+        app = MagicMock(
+            secret_key='hkfircsc',
+            session_cookie_name='session',
+            permanent_session_lifetime=timedelta(seconds=300000),
+        )
+        sess = SecureCookieSessionInterface().open_session(app, request)
         user_id = sess['_user_id']
         user_id, _ = verify_token(user_id)
-        return db.session.query(User).get(user_id)
+        return db_session.query(User).get(user_id)
 
     try:
         return current_user._get_current_object()
@@ -405,7 +396,7 @@ async def get_current_user(
     if remember_token:
         user_id = decode_cookie(remember_token)
 
-        user = db.session.query(User).filter_by(username=user_id).one_or_none()
+        user = db_session.query(User).filter_by(username=user_id).one_or_none()
 
     if user:
         return user
@@ -427,16 +418,18 @@ def promote(req: PromoteCreate, calling_user: User = Depends(get_current_user)):
 
 
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
-async def monitor_get(user: User = Depends(get_current_user)):
-    return db.session.query(Monitor).all()
+async def monitor_get(
+    user: User = Depends(get_current_user), session: Session = Depends(get_db)
+):
+    return session.query(Monitor).all()
 
 
 @monitor_ns.delete('/{monitor_id}', tags=['monitor'])
-async def monitor_delete(monitor_id: int):
-    query = db.session.query(Monitor).filter_by(id=monitor_id)
+async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
+    query = session.query(Monitor).filter_by(id=monitor_id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
-    db.session.commit()
+    session.commit()
     return {}
 
 
@@ -465,10 +458,14 @@ def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
 
 
 @monitor_ns.post('', tags=['monitor'], response_model=MonitorGet, status_code=201)
-async def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_user)):
+async def monitor_post(
+    monitor: MonitorPost,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+):
     media = validate_id(monitor.type, monitor.tmdb_id)
     c = (
-        db.session.query(Monitor)
+        session.query(Monitor)
         .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
         .one_or_none()
     )
@@ -476,8 +473,8 @@ async def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_us
         c = Monitor(
             tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
         )
-        db.session.add(c)
-        db.session.commit()
+        session.add(c)
+        session.commit()
     return c
 
 
@@ -516,97 +513,3 @@ async def websocket_stream(websocket: WebSocket):
 
 app.include_router(tv_ns, prefix='/tv')
 app.include_router(monitor_ns, prefix='/monitor')
-
-
-executor = ThreadPoolExecutor(10)
-
-
-def call_sync(method='GET', path='/monitor', query_string='', headers=None, body=None):
-    response: Dict[str, Any] = {}
-
-    async def send(message):
-        type_ = message['type']
-        logging.info('received message of type %s', type_)
-
-        if type_ == 'http.response.start':
-            response.update(message)
-            first_event.set()
-        elif type_ == 'http.response.body':
-            body = message.pop('body', None)
-            if body:
-                body_queue.put(body)
-
-            if 'more_body' in message:
-                if not message['more_body']:
-                    last_event.set()
-            else:
-                last_event.set()
-        else:
-            raise Exception('unknown message type: ' + type_)
-
-    async def recieve():
-        if body:
-            return {'type': 'http.request', 'body': body}
-        elif last_event.is_set():
-            return {'type': 'http.disconnect'}
-        else:
-            await sleep(0)
-            return {'type': 'http.*'}
-
-    async def call():
-
-        headerz = [
-            (key.encode().lower(), value.encode()) for key, value in list(headers or [])
-        ]
-        await app(
-            {
-                'type': 'http',
-                'path': path,
-                'method': method,
-                'query_string': query_string,
-                'headers': headerz,
-            },
-            recieve,
-            send,
-        )
-
-    rq = _request_ctx_stack.top
-    appc = _app_ctx_stack.top
-
-    def worker():
-        _request_ctx_stack.push(rq)
-        _app_ctx_stack.push(appc)
-        try:
-            el = get_event_loop()
-        except RuntimeError:
-            el = new_event_loop()
-            set_event_loop(el)
-        el.run_until_complete(call())
-
-    first_event = Event()
-    last_event = Event()
-    body_queue: Queue[Dict] = Queue()
-
-    def genny():
-        while not last_event.is_set():
-            try:
-                yield body_queue.get_nowait()
-            except Empty:
-                pass
-        while not body_queue.empty():
-            yield body_queue.get()
-
-    response['response'] = genny()
-
-    executor.submit(worker)
-    first_event.wait()  # wait until we have the status, headers
-
-    response.pop('type')
-    response['headers'] = dict(response['headers'])
-    response['mimetype'] = response['headers'].pop(b'content-type').decode()
-
-    return Response(**response)
-
-
-if __name__ == "__main__":
-    print(call_sync())

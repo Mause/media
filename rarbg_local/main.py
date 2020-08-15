@@ -18,8 +18,8 @@ from flask import (
     Blueprint,
     Flask,
     Response,
+    abort,
     current_app,
-    g,
     get_flashed_messages,
     redirect,
     render_template,
@@ -29,21 +29,16 @@ from flask import (
 )
 from flask_admin import Admin
 from flask_cors import CORS
-from flask_restx import Api, Resource
-from flask_restx.reqparse import RequestParser
-from flask_socketio import SocketIO, send
 from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
-from sqlalchemy import event, func
-from sqlalchemy.orm.session import Session, make_transient
 from sqlalchemy import event
-from sqlalchemy.orm.session import make_transient
+from sqlalchemy.orm.session import Session, make_transient
 from werkzeug.exceptions import NotFound
-from werkzeug.wrappers import Response as WResponse
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .auth import auth_hook
@@ -58,9 +53,8 @@ from .db import (
     db,
     get_episodes,
 )
-from .health import health
 from .models import Episode, SeriesDetails
-from .new import FakeBlueprint, magic
+from .new import app as fastapi_app
 from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
 from .tmdb import (
     get_json,
@@ -71,22 +65,12 @@ from .tmdb import (
 )
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import as_resource, non_null, precondition
+from .wsgi_to_asgi import ASGItoWSGIAdapter
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
 
 app = Blueprint('rarbg_local', __name__)
-
-authorizations = {'basic': {'type': 'basic'}}
-api = Api(
-    prefix='/api',
-    doc='/doc',
-    validate=True,
-    authorizations=authorizations,
-    security='basic',
-)
-
-sockets = SocketIO(cors_allowed_origins='*')
 
 K = TypeVar('K')
 V = TypeVar('V')
@@ -112,11 +96,10 @@ def cache_busting_url_for(endpoint, **values):
 
 def create_app(config: Dict):
     config = config if isinstance(config, dict) else {}
-    enable_new = config.get('ENABLE_NEW', False)
     papp = Flask(__name__, static_folder='../app/build/static')
     papp.register_blueprint(app)
-    if enable_new:
-        papp.register_blueprint(FakeBlueprint(), url_prefix='/api')
+    papp.wsgi_app = DispatcherMiddleware(papp.wsgi_app, {'/api': ASGItoWSGIAdapter(fastapi_app, True)})  # type: ignore
+
     papp.config.update(
         {
             'SECRET_KEY': 'hkfircsc',
@@ -136,11 +119,8 @@ def create_app(config: Dict):
         }
     )
     db.init_app(papp)
-    if not enable_new:
-        api.init_app(papp)
     if not papp.config.get('TESTING', False):
         CORS(papp, supports_credentials=True)
-    sockets.init_app(papp)
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
         engine = db.get_engine(papp, None)
@@ -209,8 +189,8 @@ def serve_index(path=None):
     return send_from_directory('../app/build/', 'index.html')
 
 
-def eventstream(func: Callable):
-    @wraps(func)
+def eventstream(function: Callable):
+    @wraps(function)
     def decorator(*args, **kwargs):
         def default(obj):
             if isinstance(obj, Enum):
@@ -222,7 +202,7 @@ def eventstream(func: Callable):
             chain(
                 (
                     f'data: {json.dumps(rset, default=default)}\n\n'
-                    for rset in func(*args, **kwargs)
+                    for rset in function(*args, **kwargs)
                 ),
                 ['data:\n\n'],
             ),
@@ -232,48 +212,6 @@ def eventstream(func: Callable):
     return decorator
 
 
-def query_params(validator):
-    def decorator(func):
-        @wraps(func)
-        @api.expect(validator)
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs, **validator.parse_args(strict=True))
-
-        return wrapper
-
-    return decorator
-
-
-@api.route('/stream/<type>/<tmdb_id>')
-@api.param('type', enum=['series', 'movie'])
-@as_resource()
-@query_params(
-    RequestParser()
-    .add_argument('season', type=int)
-    .add_argument('episode', type=int)
-    .add_argument('source', choices=[p.name for p in PROVIDERS])
-)
-@eventstream
-def stream(type: str, tmdb_id: str, source=None, season=None, episode=None):
-    if source:
-        provider = next(
-            (provider for provider in PROVIDERS if provider.name == source), None,
-        )
-        if not provider:
-            return api.abort(422)
-    else:
-        provider = FakeProvider()
-
-    if type == 'series':
-        items = provider.search_for_tv(
-            get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode
-        )
-    else:
-        items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
-
-    return (item.dict() for item in items)
-
-
 def _stream(type: str, tmdb_id: str, season=None, episode=None):
     if type == 'series':
         items = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode)
@@ -281,19 +219,6 @@ def _stream(type: str, tmdb_id: str, season=None, episode=None):
         items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
     return (item.dict() for item in items)
-
-
-@sockets.on('message')
-def socket_stream(message):
-    request = json.loads(message)
-
-    for item in _stream(**request):
-        send(json.dumps(item, default=lambda enu: enu.name))
-
-
-@app.route('/delete/<type>/<id>')
-def delete(type: str, id: str) -> WResponse:
-    return magic()
 
 
 def categorise(string: str) -> str:
@@ -351,50 +276,9 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-@api.route('/select/<tmdb_id>/season/<season>/download_all')
-@as_resource()
-def download_all_episodes(tmdb_id: str, season: str) -> Dict:
-    return magic()
-
-
-@api.route('/diagnostics')
-@as_resource()
-def api_diagnostics():
-    return health.run()
-
-
-@api.route('/openapi.json')
-@as_resource()
-def api_openapi():
-    return magic()
-
-
-@api.route('/download')
-@as_resource({'POST'})
-def api_download() -> str:
-    return magic()
-
-
-monitor = api.namespace('monitor', 'Contains media monitor resources')
-
-
-@monitor.route('')
-class MonitorsResource(Resource):
-    def post(self):
-        return magic()
-
-    def get(self):
-        return magic()
-
-
-@monitor.route('/<int:ident>')
-class MonitorResource(Resource):
-    def delete(self, ident: int):
-        return magic()
-
-
 def add_single(
     *,
+    session: Session,
     magnet: str,
     subpath: str,
     is_tv: bool,
@@ -404,6 +288,7 @@ def add_single(
     episode: Optional[str],
     title: str,
     show_title: Optional[str],
+    added_by: User,
 ) -> Union[MovieDetails, EpisodeDetails]:
     res = torrent_add(magnet, subpath)
     arguments = res['arguments']
@@ -419,9 +304,7 @@ def add_single(
     )['hashString']
 
     already = (
-        db.session.query(Download)
-        .filter_by(transmission_id=transmission_id)
-        .one_or_none()
+        session.query(Download).filter_by(transmission_id=transmission_id).one_or_none()
     )
 
     print('already', already)
@@ -436,6 +319,7 @@ def add_single(
                 title=title,
                 tmdb_id=tmdb_id,
                 show_title=non_null(show_title),
+                added_by=added_by,
             )
         else:
             return create_movie(
@@ -443,6 +327,7 @@ def add_single(
                 imdb_id=imdb_id,
                 tmdb_id=tmdb_id,
                 title=title,
+                added_by=added_by,
             )
 
     if is_tv:
@@ -528,66 +413,13 @@ def resolve_series(session: Session) -> List[SeriesDetails]:
     ]
 
 
-@api.route('/index')
-@as_resource()
-def api_index():
-    return magic()
-
-
-@api.route('/stats')
-@as_resource()
-def api_stats():
-    return magic()
-
-
 def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
     guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
     items = get_plex().library.search(guid=guid)
     return items[0] if items else None
 
 
-@api.route('/movie/<int:tmdb_id>')
-@as_resource()
-def api_movie(tmdb_id: str):
-    return magic()
-
-
-tv_ns = api.namespace('tv')
-
-
-@tv_ns.route('/<int:tmdb_id>')
-@as_resource()
-def api_tv(tmdb_id: int):
-    return magic()
-
-
-@tv_ns.route('/<int:tmdb_id>/season/<int:season>')
-@as_resource()
-def api_tv_season(tmdb_id: int, season: int):
-    return magic()
-
-
-@api.route('/torrents')
-@as_resource()
-def api_torrents():
-    return magic()
-
-
-@api.route('/search')
-@as_resource()
-def api_search():
-    return magic()
-
-
 def get_keyed_torrents() -> Dict[str, Dict]:
-    if hasattr(g, 'get_keyed_torrents'):
-        return g.get_keyed_torrents
-    else:
-        g.get_keyed_torrents = _get_keyed_torrents()
-        return g.get_keyed_torrents
-
-
-def _get_keyed_torrents() -> Dict[str, Dict]:
     try:
         return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
     except (ConnectionError, TimeoutError, FutureTimeoutError,) as e:
@@ -600,7 +432,7 @@ def _get_keyed_torrents() -> Dict[str, Dict]:
 def redirect_to_plex(tmdb_id: str):
     dat = get_imdb_in_plex(tmdb_id)
     if not dat:
-        return api.abort(404, 'Not found in plex')
+        return abort(404, 'Not found in plex')
 
     server_id = get_plex().machineIdentifier
 
