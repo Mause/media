@@ -142,7 +142,7 @@ def test_basic_auth(transmission, flask_app, user, responses):
         ]
 
 
-def test_download_movie(test_client, responses, add_torrent):
+def test_download_movie(test_client, responses, add_torrent, session):
     themoviedb(responses, '/movie/533985', {'title': 'Bit'})
     themoviedb(responses, '/movie/533985/external_ids', {'imdb_id': "tt8425034"})
 
@@ -159,7 +159,7 @@ def test_download_movie(test_client, responses, add_torrent):
     assert download.title == 'Bit'
 
 
-def test_download(test_client, responses, add_torrent):
+def test_download(test_client, responses, add_torrent, session):
     themoviedb(responses, '/tv/95792', {'name': 'Pocket Monsters'})
     themoviedb(responses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
     themoviedb(
@@ -219,10 +219,10 @@ def shallow(d: Dict):
 
 
 @fixture
-def session():
+def session(request):
     from ..new import app, get_db
 
-    db.session.remove()
+    db.session.registry.scopefunc = lambda: request.function
     session = db.session.registry()
     app.dependency_overrides[get_db] = lambda: session
     return session
