@@ -343,7 +343,7 @@ def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
     return dict(dd)
 
 
-def resolve_season(episodes):
+def resolve_season(episodes) -> List[EpisodeDetails]:
     if not (len(episodes) == 1 and episodes[0].is_season_pack()):
         return episodes
 
@@ -367,16 +367,16 @@ def resolve_season(episodes):
             download=Download(
                 id=-1,
                 transmission_id=(
-                    f'{download.transmission_id}.{episode["episode_number"]}'
+                    f'{download.transmission_id}.{episode.episode_number}'
                 ),
-                title=episode['name'],
+                title=episode.name,
                 **common,
             ),
             season=pack.season,
-            episode=episode['episode_number'],
+            episode=episode.episode_number,
             show_title=pack.show_title,
         )
-        for episode in get_tv_episodes(pack.download.tmdb_id, pack.season)['episodes']
+        for episode in get_tv_episodes(pack.download.tmdb_id, pack.season).episodes
     ]
 
 
