@@ -60,7 +60,6 @@ python-multipart = "*"
 jwkaas = "*"
 aniso8601 = "*"
 pytz = "*"
-flask-restx = "*"
 
 [requires]
 python_version = "3"

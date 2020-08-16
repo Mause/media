@@ -114,7 +114,6 @@ def create_app(config: Dict):
             'USER_ENABLE_EMAIL': False,  # Disable email authentication
             'USER_ENABLE_USERNAME': True,  # Enable username authentication
             'USER_UNAUTHORIZED_ENDPOINT': 'rarbg_local.unauthorized',
-            'RESTX_INCLUDE_ALL_MODELS': True,
             **config,
         }
     )
