@@ -1,4 +1,7 @@
+import logging
+import os
 import re
+import traceback
 from datetime import timedelta
 from functools import wraps
 from itertools import chain
@@ -78,8 +81,17 @@ app = FastAPI(
         },
         {"url": "https://media-staging.herokuapps.com/api", "description": "Staging"},
         {"url": "https://media.mause.me/api", "description": "Production"},
-    ]
+    ],
+    debug='HEROKU' not in os.environ,
 )
+
+
+def generate_plain_text(exc):
+    logging.exception('Error occured', exc_info=exc)
+    return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+
+
+app.middleware_stack.generate_plain_text = generate_plain_text
 
 
 class FakeApp:
