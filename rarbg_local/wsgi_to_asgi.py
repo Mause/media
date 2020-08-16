@@ -63,7 +63,13 @@ def call_sync(app, scope, start_response, body):
         except RuntimeError:
             el = new_event_loop()
             set_event_loop(el)
-        el.run_until_complete(call())
+
+        try:
+            el.run_until_complete(call())
+        except Exception:
+            first_event.set()
+            last_event.set()
+            logging.exception('An error occured')
 
     first_event = Event()
     last_event = Event()
