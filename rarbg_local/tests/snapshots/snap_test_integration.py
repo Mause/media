@@ -23,7 +23,7 @@ snapshots['test_schema 1'] = {
         'type': {'$ref': '#/definitions/MediaType'},
         'year': {'title': 'Year', 'type': 'integer'},
     },
-    'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
+    'required': ['title', 'type', 'imdbID', 'Type'],
     'title': 'SearchResponse',
     'type': 'object',
 }
@@ -316,7 +316,7 @@ snapshots['test_openapi 1'] = {
                     'type': {'$ref': '#/components/schemas/MediaType'},
                     'year': {'title': 'Year', 'type': 'integer'},
                 },
-                'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
+                'required': ['title', 'type', 'imdbID', 'Type'],
                 'title': 'SearchResponse',
                 'type': 'object',
             },
