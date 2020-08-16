@@ -5,7 +5,7 @@ from typing import List, Optional, Type, TypeVar, Union
 
 from flask_jsontools import JsonSerializableBase
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import UserMixin, current_user
+from flask_user import UserMixin
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Session, joinedload, relationship
 from sqlalchemy.sql import ClauseElement, func

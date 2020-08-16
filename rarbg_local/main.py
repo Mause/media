@@ -55,7 +55,7 @@ from .db import (
 )
 from .models import Episode, SeriesDetails
 from .new import app as fastapi_app
-from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
+from .providers import search_for_movie, search_for_tv
 from .tmdb import (
     get_json,
     get_movie_imdb_id,
@@ -64,7 +64,7 @@ from .tmdb import (
     resolve_id,
 )
 from .transmission_proxy import get_torrent, torrent_add
-from .utils import as_resource, non_null, precondition
+from .utils import non_null, precondition
 from .wsgi_to_asgi import ASGItoWSGIAdapter
 
 logging.basicConfig(level=logging.DEBUG)
@@ -366,9 +366,7 @@ def resolve_season(episodes) -> List[EpisodeDetails]:
             id=-1,
             download=Download(
                 id=-1,
-                transmission_id=(
-                    f'{download.transmission_id}.{episode.episode_number}'
-                ),
+                transmission_id=f'{download.transmission_id}.{episode.episode_number}',
                 title=episode.name,
                 **common,
             ),

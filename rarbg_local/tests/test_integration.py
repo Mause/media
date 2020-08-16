@@ -9,7 +9,6 @@ from flask import Flask, Request
 from flask.globals import _request_ctx_stack
 from flask.testing import FlaskClient
 from flask_login import FlaskLoginClient, login_user
-from flask_restx.swagger import Swagger
 from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
