@@ -3,7 +3,7 @@ import os
 import re
 import traceback
 from datetime import timedelta
-from functools import wraps
+from functools import lru_cache, wraps
 from itertools import chain
 from typing import Callable, Dict, Iterable, List, Optional, Union
 from unittest.mock import MagicMock
@@ -16,9 +16,10 @@ from flask_login.utils import decode_cookie
 from flask_user import UserManager, current_user
 from flask_user.password_manager import PasswordManager
 from flask_user.token_manager import TokenManager
-from pydantic import BaseModel
+from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
-from sqlalchemy import func
+from sqlalchemy import create_engine, func
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
 from .db import (
@@ -132,8 +133,24 @@ password_manager = PasswordManager(fake).password_crypt_context
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
-def get_db():
-    return db.session.registry()
+@lru_cache()
+def get_session_local(db_url: str):
+    logging.info('db_url: %s', db_url)
+    ca = {"check_same_thread": False} if 'sqlite' in db_url else {}
+    engine = create_engine(db_url, connect_args=ca)
+    return sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+class Settings(BaseSettings):
+    database_url = "sqlite:///./db.db"
+
+
+async def get_settings():
+    return Settings()
+
+
+async def get_db(settings: Settings = Depends(get_settings)):
+    return get_session_local(settings.database_url)()
 
 
 async def get_current_user(
