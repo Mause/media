@@ -1,18 +1,14 @@
 import logging
 from asyncio import get_event_loop, new_event_loop, set_event_loop, sleep
-from concurrent.futures import ThreadPoolExecutor
 from http import HTTPStatus
 from queue import Empty, Queue
-from threading import Event
+from threading import Event, Thread
 from typing import Dict
 
 RESPONSE_STATUS_TEXT = {code: str(code) for code in range(100, 600)}
 RESPONSE_STATUS_TEXT.update(
     {status.value: "%d %s" % (status.value, status.phrase) for status in HTTPStatus}
 )
-
-
-executor = ThreadPoolExecutor(10)
 
 
 def call_sync(app, scope, start_response, body):
@@ -84,7 +80,7 @@ def call_sync(app, scope, start_response, body):
         while not body_queue.empty():
             yield body_queue.get()
 
-    executor.submit(worker)
+    Thread(target=worker, daemon=True).start()
     first_event.wait()  # wait until we have the status, headers
 
     return genny()
