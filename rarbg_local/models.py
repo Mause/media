@@ -173,11 +173,11 @@ class MediaType(Enum):
 class SearchResponse(BaseModel):
     title: str
     type: MediaType
-    year: int
+    year: Optional[int]
     imdbID: int
 
     # deprecated
-    Year: int = Field(deprecated=True)
+    Year: Optional[int] = Field(deprecated=True)
     Type: MediaType = Field(deprecated=True)
 
     Config = map_to({'year': 'Year', 'type': 'Type'})
