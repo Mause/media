@@ -41,7 +41,7 @@ export function DisplayTorrent({
   const state: DownloadState = {
     downloads: [
       {
-        tmdb_id: tmdb_id,
+        tmdb_id: parseInt(tmdb_id),
         magnet: torrent.download,
         season: season,
         episode: episode,

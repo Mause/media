@@ -3,13 +3,9 @@ import ReactLoading from 'react-loading';
 import { Redirect, useLocation } from 'react-router-dom';
 import { usePost } from './utils';
 import { DisplayError } from './IndexComponent';
+import { components } from './schema';
 
-export interface DownloadCall {
-  tmdb_id: string;
-  magnet: string;
-  season?: string;
-  episode?: string;
-}
+export type DownloadCall = components['schemas']['DownloadPost'];
 export interface DownloadState {
   downloads: DownloadCall[];
 }
