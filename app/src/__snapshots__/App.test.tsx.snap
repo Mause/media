@@ -62,7 +62,7 @@ exports[`renders learn react link 1`] = `
           class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
           href="#"
         >
-          Login
+          Logout
         </a>
       </div>
     </div>
