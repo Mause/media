@@ -17,7 +17,7 @@ webdriver-manager = "*"
 pre-commit = "*"
 sqlalchemy-stubs = "*"
 snapshottest = "*"
-black = "*"
+black = {git = "https://github.com/psf/black"}
 flake8 = "*"
 mypy = "*"
 factory-boy = "*"
