@@ -194,7 +194,7 @@ def create_movie(
     timestamp: datetime = None,
 ) -> MovieDetails:
     md = MovieDetails()
-    create_download(
+    md.download = create_download(
         transmission_id=transmission_id,
         imdb_id=imdb_id,
         title=title,
@@ -222,7 +222,7 @@ def create_episode(
     timestamp: datetime = None,
 ) -> EpisodeDetails:
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
-    create_download(
+    ed.download = create_download(
         transmission_id=transmission_id,
         imdb_id=imdb_id,
         tmdb_id=tmdb_id,
