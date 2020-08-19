@@ -85,6 +85,8 @@ class User(db.Model, UserMixin):  # type: ignore
     username = db.Column(db.String(255, collation='en_AU'), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False, server_default='')
 
+    email = db.Column(db.String(255, collation='en_AU'), nullable=True, unique=True)
+
     # User information
     first_name = db.Column(
         db.String(100, collation='en_AU'), nullable=False, server_default=''
