@@ -169,22 +169,42 @@ function ParentComponentInt() {
     </Router>
   );
 }
-export function swrConfig(WrappedComponent: React.ComponentType<{}>) {
-  return () => (
+function SwrConfigWrapper({
+  WrappedComponent,
+}: {
+  WrappedComponent: React.ComponentType<{}>;
+}) {
+  const auth = useAuth0();
+  return (
     <SWRConfig
       value={{
         // five minute refresh
         refreshInterval: 5 * 60 * 1000,
-        fetcher: (...args) => load(args[0], args[1]),
+        fetcher: (path, params) =>
+          load(
+            path,
+            params,
+            auth.isAuthenticated
+              ? { Authorization: auth.getAccessTokenSilently() }
+              : {},
+          ),
       }}
     >
       <WrappedComponent />
     </SWRConfig>
   );
 }
+
+export function swrConfig(WrappedComponent: React.ComponentType<{}>) {
+  return () => <SwrConfigWrapper WrappedComponent={WrappedComponent} />;
+}
 const ParentComponent = swrConfig(ParentComponentInt);
 
 function Routes() {
+  const auth = useAuth0();
+
+  if (!auth.isAuthenticated) return <div>Please login</div>;
+
   return (
     <Switch>
       <RouteWithTitle path="/websocket/:tmdbId" title="Websocket">

@@ -1,20 +1,19 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import App from './App';
 import { appUpdated, CallbackMountPoint } from './serviceWorkerCallback';
 import { act } from 'react-dom/test-utils';
-import { usesMoxios } from './test.utils';
+import { usesMoxios, renderWithSWR } from './test.utils';
 
 usesMoxios();
 
 test('renders learn react link', () => {
-  const el = render(<App />);
+  const el = renderWithSWR(<App />);
   expect(el.container).toMatchSnapshot();
 });
 
 test('renders app update notification', async () => {
   await act(async () => {
-    render(<App />);
+    renderWithSWR(<App />);
   });
 
   expect(CallbackMountPoint.onAppUpdate).toBeTruthy();

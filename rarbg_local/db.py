@@ -85,6 +85,8 @@ class User(db.Model, UserMixin):  # type: ignore
     username = db.Column(db.String(255, collation='en_AU'), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False, server_default='')
 
+    email = db.Column(db.String(255, collation='en_AU'), nullable=True, unique=True)
+
     # User information
     first_name = db.Column(
         db.String(100, collation='en_AU'), nullable=False, server_default=''
@@ -192,7 +194,7 @@ def create_movie(
     timestamp: datetime = None,
 ) -> MovieDetails:
     md = MovieDetails()
-    create_download(
+    md.download = create_download(
         transmission_id=transmission_id,
         imdb_id=imdb_id,
         title=title,
@@ -220,7 +222,7 @@ def create_episode(
     timestamp: datetime = None,
 ) -> EpisodeDetails:
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
-    create_download(
+    ed.download = create_download(
         transmission_id=transmission_id,
         imdb_id=imdb_id,
         tmdb_id=tmdb_id,
