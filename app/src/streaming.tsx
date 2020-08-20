@@ -95,7 +95,7 @@ const Login = () => {
     );
   } else {
     return (
-      <MaterialLink href="#" onClick={loginWithRedirect}>
+      <MaterialLink href="#" onClick={() => loginWithRedirect({})}>
         Login
       </MaterialLink>
     );
