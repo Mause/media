@@ -3,7 +3,7 @@ import os
 import re
 import traceback
 from datetime import timedelta
-from functools import lru_cache, wraps
+from functools import wraps
 from itertools import chain
 from typing import Callable, Dict, Iterable, List, Optional, Union
 from unittest.mock import MagicMock
@@ -63,6 +63,7 @@ from .providers import (
     search_for_movie,
     search_for_tv,
 )
+from .singleton import singleton
 from .tmdb import (
     get_movie,
     get_movie_imdb_id,
@@ -133,24 +134,26 @@ password_manager = PasswordManager(fake).password_crypt_context
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
-@lru_cache()
-def get_session_local(db_url: str):
+class Settings(BaseSettings):
+    database_url = "sqlite:///./db.db"
+
+
+@singleton(app)
+async def get_settings():
+    return Settings()
+
+
+@singleton(app)
+def get_session_local(settings: Settings = Depends(get_settings)):
+    db_url = settings.database_url
     logging.info('db_url: %s', db_url)
     ca = {"check_same_thread": False} if 'sqlite' in db_url else {}
     engine = create_engine(db_url, connect_args=ca)
     return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-class Settings(BaseSettings):
-    database_url = "sqlite:///./db.db"
-
-
-async def get_settings():
-    return Settings()
-
-
-async def get_db(settings: Settings = Depends(get_settings)):
-    return get_session_local(settings.database_url)()
+async def get_db(session_local=Depends(get_session_local)):
+    return session_local()
 
 
 async def get_current_user(
