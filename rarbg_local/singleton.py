@@ -14,9 +14,7 @@ async def get(app: FastAPI, func: Callable[..., T]) -> T:
     request = Request({'type': 'http', 'query_string': '', 'headers': []}, None, None)
 
     values, errors, *_ = await solve_dependencies(
-        request=request,
-        dependant=dependant,
-        dependency_overrides_provider=app.dependency_overrides,
+        request=request, dependant=dependant, dependency_overrides_provider=app,
     )
 
     assert not errors
