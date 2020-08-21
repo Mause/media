@@ -21,6 +21,7 @@ black = {git = "https://github.com/psf/black"}
 flake8 = "*"
 mypy = "*"
 factory-boy = "*"
+isort = "*"
 
 [packages]
 flask = "*"
