@@ -111,13 +111,13 @@ def test_basic_auth(transmission, flask_app, user, responses):
         assert results == [
             {
                 'checker': 'transmission_connectivity',
-                'output': {'consumers': ['ctag1'], 'client_is_alive': True,},
+                'output': {'consumers': ['ctag1'], 'client_is_alive': True},
                 'passed': True,
             },
-            {'checker': 'jikan', 'output': {}, 'passed': True,},
-            {'checker': 'katcr', 'output': 'kickass', 'passed': True,},
-            {'checker': 'rarbg', 'output': 'rarbg', 'passed': True,},
-            {'checker': 'horriblesubs', 'output': 'horriblesubs', 'passed': True,},
+            {'checker': 'jikan', 'output': {}, 'passed': True},
+            {'checker': 'katcr', 'output': 'kickass', 'passed': True},
+            {'checker': 'rarbg', 'output': 'rarbg', 'passed': True},
+            {'checker': 'horriblesubs', 'output': 'horriblesubs', 'passed': True},
         ]
 
 
@@ -492,3 +492,11 @@ def test_schema(snapshot):
     from ..new import SearchResponse
 
     snapshot.assert_match(SearchResponse.schema())
+
+
+@mark.skipif("not os.path.exists('app/build/index.html')")
+@mark.parametrize('uri', ['/', '/manifest.json'])
+def test_static(uri, test_client):
+    r = test_client.get(uri)
+    assert r.reason == 'OK', (r, r.text)
+    assert r.status_code == 200

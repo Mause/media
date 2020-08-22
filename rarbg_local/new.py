@@ -5,12 +5,14 @@ import traceback
 from datetime import timedelta
 from functools import wraps
 from itertools import chain
+from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Union
 from unittest.mock import MagicMock
 
 from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException, WebSocket
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from flask import safe_join
 from flask.sessions import SecureCookieSessionInterface
 from flask_login.utils import decode_cookie
 from flask_user import UserManager, current_user
@@ -135,7 +137,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
 class Settings(BaseSettings):
-    database_url = "sqlite:///./db.db"
+    root = Path(__file__).parent.parent.absolute()
+    database_url = f"sqlite:///{root}/db.db"
+    static_resources_path = root / 'app/build'
 
 
 @singleton(app)
@@ -550,6 +554,14 @@ async def websocket_stream(websocket: WebSocket):
 
     for item in _stream(**request):
         await websocket.send_json(item)
+
+
+@app.get('/{resource}', include_in_schema=False)
+@app.get('/', include_in_schema=False)
+async def static(resource: str = '', settings: Settings = Depends(get_settings)):
+    filename = resource if "." in resource else 'index.html'
+
+    return FileResponse(path=safe_join(settings.static_resources_path, filename))
 
 
 app.include_router(tv_ns, prefix='/tv')
