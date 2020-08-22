@@ -59,6 +59,7 @@ class ITorrent(BaseModel):
 
 class UserSchema(Orm):
     username: str
+    first_name: str
 
 
 class DownloadSchema(Orm):
