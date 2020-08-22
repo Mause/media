@@ -12,7 +12,7 @@ T = TypeVar('T')
 async def get(app: FastAPI, func: Callable[..., T]) -> T:
     dependant = get_dependant(call=func, path='')
     request = Request(
-        {'type': 'http', 'query_string': '', 'headers': [], 'app': app}, None, None
+        {'type': 'http', 'query_string': '', 'headers': [], 'app': app}, None, None  # type: ignore
     )
 
     values, errors, *_ = await solve_dependencies(
@@ -26,14 +26,15 @@ async def get(app: FastAPI, func: Callable[..., T]) -> T:
     )
 
 
-def singleton(app: FastAPI) -> Callable:
-    def decorator(func: Callable):
-        @app.on_event('startup')
-        async def startup():
+def singleton(func: Callable):
+    async def wrapper(request: Request):
+        app = request.app
+
+        value = app.dependency_overrides.get(func)
+        if not value:
             value = await get(app, func)
 
             app.dependency_overrides[func] = lambda: value
+        return value
 
-        return func
-
-    return decorator
+    return wrapper

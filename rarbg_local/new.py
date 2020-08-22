@@ -142,12 +142,12 @@ class Settings(BaseSettings):
     static_resources_path = root / 'app/build'
 
 
-@singleton(app)
+@singleton
 async def get_settings():
     return Settings()
 
 
-@singleton(app)
+@singleton
 def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = settings.database_url
     logging.info('db_url: %s', db_url)
