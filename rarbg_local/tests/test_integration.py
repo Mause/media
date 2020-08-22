@@ -3,20 +3,16 @@ import logging
 from base64 import b64encode
 from datetime import datetime
 from typing import Dict, Generator
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import patch
 
 from fastapi.testclient import TestClient
-from flask import Flask, Request
-from flask.globals import _request_ctx_stack
 from flask.testing import FlaskClient
-from flask_login import FlaskLoginClient, login_user
 from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.session import Session
 
 from ..db import Download, Role, User, create_episode, create_movie
-from ..main import create_app
 from ..new import app, get_current_user
 from ..utils import cache_clear
 from .conftest import add_json, themoviedb
@@ -210,8 +206,6 @@ def test_auth(test_client):
 
 @fixture
 def session(request):
-    from sqlalchemy.orm import sessionmaker
-
     from ..db import db
     from ..new import Settings, app, get_db, get_session_local
 
@@ -219,9 +213,6 @@ def session(request):
 
     Session = get_session_local(settings)
     engine = Session.kw['bind']
-    engine.raw_connection().connection.create_collation(
-        "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
-    )
     db.Model.metadata.create_all(engine)
 
     session = Session()
@@ -325,7 +316,7 @@ def test_select_season(responses: RequestsMock, test_client: FlaskClient) -> Non
 
 
 def test_foreign_key_integrity(session: Session):
-    from ..main import Download, db
+    from ..main import Download
 
     # invalid fkey_id
     ins = Download.__table__.insert().values(id=1, movie_id=99)

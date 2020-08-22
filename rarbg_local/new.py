@@ -18,7 +18,7 @@ from flask_user.password_manager import PasswordManager
 from flask_user.token_manager import TokenManager
 from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
-from sqlalchemy import create_engine, func
+from sqlalchemy import create_engine, event, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
@@ -149,6 +149,15 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     logging.info('db_url: %s', db_url)
     ca = {"check_same_thread": False} if 'sqlite' in db_url else {}
     engine = create_engine(db_url, connect_args=ca)
+    if 'sqlite' in db_url:
+
+        def _fk_pragma_on_connect(dbapi_con, con_record):
+            dbapi_con.create_collation(
+                "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
+            )
+            dbapi_con.execute('pragma foreign_keys=ON')
+
+        event.listen(engine, 'connect', _fk_pragma_on_connect)
     return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
