@@ -360,7 +360,7 @@ async def stats(session: Session = Depends(get_db)):
 
     return [
         {
-            "user": User.query.get(added_by_id).username,
+            "user": session.query(User).get(added_by_id).username,
             "values": {type.lower(): value for _, type, value in values},
         }
         for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
