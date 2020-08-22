@@ -106,7 +106,7 @@ def test_basic_auth(transmission, flask_app, user, responses):
         )
         assert r.status_code == 200
 
-        results = r.json
+        results = r.json()
         for r in results:
             r.pop('response_time')
             r.pop('timestamp')
@@ -259,7 +259,7 @@ def test_index(responses, test_client, get_torrent, snapshot, session, user):
 
     assert res.status_code == 200
 
-    snapshot.assert_match(res.json)
+    snapshot.assert_match(res.json())
 
 
 def test_search(responses, test_client):
@@ -421,7 +421,7 @@ def test_torrents(get_torrent, test_client):
 def test_manifest(test_client):
     r = test_client.get('/manifest.json')
 
-    assert 'name' in r.json
+    assert 'name' in r.json()
 
 
 def test_movie(test_client, snapshot, responses):
@@ -458,7 +458,7 @@ def test_stream(test_client, responses):
 
     r = test_client.get('/stream/series/1?season=1&episode=1&source=rarbg')
 
-    assert r.status_code == 200, r.json
+    assert r.status_code == 200, r.json()
 
     data = r.text.split('\n\n')
     assert data
