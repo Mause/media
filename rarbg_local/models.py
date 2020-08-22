@@ -149,11 +149,6 @@ class TvSeasonResponse(BaseModel):
     episodes: List[Episode]
 
 
-class PromoteCreate(BaseModel):
-    username: str
-    roles: List[str]
-
-
 class SeasonMeta(BaseModel):
     episode_count: int
     season_number: int
@@ -182,11 +177,6 @@ class SearchResponse(BaseModel):
     Type: MediaType = Field(deprecated=True)
 
     Config = map_to({'year': 'Year', 'type': 'Type'})
-
-
-class UserCreate(BaseModel):
-    username: str
-    password: str
 
 
 class DownloadResponse(Orm):

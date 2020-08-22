@@ -2,40 +2,30 @@ import logging
 import os
 import re
 import traceback
-from datetime import timedelta
 from functools import wraps
 from itertools import chain
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Union
-from unittest.mock import MagicMock
+from typing import Callable, Dict, Iterable, List, Union
 
-from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException, WebSocket
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.responses import FileResponse, StreamingResponse
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OpenIdConnect
 from flask import safe_join
-from flask.sessions import SecureCookieSessionInterface
-from flask_login.utils import decode_cookie
-from flask_user import UserManager, current_user
-from flask_user.password_manager import PasswordManager
-from flask_user.token_manager import TokenManager
 from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
+from .auth import auth_hook, get_my_jwkaas
 from .db import (
     Download,
     EpisodeDetails,
     Monitor,
     MonitorMediaType,
     MovieDetails,
-    Role,
-    Roles,
     User,
-    db,
     get_movies,
-    get_or_create,
 )
 from .health import health
 from .models import (
@@ -50,13 +40,10 @@ from .models import (
     MonitorPost,
     MovieDetailsSchema,
     MovieResponse,
-    PromoteCreate,
     SearchResponse,
     StatsResponse,
     TvResponse,
     TvSeasonResponse,
-    UserCreate,
-    UserShim,
 )
 from .providers import (
     PROVIDERS,
@@ -98,42 +85,9 @@ def generate_plain_text(exc):
 app.middleware_stack.generate_plain_text = generate_plain_text
 
 
-class FakeApp:
-    import_name = __name__
-
-    user_manager: UserManager
-
-    def __init__(self, fastapi_app):
-        self.debug = True
-        self.config = {
-            'SQLALCHEMY_TRACK_MODIFICATIONS': False,
-            'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
-            'SQLALCHEMY_ECHO': True,
-            'SECRET_KEY': 'hkfircsc',
-        }
-        self.extensions = {}
-
-    def teardown_appcontext(self, func):
-        pass
-
-
-def startup():
-    fake_app = FakeApp(app)
-    db.init_app(fake_app)
-    db.app = fake_app
-
-    engine = db.get_engine(fake_app, None)
-    con = engine.raw_connection().connection
-    con.create_collation("en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1)
-
-    db.create_all()
-
-
-fake = FakeApp(None)
-fake.user_manager = UserManager(None, db, User)
-verify_token = TokenManager(fake).verify_token
-password_manager = PasswordManager(fake).password_crypt_context
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
+openid_connect = OpenIdConnect(
+    openIdConnectUrl='https://mause.au.auth0.com/.well-known/openid-configuration'
+)
 
 
 class Settings(BaseSettings):
@@ -170,11 +124,15 @@ async def get_db(session_local=Depends(get_session_local)):
 
 
 async def get_current_user(
-    remember_token: str = Cookie(None),
-    session: str = Cookie(None),
-    db_session: Session = Depends(get_db),
+    session=Depends(get_db),
+    header=Security(openid_connect),
+    jwkaas=Depends(get_my_jwkaas),
 ):
-    return await _get_current_user(remember_token, session, db_session)
+    user = auth_hook(session, header, jwkaas)
+    if user:
+        return user
+    else:
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 @app.get('/user/unauthorized')
@@ -406,62 +364,6 @@ async def search(query: str):
 monitor_ns = APIRouter()
 
 
-@app.post('/create_user', response_model=UserShim, tags=['user'])
-def create_user(item: UserCreate):
-    user = User(username=item.username, password=password_manager.hash(item.password),)
-    db.session.add(user)
-    db.session.commit()
-
-    return user
-
-
-async def _get_current_user(
-    remember_token: str = Cookie(None),
-    session: str = Cookie(None),
-    db_session: Session = Depends(get_db),
-) -> Optional[User]:
-    if session:
-        request = MagicMock(cookies={'session': session})
-        app = MagicMock(
-            secret_key='hkfircsc',
-            session_cookie_name='session',
-            permanent_session_lifetime=timedelta(seconds=300000),
-        )
-        sess = SecureCookieSessionInterface().open_session(app, request)
-        user_id = sess['_user_id']
-        user_id, _ = verify_token(user_id)
-        return db_session.query(User).get(user_id)
-
-    try:
-        return current_user._get_current_object()
-    except Exception:
-        pass
-
-    user = None
-    if remember_token:
-        user_id = decode_cookie(remember_token)
-
-        user = db_session.query(User).filter_by(username=user_id).one_or_none()
-
-    if user:
-        return user
-    else:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-
-@app.post('/promote', tags=['user'])
-def promote(req: PromoteCreate, calling_user: User = Depends(get_current_user)):
-    if Roles.Admin not in calling_user.roles:
-        raise HTTPException(403, 'Insufficient caller rights')
-
-    user = db.session.query(User).filter_by(username=req.username).one_or_none()
-    if user:
-        user.roles = [get_or_create(Role, name=role) for role in req.roles]
-        db.session.commit()
-    else:
-        raise HTTPException(422, "User does not exist")
-
-
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
 async def monitor_get(
     user: User = Depends(get_current_user), session: Session = Depends(get_db)
@@ -476,16 +378,6 @@ async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
     query.delete()
     session.commit()
     return {}
-
-
-@app.post("/token", tags=['user'])
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = db.session.query(User).filter_by(username=form_data.username).one_or_none()
-
-    if password_manager.verify(form_data.password, user.password if user else None):
-        return {"access_token": user.username, "token_type": "bearer"}
-
-    raise HTTPException(status_code=400, detail="Incorrect username or password")
 
 
 def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
