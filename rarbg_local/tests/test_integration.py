@@ -199,6 +199,7 @@ def shallow(d: Dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 
+@mark.skip
 def test_auth(test_client):
     from ..new import app, get_current_user
 
