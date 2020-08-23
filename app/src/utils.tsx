@@ -7,7 +7,6 @@ import { LocationDescriptor } from 'history';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@material-ui/core';
 import moxios from 'moxios';
-import { unstable_batchedUpdates } from 'react-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
 // axiosRetry(Axios, { retries: 3 });
@@ -64,47 +63,35 @@ export async function load<T>(
   return t && t.data;
 }
 
+interface Res<T> {
+  data?: T;
+  done: boolean;
+  error?: Error;
+}
+
 export function usePost<T>(
   url: string,
   body: object,
 ): { done: boolean; data?: T; error?: Error } {
-  const [done, setDone] = useState<boolean>(false);
-  const [error, setError] = useState<Error>();
-  const [data, setData] = useState<T>();
+  const [result, setResult] = useState<Res<T>>({ done: false });
   const auth = useAuth0();
 
   useEffect(() => {
     auth.getAccessTokenSilently().then((token) => {
       Axios.post<T>('/api/' + url, body, {
-        withCredentials: true,
         headers: {
           Authorization: 'Bearer ' + token,
         },
       })
         .then(
-          (res) => {
-            unstable_batchedUpdates(() => {
-              setDone(true);
-              setData(res.data);
-            });
-          },
-          (error) => {
-            unstable_batchedUpdates(() => {
-              setDone(true);
-              setError(error);
-            });
-          },
+          (res) => setResult({ done: true, data: res.data }),
+          (error) => setResult({ done: true, error }),
         )
-        .catch((error) => {
-          unstable_batchedUpdates(() => {
-            setDone(true);
-            setError(error);
-          });
-        });
+        .catch((error) => setResult({ done: true, error }));
     });
   }, [url, body, auth]);
 
-  return { done, error, data };
+  return result;
 }
 
 export function ExtMLink(props: { href: string; children: string }) {
