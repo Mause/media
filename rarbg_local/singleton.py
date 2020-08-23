@@ -28,11 +28,11 @@ def singleton(func: Callable):
     async def wrapper(request: Request):
         app = request.app
 
-        value = app.dependency_overrides.get(func)
+        value = app.dependency_overrides.get(wrapper)
         if not value:
             value = await get(app, func)
 
-            app.dependency_overrides[func] = lambda: value
+            app.dependency_overrides[wrapper] = lambda: value
         else:
             value = value()
 
