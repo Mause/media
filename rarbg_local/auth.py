@@ -22,13 +22,16 @@ def get_my_jwkaas():
     )
 
 
-def get_user_info(token_info: Dict[str, Any], rest: str) -> Dict:
+def get_user_info(
+    token_info: Dict[str, Any], rest: HTTPAuthorizationCredentials
+) -> Dict:
     key = token_info['sub']
     if key in t:
         return t[key]
     else:
         t[key] = requests.get(
-            f'{AUTH0_DOMAIN}userinfo', headers={'Authorization': 'Bearer ' + rest},
+            f'{AUTH0_DOMAIN}userinfo',
+            headers={'Authorization': rest.scheme.title() + ' ' + rest.credentials},
         ).json()
     return get_user_info(token_info, rest)
 
