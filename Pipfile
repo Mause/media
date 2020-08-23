@@ -61,6 +61,7 @@ python-multipart = "*"
 jwkaas = "*"
 aniso8601 = "*"
 pytz = "*"
+uvicorn = "*"
 
 [requires]
 python_version = "3"
