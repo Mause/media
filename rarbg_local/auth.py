@@ -8,12 +8,14 @@ from jwkaas import JWKaas
 from sqlalchemy.orm.session import Session
 
 from .db import User
+from .singleton import singleton
 
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
 
 t = TTLCache(maxsize=10, ttl=3600)
 
 
+@singleton
 def get_my_jwkaas():
     return JWKaas(
         ['https://localhost:3000/api/v2', f'{AUTH0_DOMAIN}userinfo'],
