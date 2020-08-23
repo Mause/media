@@ -1,8 +1,7 @@
 import json
 import logging
-from asyncio import get_event_loop
 from datetime import datetime
-from typing import Dict, Generator
+from typing import Dict
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
@@ -11,43 +10,15 @@ from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.session import Session
 
-from ..db import Download, Role, User, create_episode, create_movie, db
+from ..db import Download, create_episode, create_movie
 from ..main import get_episodes
-from ..new import (
-    SearchResponse,
-    Settings,
-    create_app,
-    get_current_user,
-    get_db,
-    get_session_local,
-    get_settings,
-)
-from ..singleton import get
-from ..utils import cache_clear
+from ..new import SearchResponse
 from .conftest import add_json, themoviedb
 from .factories import EpisodeDetailsFactory, MovieDetailsFactory, UserFactory
 
 HASH_STRING = '00000000000000000'
 
 logging.getLogger('faker.factory').disabled = True
-
-
-@fixture
-def clear_cache():
-    cache_clear()
-
-
-@fixture
-def fastapi_app():
-    return create_app()
-
-
-@fixture
-def test_client(
-    fastapi_app, clear_cache, user: User
-) -> Generator[TestClient, None, None]:
-    fastapi_app.dependency_overrides[get_current_user] = lambda: user
-    return TestClient(fastapi_app)
 
 
 @fixture
@@ -68,15 +39,6 @@ def add_torrent():
     res = {'arguments': {'torrent-added': {'hashString': HASH_STRING}}}
     with patch('rarbg_local.main.torrent_add', return_value=res) as mock:
         yield mock
-
-
-@fixture
-def user(session):
-    u = User(username='python', password='', email='python@python.org')
-    u.roles = [Role(name='Member')]
-    session.add(u)
-    session.commit()
-    return u
 
 
 @patch('rarbg_local.health.transmission')
@@ -185,23 +147,6 @@ def test_download_season_pack(test_client, responses, add_torrent, session):
 
 def shallow(d: Dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
-
-
-@fixture
-def session(fastapi_app):
-    fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
-        database_url='sqlite:///:memory:'
-    )
-
-    Session = get_event_loop().run_until_complete(get(fastapi_app, get_session_local))
-    assert hasattr(Session, 'kw'), Session
-    engine = Session.kw['bind']
-    assert 'sqlite' in repr(engine), repr(engine)
-    db.Model.metadata.create_all(engine)
-
-    session = Session()
-    fastapi_app.dependency_overrides[get_db] = lambda: session
-    return session
 
 
 def test_index(responses, test_client, get_torrent, snapshot, session, user):
