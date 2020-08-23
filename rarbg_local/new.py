@@ -63,26 +63,12 @@ from .tmdb import (
 )
 from .utils import non_null, precondition
 
-app = FastAPI(
-    servers=[
-        {
-            "url": "{protocol}://localhost:5000/api",
-            "description": "Development",
-            "variables": {"protocol": {"enum": ["http", "https"], "default": "https"}},
-        },
-        {"url": "https://media-staging.herokuapps.com/api", "description": "Staging"},
-        {"url": "https://media.mause.me/api", "description": "Production"},
-    ],
-    debug='HEROKU' not in os.environ,
-)
+api = APIRouter()
 
 
 def generate_plain_text(exc):
     logging.exception('Error occured', exc_info=exc)
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
-
-
-app.middleware_stack.generate_plain_text = generate_plain_text
 
 
 openid_connect = OpenIdConnect(
@@ -135,12 +121,12 @@ async def get_current_user(
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
-@app.get('/user/unauthorized')
+@api.get('/user/unauthorized')
 def user():
     pass
 
 
-@app.get('/delete/{type}/{id}')
+@api.get('/delete/{type}/{id}')
 async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
     query = session.query(
         EpisodeDetails if type == MediaType.SERIES else MovieDetails
@@ -152,13 +138,13 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
     return {}
 
 
-@app.get('/redirect/plex/{tmdb_id}')
+@api.get('/redirect/plex/{tmdb_id}')
 def redirect_plex():
     pass
 
 
-@app.get('/redirect/{type_}/{ident}')
-@app.get('/redirect/{type_}/{ident}/{season}/{episode}')
+@api.get('/redirect/{type_}/{ident}')
+@api.get('/redirect/{type_}/{ident}/{season}/{episode}')
 def redirect(type_: MediaType, ident: int, season: int = None, episode: int = None):
     pass
 
@@ -178,7 +164,7 @@ def eventstream(func: Callable[..., Iterable[BaseModel]]):
     return decorator
 
 
-@app.get(
+@api.get(
     '/stream/{type}/{tmdb_id}',
     response_class=StreamingResponse,
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
@@ -210,7 +196,7 @@ def stream(
     return items
 
 
-@app.get(
+@api.get(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: int, season: int):
@@ -241,12 +227,12 @@ async def select(tmdb_id: int, season: int):
     )
 
 
-@app.get('/diagnostics')
+@api.get('/diagnostics')
 def diagnostics():
     return health.run()[0]
 
 
-@app.post(
+@api.post(
     '/download', response_model=List[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
 )
 async def download_post(
@@ -315,14 +301,14 @@ async def download_post(
     return results
 
 
-@app.get('/index', response_model=IndexResponse)
+@api.get('/index', response_model=IndexResponse)
 async def index(session: Session = Depends(get_db)):
     from .main import resolve_series
 
     return IndexResponse(series=resolve_series(session), movies=get_movies(session))
 
 
-@app.get('/stats', response_model=List[StatsResponse])
+@api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
     from .main import groupby
 
@@ -338,7 +324,7 @@ async def stats(session: Session = Depends(get_db)):
     ]
 
 
-@app.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
+@api.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
 def movie(tmdb_id: int):
     movie = get_movie(tmdb_id)
     return {"title": movie['title'], "imdb_id": movie['imdb_id']}
@@ -348,14 +334,14 @@ def translate(path: str) -> str:
     return re.sub(r'\{([^}]*)\}', lambda m: '<' + m.group(1).split(':')[0] + '>', path)
 
 
-@app.get('/torrents', response_model=Dict[str, InnerTorrent])
+@api.get('/torrents', response_model=Dict[str, InnerTorrent])
 async def torrents():
     from .main import get_keyed_torrents
 
     return get_keyed_torrents()
 
 
-@app.get('/search', response_model=List[SearchResponse])
+@api.get('/search', response_model=List[SearchResponse])
 async def search(query: str):
     # dirty hack to make aliasing work
     return [type('SearchResponse', (), v)() for v in search_themoviedb(query)]
@@ -438,7 +424,7 @@ def _stream(type: str, tmdb_id: str, season=None, episode=None):
     return (item.dict() for item in items)
 
 
-@app.websocket("/ws")
+@api.websocket("/ws")
 async def websocket_stream(websocket: WebSocket):
     await websocket.accept()
 
@@ -448,13 +434,41 @@ async def websocket_stream(websocket: WebSocket):
         await websocket.send_json(item)
 
 
-@app.get('/{resource}', include_in_schema=False)
-@app.get('/', include_in_schema=False)
+root = APIRouter()
+
+
+@root.get('/{resource}', include_in_schema=False)
+@root.get('/', include_in_schema=False)
 async def static(resource: str = '', settings: Settings = Depends(get_settings)):
     filename = resource if "." in resource else 'index.html'
 
     return FileResponse(path=safe_join(settings.static_resources_path, filename))
 
 
-app.include_router(tv_ns, prefix='/tv')
-app.include_router(monitor_ns, prefix='/monitor')
+api.include_router(tv_ns, prefix='/tv')
+api.include_router(monitor_ns, prefix='/monitor')
+
+
+def create_app():
+    app = FastAPI(
+        servers=[
+            {
+                "url": "{protocol}://localhost:5000/api",
+                "description": "Development",
+                "variables": {
+                    "protocol": {"enum": ["http", "https"], "default": "https"}
+                },
+            },
+            {
+                "url": "https://media-staging.herokuapps.com/api",
+                "description": "Staging",
+            },
+            {"url": "https://media.mause.me/api", "description": "Production"},
+        ],
+        debug='HEROKU' not in os.environ,
+    )
+    app.middleware_stack.generate_plain_text = generate_plain_text
+    app.include_router(api, prefix='/api')
+    app.include_router(root, prefix='')
+
+    return app

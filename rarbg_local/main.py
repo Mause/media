@@ -54,7 +54,7 @@ from .db import (
     get_episodes,
 )
 from .models import Episode, SeriesDetails
-from .new import app as fastapi_app
+from .new import create_app as create_fastapi_app
 from .providers import search_for_movie, search_for_tv
 from .tmdb import (
     get_json,
@@ -98,7 +98,7 @@ def create_app(config: Dict):
     config = config if isinstance(config, dict) else {}
     papp = Flask(__name__, static_folder='../app/build/static')
     papp.register_blueprint(app)
-    papp.wsgi_app = DispatcherMiddleware(papp.wsgi_app, {'/api': ASGItoWSGIAdapter(fastapi_app, True)})  # type: ignore
+    papp.wsgi_app = DispatcherMiddleware(papp.wsgi_app, {'/api': ASGItoWSGIAdapter(create_fastapi_app(), True)})  # type: ignore
 
     papp.config.update(
         {
