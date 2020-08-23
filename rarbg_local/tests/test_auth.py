@@ -6,6 +6,7 @@ from jwkaas import JWKaas
 from jwt.api_jwt import PyJWT
 
 from ..auth import get_my_jwkaas
+from ..models import UserSchema
 from ..new import get_current_user
 from .conftest import add_json
 
@@ -31,11 +32,14 @@ def test_auth(responses, user, fastapi_app, test_client):
     async def show(user=Depends(get_current_user)):
         return user
 
-    fastapi_app.router.routes.insert(0, APIRoute('/simple', show))  # highest priority
+    # highest priority
+    fastapi_app.router.routes.insert(
+        0, APIRoute('/simple', show, response_model=UserSchema)
+    )
 
     # Act
     r = test_client.get('/simple', headers={'Authorization': 'Bearer ' + jw.decode()})
 
     # Assert
     assert r.status_code == 200, r.text
-    assert r.json() == {'first_name': 'python'}, r.text
+    assert r.json() == {'first_name': '', 'username': 'python'}, r.text
