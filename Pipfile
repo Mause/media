@@ -62,6 +62,7 @@ jwkaas = "*"
 aniso8601 = "*"
 pytz = "*"
 uvicorn = "*"
+aiofiles = "*"
 
 [requires]
 python_version = "3"
