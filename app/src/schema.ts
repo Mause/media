@@ -47,16 +47,16 @@ export interface components {
       season: number;
       episode?: number;
     };
-    EpisodeInfo: { seasonnum: string; epnum: string };
+    EpisodeInfo: { seasonnum?: string; epnum?: string };
     HTTPValidationError: {
       detail?: components["schemas"]["ValidationError"][];
     };
     ITorrent: {
       source: components["schemas"]["ProviderSource"];
-      download: string;
-      seeders: number;
-      category: string;
       title: string;
+      seeders: number;
+      download: string;
+      category: string;
       episode_info: components["schemas"]["EpisodeInfo"];
     };
     IndexResponse: {
@@ -99,13 +99,13 @@ export interface components {
     /**
      * An enumeration.
      */
-    ProviderSource: "KICKASS" | "HORRIBLESUBS" | "RARBG";
+    ProviderSource: "kickass" | "horriblesubs" | "rarbg";
     SearchResponse: {
       title: string;
       type: components["schemas"]["MediaType"];
-      year: number;
+      year?: number;
       imdbID: number;
-      Year: number;
+      Year?: number;
       Type: components["schemas"]["MediaType"];
     };
     SeasonMeta: { episode_count: number; season_number: number };
