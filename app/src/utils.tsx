@@ -8,6 +8,7 @@ import { LocationDescriptor } from 'history';
 import { TypographyTypeMap } from '@material-ui/core';
 import moxios from 'moxios';
 import { unstable_batchedUpdates } from 'react-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 // axiosRetry(Axios, { retries: 3 });
 
@@ -70,32 +71,38 @@ export function usePost<T>(
   const [done, setDone] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
   const [data, setData] = useState<T>();
+  const auth = useAuth0();
 
   useEffect(() => {
-    Axios.post<T>('/api/' + url, body, {
-      withCredentials: true,
-    })
-      .then(
-        (res) => {
-          unstable_batchedUpdates(() => {
-            setDone(true);
-            setData(res.data);
-          });
+    auth.getAccessTokenSilently().then((token) => {
+      Axios.post<T>('/api/' + url, body, {
+        withCredentials: true,
+        headers: {
+          Authorization: 'Bearer ' + token,
         },
-        (error) => {
+      })
+        .then(
+          (res) => {
+            unstable_batchedUpdates(() => {
+              setDone(true);
+              setData(res.data);
+            });
+          },
+          (error) => {
+            unstable_batchedUpdates(() => {
+              setDone(true);
+              setError(error);
+            });
+          },
+        )
+        .catch((error) => {
           unstable_batchedUpdates(() => {
             setDone(true);
             setError(error);
           });
-        },
-      )
-      .catch((error) => {
-        unstable_batchedUpdates(() => {
-          setDone(true);
-          setError(error);
         });
-      });
-  }, [url, body]);
+    });
+  }, [url, body, auth]);
 
   return { done, error, data };
 }
