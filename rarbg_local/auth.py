@@ -34,9 +34,10 @@ def get_user_info(token_info: Dict[str, Any], rest: str) -> Dict:
 
 
 def auth_hook(
+    *,
     session: Session,
     header: HTTPAuthorizationCredentials,
-    security_scopes: SecurityScopes = Depends(),
+    security_scopes: SecurityScopes,
     jwkaas=Depends(get_my_jwkaas),
 ) -> Optional[User]:
     token_info = jwkaas.get_token_info(header.credentials)

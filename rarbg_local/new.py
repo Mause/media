@@ -123,9 +123,9 @@ async def get_db(session_local=Depends(get_session_local)):
 
 
 async def get_current_user(
+    security_scopes: SecurityScopes,
     session=Depends(get_db),
     header=Security(openid_connect),
-    security_scopes: SecurityScopes = Depends(),
     jwkaas=Depends(get_my_jwkaas),
 ):
     user = auth_hook(
