@@ -1,23 +1,19 @@
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
-from fastapi import Depends, FastAPI
-from fastapi.testclient import TestClient
+from fastapi import Depends
+from fastapi.routing import APIRoute
 from jwkaas import JWKaas
 from jwt.api_jwt import PyJWT
-from pytest import mark
 
 from ..auth import get_my_jwkaas
 from ..new import get_current_user
 from .conftest import add_json
 
 
-@mark.xfail()
-def test_auth(responses, user):
+def test_auth(responses, user, fastapi_app, test_client):
+    # Arrange
     add_json(
-        responses,
-        'GET',
-        'https://mause.au.auth0.com/userinfo',
-        {'email': 'python@python.org'},
+        responses, 'GET', 'https://mause.au.auth0.com/userinfo', {'email': user.email},
     )
 
     KID = 'kid'
@@ -30,16 +26,16 @@ def test_auth(responses, user):
     jwkaas = JWKaas(None, None)
     jwkaas.pubkeys = {KID: private_key.public_key()}
 
-    single_app = FastAPI()
-    single_app.dependency_overrides[get_my_jwkaas] = lambda: jwkaas
+    fastapi_app.dependency_overrides[get_my_jwkaas] = lambda: jwkaas
 
-    @single_app.get('/')
     async def show(user=Depends(get_current_user)):
         return user
 
-    test_client = TestClient(single_app)
+    fastapi_app.router.routes.insert(0, APIRoute('/simple', show))  # highest priority
 
-    r = test_client.get('/', headers={'Authorization': 'Bearer ' + jw.decode()})
+    # Act
+    r = test_client.get('/simple', headers={'Authorization': 'Bearer ' + jw.decode()})
 
-    assert r.status_code == 200
-    assert r.json() == {'first_name': 'python'}
+    # Assert
+    assert r.status_code == 200, r.text
+    assert r.json() == {'first_name': 'python'}, r.text
