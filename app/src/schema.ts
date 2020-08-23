@@ -5,14 +5,6 @@
 
 export interface components {
   schemas: {
-    Body_login_token_post: {
-      grant_type?: string;
-      username: string;
-      password: string;
-      scope?: string;
-      client_id?: string;
-      client_secret?: string;
-    };
     DownloadAllResponse: {
       packs: components["schemas"]["ITorrent"][];
       complete: [string, components["schemas"]["ITorrent"][]][];
@@ -95,7 +87,6 @@ export interface components {
       download: components["schemas"]["DownloadSchema"];
     };
     MovieResponse: { title: string; imdb_id: string };
-    PromoteCreate: { username: string; roles: string[] };
     /**
      * An enumeration.
      */
@@ -126,9 +117,7 @@ export interface components {
       seasons: components["schemas"]["SeasonMeta"][];
     };
     TvSeasonResponse: { episodes: components["schemas"]["Episode"][] };
-    UserCreate: { username: string; password: string };
-    UserSchema: { username: string; first_name: string; };
-    UserShim: { username: string };
+    UserSchema: { username: string; first_name: string };
     ValidationError: { loc: string[]; msg: string; type: string };
   };
 }

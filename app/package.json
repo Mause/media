@@ -42,7 +42,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
-    "generate": "npx @manifoldco/swagger-to-ts https://media.mause.me/api/openapi.json -o src/schema.ts",
+    "generate": "npx @manifoldco/swagger-to-ts https://media.mause.me/openapi.json -o src/schema.ts",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
