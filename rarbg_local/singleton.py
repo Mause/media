@@ -11,9 +11,7 @@ T = TypeVar('T')
 
 async def get(app: FastAPI, func: Callable[..., T]) -> T:
     dependant = get_dependant(call=func, path='')
-    request = Request(
-        {'type': 'http', 'query_string': '', 'headers': [], 'app': app}, None, None  # type: ignore
-    )
+    request = Request({'type': 'http', 'query_string': '', 'headers': [], 'app': app})
 
     values, errors, *_ = await solve_dependencies(
         request=request, dependant=dependant, dependency_overrides_provider=app,
