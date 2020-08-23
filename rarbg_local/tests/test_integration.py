@@ -1,19 +1,28 @@
 import json
 import logging
-from base64 import b64encode
+from asyncio import get_event_loop
 from datetime import datetime
 from typing import Dict, Generator
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
-from flask.testing import FlaskClient
 from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.session import Session
 
-from ..db import Download, Role, User, create_episode, create_movie
-from ..new import app, get_current_user
+from ..db import Download, Role, User, create_episode, create_movie, db
+from ..main import get_episodes
+from ..new import (
+    SearchResponse,
+    Settings,
+    create_app,
+    get_current_user,
+    get_db,
+    get_session_local,
+    get_settings,
+)
+from ..singleton import get
 from ..utils import cache_clear
 from .conftest import add_json, themoviedb
 from .factories import EpisodeDetailsFactory, MovieDetailsFactory, UserFactory
@@ -28,28 +37,17 @@ def clear_cache():
     cache_clear()
 
 
-# @fixture
-# def flask_app() -> Generator[Flask, None, None]:
-#     app = create_app(
-#         {
-#             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
-#             'SQLALCHEMY_ECHO': False,
-#             'ENV': 'development',
-#             'TESTING': True,
-#         }
-#     )
-
-#     app.test_client_class = FlaskLoginClient
-
-#     with app.app_context():
-#         yield app
+@fixture
+def fastapi_app():
+    return create_app()
 
 
 @fixture
-def test_client(clear_cache, user: User) -> Generator[FlaskClient, None, None]:
-
-    app.dependency_overrides[get_current_user] = lambda: user
-    return TestClient(app)
+def test_client(
+    fastapi_app, clear_cache, user: User
+) -> Generator[TestClient, None, None]:
+    fastapi_app.dependency_overrides[get_current_user] = lambda: user
+    return TestClient(fastapi_app)
 
 
 @fixture
@@ -74,9 +72,7 @@ def add_torrent():
 
 @fixture
 def user(session):
-    from ..new import password_manager
-
-    u = User(username='python', password=password_manager.hash('is-great!'))
+    u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
     session.add(u)
     session.commit()
@@ -84,8 +80,7 @@ def user(session):
 
 
 @patch('rarbg_local.health.transmission')
-@mark.skip
-def test_basic_auth(transmission, flask_app, user, responses):
+def test_diagnostics(transmission, test_client, user, responses):
     responses.add('HEAD', 'https://horriblesubs.info')
     responses.add('HEAD', 'https://torrentapi.org')
     responses.add('HEAD', 'https://katcr.co')
@@ -93,32 +88,27 @@ def test_basic_auth(transmission, flask_app, user, responses):
 
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
-    with flask_app.test_client() as client:
-        r = client.get(
-            '/diagnostics',
-            headers={
-                'Authorization': 'Basic ' + b64encode(b'python:is-great!').decode()
-            },
-        )
-        assert r.status_code == 200
 
-        results = r.json()
-        for r in results:
-            r.pop('response_time')
-            r.pop('timestamp')
-            r.pop('expires')
+    r = test_client.get('/api/diagnostics',)
+    assert r.status_code == 200
 
-        assert results == [
-            {
-                'checker': 'transmission_connectivity',
-                'output': {'consumers': ['ctag1'], 'client_is_alive': True},
-                'passed': True,
-            },
-            {'checker': 'jikan', 'output': {}, 'passed': True},
-            {'checker': 'katcr', 'output': 'kickass', 'passed': True},
-            {'checker': 'rarbg', 'output': 'rarbg', 'passed': True},
-            {'checker': 'horriblesubs', 'output': 'horriblesubs', 'passed': True},
-        ]
+    results = r.json()
+    for r in results:
+        r.pop('response_time')
+        r.pop('timestamp')
+        r.pop('expires')
+
+    assert results == [
+        {
+            'checker': 'transmission_connectivity',
+            'output': {'consumers': ['ctag1'], 'client_is_alive': True},
+            'passed': True,
+        },
+        {'checker': 'jikan', 'output': {}, 'passed': True},
+        {'checker': 'katcr', 'output': 'kickass', 'passed': True},
+        {'checker': 'rarbg', 'output': 'rarbg', 'passed': True},
+        {'checker': 'horriblesubs', 'output': 'horriblesubs', 'passed': True},
+    ]
 
 
 def test_download_movie(test_client, responses, add_torrent, session):
@@ -127,7 +117,9 @@ def test_download_movie(test_client, responses, add_torrent, session):
 
     magnet = 'magnet:...'
 
-    res = test_client.post('/download', json=[{'magnet': magnet, 'tmdb_id': 533985}])
+    res = test_client.post(
+        '/api/download', json=[{'magnet': magnet, 'tmdb_id': 533985}]
+    )
     assert res.status_code == 200
 
     add_torrent.assert_called_with(magnet, 'movies')
@@ -153,7 +145,7 @@ def test_download(test_client, responses, add_torrent, session):
     magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
 
     res = test_client.post(
-        '/download',
+        '/api/download',
         json=[{'magnet': magnet, 'tmdb_id': 95792, 'season': '1', 'episode': '2'}],
     )
     assert res.status_code == 200
@@ -176,7 +168,7 @@ def test_download_season_pack(test_client, responses, add_torrent, session):
     magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
 
     res = test_client.post(
-        '/download', json=[{'magnet': magnet, 'tmdb_id': 90000, 'season': '1'}]
+        '/api/download', json=[{'magnet': magnet, 'tmdb_id': 90000, 'season': '1'}]
     )
     assert res.status_code == 200
 
@@ -196,18 +188,19 @@ def shallow(d: Dict):
 
 
 @fixture
-def session(request):
-    from ..db import db
-    from ..new import Settings, app, get_db, get_session_local
+def session(fastapi_app):
+    fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
+        database_url='sqlite:///:memory:'
+    )
 
-    settings = Settings(database_url='sqlite:///:memory:')
-
-    Session = get_session_local(settings)
+    Session = get_event_loop().run_until_complete(get(fastapi_app, get_session_local))
+    assert hasattr(Session, 'kw'), Session
     engine = Session.kw['bind']
+    assert 'sqlite' in repr(engine), repr(engine)
     db.Model.metadata.create_all(engine)
 
     session = Session()
-    app.dependency_overrides[get_db] = lambda: session
+    fastapi_app.dependency_overrides[get_db] = lambda: session
     return session
 
 
@@ -237,7 +230,7 @@ def test_index(responses, test_client, get_torrent, snapshot, session, user):
     )
     session.commit()
 
-    res = test_client.get('/index')
+    res = test_client.get('/api/index')
 
     assert res.status_code == 200
 
@@ -261,7 +254,7 @@ def test_search(responses, test_client):
         query='&query=chernobyl',
     )
 
-    res = test_client.get('/search?query=chernobyl')
+    res = test_client.get('/api/search?query=chernobyl')
     assert res.status_code == 200
     assert res.json() == [
         {
@@ -275,8 +268,7 @@ def test_search(responses, test_client):
     ]
 
 
-def test_delete_cascade(test_client: FlaskClient, session):
-    from ..main import Download, get_episodes
+def test_delete_cascade(test_client: TestClient, session):
 
     e = EpisodeDetailsFactory()
     session.add(e)
@@ -285,7 +277,7 @@ def test_delete_cascade(test_client: FlaskClient, session):
     assert len(get_episodes(session)) == 1
     assert len(session.query(Download).all()) == 1
 
-    res = test_client.get(f'/delete/series/{e.id}')
+    res = test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
     assert res.json() == {}
 
@@ -296,10 +288,10 @@ def test_delete_cascade(test_client: FlaskClient, session):
 
 
 @mark.skip
-def test_select_season(responses: RequestsMock, test_client: FlaskClient) -> None:
+def test_select_season(responses: RequestsMock, test_client: TestClient) -> None:
     themoviedb(responses, '/tv/100000', {'number_of_seasons': 1})
 
-    res = test_client.get('/select/100000/season')
+    res = test_client.get('/api/select/100000/season')
 
     assert res.status_code == 200
 
@@ -307,7 +299,6 @@ def test_select_season(responses: RequestsMock, test_client: FlaskClient) -> Non
 
 
 def test_foreign_key_integrity(session: Session):
-    from ..main import Download
 
     # invalid fkey_id
     ins = Download.__table__.insert().values(id=1, movie_id=99)
@@ -317,13 +308,13 @@ def test_foreign_key_integrity(session: Session):
 
 def test_delete_monitor(responses, test_client, session):
     themoviedb(responses, '/movie/5', {'title': 'Hello World'})
-    ls = test_client.get('/monitor').json()
+    ls = test_client.get('/api/monitor').json()
     assert ls == []
 
-    r = test_client.post('/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
+    r = test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     assert r.status_code == 201
 
-    ls = test_client.get('/monitor').json()
+    ls = test_client.get('/api/monitor').json()
 
     assert ls == [
         {
@@ -336,10 +327,10 @@ def test_delete_monitor(responses, test_client, session):
     ]
     ident = ls[0]['id']
 
-    r = test_client.delete(f'/monitor/{ident}')
+    r = test_client.delete(f'/api/monitor/{ident}')
     assert r.status_code == 200
 
-    ls = test_client.get('/monitor').json()
+    ls = test_client.get('/api/monitor').json()
     assert ls == []
 
 
@@ -356,7 +347,7 @@ def test_stats(test_client, session):
     )
     session.commit()
 
-    assert test_client.get('/stats').json() == [
+    assert test_client.get('/api/stats').json() == [
         {'user': 'user1', 'values': {'episode': 1, 'movie': 1}},
         {'user': 'user2', 'values': {'episode': 1, 'movie': 0}},
     ]
@@ -365,7 +356,7 @@ def test_stats(test_client, session):
 @patch('rarbg_local.main.get_torrent')
 def test_torrents_error(get_torrent, test_client):
     get_torrent.side_effect = TimeoutError('Timeout!')
-    torrents = test_client.get('/torrents')
+    torrents = test_client.get('/api/torrents')
     assert torrents.status_code == 500
     assert torrents.json() == {'detail': 'Unable to connect to transmission: Timeout!'}
 
@@ -387,7 +378,7 @@ def test_torrents(get_torrent, test_client):
             ]
         }
     }
-    torrents = test_client.get('/torrents')
+    torrents = test_client.get('/api/torrents')
     assert torrents.json() == {
         '00000': {
             'hashString': '00000',
@@ -401,14 +392,14 @@ def test_torrents(get_torrent, test_client):
 
 @mark.skip
 def test_manifest(test_client):
-    r = test_client.get('/manifest.json')
+    r = test_client.get('/api/manifest.json')
 
     assert 'name' in r.json()
 
 
 def test_movie(test_client, snapshot, responses):
     themoviedb(responses, '/movie/1', {'title': 'Hello', 'imdb_id': 'tt0000000'})
-    r = test_client.get('/movie/1')
+    r = test_client.get('/api/movie/1')
     assert r.status_code == 200
 
     snapshot.assert_match(r.json())
@@ -438,7 +429,7 @@ def test_stream(test_client, responses):
             },
         )
 
-    r = test_client.get('/stream/series/1?season=1&episode=1&source=rarbg')
+    r = test_client.get('/api/stream/series/1?season=1&episode=1&source=rarbg')
 
     assert r.status_code == 200, r.json()
 
@@ -480,7 +471,6 @@ def test_stream(test_client, responses):
 
 
 def test_schema(snapshot):
-    from ..new import SearchResponse
 
     snapshot.assert_match(SearchResponse.schema())
 
