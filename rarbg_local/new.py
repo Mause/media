@@ -81,7 +81,7 @@ class XOpenIdConnect(OpenIdConnect):
     async def __call__(
         self, request: Request
     ) -> Optional[HTTPAuthorizationCredentials]:
-        return HTTPBearer().__call__(request)
+        return await HTTPBearer().__call__(request)
 
 
 openid_connect = XOpenIdConnect(
