@@ -29,7 +29,7 @@ snapshots['test_index 1'] = {
     'movies': [
         {
             'download': {
-                'added_by': {'username': 'python'},
+                'added_by': {'first_name': '', 'username': 'python'},
                 'id': 2,
                 'imdb_id': 'tt0000001',
                 'timestamp': '2020-04-20T00:00:00',
@@ -48,7 +48,7 @@ snapshots['test_index 1'] = {
                 '1': [
                     {
                         'download': {
-                            'added_by': {'username': 'python'},
+                            'added_by': {'first_name': '', 'username': 'python'},
                             'id': 1,
                             'imdb_id': 'tt000000',
                             'timestamp': '2020-04-21T00:00:00',
@@ -75,23 +75,6 @@ snapshots['test_movie 1'] = {'imdb_id': 'tt0000000', 'title': 'Hello'}
 snapshots['test_openapi 1'] = {
     'components': {
         'schemas': {
-            'Body_login_token_post': {
-                'properties': {
-                    'client_id': {'title': 'Client Id', 'type': 'string'},
-                    'client_secret': {'title': 'Client Secret', 'type': 'string'},
-                    'grant_type': {
-                        'pattern': 'password',
-                        'title': 'Grant Type',
-                        'type': 'string',
-                    },
-                    'password': {'title': 'Password', 'type': 'string'},
-                    'scope': {'default': '', 'title': 'Scope', 'type': 'string'},
-                    'username': {'title': 'Username', 'type': 'string'},
-                },
-                'required': ['username', 'password'],
-                'title': 'Body_login_token_post',
-                'type': 'object',
-            },
             'DownloadAllResponse': {
                 'properties': {
                     'complete': {
@@ -333,19 +316,6 @@ snapshots['test_openapi 1'] = {
                 'title': 'MovieResponse',
                 'type': 'object',
             },
-            'PromoteCreate': {
-                'properties': {
-                    'roles': {
-                        'items': {'type': 'string'},
-                        'title': 'Roles',
-                        'type': 'array',
-                    },
-                    'username': {'title': 'Username', 'type': 'string'},
-                },
-                'required': ['username', 'roles'],
-                'title': 'PromoteCreate',
-                'type': 'object',
-            },
             'ProviderSource': {
                 'description': 'An enumeration.',
                 'enum': ['kickass', 'horriblesubs', 'rarbg'],
@@ -440,25 +410,13 @@ snapshots['test_openapi 1'] = {
                 'title': 'TvSeasonResponse',
                 'type': 'object',
             },
-            'UserCreate': {
+            'UserSchema': {
                 'properties': {
-                    'password': {'title': 'Password', 'type': 'string'},
+                    'first_name': {'title': 'First Name', 'type': 'string'},
                     'username': {'title': 'Username', 'type': 'string'},
                 },
-                'required': ['username', 'password'],
-                'title': 'UserCreate',
-                'type': 'object',
-            },
-            'UserSchema': {
-                'properties': {'username': {'title': 'Username', 'type': 'string'}},
-                'required': ['username'],
+                'required': ['username', 'first_name'],
                 'title': 'UserSchema',
-                'type': 'object',
-            },
-            'UserShim': {
-                'properties': {'username': {'title': 'Username', 'type': 'string'}},
-                'required': ['username'],
-                'title': 'UserShim',
                 'type': 'object',
             },
             'ValidationError': {
@@ -475,49 +433,22 @@ snapshots['test_openapi 1'] = {
                 'title': 'ValidationError',
                 'type': 'object',
             },
-        }
+        },
+        'securitySchemes': {
+            'OpenIdConnect': {
+                'openIdConnectUrl': (
+                    'https://mause.au.auth0.com/.well-known/openid-configuration'
+                ),
+                'type': 'openIdConnect',
+            }
+        },
     },
     'info': {'title': 'FastAPI', 'version': '0.1.0'},
     'openapi': '3.0.2',
     'paths': {
-        '/create_user': {
-            'post': {
-                'operationId': 'create_user_create_user_post',
-                'requestBody': {
-                    'content': {
-                        'application/json': {
-                            'schema': {'$ref': '#/components/schemas/UserCreate'}
-                        }
-                    },
-                    'required': True,
-                },
-                'responses': {
-                    '200': {
-                        'content': {
-                            'application/json': {
-                                'schema': {'$ref': '#/components/schemas/UserShim'}
-                            }
-                        },
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'summary': 'Create User',
-                'tags': ['user'],
-            }
-        },
-        '/delete/{type}/{id}': {
+        '/api/delete/{type}/{id}': {
             'get': {
-                'operationId': 'delete_delete__type___id__get',
+                'operationId': 'delete_api_delete__type___id__get',
                 'parameters': [
                     {
                         'in': 'path',
@@ -551,9 +482,9 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Delete',
             }
         },
-        '/diagnostics': {
+        '/api/diagnostics': {
             'get': {
-                'operationId': 'diagnostics_diagnostics_get',
+                'operationId': 'diagnostics_api_diagnostics_get',
                 'responses': {
                     '200': {
                         'content': {'application/json': {'schema': {}}},
@@ -563,23 +494,9 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Diagnostics',
             }
         },
-        '/download': {
+        '/api/download': {
             'post': {
-                'operationId': 'download_post_download_post',
-                'parameters': [
-                    {
-                        'in': 'cookie',
-                        'name': 'remember_token',
-                        'required': False,
-                        'schema': {'title': 'Remember Token', 'type': 'string'},
-                    },
-                    {
-                        'in': 'cookie',
-                        'name': 'session',
-                        'required': False,
-                        'schema': {'title': 'Session', 'type': 'string'},
-                    },
-                ],
+                'operationId': 'download_post_api_download_post',
                 'requestBody': {
                     'content': {
                         'application/json': {
@@ -607,7 +524,7 @@ snapshots['test_openapi 1'] = {
                                             },
                                         ]
                                     },
-                                    'title': 'Response Download Post Download Post',
+                                    'title': 'Response Download Post Api Download Post',
                                     'type': 'array',
                                 }
                             }
@@ -625,12 +542,13 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'OpenIdConnect': []}],
                 'summary': 'Download Post',
             }
         },
-        '/index': {
+        '/api/index': {
             'get': {
-                'operationId': 'index_index_get',
+                'operationId': 'index_api_index_get',
                 'responses': {
                     '200': {
                         'content': {
@@ -644,23 +562,9 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Index',
             }
         },
-        '/monitor': {
+        '/api/monitor': {
             'get': {
-                'operationId': 'monitor_get_monitor_get',
-                'parameters': [
-                    {
-                        'in': 'cookie',
-                        'name': 'remember_token',
-                        'required': False,
-                        'schema': {'title': 'Remember Token', 'type': 'string'},
-                    },
-                    {
-                        'in': 'cookie',
-                        'name': 'session',
-                        'required': False,
-                        'schema': {'title': 'Session', 'type': 'string'},
-                    },
-                ],
+                'operationId': 'monitor_get_api_monitor_get',
                 'responses': {
                     '200': {
                         'content': {
@@ -669,43 +573,20 @@ snapshots['test_openapi 1'] = {
                                     'items': {
                                         '$ref': '#/components/schemas/MonitorGet'
                                     },
-                                    'title': 'Response Monitor Get Monitor Get',
+                                    'title': 'Response Monitor Get Api Monitor Get',
                                     'type': 'array',
                                 }
                             }
                         },
                         'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
+                    }
                 },
+                'security': [{'OpenIdConnect': []}],
                 'summary': 'Monitor Get',
                 'tags': ['monitor'],
             },
             'post': {
-                'operationId': 'monitor_post_monitor_post',
-                'parameters': [
-                    {
-                        'in': 'cookie',
-                        'name': 'remember_token',
-                        'required': False,
-                        'schema': {'title': 'Remember Token', 'type': 'string'},
-                    },
-                    {
-                        'in': 'cookie',
-                        'name': 'session',
-                        'required': False,
-                        'schema': {'title': 'Session', 'type': 'string'},
-                    },
-                ],
+                'operationId': 'monitor_post_api_monitor_post',
                 'requestBody': {
                     'content': {
                         'application/json': {
@@ -734,13 +615,14 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'OpenIdConnect': []}],
                 'summary': 'Monitor Post',
                 'tags': ['monitor'],
             },
         },
-        '/monitor/{monitor_id}': {
+        '/api/monitor/{monitor_id}': {
             'delete': {
-                'operationId': 'monitor_delete_monitor__monitor_id__delete',
+                'operationId': 'monitor_delete_api_monitor__monitor_id__delete',
                 'parameters': [
                     {
                         'in': 'path',
@@ -769,9 +651,9 @@ snapshots['test_openapi 1'] = {
                 'tags': ['monitor'],
             }
         },
-        '/movie/{tmdb_id}': {
+        '/api/movie/{tmdb_id}': {
             'get': {
-                'operationId': 'movie_movie__tmdb_id__get',
+                'operationId': 'movie_api_movie__tmdb_id__get',
                 'parameters': [
                     {
                         'in': 'path',
@@ -803,54 +685,9 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Movie',
             }
         },
-        '/promote': {
-            'post': {
-                'operationId': 'promote_promote_post',
-                'parameters': [
-                    {
-                        'in': 'cookie',
-                        'name': 'remember_token',
-                        'required': False,
-                        'schema': {'title': 'Remember Token', 'type': 'string'},
-                    },
-                    {
-                        'in': 'cookie',
-                        'name': 'session',
-                        'required': False,
-                        'schema': {'title': 'Session', 'type': 'string'},
-                    },
-                ],
-                'requestBody': {
-                    'content': {
-                        'application/json': {
-                            'schema': {'$ref': '#/components/schemas/PromoteCreate'}
-                        }
-                    },
-                    'required': True,
-                },
-                'responses': {
-                    '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'summary': 'Promote',
-                'tags': ['user'],
-            }
-        },
-        '/redirect/plex/{tmdb_id}': {
+        '/api/redirect/plex/{tmdb_id}': {
             'get': {
-                'operationId': 'redirect_plex_redirect_plex__tmdb_id__get',
+                'operationId': 'redirect_plex_api_redirect_plex__tmdb_id__get',
                 'responses': {
                     '200': {
                         'content': {'application/json': {'schema': {}}},
@@ -860,9 +697,9 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Redirect Plex',
             }
         },
-        '/redirect/{type_}/{ident}': {
+        '/api/redirect/{type_}/{ident}': {
             'get': {
-                'operationId': 'redirect_redirect__type____ident__get',
+                'operationId': 'redirect_api_redirect__type____ident__get',
                 'parameters': [
                     {
                         'in': 'path',
@@ -908,10 +745,10 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Redirect',
             }
         },
-        '/redirect/{type_}/{ident}/{season}/{episode}': {
+        '/api/redirect/{type_}/{ident}/{season}/{episode}': {
             'get': {
                 'operationId': (
-                    'redirect_redirect__type____ident___season___episode__get'
+                    'redirect_api_redirect__type____ident___season___episode__get'
                 ),
                 'parameters': [
                     {
@@ -958,9 +795,9 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Redirect',
             }
         },
-        '/search': {
+        '/api/search': {
             'get': {
-                'operationId': 'search_search_get',
+                'operationId': 'search_api_search_get',
                 'parameters': [
                     {
                         'in': 'query',
@@ -977,7 +814,7 @@ snapshots['test_openapi 1'] = {
                                     'items': {
                                         '$ref': '#/components/schemas/SearchResponse'
                                     },
-                                    'title': 'Response Search Search Get',
+                                    'title': 'Response Search Api Search Get',
                                     'type': 'array',
                                 }
                             }
@@ -998,10 +835,10 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Search',
             }
         },
-        '/select/{tmdb_id}/season/{season}/download_all': {
+        '/api/select/{tmdb_id}/season/{season}/download_all': {
             'get': {
                 'operationId': (
-                    'select_select__tmdb_id__season__season__download_all_get'
+                    'select_api_select__tmdb_id__season__season__download_all_get'
                 ),
                 'parameters': [
                     {
@@ -1042,9 +879,9 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Select',
             }
         },
-        '/stats': {
+        '/api/stats': {
             'get': {
-                'operationId': 'stats_stats_get',
+                'operationId': 'stats_api_stats_get',
                 'responses': {
                     '200': {
                         'content': {
@@ -1053,7 +890,7 @@ snapshots['test_openapi 1'] = {
                                     'items': {
                                         '$ref': '#/components/schemas/StatsResponse'
                                     },
-                                    'title': 'Response Stats Stats Get',
+                                    'title': 'Response Stats Api Stats Get',
                                     'type': 'array',
                                 }
                             }
@@ -1064,9 +901,9 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Stats',
             }
         },
-        '/stream/{type}/{tmdb_id}': {
+        '/api/stream/{type}/{tmdb_id}': {
             'get': {
-                'operationId': 'stream_stream__type___tmdb_id__get',
+                'operationId': 'stream_api_stream__type___tmdb_id__get',
                 'parameters': [
                     {
                         'in': 'path',
@@ -1123,42 +960,9 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Stream',
             }
         },
-        '/token': {
-            'post': {
-                'operationId': 'login_token_post',
-                'requestBody': {
-                    'content': {
-                        'application/x-www-form-urlencoded': {
-                            'schema': {
-                                '$ref': '#/components/schemas/Body_login_token_post'
-                            }
-                        }
-                    },
-                    'required': True,
-                },
-                'responses': {
-                    '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'summary': 'Login',
-                'tags': ['user'],
-            }
-        },
-        '/torrents': {
+        '/api/torrents': {
             'get': {
-                'operationId': 'torrents_torrents_get',
+                'operationId': 'torrents_api_torrents_get',
                 'responses': {
                     '200': {
                         'content': {
@@ -1167,7 +971,7 @@ snapshots['test_openapi 1'] = {
                                     'additionalProperties': {
                                         '$ref': '#/components/schemas/InnerTorrent'
                                     },
-                                    'title': 'Response Torrents Torrents Get',
+                                    'title': 'Response Torrents Api Torrents Get',
                                     'type': 'object',
                                 }
                             }
@@ -1178,9 +982,9 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Torrents',
             }
         },
-        '/tv/{tmdb_id}': {
+        '/api/tv/{tmdb_id}': {
             'get': {
-                'operationId': 'api_tv_tv__tmdb_id__get',
+                'operationId': 'api_tv_api_tv__tmdb_id__get',
                 'parameters': [
                     {
                         'in': 'path',
@@ -1213,9 +1017,9 @@ snapshots['test_openapi 1'] = {
                 'tags': ['tv'],
             }
         },
-        '/tv/{tmdb_id}/season/{season}': {
+        '/api/tv/{tmdb_id}/season/{season}': {
             'get': {
-                'operationId': 'api_tv_season_tv__tmdb_id__season__season__get',
+                'operationId': 'api_tv_season_api_tv__tmdb_id__season__season__get',
                 'parameters': [
                     {
                         'in': 'path',
@@ -1256,9 +1060,9 @@ snapshots['test_openapi 1'] = {
                 'tags': ['tv'],
             }
         },
-        '/user/unauthorized': {
+        '/api/user/unauthorized': {
             'get': {
-                'operationId': 'user_user_unauthorized_get',
+                'operationId': 'user_api_user_unauthorized_get',
                 'responses': {
                     '200': {
                         'content': {'application/json': {'schema': {}}},
