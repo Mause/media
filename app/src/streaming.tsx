@@ -180,12 +180,12 @@ function SwrConfigWrapper({
       value={{
         // five minute refresh
         refreshInterval: 5 * 60 * 1000,
-        fetcher: (path, params) =>
-          load(
+        fetcher: async (path, params) =>
+          await load(
             path,
             params,
             auth.isAuthenticated
-              ? { Authorization: auth.getAccessTokenSilently() }
+              ? { Authorization: await auth.getAccessTokenSilently() }
               : {},
           ),
       }}
