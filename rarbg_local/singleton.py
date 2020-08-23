@@ -33,6 +33,9 @@ def singleton(func: Callable):
             value = await get(app, func)
 
             app.dependency_overrides[func] = lambda: value
+        else:
+            value = value()
+
         return value
 
     return wrapper
