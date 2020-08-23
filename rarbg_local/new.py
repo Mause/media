@@ -10,7 +10,12 @@ from typing import Callable, Dict, Iterable, List, Optional, Union
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
 from fastapi.responses import FileResponse, StreamingResponse
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OpenIdConnect
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBearer,
+    OpenIdConnect,
+    SecurityScopes,
+)
 from flask import safe_join
 from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
@@ -120,9 +125,12 @@ async def get_db(session_local=Depends(get_session_local)):
 async def get_current_user(
     session=Depends(get_db),
     header=Security(openid_connect),
+    security_scopes: SecurityScopes = Depends(),
     jwkaas=Depends(get_my_jwkaas),
 ):
-    user = auth_hook(session, header, jwkaas)
+    user = auth_hook(
+        session=session, header=header, security_scopes=security_scopes, jwkaas=jwkaas
+    )
     if user:
         return user
     else:
