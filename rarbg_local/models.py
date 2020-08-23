@@ -157,7 +157,7 @@ class SeasonMeta(BaseModel):
 class TvResponse(BaseModel):
     number_of_seasons: int
     title: str
-    imdb_id: str
+    imdb_id: Optional[str]
     seasons: List[SeasonMeta]
 
 
