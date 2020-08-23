@@ -5,11 +5,12 @@ import traceback
 from functools import wraps
 from itertools import chain
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Union
+from typing import Callable, Dict, Iterable, List, Optional, Union
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
+from fastapi.requests import Request
 from fastapi.responses import FileResponse, StreamingResponse
-from fastapi.security import OpenIdConnect
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OpenIdConnect
 from flask import safe_join
 from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
@@ -71,7 +72,14 @@ def generate_plain_text(exc):
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
-openid_connect = OpenIdConnect(
+class XOpenIdConnect(OpenIdConnect):
+    async def __call__(
+        self, request: Request
+    ) -> Optional[HTTPAuthorizationCredentials]:
+        return HTTPBearer().__call__(request)
+
+
+openid_connect = XOpenIdConnect(
     openIdConnectUrl='https://mause.au.auth0.com/.well-known/openid-configuration'
 )
 

@@ -435,7 +435,7 @@ snapshots['test_openapi 1'] = {
             },
         },
         'securitySchemes': {
-            'OpenIdConnect': {
+            'XOpenIdConnect': {
                 'openIdConnectUrl': (
                     'https://mause.au.auth0.com/.well-known/openid-configuration'
                 ),
@@ -542,7 +542,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
-                'security': [{'OpenIdConnect': []}],
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Download Post',
             }
         },
@@ -581,7 +581,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Successful Response',
                     }
                 },
-                'security': [{'OpenIdConnect': []}],
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Monitor Get',
                 'tags': ['monitor'],
             },
@@ -615,7 +615,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
-                'security': [{'OpenIdConnect': []}],
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Monitor Post',
                 'tags': ['monitor'],
             },

@@ -2,8 +2,8 @@ from typing import Any, Dict, Optional
 
 import requests
 from cachetools import TTLCache
-from fastapi import Depends, HTTPException, Security, status
-from fastapi.security import SecurityScopes
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, SecurityScopes
 from jwkaas import JWKaas
 from sqlalchemy.orm.session import Session
 
@@ -34,13 +34,12 @@ def get_user_info(token_info: Dict[str, Any], rest: str) -> Dict:
 
 
 def auth_hook(
-    session: Session = Depends('.new.get_current_user'),
-    header: str = Security('.new.openid_connect'),
+    session: Session,
+    header: HTTPAuthorizationCredentials,
     security_scopes: SecurityScopes = Depends(),
     jwkaas=Depends(get_my_jwkaas),
 ) -> Optional[User]:
-    _, header = header.split()
-    token_info = jwkaas.get_token_info(header)
+    token_info = jwkaas.get_token_info(header.credentials)
     if token_info is None:
         return None
 
