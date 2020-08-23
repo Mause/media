@@ -185,7 +185,10 @@ function SwrConfigWrapper({
             path,
             params,
             auth.isAuthenticated
-              ? { Authorization: await auth.getAccessTokenSilently() }
+              ? {
+                  Authorization:
+                    'Bearer ' + (await auth.getAccessTokenSilently()),
+                }
               : {},
           ),
       }}
