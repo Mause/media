@@ -445,7 +445,7 @@ async def websocket_stream(websocket: WebSocket):
 root = APIRouter()
 
 
-@root.get('/{resource}', include_in_schema=False)
+@root.get('/{resource:path}', include_in_schema=False)
 @root.get('/', include_in_schema=False)
 async def static(resource: str = '', settings: Settings = Depends(get_settings)):
     filename = resource if "." in resource else 'index.html'
