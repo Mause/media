@@ -248,12 +248,12 @@ def get_movies(session: Session) -> List[MovieDetails]:
     return get_all(session, MovieDetails)
 
 
-def get_or_create(model: Type[T], defaults=None, **kwargs) -> T:
-    instance = db.session.query(model).filter_by(**kwargs).first()
+def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> T:
+    instance = session.query(model).filter_by(**kwargs).first()
     if instance:
         return instance
     params = {k: v for k, v in kwargs.items() if not isinstance(v, ClauseElement)}
     params.update(defaults or {})
     instance: T = model(**params)  # type: ignore
-    db.session.add(instance)
+    session.add(instance)
     return instance
