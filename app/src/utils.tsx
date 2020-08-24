@@ -8,6 +8,7 @@ import { LocationDescriptor } from 'history';
 import { TypographyTypeMap } from '@material-ui/core';
 import moxios from 'moxios';
 import { useAuth0 } from '@auth0/auth0-react';
+import { FetchEventTarget } from './fetch_stream';
 
 // axiosRetry(Axios, { retries: 3 });
 
@@ -23,20 +24,24 @@ export function subscribe<T>(
   path: string,
   callback: (a: T) => void,
   error: (e: Error) => void,
+  authorization: string,
   end: (() => void) | null = null,
 ): () => void {
-  const es = new EventSource(path, {
-    withCredentials: true,
+  const es = FetchEventTarget(path, {
+    headers: new Headers({
+      Authorization: 'Bearer ' + authorization,
+    }),
   });
-  es.onerror = (event: Event) => {
+  const onerror = (event: Event) => {
     error((event as unknown) as Error);
   };
-  const internal_callback = ({ data }: { data: string }) => {
+  es.addEventListener('abort', onerror);
+  const internal_callback = (event: Event) => {
+    const data = (event as MessageEvent).data;
     if (!data) {
       if (end) {
         end();
       }
-      es.close();
     } else {
       callback(JSON.parse(data));
     }
@@ -44,8 +49,7 @@ export function subscribe<T>(
   es.addEventListener('message', internal_callback);
 
   return () => {
-    es.close();
-    es.onerror = null;
+    es.removeEventListener('abort', onerror);
     es.removeEventListener('message', internal_callback);
   };
 }

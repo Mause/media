@@ -229,6 +229,7 @@ function useSubscribe<T>(
         });
       },
       (error) => setSubscription({ error, loading: false, items }),
+      authorization,
       () => setSubscription({ loading: false, items }),
     );
   }, [url, authorization]);
