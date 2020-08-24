@@ -485,17 +485,14 @@ def create_app():
     app = FastAPI(
         servers=[
             {
-                "url": "{protocol}://localhost:5000/api",
+                "url": "{protocol}://localhost:5000/",
                 "description": "Development",
                 "variables": {
                     "protocol": {"enum": ["http", "https"], "default": "https"}
                 },
             },
-            {
-                "url": "https://media-staging.herokuapps.com/api",
-                "description": "Staging",
-            },
-            {"url": "https://media.mause.me/api", "description": "Production"},
+            {"url": "https://media-staging.herokuapps.com/", "description": "Staging"},
+            {"url": "https://media.mause.me/", "description": "Production"},
         ],
         debug='HEROKU' not in os.environ,
     )
