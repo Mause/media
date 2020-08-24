@@ -1,14 +1,14 @@
-function makeWriteableEventStream(eventTarget) {
+function makeWriteableEventStream(eventTarget: EventTarget) {
   return new WritableStream({
     start(controller) {
       eventTarget.dispatchEvent(new Event('start'));
     },
     write(message, controller) {
       eventTarget.dispatchEvent(
-        new MessageEvent(message.type, { data: message.data }),
+        new MessageEvent('message', { data: message }),
       );
     },
-    close(controller) {
+    close() {
       eventTarget.dispatchEvent(new CloseEvent('close'));
     },
     abort(reason) {
