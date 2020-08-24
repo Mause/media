@@ -50,7 +50,7 @@ function FetchEventTarget(input, init) {
   const eventStream = makeWriteableEventStream(eventTarget);
   fetch(input, init)
     .then((response) => {
-      response.body
+      response.body!
         .pipeThrough(new TextDecoderStream())
         .pipeThrough(jsonDecoder)
         .pipeTo(eventStream);
