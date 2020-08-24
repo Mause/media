@@ -10,6 +10,7 @@ import { Breadcrumbs, Typography } from '@material-ui/core';
 import { Shared } from './SeasonSelectComponent';
 import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
@@ -230,6 +231,15 @@ function useSubscribe<T>(
   }, [url]);
 
   return subscription;
+}
+
+function useToken() {
+  const auth = useAuth0();
+  const [token, setToken] = useState<string>();
+  useEffect(() => {
+    auth.getAccessTokenSilently().then(setToken);
+  }, []);
+  return token;
 }
 
 function useSubscribes<T>(
