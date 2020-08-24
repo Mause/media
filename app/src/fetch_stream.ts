@@ -43,11 +43,11 @@ function makeJsonDecoder() {
   });
 }
 
-function FetchEventTarget(input, init) {
+export function FetchEventTarget(url: string, init: RequestInit) {
   const eventTarget = new EventTarget();
   const jsonDecoder = makeJsonDecoder();
   const eventStream = makeWriteableEventStream(eventTarget);
-  fetch(input, init)
+  fetch(url, init)
     .then((response) => {
       response.body!
         .pipeThrough(new TextDecoderStream())
