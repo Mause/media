@@ -207,6 +207,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
 
 function useSubscribe<T>(
   url: string,
+  authorization?: string,
 ): { items: T[]; loading: boolean; error?: Error } {
   const [subscription, setSubscription] = useState<{
     items: T[];
@@ -215,6 +216,8 @@ function useSubscribe<T>(
   }>({ loading: true, items: [], error: undefined });
 
   useEffect(() => {
+    if (!authorization) return; // don't subscribe until we have auth
+
     const items: T[] = [];
     return subscribe<T>(
       url,
@@ -228,7 +231,7 @@ function useSubscribe<T>(
       (error) => setSubscription({ error, loading: false, items }),
       () => setSubscription({ loading: false, items }),
     );
-  }, [url]);
+  }, [url, authorization]);
 
   return subscription;
 }
@@ -245,11 +248,13 @@ function useToken() {
 function useSubscribes<T>(
   url: string,
 ): { items: T[]; loading: boolean; errors: { [key: string]: Error } } {
+  const token = useToken();
+
   const p = ['rarbg', 'horriblesubs', 'kickass'];
   const providers = [
-    useSubscribe<T>(url + '&source=' + p[0]),
-    useSubscribe<T>(url + '&source=' + p[1]),
-    useSubscribe<T>(url + '&source=' + p[2]),
+    useSubscribe<T>(url + '&source=' + p[0], token),
+    useSubscribe<T>(url + '&source=' + p[1], token),
+    useSubscribe<T>(url + '&source=' + p[2], token),
   ];
 
   return {
