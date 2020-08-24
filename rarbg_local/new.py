@@ -22,7 +22,6 @@ from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from starlette.middleware.base import BaseHTTPMiddleware
 
 from .auth import auth_hook, get_my_jwkaas
 from .db import (
@@ -462,15 +461,20 @@ async def static(resource: str = '', settings: Settings = Depends(get_settings))
     return FileResponse(path=safe_join(settings.static_resources_path, filename))
 
 
-class AuthMiddleware(BaseHTTPMiddleware):
+class AuthMiddleware:
+    def __init__(self, app):
+        self.app = app
+
     async def auth(self, user=Depends(get_current_user)):
         ...
 
-    async def dispatch(self, request, call_next):
-        if request.url.path.startswith('/api'):
-            await get(request.app, self.auth, request)
+    async def __call__(self, scope, recieve, send):
+        if scope['type'] != 'lifespan':
+            request = Request(scope, recieve, send)
+            if request.url.path.startswith('/api'):
+                await get(request.app, self.auth, request)
 
-        return await call_next(request)
+        await self.app(scope, recieve, send)
 
 
 api.include_router(tv_ns, prefix='/tv')
