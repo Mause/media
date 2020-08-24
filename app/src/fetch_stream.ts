@@ -45,8 +45,7 @@ function makeJsonDecoder() {
 
 function FetchEventTarget(input, init) {
   const eventTarget = new EventTarget();
-  const textDecoder = new TextDecoder('utf-8');
-  const jsonDecoder = makeJsonDecoder(input);
+  const jsonDecoder = makeJsonDecoder();
   const eventStream = makeWriteableEventStream(eventTarget);
   fetch(input, init)
     .then((response) => {
