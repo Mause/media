@@ -9,9 +9,11 @@ from fastapi.routing import get_dependant, run_endpoint_function
 T = TypeVar('T')
 
 
-async def get(app: FastAPI, func: Callable[..., T]) -> T:
+async def get(app: FastAPI, func: Callable[..., T], request: Request = None) -> T:
     dependant = get_dependant(call=func, path='')
-    request = Request({'type': 'http', 'query_string': '', 'headers': [], 'app': app})
+    request = request or Request(
+        {'type': 'http', 'query_string': '', 'headers': [], 'app': app}
+    )
 
     values, errors, *_ = await solve_dependencies(
         request=request, dependant=dependant, dependency_overrides_provider=app,
