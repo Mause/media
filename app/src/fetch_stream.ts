@@ -18,21 +18,25 @@ function makeWriteableEventStream(eventTarget) {
 }
 
 function makeJsonDecoder() {
+  let buf = '',
+    pos = 0;
   return new TransformStream({
     start(controller) {
-      controller.buf = '';
-      controller.pos = 0;
+      buf = '';
+      pos = 0;
     },
     transform(chunk, controller) {
-      controller.buf += chunk;
-      while (controller.pos < controller.buf.length) {
-        if (controller.buf[controller.pos] == '\n') {
-          const line = controller.buf.substring(0, controller.pos);
-          controller.enqueue(JSON.parse(line));
-          controller.buf = controller.buf.substring(controller.pos + 1);
-          controller.pos = 0;
+      buf += chunk;
+      while (pos < buf.length) {
+        if (buf[pos] === '\n') {
+          const line = buf.substring(5, pos); // 5 to strip data: prefix
+          if (line.trim().length) {
+            controller.enqueue(JSON.parse(line));
+          }
+          buf = buf.substring(pos + 2); // 2 for 2 newlines
+          pos = 0;
         } else {
-          ++controller.pos;
+          ++pos;
         }
       }
     },
