@@ -22,6 +22,7 @@ from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from .auth import auth_hook, get_my_jwkaas
 from .db import (
@@ -58,7 +59,7 @@ from .providers import (
     search_for_movie,
     search_for_tv,
 )
-from .singleton import singleton
+from .singleton import get, singleton
 from .tmdb import (
     get_movie,
     get_movie_imdb_id,
@@ -461,6 +462,17 @@ async def static(resource: str = '', settings: Settings = Depends(get_settings))
     return FileResponse(path=safe_join(settings.static_resources_path, filename))
 
 
+class AuthMiddleware(BaseHTTPMiddleware):
+    async def auth(self, user=Depends(get_current_user)):
+        ...
+
+    async def dispatch(self, request, call_next):
+        if request.url.path.startswith('/api'):
+            await get(request.app, self.auth, request)
+
+        return await call_next(request)
+
+
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 
@@ -486,5 +498,7 @@ def create_app():
     app.middleware_stack.generate_plain_text = generate_plain_text
     app.include_router(api, prefix='/api')
     app.include_router(root, prefix='')
+
+    app.add_middleware(AuthMiddleware)
 
     return app
