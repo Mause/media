@@ -463,9 +463,12 @@ async def static(resource: str = '', settings: Settings = Depends(get_settings))
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
+    async def auth(self, user=Depends(get_current_user)):
+        ...
+
     async def dispatch(self, request, call_next):
         if request.url.path.startswith('/api'):
-            await get(request.app, get_current_user, request)
+            await get(request.app, self.auth, request)
 
         return await call_next(request)
 
