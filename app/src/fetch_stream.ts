@@ -60,39 +60,3 @@ function FetchEventTarget(input, init) {
     });
   return eventTarget;
 }
-
-window.onload = function () {
-  const form = document.getElementById('message-form');
-  const responseField = document.getElementById('response');
-  let abortController = null;
-
-  form.onsubmit = function (e) {
-    e.preventDefault();
-
-    if (abortController !== null) {
-      abortController.abort();
-    }
-
-    abortController = new AbortController();
-
-    // Retrieve the message from the textarea.
-    var formData = new FormData(form);
-    var message = formData.get('message');
-    var body = JSON.stringify({ message });
-
-    eventTarget = new FetchEventTarget('${__FETCH_URL__}', {
-      method: 'POST',
-      headers: new Headers({
-        accept: 'application/json',
-        'content-type': 'application/json',
-      }),
-      mode: 'same-origin',
-      signal: abortController.signal,
-      body,
-    });
-
-    eventTarget.addEventListener('tick', (event) => {
-      responseField.innerHTML = JSON.stringify(event.data);
-    });
-  };
-};
