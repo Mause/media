@@ -43,7 +43,7 @@ export function subscribe<T>(
         end();
       }
     } else {
-      callback(JSON.parse(data));
+      callback(data);
     }
   };
   es.addEventListener('message', internal_callback);
