@@ -25,7 +25,7 @@ export function subscribe<T>(
   callback: (a: T) => void,
   error: (e: Error) => void,
   authorization: string,
-  end: (() => void) | null = null,
+  end: (() => void) | null = () => null,
 ): () => void {
   const es = FetchEventTarget(path, {
     headers: new Headers({
@@ -37,18 +37,12 @@ export function subscribe<T>(
   };
   es.addEventListener('abort', onerror);
   const internal_callback = (event: Event) => {
-    const data = (event as MessageEvent).data;
-    if (!data) {
-      if (end) {
-        end();
-      }
-    } else {
-      callback(data);
-    }
+    callback((event as MessageEvent).data);
   };
   es.addEventListener('message', internal_callback);
 
   return () => {
+    es.removeEventListener('close', end);
     es.removeEventListener('abort', onerror);
     es.removeEventListener('message', internal_callback);
   };
