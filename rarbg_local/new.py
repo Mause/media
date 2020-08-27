@@ -119,8 +119,12 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-async def get_db(session_local=Depends(get_session_local)):
-    return session_local()
+def get_db(session_local=Depends(get_session_local)):
+    sl = session_local()
+    try:
+        yield sl
+    finally:
+        sl.close()
 
 
 async def get_current_user(
