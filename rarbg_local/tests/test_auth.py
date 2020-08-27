@@ -43,3 +43,12 @@ def test_auth(responses, user, fastapi_app, test_client):
     # Assert
     assert r.status_code == 200, r.text
     assert r.json() == {'first_name': '', 'username': 'python'}, r.text
+
+
+def test_no_auth(fastapi_app, test_client):
+    del fastapi_app.dependency_overrides[get_current_user]
+
+    r = test_client.get('/api/diagnostics')
+
+    assert r.status_code == 403
+    assert r.json() == {'detail': 'Not authenticated'}
