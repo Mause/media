@@ -22,6 +22,7 @@ from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from starlette.exceptions import ExceptionMiddleware
 
 from .auth import auth_hook, get_my_jwkaas
 from .db import (
@@ -501,5 +502,8 @@ def create_app():
     app.include_router(root, prefix='')
 
     app.add_middleware(AuthMiddleware)
+
+    # catch exceptions in middleware
+    app.add_middleware(ExceptionMiddleware, handlers=app.exception_handlers)
 
     return app
