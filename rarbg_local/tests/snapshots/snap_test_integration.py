@@ -394,7 +394,7 @@ snapshots['test_openapi 1'] = {
                     },
                     'title': {'title': 'Title', 'type': 'string'},
                 },
-                'required': ['number_of_seasons', 'title', 'imdb_id', 'seasons'],
+                'required': ['number_of_seasons', 'title', 'seasons'],
                 'title': 'TvResponse',
                 'type': 'object',
             },
@@ -1076,10 +1076,10 @@ snapshots['test_openapi 1'] = {
     'servers': [
         {
             'description': 'Development',
-            'url': '{protocol}://localhost:5000/api',
+            'url': '{protocol}://localhost:5000/',
             'variables': {'protocol': {'default': 'https', 'enum': ['http', 'https']}},
         },
-        {'description': 'Staging', 'url': 'https://media-staging.herokuapps.com/api'},
-        {'description': 'Production', 'url': 'https://media.mause.me/api'},
+        {'description': 'Staging', 'url': 'https://media-staging.herokuapps.com/'},
+        {'description': 'Production', 'url': 'https://media.mause.me/'},
     ],
 }
