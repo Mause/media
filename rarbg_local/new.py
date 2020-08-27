@@ -106,7 +106,7 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = settings.database_url
     logging.info('db_url: %s', db_url)
     ca = {"check_same_thread": False} if 'sqlite' in db_url else {}
-    engine = create_engine(db_url, connect_args=ca)
+    engine = create_engine(db_url, connect_args=ca, pool_size=2)
     if 'sqlite' in db_url:
 
         def _fk_pragma_on_connect(dbapi_con, con_record):
