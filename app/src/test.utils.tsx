@@ -19,7 +19,7 @@ export function renderWithSWR(el: ReactElement) {
   const c: Auth0ContextInterface = {
     isAuthenticated: true,
     getAccessTokenSilently() {
-      return Promise.resolve('');
+      return Promise.resolve('TOKEN');
     },
   };
   return render(
