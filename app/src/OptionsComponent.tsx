@@ -52,7 +52,9 @@ export function DisplayTorrent({
   const url = { pathname: '/download', state };
   return (
     <span>
-      <strong title={torrent.source}>{torrent.source.substring(0, 1)}</strong>
+      <strong title={torrent.source}>
+        {torrent.source.substring(0, 1).toUpperCase()}
+      </strong>
       &nbsp;
       <MLink to={url}>{torrent.title}</MLink>
       &nbsp;
