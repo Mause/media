@@ -9,20 +9,20 @@ from typing import Callable, Dict, Iterable, List, Optional, Union
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import StreamingResponse
 from fastapi.security import (
     HTTPAuthorizationCredentials,
     HTTPBearer,
     OpenIdConnect,
     SecurityScopes,
 )
-from flask import safe_join
 from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from starlette.exceptions import ExceptionMiddleware
+from starlette.staticfiles import StaticFiles
 
 from .auth import auth_hook, get_my_jwkaas
 from .db import (
@@ -458,12 +458,21 @@ async def websocket_stream(websocket: WebSocket):
 root = APIRouter()
 
 
-@root.get('/{resource:path}', include_in_schema=False)
-@root.get('/', include_in_schema=False)
-async def static(resource: str = '', settings: Settings = Depends(get_settings)):
+@singleton
+def get_static_files(settings: Settings = Depends(get_settings)):
+    return StaticFiles(directory=settings.static_resources_path)
+
+
+@root.api_route('/{resource:path}', methods=['GET', 'HEAD'], include_in_schema=False)
+@root.api_route('/', methods=['GET', 'HEAD'], include_in_schema=False)
+async def static(
+    request: Request,
+    resource: str = '',
+    static_files: StaticFiles = Depends(get_static_files),
+):
     filename = resource if "." in resource else 'index.html'
 
-    return FileResponse(path=safe_join(settings.static_resources_path, filename))
+    return await static_files.get_response(filename, request.scope)
 
 
 class AuthMiddleware:
