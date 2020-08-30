@@ -5,13 +5,8 @@ import { useLocation } from 'react-router-dom';
 import { SearchBox } from './IndexComponent';
 import useSWR from 'swr';
 import { MLink } from './utils';
-
-export interface SearchResult {
-  Type: string;
-  Year: number;
-  imdbID: number;
-  title: string;
-}
+import { components } from './schema';
+type SearchResult = components['schemas']['SearchResponse'];
 
 export function SearchComponent() {
   const { search } = useLocation();
@@ -25,7 +20,7 @@ export function SearchComponent() {
       <SearchBox />
       <ul>
         {results ? (
-          results.map(result => (
+          results.map((result) => (
             <li key={result.imdbID}>
               <MLink
                 to={{

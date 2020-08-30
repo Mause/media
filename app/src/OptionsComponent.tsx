@@ -11,19 +11,13 @@ import { Shared } from './SeasonSelectComponent';
 import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
 import { useAuth0 } from '@auth0/auth0-react';
+import { components } from './schema';
+
+type ITorrent = components['schemas']['ITorrent'];
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
   return _.last(u.searchParams.get('xt')!.split(':'));
-}
-
-export interface ITorrent {
-  source: 'KICKASS' | 'RARBG' | 'HORRIBLESUBS';
-  title: string;
-  seeders: number;
-  download: string;
-  category: string;
-  episode_info: { seasonnum?: string; epnum?: string };
 }
 
 export function DisplayTorrent({

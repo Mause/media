@@ -7,12 +7,11 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import useSWR from 'swr';
 import qs from 'qs';
 import { MLink } from './utils';
+import { components } from './schema';
 
-export interface TV {
-  number_of_seasons: number;
-  title: string;
-  seasons: { episode_count: number; season_number: number }[];
-}
+export type Season = components['schemas']['TvSeasonResponse'];
+export type EpisodeResponse = components['schemas']['Episode'];
+export type TV = components['schemas']['TvResponse'];
 
 export function Shared() {
   const { state } = useLocation<{ query: string }>();
@@ -54,7 +53,7 @@ function SeasonSelectComponent() {
         <ReactLoading type="balls" color="#000000" />
       ) : (
         <ul>
-          {_.range(1, tv.number_of_seasons + 1).map(i => (
+          {_.range(1, tv.number_of_seasons + 1).map((i) => (
             <li key={i}>
               <MLink to={`/select/${tmdb_id}/season/${i}`}>Season {i}</MLink>
             </li>
@@ -84,14 +83,6 @@ export function EpisodeSelectBreadcrumbs(props: {
   );
 }
 
-interface Episode {
-  episode_number: number;
-  id: string;
-  name: string;
-}
-export interface Season {
-  episodes: Episode[];
-}
 function EpisodeSelectComponent() {
   const { tmdb_id, season: seasonNumber } = useParams();
   const { data: season } = useSWR<Season>(
@@ -103,7 +94,7 @@ function EpisodeSelectComponent() {
       <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={seasonNumber!} />
       {season ? (
         <ol>
-          {season.episodes.map(episode => (
+          {season.episodes.map((episode) => (
             <li key={episode.id} value={episode.episode_number}>
               <MLink
                 to={`/select/${tmdb_id}/season/${seasonNumber}/episode/${episode.episode_number}/options`}

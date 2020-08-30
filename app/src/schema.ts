@@ -73,6 +73,7 @@ export interface components {
       id: number;
       title: string;
       added_by: string;
+      status?: boolean;
     };
     /**
      * An enumeration.
@@ -113,7 +114,7 @@ export interface components {
     TvResponse: {
       number_of_seasons: number;
       title: string;
-      imdb_id: string;
+      imdb_id?: string;
       seasons: components["schemas"]["SeasonMeta"][];
     };
     TvSeasonResponse: { episodes: components["schemas"]["Episode"][] };
