@@ -329,10 +329,7 @@ def add_single(
                 added_by=added_by,
             )
 
-    if is_tv:
-        return already.movie
-    else:
-        return already.episode
+    return already.episode if is_tv else already.movie
 
 
 def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
