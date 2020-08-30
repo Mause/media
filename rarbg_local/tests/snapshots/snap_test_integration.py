@@ -443,7 +443,7 @@ snapshots['test_openapi 1'] = {
             }
         },
     },
-    'info': {'title': 'FastAPI', 'version': '0.1.0'},
+    'info': {'title': 'Media', 'version': '0.1.0-dev'},
     'openapi': '3.0.2',
     'paths': {
         '/api/delete/{type}/{id}': {

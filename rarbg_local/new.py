@@ -508,6 +508,8 @@ def create_app():
             {"url": "https://media-staging.herokuapps.com/", "description": "Staging"},
             {"url": "https://media.mause.me/", "description": "Production"},
         ],
+        title='Media',
+        version='0.1.0-' + os.environ.get('HEROKU_SLUG_COMMIT', 'dev'),
         debug='HEROKU' not in os.environ,
     )
     app.middleware_stack.generate_plain_text = generate_plain_text
