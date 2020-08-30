@@ -448,7 +448,7 @@ snapshots['test_openapi 1'] = {
     'paths': {
         '/api/delete/{type}/{id}': {
             'get': {
-                'operationId': 'delete_api_delete__type___id__get',
+                'operationId': 'delete',
                 'parameters': [
                     {
                         'in': 'path',
@@ -484,7 +484,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/diagnostics': {
             'get': {
-                'operationId': 'diagnostics_api_diagnostics_get',
+                'operationId': 'diagnostics',
                 'responses': {
                     '200': {
                         'content': {'application/json': {'schema': {}}},
@@ -496,7 +496,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/download': {
             'post': {
-                'operationId': 'download_post_api_download_post',
+                'operationId': 'download_post',
                 'requestBody': {
                     'content': {
                         'application/json': {
@@ -548,7 +548,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/index': {
             'get': {
-                'operationId': 'index_api_index_get',
+                'operationId': 'index',
                 'responses': {
                     '200': {
                         'content': {
@@ -564,7 +564,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/monitor': {
             'get': {
-                'operationId': 'monitor_get_api_monitor_get',
+                'operationId': 'monitor_get',
                 'responses': {
                     '200': {
                         'content': {
@@ -586,7 +586,7 @@ snapshots['test_openapi 1'] = {
                 'tags': ['monitor'],
             },
             'post': {
-                'operationId': 'monitor_post_api_monitor_post',
+                'operationId': 'monitor_post',
                 'requestBody': {
                     'content': {
                         'application/json': {
@@ -622,7 +622,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/monitor/{monitor_id}': {
             'delete': {
-                'operationId': 'monitor_delete_api_monitor__monitor_id__delete',
+                'operationId': 'monitor_delete',
                 'parameters': [
                     {
                         'in': 'path',
@@ -653,7 +653,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/movie/{tmdb_id}': {
             'get': {
-                'operationId': 'movie_api_movie__tmdb_id__get',
+                'operationId': 'movie',
                 'parameters': [
                     {
                         'in': 'path',
@@ -687,7 +687,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/redirect/plex/{tmdb_id}': {
             'get': {
-                'operationId': 'redirect_plex_api_redirect_plex__tmdb_id__get',
+                'operationId': 'redirect_plex',
                 'responses': {
                     '200': {
                         'content': {'application/json': {'schema': {}}},
@@ -699,7 +699,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/redirect/{type_}/{ident}': {
             'get': {
-                'operationId': 'redirect_api_redirect__type____ident__get',
+                'operationId': 'redirect',
                 'parameters': [
                     {
                         'in': 'path',
@@ -747,9 +747,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/redirect/{type_}/{ident}/{season}/{episode}': {
             'get': {
-                'operationId': (
-                    'redirect_api_redirect__type____ident___season___episode__get'
-                ),
+                'operationId': 'redirect',
                 'parameters': [
                     {
                         'in': 'path',
@@ -797,7 +795,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/search': {
             'get': {
-                'operationId': 'search_api_search_get',
+                'operationId': 'search',
                 'parameters': [
                     {
                         'in': 'query',
@@ -837,9 +835,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/select/{tmdb_id}/season/{season}/download_all': {
             'get': {
-                'operationId': (
-                    'select_api_select__tmdb_id__season__season__download_all_get'
-                ),
+                'operationId': 'select',
                 'parameters': [
                     {
                         'in': 'path',
@@ -881,7 +877,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/stats': {
             'get': {
-                'operationId': 'stats_api_stats_get',
+                'operationId': 'stats',
                 'responses': {
                     '200': {
                         'content': {
@@ -903,7 +899,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/stream/{type}/{tmdb_id}': {
             'get': {
-                'operationId': 'stream_api_stream__type___tmdb_id__get',
+                'operationId': 'stream',
                 'parameters': [
                     {
                         'in': 'path',
@@ -962,7 +958,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/torrents': {
             'get': {
-                'operationId': 'torrents_api_torrents_get',
+                'operationId': 'torrents',
                 'responses': {
                     '200': {
                         'content': {
@@ -984,7 +980,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/tv/{tmdb_id}': {
             'get': {
-                'operationId': 'api_tv_api_tv__tmdb_id__get',
+                'operationId': 'api_tv',
                 'parameters': [
                     {
                         'in': 'path',
@@ -1019,7 +1015,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/tv/{tmdb_id}/season/{season}': {
             'get': {
-                'operationId': 'api_tv_season_api_tv__tmdb_id__season__season__get',
+                'operationId': 'api_tv_season',
                 'parameters': [
                     {
                         'in': 'path',
@@ -1062,7 +1058,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/user/unauthorized': {
             'get': {
-                'operationId': 'user_api_user_unauthorized_get',
+                'operationId': 'user',
                 'responses': {
                     '200': {
                         'content': {'application/json': {'schema': {}}},

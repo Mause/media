@@ -16,6 +16,7 @@ from fastapi.security import (
     OpenIdConnect,
     SecurityScopes,
 )
+from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
@@ -515,6 +516,7 @@ def create_app():
     app.middleware_stack.generate_plain_text = generate_plain_text
     app.include_router(api, prefix='/api')
     app.include_router(root, prefix='')
+    simplify_operation_ids(app)
 
     app.add_middleware(AuthMiddleware)
 

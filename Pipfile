@@ -63,6 +63,7 @@ aniso8601 = "*"
 pytz = "*"
 uvicorn = "*"
 aiofiles = "*"
+fastapi-utils = "*"
 
 [requires]
 python_version = "3"
