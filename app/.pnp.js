@@ -91,7 +91,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/lodash",
-        "npm:4.14.158"
+        "npm:4.14.161"
       ],
       [
         "@types/moxios",
@@ -99,7 +99,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/node",
-        "npm:14.0.27"
+        "npm:14.6.2"
       ],
       [
         "@types/qs",
@@ -155,7 +155,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "lodash",
-        "npm:4.17.19"
+        "npm:4.17.20"
       ],
       [
         "mockdate",
@@ -252,9 +252,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.0.17"],
             ["@types/history", "npm:4.7.7"],
             ["@types/jest", "npm:26.0.7"],
-            ["@types/lodash", "npm:4.14.158"],
+            ["@types/lodash", "npm:4.14.161"],
             ["@types/moxios", "npm:0.4.9"],
-            ["@types/node", "npm:14.0.27"],
+            ["@types/node", "npm:14.6.2"],
             ["@types/qs", "npm:6.9.4"],
             ["@types/react", "npm:16.9.43"],
             ["@types/react-dom", "npm:16.9.8"],
@@ -268,7 +268,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["history", "npm:4.10.1"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
             ["jest-junit", "npm:11.1.0"],
-            ["lodash", "npm:4.17.19"],
+            ["lodash", "npm:4.17.20"],
             ["mockdate", "npm:3.0.2"],
             ["moment", "npm:2.27.0"],
             ["moxios", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.4.0"],
@@ -3849,10 +3849,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/lodash", [
-        ["npm:4.14.158", {
-          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.158-ddc174121c-edee47e7db.zip/node_modules/@types/lodash/",
+        ["npm:4.14.161", {
+          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.161-3f926592cc-c3657517da.zip/node_modules/@types/lodash/",
           "packageDependencies": [
-            ["@types/lodash", "npm:4.14.158"]
+            ["@types/lodash", "npm:4.14.161"]
           ],
           "linkType": "HARD",
         }]
@@ -3881,6 +3881,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-14.0.27-d33df6dc81-54ecf408eb.zip/node_modules/@types/node/",
           "packageDependencies": [
             ["@types/node", "npm:14.0.27"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:14.6.2", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-14.6.2-8d443058b2-e88f4749fd.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:14.6.2"]
           ],
           "linkType": "HARD",
         }]
@@ -4715,9 +4722,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.0.17"],
             ["@types/history", "npm:4.7.7"],
             ["@types/jest", "npm:26.0.7"],
-            ["@types/lodash", "npm:4.14.158"],
+            ["@types/lodash", "npm:4.14.161"],
             ["@types/moxios", "npm:0.4.9"],
-            ["@types/node", "npm:14.0.27"],
+            ["@types/node", "npm:14.6.2"],
             ["@types/qs", "npm:6.9.4"],
             ["@types/react", "npm:16.9.43"],
             ["@types/react-dom", "npm:16.9.8"],
@@ -4731,7 +4738,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["history", "npm:4.10.1"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
             ["jest-junit", "npm:11.1.0"],
-            ["lodash", "npm:4.17.19"],
+            ["lodash", "npm:4.17.20"],
             ["mockdate", "npm:3.0.2"],
             ["moment", "npm:2.27.0"],
             ["moxios", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.4.0"],
@@ -11936,6 +11943,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/lodash-npm-4.17.19-fa87a8e838-ff2b7a95f0.zip/node_modules/lodash/",
           "packageDependencies": [
             ["lodash", "npm:4.17.19"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:4.17.20", {
+          "packageLocation": "./.yarn/cache/lodash-npm-4.17.20-c0db62021c-c62101d250.zip/node_modules/lodash/",
+          "packageDependencies": [
+            ["lodash", "npm:4.17.20"]
           ],
           "linkType": "HARD",
         }]
