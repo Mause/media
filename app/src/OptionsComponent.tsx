@@ -13,7 +13,7 @@ import { DisplayError } from './IndexComponent';
 import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
 
-type ITorrent = components['schemas']['ITorrent'];
+export type ITorrent = components['schemas']['ITorrent'];
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
