@@ -29,7 +29,7 @@ describe('MonitorComponent', () => {
           id: 1,
           title: 'Hello World',
           tmdb_id: '5',
-          type: MediaType.MOVIE,
+          type: 'MOVIE',
         },
       ];
       await mock('monitor', res);
@@ -44,7 +44,7 @@ describe('MonitorComponent', () => {
       const hist = createMemoryHistory();
       hist.push({
         pathname: '/monitor/add/5',
-        state: { type: MediaType.MOVIE },
+        state: { type: 'MOVIE' },
       });
 
       renderWithSWR(

@@ -6,7 +6,7 @@ import { SearchBox } from './IndexComponent';
 import useSWR from 'swr';
 import { MLink } from './utils';
 import { components } from './schema';
-type SearchResult = components['schemas']['SearchResponse'];
+export type SearchResult = components['schemas']['SearchResponse'];
 
 export function SearchComponent() {
   const { search } = useLocation();
