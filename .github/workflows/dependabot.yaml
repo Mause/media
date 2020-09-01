@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - 'dependabot/npm_and_yarn/*'
+      - 'dependabot/npm_and_yarn/**'
 
 jobs:
   rebuild:
