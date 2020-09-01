@@ -3,7 +3,7 @@ from enum import Enum
 from functools import reduce
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar
 
-from pydantic import BaseModel, Field, constr
+from pydantic import BaseModel, constr
 from pydantic.main import _missing
 from pydantic.utils import GetterDict
 
@@ -171,12 +171,6 @@ class SearchResponse(BaseModel):
     type: MediaType
     year: Optional[int]
     imdbID: int
-
-    # deprecated
-    Year: Optional[int] = Field(deprecated=True)
-    Type: MediaType = Field(deprecated=True)
-
-    Config = map_to({'year': 'Year', 'type': 'Type'})
 
 
 class DownloadResponse(Orm):

@@ -365,8 +365,7 @@ async def torrents():
 
 @api.get('/search', response_model=List[SearchResponse])
 async def search(query: str):
-    # dirty hack to make aliasing work
-    return [type('SearchResponse', (), v)() for v in search_themoviedb(query)]
+    return search_themoviedb(query)
 
 
 monitor_ns = APIRouter()

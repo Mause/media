@@ -13,14 +13,12 @@ snapshots['test_schema 1'] = {
         }
     },
     'properties': {
-        'Type': {'$ref': '#/definitions/MediaType'},
-        'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
         'imdbID': {'title': 'Imdbid', 'type': 'integer'},
         'title': {'title': 'Title', 'type': 'string'},
         'type': {'$ref': '#/definitions/MediaType'},
         'year': {'title': 'Year', 'type': 'integer'},
     },
-    'required': ['title', 'type', 'imdbID', 'Type'],
+    'required': ['title', 'type', 'imdbID'],
     'title': 'SearchResponse',
     'type': 'object',
 }
@@ -276,6 +274,7 @@ snapshots['test_openapi 1'] = {
                 'properties': {
                     'added_by': {'title': 'Added By', 'type': 'string'},
                     'id': {'title': 'Id', 'type': 'integer'},
+                    'status': {'default': False, 'title': 'Status', 'type': 'boolean'},
                     'title': {'title': 'Title', 'type': 'string'},
                     'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
                     'type': {'$ref': '#/components/schemas/MonitorMediaType'},
@@ -323,14 +322,12 @@ snapshots['test_openapi 1'] = {
             },
             'SearchResponse': {
                 'properties': {
-                    'Type': {'$ref': '#/components/schemas/MediaType'},
-                    'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
                     'imdbID': {'title': 'Imdbid', 'type': 'integer'},
                     'title': {'title': 'Title', 'type': 'string'},
                     'type': {'$ref': '#/components/schemas/MediaType'},
                     'year': {'title': 'Year', 'type': 'integer'},
                 },
-                'required': ['title', 'type', 'imdbID', 'Type'],
+                'required': ['title', 'type', 'imdbID'],
                 'title': 'SearchResponse',
                 'type': 'object',
             },

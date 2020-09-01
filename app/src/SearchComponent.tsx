@@ -25,13 +25,13 @@ export function SearchComponent() {
               <MLink
                 to={{
                   pathname:
-                    result.Type === 'movie'
+                    result.type === 'movie'
                       ? `/select/${result.imdbID}/options`
                       : `/select/${result.imdbID}/season`,
                   state: { query },
                 }}
               >
-                {result.title} ({result.Year ? result.Year : 'Unknown year'})
+                {result.title} ({result.year ? result.year : 'Unknown year'})
               </MLink>
             </li>
           ))

@@ -97,8 +97,6 @@ export interface components {
       type: components["schemas"]["MediaType"];
       year?: number;
       imdbID: number;
-      Year?: number;
-      Type: components["schemas"]["MediaType"];
     };
     SeasonMeta: { episode_count: number; season_number: number };
     SeriesDetails: {
