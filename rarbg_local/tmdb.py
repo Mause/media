@@ -49,9 +49,9 @@ def search_themoviedb(s: str) -> List[Dict]:
     r = tmdb.get('search/multi', params={'query': s})
     return [
         {
-            'Type': MAP[result['media_type']],
+            'type': MAP[result['media_type']],
             'title': try_(result, 'title', 'name'),
-            'Year': get_year(result),
+            'year': get_year(result),
             'imdbID': result['id'],
         }
         for result in r.json().get('results', [])

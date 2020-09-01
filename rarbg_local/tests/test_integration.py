@@ -202,14 +202,7 @@ def test_search(responses, test_client):
     res = test_client.get('/api/search?query=chernobyl')
     assert res.status_code == 200
     assert res.json() == [
-        {
-            'Type': 'series',
-            'imdbID': 10000,
-            'title': 'Chernobyl',
-            'Year': 2019,
-            'year': 2019,
-            'type': 'series',
-        }
+        {'imdbID': 10000, 'title': 'Chernobyl', 'year': 2019, 'type': 'series',}
     ]
 
 
