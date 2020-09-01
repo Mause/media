@@ -267,6 +267,7 @@ def test_delete_monitor(responses, test_client, session):
             'title': 'Hello World',
             'tmdb_id': 5,
             'id': 1,
+            'status': False,
             'added_by': 'python',
         }
     ]

@@ -127,6 +127,7 @@ class MonitorGet(MonitorPost):
     id: int
     title: str
     added_by: str
+    status: bool = False
 
     Config = map_to({'added_by': 'added_by.username'})
 
