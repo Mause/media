@@ -80,7 +80,7 @@ def generate_plain_text(exc):
 
 
 class XOpenIdConnect(OpenIdConnect):
-    async def __call__(
+    async def __call__(  # type: ignore[override]
         self, request: Request
     ) -> Optional[HTTPAuthorizationCredentials]:
         return await HTTPBearer().__call__(request)
@@ -460,7 +460,7 @@ root = APIRouter()
 
 @singleton
 def get_static_files(settings: Settings = Depends(get_settings)):
-    return StaticFiles(directory=settings.static_resources_path)
+    return StaticFiles(directory=str(settings.static_resources_path))
 
 
 @root.api_route('/{resource:path}', methods=['GET', 'HEAD'], include_in_schema=False)

@@ -233,7 +233,7 @@ def test_select_season(responses: RequestsMock, test_client: TestClient) -> None
 
     assert res.status_code == 200
 
-    assert res.get_data()
+    assert res.json()
 
 
 def test_foreign_key_integrity(session: Session):
