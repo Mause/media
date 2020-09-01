@@ -23,7 +23,6 @@ tools:
       - import-xml-sax
       - import_xml-etree
       - md5
-      - no-call-in-default-args
       - random
       - start-process-with-no-shell
       - start-process-with-partial-path
@@ -277,6 +276,7 @@ tools:
     ignore:
       - bad-wildcard-import
       - bare-except-bugbear
+      - no-call-in-default-args
       - no-getattr
       - no-setattr
       - unused-loop-variable
