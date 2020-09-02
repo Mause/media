@@ -245,11 +245,11 @@
         },
         "eventlet": {
             "hashes": [
-                "sha256:4f4a43366b4cbd4a3f2f231816e5c3dae8ab316df9b7da11f0525e2800559f33",
-                "sha256:faa384fdd8e5797ab1f16979576fc93ce89a7e1e5622d345caec1bf767a274fd"
+                "sha256:0fb3edef033f5ac3db5a4de187147499c9f2527daad8c4e3c3b030fa8efa74ef",
+                "sha256:a6e895ee88fdfd5bfcd24e5f53206a3e0724627c147860faa3aa30b4819b7143"
             ],
             "index": "pypi",
-            "version": "==0.26.1"
+            "version": "==0.27.0"
         },
         "fastapi": {
             "hashes": [
@@ -1207,10 +1207,10 @@
         },
         "identify": {
             "hashes": [
-                "sha256:9f5fcf22b665eaece583bd395b103c2769772a0f646ffabb5b1f155901b07de2",
-                "sha256:b1aa2e05863dc80242610d46a7b49105e2eafe00ef0c8ff311c1828680760c76"
+                "sha256:e105a62fd3a496c701fd1bc4e24eb695455b5efb97e722816d5bd988c3344311",
+                "sha256:f9f84a4ff44e29b9cc23c4012c2c8954089860723f80ce63d760393e5f197108"
             ],
-            "version": "==1.4.29"
+            "version": "==1.4.30"
         },
         "idna": {
             "hashes": [
@@ -1645,10 +1645,10 @@
         },
         "traitlets": {
             "hashes": [
-                "sha256:6c09e93a4b0aae5594d88d22910dd40677c3f4d730c5881ce4a8254fcf480052",
-                "sha256:d56e45db33a0f37ffa3cc4cfa439fc09ed2906e228d0f28310fcd42a19facdce"
+                "sha256:0d9c4005506b306b0a99551e96174b8bedc675c2dd048f92b3bbbb7d86ac93a9",
+                "sha256:62a037f12ccb823fb05823afbe35fe0273bc18fa3202d0cf0ea8f24e97e464be"
             ],
-            "version": "==5.0.0rc2"
+            "version": "==5.0.0"
         },
         "typed-ast": {
             "hashes": [
