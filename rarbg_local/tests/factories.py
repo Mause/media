@@ -9,9 +9,14 @@ from ..models import (
     Episode,
     EpisodeInfo,
     ITorrent,
+    MovieResponse,
     ProviderSource,
+    SeasonMeta,
+    TvResponse,
     TvSeasonResponse,
 )
+
+imdb_id = factory.Faker('numerify', text='tt######')
 
 
 class EpisodeFactory(factory.Factory):
@@ -29,6 +34,31 @@ class TvSeasonResponseFactory(factory.Factory):
         model = TvSeasonResponse
 
     episodes = factory.List([factory.SubFactory(EpisodeFactory)])
+
+
+class SeasonFactory(factory.Factory):
+    class Meta:
+        model = SeasonMeta
+
+    episode_count = factory.Faker('numerify')
+    season_number = factory.Faker('numerify')
+
+
+class TvResponseFactory(factory.Factory):
+    class Meta:
+        model = TvResponse
+
+    title = factory.Faker('name')
+    number_of_seasons = factory.LazyAttribute(lambda a: len(a.seasons))
+    seasons = factory.List([factory.SubFactory(SeasonFactory)])
+
+
+class MovieResponseFactory(factory.Factory):
+    class Meta:
+        model = MovieResponse
+
+    imdb_id = imdb_id
+    title = factory.Faker('name')
 
 
 class EpisodeInfoFactory(factory.Factory):
@@ -80,7 +110,7 @@ class DownloadFactory(factory.Factory):
 
     tmdb_id = factory.Faker('numerify', text='######')
     transmission_id = factory.Faker('uuid4')
-    imdb_id = factory.Faker('numerify', text='tt######')
+    imdb_id = imdb_id
     timestamp = FuzzyDateTime(start_dt=datetime(2000, 1, 1, tzinfo=timezone.utc))
 
 
