@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-import factory
+from factory import Factory, Faker, List, SubFactory, lazy_attribute
 from factory.fuzzy import FuzzyChoice, FuzzyDateTime
 
 from ..db import Download, EpisodeDetails, MovieDetails, User
@@ -16,76 +16,76 @@ from ..models import (
     TvSeasonResponse,
 )
 
-imdb_id = factory.Faker('numerify', text='tt######')
+imdb_id = Faker('numerify', text='tt######')
 
 
-class EpisodeFactory(factory.Factory):
+class EpisodeFactory(Factory):
     class Meta:
         model = Episode
 
-    name = factory.Faker('name')
-    id = factory.Faker('numerify')
-    episode_number = factory.Faker('numerify')
-    air_date = factory.Faker('date')
+    name = Faker('name')
+    id = Faker('numerify')
+    episode_number = Faker('numerify')
+    air_date = Faker('date')
 
 
-class TvSeasonResponseFactory(factory.Factory):
+class TvSeasonResponseFactory(Factory):
     class Meta:
         model = TvSeasonResponse
 
-    episodes = factory.List([factory.SubFactory(EpisodeFactory)])
+    episodes = List([SubFactory(EpisodeFactory)])
 
 
-class SeasonFactory(factory.Factory):
+class SeasonFactory(Factory):
     class Meta:
         model = SeasonMeta
 
-    episode_count = factory.Faker('numerify')
-    season_number = factory.Faker('numerify')
+    episode_count = Faker('numerify')
+    season_number = Faker('numerify')
 
 
-class TvResponseFactory(factory.Factory):
+class TvResponseFactory(Factory):
     class Meta:
         model = TvResponse
 
-    title = factory.Faker('name')
-    number_of_seasons = factory.LazyAttribute(lambda a: len(a.seasons))
-    seasons = factory.List([factory.SubFactory(SeasonFactory)])
+    title = Faker('name')
+    number_of_seasons = lazy_attribute(lambda a: len(a.seasons))
+    seasons = List([SubFactory(SeasonFactory)])
 
 
-class MovieResponseFactory(factory.Factory):
+class MovieResponseFactory(Factory):
     class Meta:
         model = MovieResponse
 
     imdb_id = imdb_id
-    title = factory.Faker('name')
+    title = Faker('name')
 
 
-class EpisodeInfoFactory(factory.Factory):
+class EpisodeInfoFactory(Factory):
     class Meta:
         model = EpisodeInfo
 
-    seasonnum = factory.Faker('numerify', text='#')
-    epnum = factory.Faker('numerify', text='#')
+    seasonnum = Faker('numerify', text='#')
+    epnum = Faker('numerify', text='#')
 
 
-class ITorrentFactory(factory.Factory):
+class ITorrentFactory(Factory):
     class Meta:
         model = ITorrent
 
     source = FuzzyChoice(ProviderSource)
-    title = factory.Faker('file_name')
-    seeders = factory.Faker('numerify', text='##')
-    download = factory.lazy_attribute(lambda a: 'magnet://' + a.title)
+    title = Faker('file_name')
+    seeders = Faker('numerify', text='##')
+    download = lazy_attribute(lambda a: 'magnet://' + a.title)
     category = FuzzyChoice(['A', 'B', 'C'])
-    episode_info = factory.SubFactory(EpisodeInfoFactory)
+    episode_info = SubFactory(EpisodeInfoFactory)
 
 
-ITorrentList = factory.List([ITorrentFactory()])
-PackList = factory.List([factory.List([factory.Faker('file_name'), ITorrentList])])
+ITorrentList = List([ITorrentFactory()])
+PackList = List([List([Faker('file_name'), ITorrentList])])
 
 
-class DownloadAllResponseFactory(factory.Factory):
+class DownloadAllResponseFactory(Factory):
     class Meta:
         model = DownloadAllResponse
 
@@ -94,39 +94,39 @@ class DownloadAllResponseFactory(factory.Factory):
     incomplete = PackList
 
 
-class UserFactory(factory.Factory):
+class UserFactory(Factory):
     class Meta:
         model = User
 
-    username = factory.Faker('name')
+    username = Faker('name')
 
 
-class DownloadFactory(factory.Factory):
+class DownloadFactory(Factory):
     class Meta:
         model = Download
 
-    added_by = factory.SubFactory(UserFactory)
-    title = factory.Faker('name')
+    added_by = SubFactory(UserFactory)
+    title = Faker('name')
 
-    tmdb_id = factory.Faker('numerify', text='######')
-    transmission_id = factory.Faker('uuid4')
+    tmdb_id = Faker('numerify', text='######')
+    transmission_id = Faker('uuid4')
     imdb_id = imdb_id
     timestamp = FuzzyDateTime(start_dt=datetime(2000, 1, 1, tzinfo=timezone.utc))
 
 
-class EpisodeDetailsFactory(factory.Factory):
+class EpisodeDetailsFactory(Factory):
     class Meta:
         model = EpisodeDetails
 
-    show_title = factory.Faker('name')
-    download = factory.SubFactory(DownloadFactory, type='EPISODE')
+    show_title = Faker('name')
+    download = SubFactory(DownloadFactory, type='EPISODE')
 
-    season = factory.Faker('numerify', text='#')
-    episode = factory.Faker('numerify', text='#')
+    season = Faker('numerify', text='#')
+    episode = Faker('numerify', text='#')
 
 
-class MovieDetailsFactory(factory.Factory):
+class MovieDetailsFactory(Factory):
     class Meta:
         model = MovieDetails
 
-    download = factory.SubFactory(DownloadFactory, type='MOVIE')
+    download = SubFactory(DownloadFactory, type='MOVIE')
