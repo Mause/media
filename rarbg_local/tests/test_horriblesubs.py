@@ -5,6 +5,7 @@ from responses import RequestsMock
 from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
 from ..providers import HorriblesubsProvider
 from .conftest import themoviedb
+from .factories import TvResponseFactory
 
 
 def load_html(filename):
@@ -114,7 +115,9 @@ def test_provider(responses: RequestsMock, snapshot):
             'title_synonyms': ['Busters that are little'],
         },
     )
-    themoviedb(responses, '/tv/1', {'name': 'Little Busters!'})
+    themoviedb(
+        responses, '/tv/1', TvResponseFactory.build(name='Little Busters!').dict()
+    )
 
     results = [
         item.dict() for item in HorriblesubsProvider().search_for_tv(None, 1, 1, 2)
