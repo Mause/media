@@ -1,7 +1,11 @@
+name: Dependabot redo
+
 on:
   push:
     branches:
       - 'dependabot/npm_and_yarn/**'
+    paths:
+      - app/package.json
 
 jobs:
   rebuild:
@@ -10,6 +14,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
 
       - run: |
           python3 .github/workflows/run_yarn.py
@@ -19,4 +25,8 @@ jobs:
           git config user.email github-actions@github.com
           git add .
           git commit -m "Add yarn artifacts"
-          git push
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
