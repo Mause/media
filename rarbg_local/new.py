@@ -295,7 +295,7 @@ async def download_post(
 
             show_title = item['name']
         else:
-            title = item['title']
+            title = item.title
 
         results.append(
             add_single(
@@ -349,8 +349,7 @@ async def stats(session: Session = Depends(get_db)):
 
 @api.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
 def movie(tmdb_id: int):
-    movie = get_movie(tmdb_id)
-    return {"title": movie['title'], "imdb_id": movie['imdb_id']}
+    return get_movie(tmdb_id)
 
 
 def translate(path: str) -> str:
@@ -391,7 +390,7 @@ async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
 def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
     try:
         return (
-            get_movie(tmdb_id)['title']
+            get_movie(tmdb_id).title
             if type == MonitorMediaType.MOVIE
             else get_tv(tmdb_id)['name']
         )
