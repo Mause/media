@@ -269,14 +269,9 @@ async def download_post(
     for thing in things:
         is_tv = thing.season is not None
 
-        item = get_tv(thing.tmdb_id) if is_tv else get_movie(thing.tmdb_id)
+        show_title: Optional[str]
         if is_tv:
-            subpath = f'tv_shows/{item.name}/Season {thing.season}'
-        else:
-            subpath = 'movies'
-
-        show_title = None
-        if thing.season is not None:
+            item = get_tv(thing.tmdb_id)
             if thing.episode is None:
                 title = f'Season {thing.season}'
             else:
@@ -293,8 +288,11 @@ async def download_post(
                 title = episode.name
 
             show_title = item.name
+            subpath = f'tv_shows/{item.name}/Season {thing.season}'
         else:
-            title = item.title
+            show_title = None
+            title = get_movie(thing.tmdb_id).title
+            subpath = 'movies'
 
         results.append(
             add_single(
