@@ -1,6 +1,5 @@
 import logging
 import os
-import re
 import traceback
 from functools import wraps
 from itertools import chain
@@ -350,10 +349,6 @@ async def stats(session: Session = Depends(get_db)):
 @api.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
 def movie(tmdb_id: int):
     return get_movie(tmdb_id)
-
-
-def translate(path: str) -> str:
-    return re.sub(r'\{([^}]*)\}', lambda m: '<' + m.group(1).split(':')[0] + '>', path)
 
 
 @api.get('/torrents', response_model=Dict[str, InnerTorrent])
