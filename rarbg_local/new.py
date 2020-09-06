@@ -387,7 +387,7 @@ def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
         return (
             get_movie(tmdb_id).title
             if type == MonitorMediaType.MOVIE
-            else get_tv(tmdb_id)['name']
+            else get_tv(tmdb_id).name
         )
     except HTTPError as e:
         if e.response.status_code == 404:
@@ -423,7 +423,7 @@ tv_ns = APIRouter()
 @tv_ns.get('/{tmdb_id}', tags=['tv'], response_model=TvResponse)
 def api_tv(tmdb_id: int):
     tv = get_tv(tmdb_id)
-    return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv['name']}
+    return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv.name}
 
 
 @tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)

@@ -47,7 +47,6 @@ class SeasonFactory(Factory):
 
 class TvBaseResponseFactory(Factory):
     number_of_seasons = lazy_attribute(lambda a: len(a.seasons))
-    imdb_id = imdb_id
     seasons = List([SubFactory(SeasonFactory)])
 
 
@@ -56,6 +55,7 @@ class TvResponseFactory(TvBaseResponseFactory):
         model = TvResponse
 
     title = Faker('name')
+    imdb_id = imdb_id
 
 
 class TvApiResponseFactory(TvBaseResponseFactory):
