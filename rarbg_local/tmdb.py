@@ -8,7 +8,7 @@ import requests
 from cachetools.func import ttl_cache
 from requests_toolbelt.sessions import BaseUrlSession
 
-from .models import TvSeasonResponse
+from .models import SearchResponse, TvSeasonResponse
 from .utils import lru_cache, precondition
 
 tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
@@ -44,16 +44,16 @@ def get_year(result: Dict[str, str]) -> Optional[int]:
 
 
 @ttl_cache()
-def search_themoviedb(s: str) -> List[Dict]:
+def search_themoviedb(s: str) -> List[SearchResponse]:
     MAP = {'tv': 'series', 'movie': 'movie'}
     r = tmdb.get('search/multi', params={'query': s})
     return [
-        {
-            'type': MAP[result['media_type']],
-            'title': try_(result, 'title', 'name'),
-            'year': get_year(result),
-            'imdbID': result['id'],
-        }
+        SearchResponse(
+            type=MAP[result['media_type']],
+            title=try_(result, 'title', 'name'),
+            year=get_year(result),
+            imdbID=result['id'],
+        )
         for result in r.json().get('results', [])
         if result['media_type'] in MAP
     ]
