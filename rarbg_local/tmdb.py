@@ -8,7 +8,7 @@ import requests
 from cachetools.func import ttl_cache
 from requests_toolbelt.sessions import BaseUrlSession
 
-from .models import MovieResponse, SearchResponse, TvSeasonResponse
+from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonResponse
 from .utils import lru_cache, precondition
 
 tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
@@ -91,8 +91,8 @@ def get_movie(id: str) -> MovieResponse:
 
 
 @ttl_cache()
-def get_tv(id: str):
-    return get_json(f'tv/{id}')
+def get_tv(id: str) -> TvApiResponse:
+    return TvApiResponse(**get_json(f'tv/{id}'))
 
 
 def get_movie_imdb_id(movie_id: Union[int, str]) -> str:

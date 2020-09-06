@@ -155,11 +155,18 @@ class SeasonMeta(BaseModel):
     season_number: int
 
 
-class TvResponse(BaseModel):
+class TvBaseResponse(BaseModel):
     number_of_seasons: int
-    title: str
     imdb_id: Optional[str]
     seasons: List[SeasonMeta]
+
+
+class TvResponse(TvBaseResponse):
+    title: str
+
+
+class TvApiResponse(TvBaseResponse):
+    name: str
 
 
 class MediaType(Enum):

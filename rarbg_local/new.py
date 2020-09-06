@@ -271,7 +271,7 @@ async def download_post(
 
         item = get_tv(thing.tmdb_id) if is_tv else get_movie(thing.tmdb_id)
         if is_tv:
-            subpath = f'tv_shows/{item["name"]}/Season {thing.season}'
+            subpath = f'tv_shows/{item.name}/Season {thing.season}'
         else:
             subpath = 'movies'
 
@@ -292,7 +292,7 @@ async def download_post(
                 assert episode, f'Could not find episode: {thing}'
                 title = episode.name
 
-            show_title = item['name']
+            show_title = item.name
         else:
             title = item.title
 

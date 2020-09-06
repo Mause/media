@@ -391,7 +391,7 @@ snapshots['test_openapi 1'] = {
                     },
                     'title': {'title': 'Title', 'type': 'string'},
                 },
-                'required': ['number_of_seasons', 'title', 'seasons'],
+                'required': ['number_of_seasons', 'seasons', 'title'],
                 'title': 'TvResponse',
                 'type': 'object',
             },

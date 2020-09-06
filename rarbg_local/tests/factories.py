@@ -12,6 +12,7 @@ from ..models import (
     MovieResponse,
     ProviderSource,
     SeasonMeta,
+    TvApiResponse,
     TvResponse,
     TvSeasonResponse,
 )
@@ -44,13 +45,24 @@ class SeasonFactory(Factory):
     season_number = Faker('numerify')
 
 
-class TvResponseFactory(Factory):
+class TvBaseResponseFactory(Factory):
+    number_of_seasons = lazy_attribute(lambda a: len(a.seasons))
+    imdb_id = imdb_id
+    seasons = List([SubFactory(SeasonFactory)])
+
+
+class TvResponseFactory(TvBaseResponseFactory):
     class Meta:
         model = TvResponse
 
     title = Faker('name')
-    number_of_seasons = lazy_attribute(lambda a: len(a.seasons))
-    seasons = List([SubFactory(SeasonFactory)])
+
+
+class TvApiResponseFactory(TvBaseResponseFactory):
+    class Meta:
+        model = TvApiResponse
+
+    name = Faker('name')
 
 
 class MovieResponseFactory(Factory):

@@ -139,7 +139,7 @@ class HorriblesubsProvider(Provider):
     def search_for_tv(
         self, imdb_id: Optional[str], tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
-        name = get_tv(tmdb_id)['name']
+        name = get_tv(tmdb_id).name
         template = f'HorribleSubs {name} S{season:02d}'
 
         for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
