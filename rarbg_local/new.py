@@ -107,7 +107,7 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = settings.database_url
     logging.info('db_url: %s', db_url)
     ca = {"check_same_thread": False} if 'sqlite' in db_url else {}
-    engine = create_engine(db_url, connect_args=ca, pool_size=2)
+    engine = create_engine(db_url, connect_args=ca, pool_size=20)
     if 'sqlite' in db_url:
 
         def _fk_pragma_on_connect(dbapi_con, con_record):
@@ -117,7 +117,8 @@ def get_session_local(settings: Settings = Depends(get_settings)):
             dbapi_con.execute('pragma foreign_keys=ON')
 
         event.listen(engine, 'connect', _fk_pragma_on_connect)
-    return sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
 def get_db(session_local=Depends(get_session_local)):
