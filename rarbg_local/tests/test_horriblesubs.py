@@ -5,7 +5,6 @@ from responses import RequestsMock
 from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
 from ..providers import HorriblesubsProvider
 from .conftest import themoviedb
-from .factories import TvResponseFactory
 
 
 def load_html(filename):
@@ -28,11 +27,17 @@ def test_parse(responses):
         'One Piece': '/shows/one-piece',
         'Kyokou Suiri': '/shows/kyokou-suiri',
         'Magia Record': '/shows/magia-record',
-        'Fate Grand Order - Absolute Demonic Front Babylonia': '/shows/fate-grand-order-absolute-demonic-front-babylonia',
+        'Fate Grand Order - Absolute Demonic Front Babylonia': (
+            '/shows/fate-grand-order-absolute-demonic-front-babylonia'
+        ),
         'Nanabun no Nijyuuni': '/shows/nanabun-no-nijyuuni',
         'Ishuzoku Reviewers': '/shows/ishuzoku-reviewers',
-        'Boku no Tonari ni Ankoku Hakaishin ga Imasu': '/shows/boku-no-tonari-ni-ankoku-hakaishin-ga-imasu',
-        'Cardfight!! Vanguard - Zoku Koukousei-hen': '/shows/cardfight-vanguard-zoku-koukousei-hen',
+        'Boku no Tonari ni Ankoku Hakaishin ga Imasu': (
+            '/shows/boku-no-tonari-ni-ankoku-hakaishin-ga-imasu'
+        ),
+        'Cardfight!! Vanguard - Zoku Koukousei-hen': (
+            '/shows/cardfight-vanguard-zoku-koukousei-hen'
+        ),
         'Detective Conan': '/shows/detective-conan',
         'Boku no Hero Academia': '/shows/boku-no-hero-academia',
         'Runway de Waratte': '/shows/runway-de-waratte',
@@ -115,9 +120,7 @@ def test_provider(responses: RequestsMock, snapshot):
             'title_synonyms': ['Busters that are little'],
         },
     )
-    themoviedb(
-        responses, '/tv/1', TvResponseFactory.build(name='Little Busters!').dict()
-    )
+    themoviedb(responses, '/tv/1', {'name': 'Little Busters!'})
 
     results = [
         item.dict() for item in HorriblesubsProvider().search_for_tv(None, 1, 1, 2)
