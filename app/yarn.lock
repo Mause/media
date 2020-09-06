@@ -2397,13 +2397,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:*, @types/jest@npm:^26.0.7":
+"@types/jest@npm:*":
   version: 26.0.7
   resolution: "@types/jest@npm:26.0.7"
   dependencies:
     jest-diff: ^25.2.1
     pretty-format: ^25.2.1
   checksum: 9c54f6cdcef19a570151aa0b3257219beffa11f4aeae501e5a41211e7ea4edde9acd90a59b38595b09f34e525879b8bd557436d7ac365aa5e8f31ed2de190e29
+  languageName: node
+  linkType: hard
+
+"@types/jest@npm:^26.0.13":
+  version: 26.0.13
+  resolution: "@types/jest@npm:26.0.13"
+  dependencies:
+    jest-diff: ^25.2.1
+    pretty-format: ^25.2.1
+  checksum: 5476d59a99d1552d3ef99179d9ab8a59b24434c1990fda0836b8e6899a6a5fe898b62c0f0b8c9d3308b5c652cb95fca0b3b404028379b306f123a1e872413498
   languageName: node
   linkType: hard
 
@@ -3198,7 +3208,7 @@ __metadata:
     "@testing-library/react": ^10.4.7
     "@testing-library/user-event": ^12.0.17
     "@types/history": 4.7.7
-    "@types/jest": ^26.0.7
+    "@types/jest": ^26.0.13
     "@types/lodash": ^4.14.161
     "@types/moxios": ^0.4.9
     "@types/node": ^14.6.2
