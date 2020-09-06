@@ -71,7 +71,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@testing-library/jest-dom",
-        "npm:5.11.2"
+        "npm:5.11.4"
       ],
       [
         "@testing-library/react",
@@ -247,7 +247,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/lab", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:4.0.0-alpha.56"],
             ["@sentry/apm", "npm:5.22.3"],
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.22.3"],
-            ["@testing-library/jest-dom", "npm:5.11.2"],
+            ["@testing-library/jest-dom", "npm:5.11.4"],
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.2"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.3"],
             ["@types/history", "npm:4.7.7"],
@@ -3679,18 +3679,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@testing-library/jest-dom", [
-        ["npm:5.11.2", {
-          "packageLocation": "./.yarn/cache/@testing-library-jest-dom-npm-5.11.2-6c7e6ef055-21b7cca436.zip/node_modules/@testing-library/jest-dom/",
+        ["npm:5.11.4", {
+          "packageLocation": "./.yarn/cache/@testing-library-jest-dom-npm-5.11.4-6e5f38ef88-2d59d58828.zip/node_modules/@testing-library/jest-dom/",
           "packageDependencies": [
-            ["@testing-library/jest-dom", "npm:5.11.2"],
+            ["@testing-library/jest-dom", "npm:5.11.4"],
             ["@babel/runtime", "npm:7.10.5"],
             ["@types/testing-library__jest-dom", "npm:5.9.1"],
             ["aria-query", "npm:4.2.2"],
             ["chalk", "npm:3.0.0"],
             ["css", "npm:3.0.0"],
             ["css.escape", "npm:1.5.1"],
-            ["jest-diff", "npm:25.5.0"],
-            ["jest-matcher-utils", "npm:25.5.0"],
             ["lodash", "npm:4.17.19"],
             ["redent", "npm:3.0.0"]
           ],
@@ -4785,7 +4783,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/lab", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:4.0.0-alpha.56"],
             ["@sentry/apm", "npm:5.22.3"],
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.22.3"],
-            ["@testing-library/jest-dom", "npm:5.11.2"],
+            ["@testing-library/jest-dom", "npm:5.11.4"],
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.2"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.3"],
             ["@types/history", "npm:4.7.7"],
@@ -11125,17 +11123,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-diff", "npm:24.9.0"],
             ["jest-get-type", "npm:24.9.0"],
             ["pretty-format", "npm:24.9.0"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:25.5.0", {
-          "packageLocation": "./.yarn/cache/jest-matcher-utils-npm-25.5.0-f4e66ce80a-f60504e34b.zip/node_modules/jest-matcher-utils/",
-          "packageDependencies": [
-            ["jest-matcher-utils", "npm:25.5.0"],
-            ["chalk", "npm:3.0.0"],
-            ["jest-diff", "npm:25.5.0"],
-            ["jest-get-type", "npm:25.2.6"],
-            ["pretty-format", "npm:25.5.0"]
           ],
           "linkType": "HARD",
         }]
