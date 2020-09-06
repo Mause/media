@@ -87,7 +87,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/jest",
-        "npm:26.0.7"
+        "npm:26.0.13"
       ],
       [
         "@types/lodash",
@@ -251,7 +251,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:10.4.7"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.0.17"],
             ["@types/history", "npm:4.7.7"],
-            ["@types/jest", "npm:26.0.7"],
+            ["@types/jest", "npm:26.0.13"],
             ["@types/lodash", "npm:4.14.161"],
             ["@types/moxios", "npm:0.4.9"],
             ["@types/node", "npm:14.6.2"],
@@ -3829,6 +3829,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/jest", [
+        ["npm:26.0.13", {
+          "packageLocation": "./.yarn/cache/@types-jest-npm-26.0.13-bc5d533019-5476d59a99.zip/node_modules/@types/jest/",
+          "packageDependencies": [
+            ["@types/jest", "npm:26.0.13"],
+            ["jest-diff", "npm:25.5.0"],
+            ["pretty-format", "npm:25.5.0"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:26.0.7", {
           "packageLocation": "./.yarn/cache/@types-jest-npm-26.0.7-1410edc6d4-9c54f6cdce.zip/node_modules/@types/jest/",
           "packageDependencies": [
@@ -4750,7 +4759,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:10.4.7"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.0.17"],
             ["@types/history", "npm:4.7.7"],
-            ["@types/jest", "npm:26.0.7"],
+            ["@types/jest", "npm:26.0.13"],
             ["@types/lodash", "npm:4.14.161"],
             ["@types/moxios", "npm:0.4.9"],
             ["@types/node", "npm:14.6.2"],
