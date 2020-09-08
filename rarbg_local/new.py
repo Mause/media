@@ -20,6 +20,9 @@ from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
+from sqlalchemy import event, func
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles

@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 from functools import lru_cache
 from typing import List, Optional, Type, TypeVar, Union
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 import backoff
 import psycopg2
@@ -14,7 +15,6 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
-    create_engine,
     event,
 )
 from sqlalchemy.engine import URL, make_url
@@ -291,11 +291,11 @@ def get_session_local(settings: Settings = Depends(get_settings)):
 
     sqlite = db_url.drivername == 'sqlite'
     if sqlite:
-        engine = create_engine(
+        engine = create_async_engine(
             db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
         )
 
-        @event.listens_for(engine, 'connect')
+        @event.listens_for(engine.sync_engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
             dbapi_con.create_collation(
                 "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
@@ -303,11 +303,11 @@ def get_session_local(settings: Settings = Depends(get_settings)):
             dbapi_con.execute('pragma foreign_keys=ON')
 
     else:
-        engine = create_engine(
+        engine = create_async_engine(
             db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
         )
 
-        @event.listens_for(engine, "do_connect")
+        @event.listens_for(engine.sync_engine, "do_connect")
         @backoff.on_exception(
             backoff.fibo,
             psycopg2.OperationalError,
@@ -317,12 +317,14 @@ def get_session_local(settings: Settings = Depends(get_settings)):
         def receive_do_connect(dialect, conn_rec, cargs, cparams):
             return psycopg2.connect(*cargs, **cparams)
 
-    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    return sessionmaker(
+        autocommit=False, autoflush=True, bind=engine, class_=AsyncSession
+    )
 
 
-def get_db(session_local=Depends(get_session_local)):
+async def get_db(session_local=Depends(get_session_local)):
     sl = session_local()
     try:
         yield sl
     finally:
-        sl.close()
+        await sl.close()
