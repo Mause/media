@@ -18,7 +18,8 @@ from fastapi.security import (
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
-from sqlalchemy import create_engine, event, func
+from sqlalchemy import event, func
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from starlette.exceptions import ExceptionMiddleware
@@ -106,7 +107,7 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = settings.database_url
     logging.info('db_url: %s', db_url)
     ca = {"check_same_thread": False} if 'sqlite' in db_url else {}
-    engine = create_engine(db_url, connect_args=ca, pool_size=20)
+    engine = create_async_engine(db_url, connect_args=ca, pool_size=20)
     if 'sqlite' in db_url:
 
         def _fk_pragma_on_connect(dbapi_con, con_record):
@@ -115,9 +116,11 @@ def get_session_local(settings: Settings = Depends(get_settings)):
             )
             dbapi_con.execute('pragma foreign_keys=ON')
 
-        event.listen(engine, 'connect', _fk_pragma_on_connect)
+        event.listen(engine.sync_engine, 'connect', _fk_pragma_on_connect)
 
-    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    return sessionmaker(
+        autocommit=False, autoflush=True, bind=engine, class_=AsyncSession
+    )
 
 
 def get_db(session_local=Depends(get_session_local)):
