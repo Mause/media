@@ -21,6 +21,7 @@ from sqlalchemy import (
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
+    AsyncSession,
     create_async_engine,
 )
 from sqlalchemy.future import select
@@ -332,7 +333,7 @@ def build_engine(db_url: URL, cr: Callable):
             db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
         )
 
-        @listens_for(engine, 'connect')
+        @listens_for(engine.sync_engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
             if not hasattr(dbapi_con, 'create_collation'):  # async
                 dbapi_con = dbapi_con.driver_connection._connection
@@ -371,15 +372,17 @@ async def get_async_engine(
 
 @singleton
 def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> sessionmaker:
-    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    return sessionmaker(
+        autocommit=False, autoflush=True, bind=engine, class_=AsyncSession
+    )
 
 
-def get_db(session_local=Depends(get_session_local)):
+async def get_db(session_local=Depends(get_session_local)):
     sl = session_local()
     try:
         yield sl
     finally:
-        sl.close()
+        await sl.close()
 
 
 def safe_delete(session: Session, entity: type[T], id: int):
