@@ -20,7 +20,7 @@ from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
-from sqlalchemy import event, func
+from sqlalchemy import event, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
@@ -199,7 +199,7 @@ async def stream(
 @api.get(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
-async def select(tmdb_id: int, season: int):
+async def api_select(tmdb_id: int, season: int):
     results = search_for_tv(await get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
     episodes = (await get_tv_episodes(tmdb_id, season)).episodes
@@ -300,14 +300,18 @@ async def index(session: Session = Depends(get_db)):
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
     keys = Download.added_by_id, Download.type
-    query = session.query(*keys, func.count(name='count')).group_by(*keys)
+    query = await session.execute(
+        select(*keys, func.count(name='count')).group_by(*keys)
+    )
 
     return [
         {
             "user": session.query(User).get(added_by_id).username,
             "values": {type.lower(): value for _, type, value in values},
         }
-        for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
+        for added_by_id, values in groupby(
+            query.scalars(), lambda row: row.added_by_id
+        ).items()
     ]
 
 
@@ -333,7 +337,7 @@ monitor_ns = APIRouter(tags=['monitor'])
 async def monitor_get(
     user: User = Depends(get_current_user), session: Session = Depends(get_db)
 ):
-    return session.query(Monitor).all()
+    return list((await session.execute(select(Monitor))).scalars())
 
 
 @monitor_ns.delete('/{monitor_id}')
