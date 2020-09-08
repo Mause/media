@@ -289,11 +289,15 @@ async def stats(session: Session = Depends(get_db)):
         }
 
     keys = Download.added_by_id, Download.type
-    query = session.execute(select(*keys, func.count(name='count')).group_by(*keys))
+    query = await session.execute(
+        select(*keys, func.count(name='count')).group_by(*keys)
+    )
 
     return [
         process(added_by_id, values)
-        for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
+        for added_by_id, values in groupby(
+            query.scalars(), lambda row: row.added_by_id
+        ).items()
     ]
 
 
