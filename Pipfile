@@ -26,7 +26,7 @@ isort = "*"
 [packages]
 flask = "*"
 requests = "*"
-sqlalchemy = "*"
+sqlalchemy = {git = "https://github.com/sqlalchemy/sqlalchemy"}
 sqlalchemy-repr = "*"
 flask-sqlalchemy = "*"
 aiohttp = "*"
