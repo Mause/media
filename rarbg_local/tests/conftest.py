@@ -52,7 +52,7 @@ def session(fastapi_app):
     Session = get_event_loop().run_until_complete(get(fastapi_app, get_session_local))
     assert hasattr(Session, 'kw'), Session
     engine = Session.kw['bind']
-    assert 'sqlite' in repr(engine.async_engine), repr(engine.async_engine)
+    assert 'sqlite' in repr(engine.sync_engine), repr(engine.sync_engine)
     db.Model.metadata.create_all(engine.sync_engine)
 
     session = Session()
