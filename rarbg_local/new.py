@@ -21,7 +21,6 @@ from requests.exceptions import HTTPError
 from sqlalchemy import delete, event, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.session import Session
 from starlette.exceptions import ExceptionMiddleware
 from starlette.staticfiles import StaticFiles
 
@@ -268,7 +267,7 @@ def diagnostics():
 async def download_post(
     things: List[DownloadPost],
     added_by: User = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: AsyncSession = Depends(get_db),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
     from .main import add_single
 
@@ -330,7 +329,7 @@ async def download_post(
 
 
 @api.get('/index', response_model=IndexResponse)
-async def index(session: Session = Depends(get_db)):
+async def index(session: AsyncSession = Depends(get_db)):
     from .main import resolve_series
 
     return IndexResponse(
@@ -345,7 +344,7 @@ async def get_one(session, entity, id):
 
 
 @api.get('/stats', response_model=List[StatsResponse])
-async def stats(session: Session = Depends(get_db)):
+async def stats(session: AsyncSession = Depends(get_db)):
     from .main import groupby
 
     keys = Download.added_by_id, Download.type
@@ -386,13 +385,13 @@ monitor_ns = APIRouter()
 
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
 async def monitor_get(
-    user: User = Depends(get_current_user), session: Session = Depends(get_db)
+    user: User = Depends(get_current_user), session: AsyncSession = Depends(get_db)
 ):
     return list((await session.execute(select(Monitor))).scalars())
 
 
 @monitor_ns.delete('/{monitor_id}', tags=['monitor'])
-async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
+async def monitor_delete(monitor_id: int, session: AsyncSession = Depends(get_db)):
     await safe_delete(session, Monitor, monitor_id)
 
     return {}
@@ -416,7 +415,7 @@ def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
 async def monitor_post(
     monitor: MonitorPost,
     user: User = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: AsyncSession = Depends(get_db),
 ):
     media = validate_id(monitor.type, monitor.tmdb_id)
     c = (
