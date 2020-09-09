@@ -159,7 +159,7 @@ async def safe_delete(session, entity, id):
 
 
 @api.get('/delete/{type}/{id}')
-async def delete_item(type: MediaType, id: int, session: Session = Depends(get_db)):
+async def delete_item(type: MediaType, id: int, session: AsyncSession = Depends(get_db)):
     await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
