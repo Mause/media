@@ -297,6 +297,12 @@ async def index(session: Session = Depends(get_db)):
     )
 
 
+async def get_one(session, entity, id):
+    query = select(entity).filter_by(id=id)
+    res = await session.execute(query)
+    return res.scalars().one()
+
+
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
     keys = Download.added_by_id, Download.type
@@ -306,11 +312,11 @@ async def stats(session: Session = Depends(get_db)):
 
     return [
         {
-            "user": session.query(User).get(added_by_id).username,
+            "user": (await get_one(session, User, added_by_id)).username,
             "values": {type.lower(): value for _, type, value in values},
         }
         for added_by_id, values in groupby(
-            query.scalars(), lambda row: row.added_by_id
+            query.all(), lambda row: row.added_by_id
         ).items()
     ]
 
