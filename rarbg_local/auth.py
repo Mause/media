@@ -60,7 +60,11 @@ async def get_current_user(
 
     email = getattr(token_info, 'https://media.mause.me/email')
 
-    user = session.execute(select(User).filter_by(email=email)).scalars().one_or_none()
+    user = (
+        (await session.execute(select(User).filter_by(email=email)))
+        .scalars()
+        .one_or_none()
+    )
 
     if user is None:
         logger.info("User not found")

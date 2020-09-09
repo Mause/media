@@ -7,7 +7,7 @@ import uvloop
 from async_asgi_testclient import TestClient
 from fastapi import Depends
 from fastapi.security import SecurityScopes
-from pytest import fixture, hookimpl
+from pytest import fixture, hookimpl, mark
 from responses import RequestsMock
 from sqlalchemy.engine.url import URL
 from sqlalchemy.future import select
@@ -53,11 +53,12 @@ def test_client(fastapi_app, clear_cache, user) -> TestClient:
 
 
 @fixture
-def user(session):
+@mark.asyncio
+async def user(session):
     u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
     session.add(u)
-    session.commit()
+    await session.commit()
     return u
 
 
