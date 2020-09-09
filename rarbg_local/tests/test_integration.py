@@ -248,7 +248,7 @@ async def test_index(
             ),
         ]
     )
-    session.commit()
+    await session.commit()
 
     aioresponses.add(
         'https://api.themoviedb.org/3/tv/3/season/1',
@@ -329,10 +329,17 @@ async def test_search(aioresponses, test_client, snapshot):
 
 @mark.asyncio
 async def test_delete_cascade(test_client: TestClient, session):
+    async def check():
+        return (
+            len(await get_episodes(session)),
+            len((await session.execute(select(Download))).all()),
+        )
+
     e = EpisodeDetailsFactory.create()
     session.add(e)
-    session.commit()
+    await session.commit()
 
+    assert await check() == (1, 1)
     assert len(get_episodes(session)) == 1
     assert len(session.execute(select(Download)).scalars().all()) == 1
 
@@ -340,10 +347,9 @@ async def test_delete_cascade(test_client: TestClient, session):
     assert res.status_code == 200
     assert res.json() == {}
 
-    session.commit()
+    await session.commit()
 
-    assert len(get_episodes(session)) == 0
-    assert len(session.execute(select(Download)).scalars().all()) == 0
+    assert await check() == (0, 0)
 
 
 @mark.asyncio
@@ -386,7 +392,7 @@ async def test_foreign_key_integrity(session: Session):
     # invalid fkey_id
     ins = Download.__table__.insert().values(id=1, movie_id=99)
     with raises(IntegrityError):
-        session.execute(ins)
+        await session.execute(ins)
 
 
 @mark.asyncio
@@ -396,6 +402,8 @@ async def test_delete_monitor(aioresponses, test_client, session):
         '/movie/5',
         MovieResponseFactory.build(title='Hello World').model_dump(),
     )
+    ls = await test_client.get('/api/monitor')
+    ls = ls.json()
     themoviedb(
         aioresponses,
         '/tv/5',
@@ -407,6 +415,8 @@ async def test_delete_monitor(aioresponses, test_client, session):
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     assert r.status_code == 201
 
+    ls = await test_client.get('/api/monitor')
+    ls = ls.json()
     (
         await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'TV'})
     ).raise_for_status()
@@ -440,8 +450,8 @@ async def test_delete_monitor(aioresponses, test_client, session):
         r = await test_client.delete(f'/api/monitor/{item["id"]}')
         assert r.status_code == 200
 
-    ls = (await test_client.get('/api/monitor')).json()
-    assert ls == []
+    ls = await test_client.get('/api/monitor')
+    assert ls.json() == []
 
 
 @mark.asyncio
