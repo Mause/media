@@ -393,10 +393,8 @@ async def monitor_get(
 
 @monitor_ns.delete('/{monitor_id}', tags=['monitor'])
 async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
-    query = session.query(Monitor).filter_by(id=monitor_id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    session.commit()
+    await safe_delete(session, Monitor, monitor_id)
+
     return {}
 
 
