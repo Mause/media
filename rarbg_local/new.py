@@ -353,7 +353,7 @@ async def monitor_get(
 
 @monitor_ns.delete('/{monitor_id}')
 async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
-    safe_delete(session, Monitor, monitor_id)
+    await safe_delete(session, Monitor, monitor_id)
 
     return {}
 
