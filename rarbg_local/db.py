@@ -262,7 +262,7 @@ def create_episode(
     return ed
 
 
-async def get_all(session: Session, model: type[T]) -> Sequence[T]:
+async def get_all(session: AsyncSession, model: type[T]) -> Sequence[T]:
     if model == MovieDetails:
         joint = MovieDetails.download
     elif model == EpisodeDetails:
@@ -277,11 +277,11 @@ async def get_all(session: Session, model: type[T]) -> Sequence[T]:
     )
 
 
-async def get_episodes(session: Session) -> Sequence[EpisodeDetails]:
+async def get_episodes(session: AsyncSession) -> Sequence[EpisodeDetails]:
     return await get_all(session, EpisodeDetails)
 
 
-async def get_movies(session: Session) -> Sequence[MovieDetails]:
+async def get_movies(session: AsyncSession) -> Sequence[MovieDetails]:
     return await get_all(session, MovieDetails)
 
 
@@ -390,7 +390,7 @@ async def get_db(session_local=Depends(get_session_local)):
         await sl.close()
 
 
-def safe_delete(session: Session, entity: type[T], id: int):
-    query = session.execute(delete(entity).filter_by(id=id))
-    precondition(query.rowcount > 0, 'Nothing to delete')
-    session.commit()
+async def safe_delete(session: AsyncSession, entity: type[T], id: int):
+    query = await session.execute(delete(entity).filter_by(id=id))
+    precondition(query.rowcount() > 0, 'Nothing to delete')
+    await session.commit()

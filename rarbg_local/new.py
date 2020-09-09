@@ -19,8 +19,9 @@ from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel
 from sqlalchemy import func
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session, object_session
+from sqlalchemy.orm.session import object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -100,7 +101,9 @@ def user():
 
 
 @api.get('/delete/{type}/{id}', name='delete')
-async def delete_item(type: MediaType, id: int, session: Session = Depends(get_db)):
+async def delete_item(
+    type: MediaType, id: int, session: Annotated[AsyncSession, Depends(get_db)]
+):
     await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
@@ -271,14 +274,14 @@ async def download_post(
 
 
 @api.get('/index', response_model=IndexResponse)
-async def index(session: Session = Depends(get_db)):
+async def index(session: AsyncSession = Depends(get_db)):
     return IndexResponse(
         series=await resolve_series(session), movies=await get_movies(session)
     )
 
 
 @api.get('/stats', response_model=list[StatsResponse])
-async def stats(session: Session = Depends(get_db)):
+async def stats(session: Annotated[AsyncSession, Depends(get_db)]):
     async def process(added_by_id: int, values):
         user = await session.get(User, added_by_id)
         if not user:
