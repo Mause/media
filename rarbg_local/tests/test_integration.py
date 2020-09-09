@@ -396,9 +396,10 @@ async def test_stats(test_client, session):
             MovieDetailsFactory(download__added_by=user1),
         ]
     )
-    session.commit()
+    await session.commit()
 
-    assert (await test_client.get('/api/stats')).json() == [
+    res = await test_client.get('/api/stats')
+    assert res.json() == [
         {'user': 'user1', 'values': {'episode': 1, 'movie': 1}},
         {'user': 'user2', 'values': {'episode': 1, 'movie': 0}},
     ]
