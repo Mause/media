@@ -381,14 +381,12 @@ async def monitor_post(
 ):
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
-        (
-            await session.execute(
-                select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
-            )
+        await session.execute(
+            select(Monitor)
+            .where(Monitor.tmdb_id == monitor.tmdb_id)
+            .where(Monitor.type == monitor.type)
         )
-        .scalars()
-        .one_or_none()
-    )
+    ).scalar_one_or_none()
     if not c:
         c = Monitor(
             tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
