@@ -1,10 +1,11 @@
 import logging
 import os
 import traceback
-from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
     Annotated,
+    AsyncGenerator,
+    Callable,
     Literal,
     TypeVar,
     Union,
@@ -98,9 +99,9 @@ def user():
     pass
 
 
-@api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
-    safe_delete(
+@api.get('/delete/{type}/{id}', name='delete')
+async def delete_item(type: MediaType, id: int, session: Session = Depends(get_db)):
+    await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
 
