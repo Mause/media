@@ -9,6 +9,8 @@ from lxml.builder import E
 from lxml.etree import tostring
 from psycopg2 import OperationalError
 from pytest import fixture, mark, raises
+from responses import RequestsMock
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
@@ -84,8 +86,7 @@ async def test_diagnostics(
 
 
 @mark.asyncio
-async def test_download_movie(
-    test_client, responses, aioresponses, add_torrent, session
+async def test_download_movie(test_client, responses, aioresponses, add_torrent, session
 ):
     themoviedb(
         aioresponses, '/movie/533985', MovieResponseFactory.build(title='Bit').dict()
@@ -228,7 +229,7 @@ async def test_index(
             ),
         ]
     )
-    session.commit()
+    await session.commit()
 
     aioresponses.add(
         'https://api.themoviedb.org/3/tv/3/season/1',
@@ -277,21 +278,24 @@ async def test_search(aioresponses, test_client):
 
 @mark.asyncio
 async def test_delete_cascade(test_client: TestClient, session):
+    async def check():
+        return (
+            len(await get_episodes(session)),
+            len((await session.execute(select(Download))).all()),
+        )
     e = EpisodeDetailsFactory()
     session.add(e)
-    session.commit()
+    await session.commit()
 
-    assert len(get_episodes(session)) == 1
-    assert len(session.query(Download).all()) == 1
+    assert await check() == (1, 1)
 
     res = await test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
     assert res.json() == {}
 
-    session.commit()
+    await session.commit()
 
-    assert len(get_episodes(session)) == 0
-    assert len(session.query(Download).all()) == 0
+    assert await check() == (0, 0)
 
 
 @mark.asyncio
@@ -334,7 +338,7 @@ async def test_foreign_key_integrity(session: Session):
     # invalid fkey_id
     ins = Download.__table__.insert().values(id=1, movie_id=99)
     with raises(IntegrityError):
-        session.execute(ins)
+        await session.execute(ins)
 
 
 @mark.asyncio
@@ -342,6 +346,8 @@ async def test_delete_monitor(aioresponses, test_client, session):
     themoviedb(
         aioresponses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
     )
+    ls = await test_client.get('/api/monitor')
+    ls = ls.json()
     themoviedb(
         aioresponses, '/tv/5', TvApiResponseFactory.build(name='Hello World').dict()
     )
@@ -351,6 +357,8 @@ async def test_delete_monitor(aioresponses, test_client, session):
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     assert r.status_code == 201
 
+    ls = await test_client.get('/api/monitor')
+    ls = ls.json()
     (
         await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'TV'})
     ).raise_for_status()
@@ -380,8 +388,8 @@ async def test_delete_monitor(aioresponses, test_client, session):
         r = await test_client.delete(f'/api/monitor/{item["id"]}')
         assert r.status_code == 200
 
-    ls = (await test_client.get('/api/monitor')).json()
-    assert ls == []
+    ls = await test_client.get('/api/monitor')
+    assert ls.json() == []
 
 
 @mark.asyncio
@@ -535,6 +543,7 @@ async def test_schema(snapshot):
     snapshot.assert_match(json.dumps(SearchResponse.schema(), indent=2), 'schema.json')
 
 
+@mark.asyncio
 @mark.skipif("not os.path.exists('app/build/index.html')")
 @mark.parametrize('uri', ['/', '/manifest.json'])
 @mark.asyncio
