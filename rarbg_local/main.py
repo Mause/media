@@ -396,8 +396,8 @@ def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
     )
 
 
-def resolve_series(session: Session) -> List[SeriesDetails]:
-    episodes = get_episodes(session)
+async def resolve_series(session: Session) -> List[SeriesDetails]:
+    episodes = await get_episodes(session)
 
     return [
         make_series_details(imdb_id, show)

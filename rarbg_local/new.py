@@ -18,7 +18,7 @@ from fastapi.security import (
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
-from sqlalchemy import event, func, select
+from sqlalchemy import delete, event, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
@@ -123,12 +123,12 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     )
 
 
-def get_db(session_local=Depends(get_session_local)):
+async def get_db(session_local=Depends(get_session_local)):
     sl = session_local()
     try:
         yield sl
     finally:
-        sl.close()
+        await sl.close()
 
 
 async def get_current_user(
@@ -151,14 +151,19 @@ def user():
     pass
 
 
+async def safe_delete(session, entity, id):
+    query = select(entity).filter_by(id=id)
+    res = (await session.execute(query)).scalars().all()
+    precondition(len(res) == 1, 'Invalid')
+    await session.execute(delete(entity).filter_by(id=res[0].id))
+    await session.commit()
+
+
 @api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
-    query = session.query(
-        EpisodeDetails if type == MediaType.SERIES else MovieDetails
-    ).filter_by(id=id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    session.commit()
+async def delete_item(type: MediaType, id: int, session: Session = Depends(get_db)):
+    await safe_delete(
+        session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
+    )
 
     return {}
 
@@ -415,8 +420,12 @@ async def monitor_post(
 ):
     media = validate_id(monitor.type, monitor.tmdb_id)
     c = (
-        session.query(Monitor)
-        .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+        (
+            await session.execute(
+                select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            )
+        )
+        .scalars()
         .one_or_none()
     )
     if not c:
@@ -424,7 +433,7 @@ async def monitor_post(
             tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
         )
         session.add(c)
-        session.commit()
+        await session.commit()
     return c
 
 

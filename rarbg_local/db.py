@@ -6,7 +6,7 @@ from typing import List, Optional, Type, TypeVar, Union
 from flask_jsontools import JsonSerializableBase
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserMixin
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, select
 from sqlalchemy.orm import Session, joinedload, relationship
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
@@ -236,16 +236,16 @@ def create_episode(
     return ed
 
 
-def get_all(session: Session, model: Type[T]) -> List[T]:
-    return session.query(model).options(joinedload('download')).all()
+async def get_all(session: Session, model: Type[T]) -> List[T]:
+    return (await session.execute(select(model).options(joinedload('download')))).all()
 
 
-def get_episodes(session: Session) -> List[EpisodeDetails]:
-    return get_all(session, EpisodeDetails)
+async def get_episodes(session: Session) -> List[EpisodeDetails]:
+    return await get_all(session, EpisodeDetails)
 
 
-def get_movies(session: Session) -> List[MovieDetails]:
-    return get_all(session, MovieDetails)
+async def get_movies(session: Session) -> List[MovieDetails]:
+    return await get_all(session, MovieDetails)
 
 
 def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> T:
