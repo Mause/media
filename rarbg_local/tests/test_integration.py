@@ -285,7 +285,8 @@ def test_delete_monitor(responses, test_client, session):
     assert ls == []
 
 
-def test_stats(test_client, session):
+@mark.asyncio
+async def test_stats(test_client, session):
     user1 = UserFactory(username='user1')
     user2 = UserFactory(username='user2')
 
@@ -296,9 +297,10 @@ def test_stats(test_client, session):
             MovieDetailsFactory(download__added_by=user1),
         ]
     )
-    session.commit()
+    await session.commit()
 
-    assert test_client.get('/api/stats').json() == [
+    res = await test_client.get('/api/stats')
+    assert res.json() == [
         {'user': 'user1', 'values': {'episode': 1, 'movie': 1}},
         {'user': 'user2', 'values': {'episode': 1, 'movie': 0}},
     ]
