@@ -7,6 +7,7 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 from pytest import fixture, mark, raises
 from responses import RequestsMock
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.session import Session
 
@@ -48,7 +49,8 @@ def add_torrent():
 
 
 @patch('rarbg_local.health.transmission')
-def test_diagnostics(transmission, test_client, user, responses):
+@mark.asyncio
+async def test_diagnostics(transmission, test_client, user, responses):
     responses.add('HEAD', 'https://horriblesubs.info')
     responses.add('HEAD', 'https://torrentapi.org')
     responses.add('HEAD', 'https://katcr.co')
@@ -57,7 +59,7 @@ def test_diagnostics(transmission, test_client, user, responses):
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
 
-    r = test_client.get('/api/diagnostics',)
+    r = await test_client.get('/api/diagnostics',)
     assert r.status_code == 200
 
     results = r.json()
@@ -79,7 +81,8 @@ def test_diagnostics(transmission, test_client, user, responses):
     ]
 
 
-def test_download_movie(test_client, responses, add_torrent, session):
+@mark.asyncio
+async def test_download_movie(test_client, responses, add_torrent, session):
     themoviedb(
         responses, '/movie/533985', MovieResponseFactory.build(title='Bit').dict()
     )
@@ -87,7 +90,7 @@ def test_download_movie(test_client, responses, add_torrent, session):
 
     magnet = 'magnet:...'
 
-    res = test_client.post(
+    res = await test_client.post(
         '/api/download', json=[{'magnet': magnet, 'tmdb_id': 533985}]
     )
     assert res.status_code == 200
@@ -98,7 +101,8 @@ def test_download_movie(test_client, responses, add_torrent, session):
     assert download.title == 'Bit'
 
 
-def test_download(test_client, responses, add_torrent, session):
+@mark.asyncio
+async def test_download(test_client, responses, add_torrent, session):
     themoviedb(
         responses, '/tv/95792', TvApiResponseFactory(name='Pocket Monsters').dict()
     )
@@ -116,7 +120,7 @@ def test_download(test_client, responses, add_torrent, session):
 
     magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
 
-    res = test_client.post(
+    res = await test_client.post(
         '/api/download',
         json=[{'magnet': magnet, 'tmdb_id': 95792, 'season': '1', 'episode': '2'}],
     )
@@ -133,13 +137,14 @@ def test_download(test_client, responses, add_torrent, session):
     assert download.episode.show_title == 'Pocket Monsters'
 
 
-def test_download_season_pack(test_client, responses, add_torrent, session):
+@mark.asyncio
+async def test_download_season_pack(test_client, responses, add_torrent, session):
     themoviedb(responses, '/tv/90000', TvApiResponseFactory(name='Watchmen').dict())
     themoviedb(responses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
 
     magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
 
-    res = test_client.post(
+    res = await test_client.post(
         '/api/download', json=[{'magnet': magnet, 'tmdb_id': 90000, 'season': '1'}]
     )
     assert res.status_code == 200
@@ -159,7 +164,8 @@ def shallow(d: Dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 
-def test_index(responses, test_client, get_torrent, snapshot, session, user):
+@mark.asyncio
+async def test_index(responses, test_client, get_torrent, snapshot, session, user):
     session.add_all(
         [
             create_episode(
@@ -183,16 +189,17 @@ def test_index(responses, test_client, get_torrent, snapshot, session, user):
             ),
         ]
     )
-    session.commit()
+    await session.commit()
 
-    res = test_client.get('/api/index')
+    res = await test_client.get('/api/index')
 
     assert res.status_code == 200
 
     snapshot.assert_match(res.json())
 
 
-def test_search(responses, test_client):
+@mark.asyncio
+async def test_search(responses, test_client):
     themoviedb(
         responses,
         '/search/multi',
@@ -209,30 +216,34 @@ def test_search(responses, test_client):
         query='&query=chernobyl',
     )
 
-    res = test_client.get('/api/search?query=chernobyl')
+    res = await test_client.get('/api/search?query=chernobyl')
     assert res.status_code == 200
     assert res.json() == [
         {'imdbID': 10000, 'title': 'Chernobyl', 'year': 2019, 'type': 'series',}
     ]
 
 
-def test_delete_cascade(test_client: TestClient, session):
+@mark.asyncio
+async def test_delete_cascade(test_client: TestClient, session):
+    async def check():
+        return (
+            len(await get_episodes(session)),
+            len((await session.execute(select(Download))).all()),
+        )
 
     e = EpisodeDetailsFactory()
     session.add(e)
-    session.commit()
+    await session.commit()
 
-    assert len(get_episodes(session)) == 1
-    assert len(session.query(Download).all()) == 1
+    assert await check() == (1, 1)
 
-    res = test_client.get(f'/api/delete/series/{e.id}')
+    res = await test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
     assert res.json() == {}
 
-    session.commit()
+    await session.commit()
 
-    assert len(get_episodes(session)) == 0
-    assert len(session.query(Download).all()) == 0
+    assert await check() == (0, 0)
 
 
 @mark.skip
@@ -246,25 +257,29 @@ def test_select_season(responses: RequestsMock, test_client: TestClient) -> None
     assert res.json()
 
 
-def test_foreign_key_integrity(session: Session):
+@mark.asyncio
+async def test_foreign_key_integrity(session: Session):
 
     # invalid fkey_id
     ins = Download.__table__.insert().values(id=1, movie_id=99)
     with raises(IntegrityError):
-        session.execute(ins)
+        await session.execute(ins)
 
 
-def test_delete_monitor(responses, test_client, session):
+@mark.asyncio
+async def test_delete_monitor(responses, test_client, session):
     themoviedb(
         responses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
     )
-    ls = test_client.get('/api/monitor').json()
+    ls = await test_client.get('/api/monitor')
+    ls = ls.json()
     assert ls == []
 
-    r = test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
+    r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     assert r.status_code == 201
 
-    ls = test_client.get('/api/monitor').json()
+    ls = await test_client.get('/api/monitor')
+    ls = ls.json()
 
     assert ls == [
         {
@@ -278,11 +293,11 @@ def test_delete_monitor(responses, test_client, session):
     ]
     ident = ls[0]['id']
 
-    r = test_client.delete(f'/api/monitor/{ident}')
+    r = await test_client.delete(f'/api/monitor/{ident}')
     assert r.status_code == 200
 
-    ls = test_client.get('/api/monitor').json()
-    assert ls == []
+    ls = await test_client.get('/api/monitor')
+    assert ls.json() == []
 
 
 @mark.asyncio
@@ -307,15 +322,17 @@ async def test_stats(test_client, session):
 
 
 @patch('rarbg_local.main.get_torrent')
-def test_torrents_error(get_torrent, test_client):
+@mark.asyncio
+async def test_torrents_error(get_torrent, test_client):
     get_torrent.side_effect = TimeoutError('Timeout!')
-    torrents = test_client.get('/api/torrents')
+    torrents = await test_client.get('/api/torrents')
     assert torrents.status_code == 500
     assert torrents.json() == {'detail': 'Unable to connect to transmission: Timeout!'}
 
 
 @patch('rarbg_local.main.get_torrent')
-def test_torrents(get_torrent, test_client):
+@mark.asyncio
+async def test_torrents(get_torrent, test_client):
     get_torrent.return_value = {
         'arguments': {
             'torrents': [
@@ -331,7 +348,7 @@ def test_torrents(get_torrent, test_client):
             ]
         }
     }
-    torrents = test_client.get('/api/torrents')
+    torrents = await test_client.get('/api/torrents')
     assert torrents.json() == {
         '00000': {
             'hashString': '00000',
@@ -350,22 +367,25 @@ def test_manifest(test_client):
     assert 'name' in r.json()
 
 
-def test_movie(test_client, snapshot, responses):
+@mark.asyncio
+async def test_movie(test_client, snapshot, responses):
     themoviedb(responses, '/movie/1', {'title': 'Hello', 'imdb_id': 'tt0000000'})
-    r = test_client.get('/api/movie/1')
+    r = await test_client.get('/api/movie/1')
     assert r.status_code == 200
 
     snapshot.assert_match(r.json())
 
 
-def test_openapi(test_client, snapshot):
-    r = test_client.get('/openapi.json')
+@mark.asyncio
+async def test_openapi(test_client, snapshot):
+    r = await test_client.get('/openapi.json')
     assert r.status_code == 200
 
     snapshot.assert_match(r.json())
 
 
-def test_stream(test_client, responses):
+@mark.asyncio
+async def test_stream(test_client, responses):
     themoviedb(responses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
     root = 'https://torrentapi.org/pubapi_v2.php?mode=search&ranked=0&limit=100&format=json_extended&app_id=Sonarr'
     add_json(responses, 'GET', root + '&get_token=get_token', {'token': 'aaaaaaa'})
@@ -382,7 +402,7 @@ def test_stream(test_client, responses):
             },
         )
 
-    r = test_client.get('/api/stream/series/1?season=1&episode=1&source=rarbg')
+    r = await test_client.get('/api/stream/series/1?season=1&episode=1&source=rarbg')
 
     assert r.status_code == 200, r.json()
 
@@ -428,9 +448,9 @@ def test_schema(snapshot):
     snapshot.assert_match(SearchResponse.schema())
 
 
+@mark.asyncio
 @mark.skipif("not os.path.exists('app/build/index.html')")
 @mark.parametrize('uri', ['/', '/manifest.json'])
-def test_static(uri, test_client):
-    r = test_client.get(uri)
-    assert r.reason == 'OK', (r, r.text)
+async def test_static(uri, test_client):
+    r = await test_client.get(uri)
     assert r.status_code == 200
