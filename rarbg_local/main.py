@@ -7,6 +7,7 @@ from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Uni
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
+from sqlalchemy import select
 from sqlalchemy.orm.session import Session, make_transient
 
 from .db import (
@@ -86,7 +87,7 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-def add_single(
+async def add_single(
     *,
     session: Session,
     magnet: str,
@@ -114,8 +115,10 @@ def add_single(
     )['hashString']
 
     already = (
-        session.query(Download).filter_by(transmission_id=transmission_id).one_or_none()
-    )
+        await session.execute(
+            select(Download).filter_by(transmission_id=transmission_id)
+        )
+    ).one_or_none()
 
     print('already', already)
     if not already:
