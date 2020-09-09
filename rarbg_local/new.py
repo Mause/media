@@ -247,7 +247,7 @@ async def download_post(
             subpath = 'movies'
 
         results.append(
-            add_single(
+            await add_single(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
@@ -268,7 +268,7 @@ async def download_post(
         )
 
     session.add_all(results)
-    session.commit()
+    await session.commit()
 
     return results
 

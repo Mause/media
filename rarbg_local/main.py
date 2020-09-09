@@ -88,7 +88,7 @@ def extract_marker(title: str) -> tuple[str, str | None]:
     return cast(tuple[str, str], tuple(m.groups()[1:]))
 
 
-def add_single(
+async def add_single(
     *,
     session: Session,
     magnet: str,
@@ -116,7 +116,11 @@ def add_single(
     )['hashString']
 
     already = (
-        session.execute(select(Download).filter_by(transmission_id=transmission_id))
+        (
+            await session.execute(
+                select(Download).filter_by(transmission_id=transmission_id)
+            )
+        )
         .scalars()
         .one_or_none()
     )
