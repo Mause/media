@@ -159,7 +159,9 @@ async def safe_delete(session, entity, id):
 
 
 @api.get('/delete/{type}/{id}')
-async def delete_item(type: MediaType, id: int, session: AsyncSession = Depends(get_db)):
+async def delete_item(
+    type: MediaType, id: int, session: AsyncSession = Depends(get_db)
+):
     await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
@@ -302,7 +304,7 @@ async def download_post(
             subpath = 'movies'
 
         results.append(
-            add_single(
+            await add_single(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
@@ -323,7 +325,7 @@ async def download_post(
         )
 
     session.add_all(results)
-    session.commit()
+    await session.commit()
 
     return results
 
@@ -340,7 +342,7 @@ async def index(session: AsyncSession = Depends(get_db)):
 async def get_one(session, entity, id):
     query = select(entity).filter_by(id=id)
     res = await session.execute(query)
-    return res.scalars().one()
+    return res.scalar_one()
 
 
 @api.get('/stats', response_model=List[StatsResponse])

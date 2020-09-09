@@ -97,7 +97,7 @@ async def test_download_movie(test_client, responses, add_torrent, session):
 
     add_torrent.assert_called_with(magnet, 'movies')
 
-    download = session.query(Download).first()
+    download = (await session.execute(select(Download))).scalars().first()
     assert download.title == 'Bit'
 
 
@@ -128,7 +128,7 @@ async def test_download(test_client, responses, add_torrent, session):
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
 
-    download = session.query(Download).first()
+    download = (await session.execute(select(Download))).scalars().first()
     assert download
     assert download.title == 'Satoshi, Go, and Lugia Go!'
     assert download.episode
@@ -151,7 +151,7 @@ async def test_download_season_pack(test_client, responses, add_torrent, session
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Watchmen/Season 1')
 
-    download = session.query(Download).first()
+    download = (await session.execute(select(Download))).scalars().first()
     assert download
     assert download.title == 'Season 1'
     assert download.episode
