@@ -3,7 +3,7 @@ from asyncio import get_event_loop
 from typing import AsyncGenerator, List, Pattern, TypeVar, Union
 
 from async_asgi_testclient import TestClient
-from pytest import fixture, hookimpl
+from pytest import fixture, hookimpl, mark
 from responses import RequestsMock
 
 from ..db import Base, Role, User, get_db, get_session_local
@@ -35,11 +35,12 @@ def test_client(fastapi_app, clear_cache, user: User) -> TestClient:
 
 
 @fixture
-def user(session):
+@mark.asyncio
+async def user(session):
     u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
     session.add(u)
-    session.commit()
+    await session.commit()
     return u
 
 

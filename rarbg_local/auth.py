@@ -5,6 +5,7 @@ from cachetools import TTLCache
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, SecurityScopes
 from jwkaas import JWKaas
+from sqlalchemy import select
 from sqlalchemy.orm.session import Session
 
 from .db import User
@@ -38,7 +39,7 @@ def get_user_info(
     return get_user_info(token_info, rest)
 
 
-def auth_hook(
+async def auth_hook(
     *,
     session: Session,
     header: HTTPAuthorizationCredentials,
@@ -59,4 +60,8 @@ def auth_hook(
 
     us = get_user_info(token_info, header)
 
-    return session.query(User).filter_by(email=us['email']).one_or_none()
+    return (
+        (await session.execute(select(User).filter_by(email=us['email'])))
+        .scalars()
+        .one_or_none()
+    )
