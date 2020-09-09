@@ -4,6 +4,7 @@ from fastapi import Depends
 from fastapi.routing import APIRoute
 from jwkaas import JWKaas
 from jwt.api_jwt import PyJWT
+from pytest import mark
 
 from ..auth import get_my_jwkaas
 from ..models import UserSchema
@@ -11,7 +12,8 @@ from ..new import get_current_user
 from .conftest import add_json
 
 
-def test_auth(responses, user, fastapi_app, test_client):
+@mark.asyncio
+async def test_auth(responses, user, fastapi_app, test_client):
     # Arrange
     add_json(
         responses, 'GET', 'https://mause.au.auth0.com/userinfo', {'email': user.email},
@@ -38,17 +40,20 @@ def test_auth(responses, user, fastapi_app, test_client):
     )
 
     # Act
-    r = test_client.get('/simple', headers={'Authorization': 'Bearer ' + jw.decode()})
+    r = await test_client.get(
+        '/simple', headers={'Authorization': 'Bearer ' + jw.decode()}
+    )
 
     # Assert
     assert r.status_code == 200, r.text
     assert r.json() == {'first_name': '', 'username': 'python'}, r.text
 
 
-def test_no_auth(fastapi_app, test_client):
+@mark.asyncio
+async def test_no_auth(fastapi_app, test_client):
     del fastapi_app.dependency_overrides[get_current_user]
 
-    r = test_client.get('/api/diagnostics')
+    r = await test_client.get('/api/diagnostics')
 
     assert r.status_code == 403
     assert r.json() == {'detail': 'Not authenticated'}

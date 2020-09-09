@@ -137,7 +137,7 @@ async def get_current_user(
     header=Security(openid_connect),
     jwkaas=Depends(get_my_jwkaas),
 ):
-    user = auth_hook(
+    user = await auth_hook(
         session=session, header=header, security_scopes=security_scopes, jwkaas=jwkaas
     )
     if user:

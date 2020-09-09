@@ -2,7 +2,7 @@ import json
 from asyncio import get_event_loop
 
 from async_asgi_testclient import TestClient
-from pytest import fixture, hookimpl
+from pytest import fixture, hookimpl, mark
 from responses import RequestsMock
 
 from ..db import Role, User, db
@@ -35,11 +35,12 @@ def test_client(fastapi_app, clear_cache, user: User) -> TestClient:
 
 
 @fixture
-def user(session):
+@mark.asyncio
+async def user(session):
     u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
     session.add(u)
-    session.commit()
+    await session.commit()
     return u
 
 
