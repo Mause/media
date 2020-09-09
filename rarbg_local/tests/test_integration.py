@@ -9,7 +9,6 @@ from lxml.builder import E
 from lxml.etree import tostring
 from psycopg2 import OperationalError
 from pytest import fixture, mark, raises
-from responses import RequestsMock
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
@@ -86,7 +85,8 @@ async def test_diagnostics(
 
 
 @mark.asyncio
-async def test_download_movie(test_client, responses, aioresponses, add_torrent, session
+async def test_download_movie(
+    test_client, responses, aioresponses, add_torrent, session
 ):
     themoviedb(
         aioresponses, '/movie/533985', MovieResponseFactory.build(title='Bit').dict()
@@ -283,6 +283,7 @@ async def test_delete_cascade(test_client: TestClient, session):
             len(await get_episodes(session)),
             len((await session.execute(select(Download))).all()),
         )
+
     e = EpisodeDetailsFactory()
     session.add(e)
     await session.commit()

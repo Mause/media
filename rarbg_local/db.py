@@ -3,7 +3,6 @@ import logging
 from datetime import datetime
 from functools import lru_cache
 from typing import List, Optional, Type, TypeVar, Union
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 import backoff
 import psycopg2
@@ -16,8 +15,10 @@ from sqlalchemy import (
     Integer,
     String,
     event,
+    select,
 )
 from sqlalchemy.engine import URL, make_url
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, joinedload, relationship, sessionmaker
 from sqlalchemy.sql import ClauseElement, func
@@ -253,16 +254,16 @@ def create_episode(
     return ed
 
 
-def get_all(session: Session, model: Type[T]) -> List[T]:
-    return session.query(model).options(joinedload('download')).all()
+async def get_all(session: Session, model: Type[T]) -> List[T]:
+    return (await session.execute(select(model).options(joinedload('download')))).all()
 
 
-def get_episodes(session: Session) -> List[EpisodeDetails]:
-    return get_all(session, EpisodeDetails)
+async def get_episodes(session: Session) -> List[EpisodeDetails]:
+    return await get_all(session, EpisodeDetails)
 
 
-def get_movies(session: Session) -> List[MovieDetails]:
-    return get_all(session, MovieDetails)
+async def get_movies(session: Session) -> List[MovieDetails]:
+    return await get_all(session, MovieDetails)
 
 
 def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> T:

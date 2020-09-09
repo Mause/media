@@ -2,7 +2,7 @@ import logging
 import os
 import traceback
 from functools import wraps
-from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
+from typing import AsyncGenerator, Callable, Dict, List, Optional, Union
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
@@ -20,10 +20,7 @@ from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
-from sqlalchemy import event, func, select
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import func
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
 
@@ -126,11 +123,19 @@ def user():
     pass
 
 
-def safe_delete(session: Session, entity: Type, id: int):
-    query = session.query(entity).filter_by(id=id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    session.commit()
+async def safe_delete(session, entity, id):
+    query = select(entity).filter_by(id=id)
+    res = (await session.execute(query)).scalars().all()
+    precondition(len(res) == 1, 'Invalid')
+    await session.execute(delete(entity).filter_by(id=res[0].id))
+    await session.commit()
+
+
+@api.get('/delete/{type}/{id}')
+async def delete_item(type: MediaType, id: int, session: Session = Depends(get_db)):
+    await safe_delete(
+        session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
+    )
 
 
 @api.get('/delete/{type}/{id}')
@@ -375,8 +380,12 @@ async def monitor_post(
 ):
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
-        session.query(Monitor)
-        .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+        (
+            await session.execute(
+                select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            )
+        )
+        .scalars()
         .one_or_none()
     )
     if not c:
@@ -384,7 +393,7 @@ async def monitor_post(
             tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
         )
         session.add(c)
-        session.commit()
+        await session.commit()
     return c
 
 
