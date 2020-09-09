@@ -333,7 +333,9 @@ async def download_post(
 async def index(session: Session = Depends(get_db)):
     from .main import resolve_series
 
-    return IndexResponse(series=resolve_series(session), movies=get_movies(session))
+    return IndexResponse(
+        series=await resolve_series(session), movies=await get_movies(session)
+    )
 
 
 async def get_one(session, entity, id):

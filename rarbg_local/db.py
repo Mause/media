@@ -237,7 +237,11 @@ def create_episode(
 
 
 async def get_all(session: Session, model: Type[T]) -> List[T]:
-    return (await session.execute(select(model).options(joinedload('download')))).all()
+    return (
+        (await session.execute(select(model).options(joinedload('download'))))
+        .scalars()
+        .all()
+    )
 
 
 async def get_episodes(session: Session) -> List[EpisodeDetails]:
