@@ -445,7 +445,7 @@ snapshots['test_openapi 1'] = {
     'paths': {
         '/api/delete/{type}/{id}': {
             'get': {
-                'operationId': 'delete',
+                'operationId': 'delete_item',
                 'parameters': [
                     {
                         'in': 'path',
@@ -476,7 +476,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
-                'summary': 'Delete',
+                'summary': 'Delete Item',
             }
         },
         '/api/diagnostics': {
@@ -832,7 +832,7 @@ snapshots['test_openapi 1'] = {
         },
         '/api/select/{tmdb_id}/season/{season}/download_all': {
             'get': {
-                'operationId': 'select',
+                'operationId': 'api_select',
                 'parameters': [
                     {
                         'in': 'path',
@@ -869,7 +869,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
-                'summary': 'Select',
+                'summary': 'Api Select',
             }
         },
         '/api/stats': {
