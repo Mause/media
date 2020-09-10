@@ -16,9 +16,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: |
-          yarn install --frozen-lockfile
-          yarn build
+      - run: yarn install --immutable
+        working-directory: app
+        env:
+          CI: true
+      - run: yarn build
         working-directory: app
         env:
           CI: true
