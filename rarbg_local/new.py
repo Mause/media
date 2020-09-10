@@ -22,6 +22,7 @@ from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import delete, select
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
 

@@ -20,6 +20,7 @@ from sqlalchemy import (
 from sqlalchemy.engine import URL, make_url
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.future import select
 from sqlalchemy.orm import Session, joinedload, relationship, sessionmaker
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum

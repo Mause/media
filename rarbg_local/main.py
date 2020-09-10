@@ -7,7 +7,7 @@ from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Uni
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
-from sqlalchemy import select
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, make_transient
 
 from .db import (
