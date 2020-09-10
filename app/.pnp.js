@@ -115,7 +115,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/react-helmet",
-        "npm:6.0.0"
+        "npm:6.1.0"
       ],
       [
         "@types/react-router-dom",
@@ -258,7 +258,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/qs", "npm:6.9.4"],
             ["@types/react", "npm:16.9.49"],
             ["@types/react-dom", "npm:16.9.8"],
-            ["@types/react-helmet", "npm:6.0.0"],
+            ["@types/react-helmet", "npm:6.1.0"],
             ["@types/react-router-dom", "npm:5.1.5"],
             ["@types/socket.io-client", "npm:1.4.33"],
             ["@use-it/interval", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.3"],
@@ -4003,10 +4003,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/react-helmet", [
-        ["npm:6.0.0", {
-          "packageLocation": "./.yarn/cache/@types-react-helmet-npm-6.0.0-4117250c21-f53121736d.zip/node_modules/@types/react-helmet/",
+        ["npm:6.1.0", {
+          "packageLocation": "./.yarn/cache/@types-react-helmet-npm-6.1.0-2b66a9e4e0-b7aaa3aa2d.zip/node_modules/@types/react-helmet/",
           "packageDependencies": [
-            ["@types/react-helmet", "npm:6.0.0"],
+            ["@types/react-helmet", "npm:6.1.0"],
             ["@types/react", "npm:16.9.43"]
           ],
           "linkType": "HARD",
@@ -4803,7 +4803,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/qs", "npm:6.9.4"],
             ["@types/react", "npm:16.9.49"],
             ["@types/react-dom", "npm:16.9.8"],
-            ["@types/react-helmet", "npm:6.0.0"],
+            ["@types/react-helmet", "npm:6.1.0"],
             ["@types/react-router-dom", "npm:5.1.5"],
             ["@types/socket.io-client", "npm:1.4.33"],
             ["@use-it/interval", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.3"],

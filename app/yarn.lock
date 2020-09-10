@@ -2536,12 +2536,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-helmet@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@types/react-helmet@npm:6.0.0"
+"@types/react-helmet@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@types/react-helmet@npm:6.1.0"
   dependencies:
     "@types/react": "*"
-  checksum: f53121736d0821a98c85ec8384f48796849ea4b16759ebe299d61ba30d3ee3e702f5269cab21675c4676f377a480666910c0837ad058f24a8e4a5b0e522a37cf
+  checksum: b7aaa3aa2d81cd3b14a0e77a858de86934a3400f4ec35945117edb3979b8a41130e70b8a27241de295195e365962a9b5bc149a2a029d23795fd0f6c740d1de77
   languageName: node
   linkType: hard
 
@@ -3256,7 +3256,7 @@ __metadata:
     "@types/qs": ^6.9.4
     "@types/react": ^16.9.49
     "@types/react-dom": ^16.9.8
-    "@types/react-helmet": ^6.0.0
+    "@types/react-helmet": ^6.1.0
     "@types/react-router-dom": ^5.1.5
     "@types/socket.io-client": ^1.4.33
     "@use-it/interval": ^0.1.3
