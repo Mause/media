@@ -18,8 +18,9 @@ from fastapi.security import (
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
-from sqlalchemy import delete, event, func, select
+from sqlalchemy import event, func
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.future import delete, select
 from sqlalchemy.orm import sessionmaker
 from starlette.exceptions import ExceptionMiddleware
 from starlette.staticfiles import StaticFiles

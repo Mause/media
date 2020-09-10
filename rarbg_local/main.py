@@ -35,7 +35,8 @@ from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
-from sqlalchemy import event, select
+from sqlalchemy import event
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, make_transient
 from werkzeug.exceptions import NotFound
 from werkzeug.middleware.dispatcher import DispatcherMiddleware

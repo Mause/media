@@ -5,7 +5,7 @@ from cachetools import TTLCache
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, SecurityScopes
 from jwkaas import JWKaas
-from sqlalchemy import select
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session
 
 from .db import User
