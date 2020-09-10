@@ -12,7 +12,7 @@
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
-    "@sentry/apm": "^5.22.3",
+    "@sentry/apm": "^5.23.0",
     "@sentry/react": "^5.22.3",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.2",
