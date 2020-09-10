@@ -424,8 +424,8 @@ async def monitor_post(
     c = (
         await session.execute(
             select(Monitor)
-            .where(Monitor.tmdb_id == monitor.tmdb_id)
-            .where(Monitor.type == monitor.type)
+            .filter_by(tmdb_id=monitor.tmdb_id)
+            .filter_by(type=monitor.type)
         )
     ).scalar_one_or_none()
     if not c:
