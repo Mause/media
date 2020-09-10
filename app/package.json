@@ -5,7 +5,7 @@
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@auth0/auth0-react": "^1.0.0",
-    "@csstools/normalize.css": "^10.1.0",
+    "@csstools/normalize.css": "^11.0.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",

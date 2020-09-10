@@ -1574,6 +1574,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@csstools/normalize.css@npm:^11.0.1":
+  version: 11.0.1
+  resolution: "@csstools/normalize.css@npm:11.0.1"
+  checksum: 0595b5ede221e231d4965b80dd238ff9d86a84a70d299f9be629217cfa7a3cfe453f3ea64f9a00ecc20fa793c7c69f9a29b88051a1dced214347917587e1a317
+  languageName: node
+  linkType: hard
+
 "@emotion/hash@npm:^0.8.0":
   version: 0.8.0
   resolution: "@emotion/hash@npm:0.8.0"
@@ -3236,7 +3243,7 @@ __metadata:
   resolution: "app@workspace:."
   dependencies:
     "@auth0/auth0-react": ^1.0.0
-    "@csstools/normalize.css": ^10.1.0
+    "@csstools/normalize.css": ^11.0.1
     "@fortawesome/fontawesome-svg-core": ^1.2.30
     "@fortawesome/free-solid-svg-icons": ^5.14.0
     "@fortawesome/react-fontawesome": ^0.1.11

@@ -35,7 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@csstools/normalize.css",
-        "npm:10.1.0"
+        "npm:11.0.1"
       ],
       [
         "@fortawesome/fontawesome-svg-core",
@@ -238,7 +238,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["@auth0/auth0-react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0"],
-            ["@csstools/normalize.css", "npm:10.1.0"],
+            ["@csstools/normalize.css", "npm:11.0.1"],
             ["@fortawesome/fontawesome-svg-core", "npm:1.2.30"],
             ["@fortawesome/free-solid-svg-icons", "npm:5.14.0"],
             ["@fortawesome/react-fontawesome", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.11"],
@@ -2895,6 +2895,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@csstools/normalize.css", "npm:10.1.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:11.0.1", {
+          "packageLocation": "./.yarn/cache/@csstools-normalize.css-npm-11.0.1-d963bb41bd-0595b5ede2.zip/node_modules/@csstools/normalize.css/",
+          "packageDependencies": [
+            ["@csstools/normalize.css", "npm:11.0.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@emotion/hash", [
@@ -4783,7 +4790,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["app", "workspace:."],
             ["@auth0/auth0-react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0"],
-            ["@csstools/normalize.css", "npm:10.1.0"],
+            ["@csstools/normalize.css", "npm:11.0.1"],
             ["@fortawesome/fontawesome-svg-core", "npm:1.2.30"],
             ["@fortawesome/free-solid-svg-icons", "npm:5.14.0"],
             ["@fortawesome/react-fontawesome", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.11"],
