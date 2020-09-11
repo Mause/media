@@ -476,6 +476,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Delete',
             }
         },
@@ -488,6 +489,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Successful Response',
                     }
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Diagnostics',
             }
         },
@@ -556,6 +558,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Successful Response',
                     }
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Index',
             }
         },
@@ -644,6 +647,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Monitor Delete',
                 'tags': ['monitor'],
             }
@@ -679,6 +683,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Movie',
             }
         },
@@ -691,6 +696,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Successful Response',
                     }
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Redirect Plex',
             }
         },
@@ -739,6 +745,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Redirect',
             }
         },
@@ -787,6 +794,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Redirect',
             }
         },
@@ -827,6 +835,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Search',
             }
         },
@@ -869,6 +878,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Select',
             }
         },
@@ -891,6 +901,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Successful Response',
                     }
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Stats',
             }
         },
@@ -950,6 +961,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Stream',
             }
         },
@@ -972,6 +984,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Successful Response',
                     }
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Torrents',
             }
         },
@@ -1006,6 +1019,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Api Tv',
                 'tags': ['tv'],
             }
@@ -1049,6 +1063,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'Api Tv Season',
                 'tags': ['tv'],
             }
@@ -1062,6 +1077,7 @@ snapshots['test_openapi 1'] = {
                         'description': 'Successful Response',
                     }
                 },
+                'security': [{'XOpenIdConnect': []}],
                 'summary': 'User',
             }
         },
