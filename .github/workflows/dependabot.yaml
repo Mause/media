@@ -22,10 +22,8 @@ jobs:
           python3 .github/workflows/run_yarn.py
 
       - run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
           git add .
-          git commit -m "Add yarn artifacts"
+          git commit --amend --no-edit
 
       - name: Push changes
         uses: ad-m/github-push-action@master
