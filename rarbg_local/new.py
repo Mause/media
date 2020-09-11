@@ -21,7 +21,6 @@ from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from starlette.exceptions import ExceptionMiddleware
 from starlette.staticfiles import StaticFiles
 
 from .auth import auth_hook, get_my_jwkaas
@@ -59,7 +58,7 @@ from .providers import (
     search_for_movie,
     search_for_tv,
 )
-from .singleton import get, singleton
+from .singleton import singleton
 from .tmdb import (
     get_movie,
     get_movie_imdb_id,
@@ -468,22 +467,6 @@ async def static(
     return await static_files.get_response(filename, request.scope)
 
 
-class AuthMiddleware:
-    def __init__(self, app):
-        self.app = app
-
-    async def auth(self, user=Depends(get_current_user)):
-        ...
-
-    async def __call__(self, scope, recieve, send):
-        if scope['type'] != 'lifespan':
-            request = Request(scope, recieve, send)
-            if request.url.path.startswith('/api'):
-                await get(request.app, self.auth, request)
-
-        await self.app(scope, recieve, send)
-
-
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 
@@ -506,13 +489,8 @@ def create_app():
         debug='HEROKU' not in os.environ,
     )
     app.middleware_stack.generate_plain_text = generate_plain_text
-    app.include_router(api, prefix='/api')
+    app.include_router(api, prefix='/api', dependencies=[Depends(get_current_user)])
     app.include_router(root, prefix='')
     simplify_operation_ids(app)
-
-    app.add_middleware(AuthMiddleware)
-
-    # catch exceptions in middleware
-    app.add_middleware(ExceptionMiddleware, handlers=app.exception_handlers)
 
     return app
