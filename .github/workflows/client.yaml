@@ -1,7 +1,6 @@
 name: Client
 
-on:
-  push
+on: push
 
 jobs:
   rebuild:
