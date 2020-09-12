@@ -19,5 +19,5 @@ jobs:
     - uses: actions/setup-java@v1
       with:
               java-version: 8
-    - run: npm install -g openapi-generator
+    - run: npm install -g @openapitools/openapi-generator-cli
     - run: openapi-generator generate -i https://media.mause.me/openapi.json -g python --git-user-id "Mause" --git-repo-id "rarbg_local" --release-note "GitHub integration demo" -o client
