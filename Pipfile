@@ -22,6 +22,8 @@ flake8 = "*"
 mypy = "*"
 factory-boy = "*"
 isort = "*"
+pytest-asyncio = "*"
+async-asgi-testclient = "*"
 
 [packages]
 flask = "*"

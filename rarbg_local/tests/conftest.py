@@ -1,7 +1,7 @@
 import json
 from asyncio import get_event_loop
 
-from fastapi.testclient import TestClient
+from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
 from responses import RequestsMock
 
