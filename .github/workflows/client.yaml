@@ -3,8 +3,8 @@ name: Client
 on: push
 
 jobs:
-  rebuild:
-    name: Rebuild
+  generate_client:
+    name: Generate client
     runs-on: ubuntu-latest
 
     strategy:
