@@ -1491,7 +1491,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.10.3, @babel/runtime@npm:^7.10.5, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.3.4, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.4.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.10.3, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.3.4, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.4.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.10.5
   resolution: "@babel/runtime@npm:7.10.5"
   dependencies:
@@ -3283,7 +3283,7 @@ __metadata:
     react-collapsible: ^2.8.0
     react-contextmenu: ^2.14.0
     react-dom: ^16.13.1
-    react-error-boundary: ^2.3.1
+    react-error-boundary: ^3.0.0
     react-helmet: ^6.1.0
     react-loading: ^2.0.3
     react-router-dom: ^5.2.0
@@ -12748,14 +12748,14 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "react-error-boundary@npm:2.3.1"
+"react-error-boundary@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "react-error-boundary@npm:3.0.0"
   dependencies:
-    "@babel/runtime": ^7.10.5
+    "@babel/runtime": ^7.11.2
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 063ba973b9971594e123c5f77eb0537453f4fbbc4e1d1258fdf91b6255918798d45a255803d1b61a7190b9c5b1759c05250eba3cd97d80560dd0be273a4e3e39
+  checksum: 907af5011c7cb5dd5dfec1ec1b613c54c23e54f5d235e200fdd620e7b7ece8f19cc4583a66ac264fce79cb5b8b0a51225fa750022c2b607808f34828d14c70df
   languageName: node
   linkType: hard
 

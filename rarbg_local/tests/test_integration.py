@@ -247,10 +247,11 @@ async def test_delete_cascade(test_client: TestClient, session):
 
 
 @mark.skip
-def test_select_season(responses: RequestsMock, test_client: TestClient) -> None:
+@mark.asyncio
+async def test_select_season(responses: RequestsMock, test_client: TestClient) -> None:
     themoviedb(responses, '/tv/100000', {'number_of_seasons': 1})
 
-    res = test_client.get('/api/select/100000/season')
+    res = await test_client.get('/api/select/100000/season')
 
     assert res.status_code == 200
 
@@ -271,15 +272,13 @@ async def test_delete_monitor(responses, test_client, session):
     themoviedb(
         responses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
     )
-    ls = await test_client.get('/api/monitor')
-    ls = ls.json()
+    ls = (await test_client.get('/api/monitor')).json()
     assert ls == []
 
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     assert r.status_code == 201
 
-    ls = await test_client.get('/api/monitor')
-    ls = ls.json()
+    ls = (await test_client.get('/api/monitor')).json()
 
     assert ls == [
         {
@@ -296,8 +295,8 @@ async def test_delete_monitor(responses, test_client, session):
     r = await test_client.delete(f'/api/monitor/{ident}')
     assert r.status_code == 200
 
-    ls = await test_client.get('/api/monitor')
-    assert ls.json() == []
+    ls = (await test_client.get('/api/monitor')).json()
+    assert ls == []
 
 
 @mark.asyncio
@@ -314,8 +313,7 @@ async def test_stats(test_client, session):
     )
     await session.commit()
 
-    res = await test_client.get('/api/stats')
-    assert res.json() == [
+    assert (await test_client.get('/api/stats')).json() == [
         {'user': 'user1', 'values': {'episode': 1, 'movie': 1}},
         {'user': 'user2', 'values': {'episode': 1, 'movie': 0}},
     ]
@@ -361,8 +359,9 @@ async def test_torrents(get_torrent, test_client):
 
 
 @mark.skip
-def test_manifest(test_client):
-    r = test_client.get('/api/manifest.json')
+@mark.asyncio
+async def test_manifest(test_client):
+    r = await test_client.get('/api/manifest.json')
 
     assert 'name' in r.json()
 
@@ -443,7 +442,8 @@ async def test_stream(test_client, responses):
     ]
 
 
-def test_schema(snapshot):
+@mark.asyncio
+async def test_schema(snapshot):
 
     snapshot.assert_match(SearchResponse.schema())
 
