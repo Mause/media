@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Dict
 from unittest.mock import patch
 
-from fastapi.testclient import TestClient
+from async_asgi_testclient import TestClient
 from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
