@@ -163,7 +163,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "moment",
-        "npm:2.27.0"
+        "npm:2.28.0"
       ],
       [
         "moxios",
@@ -270,7 +270,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-junit", "npm:11.1.0"],
             ["lodash", "npm:4.17.20"],
             ["mockdate", "npm:3.0.2"],
-            ["moment", "npm:2.27.0"],
+            ["moment", "npm:2.28.0"],
             ["moxios", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.4.0"],
             ["prop-types", "npm:15.7.2"],
             ["qs", "npm:6.9.4"],
@@ -4822,7 +4822,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-junit", "npm:11.1.0"],
             ["lodash", "npm:4.17.20"],
             ["mockdate", "npm:3.0.2"],
-            ["moment", "npm:2.27.0"],
+            ["moment", "npm:2.28.0"],
             ["moxios", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.4.0"],
             ["prop-types", "npm:15.7.2"],
             ["qs", "npm:6.9.4"],
@@ -12667,10 +12667,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["moment", [
-        ["npm:2.27.0", {
-          "packageLocation": "./.yarn/cache/moment-npm-2.27.0-0e670d438d-72d9a7d8db.zip/node_modules/moment/",
+        ["npm:2.28.0", {
+          "packageLocation": "./.yarn/cache/moment-npm-2.28.0-9672b927b4-f239dd93ce.zip/node_modules/moment/",
           "packageDependencies": [
-            ["moment", "npm:2.27.0"]
+            ["moment", "npm:2.28.0"]
           ],
           "linkType": "HARD",
         }]
