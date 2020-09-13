@@ -40,4 +40,5 @@ def singleton(func: Callable):
 
         return value
 
+    wrapper.__name__ = wrapper.__qualname__ = f'singleton wrapper for {func!r}'
     return wrapper

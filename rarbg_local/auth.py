@@ -49,8 +49,9 @@ def auth_hook(
     if token_info is None:
         return None
 
+    assert security_scopes.scopes
     for scope in security_scopes.scopes:
-        if scope not in token_info.scopes:
+        if scope not in token_info['scope'].split():
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Not enough permissions",
