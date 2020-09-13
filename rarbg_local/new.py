@@ -145,7 +145,7 @@ async def get_db(session_local=Depends(get_session_local)):
 async def get_current_user(
     security_scopes: SecurityScopes,
     session=Depends(get_db),
-    header=Security(openid_connect, scopes=['openid']),
+    header=Depends(openid_connect),
     jwkaas=Depends(get_my_jwkaas),
 ):
     user = await auth_hook(
@@ -437,7 +437,7 @@ tv_ns = APIRouter()
 @tv_ns.get('/{tmdb_id}', tags=['tv'], response_model=TvResponse)
 def api_tv(tmdb_id: int):
     tv = get_tv(tmdb_id)
-    return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv.name}
+    return TvResponse(**tv.dict(), imdb_id=get_tv_imdb_id(tmdb_id), title=tv.name)
 
 
 @tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)
@@ -537,7 +537,11 @@ def create_app():
         debug='HEROKU' not in os.environ,
     )
     app.middleware_stack.generate_plain_text = generate_plain_text
-    app.include_router(api, prefix='/api', dependencies=[Depends(get_current_user)])
+    app.include_router(
+        api,
+        prefix='/api',
+        dependencies=[Security(get_current_user, scopes=['openid'])],
+    )
     app.include_router(root, prefix='')
     simplify_operation_ids(app)
 

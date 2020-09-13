@@ -1,6 +1,6 @@
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
-from fastapi import Depends
+from fastapi import Depends, Security
 from fastapi.routing import APIRoute
 from jwkaas import JWKaas
 from jwt.api_jwt import PyJWT
@@ -24,7 +24,9 @@ async def test_auth(responses, user, fastapi_app, test_client):
         public_exponent=65537, key_size=2048, backend=default_backend()
     )
 
-    jw = PyJWT().encode({'sub': 'python'}, private_key, 'RS256', {'kid': KID})
+    jw = PyJWT().encode(
+        {'sub': 'python', 'scope': 'openid'}, private_key, 'RS256', {'kid': KID}
+    )
 
     jwkaas = JWKaas(None, None)
     jwkaas.pubkeys = {KID: private_key.public_key()}
@@ -36,7 +38,14 @@ async def test_auth(responses, user, fastapi_app, test_client):
 
     # highest priority
     fastapi_app.router.routes.insert(
-        0, APIRoute('/simple', show, response_model=UserSchema)
+        0,
+        APIRoute(
+            '/simple',
+            show,
+            response_model=UserSchema,
+            # this should match the one defined in create_app. need to define it here too annoying
+            dependencies=[Security(get_current_user, scopes=['openid'])],
+        ),
     )
 
     # Act
