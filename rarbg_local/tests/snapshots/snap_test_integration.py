@@ -687,117 +687,6 @@ snapshots['test_openapi 1'] = {
                 'summary': 'Movie',
             }
         },
-        '/api/redirect/plex/{tmdb_id}': {
-            'get': {
-                'operationId': 'redirect_plex',
-                'responses': {
-                    '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    }
-                },
-                'security': [{'XOpenIdConnect': ['openid']}],
-                'summary': 'Redirect Plex',
-            }
-        },
-        '/api/redirect/{type_}/{ident}': {
-            'get': {
-                'operationId': 'redirect',
-                'parameters': [
-                    {
-                        'in': 'path',
-                        'name': 'type_',
-                        'required': True,
-                        'schema': {'$ref': '#/components/schemas/MediaType'},
-                    },
-                    {
-                        'in': 'path',
-                        'name': 'ident',
-                        'required': True,
-                        'schema': {'title': 'Ident', 'type': 'integer'},
-                    },
-                    {
-                        'in': 'query',
-                        'name': 'season',
-                        'required': False,
-                        'schema': {'title': 'Season', 'type': 'integer'},
-                    },
-                    {
-                        'in': 'query',
-                        'name': 'episode',
-                        'required': False,
-                        'schema': {'title': 'Episode', 'type': 'integer'},
-                    },
-                ],
-                'responses': {
-                    '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'security': [{'XOpenIdConnect': ['openid']}],
-                'summary': 'Redirect',
-            }
-        },
-        '/api/redirect/{type_}/{ident}/{season}/{episode}': {
-            'get': {
-                'operationId': 'redirect',
-                'parameters': [
-                    {
-                        'in': 'path',
-                        'name': 'type_',
-                        'required': True,
-                        'schema': {'$ref': '#/components/schemas/MediaType'},
-                    },
-                    {
-                        'in': 'path',
-                        'name': 'ident',
-                        'required': True,
-                        'schema': {'title': 'Ident', 'type': 'integer'},
-                    },
-                    {
-                        'in': 'path',
-                        'name': 'season',
-                        'required': True,
-                        'schema': {'title': 'Season', 'type': 'integer'},
-                    },
-                    {
-                        'in': 'path',
-                        'name': 'episode',
-                        'required': True,
-                        'schema': {'title': 'Episode', 'type': 'integer'},
-                    },
-                ],
-                'responses': {
-                    '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'security': [{'XOpenIdConnect': ['openid']}],
-                'summary': 'Redirect',
-            }
-        },
         '/api/search': {
             'get': {
                 'operationId': 'search',
@@ -1079,6 +968,132 @@ snapshots['test_openapi 1'] = {
                 },
                 'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'User',
+            }
+        },
+        '/redirect/plex/{tmdb_id}': {
+            'get': {
+                'operationId': 'redirect_to_plex',
+                'parameters': [
+                    {
+                        'in': 'path',
+                        'name': 'tmdb_id',
+                        'required': True,
+                        'schema': {'title': 'Tmdb Id', 'type': 'string'},
+                    }
+                ],
+                'responses': {
+                    '200': {
+                        'content': {'application/json': {'schema': {}}},
+                        'description': 'Successful Response',
+                    },
+                    '422': {
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    '$ref': '#/components/schemas/HTTPValidationError'
+                                }
+                            }
+                        },
+                        'description': 'Validation Error',
+                    },
+                },
+                'summary': 'Redirect To Plex',
+            }
+        },
+        '/redirect/{type_}/{tmdb_id}': {
+            'get': {
+                'operationId': 'redirect_to_imdb',
+                'parameters': [
+                    {
+                        'in': 'path',
+                        'name': 'type_',
+                        'required': True,
+                        'schema': {'$ref': '#/components/schemas/MediaType'},
+                    },
+                    {
+                        'in': 'path',
+                        'name': 'tmdb_id',
+                        'required': True,
+                        'schema': {'title': 'Tmdb Id', 'type': 'integer'},
+                    },
+                    {
+                        'in': 'query',
+                        'name': 'season',
+                        'required': False,
+                        'schema': {'title': 'Season', 'type': 'integer'},
+                    },
+                    {
+                        'in': 'query',
+                        'name': 'episode',
+                        'required': False,
+                        'schema': {'title': 'Episode', 'type': 'integer'},
+                    },
+                ],
+                'responses': {
+                    '200': {
+                        'content': {'application/json': {'schema': {}}},
+                        'description': 'Successful Response',
+                    },
+                    '422': {
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    '$ref': '#/components/schemas/HTTPValidationError'
+                                }
+                            }
+                        },
+                        'description': 'Validation Error',
+                    },
+                },
+                'summary': 'Redirect To Imdb',
+            }
+        },
+        '/redirect/{type_}/{tmdb_id}/{season}/{episode}': {
+            'get': {
+                'operationId': 'redirect_to_imdb',
+                'parameters': [
+                    {
+                        'in': 'path',
+                        'name': 'type_',
+                        'required': True,
+                        'schema': {'$ref': '#/components/schemas/MediaType'},
+                    },
+                    {
+                        'in': 'path',
+                        'name': 'tmdb_id',
+                        'required': True,
+                        'schema': {'title': 'Tmdb Id', 'type': 'integer'},
+                    },
+                    {
+                        'in': 'path',
+                        'name': 'season',
+                        'required': True,
+                        'schema': {'title': 'Season', 'type': 'integer'},
+                    },
+                    {
+                        'in': 'path',
+                        'name': 'episode',
+                        'required': True,
+                        'schema': {'title': 'Episode', 'type': 'integer'},
+                    },
+                ],
+                'responses': {
+                    '200': {
+                        'content': {'application/json': {'schema': {}}},
+                        'description': 'Successful Response',
+                    },
+                    '422': {
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    '$ref': '#/components/schemas/HTTPValidationError'
+                                }
+                            }
+                        },
+                        'description': 'Validation Error',
+                    },
+                },
+                'summary': 'Redirect To Imdb',
             }
         },
     },
