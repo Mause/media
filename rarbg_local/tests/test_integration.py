@@ -242,16 +242,43 @@ async def test_delete_cascade(test_client: TestClient, session):
     assert len(session.query(Download).all()) == 0
 
 
-@mark.skip
 @mark.asyncio
-async def test_select_season(responses: RequestsMock, test_client: TestClient) -> None:
-    themoviedb(responses, '/tv/100000', {'number_of_seasons': 1})
+async def test_season_info(
+    responses: RequestsMock, test_client: TestClient, snapshot
+) -> None:
+    themoviedb(
+        responses,
+        '/tv/100000/season/1',
+        {'episodes': [{'name': 'The Pilot', 'id': '00000', 'episode_number': 1}]},
+    )
 
-    res = await test_client.get('/api/select/100000/season')
+    res = await test_client.get('/api/tv/100000/season/1')
 
     assert res.status_code == 200
 
-    assert res.json()
+    snapshot.assert_match(res.json())
+
+
+@mark.asyncio
+async def test_select_season(
+    responses: RequestsMock, test_client: TestClient, snapshot
+) -> None:
+    themoviedb(
+        responses,
+        '/tv/100000',
+        {
+            'number_of_seasons': 1,
+            'seasons': [{'episode_count': 1, 'season_number': 1}],
+            'name': 'hello',
+        },
+    )
+    themoviedb(responses, '/tv/100000/external_ids', {'imdb_id': 'tt1000'})
+
+    res = await test_client.get('/api/tv/100000')
+
+    assert res.status_code == 200
+
+    snapshot.assert_match(res.json())
 
 
 @mark.asyncio
