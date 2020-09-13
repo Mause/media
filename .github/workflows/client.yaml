@@ -21,3 +21,7 @@ jobs:
               java-version: 8
     - run: npm install -g @openapitools/openapi-generator-cli
     - run: openapi-generator generate -i https://media.mause.me/openapi.json -g python -o client --skip-validate-spec
+    - uses: actions/upload-artifact@v2
+      with:
+        name: client
+        path: client
