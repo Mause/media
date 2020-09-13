@@ -4,7 +4,7 @@ import traceback
 from functools import wraps
 from itertools import chain
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Union
+from typing import Callable, Dict, Iterable, List, Optional, Type, Union
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
@@ -147,14 +147,18 @@ def user():
     pass
 
 
-@api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
-    query = session.query(
-        EpisodeDetails if type == MediaType.SERIES else MovieDetails
-    ).filter_by(id=id)
+def safe_delete(session: Session, entity: Type, id: int):
+    query = session.query(entity).filter_by(id=id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
     session.commit()
+
+
+@api.get('/delete/{type}/{id}')
+async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
+    safe_delete(
+        session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
+    )
 
     return {}
 
@@ -372,10 +376,8 @@ async def monitor_get(
 
 @monitor_ns.delete('/{monitor_id}', tags=['monitor'])
 async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
-    query = session.query(Monitor).filter_by(id=monitor_id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    session.commit()
+    safe_delete(session, Monitor, monitor_id)
+
     return {}
 
 
