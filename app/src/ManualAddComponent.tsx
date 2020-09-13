@@ -1,4 +1,4 @@
-import { useLocation, Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useSWR from 'swr';
 import {
   TextField,
@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { DownloadState } from './DownloadComponent';
 import React, { FormEvent, useState } from 'react';
+import { useLocation } from './utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,7 +41,7 @@ export function ManualAddComponent() {
   const [submitted, setSubmitted] = useState(false);
 
   if (!state) {
-    return <Redirect to="/" />;
+    return <Navigate to="/" />;
   }
   if (submitted) {
     const toState: DownloadState = {
@@ -51,7 +52,7 @@ export function ManualAddComponent() {
         },
       ],
     };
-    return <Redirect to={{ pathname: '/download', state: toState }} />;
+    return <Navigate to="/download" state={toState} />;
   }
 
   return (
@@ -59,7 +60,7 @@ export function ManualAddComponent() {
       <h3>{data?.title}</h3>
       <TextField
         placeholder="magnet:..."
-        onChange={e => setMagnet(e.target.value)}
+        onChange={(e) => setMagnet(e.target.value)}
         inputProps={{ pattern: '^magnet:.*' }}
       />
       <Button type="submit" variant="outlined">

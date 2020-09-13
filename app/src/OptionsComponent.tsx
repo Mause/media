@@ -89,11 +89,7 @@ function remove(bit: string): string {
 }
 
 function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
-  const { season, episode, tmdb_id } = useParams<{
-    tmdb_id: string;
-    season?: string;
-    episode?: string;
-  }>();
+  const { season, episode, tmdb_id } = useParams();
 
   const { data: meta } = useSWR<{ title: string }>(
     (season ? 'tv' : 'movie') + '/' + tmdb_id,
@@ -177,21 +173,14 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       )}
       <ul>
         <li>
-          <MLink
-            to={{
-              pathname: '/manual',
-              state: { tmdb_id, season, episode },
-            }}
-          >
+          <MLink to="/manual" state={{ tmdb_id, season, episode }}>
             Add manually
           </MLink>
         </li>
         <li>
           <MLink
-            to={{
-              pathname: `/monitor/add/${tmdb_id}`,
-              state: { type: type === 'movie' ? 'MOVIE' : 'TV' },
-            }}
+            to={`/monitor/add/${tmdb_id}`}
+            state={{ type: type === 'movie' ? 'MOVIE' : 'TV' }}
           >
             Add to monitor
           </MLink>

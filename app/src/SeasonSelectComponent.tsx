@@ -1,4 +1,4 @@
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import React from 'react';
 import ReactLoading from 'react-loading';
@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import useSWR from 'swr';
 import qs from 'qs';
-import { MLink } from './utils';
+import { MLink, useLocation } from './utils';
 import { components } from './schema';
 
 export type Season = components['schemas']['TvSeasonResponse'];
