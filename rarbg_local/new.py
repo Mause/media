@@ -5,6 +5,7 @@ from functools import wraps
 from itertools import chain
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Type, Union
+from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
@@ -34,6 +35,7 @@ from .db import (
     get_movies,
 )
 from .health import health
+from .main import get_imdb_in_plex, get_plex
 from .models import (
     DownloadAllResponse,
     DownloadPost,
@@ -60,6 +62,7 @@ from .providers import (
 )
 from .singleton import singleton
 from .tmdb import (
+    get_json,
     get_movie,
     get_movie_imdb_id,
     get_tv,
@@ -161,17 +164,6 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
     )
 
     return {}
-
-
-@api.get('/redirect/plex/{tmdb_id}')
-def redirect_plex():
-    pass
-
-
-@api.get('/redirect/{type_}/{ident}')
-@api.get('/redirect/{type_}/{ident}/{season}/{episode}')
-def redirect(type_: MediaType, ident: int, season: int = None, episode: int = None):
-    pass
 
 
 def eventstream(func: Callable[..., Iterable[BaseModel]]):
@@ -467,6 +459,39 @@ async def static(
     filename = resource if "." in resource else 'index.html'
 
     return await static_files.get_response(filename, request.scope)
+
+
+def redirect(url):
+    raise HTTPException(301, headers={'Location': url})
+
+
+@root.get('/redirect/plex/{tmdb_id}')
+def redirect_to_plex(tmdb_id: str):
+    dat = get_imdb_in_plex(tmdb_id)
+    if not dat:
+        raise HTTPException(404, 'Not found in plex')
+
+    server_id = get_plex().machineIdentifier
+
+    return redirect(
+        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
+        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
+    )
+
+
+@root.get('/redirect/{type_}/{ident}')
+@root.get('/redirect/{type_}/{ident}/{season}/{episode}')
+def redirect_to_imdb(type_: str, ident: str, season: str = None, episode: str = None):
+    if type_ == 'movie':
+        imdb_id = get_movie_imdb_id(ident)
+    elif season:
+        imdb_id = get_json(
+            f'tv/{ident}/season/{season}/episode/{episode}/external_ids'
+        )['imdb_id']
+    else:
+        imdb_id = get_tv_imdb_id(ident)
+
+    return redirect(f'https://www.imdb.com/title/{imdb_id}')
 
 
 api.include_router(tv_ns, prefix='/tv')
