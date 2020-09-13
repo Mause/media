@@ -1107,3 +1107,14 @@ snapshots['test_openapi 1'] = {
         {'description': 'Production', 'url': 'https://media.mause.me/'},
     ],
 }
+
+snapshots['test_season_info 1'] = {
+    'episodes': [{'air_date': None, 'episode_number': 1, 'id': 0, 'name': 'The Pilot'}]
+}
+
+snapshots['test_select_season 1'] = {
+    'imdb_id': 'tt1000',
+    'number_of_seasons': 1,
+    'seasons': [{'episode_count': 1, 'season_number': 1}],
+    'title': 'hello',
+}
