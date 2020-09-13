@@ -4,11 +4,12 @@ import traceback
 from functools import wraps
 from itertools import chain
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Union
+from typing import Callable, Dict, Iterable, List, Optional, Type, Union
+from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
-from fastapi.responses import StreamingResponse
+from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.security import (
     HTTPAuthorizationCredentials,
     HTTPBearer,
@@ -34,6 +35,16 @@ from .db import (
     get_movies,
 )
 from .health import health
+from .main import (
+    add_single,
+    extract_marker,
+    get_imdb_in_plex,
+    get_keyed_torrents,
+    get_plex,
+    groupby,
+    normalise,
+    resolve_series,
+)
 from .models import (
     DownloadAllResponse,
     DownloadPost,
@@ -60,6 +71,7 @@ from .providers import (
 )
 from .singleton import singleton
 from .tmdb import (
+    get_json,
     get_movie,
     get_movie_imdb_id,
     get_tv,
@@ -147,27 +159,20 @@ def user():
     pass
 
 
-@api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
-    query = session.query(
-        EpisodeDetails if type == MediaType.SERIES else MovieDetails
-    ).filter_by(id=id)
+def safe_delete(session: Session, entity: Type, id: int):
+    query = session.query(entity).filter_by(id=id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
     session.commit()
 
+
+@api.get('/delete/{type}/{id}')
+async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
+    safe_delete(
+        session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
+    )
+
     return {}
-
-
-@api.get('/redirect/plex/{tmdb_id}')
-def redirect_plex():
-    pass
-
-
-@api.get('/redirect/{type_}/{ident}')
-@api.get('/redirect/{type_}/{ident}/{season}/{episode}')
-def redirect(type_: MediaType, ident: int, season: int = None, episode: int = None):
-    pass
 
 
 def eventstream(func: Callable[..., Iterable[BaseModel]]):
@@ -221,7 +226,6 @@ def stream(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: int, season: int):
-    from .main import extract_marker, groupby, normalise
 
     results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
@@ -261,7 +265,6 @@ async def download_post(
     added_by: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
-    from .main import add_single
 
     results: List[Union[MovieDetails, EpisodeDetails]] = []
 
@@ -322,14 +325,12 @@ async def download_post(
 
 @api.get('/index', response_model=IndexResponse)
 async def index(session: Session = Depends(get_db)):
-    from .main import resolve_series
 
     return IndexResponse(series=resolve_series(session), movies=get_movies(session))
 
 
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
-    from .main import groupby
 
     keys = Download.added_by_id, Download.type
     query = session.query(*keys, func.count(name='count')).group_by(*keys)
@@ -350,7 +351,6 @@ def movie(tmdb_id: int):
 
 @api.get('/torrents', response_model=Dict[str, InnerTorrent])
 async def torrents():
-    from .main import get_keyed_torrents
 
     return get_keyed_torrents()
 
@@ -372,10 +372,8 @@ async def monitor_get(
 
 @monitor_ns.delete('/{monitor_id}', tags=['monitor'])
 async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
-    query = session.query(Monitor).filter_by(id=monitor_id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    session.commit()
+    safe_delete(session, Monitor, monitor_id)
+
     return {}
 
 
@@ -465,6 +463,37 @@ async def static(
     filename = resource if "." in resource else 'index.html'
 
     return await static_files.get_response(filename, request.scope)
+
+
+@root.get('/redirect/plex/{tmdb_id}')
+def redirect_to_plex(tmdb_id: str):
+    dat = get_imdb_in_plex(tmdb_id)
+    if not dat:
+        raise HTTPException(404, 'Not found in plex')
+
+    server_id = get_plex().machineIdentifier
+
+    return RedirectResponse(
+        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
+        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
+    )
+
+
+@root.get('/redirect/{type_}/{tmdb_id}')
+@root.get('/redirect/{type_}/{tmdb_id}/{season}/{episode}')
+def redirect_to_imdb(
+    type_: MediaType, tmdb_id: int, season: int = None, episode: int = None
+):
+    if type_ == 'movie':
+        imdb_id = get_movie_imdb_id(tmdb_id)
+    elif season:
+        imdb_id = get_json(
+            f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
+        )['imdb_id']
+    else:
+        imdb_id = get_tv_imdb_id(tmdb_id)
+
+    return RedirectResponse(f'https://www.imdb.com/title/{imdb_id}')
 
 
 api.include_router(tv_ns, prefix='/tv')

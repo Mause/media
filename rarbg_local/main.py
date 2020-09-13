@@ -11,14 +11,12 @@ from itertools import chain
 from os.path import join
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
-from urllib.parse import urlencode
 
 from fastapi.exceptions import HTTPException
 from flask import (
     Blueprint,
     Flask,
     Response,
-    abort,
     current_app,
     get_flashed_messages,
     redirect,
@@ -38,7 +36,6 @@ from requests.exceptions import ConnectionError
 from sqlalchemy import event
 from sqlalchemy.orm.session import Session, make_transient
 from werkzeug.exceptions import NotFound
-from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .auth import auth_hook
@@ -54,18 +51,10 @@ from .db import (
     get_episodes,
 )
 from .models import Episode, SeriesDetails
-from .new import create_app as create_fastapi_app
 from .providers import search_for_movie, search_for_tv
-from .tmdb import (
-    get_json,
-    get_movie_imdb_id,
-    get_tv_episodes,
-    get_tv_imdb_id,
-    resolve_id,
-)
+from .tmdb import get_movie_imdb_id, get_tv_episodes, get_tv_imdb_id, resolve_id
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import non_null, precondition
-from .wsgi_to_asgi import ASGItoWSGIAdapter
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
@@ -98,7 +87,6 @@ def create_app(config: Dict):
     config = config if isinstance(config, dict) else {}
     papp = Flask(__name__, static_folder='../app/build/static')
     papp.register_blueprint(app)
-    papp.wsgi_app = DispatcherMiddleware(papp.wsgi_app, {'/api': ASGItoWSGIAdapter(create_fastapi_app(), True)})  # type: ignore
 
     papp.config.update(
         {
@@ -420,32 +408,3 @@ def get_keyed_torrents() -> Dict[str, Dict]:
         logging.exception('Unable to connect to transmission')
         error = 'Unable to connect to transmission: ' + str(e)
         raise HTTPException(500, error)
-
-
-@app.route('/redirect/plex/<tmdb_id>')
-def redirect_to_plex(tmdb_id: str):
-    dat = get_imdb_in_plex(tmdb_id)
-    if not dat:
-        return abort(404, 'Not found in plex')
-
-    server_id = get_plex().machineIdentifier
-
-    return redirect(
-        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
-        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
-    )
-
-
-@app.route('/redirect/<type_>/<ident>')
-@app.route('/redirect/<type_>/<ident>/<season>/<episode>')
-def redirect_to_imdb(type_: str, ident: str, season: str = None, episode: str = None):
-    if type_ == 'movie':
-        imdb_id = get_movie_imdb_id(ident)
-    elif season:
-        imdb_id = get_json(
-            f'tv/{ident}/season/{season}/episode/{episode}/external_ids'
-        )['imdb_id']
-    else:
-        imdb_id = get_tv_imdb_id(ident)
-
-    return redirect(f'https://www.imdb.com/title/{imdb_id}')
