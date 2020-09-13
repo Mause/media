@@ -323,10 +323,14 @@ function Season({
   );
 }
 
-export function NextEpisodeAirs(props: { tmdb_id: number; season: string; season_episodes: { episode?: number }[] }) {
-  const { data } = useSWR<{ episodes: { name: string; air_date: string; episode_number: number }[] }>(
-    `tv/${props.tmdb_id}/season/${props.season}`,
-  );
+export function NextEpisodeAirs(props: {
+  tmdb_id: number;
+  season: string;
+  season_episodes: { episode?: number }[];
+}) {
+  const { data } = useSWR<{
+    episodes: { name: string; air_date: string; episode_number: number }[];
+  }>(`tv/${props.tmdb_id}/season/${props.season}`);
 
   if (!data) {
     return <></>;
