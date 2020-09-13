@@ -1,16 +1,33 @@
-# -*- coding: utf-8 -*-
 # snapshottest: v1 - https://goo.gl/zC4yUc
-from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
+snapshots['test_schema 1'] = {
+    'definitions': {
+        'MediaType': {
+            'description': 'An enumeration.',
+            'enum': ['series', 'movie'],
+            'title': 'MediaType',
+        }
+    },
+    'properties': {
+        'imdbID': {'title': 'Imdbid', 'type': 'integer'},
+        'title': {'title': 'Title', 'type': 'string'},
+        'type': {'$ref': '#/definitions/MediaType'},
+        'year': {'title': 'Year', 'type': 'integer'},
+    },
+    'required': ['title', 'type', 'imdbID'],
+    'title': 'SearchResponse',
+    'type': 'object',
+}
+
 snapshots['test_index 1'] = {
     'movies': [
         {
             'download': {
-                'added_by': {'username': 'python'},
+                'added_by': {'first_name': '', 'username': 'python'},
                 'id': 2,
                 'imdb_id': 'tt0000001',
                 'timestamp': '2020-04-20T00:00:00',
@@ -29,7 +46,7 @@ snapshots['test_index 1'] = {
                 '1': [
                     {
                         'download': {
-                            'added_by': {'username': 'python'},
+                            'added_by': {'first_name': '', 'username': 'python'},
                             'id': 1,
                             'imdb_id': 'tt000000',
                             'timestamp': '2020-04-21T00:00:00',
@@ -51,47 +68,11 @@ snapshots['test_index 1'] = {
     ],
 }
 
-snapshots['test_schema 1'] = {
-    'definitions': {
-        'MediaType': {
-            'description': 'An enumeration.',
-            'enum': ['series', 'movie'],
-            'title': 'MediaType',
-        }
-    },
-    'properties': {
-        'Type': {'$ref': '#/definitions/MediaType'},
-        'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
-        'imdbID': {'title': 'Imdbid', 'type': 'integer'},
-        'title': {'title': 'Title', 'type': 'string'},
-        'type': {'$ref': '#/definitions/MediaType'},
-        'year': {'title': 'Year', 'type': 'integer'},
-    },
-    'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
-    'title': 'SearchResponse',
-    'type': 'object',
-}
+snapshots['test_movie 1'] = {'imdb_id': 'tt0000000', 'title': 'Hello'}
 
 snapshots['test_openapi 1'] = {
     'components': {
         'schemas': {
-            'Body_login_token_post': {
-                'properties': {
-                    'client_id': {'title': 'Client Id', 'type': 'string'},
-                    'client_secret': {'title': 'Client Secret', 'type': 'string'},
-                    'grant_type': {
-                        'pattern': 'password',
-                        'title': 'Grant Type',
-                        'type': 'string',
-                    },
-                    'password': {'title': 'Password', 'type': 'string'},
-                    'scope': {'default': '', 'title': 'Scope', 'type': 'string'},
-                    'username': {'title': 'Username', 'type': 'string'},
-                },
-                'required': ['username', 'password'],
-                'title': 'Body_login_token_post',
-                'type': 'object',
-            },
             'DownloadAllResponse': {
                 'properties': {
                     'complete': {
@@ -207,7 +188,6 @@ snapshots['test_openapi 1'] = {
                     'epnum': {'title': 'Epnum', 'type': 'string'},
                     'seasonnum': {'title': 'Seasonnum', 'type': 'string'},
                 },
-                'required': ['seasonnum', 'epnum'],
                 'title': 'EpisodeInfo',
                 'type': 'object',
             },
@@ -233,10 +213,10 @@ snapshots['test_openapi 1'] = {
                 },
                 'required': [
                     'source',
-                    'download',
-                    'seeders',
-                    'category',
                     'title',
+                    'seeders',
+                    'download',
+                    'category',
                     'episode_info',
                 ],
                 'title': 'ITorrent',
@@ -294,6 +274,7 @@ snapshots['test_openapi 1'] = {
                 'properties': {
                     'added_by': {'title': 'Added By', 'type': 'string'},
                     'id': {'title': 'Id', 'type': 'integer'},
+                    'status': {'default': False, 'title': 'Status', 'type': 'boolean'},
                     'title': {'title': 'Title', 'type': 'string'},
                     'tmdb_id': {'title': 'Tmdb Id', 'type': 'integer'},
                     'type': {'$ref': '#/components/schemas/MonitorMediaType'},
@@ -334,34 +315,19 @@ snapshots['test_openapi 1'] = {
                 'title': 'MovieResponse',
                 'type': 'object',
             },
-            'PromoteCreate': {
-                'properties': {
-                    'roles': {
-                        'items': {'type': 'string'},
-                        'title': 'Roles',
-                        'type': 'array',
-                    },
-                    'username': {'title': 'Username', 'type': 'string'},
-                },
-                'required': ['username', 'roles'],
-                'title': 'PromoteCreate',
-                'type': 'object',
-            },
             'ProviderSource': {
                 'description': 'An enumeration.',
-                'enum': ['KICKASS', 'HORRIBLESUBS', 'RARBG'],
+                'enum': ['kickass', 'horriblesubs', 'rarbg'],
                 'title': 'ProviderSource',
             },
             'SearchResponse': {
                 'properties': {
-                    'Type': {'$ref': '#/components/schemas/MediaType'},
-                    'Year': {'deprecated': True, 'title': 'Year', 'type': 'integer'},
                     'imdbID': {'title': 'Imdbid', 'type': 'integer'},
                     'title': {'title': 'Title', 'type': 'string'},
                     'type': {'$ref': '#/components/schemas/MediaType'},
                     'year': {'title': 'Year', 'type': 'integer'},
                 },
-                'required': ['title', 'type', 'year', 'imdbID', 'Year', 'Type'],
+                'required': ['title', 'type', 'imdbID'],
                 'title': 'SearchResponse',
                 'type': 'object',
             },
@@ -425,7 +391,7 @@ snapshots['test_openapi 1'] = {
                     },
                     'title': {'title': 'Title', 'type': 'string'},
                 },
-                'required': ['number_of_seasons', 'title', 'imdb_id', 'seasons'],
+                'required': ['number_of_seasons', 'seasons', 'title'],
                 'title': 'TvResponse',
                 'type': 'object',
             },
@@ -441,25 +407,13 @@ snapshots['test_openapi 1'] = {
                 'title': 'TvSeasonResponse',
                 'type': 'object',
             },
-            'UserCreate': {
+            'UserSchema': {
                 'properties': {
-                    'password': {'title': 'Password', 'type': 'string'},
+                    'first_name': {'title': 'First Name', 'type': 'string'},
                     'username': {'title': 'Username', 'type': 'string'},
                 },
-                'required': ['username', 'password'],
-                'title': 'UserCreate',
-                'type': 'object',
-            },
-            'UserSchema': {
-                'properties': {'username': {'title': 'Username', 'type': 'string'}},
-                'required': ['username'],
+                'required': ['username', 'first_name'],
                 'title': 'UserSchema',
-                'type': 'object',
-            },
-            'UserShim': {
-                'properties': {'username': {'title': 'Username', 'type': 'string'}},
-                'required': ['username'],
-                'title': 'UserShim',
                 'type': 'object',
             },
             'ValidationError': {
@@ -476,49 +430,22 @@ snapshots['test_openapi 1'] = {
                 'title': 'ValidationError',
                 'type': 'object',
             },
-        }
-    },
-    'info': {'title': 'FastAPI', 'version': '0.1.0'},
-    'openapi': '3.0.2',
-    'paths': {
-        '/create_user': {
-            'post': {
-                'operationId': 'create_user_create_user_post',
-                'requestBody': {
-                    'content': {
-                        'application/json': {
-                            'schema': {'$ref': '#/components/schemas/UserCreate'}
-                        }
-                    },
-                    'required': True,
-                },
-                'responses': {
-                    '200': {
-                        'content': {
-                            'application/json': {
-                                'schema': {'$ref': '#/components/schemas/UserShim'}
-                            }
-                        },
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'summary': 'Create User',
-                'tags': ['user'],
+        },
+        'securitySchemes': {
+            'XOpenIdConnect': {
+                'openIdConnectUrl': (
+                    'https://mause.au.auth0.com/.well-known/openid-configuration'
+                ),
+                'type': 'openIdConnect',
             }
         },
-        '/delete/{type}/{id}': {
+    },
+    'info': {'title': 'Media', 'version': '0.1.0-dev'},
+    'openapi': '3.0.2',
+    'paths': {
+        '/api/delete/{type}/{id}': {
             'get': {
-                'operationId': 'delete_delete__type___id__get',
+                'operationId': 'delete',
                 'parameters': [
                     {
                         'in': 'path',
@@ -549,24 +476,26 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Delete',
             }
         },
-        '/diagnostics': {
+        '/api/diagnostics': {
             'get': {
-                'operationId': 'diagnostics_diagnostics_get',
+                'operationId': 'diagnostics',
                 'responses': {
                     '200': {
                         'content': {'application/json': {'schema': {}}},
                         'description': 'Successful Response',
                     }
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Diagnostics',
             }
         },
-        '/download': {
+        '/api/download': {
             'post': {
-                'operationId': 'download_post_download_post',
+                'operationId': 'download_post',
                 'requestBody': {
                     'content': {
                         'application/json': {
@@ -581,65 +510,20 @@ snapshots['test_openapi 1'] = {
                 },
                 'responses': {
                     '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'summary': 'Download Post',
-            }
-        },
-        '/index': {
-            'get': {
-                'operationId': 'index_index_get',
-                'responses': {
-                    '200': {
-                        'content': {
-                            'application/json': {
-                                'schema': {'$ref': '#/components/schemas/IndexResponse'}
-                            }
-                        },
-                        'description': 'Successful Response',
-                    }
-                },
-                'summary': 'Index',
-            }
-        },
-        '/monitor': {
-            'get': {
-                'operationId': 'monitor_get_monitor_get',
-                'parameters': [
-                    {
-                        'in': 'cookie',
-                        'name': 'remember_token',
-                        'required': False,
-                        'schema': {'title': 'Remember Token', 'type': 'string'},
-                    },
-                    {
-                        'in': 'cookie',
-                        'name': 'session',
-                        'required': False,
-                        'schema': {'title': 'Session', 'type': 'string'},
-                    },
-                ],
-                'responses': {
-                    '200': {
                         'content': {
                             'application/json': {
                                 'schema': {
                                     'items': {
-                                        '$ref': '#/components/schemas/MonitorGet'
+                                        'anyOf': [
+                                            {
+                                                '$ref': '#/components/schemas/MovieDetailsSchema'
+                                            },
+                                            {
+                                                '$ref': '#/components/schemas/EpisodeDetailsSchema'
+                                            },
+                                        ]
                                     },
-                                    'title': 'Response Monitor Get Monitor Get',
+                                    'title': 'Response Download Post Api Download Post',
                                     'type': 'array',
                                 }
                             }
@@ -657,25 +541,52 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
+                'summary': 'Download Post',
+            }
+        },
+        '/api/index': {
+            'get': {
+                'operationId': 'index',
+                'responses': {
+                    '200': {
+                        'content': {
+                            'application/json': {
+                                'schema': {'$ref': '#/components/schemas/IndexResponse'}
+                            }
+                        },
+                        'description': 'Successful Response',
+                    }
+                },
+                'security': [{'XOpenIdConnect': ['openid']}],
+                'summary': 'Index',
+            }
+        },
+        '/api/monitor': {
+            'get': {
+                'operationId': 'monitor_get',
+                'responses': {
+                    '200': {
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    'items': {
+                                        '$ref': '#/components/schemas/MonitorGet'
+                                    },
+                                    'title': 'Response Monitor Get Api Monitor Get',
+                                    'type': 'array',
+                                }
+                            }
+                        },
+                        'description': 'Successful Response',
+                    }
+                },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Monitor Get',
                 'tags': ['monitor'],
             },
             'post': {
-                'operationId': 'monitor_post_monitor_post',
-                'parameters': [
-                    {
-                        'in': 'cookie',
-                        'name': 'remember_token',
-                        'required': False,
-                        'schema': {'title': 'Remember Token', 'type': 'string'},
-                    },
-                    {
-                        'in': 'cookie',
-                        'name': 'session',
-                        'required': False,
-                        'schema': {'title': 'Session', 'type': 'string'},
-                    },
-                ],
+                'operationId': 'monitor_post',
                 'requestBody': {
                     'content': {
                         'application/json': {
@@ -704,13 +615,14 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Monitor Post',
                 'tags': ['monitor'],
             },
         },
-        '/monitor/{monitor_id}': {
+        '/api/monitor/{monitor_id}': {
             'delete': {
-                'operationId': 'monitor_delete_monitor__monitor_id__delete',
+                'operationId': 'monitor_delete',
                 'parameters': [
                     {
                         'in': 'path',
@@ -735,13 +647,14 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Monitor Delete',
                 'tags': ['monitor'],
             }
         },
-        '/movie/{tmdb_id}': {
+        '/api/movie/{tmdb_id}': {
             'get': {
-                'operationId': 'movie_movie__tmdb_id__get',
+                'operationId': 'movie',
                 'parameters': [
                     {
                         'in': 'path',
@@ -770,165 +683,13 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Movie',
             }
         },
-        '/promote': {
-            'post': {
-                'operationId': 'promote_promote_post',
-                'parameters': [
-                    {
-                        'in': 'cookie',
-                        'name': 'remember_token',
-                        'required': False,
-                        'schema': {'title': 'Remember Token', 'type': 'string'},
-                    },
-                    {
-                        'in': 'cookie',
-                        'name': 'session',
-                        'required': False,
-                        'schema': {'title': 'Session', 'type': 'string'},
-                    },
-                ],
-                'requestBody': {
-                    'content': {
-                        'application/json': {
-                            'schema': {'$ref': '#/components/schemas/PromoteCreate'}
-                        }
-                    },
-                    'required': True,
-                },
-                'responses': {
-                    '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'summary': 'Promote',
-                'tags': ['user'],
-            }
-        },
-        '/redirect/plex/{tmdb_id}': {
+        '/api/search': {
             'get': {
-                'operationId': 'redirect_plex_redirect_plex__tmdb_id__get',
-                'responses': {
-                    '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    }
-                },
-                'summary': 'Redirect Plex',
-            }
-        },
-        '/redirect/{type_}/{ident}': {
-            'get': {
-                'operationId': 'redirect_redirect__type____ident__get',
-                'parameters': [
-                    {
-                        'in': 'path',
-                        'name': 'type_',
-                        'required': True,
-                        'schema': {'$ref': '#/components/schemas/MediaType'},
-                    },
-                    {
-                        'in': 'path',
-                        'name': 'ident',
-                        'required': True,
-                        'schema': {'title': 'Ident', 'type': 'integer'},
-                    },
-                    {
-                        'in': 'query',
-                        'name': 'season',
-                        'required': False,
-                        'schema': {'title': 'Season', 'type': 'integer'},
-                    },
-                    {
-                        'in': 'query',
-                        'name': 'episode',
-                        'required': False,
-                        'schema': {'title': 'Episode', 'type': 'integer'},
-                    },
-                ],
-                'responses': {
-                    '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'summary': 'Redirect',
-            }
-        },
-        '/redirect/{type_}/{ident}/{season}/{episode}': {
-            'get': {
-                'operationId': 'redirect_redirect__type____ident___season___episode__get',
-                'parameters': [
-                    {
-                        'in': 'path',
-                        'name': 'type_',
-                        'required': True,
-                        'schema': {'$ref': '#/components/schemas/MediaType'},
-                    },
-                    {
-                        'in': 'path',
-                        'name': 'ident',
-                        'required': True,
-                        'schema': {'title': 'Ident', 'type': 'integer'},
-                    },
-                    {
-                        'in': 'path',
-                        'name': 'season',
-                        'required': True,
-                        'schema': {'title': 'Season', 'type': 'integer'},
-                    },
-                    {
-                        'in': 'path',
-                        'name': 'episode',
-                        'required': True,
-                        'schema': {'title': 'Episode', 'type': 'integer'},
-                    },
-                ],
-                'responses': {
-                    '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'summary': 'Redirect',
-            }
-        },
-        '/search': {
-            'get': {
-                'operationId': 'search_search_get',
+                'operationId': 'search',
                 'parameters': [
                     {
                         'in': 'query',
@@ -945,7 +706,7 @@ snapshots['test_openapi 1'] = {
                                     'items': {
                                         '$ref': '#/components/schemas/SearchResponse'
                                     },
-                                    'title': 'Response Search Search Get',
+                                    'title': 'Response Search Api Search Get',
                                     'type': 'array',
                                 }
                             }
@@ -963,12 +724,13 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Search',
             }
         },
-        '/select/{tmdb_id}/season/{season}/download_all': {
+        '/api/select/{tmdb_id}/season/{season}/download_all': {
             'get': {
-                'operationId': 'select_select__tmdb_id__season__season__download_all_get',
+                'operationId': 'select',
                 'parameters': [
                     {
                         'in': 'path',
@@ -1005,12 +767,13 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Select',
             }
         },
-        '/stats': {
+        '/api/stats': {
             'get': {
-                'operationId': 'stats_stats_get',
+                'operationId': 'stats',
                 'responses': {
                     '200': {
                         'content': {
@@ -1019,7 +782,7 @@ snapshots['test_openapi 1'] = {
                                     'items': {
                                         '$ref': '#/components/schemas/StatsResponse'
                                     },
-                                    'title': 'Response Stats Stats Get',
+                                    'title': 'Response Stats Api Stats Get',
                                     'type': 'array',
                                 }
                             }
@@ -1027,24 +790,31 @@ snapshots['test_openapi 1'] = {
                         'description': 'Successful Response',
                     }
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Stats',
             }
         },
-        '/stream/{type}/{tmdb_id}': {
+        '/api/stream/{type}/{tmdb_id}': {
             'get': {
-                'operationId': 'stream_stream__type___tmdb_id__get',
+                'operationId': 'stream',
                 'parameters': [
                     {
                         'in': 'path',
                         'name': 'type',
                         'required': True,
-                        'schema': {'$ref': '#/components/schemas/MediaType'},
+                        'schema': {'title': 'Type', 'type': 'string'},
                     },
                     {
                         'in': 'path',
                         'name': 'tmdb_id',
                         'required': True,
-                        'schema': {'title': 'Tmdb Id', 'type': 'integer'},
+                        'schema': {'title': 'Tmdb Id', 'type': 'string'},
+                    },
+                    {
+                        'in': 'query',
+                        'name': 'source',
+                        'required': False,
+                        'schema': {'$ref': '#/components/schemas/ProviderSource'},
                     },
                     {
                         'in': 'query',
@@ -1080,45 +850,13 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Stream',
             }
         },
-        '/token': {
-            'post': {
-                'operationId': 'login_token_post',
-                'requestBody': {
-                    'content': {
-                        'application/x-www-form-urlencoded': {
-                            'schema': {
-                                '$ref': '#/components/schemas/Body_login_token_post'
-                            }
-                        }
-                    },
-                    'required': True,
-                },
-                'responses': {
-                    '200': {
-                        'content': {'application/json': {'schema': {}}},
-                        'description': 'Successful Response',
-                    },
-                    '422': {
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    '$ref': '#/components/schemas/HTTPValidationError'
-                                }
-                            }
-                        },
-                        'description': 'Validation Error',
-                    },
-                },
-                'summary': 'Login',
-                'tags': ['user'],
-            }
-        },
-        '/torrents': {
+        '/api/torrents': {
             'get': {
-                'operationId': 'torrents_torrents_get',
+                'operationId': 'torrents',
                 'responses': {
                     '200': {
                         'content': {
@@ -1127,7 +865,7 @@ snapshots['test_openapi 1'] = {
                                     'additionalProperties': {
                                         '$ref': '#/components/schemas/InnerTorrent'
                                     },
-                                    'title': 'Response Torrents Torrents Get',
+                                    'title': 'Response Torrents Api Torrents Get',
                                     'type': 'object',
                                 }
                             }
@@ -1135,12 +873,13 @@ snapshots['test_openapi 1'] = {
                         'description': 'Successful Response',
                     }
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Torrents',
             }
         },
-        '/tv/{tmdb_id}': {
+        '/api/tv/{tmdb_id}': {
             'get': {
-                'operationId': 'api_tv_tv__tmdb_id__get',
+                'operationId': 'api_tv',
                 'parameters': [
                     {
                         'in': 'path',
@@ -1169,13 +908,14 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Api Tv',
                 'tags': ['tv'],
             }
         },
-        '/tv/{tmdb_id}/season/{season}': {
+        '/api/tv/{tmdb_id}/season/{season}': {
             'get': {
-                'operationId': 'api_tv_season_tv__tmdb_id__season__season__get',
+                'operationId': 'api_tv_season',
                 'parameters': [
                     {
                         'in': 'path',
@@ -1212,23 +952,158 @@ snapshots['test_openapi 1'] = {
                         'description': 'Validation Error',
                     },
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Api Tv Season',
                 'tags': ['tv'],
             }
         },
-        '/user/unauthorized': {
+        '/api/user/unauthorized': {
             'get': {
-                'operationId': 'user_user_unauthorized_get',
+                'operationId': 'user',
                 'responses': {
                     '200': {
                         'content': {'application/json': {'schema': {}}},
                         'description': 'Successful Response',
                     }
                 },
+                'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'User',
             }
         },
+        '/redirect/plex/{tmdb_id}': {
+            'get': {
+                'operationId': 'redirect_to_plex',
+                'parameters': [
+                    {
+                        'in': 'path',
+                        'name': 'tmdb_id',
+                        'required': True,
+                        'schema': {'title': 'Tmdb Id', 'type': 'string'},
+                    }
+                ],
+                'responses': {
+                    '200': {
+                        'content': {'application/json': {'schema': {}}},
+                        'description': 'Successful Response',
+                    },
+                    '422': {
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    '$ref': '#/components/schemas/HTTPValidationError'
+                                }
+                            }
+                        },
+                        'description': 'Validation Error',
+                    },
+                },
+                'summary': 'Redirect To Plex',
+            }
+        },
+        '/redirect/{type_}/{tmdb_id}': {
+            'get': {
+                'operationId': 'redirect_to_imdb',
+                'parameters': [
+                    {
+                        'in': 'path',
+                        'name': 'type_',
+                        'required': True,
+                        'schema': {'$ref': '#/components/schemas/MediaType'},
+                    },
+                    {
+                        'in': 'path',
+                        'name': 'tmdb_id',
+                        'required': True,
+                        'schema': {'title': 'Tmdb Id', 'type': 'integer'},
+                    },
+                    {
+                        'in': 'query',
+                        'name': 'season',
+                        'required': False,
+                        'schema': {'title': 'Season', 'type': 'integer'},
+                    },
+                    {
+                        'in': 'query',
+                        'name': 'episode',
+                        'required': False,
+                        'schema': {'title': 'Episode', 'type': 'integer'},
+                    },
+                ],
+                'responses': {
+                    '200': {
+                        'content': {'application/json': {'schema': {}}},
+                        'description': 'Successful Response',
+                    },
+                    '422': {
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    '$ref': '#/components/schemas/HTTPValidationError'
+                                }
+                            }
+                        },
+                        'description': 'Validation Error',
+                    },
+                },
+                'summary': 'Redirect To Imdb',
+            }
+        },
+        '/redirect/{type_}/{tmdb_id}/{season}/{episode}': {
+            'get': {
+                'operationId': 'redirect_to_imdb',
+                'parameters': [
+                    {
+                        'in': 'path',
+                        'name': 'type_',
+                        'required': True,
+                        'schema': {'$ref': '#/components/schemas/MediaType'},
+                    },
+                    {
+                        'in': 'path',
+                        'name': 'tmdb_id',
+                        'required': True,
+                        'schema': {'title': 'Tmdb Id', 'type': 'integer'},
+                    },
+                    {
+                        'in': 'path',
+                        'name': 'season',
+                        'required': True,
+                        'schema': {'title': 'Season', 'type': 'integer'},
+                    },
+                    {
+                        'in': 'path',
+                        'name': 'episode',
+                        'required': True,
+                        'schema': {'title': 'Episode', 'type': 'integer'},
+                    },
+                ],
+                'responses': {
+                    '200': {
+                        'content': {'application/json': {'schema': {}}},
+                        'description': 'Successful Response',
+                    },
+                    '422': {
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    '$ref': '#/components/schemas/HTTPValidationError'
+                                }
+                            }
+                        },
+                        'description': 'Validation Error',
+                    },
+                },
+                'summary': 'Redirect To Imdb',
+            }
+        },
     },
+    'servers': [
+        {
+            'description': 'Development',
+            'url': '{protocol}://localhost:5000/',
+            'variables': {'protocol': {'default': 'https', 'enum': ['http', 'https']}},
+        },
+        {'description': 'Staging', 'url': 'https://media-staging.herokuapps.com/'},
+        {'description': 'Production', 'url': 'https://media.mause.me/'},
+    ],
 }
-
-snapshots['test_movie 1'] = {'imdb_id': 'tt0000000', 'title': 'Hello'}

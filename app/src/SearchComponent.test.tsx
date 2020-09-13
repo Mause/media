@@ -18,9 +18,9 @@ test('SearchComponent', async () => {
 
     const results: SearchResult[] = [
       {
-        Type: 'movie',
+        type: 'movie',
         imdbID: 10000,
-        Year: 2019,
+        year: 2019,
         title: 'Hello',
       },
     ];

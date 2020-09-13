@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from enum import Enum
 from functools import reduce
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar
@@ -38,9 +38,9 @@ def map_to(config: Dict[str, str]) -> Type:
 
 
 class ProviderSource(Enum):
-    KICKASS = 'KICKASS'
-    HORRIBLESUBS = 'HORRIBLESUBS'
-    RARBG = 'RARBG'
+    KICKASS = 'kickass'
+    HORRIBLESUBS = 'horriblesubs'
+    RARBG = 'rarbg'
 
 
 class EpisodeInfo(BaseModel):
@@ -59,6 +59,7 @@ class ITorrent(BaseModel):
 
 class UserSchema(Orm):
     username: str
+    first_name: str
 
 
 class DownloadSchema(Orm):
@@ -126,6 +127,7 @@ class MonitorGet(MonitorPost):
     id: int
     title: str
     added_by: str
+    status: bool = False
 
     Config = map_to({'added_by': 'added_by.username'})
 
@@ -135,3 +137,67 @@ class DownloadPost(BaseModel):
     magnet: constr(regex=r'^magnet:')  # type: ignore
     season: Optional[str] = None
     episode: Optional[str] = None
+
+
+class Episode(BaseModel):
+    name: str
+    id: int
+    episode_number: int
+    air_date: Optional[date]
+
+
+class TvSeasonResponse(BaseModel):
+    episodes: List[Episode]
+
+
+class SeasonMeta(BaseModel):
+    episode_count: int
+    season_number: int
+
+
+class TvBaseResponse(BaseModel):
+    number_of_seasons: int
+    seasons: List[SeasonMeta]
+
+
+class TvResponse(TvBaseResponse):
+    imdb_id: Optional[str]
+    title: str
+
+
+class TvApiResponse(TvBaseResponse):
+    name: str
+
+
+class MediaType(Enum):
+    SERIES = 'series'
+    MOVIE = 'movie'
+
+
+class SearchResponse(BaseModel):
+    title: str
+    type: MediaType
+    year: Optional[int]
+    imdbID: int
+
+
+class DownloadResponse(Orm):
+    id: int
+
+
+class MovieResponse(BaseModel):
+    title: str
+    imdb_id: str
+
+
+class InnerTorrent(BaseModel):
+    class InnerTorrentFile(BaseModel):
+        bytesCompleted: int
+        length: int
+        name: str
+
+    eta: int
+    hashString: str
+    id: int
+    percentDone: float
+    files: List[InnerTorrentFile]

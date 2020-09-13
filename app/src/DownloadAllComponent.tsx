@@ -61,8 +61,8 @@ function DownloadAllComponent() {
   );
 }
 
-function download_all(tmdb_id: string, torrents: ITorrent[]) {
-  const downloads: DownloadCall[] = torrents.map((t) => ({
+function download_all(tmdb_id: number, torrents: ITorrent[]) {
+  const downloads: DownloadCall[] = torrents.map(t => ({
     tmdb_id,
     magnet: t.download,
     season: t.episode_info.seasonnum,
@@ -87,7 +87,7 @@ function Individual(props: {
           props.items.map(([name, torrents]) => (
             <div key={name}>
               <h4>
-                <MLink {...download_all(props.tmdb_id, torrents)}>{name}</MLink>
+                <MLink {...download_all(parseInt(props.tmdb_id), torrents)}>{name}</MLink>
               </h4>
               <ul>
                 {torrents.map((t) => (

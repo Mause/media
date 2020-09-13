@@ -10,19 +10,14 @@ import { Breadcrumbs, Typography } from '@material-ui/core';
 import { Shared } from './SeasonSelectComponent';
 import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
+import { useAuth0 } from '@auth0/auth0-react';
+import { components } from './schema';
+
+export type ITorrent = components['schemas']['ITorrent'];
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
   return _.last(u.searchParams.get('xt')!.split(':'));
-}
-
-export interface ITorrent {
-  source: 'KICKASS' | 'RARBG' | 'HORRIBLESUBS';
-  title: string;
-  seeders: number;
-  download: string;
-  category: string;
-  episode_info: { seasonnum?: string; epnum?: string };
 }
 
 export function DisplayTorrent({
@@ -41,7 +36,7 @@ export function DisplayTorrent({
   const state: DownloadState = {
     downloads: [
       {
-        tmdb_id: tmdb_id,
+        tmdb_id: parseInt(tmdb_id),
         magnet: torrent.download,
         season: season,
         episode: episode,
@@ -51,7 +46,9 @@ export function DisplayTorrent({
   const url = { pathname: '/download', state };
   return (
     <span>
-      <strong title={torrent.source}>{torrent.source.substring(0, 1)}</strong>
+      <strong title={torrent.source}>
+        {torrent.source.substring(0, 1).toUpperCase()}
+      </strong>
       &nbsp;
       <MLink to={url}>{torrent.title}</MLink>
       &nbsp;
@@ -195,6 +192,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
 
 function useSubscribe<T>(
   url: string,
+  authorization?: string,
 ): { items: T[]; loading: boolean; error?: Error } {
   const [subscription, setSubscription] = useState<{
     items: T[];
@@ -203,6 +201,8 @@ function useSubscribe<T>(
   }>({ loading: true, items: [], error: undefined });
 
   useEffect(() => {
+    if (!authorization) return; // don't subscribe until we have auth
+
     const items: T[] = [];
     return subscribe<T>(
       url,
@@ -214,21 +214,33 @@ function useSubscribe<T>(
         });
       },
       (error) => setSubscription({ error, loading: false, items }),
+      authorization,
       () => setSubscription({ loading: false, items }),
     );
-  }, [url]);
+  }, [url, authorization]);
 
   return subscription;
+}
+
+function useToken() {
+  const auth = useAuth0();
+  const [token, setToken] = useState<string>();
+  useEffect(() => {
+    auth.getAccessTokenSilently().then(setToken);
+  }, [auth]);
+  return token;
 }
 
 function useSubscribes<T>(
   url: string,
 ): { items: T[]; loading: boolean; errors: { [key: string]: Error } } {
+  const token = useToken();
+
   const p = ['rarbg', 'horriblesubs', 'kickass'];
   const providers = [
-    useSubscribe<T>(url + '&source=' + p[0]),
-    useSubscribe<T>(url + '&source=' + p[1]),
-    useSubscribe<T>(url + '&source=' + p[2]),
+    useSubscribe<T>(url + '&source=' + p[0], token),
+    useSubscribe<T>(url + '&source=' + p[1], token),
+    useSubscribe<T>(url + '&source=' + p[2], token),
   ];
 
   return {

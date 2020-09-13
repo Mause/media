@@ -1,48 +1,77 @@
-import re
-from asyncio import get_event_loop, new_event_loop, set_event_loop, sleep
-from datetime import date
-from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
-from unittest.mock import MagicMock
+import logging
+import os
+import traceback
+from functools import wraps
+from itertools import chain
+from pathlib import Path
+from typing import Callable, Dict, Iterable, List, Optional, Type, Union
 from urllib.parse import urlencode
 
-from fastapi import APIRouter, Cookie, Depends, FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from flask import Blueprint, Response, current_app, request
-from flask.sessions import SecureCookieSessionInterface
-from flask_login.utils import decode_cookie
-from flask_user import UserManager, current_user
-from flask_user.password_manager import PasswordManager
-from flask_user.token_manager import TokenManager
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
+from fastapi.requests import Request
+from fastapi.responses import RedirectResponse, StreamingResponse
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBearer,
+    OpenIdConnect,
+    SecurityScopes,
+)
+from fastapi_utils.openapi import simplify_operation_ids
+from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
-from sqlalchemy import func
+from sqlalchemy import create_engine, event, func
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.session import Session
+from starlette.staticfiles import StaticFiles
 
+from .auth import auth_hook, get_my_jwkaas
 from .db import (
     Download,
+    EpisodeDetails,
     Monitor,
     MonitorMediaType,
-    Role,
-    Roles,
+    MovieDetails,
     User,
-    db,
     get_movies,
-    get_or_create,
 )
 from .health import health
+from .main import (
+    add_single,
+    extract_marker,
+    get_imdb_in_plex,
+    get_keyed_torrents,
+    get_plex,
+    groupby,
+    normalise,
+    resolve_series,
+)
 from .models import (
+    DownloadAllResponse,
     DownloadPost,
+    EpisodeDetailsSchema,
     IndexResponse,
+    InnerTorrent,
+    ITorrent,
+    MediaType,
     MonitorGet,
     MonitorPost,
-    Orm,
+    MovieDetailsSchema,
+    MovieResponse,
+    SearchResponse,
     StatsResponse,
-    UserShim,
-    map_to,
+    TvResponse,
+    TvSeasonResponse,
 )
-from .providers import ProviderSource, search_for_tv
+from .providers import (
+    PROVIDERS,
+    FakeProvider,
+    ProviderSource,
+    search_for_movie,
+    search_for_tv,
+)
+from .singleton import singleton
 from .tmdb import (
+    get_json,
     get_movie,
     get_movie_imdb_id,
     get_tv,
@@ -50,125 +79,157 @@ from .tmdb import (
     get_tv_imdb_id,
     search_themoviedb,
 )
-from .utils import precondition
+from .utils import non_null, precondition
 
-app = FastAPI()
-
-
-class FakeApp:
-    import_name = __name__
-
-    user_manager: UserManager
-
-    def __init__(self, fastapi_app):
-        self.debug = True
-        self.config = {
-            'SQLALCHEMY_TRACK_MODIFICATIONS': False,
-            'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
-            'SQLALCHEMY_ECHO': True,
-            'SECRET_KEY': 'hkfircsc',
-        }
-        self.extensions = {}
-
-    def teardown_appcontext(self, func):
-        pass
+api = APIRouter()
 
 
-def startup():
-    fake_app = FakeApp(app)
-    db.init_app(fake_app)
-    db.app = fake_app
-
-    engine = db.get_engine(fake_app, None)
-    con = engine.raw_connection().connection
-    con.create_collation("en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1)
-
-    db.create_all()
+def generate_plain_text(exc):
+    logging.exception('Error occured', exc_info=exc)
+    return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
-fake = FakeApp(None)
-fake.user_manager = UserManager(None, db, User)
-verify_token = TokenManager(fake).verify_token
-password_manager = PasswordManager(fake).password_crypt_context
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
+class XOpenIdConnect(OpenIdConnect):
+    async def __call__(  # type: ignore[override]
+        self, request: Request
+    ) -> Optional[HTTPAuthorizationCredentials]:
+        return await HTTPBearer().__call__(request)
 
 
-class MediaType(Enum):
-    SERIES = 'series'
-    MOVIE = 'movie'
+openid_connect = XOpenIdConnect(
+    openIdConnectUrl='https://mause.au.auth0.com/.well-known/openid-configuration'
+)
 
 
-class DownloadResponse(Orm):
-    id: int
+class Settings(BaseSettings):
+    root = Path(__file__).parent.parent.absolute()
+    database_url = f"sqlite:///{root}/db.db"
+    static_resources_path = root / 'app/build'
 
 
-@app.get('/user/unauthorized')
+@singleton
+async def get_settings():
+    return Settings()
+
+
+@singleton
+def get_session_local(settings: Settings = Depends(get_settings)):
+    db_url = settings.database_url
+    logging.info('db_url: %s', db_url)
+    ca = {"check_same_thread": False} if 'sqlite' in db_url else {}
+    engine = create_engine(db_url, connect_args=ca, pool_size=20)
+    if 'sqlite' in db_url:
+
+        def _fk_pragma_on_connect(dbapi_con, con_record):
+            dbapi_con.create_collation(
+                "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
+            )
+            dbapi_con.execute('pragma foreign_keys=ON')
+
+        event.listen(engine, 'connect', _fk_pragma_on_connect)
+
+    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+
+
+def get_db(session_local=Depends(get_session_local)):
+    sl = session_local()
+    try:
+        yield sl
+    finally:
+        sl.close()
+
+
+async def get_current_user(
+    security_scopes: SecurityScopes,
+    session=Depends(get_db),
+    header=Security(openid_connect, scopes=['openid']),
+    jwkaas=Depends(get_my_jwkaas),
+):
+    user = auth_hook(
+        session=session, header=header, security_scopes=security_scopes, jwkaas=jwkaas
+    )
+    if user:
+        return user
+    else:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+@api.get('/user/unauthorized')
 def user():
     pass
 
 
-@app.get('/delete/{type}/{id}')
-def delete(type: MediaType, id: int):
-    pass
+def safe_delete(session: Session, entity: Type, id: int):
+    query = session.query(entity).filter_by(id=id)
+    precondition(query.count() > 0, 'Nothing to delete')
+    query.delete()
+    session.commit()
 
 
-@app.get('/redirect/plex/{tmdb_id}')
-def redirect_plex():
-    pass
+@api.get('/delete/{type}/{id}')
+async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
+    safe_delete(
+        session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
+    )
+
+    return {}
 
 
-@app.get('/redirect/{type_}/{ident}')
-@app.get('/redirect/{type_}/{ident}/{season}/{episode}')
-def redirect(type_: MediaType, ident: int, season: int = None, episode: int = None):
-    pass
+def eventstream(func: Callable[..., Iterable[BaseModel]]):
+    @wraps(func)
+    async def decorator(*args, **kwargs):
+        sr = StreamingResponse(
+            chain(
+                (f'data: {rset.json()}\n\n' for rset in func(*args, **kwargs)),
+                ['data:\n\n'],
+            ),
+            media_type="text/event-stream",
+        )
+        return sr
+
+    return decorator
 
 
-class EpisodeInfo(BaseModel):
-    seasonnum: str
-    epnum: str
-
-
-class ITorrent(BaseModel):
-    source: ProviderSource
-    download: str
-    seeders: int
-    category: str
-    title: str
-    episode_info: EpisodeInfo
-
-
-@app.get(
+@api.get(
     '/stream/{type}/{tmdb_id}',
     response_class=StreamingResponse,
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
-async def stream(
-    type: MediaType,
-    tmdb_id: int,
-    season: Optional[int] = None,
-    episode: Optional[int] = None,
+@eventstream
+def stream(
+    type: str,
+    tmdb_id: str,
+    source: ProviderSource = None,
+    season: int = None,
+    episode: int = None,
 ):
-    async def t():
-        yield b''
+    if source:
+        provider = next(
+            (provider for provider in PROVIDERS if provider.name == source.value), None,
+        )
+        if not provider:
+            raise HTTPException(422, 'Invalid provider')
+    else:
+        provider = FakeProvider()
 
-    return StreamingResponse(t(), headers={'content-type': 'text/event-stream'})
+    if type == 'series':
+        items = provider.search_for_tv(
+            get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
+        )
+    else:
+        items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
+
+    return items
 
 
-class DownloadAllResponse(BaseModel):
-    packs: List[ITorrent]
-    complete: List[Tuple[str, List[ITorrent]]]
-    incomplete: List[Tuple[str, List[ITorrent]]]
-
-
-@app.get(
+@api.get(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: int, season: int):
-    from .main import extract_marker, groupby, normalise
 
     results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
-    episodes = get_tv_episodes(tmdb_id, season)['episodes']
+    episodes = get_tv_episodes(tmdb_id, season).episodes
 
     packs_or_not = groupby(
         results, lambda result: extract_marker(result.title)[1] is None
@@ -191,250 +252,137 @@ async def select(tmdb_id: int, season: int):
     )
 
 
-@app.get('/diagnostics')
+@api.get('/diagnostics')
 def diagnostics():
     return health.run()[0]
 
 
-@app.post('/download')
-async def download_post(things: List[DownloadPost]) -> Dict:
-    from .main import add_single
+@api.post(
+    '/download', response_model=List[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
+)
+async def download_post(
+    things: List[DownloadPost],
+    added_by: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> List[Union[MovieDetails, EpisodeDetails]]:
+
+    results: List[Union[MovieDetails, EpisodeDetails]] = []
 
     for thing in things:
         is_tv = thing.season is not None
 
-        item = get_tv(thing.tmdb_id) if is_tv else get_movie(thing.tmdb_id)
+        show_title: Optional[str]
         if is_tv:
-            subpath = f'tv_shows/{item["name"]}/Season {thing.season}'
-        else:
-            subpath = 'movies'
-
-        show_title = None
-        if thing.season is not None:
+            item = get_tv(thing.tmdb_id)
             if thing.episode is None:
                 title = f'Season {thing.season}'
             else:
-                idx = int(thing.episode) - 1
-                title = get_tv_episodes(thing.tmdb_id, thing.season)['episodes'][idx][
-                    'name'
-                ]
-            show_title = item['name']
-        else:
-            title = item['title']
+                episodes = get_tv_episodes(thing.tmdb_id, thing.season).episodes
+                episode = next(
+                    (
+                        episode
+                        for episode in episodes
+                        if str(episode.episode_number) == thing.episode
+                    ),
+                    None,
+                )
+                assert episode, f'Could not find episode: {thing}'
+                title = episode.name
 
-        add_single(
-            magnet=thing.magnet,
-            imdb_id=(
-                get_tv_imdb_id(str(thing.tmdb_id))
-                if is_tv
-                else get_movie_imdb_id(str(thing.tmdb_id))
+            show_title = item.name
+            subpath = f'tv_shows/{item.name}/Season {thing.season}'
+        else:
+            show_title = None
+            title = get_movie(thing.tmdb_id).title
+            subpath = 'movies'
+
+        results.append(
+            add_single(
+                session=session,
+                magnet=thing.magnet,
+                imdb_id=(
+                    get_tv_imdb_id(str(thing.tmdb_id))
+                    if is_tv
+                    else get_movie_imdb_id(str(thing.tmdb_id))
+                )
+                or '',
+                subpath=subpath,
+                tmdb_id=thing.tmdb_id,
+                season=thing.season,
+                episode=thing.episode,
+                title=title,
+                show_title=show_title,
+                is_tv=is_tv,
+                added_by=added_by,
             )
-            or '',
-            subpath=subpath,
-            tmdb_id=thing.tmdb_id,
-            season=thing.season,
-            episode=thing.episode,
-            title=title,
-            show_title=show_title,
-            is_tv=is_tv,
         )
 
-    return {}
+    session.add_all(results)
+    session.commit()
+
+    return results
 
 
-@app.get('/index', response_model=IndexResponse)
-async def index():
-    from .main import resolve_series
+@api.get('/index', response_model=IndexResponse)
+async def index(session: Session = Depends(get_db)):
 
-    return IndexResponse(series=resolve_series(), movies=get_movies())
+    return IndexResponse(series=resolve_series(session), movies=get_movies(session))
 
 
-@app.get('/stats', response_model=List[StatsResponse])
-async def stats():
-    from .main import groupby
+@api.get('/stats', response_model=List[StatsResponse])
+async def stats(session: Session = Depends(get_db)):
 
-    keys = User.username, Download.type
-    query = db.session.query(*keys, func.count(name='count')).group_by(*keys)
+    keys = Download.added_by_id, Download.type
+    query = session.query(*keys, func.count(name='count')).group_by(*keys)
 
     return [
-        {"user": user, 'values': {type: value for _, type, value in values}}
-        for user, values in groupby(query, lambda row: row.username).items()
+        {
+            "user": session.query(User).get(added_by_id).username,
+            "values": {type.lower(): value for _, type, value in values},
+        }
+        for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
     ]
 
 
-class MovieResponse(BaseModel):
-    title: str
-    imdb_id: str
-
-
-@app.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
+@api.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
 def movie(tmdb_id: int):
-    movie = get_movie(tmdb_id)
-    return {"title": movie['title'], "imdb_id": movie['imdb_id']}
+    return get_movie(tmdb_id)
 
 
-def magic(*args, **kwargs):
-    # we ignore the arguments flask tries to give us
-
-    return call_sync(
-        request.method,
-        '/' + request.path.split('/', 2)[-1],
-        urlencode(request.args),
-        headers=request.headers,
-        body=request.data,
-    )
-
-
-def translate(path: str) -> str:
-    return re.sub(r'\{([^}]*)\}', lambda m: '<' + m.group(1).split(':')[0] + '>', path)
-
-
-class FakeBlueprint(Blueprint):
-    def __init__(self):
-        super().__init__('fastapi', __name__)
-
-    def register(self, fapp, options, first_registration):
-        state = self.make_setup_state(fapp, options, first_registration)
-        for route in app.routes:
-            state.add_url_rule(
-                translate(route.path),
-                view_func=magic,
-                methods=route.methods,
-                endpoint=route,
-            )
-
-
-class InnerTorrent(BaseModel):
-    class InnerTorrentFile(BaseModel):
-        bytesCompleted: int
-        length: int
-        name: str
-
-    eta: int
-    hashString: str
-    id: int
-    percentDone: float
-    files: List[InnerTorrentFile]
-
-
-@app.get('/torrents', response_model=Dict[str, InnerTorrent])
+@api.get('/torrents', response_model=Dict[str, InnerTorrent])
 async def torrents():
-    from .main import get_keyed_torrents
 
     return get_keyed_torrents()
 
 
-class SearchResponse(BaseModel):
-    title: str
-    type: MediaType
-    year: int
-    imdbID: int
-
-    # deprecated
-    Year: int = Field(deprecated=True)
-    Type: MediaType = Field(deprecated=True)
-
-    Config = map_to({'year': 'Year', 'type': 'Type'})
-
-
-@app.get('/search', response_model=List[SearchResponse])
+@api.get('/search', response_model=List[SearchResponse])
 async def search(query: str):
-    # dirty hack to make aliasing work
-    return [type('SearchResponse', (), v)() for v in search_themoviedb(query)]
+    return search_themoviedb(query)
 
 
 monitor_ns = APIRouter()
 
 
-class UserCreate(BaseModel):
-    username: str
-    password: str
-
-
-@app.post('/create_user', response_model=UserShim, tags=['user'])
-def create_user(item: UserCreate):
-    user = User(username=item.username, password=password_manager.hash(item.password),)
-    db.session.add(user)
-    db.session.commit()
-
-    return user
-
-
-async def get_current_user(
-    remember_token: str = Cookie(None), session: str = Cookie(None)
-) -> Optional[User]:
-    if session:
-        request = MagicMock(cookies={'session': session})
-        sess = SecureCookieSessionInterface().open_session(current_app, request)
-        user_id = sess['_user_id']
-        user_id, _ = verify_token(user_id)
-        return db.session.query(User).get(user_id)
-
-    try:
-        return current_user._get_current_object()
-    except Exception:
-        pass
-
-    user = None
-    if remember_token:
-        user_id = decode_cookie(remember_token)
-
-        user = db.session.query(User).filter_by(username=user_id).one_or_none()
-
-    if user:
-        return user
-    else:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-
-class PromoteCreate(BaseModel):
-    username: str
-    roles: List[str]
-
-
-@app.post('/promote', tags=['user'])
-def promote(req: PromoteCreate, calling_user: User = Depends(get_current_user)):
-    if Roles.Admin not in calling_user.roles:
-        raise HTTPException(403, 'Insufficient caller rights')
-
-    user = db.session.query(User).filter_by(username=req.username).one_or_none()
-    if user:
-        user.roles = [get_or_create(Role, name=role) for role in req.roles]
-        db.session.commit()
-    else:
-        raise HTTPException(422, "User does not exist")
-
-
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
-async def monitor_get(user: User = Depends(get_current_user)):
-    return db.session.query(Monitor).all()
+async def monitor_get(
+    user: User = Depends(get_current_user), session: Session = Depends(get_db)
+):
+    return session.query(Monitor).all()
 
 
 @monitor_ns.delete('/{monitor_id}', tags=['monitor'])
-async def monitor_delete(monitor_id: int):
-    query = db.session.query(Monitor).filter_by(id=monitor_id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    db.session.commit()
+async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
+    safe_delete(session, Monitor, monitor_id)
+
     return {}
-
-
-@app.post("/token", tags=['user'])
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = db.session.query(User).filter_by(username=form_data.username).one_or_none()
-
-    if password_manager.verify(form_data.password, user.password if user else None):
-        return {"access_token": user.username, "token_type": "bearer"}
-
-    raise HTTPException(status_code=400, detail="Incorrect username or password")
 
 
 def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
     try:
         return (
-            get_movie(tmdb_id)['title']
+            get_movie(tmdb_id).title
             if type == MonitorMediaType.MOVIE
-            else get_tv(tmdb_id)['name']
+            else get_tv(tmdb_id).name
         )
     except HTTPError as e:
         if e.response.status_code == 404:
@@ -444,10 +392,14 @@ def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
 
 
 @monitor_ns.post('', tags=['monitor'], response_model=MonitorGet, status_code=201)
-async def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_user)):
+async def monitor_post(
+    monitor: MonitorPost,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+):
     media = validate_id(monitor.type, monitor.tmdb_id)
     c = (
-        db.session.query(Monitor)
+        session.query(Monitor)
         .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
         .one_or_none()
     )
@@ -455,41 +407,18 @@ async def monitor_post(monitor: MonitorPost, user: User = Depends(get_current_us
         c = Monitor(
             tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
         )
-        db.session.add(c)
-        db.session.commit()
+        session.add(c)
+        session.commit()
     return c
 
 
 tv_ns = APIRouter()
 
 
-class SeasonMeta(BaseModel):
-    episode_count: int
-    season_number: int
-
-
-class TvResponse(BaseModel):
-    number_of_seasons: int
-    title: str
-    imdb_id: str
-    seasons: List[SeasonMeta]
-
-
 @tv_ns.get('/{tmdb_id}', tags=['tv'], response_model=TvResponse)
 def api_tv(tmdb_id: int):
     tv = get_tv(tmdb_id)
-    return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv['name']}
-
-
-class Episode(BaseModel):
-    name: str
-    id: int
-    episode_number: int
-    air_date: Optional[date]
-
-
-class TvSeasonResponse(BaseModel):
-    episodes: List[Episode]
+    return {**tv, 'imdb_id': get_tv_imdb_id(tmdb_id), 'title': tv.name}
 
 
 @tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)
@@ -497,64 +426,100 @@ def api_tv_season(tmdb_id: int, season: int):
     return get_tv_episodes(tmdb_id, season)
 
 
-app.include_router(tv_ns, prefix='/tv')
-app.include_router(monitor_ns, prefix='/monitor')
+def _stream(type: str, tmdb_id: str, season=None, episode=None):
+    if type == 'series':
+        items = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode)
+    else:
+        items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
+
+    return (item.dict() for item in items)
 
 
-def call_sync(method='GET', path='/monitor', query_string='', headers=None, body=None):
-    response: Dict[str, Any] = {}
+@api.websocket("/ws")
+async def websocket_stream(websocket: WebSocket):
+    await websocket.accept()
 
-    async def send(message):
-        body = message.pop('body', None)
-        if body:
-            if 'body' in response:
-                response['body'] += body
-            else:
-                response['body'] = body
-        response.update(message)
+    request = await websocket.receive_json()
 
-    async def recieve():
-        if body:
-            return {'type': 'http.request', 'body': body}
-        elif 'body' in response and not response['more_body']:
-            return {'type': 'http.disconnect'}
-        else:
-            await sleep(0)
-            return {'type': 'http.*'}
+    for item in _stream(**request):
+        await websocket.send_json(item)
 
-    async def call():
 
-        headerz = [
-            (key.encode().lower(), value.encode()) for key, value in list(headers or [])
-        ]
-        await app(
+root = APIRouter()
+
+
+@singleton
+def get_static_files(settings: Settings = Depends(get_settings)):
+    return StaticFiles(directory=str(settings.static_resources_path))
+
+
+@root.api_route('/{resource:path}', methods=['GET', 'HEAD'], include_in_schema=False)
+@root.api_route('/', methods=['GET', 'HEAD'], include_in_schema=False)
+async def static(
+    request: Request,
+    resource: str = '',
+    static_files: StaticFiles = Depends(get_static_files),
+):
+    filename = resource if "." in resource else 'index.html'
+
+    return await static_files.get_response(filename, request.scope)
+
+
+@root.get('/redirect/plex/{tmdb_id}')
+def redirect_to_plex(tmdb_id: str):
+    dat = get_imdb_in_plex(tmdb_id)
+    if not dat:
+        raise HTTPException(404, 'Not found in plex')
+
+    server_id = get_plex().machineIdentifier
+
+    return RedirectResponse(
+        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
+        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
+    )
+
+
+@root.get('/redirect/{type_}/{tmdb_id}')
+@root.get('/redirect/{type_}/{tmdb_id}/{season}/{episode}')
+def redirect_to_imdb(
+    type_: MediaType, tmdb_id: int, season: int = None, episode: int = None
+):
+    if type_ == 'movie':
+        imdb_id = get_movie_imdb_id(tmdb_id)
+    elif season:
+        imdb_id = get_json(
+            f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
+        )['imdb_id']
+    else:
+        imdb_id = get_tv_imdb_id(tmdb_id)
+
+    return RedirectResponse(f'https://www.imdb.com/title/{imdb_id}')
+
+
+api.include_router(tv_ns, prefix='/tv')
+api.include_router(monitor_ns, prefix='/monitor')
+
+
+def create_app():
+    app = FastAPI(
+        servers=[
             {
-                'type': 'http',
-                'path': path,
-                'method': method,
-                'query_string': query_string,
-                'headers': headerz,
+                "url": "{protocol}://localhost:5000/",
+                "description": "Development",
+                "variables": {
+                    "protocol": {"enum": ["http", "https"], "default": "https"}
+                },
             },
-            recieve,
-            send,
-        )
+            {"url": "https://media-staging.herokuapps.com/", "description": "Staging"},
+            {"url": "https://media.mause.me/", "description": "Production"},
+        ],
+        title='Media',
+        version='0.1.0-' + os.environ.get('HEROKU_SLUG_COMMIT', 'dev'),
+        debug='HEROKU' not in os.environ,
+    )
+    app.middleware_stack.generate_plain_text = generate_plain_text
+    app.include_router(api, prefix='/api', dependencies=[Depends(get_current_user)])
+    app.include_router(root, prefix='')
+    simplify_operation_ids(app)
 
-    try:
-        el = get_event_loop()
-    except RuntimeError:
-        el = new_event_loop()
-        set_event_loop(el)
-    el.run_until_complete(call())
-
-    response.pop('type')
-    response.pop('more_body', None)
-    if 'body' in response:
-        response['response'] = response.pop('body')
-    response['headers'] = dict(response['headers'])
-    response['mimetype'] = response['headers'].pop(b'content-type').decode()
-
-    return Response(**response)
-
-
-if __name__ == "__main__":
-    print(call_sync())
+    return app

@@ -33,6 +33,7 @@ import { Integrations as ApmIntegrations } from '@sentry/apm';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link as MaterialLink } from '@material-ui/core';
+import { components } from './schema';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -47,44 +48,11 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-export interface IndexResponse {
-  series: SeriesResponse[];
-  movies: MovieResponse[];
-}
-export interface Download {
-  id: number;
-  imdb_id: string;
-  title: string;
-  transmission_id: string;
-  added_by?: { first_name: string };
-}
-export interface MovieResponse {
-  download: Download;
-  id: number;
-}
-export interface SeriesResponse {
-  imdb_id: string;
-  tmdb_id: string;
-  title: string;
-  seasons: {
-    [key: string]: EpisodeResponse[];
-  };
-}
-export interface EpisodeResponse {
-  download: Download;
-  episode: number;
-  id: number;
-  season: number;
-  show_title: string;
-}
-export interface TorrentFile {
-  name: string;
-  bytesCompleted: number;
-  length: number;
-}
-export type Torrents = {
-  [key: string]: { eta: number; percentDone: number; files: TorrentFile[] };
-};
+export type Torrents = { [key: string]: components['schemas']['InnerTorrent'] };
+export type IndexResponse = components['schemas']['IndexResponse'];
+export type MovieResponse = components['schemas']['MovieDetailsSchema'];
+export type SeriesResponse = components['schemas']['SeriesDetails'];
+export type EpisodeResponse = components['schemas']['EpisodeDetailsSchema'];
 
 function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
   return (
@@ -127,7 +95,7 @@ const Login = () => {
     );
   } else {
     return (
-      <MaterialLink href="#" onClick={loginWithRedirect}>
+      <MaterialLink href="#" onClick={() => loginWithRedirect({})}>
         Login
       </MaterialLink>
     );
@@ -201,22 +169,45 @@ function ParentComponentInt() {
     </Router>
   );
 }
-export function swrConfig(WrappedComponent: React.ComponentType<{}>) {
-  return () => (
+function SwrConfigWrapper({
+  WrappedComponent,
+}: {
+  WrappedComponent: React.ComponentType<{}>;
+}) {
+  const auth = useAuth0();
+  return (
     <SWRConfig
       value={{
         // five minute refresh
         refreshInterval: 5 * 60 * 1000,
-        fetcher: (...args) => load(args[0], args[1]),
+        fetcher: async (path, params) =>
+          await load(
+            path,
+            params,
+            auth.isAuthenticated
+              ? {
+                  Authorization:
+                    'Bearer ' + (await auth.getAccessTokenSilently()),
+                }
+              : {},
+          ),
       }}
     >
       <WrappedComponent />
     </SWRConfig>
   );
 }
+
+export function swrConfig(WrappedComponent: React.ComponentType<{}>) {
+  return () => <SwrConfigWrapper WrappedComponent={WrappedComponent} />;
+}
 const ParentComponent = swrConfig(ParentComponentInt);
 
 function Routes() {
+  const auth = useAuth0();
+
+  if (!auth.isAuthenticated) return <div>Please login</div>;
+
   return (
     <Switch>
       <RouteWithTitle path="/websocket/:tmdbId" title="Websocket">

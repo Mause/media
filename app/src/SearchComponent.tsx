@@ -5,13 +5,8 @@ import { useLocation } from 'react-router-dom';
 import { SearchBox } from './IndexComponent';
 import useSWR from 'swr';
 import { MLink } from './utils';
-
-export interface SearchResult {
-  Type: string;
-  Year: number;
-  imdbID: number;
-  title: string;
-}
+import { components } from './schema';
+export type SearchResult = components['schemas']['SearchResponse'];
 
 export function SearchComponent() {
   const { search } = useLocation();
@@ -29,13 +24,14 @@ export function SearchComponent() {
             <li key={result.imdbID}>
               <MLink
                 to={
-                  result.Type === 'movie'
-                    ? `/select/${result.imdbID}/options`
-                    : `/select/${result.imdbID}/season`
+                  pathname:
+                    result.type === 'movie'
+                      ? `/select/${result.imdbID}/options`
+                      : `/select/${result.imdbID}/season`,
                 }
                 state={{ query }}
               >
-                {result.title} ({result.Year ? result.Year : 'Unknown year'})
+                {result.title} ({result.year ? result.year : 'Unknown year'})
               </MLink>
             </li>
           ))

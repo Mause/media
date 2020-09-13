@@ -7,12 +7,11 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import useSWR from 'swr';
 import qs from 'qs';
 import { MLink, useLocation } from './utils';
+import { components } from './schema';
 
-export interface TV {
-  number_of_seasons: number;
-  title: string;
-  seasons: { episode_count: number; season_number: number }[];
-}
+export type Season = components['schemas']['TvSeasonResponse'];
+export type EpisodeResponse = components['schemas']['Episode'];
+export type TV = components['schemas']['TvResponse'];
 
 export function Shared() {
   const { state } = useLocation<{ query: string }>();
@@ -84,14 +83,6 @@ export function EpisodeSelectBreadcrumbs(props: {
   );
 }
 
-interface Episode {
-  episode_number: number;
-  id: string;
-  name: string;
-}
-export interface Season {
-  episodes: Episode[];
-}
 function EpisodeSelectComponent() {
   const { tmdb_id, season: seasonNumber } = useParams();
   const { data: season } = useSWR<Season>(

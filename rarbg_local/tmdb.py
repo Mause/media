@@ -8,6 +8,7 @@ import requests
 from cachetools.func import ttl_cache
 from requests_toolbelt.sessions import BaseUrlSession
 
+from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonResponse
 from .utils import lru_cache, precondition
 
 tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
@@ -43,16 +44,16 @@ def get_year(result: Dict[str, str]) -> Optional[int]:
 
 
 @ttl_cache()
-def search_themoviedb(s: str) -> List[Dict]:
+def search_themoviedb(s: str) -> List[SearchResponse]:
     MAP = {'tv': 'series', 'movie': 'movie'}
     r = tmdb.get('search/multi', params={'query': s})
     return [
-        {
-            'Type': MAP[result['media_type']],
-            'title': try_(result, 'title', 'name'),
-            'Year': get_year(result),
-            'imdbID': result['id'],
-        }
+        SearchResponse(
+            type=MAP[result['media_type']],
+            title=try_(result, 'title', 'name'),
+            year=get_year(result),
+            imdbID=result['id'],
+        )
         for result in r.json().get('results', [])
         if result['media_type'] in MAP
     ]
@@ -85,13 +86,13 @@ def resolve_id(imdb_id: str, type: ThingType) -> str:
 
 
 @lru_cache()
-def get_movie(id: str):
-    return get_json(f'movie/{id}')
+def get_movie(id: str) -> MovieResponse:
+    return MovieResponse(**get_json(f'movie/{id}'))
 
 
 @ttl_cache()
-def get_tv(id: str):
-    return get_json(f'tv/{id}')
+def get_tv(id: str) -> TvApiResponse:
+    return TvApiResponse(**get_json(f'tv/{id}'))
 
 
 def get_movie_imdb_id(movie_id: Union[int, str]) -> str:
@@ -108,8 +109,8 @@ def get_imdb_id(type: str, id: Union[int, str]) -> str:
 
 
 @ttl_cache()
-def get_tv_episodes(id: str, season: str):
-    return get_json(f'tv/{id}/season/{season}')
+def get_tv_episodes(id: str, season: str) -> TvSeasonResponse:
+    return TvSeasonResponse(**get_json(f'tv/{id}/season/{season}'))
 
 
 class ReleaseType(Enum):

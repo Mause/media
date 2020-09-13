@@ -120,19 +120,19 @@ def search(showid: int, search_term: str):
 @ttl_cache()
 def get_names(tmdb_id: int) -> Set[str]:
     tv = get_tv(tmdb_id)
-    results = jikan.get('search/anime', params={'q': tv['name'], 'limit': 1}).json()[
+    results = jikan.get('search/anime', params={'q': tv.name, 'limit': 1}).json()[
         'results'
     ]
     if not results:
-        return {tv['name']}
+        return {tv.name}
 
     result = results[0]
-    if closeness(tv['name'], [result['title']]) < 95:
-        return {tv['name']}
+    if closeness(tv.name, [result['title']]) < 95:
+        return {tv.name}
 
     result = jikan.get(f'anime/{results[0]["mal_id"]}').json()
 
-    return set([tv['name'], result['title']] + result['title_synonyms'])
+    return set([tv.name, result['title']] + result['title_synonyms'])
 
 
 def closeness(key, names):

@@ -17,9 +17,13 @@ webdriver-manager = "*"
 pre-commit = "*"
 sqlalchemy-stubs = "*"
 snapshottest = "*"
-black = "*"
+black = {git = "https://github.com/psf/black"}
 flake8 = "*"
 mypy = "*"
+factory-boy = "*"
+isort = "*"
+pytest-asyncio = "*"
+async-asgi-testclient = "*"
 
 [packages]
 flask = "*"
@@ -59,7 +63,9 @@ python-multipart = "*"
 jwkaas = "*"
 aniso8601 = "*"
 pytz = "*"
-flask-restx = "*"
+uvicorn = "*"
+aiofiles = "*"
+fastapi-utils = "*"
 
 [requires]
 python_version = "3"

@@ -276,6 +276,7 @@ tools:
     ignore:
       - bad-wildcard-import
       - bare-except-bugbear
+      - no-call-in-default-args
       - no-getattr
       - no-setattr
       - unused-loop-variable
@@ -298,7 +299,7 @@ tools:
       - recursion-error
       - missing-meta-charset
       - missing-meta-content-type
-    run: true
+    run: false
   r2c.requests:
     ignore:
       - use-timeout

@@ -10,8 +10,7 @@ from functools import lru_cache, wraps
 from itertools import chain
 from os.path import join
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, cast
-from urllib.parse import urlencode
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
 
 from fastapi.exceptions import HTTPException
 from flask import (
@@ -19,9 +18,7 @@ from flask import (
     Flask,
     Response,
     current_app,
-    g,
     get_flashed_messages,
-    jsonify,
     redirect,
     render_template,
     request,
@@ -30,19 +27,15 @@ from flask import (
 )
 from flask_admin import Admin
 from flask_cors import CORS
-from flask_restx import Api, Resource
-from flask_restx.reqparse import RequestParser
-from flask_socketio import SocketIO, send
 from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
-from sqlalchemy import event, func
-from sqlalchemy.orm.session import make_transient
+from sqlalchemy import event
+from sqlalchemy.orm.session import Session, make_transient
 from werkzeug.exceptions import NotFound
-from werkzeug.wrappers import Response as WResponse
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .auth import auth_hook
@@ -57,35 +50,16 @@ from .db import (
     db,
     get_episodes,
 )
-from .health import health
-from .models import SeriesDetails
-from .new import FakeBlueprint, magic
-from .providers import PROVIDERS, FakeProvider, search_for_movie, search_for_tv
-from .tmdb import (
-    get_json,
-    get_movie_imdb_id,
-    get_tv_episodes,
-    get_tv_imdb_id,
-    resolve_id,
-)
+from .models import Episode, SeriesDetails
+from .providers import search_for_movie, search_for_tv
+from .tmdb import get_movie_imdb_id, get_tv_episodes, get_tv_imdb_id, resolve_id
 from .transmission_proxy import get_torrent, torrent_add
-from .utils import as_resource, non_null, precondition
+from .utils import non_null, precondition
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
 
 app = Blueprint('rarbg_local', __name__)
-
-authorizations = {'basic': {'type': 'basic',}}
-api = Api(
-    prefix='/api',
-    doc='/doc',
-    validate=True,
-    authorizations=authorizations,
-    security='basic',
-)
-
-sockets = SocketIO(cors_allowed_origins='*')
 
 K = TypeVar('K')
 V = TypeVar('V')
@@ -111,11 +85,9 @@ def cache_busting_url_for(endpoint, **values):
 
 def create_app(config: Dict):
     config = config if isinstance(config, dict) else {}
-    enable_new = config.get('ENABLE_NEW', False)
     papp = Flask(__name__, static_folder='../app/build/static')
     papp.register_blueprint(app)
-    if enable_new:
-        papp.register_blueprint(FakeBlueprint(), url_prefix='/api')
+
     papp.config.update(
         {
             'SECRET_KEY': 'hkfircsc',
@@ -130,16 +102,12 @@ def create_app(config: Dict):
             'USER_ENABLE_EMAIL': False,  # Disable email authentication
             'USER_ENABLE_USERNAME': True,  # Enable username authentication
             'USER_UNAUTHORIZED_ENDPOINT': 'rarbg_local.unauthorized',
-            'RESTX_INCLUDE_ALL_MODELS': True,
             **config,
         }
     )
     db.init_app(papp)
-    if not enable_new:
-        api.init_app(papp)
     if not papp.config.get('TESTING', False):
         CORS(papp, supports_credentials=True)
-    sockets.init_app(papp)
 
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
         engine = db.get_engine(papp, None)
@@ -208,8 +176,8 @@ def serve_index(path=None):
     return send_from_directory('../app/build/', 'index.html')
 
 
-def eventstream(func: Callable):
-    @wraps(func)
+def eventstream(function: Callable):
+    @wraps(function)
     def decorator(*args, **kwargs):
         def default(obj):
             if isinstance(obj, Enum):
@@ -221,7 +189,7 @@ def eventstream(func: Callable):
             chain(
                 (
                     f'data: {json.dumps(rset, default=default)}\n\n'
-                    for rset in func(*args, **kwargs)
+                    for rset in function(*args, **kwargs)
                 ),
                 ['data:\n\n'],
             ),
@@ -231,48 +199,6 @@ def eventstream(func: Callable):
     return decorator
 
 
-def query_params(validator):
-    def decorator(func):
-        @wraps(func)
-        @api.expect(validator)
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs, **validator.parse_args(strict=True))
-
-        return wrapper
-
-    return decorator
-
-
-@api.route('/stream/<type>/<tmdb_id>')
-@api.param('type', enum=['series', 'movie'])
-@as_resource()
-@query_params(
-    RequestParser()
-    .add_argument('season', type=int)
-    .add_argument('episode', type=int)
-    .add_argument('source', choices=[p.name for p in PROVIDERS])
-)
-@eventstream
-def stream(type: str, tmdb_id: str, source=None, season=None, episode=None):
-    if source:
-        provider = next(
-            (provider for provider in PROVIDERS if provider.name == source), None,
-        )
-        if not provider:
-            return api.abort(422)
-    else:
-        provider = FakeProvider()
-
-    if type == 'series':
-        items = provider.search_for_tv(
-            get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode
-        )
-    else:
-        items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
-
-    return (item.dict() for item in items)
-
-
 def _stream(type: str, tmdb_id: str, season=None, episode=None):
     if type == 'series':
         items = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode)
@@ -280,26 +206,6 @@ def _stream(type: str, tmdb_id: str, season=None, episode=None):
         items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
     return (item.dict() for item in items)
-
-
-@sockets.on('message')
-def socket_stream(message):
-    request = json.loads(message)
-
-    for item in _stream(**request):
-        send(json.dumps(item, default=lambda enu: enu.name))
-
-
-@app.route('/delete/<type>/<id>')
-def delete(type: str, id: str) -> WResponse:
-    query = db.session.query(
-        EpisodeDetails if type == 'series' else MovieDetails
-    ).filter_by(id=id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    db.session.commit()
-
-    return jsonify()
 
 
 def categorise(string: str) -> str:
@@ -317,7 +223,7 @@ season_re = re.compile(r'\W(S\d{2})\W')
 punctuation_re = re.compile(f'[{string.punctuation} ]')
 
 
-def normalise(episodes: List[Dict], title: str) -> Optional[str]:
+def normalise(episodes: List[Episode], title: str) -> Optional[str]:
     sel = full_marker_re.search(title)
     if not sel:
         sel = season_re.search(title)
@@ -333,13 +239,13 @@ def normalise(episodes: List[Dict], title: str) -> Optional[str]:
         (
             episode
             for episode in episodes
-            if episode['episode_number'] == int(i_episode, 10)
+            if episode.episode_number == int(i_episode, 10)
         ),
         None,
     )
     assert episode
 
-    to_replace = punctuation_re.sub(' ', episode['name'])
+    to_replace = punctuation_re.sub(' ', episode.name)
     to_replace = '.'.join(to_replace.split())
     title = re.sub(to_replace, 'TITLE', title, re.I)
 
@@ -357,50 +263,9 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-@api.route('/select/<tmdb_id>/season/<season>/download_all')
-@as_resource()
-def download_all_episodes(tmdb_id: str, season: str) -> Dict:
-    return magic()
-
-
-@api.route('/diagnostics')
-@as_resource()
-def api_diagnostics():
-    return health.run()
-
-
-@api.route('/openapi.json')
-@as_resource()
-def api_openapi():
-    return magic()
-
-
-@api.route('/download')
-@as_resource({'POST'})
-def api_download() -> str:
-    return magic()
-
-
-monitor = api.namespace('monitor', 'Contains media monitor resources')
-
-
-@monitor.route('')
-class MonitorsResource(Resource):
-    def post(self):
-        return magic()
-
-    def get(self):
-        return magic()
-
-
-@monitor.route('/<int:ident>')
-class MonitorResource(Resource):
-    def delete(self, ident: int):
-        return magic()
-
-
 def add_single(
     *,
+    session: Session,
     magnet: str,
     subpath: str,
     is_tv: bool,
@@ -410,7 +275,8 @@ def add_single(
     episode: Optional[str],
     title: str,
     show_title: Optional[str],
-) -> None:
+    added_by: User,
+) -> Union[MovieDetails, EpisodeDetails]:
     res = torrent_add(magnet, subpath)
     arguments = res['arguments']
     print(arguments)
@@ -425,16 +291,14 @@ def add_single(
     )['hashString']
 
     already = (
-        db.session.query(Download)
-        .filter_by(transmission_id=transmission_id)
-        .one_or_none()
+        session.query(Download).filter_by(transmission_id=transmission_id).one_or_none()
     )
 
     print('already', already)
     if not already:
         if is_tv:
             precondition(season, 'Season must be provided for tv type')
-            create_episode(
+            return create_episode(
                 transmission_id=transmission_id,
                 imdb_id=imdb_id,
                 season=non_null(season),
@@ -442,16 +306,18 @@ def add_single(
                 title=title,
                 tmdb_id=tmdb_id,
                 show_title=non_null(show_title),
+                added_by=added_by,
             )
         else:
-            create_movie(
+            return create_movie(
                 transmission_id=transmission_id,
                 imdb_id=imdb_id,
                 tmdb_id=tmdb_id,
                 title=title,
+                added_by=added_by,
             )
 
-        db.session.commit()
+    return already.episode if is_tv else already.movie
 
 
 def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
@@ -461,7 +327,7 @@ def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
     return dict(dd)
 
 
-def resolve_season(episodes):
+def resolve_season(episodes) -> List[EpisodeDetails]:
     if not (len(episodes) == 1 and episodes[0].is_season_pack()):
         return episodes
 
@@ -484,15 +350,15 @@ def resolve_season(episodes):
             id=-1,
             download=Download(
                 id=-1,
-                transmission_id=f'{download.transmission_id}.{episode["episode_number"]}',
-                title=episode['name'],
+                transmission_id=f'{download.transmission_id}.{episode.episode_number}',
+                title=episode.name,
                 **common,
             ),
             season=pack.season,
-            episode=episode['episode_number'],
+            episode=episode.episode_number,
             show_title=pack.show_title,
         )
-        for episode in get_tv_episodes(pack.download.tmdb_id, pack.season)['episodes']
+        for episode in get_tv_episodes(pack.download.tmdb_id, pack.season).episodes
     ]
 
 
@@ -518,8 +384,8 @@ def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
     )
 
 
-def resolve_series() -> List[SeriesDetails]:
-    episodes = get_episodes()
+def resolve_series(session: Session) -> List[SeriesDetails]:
+    episodes = get_episodes(session)
 
     return [
         make_series_details(imdb_id, show)
@@ -529,98 +395,16 @@ def resolve_series() -> List[SeriesDetails]:
     ]
 
 
-@api.route('/index')
-@as_resource()
-def api_index():
-    return magic()
-
-
-@api.route('/stats')
-@as_resource()
-def api_stats():
-    return magic()
-
-
 def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
     guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
     items = get_plex().library.search(guid=guid)
     return items[0] if items else None
 
 
-@api.route('/movie/<int:tmdb_id>')
-@as_resource()
-def api_movie(tmdb_id: str):
-    return magic()
-
-
-tv_ns = api.namespace('tv')
-
-
-@tv_ns.route('/<int:tmdb_id>')
-@as_resource()
-def api_tv():
-    return magic()
-
-
-@tv_ns.route('/<int:tmdb_id>/season/<int:season>')
-@as_resource()
-def api_tv_season():
-    return magic()
-
-
-@api.route('/torrents')
-@as_resource()
-def api_torrents():
-    return magic()
-
-
-@api.route('/search')
-@as_resource()
-def api_search():
-    return magic()
-
-
 def get_keyed_torrents() -> Dict[str, Dict]:
-    if hasattr(g, 'get_keyed_torrents'):
-        return g.get_keyed_torrents
-    else:
-        g.get_keyed_torrents = _get_keyed_torrents()
-        return g.get_keyed_torrents
-
-
-def _get_keyed_torrents() -> Dict[str, Dict]:
     try:
         return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
     except (ConnectionError, TimeoutError, FutureTimeoutError,) as e:
         logging.exception('Unable to connect to transmission')
         error = 'Unable to connect to transmission: ' + str(e)
         raise HTTPException(500, error)
-
-
-@app.route('/redirect/plex/<tmdb_id>')
-def redirect_to_plex(tmdb_id: str):
-    dat = get_imdb_in_plex(tmdb_id)
-    if not dat:
-        return api.abort(404, 'Not found in plex')
-
-    server_id = get_plex().machineIdentifier
-
-    return redirect(
-        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
-        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
-    )
-
-
-@app.route('/redirect/<type_>/<ident>')
-@app.route('/redirect/<type_>/<ident>/<season>/<episode>')
-def redirect_to_imdb(type_: str, ident: str, season: str = None, episode: str = None):
-    if type_ == 'movie':
-        imdb_id = get_movie_imdb_id(ident)
-    elif season:
-        imdb_id = get_json(
-            f'tv/{ident}/season/{season}/episode/{episode}/external_ids'
-        )['imdb_id']
-    else:
-        imdb_id = get_tv_imdb_id(ident)
-
-    return redirect(f'https://www.imdb.com/title/{imdb_id}')
