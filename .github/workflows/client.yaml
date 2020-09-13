@@ -20,4 +20,4 @@ jobs:
       with:
               java-version: 8
     - run: npm install -g @openapitools/openapi-generator-cli
-    - run: openapi-generator generate -i https://media.mause.me/openapi.json -g python -o client
+    - run: openapi-generator generate -i https://media.mause.me/openapi.json -g python -o client --skip-validate-spec
