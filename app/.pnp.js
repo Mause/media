@@ -75,7 +75,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@testing-library/react",
-        "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.2"
+        "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.4"
       ],
       [
         "@testing-library/user-event",
@@ -248,7 +248,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/apm", "npm:5.23.0"],
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.23.0"],
             ["@testing-library/jest-dom", "npm:5.11.4"],
-            ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.2"],
+            ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.4"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.4"],
             ["@types/history", "npm:4.7.7"],
             ["@types/jest", "npm:26.0.13"],
@@ -3670,10 +3670,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@testing-library/dom", [
-        ["npm:7.24.1", {
-          "packageLocation": "./.yarn/cache/@testing-library-dom-npm-7.24.1-d77dd6fc4f-e5ebd9a27e.zip/node_modules/@testing-library/dom/",
+        ["npm:7.24.2", {
+          "packageLocation": "./.yarn/cache/@testing-library-dom-npm-7.24.2-626e7f11fe-544dff249c.zip/node_modules/@testing-library/dom/",
           "packageDependencies": [
-            ["@testing-library/dom", "npm:7.24.1"],
+            ["@testing-library/dom", "npm:7.24.2"],
             ["@babel/code-frame", "npm:7.10.4"],
             ["@babel/runtime", "npm:7.10.5"],
             ["@types/aria-query", "npm:4.2.0"],
@@ -3703,12 +3703,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@testing-library/react", [
-        ["virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.2", {
-          "packageLocation": "./.yarn/$$virtual/@testing-library-react-virtual-d3e9e79d40/0/cache/@testing-library-react-npm-11.0.2-3f710d1c12-664dfbafb3.zip/node_modules/@testing-library/react/",
+        ["virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.4", {
+          "packageLocation": "./.yarn/$$virtual/@testing-library-react-virtual-95bfbdabc2/0/cache/@testing-library-react-npm-11.0.4-2adbdfa1f0-3662df0d28.zip/node_modules/@testing-library/react/",
           "packageDependencies": [
-            ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.2"],
+            ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.4"],
             ["@babel/runtime", "npm:7.11.2"],
-            ["@testing-library/dom", "npm:7.24.1"],
+            ["@testing-library/dom", "npm:7.24.2"],
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:16.13.1"]
           ],
@@ -4800,7 +4800,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/apm", "npm:5.23.0"],
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.23.0"],
             ["@testing-library/jest-dom", "npm:5.11.4"],
-            ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.2"],
+            ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.4"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.4"],
             ["@types/history", "npm:4.7.7"],
             ["@types/jest", "npm:26.0.13"],

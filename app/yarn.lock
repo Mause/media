@@ -2266,9 +2266,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^7.23.0":
-  version: 7.24.1
-  resolution: "@testing-library/dom@npm:7.24.1"
+"@testing-library/dom@npm:^7.24.2":
+  version: 7.24.2
+  resolution: "@testing-library/dom@npm:7.24.2"
   dependencies:
     "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.10.3
@@ -2277,7 +2277,7 @@ __metadata:
     chalk: ^4.1.0
     dom-accessibility-api: ^0.5.1
     pretty-format: ^26.4.2
-  checksum: e5ebd9a27e48f48012b77888e6c2bb16b6e36c2fe4db299ea17fb25d427491afea28cb3bf33379a4ea8d1f4fc76ef294964027747f58c102c69086ed1a1dbe50
+  checksum: 544dff249c20543ca3aad6a9bef03bbb8b920c6724f41e89c874d78c23da0a226703f4c8a9264b875c913f05e4fc5b312ef2dae01f0ea865a9552c92541076ba
   languageName: node
   linkType: hard
 
@@ -2297,16 +2297,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^11.0.2":
-  version: 11.0.2
-  resolution: "@testing-library/react@npm:11.0.2"
+"@testing-library/react@npm:^11.0.4":
+  version: 11.0.4
+  resolution: "@testing-library/react@npm:11.0.4"
   dependencies:
     "@babel/runtime": ^7.11.2
-    "@testing-library/dom": ^7.23.0
+    "@testing-library/dom": ^7.24.2
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 664dfbafb36dcad0fb232a48824e63d58db4594f6ada073bea9fe322c4a9fc717aa95a0d2f196fbaa40b0cc3c78683967b8571405a6ceb755f7eb9c3dd916cd6
+  checksum: 3662df0d284b4ad0701aa86ec396652280357cccf22935c6bde02fbb9a08125c216a43c4960b188e6403f053bfa68a680d934a9ea90ff92312e16e57d6eaa986
   languageName: node
   linkType: hard
 
@@ -3253,7 +3253,7 @@ __metadata:
     "@sentry/apm": ^5.23.0
     "@sentry/react": ^5.23.0
     "@testing-library/jest-dom": ^5.11.4
-    "@testing-library/react": ^11.0.2
+    "@testing-library/react": ^11.0.4
     "@testing-library/user-event": ^12.1.4
     "@types/history": 4.7.7
     "@types/jest": ^26.0.13
