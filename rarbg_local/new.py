@@ -4,7 +4,7 @@ import traceback
 from functools import wraps
 from itertools import chain
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Type, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
@@ -162,11 +162,11 @@ def user():
     pass
 
 
-async def safe_delete(session, entity, id):
+async def safe_delete(session: AsyncSession, entity: Any, id: int):
     query = select(entity).filter_by(id=id)
     res = (await session.execute(query)).scalars().all()
     precondition(len(res) == 1, 'Invalid')
-    await session.execute(delete(entity).filter_by(id=res[0].id))
+    await session.execute(delete(entity).where(entity.id == res[0].id))
     await session.commit()
 
 
@@ -177,6 +177,8 @@ async def delete_item(
     await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
+
+    return {}
 
 
 def eventstream(func: Callable[..., Iterable[BaseModel]]):

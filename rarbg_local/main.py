@@ -25,7 +25,6 @@ from flask import (
     send_from_directory,
     url_for,
 )
-from flask_admin import Admin
 from flask_cors import CORS
 from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
@@ -38,7 +37,6 @@ from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, make_transient
 from werkzeug.exceptions import NotFound
 
-from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .auth import auth_hook
 from .db import (
     Download,
@@ -125,6 +123,10 @@ def create_app(config: Dict):
     db.create_all(app=papp)
     UserManager(papp, db, User)
     papp.login_manager.request_loader(auth_hook)
+
+    from flask_admin import Admin
+
+    from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 
     admin = Admin(papp, name='Media')
     admin.add_view(UserAdmin(User, db.session))
