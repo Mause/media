@@ -4,7 +4,7 @@ import traceback
 from functools import wraps
 from itertools import chain
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Union
+from typing import Callable, Dict, Iterable, List, Optional, Type, Union
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
@@ -133,7 +133,7 @@ async def get_db(session_local=Depends(get_session_local)):
 async def get_current_user(
     security_scopes: SecurityScopes,
     session=Depends(get_db),
-    header=Security(openid_connect),
+    header=Security(openid_connect, scopes=['openid']),
     jwkaas=Depends(get_my_jwkaas),
 ):
     user = await auth_hook(
@@ -165,8 +165,6 @@ async def delete_item(
     await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
-
-    return {}
 
 
 @api.get('/redirect/plex/{tmdb_id}')
