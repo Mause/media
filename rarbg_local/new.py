@@ -17,6 +17,9 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
+from plexapi.media import Media
+from plexapi.myplex import MyPlexAccount
+from plexapi.server import PlexServer
 from pydantic import BaseModel, BaseSettings
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
@@ -38,9 +41,7 @@ from .health import health
 from .main import (
     add_single,
     extract_marker,
-    get_imdb_in_plex,
     get_keyed_torrents,
-    get_plex,
     groupby,
     normalise,
     resolve_series,
@@ -465,13 +466,27 @@ async def static(
     return await static_files.get_response(filename, request.scope)
 
 
+@singleton
+def get_plex(settings=Depends(get_settings)) -> PlexServer:
+    acct = MyPlexAccount(settings.plex_username, settings.plex_password)
+    novell = acct.resource('Novell')
+    novell.connections = [c for c in novell.connections if not c.local]
+    return novell.connect(ssl=True)
+
+
+def get_imdb_in_plex(imdb_id: str, plex) -> Optional[Media]:
+    guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
+    items = plex.library.search(guid=guid)
+    return items[0] if items else None
+
+
 @root.get('/redirect/plex/{tmdb_id}')
-def redirect_to_plex(tmdb_id: str):
-    dat = get_imdb_in_plex(tmdb_id)
+def redirect_to_plex(tmdb_id: str, plex=Depends(get_plex)):
+    dat = get_imdb_in_plex(tmdb_id, plex)
     if not dat:
         raise HTTPException(404, 'Not found in plex')
 
-    server_id = get_plex().machineIdentifier
+    server_id = plex.machineIdentifier
 
     return RedirectResponse(
         f'https://app.plex.tv/desktop#!/server/{server_id}/details?'

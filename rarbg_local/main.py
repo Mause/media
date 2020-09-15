@@ -6,7 +6,7 @@ import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
 from enum import Enum
-from functools import lru_cache, wraps
+from functools import wraps
 from itertools import chain
 from os.path import join
 from pathlib import Path
@@ -29,9 +29,6 @@ from flask_admin import Admin
 from flask_cors import CORS
 from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
-from plexapi.media import Media
-from plexapi.myplex import MyPlexAccount
-from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
 from sqlalchemy import event
 from sqlalchemy.orm.session import Session, make_transient
@@ -63,14 +60,6 @@ app = Blueprint('rarbg_local', __name__)
 
 K = TypeVar('K')
 V = TypeVar('V')
-
-
-@lru_cache()
-def get_plex() -> PlexServer:
-    acct = MyPlexAccount(os.environ['PLEX_USERNAME'], os.environ['PLEX_PASSWORD'])
-    novell = acct.resource('Novell')
-    novell.connections = [c for c in novell.connections if not c.local]
-    return novell.connect(ssl=True)
 
 
 def cache_busting_url_for(endpoint, **values):
@@ -393,12 +382,6 @@ def resolve_series(session: Session) -> List[SeriesDetails]:
             episodes, lambda episode: episode.download.tmdb_id
         ).items()
     ]
-
-
-def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
-    guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
-    items = get_plex().library.search(guid=guid)
-    return items[0] if items else None
 
 
 def get_keyed_torrents() -> Dict[str, Dict]:
