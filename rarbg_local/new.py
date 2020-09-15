@@ -454,18 +454,6 @@ def get_static_files(settings: Settings = Depends(get_settings)):
     return StaticFiles(directory=str(settings.static_resources_path))
 
 
-@root.api_route('/{resource:path}', methods=['GET', 'HEAD'], include_in_schema=False)
-@root.api_route('/', methods=['GET', 'HEAD'], include_in_schema=False)
-async def static(
-    request: Request,
-    resource: str = '',
-    static_files: StaticFiles = Depends(get_static_files),
-):
-    filename = resource if "." in resource else 'index.html'
-
-    return await static_files.get_response(filename, request.scope)
-
-
 @singleton
 def get_plex(settings=Depends(get_settings)) -> PlexServer:
     acct = MyPlexAccount(settings.plex_username, settings.plex_password)
@@ -509,6 +497,18 @@ def redirect_to_imdb(
         imdb_id = get_tv_imdb_id(tmdb_id)
 
     return RedirectResponse(f'https://www.imdb.com/title/{imdb_id}')
+
+
+@root.api_route('/{resource:path}', methods=['GET', 'HEAD'], include_in_schema=False)
+@root.api_route('/', methods=['GET', 'HEAD'], include_in_schema=False)
+async def static(
+    request: Request,
+    resource: str = '',
+    static_files: StaticFiles = Depends(get_static_files),
+):
+    filename = resource if "." in resource else 'index.html'
+
+    return await static_files.get_response(filename, request.scope)
 
 
 api.include_router(tv_ns, prefix='/tv')
