@@ -20,7 +20,7 @@ from fastapi_utils.openapi import simplify_operation_ids
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
-from pydantic import BaseModel, BaseSettings
+from pydantic import BaseModel, BaseSettings, SecretStr
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
 from sqlalchemy.orm import sessionmaker
@@ -106,6 +106,8 @@ class Settings(BaseSettings):
     root = Path(__file__).parent.parent.absolute()
     database_url = f"sqlite:///{root}/db.db"
     static_resources_path = root / 'app/build'
+    plex_username: Optional[str] = None
+    plex_password: Optional[SecretStr] = None
 
 
 @singleton

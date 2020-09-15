@@ -477,3 +477,23 @@ async def test_schema(snapshot):
 async def test_static(uri, test_client):
     r = await test_client.get(uri)
     assert r.status_code == 200
+
+
+@mark.asyncio
+async def test_plex_redirect(test_client, responses):
+    responses.add('POST', 'https://plex.tv/users/sign_in.xml')
+
+    responses.add(
+        'GET',
+        'https://plex.tv/api/resources?includeHttps=1&includeRelay=1',
+        '''
+<Resources>
+<Resource name="Novell" provides="">
+<Connection/>
+</Resource>
+</Resources>
+
+''',
+    )
+
+    await test_client.get('/redirect/plex/10000')
