@@ -5,6 +5,8 @@ from typing import Dict
 from unittest.mock import patch
 
 from async_asgi_testclient import TestClient
+from lxml.builder import E
+from lxml.etree import tostring
 from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
@@ -482,18 +484,33 @@ async def test_static(uri, test_client):
 @mark.asyncio
 async def test_plex_redirect(test_client, responses):
     responses.add('POST', 'https://plex.tv/users/sign_in.xml')
+    responses.add(
+        'GET', 'https://test/', tostring(E.Root(machineIdentifier="aaaa")),
+    )
+    responses.add('GET', 'https://test/library', tostring(E.Library()))
+    responses.add(
+        'GET',
+        'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2F10000%3Flang%3Den',
+        tostring(E.Search(E.Video(type='Video.episode', ratingKey='aaa'))),
+    )
 
     responses.add(
         'GET',
         'https://plex.tv/api/resources?includeHttps=1&includeRelay=1',
-        '''
-<Resources>
-<Resource name="Novell" provides="">
-<Connection/>
-</Resource>
-</Resources>
-
-''',
+        tostring(
+            E.Resources(
+                E.Resource(
+                    E.Connection(uri="https://test", secure="True"),
+                    name="Novell",
+                    provides="server",
+                )
+            ),
+        ),
     )
 
-    await test_client.get('/redirect/plex/10000')
+    r = await test_client.get('/redirect/plex/10000', allow_redirects=False)
+
+    assert (
+        r.headers['Location']
+        == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2Faaa'
+    )
