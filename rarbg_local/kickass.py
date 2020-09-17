@@ -65,6 +65,6 @@ def base(name, imdb_id):
 
 
 def search_for_movie(imdb_id: str, tmdb_id: int):
-    name = get_movie(tmdb_id)['title']
+    name = get_movie(tmdb_id).title
 
     return base(name, imdb_id)
