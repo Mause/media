@@ -103,7 +103,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/qs",
-        "npm:6.9.4"
+        "npm:6.9.5"
       ],
       [
         "@types/react",
@@ -255,7 +255,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash", "npm:4.14.161"],
             ["@types/moxios", "npm:0.4.9"],
             ["@types/node", "npm:14.6.2"],
-            ["@types/qs", "npm:6.9.4"],
+            ["@types/qs", "npm:6.9.5"],
             ["@types/react", "npm:16.9.49"],
             ["@types/react-dom", "npm:16.9.8"],
             ["@types/react-helmet", "npm:6.1.0"],
@@ -3971,10 +3971,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/qs", [
-        ["npm:6.9.4", {
-          "packageLocation": "./.yarn/cache/@types-qs-npm-6.9.4-259b993015-152d2431f7.zip/node_modules/@types/qs/",
+        ["npm:6.9.5", {
+          "packageLocation": "./.yarn/cache/@types-qs-npm-6.9.5-98e83ee762-afe4721a80.zip/node_modules/@types/qs/",
           "packageDependencies": [
-            ["@types/qs", "npm:6.9.4"]
+            ["@types/qs", "npm:6.9.5"]
           ],
           "linkType": "HARD",
         }]
@@ -4807,7 +4807,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash", "npm:4.14.161"],
             ["@types/moxios", "npm:0.4.9"],
             ["@types/node", "npm:14.6.2"],
-            ["@types/qs", "npm:6.9.4"],
+            ["@types/qs", "npm:6.9.5"],
             ["@types/react", "npm:16.9.49"],
             ["@types/react-dom", "npm:16.9.8"],
             ["@types/react-helmet", "npm:6.1.0"],
