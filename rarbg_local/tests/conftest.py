@@ -20,6 +20,7 @@ from ..utils import cache_clear
 
 @fixture
 def fastapi_app():
+    cache_clear()
     return create_app()
 
 

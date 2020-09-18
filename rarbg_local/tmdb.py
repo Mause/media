@@ -5,11 +5,10 @@ from typing import Dict, List, Literal, Optional, Union
 
 import backoff
 import requests
-from cachetools.func import ttl_cache
 from requests_toolbelt.sessions import BaseUrlSession
 
 from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonResponse
-from .utils import lru_cache, precondition
+from .utils import lru_cache, precondition, ttl_cache
 
 tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
 tmdb.params['api_key'] = '66b197263af60702ba14852b4ec9b143'

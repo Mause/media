@@ -149,8 +149,8 @@ function ParentComponentInt() {
               <code>
                 <pre>
                   {props.error!!.message}
-                  {props.componentStack
-                    ?.toString()
+                  {props
+                    .error!!.stack?.toString()
                     .split('\n')
                     .map((line) => (
                       <span key={line}>
@@ -160,6 +160,7 @@ function ParentComponentInt() {
                     ))}
                 </pre>
               </code>
+              <button onClick={props.resetErrorBoundary}>Retry</button>
             </div>
           );
         }}
@@ -186,9 +187,9 @@ function SwrConfigWrapper({
             params,
             auth.isAuthenticated
               ? {
-                  Authorization:
-                    'Bearer ' + (await auth.getAccessTokenSilently()),
-                }
+                Authorization:
+                  'Bearer ' + (await auth.getAccessTokenSilently()),
+              }
               : {},
           ),
       }}

@@ -2266,9 +2266,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^7.23.0":
-  version: 7.24.1
-  resolution: "@testing-library/dom@npm:7.24.1"
+"@testing-library/dom@npm:^7.24.2":
+  version: 7.24.2
+  resolution: "@testing-library/dom@npm:7.24.2"
   dependencies:
     "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.10.3
@@ -2277,7 +2277,7 @@ __metadata:
     chalk: ^4.1.0
     dom-accessibility-api: ^0.5.1
     pretty-format: ^26.4.2
-  checksum: e5ebd9a27e48f48012b77888e6c2bb16b6e36c2fe4db299ea17fb25d427491afea28cb3bf33379a4ea8d1f4fc76ef294964027747f58c102c69086ed1a1dbe50
+  checksum: 544dff249c20543ca3aad6a9bef03bbb8b920c6724f41e89c874d78c23da0a226703f4c8a9264b875c913f05e4fc5b312ef2dae01f0ea865a9552c92541076ba
   languageName: node
   linkType: hard
 
@@ -2297,27 +2297,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^11.0.2":
-  version: 11.0.2
-  resolution: "@testing-library/react@npm:11.0.2"
+"@testing-library/react@npm:^11.0.4":
+  version: 11.0.4
+  resolution: "@testing-library/react@npm:11.0.4"
   dependencies:
     "@babel/runtime": ^7.11.2
-    "@testing-library/dom": ^7.23.0
+    "@testing-library/dom": ^7.24.2
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 664dfbafb36dcad0fb232a48824e63d58db4594f6ada073bea9fe322c4a9fc717aa95a0d2f196fbaa40b0cc3c78683967b8571405a6ceb755f7eb9c3dd916cd6
+  checksum: 3662df0d284b4ad0701aa86ec396652280357cccf22935c6bde02fbb9a08125c216a43c4960b188e6403f053bfa68a680d934a9ea90ff92312e16e57d6eaa986
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^12.1.4":
-  version: 12.1.4
-  resolution: "@testing-library/user-event@npm:12.1.4"
+"@testing-library/user-event@npm:^12.1.5":
+  version: 12.1.5
+  resolution: "@testing-library/user-event@npm:12.1.5"
   dependencies:
     "@babel/runtime": ^7.10.2
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
-  checksum: 3ef0b2708cf762de5f63700d73b348626bbfc51f2a7039c257ff673065ec525994e2eb02c74c5c678086531094a2c35ce227db97c21620907903d22cb2464f35
+  checksum: a1ef9f24088a58d0cd69b59417b27e359b676fe2c5848af42f6ef03cf93f96446f1f40ca3acadb06b06ca535fa06826ea9df1a198160752133c748d422ed3d4d
   languageName: node
   linkType: hard
 
@@ -2527,10 +2527,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:^6.9.4":
-  version: 6.9.4
-  resolution: "@types/qs@npm:6.9.4"
-  checksum: 152d2431f7d3ff20bb1525e40a4074aadc8dcde9368b0b1c153014f84cd49ef87218119e7e9d4a2ccd8a4a71c94523361fb4796d90b4328c2222816c0e422483
+"@types/qs@npm:^6.9.5":
+  version: 6.9.5
+  resolution: "@types/qs@npm:6.9.5"
+  checksum: afe4721a802a4b5fa874a7d6d9fd33c9e812bb0ef90dabb050e8072be4ab2e5e817c0feacb9b4e0771d875de99f4d9738217976aeb8d36b81ccd82ded5e9fdc0
   languageName: node
   linkType: hard
 
@@ -3253,14 +3253,14 @@ __metadata:
     "@sentry/apm": ^5.23.0
     "@sentry/react": ^5.23.0
     "@testing-library/jest-dom": ^5.11.4
-    "@testing-library/react": ^11.0.2
-    "@testing-library/user-event": ^12.1.4
+    "@testing-library/react": ^11.0.4
+    "@testing-library/user-event": ^12.1.5
     "@types/history": 4.7.7
     "@types/jest": ^26.0.13
     "@types/lodash": ^4.14.161
     "@types/moxios": ^0.4.9
     "@types/node": ^14.6.2
-    "@types/qs": ^6.9.4
+    "@types/qs": ^6.9.5
     "@types/react": ^16.9.49
     "@types/react-dom": ^16.9.8
     "@types/react-helmet": ^6.1.0
@@ -3275,7 +3275,7 @@ __metadata:
     jest-junit: ^11.1.0
     lodash: ^4.17.20
     mockdate: ^3.0.2
-    moment: ^2.27.0
+    moment: ^2.28.0
     moxios: ^0.4.0
     prop-types: ^15.7.2
     qs: ^6.9.4
@@ -3283,7 +3283,7 @@ __metadata:
     react-collapsible: ^2.8.0
     react-contextmenu: ^2.14.0
     react-dom: ^16.13.1
-    react-error-boundary: ^3.0.0
+    react-error-boundary: ^3.0.1
     react-helmet: ^6.1.0
     react-loading: ^2.0.3
     react-router-dom: ^5.2.0
@@ -10343,10 +10343,10 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.27.0":
-  version: 2.27.0
-  resolution: "moment@npm:2.27.0"
-  checksum: 72d9a7d8dba59e3d538440cdc0b59fa895b123361e370be231896478aaf157a484355ce32bd8daf6f731d6d1636d3a67ecb67531e536e093ca18b43e0cbae194
+"moment@npm:^2.28.0":
+  version: 2.28.0
+  resolution: "moment@npm:2.28.0"
+  checksum: f239dd93cec0560eb75467d987b6117cc074cfbef086c8e0e01aa93f4aff198ee1a3d13166bb01397542dced6b1b608f2bff95b7ded209c46b0593afacb2d916
   languageName: node
   linkType: hard
 
@@ -12748,14 +12748,14 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "react-error-boundary@npm:3.0.0"
+"react-error-boundary@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "react-error-boundary@npm:3.0.1"
   dependencies:
     "@babel/runtime": ^7.11.2
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 907af5011c7cb5dd5dfec1ec1b613c54c23e54f5d235e200fdd620e7b7ece8f19cc4583a66ac264fce79cb5b8b0a51225fa750022c2b607808f34828d14c70df
+  checksum: 5ba09ea5fa2266b64d35d7e3954e75c5596c2735718a0ad84fb7fa741cfe908154c4f3a4e51026925d91e45fa61f7122857b5146136039c7345b2ce0336e9197
   languageName: node
   linkType: hard
 

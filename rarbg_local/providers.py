@@ -118,7 +118,10 @@ class KickassProvider(Provider):
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=tv_convert(item['resolution']),
-                episode_info=EpisodeInfo(seasonnum=str(season), epnum=str(episode)),
+                episode_info=EpisodeInfo(
+                    seasonnum=str(season),
+                    epnum=None if episode is None else str(episode),
+                ),
             )
 
     def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
