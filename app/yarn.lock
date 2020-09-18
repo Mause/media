@@ -5,30 +5,30 @@ __metadata:
   version: 4
   cacheKey: 5
 
-"@auth0/auth0-react@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@auth0/auth0-react@npm:1.0.0"
+"@auth0/auth0-react@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@auth0/auth0-react@npm:1.1.0"
   dependencies:
-    "@auth0/auth0-spa-js": ^1.9.0
+    "@auth0/auth0-spa-js": ^1.12.1
   peerDependencies:
-    react: ^16.13.1
-    react-dom: ^16.13.1
-  checksum: a043fcfc6d1f4aabf24ef82f99382a23225aaa1577a374889791f49a8f7b7c122947ccb2819c0e128468860edc1d353279c7b5db03a7dd24f8a3b8059427588a
+    react: ^16.11.0
+    react-dom: ^16.11.0
+  checksum: ae17420076670d0bdcb0954bec26c49b586aa7ed6edd27f722a83e3f7842c26bfe8d7c19ea51ad7ff7707b94acf3387a57528fa16fdb6992918174ca6c5e38f5
   languageName: node
   linkType: hard
 
-"@auth0/auth0-spa-js@npm:^1.9.0":
-  version: 1.10.0
-  resolution: "@auth0/auth0-spa-js@npm:1.10.0"
+"@auth0/auth0-spa-js@npm:^1.12.1":
+  version: 1.12.1
+  resolution: "@auth0/auth0-spa-js@npm:1.12.1"
   dependencies:
-    abortcontroller-polyfill: ^1.4.0
-    browser-tabs-lock: ^1.2.8
-    core-js: ^3.6.4
+    abortcontroller-polyfill: ^1.5.0
+    browser-tabs-lock: ^1.2.9
+    core-js: ^3.6.5
     es-cookie: ^1.3.2
-    fast-text-encoding: ^1.0.1
+    fast-text-encoding: ^1.0.3
     promise-polyfill: ^8.1.3
     unfetch: ^4.1.0
-  checksum: fc72d43de8a1a8011cc3bb21e8e1ba2d2751fdcb47677d1d93114afaab46f1e11232cc4181dda014537bb6bd62402f8e25a3ae4b58d051fd3b89ee26bd230cce
+  checksum: f32e82c9c420bff45cdc22b447673c65330c06452d40716790f30718f8276653315a006ef6dde9450f21a6b8519f99930c1fdfac15033cf842883132419ce370
   languageName: node
   linkType: hard
 
@@ -2950,10 +2950,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"abortcontroller-polyfill@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "abortcontroller-polyfill@npm:1.4.0"
-  checksum: 81c8aa38a6ce21f103aed31dd15f451a8faad6beeb2c7a18541f0c80a208e88faeeaa64318dae4c4592856249092c20d2db7f70138c938837ca6758be6b627fb
+"abortcontroller-polyfill@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "abortcontroller-polyfill@npm:1.5.0"
+  checksum: be16982004c589e72e4e197c4828745baa94ef2fa02ec50ab449446071bd9ff1b9968e1adaa3b4ccb039144d4b11e43445383771048015ce7006dc0dfdaf342a
   languageName: node
   linkType: hard
 
@@ -3242,7 +3242,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app@workspace:."
   dependencies:
-    "@auth0/auth0-react": ^1.0.0
+    "@auth0/auth0-react": ^1.1.0
     "@csstools/normalize.css": ^11.0.1
     "@fortawesome/fontawesome-svg-core": ^1.2.30
     "@fortawesome/free-solid-svg-icons": ^5.14.0
@@ -4039,12 +4039,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browser-tabs-lock@npm:^1.2.8":
-  version: 1.2.10
-  resolution: "browser-tabs-lock@npm:1.2.10"
+"browser-tabs-lock@npm:^1.2.9":
+  version: 1.2.11
+  resolution: "browser-tabs-lock@npm:1.2.11"
   dependencies:
     lodash: ">=4.17.19"
-  checksum: b7e99b3314e8e9adc53c97e111d7d579b63d8b6d1cb9f57d2578be7fc5ededa4932ec9aa1d2c613bc163ede64256148343d3906d3be4f3909b6e086af1e6cd98
+  checksum: 89ea89984c2735a82efb84f1422b90c091ca48ef177083dd21d37842d02fc16fe8e5708329e39dbba362fe74a542bb5b64f70d10467f0ed2be19fff53d382680
   languageName: node
   linkType: hard
 
@@ -4984,7 +4984,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.5.0, core-js@npm:^3.6.4":
+"core-js@npm:^3.5.0, core-js@npm:^3.6.5":
   version: 3.6.5
   resolution: "core-js@npm:3.6.5"
   checksum: 9283348dd5be2f1d07feaf90e2336b3f00a2316e3d3c6d4f789c9a67bdd4d7b08ce1c88dca4e591340130056c6b412b0b74fae039f8e259206f1073f542e4e85
@@ -6781,7 +6781,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-text-encoding@npm:^1.0.1":
+"fast-text-encoding@npm:^1.0.3":
   version: 1.0.3
   resolution: "fast-text-encoding@npm:1.0.3"
   checksum: f14fb9242fc8ea942d8b6374f84e918aa5e97bbdf3cafbbf737b04f677277a1900cb9914eab601822cc51787dc607bfff5904e646b3fcc82d84081b21261ba87

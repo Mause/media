@@ -31,7 +31,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "fallbackPool": [
       [
         "@auth0/auth0-react",
-        "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0"
+        "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.1.0"
       ],
       [
         "@csstools/normalize.css",
@@ -237,7 +237,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {
           "packageLocation": "./",
           "packageDependencies": [
-            ["@auth0/auth0-react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0"],
+            ["@auth0/auth0-react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.1.0"],
             ["@csstools/normalize.css", "npm:11.0.1"],
             ["@fortawesome/fontawesome-svg-core", "npm:1.2.30"],
             ["@fortawesome/free-solid-svg-icons", "npm:5.14.0"],
@@ -292,11 +292,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@auth0/auth0-react", [
-        ["virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0", {
-          "packageLocation": "./.yarn/$$virtual/@auth0-auth0-react-virtual-c5c19450b3/0/cache/@auth0-auth0-react-npm-1.0.0-dab32fa722-a043fcfc6d.zip/node_modules/@auth0/auth0-react/",
+        ["virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.1.0", {
+          "packageLocation": "./.yarn/$$virtual/@auth0-auth0-react-virtual-d364417552/0/cache/@auth0-auth0-react-npm-1.1.0-d70826f652-ae17420076.zip/node_modules/@auth0/auth0-react/",
           "packageDependencies": [
-            ["@auth0/auth0-react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0"],
-            ["@auth0/auth0-spa-js", "npm:1.10.0"],
+            ["@auth0/auth0-react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.1.0"],
+            ["@auth0/auth0-spa-js", "npm:1.12.1"],
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:16.13.1"]
           ],
@@ -308,12 +308,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@auth0/auth0-spa-js", [
-        ["npm:1.10.0", {
-          "packageLocation": "./.yarn/cache/@auth0-auth0-spa-js-npm-1.10.0-dc8ebaee4c-fc72d43de8.zip/node_modules/@auth0/auth0-spa-js/",
+        ["npm:1.12.1", {
+          "packageLocation": "./.yarn/cache/@auth0-auth0-spa-js-npm-1.12.1-3b782d9a26-f32e82c9c4.zip/node_modules/@auth0/auth0-spa-js/",
           "packageDependencies": [
-            ["@auth0/auth0-spa-js", "npm:1.10.0"],
-            ["abortcontroller-polyfill", "npm:1.4.0"],
-            ["browser-tabs-lock", "npm:1.2.10"],
+            ["@auth0/auth0-spa-js", "npm:1.12.1"],
+            ["abortcontroller-polyfill", "npm:1.5.0"],
+            ["browser-tabs-lock", "npm:1.2.11"],
             ["core-js", "npm:3.6.5"],
             ["es-cookie", "npm:1.3.2"],
             ["fast-text-encoding", "npm:1.0.3"],
@@ -4469,10 +4469,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["abortcontroller-polyfill", [
-        ["npm:1.4.0", {
-          "packageLocation": "./.yarn/cache/abortcontroller-polyfill-npm-1.4.0-d2ba6da917-81c8aa38a6.zip/node_modules/abortcontroller-polyfill/",
+        ["npm:1.5.0", {
+          "packageLocation": "./.yarn/cache/abortcontroller-polyfill-npm-1.5.0-a9504245ec-be16982004.zip/node_modules/abortcontroller-polyfill/",
           "packageDependencies": [
-            ["abortcontroller-polyfill", "npm:1.4.0"]
+            ["abortcontroller-polyfill", "npm:1.5.0"]
           ],
           "linkType": "HARD",
         }]
@@ -4789,7 +4789,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["app", "workspace:."],
-            ["@auth0/auth0-react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0"],
+            ["@auth0/auth0-react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.1.0"],
             ["@csstools/normalize.css", "npm:11.0.1"],
             ["@fortawesome/fontawesome-svg-core", "npm:1.2.30"],
             ["@fortawesome/free-solid-svg-icons", "npm:5.14.0"],
@@ -5734,10 +5734,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["browser-tabs-lock", [
-        ["npm:1.2.10", {
-          "packageLocation": "./.yarn/unplugged/browser-tabs-lock-npm-1.2.10-da18ef3576/node_modules/browser-tabs-lock/",
+        ["npm:1.2.11", {
+          "packageLocation": "./.yarn/unplugged/browser-tabs-lock-npm-1.2.11-88406849d7/node_modules/browser-tabs-lock/",
           "packageDependencies": [
-            ["browser-tabs-lock", "npm:1.2.10"],
+            ["browser-tabs-lock", "npm:1.2.11"],
             ["lodash", "npm:4.17.19"]
           ],
           "linkType": "HARD",
