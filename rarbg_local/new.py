@@ -17,7 +17,10 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
-from pydantic import BaseModel, BaseSettings
+from plexapi.media import Media
+from plexapi.myplex import MyPlexAccount
+from plexapi.server import PlexServer
+from pydantic import BaseModel, BaseSettings, SecretStr
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
 from sqlalchemy.orm import sessionmaker
@@ -38,9 +41,7 @@ from .health import health
 from .main import (
     add_single,
     extract_marker,
-    get_imdb_in_plex,
     get_keyed_torrents,
-    get_plex,
     groupby,
     normalise,
     resolve_series,
@@ -105,6 +106,8 @@ class Settings(BaseSettings):
     root = Path(__file__).parent.parent.absolute()
     database_url = f"sqlite:///{root}/db.db"
     static_resources_path = root / 'app/build'
+    plex_username: Optional[str] = None
+    plex_password: Optional[SecretStr] = None
 
 
 @singleton
@@ -453,25 +456,27 @@ def get_static_files(settings: Settings = Depends(get_settings)):
     return StaticFiles(directory=str(settings.static_resources_path))
 
 
-@root.api_route('/{resource:path}', methods=['GET', 'HEAD'], include_in_schema=False)
-@root.api_route('/', methods=['GET', 'HEAD'], include_in_schema=False)
-async def static(
-    request: Request,
-    resource: str = '',
-    static_files: StaticFiles = Depends(get_static_files),
-):
-    filename = resource if "." in resource else 'index.html'
+@singleton
+def get_plex(settings=Depends(get_settings)) -> PlexServer:
+    acct = MyPlexAccount(settings.plex_username, settings.plex_password)
+    novell = acct.resource('Novell')
+    novell.connections = [c for c in novell.connections if not c.local]
+    return novell.connect(ssl=True)
 
-    return await static_files.get_response(filename, request.scope)
+
+def get_imdb_in_plex(imdb_id: str, plex) -> Optional[Media]:
+    guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
+    items = plex.library.search(guid=guid)
+    return items[0] if items else None
 
 
 @root.get('/redirect/plex/{tmdb_id}')
-def redirect_to_plex(tmdb_id: str):
-    dat = get_imdb_in_plex(tmdb_id)
+def redirect_to_plex(tmdb_id: str, plex=Depends(get_plex)):
+    dat = get_imdb_in_plex(tmdb_id, plex)
     if not dat:
         raise HTTPException(404, 'Not found in plex')
 
-    server_id = get_plex().machineIdentifier
+    server_id = plex.machineIdentifier
 
     return RedirectResponse(
         f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
@@ -494,6 +499,18 @@ def redirect_to_imdb(
         imdb_id = get_tv_imdb_id(tmdb_id)
 
     return RedirectResponse(f'https://www.imdb.com/title/{imdb_id}')
+
+
+@root.api_route('/{resource:path}', methods=['GET', 'HEAD'], include_in_schema=False)
+@root.api_route('/', methods=['GET', 'HEAD'], include_in_schema=False)
+async def static(
+    request: Request,
+    resource: str = '',
+    static_files: StaticFiles = Depends(get_static_files),
+):
+    filename = resource if "." in resource else 'index.html'
+
+    return await static_files.get_response(filename, request.scope)
 
 
 api.include_router(tv_ns, prefix='/tv')
