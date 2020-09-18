@@ -4,7 +4,7 @@ import traceback
 from functools import wraps
 from itertools import chain
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Type, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
@@ -22,9 +22,10 @@ from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from pydantic import BaseModel, BaseSettings, SecretStr
 from requests.exceptions import HTTPError
-from sqlalchemy import create_engine, event, func
+from sqlalchemy import delete, event, func
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.future import select
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
 
 from .auth import auth_hook, get_my_jwkaas
@@ -120,7 +121,7 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = settings.database_url
     logging.info('db_url: %s', db_url)
     ca = {"check_same_thread": False} if 'sqlite' in db_url else {}
-    engine = create_engine(db_url, connect_args=ca, pool_size=20)
+    engine = create_async_engine(db_url, connect_args=ca, pool_size=20)
     if 'sqlite' in db_url:
 
         def _fk_pragma_on_connect(dbapi_con, con_record):
@@ -129,17 +130,19 @@ def get_session_local(settings: Settings = Depends(get_settings)):
             )
             dbapi_con.execute('pragma foreign_keys=ON')
 
-        event.listen(engine, 'connect', _fk_pragma_on_connect)
+        event.listen(engine.sync_engine, 'connect', _fk_pragma_on_connect)
 
-    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    return sessionmaker(
+        autocommit=False, autoflush=True, bind=engine, class_=AsyncSession
+    )
 
 
-def get_db(session_local=Depends(get_session_local)):
+async def get_db(session_local=Depends(get_session_local)):
     sl = session_local()
     try:
         yield sl
     finally:
-        sl.close()
+        await sl.close()
 
 
 async def get_current_user(
@@ -148,7 +151,7 @@ async def get_current_user(
     header=Depends(openid_connect),
     jwkaas=Depends(get_my_jwkaas),
 ):
-    user = auth_hook(
+    user = await auth_hook(
         session=session, header=header, security_scopes=security_scopes, jwkaas=jwkaas
     )
     if user:
@@ -162,16 +165,19 @@ def user():
     pass
 
 
-def safe_delete(session: Session, entity: Type, id: int):
-    query = session.query(entity).filter_by(id=id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    session.commit()
+async def safe_delete(session: AsyncSession, entity: Any, id: int):
+    query = select(entity).filter_by(id=id)
+    res = (await session.execute(query)).scalars().all()
+    precondition(len(res) == 1, 'Invalid')
+    await session.execute(delete(entity).where(entity.id == res[0].id))
+    await session.commit()
 
 
 @api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
-    safe_delete(
+async def delete_item(
+    type: MediaType, id: int, session: AsyncSession = Depends(get_db)
+):
+    await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
 
@@ -228,7 +234,7 @@ def stream(
 @api.get(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
-async def select(tmdb_id: int, season: int):
+async def api_select(tmdb_id: int, season: int):
 
     results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
@@ -266,7 +272,7 @@ def diagnostics():
 async def download_post(
     things: List[DownloadPost],
     added_by: User = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: AsyncSession = Depends(get_db),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
 
     results: List[Union[MovieDetails, EpisodeDetails]] = []
@@ -300,7 +306,7 @@ async def download_post(
             subpath = 'movies'
 
         results.append(
-            add_single(
+            await add_single(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
@@ -321,29 +327,39 @@ async def download_post(
         )
 
     session.add_all(results)
-    session.commit()
+    await session.commit()
 
     return results
 
 
 @api.get('/index', response_model=IndexResponse)
-async def index(session: Session = Depends(get_db)):
+async def index(session: AsyncSession = Depends(get_db)):
+    return IndexResponse(
+        series=await resolve_series(session), movies=await get_movies(session)
+    )
 
-    return IndexResponse(series=resolve_series(session), movies=get_movies(session))
+
+async def get_one(session, entity, id):
+    query = select(entity).filter_by(id=id)
+    res = await session.execute(query)
+    return res.scalar_one()
 
 
 @api.get('/stats', response_model=List[StatsResponse])
-async def stats(session: Session = Depends(get_db)):
-
+async def stats(session: AsyncSession = Depends(get_db)):
     keys = Download.added_by_id, Download.type
-    query = session.query(*keys, func.count(name='count')).group_by(*keys)
+    query = await session.execute(
+        select(*keys, func.count(name='count')).group_by(*keys)
+    )
 
     return [
         {
-            "user": session.query(User).get(added_by_id).username,
+            "user": (await get_one(session, User, added_by_id)).username,
             "values": {type.lower(): value for _, type, value in values},
         }
-        for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
+        for added_by_id, values in groupby(
+            query.all(), lambda row: row.added_by_id
+        ).items()
     ]
 
 
@@ -368,14 +384,14 @@ monitor_ns = APIRouter()
 
 @monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
 async def monitor_get(
-    user: User = Depends(get_current_user), session: Session = Depends(get_db)
+    user: User = Depends(get_current_user), session: AsyncSession = Depends(get_db)
 ):
-    return session.query(Monitor).all()
+    return list((await session.execute(select(Monitor))).scalars())
 
 
 @monitor_ns.delete('/{monitor_id}', tags=['monitor'])
-async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
-    safe_delete(session, Monitor, monitor_id)
+async def monitor_delete(monitor_id: int, session: AsyncSession = Depends(get_db)):
+    await safe_delete(session, Monitor, monitor_id)
 
     return {}
 
@@ -398,20 +414,23 @@ def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
 async def monitor_post(
     monitor: MonitorPost,
     user: User = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: AsyncSession = Depends(get_db),
 ):
     media = validate_id(monitor.type, monitor.tmdb_id)
+
     c = (
-        session.query(Monitor)
-        .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
-        .one_or_none()
-    )
+        await session.execute(
+            select(Monitor)
+            .filter_by(tmdb_id=monitor.tmdb_id)
+            .filter_by(type=monitor.type)
+        )
+    ).scalar_one_or_none()
     if not c:
         c = Monitor(
             tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
         )
         session.add(c)
-        session.commit()
+        await session.commit()
     return c
 
 

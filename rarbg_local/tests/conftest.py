@@ -2,7 +2,7 @@ import json
 from asyncio import get_event_loop
 
 from async_asgi_testclient import TestClient
-from pytest import fixture, hookimpl
+from pytest import fixture, hookimpl, mark
 from responses import RequestsMock
 
 from ..db import Role, User, db
@@ -36,11 +36,12 @@ def test_client(fastapi_app, clear_cache, user: User) -> TestClient:
 
 
 @fixture
-def user(session):
+@mark.asyncio
+async def user(session):
     u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
     session.add(u)
-    session.commit()
+    await session.commit()
     return u
 
 
@@ -53,8 +54,8 @@ def session(fastapi_app):
     Session = get_event_loop().run_until_complete(get(fastapi_app, get_session_local))
     assert hasattr(Session, 'kw'), Session
     engine = Session.kw['bind']
-    assert 'sqlite' in repr(engine), repr(engine)
-    db.Model.metadata.create_all(engine)
+    assert 'sqlite' in repr(engine.sync_engine), repr(engine.sync_engine)
+    db.Model.metadata.create_all(engine.sync_engine)
 
     session = Session()
     fastapi_app.dependency_overrides[get_db] = lambda: session

@@ -9,6 +9,7 @@ from lxml.builder import E
 from lxml.etree import tostring
 from pytest import fixture, mark, raises
 from responses import RequestsMock
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.session import Session
 
@@ -98,7 +99,7 @@ async def test_download_movie(test_client, responses, add_torrent, session):
 
     add_torrent.assert_called_with(magnet, 'movies')
 
-    download = session.query(Download).first()
+    download = (await session.execute(select(Download))).scalars().first()
     assert download.title == 'Bit'
 
 
@@ -129,7 +130,7 @@ async def test_download(test_client, responses, add_torrent, session):
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
 
-    download = session.query(Download).first()
+    download = (await session.execute(select(Download))).scalars().first()
     assert download
     assert download.title == 'Satoshi, Go, and Lugia Go!'
     assert download.episode
@@ -152,7 +153,7 @@ async def test_download_season_pack(test_client, responses, add_torrent, session
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Watchmen/Season 1')
 
-    download = session.query(Download).first()
+    download = (await session.execute(select(Download))).scalars().first()
     assert download
     assert download.title == 'Season 1'
     assert download.episode
@@ -190,7 +191,7 @@ async def test_index(responses, test_client, get_torrent, snapshot, session, use
             ),
         ]
     )
-    session.commit()
+    await session.commit()
 
     res = await test_client.get('/api/index')
 
@@ -226,22 +227,25 @@ async def test_search(responses, test_client):
 
 @mark.asyncio
 async def test_delete_cascade(test_client: TestClient, session):
+    async def check():
+        return (
+            len(await get_episodes(session)),
+            len((await session.execute(select(Download))).all()),
+        )
 
     e = EpisodeDetailsFactory()
     session.add(e)
-    session.commit()
+    await session.commit()
 
-    assert len(get_episodes(session)) == 1
-    assert len(session.query(Download).all()) == 1
+    assert await check() == (1, 1)
 
     res = await test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
     assert res.json() == {}
 
-    session.commit()
+    await session.commit()
 
-    assert len(get_episodes(session)) == 0
-    assert len(session.query(Download).all()) == 0
+    assert await check() == (0, 0)
 
 
 @mark.asyncio
@@ -289,7 +293,7 @@ async def test_foreign_key_integrity(session: Session):
     # invalid fkey_id
     ins = Download.__table__.insert().values(id=1, movie_id=99)
     with raises(IntegrityError):
-        session.execute(ins)
+        await session.execute(ins)
 
 
 @mark.asyncio
@@ -336,7 +340,7 @@ async def test_stats(test_client, session):
             MovieDetailsFactory(download__added_by=user1),
         ]
     )
-    session.commit()
+    await session.commit()
 
     assert (await test_client.get('/api/stats')).json() == [
         {'user': 'user1', 'values': {'episode': 1, 'movie': 1}},
@@ -473,9 +477,9 @@ async def test_schema(snapshot):
     snapshot.assert_match(SearchResponse.schema())
 
 
+@mark.asyncio
 @mark.skipif("not os.path.exists('app/build/index.html')")
 @mark.parametrize('uri', ['/', '/manifest.json'])
-@mark.asyncio
 async def test_static(uri, test_client):
     r = await test_client.get(uri)
     assert r.status_code == 200

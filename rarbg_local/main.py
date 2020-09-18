@@ -25,16 +25,15 @@ from flask import (
     send_from_directory,
     url_for,
 )
-from flask_admin import Admin
 from flask_cors import CORS
 from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
 from requests.exceptions import ConnectionError
 from sqlalchemy import event
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, make_transient
 from werkzeug.exceptions import NotFound
 
-from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .auth import auth_hook
 from .db import (
     Download,
@@ -113,6 +112,10 @@ def create_app(config: Dict):
     db.create_all(app=papp)
     UserManager(papp, db, User)
     papp.login_manager.request_loader(auth_hook)
+
+    from flask_admin import Admin
+
+    from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 
     admin = Admin(papp, name='Media')
     admin.add_view(UserAdmin(User, db.session))
@@ -252,7 +255,7 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-def add_single(
+async def add_single(
     *,
     session: Session,
     magnet: str,
@@ -280,8 +283,10 @@ def add_single(
     )['hashString']
 
     already = (
-        session.query(Download).filter_by(transmission_id=transmission_id).one_or_none()
-    )
+        await session.execute(
+            select(Download).filter_by(transmission_id=transmission_id)
+        )
+    ).one_or_none()
 
     print('already', already)
     if not already:
@@ -373,8 +378,8 @@ def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
     )
 
 
-def resolve_series(session: Session) -> List[SeriesDetails]:
-    episodes = get_episodes(session)
+async def resolve_series(session: Session) -> List[SeriesDetails]:
+    episodes = await get_episodes(session)
 
     return [
         make_series_details(imdb_id, show)
