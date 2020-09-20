@@ -3288,7 +3288,7 @@ __metadata:
     react-loading: ^2.0.3
     react-router-dom: ^5.2.0
     react-scripts: 3.4.1
-    swr: ^0.3.2
+    swr: ^0.3.3
     typescript: 3
     typescript-string-operations: ^1.3.3
     use-socketio: ^2.0.3
@@ -14621,14 +14621,14 @@ resolve@1.15.0:
   languageName: node
   linkType: hard
 
-"swr@npm:^0.3.2":
-  version: 0.3.2
-  resolution: "swr@npm:0.3.2"
+"swr@npm:^0.3.3":
+  version: 0.3.3
+  resolution: "swr@npm:0.3.3"
   dependencies:
     fast-deep-equal: 2.0.1
   peerDependencies:
     react: ^16.11.0
-  checksum: ad464df381c274d79bc6ff1d51c7ae2c8736767d6400c585331c93c454c5f42808ac0091661605d29d81b96849f126fc3f9e49d17926d7d91ae67c92df1518fc
+  checksum: 01e059920caa12522bf0073d1e3b574b190a2a9a6b0190e70306008b45672bf6ddcc35ae57cb96b8ef22f7306ba044023db2469f9165de8d908296b6b42a717c
   languageName: node
   linkType: hard
 
