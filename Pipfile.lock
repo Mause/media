@@ -657,10 +657,10 @@
         },
         "plexapi": {
             "hashes": [
-                "sha256:137910dea33791bae1b355ec51f0c7b881eb81175d0e0c83ac347552c1e81a13"
+                "sha256:10f7141246dd800d587eab44d667e34a8cad34313d1c4c55f54c2a8056c958ee"
             ],
             "index": "pypi",
-            "version": "==4.1.0"
+            "version": "==4.1.1"
         },
         "psycopg2-binary": {
             "hashes": [
