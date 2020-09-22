@@ -3275,7 +3275,7 @@ __metadata:
     jest-junit: ^11.1.0
     lodash: ^4.17.20
     mockdate: ^3.0.2
-    moment: ^2.28.0
+    moment: ^2.29.0
     moxios: ^0.4.0
     prop-types: ^15.7.2
     qs: ^6.9.4
@@ -10343,10 +10343,10 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.28.0":
-  version: 2.28.0
-  resolution: "moment@npm:2.28.0"
-  checksum: f239dd93cec0560eb75467d987b6117cc074cfbef086c8e0e01aa93f4aff198ee1a3d13166bb01397542dced6b1b608f2bff95b7ded209c46b0593afacb2d916
+"moment@npm:^2.29.0":
+  version: 2.29.0
+  resolution: "moment@npm:2.29.0"
+  checksum: ad4850191348e75447d4d0b1362c78825b3d966f5abc42b3ed0ae0a6fcda5eb4504789c361d18c762f7467b3a7923b59f8bf1d52769568585516035b6c848a55
   languageName: node
   linkType: hard
 
