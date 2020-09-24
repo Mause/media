@@ -21,7 +21,7 @@ function useMessages<T>(initMessage: object) {
     () => {
       if (lastMessage) {
         setMessages(messages =>
-          messages.concat([JSON.parse(lastMessage) as T]),
+          messages.concat([JSON.parse(lastMessage as any as string) as T]),
         );
       }
     },
