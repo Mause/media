@@ -3288,7 +3288,7 @@ __metadata:
     react-loading: ^2.0.3
     react-router-dom: ^5.2.0
     react-scripts: 3.4.1
-    swr: ^0.3.3
+    swr: ^0.3.4
     typescript: 3
     typescript-string-operations: ^1.3.3
     use-socketio: ^2.0.3
@@ -5657,6 +5657,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dequal@npm:2.0.2":
+  version: 2.0.2
+  resolution: "dequal@npm:2.0.2"
+  checksum: 3b5b019a873da282a25512c632c077e5e8e2a019e71c5b6968836443b861e44176ee3934facfecdc14994d553c1ff4a6c7232278d6aef87baf65e2413d41760c
+  languageName: node
+  linkType: hard
+
 "des.js@npm:^1.0.0":
   version: 1.0.1
   resolution: "des.js@npm:1.0.1"
@@ -6729,13 +6736,6 @@ __metadata:
   version: 1.4.0
   resolution: "extsprintf@npm:1.4.0"
   checksum: 092e011574324c5cddd78b5a27f869c2703613c1140eb7763aef8f5b0e33769a9b4c7dbcc50acd39b6afebe79bf66adcec73bf3c84e095c5bcfb42306d128ad0
-  languageName: node
-  linkType: hard
-
-"fast-deep-equal@npm:2.0.1":
-  version: 2.0.1
-  resolution: "fast-deep-equal@npm:2.0.1"
-  checksum: ad315b79abe335f25271821447bdbbca5d7a6e5930da498fbb2628d28399e958a679adddbb665f5b2943bfd83d9dd375ac5fb45e9004c9516177008ebb7efc16
   languageName: node
   linkType: hard
 
@@ -14621,14 +14621,14 @@ resolve@1.15.0:
   languageName: node
   linkType: hard
 
-"swr@npm:^0.3.3":
-  version: 0.3.3
-  resolution: "swr@npm:0.3.3"
+"swr@npm:^0.3.4":
+  version: 0.3.4
+  resolution: "swr@npm:0.3.4"
   dependencies:
-    fast-deep-equal: 2.0.1
+    dequal: 2.0.2
   peerDependencies:
     react: ^16.11.0
-  checksum: 01e059920caa12522bf0073d1e3b574b190a2a9a6b0190e70306008b45672bf6ddcc35ae57cb96b8ef22f7306ba044023db2469f9165de8d908296b6b42a717c
+  checksum: f3fdac0883a196071fa2b9b7f823d3ef7075f0f0793e59878c81ed0c71db06a468412208fdc1d842bbc9b98fdef6e2ec5a861e383590f4c3523077fd4fb8c1c8
   languageName: node
   linkType: hard
 
