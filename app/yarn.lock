@@ -3280,7 +3280,7 @@ __metadata:
     prop-types: ^15.7.2
     qs: ^6.9.4
     react: ^16.13.1
-    react-collapsible: ^2.8.0
+    react-collapsible: ^2.8.1
     react-contextmenu: ^2.14.0
     react-dom: ^16.13.1
     react-error-boundary: ^3.0.1
@@ -12677,14 +12677,14 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-collapsible@npm:^2.8.0":
-  version: 2.8.0
-  resolution: "react-collapsible@npm:2.8.0"
+"react-collapsible@npm:^2.8.1":
+  version: 2.8.1
+  resolution: "react-collapsible@npm:2.8.1"
   peerDependencies:
     prop-types: ^15.5.8
     react: ~15 || ~16
     react-dom: ~15 || ~16
-  checksum: f118bf28fefd600afe264837eddf0fda62f626f2eaaefab164d5d2acfea3526c5a2832fa92c08d1f61dfd54957a52cad035b7f711be85f0f0f364367cfc573a2
+  checksum: aa91cd099f50158aade8daa9666542f48ccb1978f96110cd56bf10c2dabe54613aba336ada40c781e0b5cd3c08c3191fec7176472a6bcab612912f4eefa4e1b2
   languageName: node
   linkType: hard
 
