@@ -48,7 +48,7 @@ export function ManualAddComponent() {
         {
           magnet,
           ...state,
-          imdb_id: parseInt(state.imdb_id),
+          tmdb_id: parseInt(state.tmdb_id),
         },
       ],
     };
