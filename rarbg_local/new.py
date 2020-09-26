@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Type, Union
 from urllib.parse import urlencode
 
+import backoff
+import psycopg2
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
@@ -123,13 +125,24 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     engine = create_engine(db_url, connect_args=ca, pool_size=20)
     if 'sqlite' in db_url:
 
+        @event.listens_for(engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
             dbapi_con.create_collation(
                 "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
             )
             dbapi_con.execute('pragma foreign_keys=ON')
 
-        event.listen(engine, 'connect', _fk_pragma_on_connect)
+    else:
+
+        @event.listens_for(engine, "do_connect")
+        @backoff.on_exception(
+            backoff.fibo,
+            psycopg2.OperationalError,
+            max_tries=5,
+            giveup=lambda e: "too many connections for role" not in e.args[0],
+        )
+        def receive_do_connect(dialect, conn_rec, cargs, cparams):
+            return psycopg2.connect(*cargs, **cparams)
 
     return sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
