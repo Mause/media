@@ -7,14 +7,16 @@ from unittest.mock import patch
 from async_asgi_testclient import TestClient
 from lxml.builder import E
 from lxml.etree import tostring
+from psycopg2 import OperationalError
 from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
 from ..db import Download, create_episode, create_movie
 from ..main import get_episodes
-from ..new import SearchResponse
+from ..new import SearchResponse, Settings, get_current_user, get_settings
 from .conftest import add_json, themoviedb
 from .factories import (
     EpisodeDetailsFactory,
@@ -514,3 +516,30 @@ async def test_plex_redirect(test_client, responses):
         r.headers['Location']
         == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2Faaa'
     )
+
+
+@mark.asyncio
+async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
+    def replacement(*args, **kwargs):
+        raise OperationalError(message)
+
+    message = 'FATAL:  too many connections for role "wlhdyudesczvwl"'
+    monkeypatch.setattr('psycopg2.connect', replacement)
+
+    do = fastapi_app.dependency_overrides
+    fastapi_app.dependency_overrides
+    cu = do[get_current_user]
+    do.clear()
+    do.update(
+        {
+            get_current_user: cu,
+            get_settings: lambda: Settings(database_url='postgres:///:memory:'),
+        }
+    )
+
+    with raises(SQLAOperationError) as ei:
+        await test_client.get('/api/stats')
+
+    assert ei.match(message)
+
+    assert caplog.text.count(message) == 6  # five plus the last time
