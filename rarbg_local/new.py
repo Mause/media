@@ -125,7 +125,9 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     sqlite = 'sqlite' in db_url
 
     ca = {"check_same_thread": False} if sqlite else {}
-    engine_args = {} if sqlite else {'max_overflow': 10, 'pool_size': 5, 'recycle': 300}
+    engine_args = (
+        {} if sqlite else {'max_overflow': 10, 'pool_size': 5, 'pool_recycle': 300}
+    )
     engine = create_engine(db_url, connect_args=ca, **engine_args, echo_pool='debug')
 
     if sqlite:
