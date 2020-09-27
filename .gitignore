@@ -16,3 +16,5 @@ node_modules/
 .env
 
 .bento/cache
+token.txt
+media_token.txt
