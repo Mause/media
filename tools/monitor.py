@@ -7,8 +7,7 @@ from rich.columns import Columns
 from rich.console import Console, RenderGroup
 from rich_sparklines import Graph
 
-CLEAR_SCREEN = '\033c'
-print = Console().print
+console = Console()
 
 
 def get_connections():
@@ -60,12 +59,12 @@ def main():
         for g in graphs:
             g.update()
 
-        print(
+        console.clear()
+        console.print(
             RenderGroup(
-                CLEAR_SCREEN,
                 Columns(graphs),
                 'timestamp: [blue]{}[/], worker: [blue]{}[/]'.format(
-                    datetime.now().isoformat(), data.pop('worker_pid', '?')
+                    datetime.now().isoformat(), data.pop('worker_id', '?')
                 ),
             )
         )
