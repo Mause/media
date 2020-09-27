@@ -5,7 +5,6 @@ import requests
 from requests.exceptions import ConnectionError, ReadTimeout
 from rich.columns import Columns
 from rich.console import Console, RenderGroup
-from rich.text import Text
 from rich_sparklines import Graph
 
 CLEAR_SCREEN = '\033c'
@@ -65,10 +64,8 @@ def main():
             RenderGroup(
                 CLEAR_SCREEN,
                 Columns(graphs),
-                Text(
-                    'timestamp: [blue]{}[/], worker: [blue]{}[/]'.format(
-                        datetime.now().isoformat(), data.pop('worker_pid', '?')
-                    )
+                'timestamp: [blue]{}[/], worker: [blue]{}[/]'.format(
+                    datetime.now().isoformat(), data.pop('worker_pid', '?')
                 ),
             )
         )
