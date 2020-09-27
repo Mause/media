@@ -1,12 +1,14 @@
-import os
 import time
+from datetime import datetime
 
 import requests
 from requests.exceptions import ConnectionError, ReadTimeout
 from rich.columns import Columns
-from rich.console import Console
+from rich.console import Console, RenderGroup
+from rich.text import Text
 from rich_sparklines import Graph
 
+CLEAR_SCREEN = '\033c'
 print = Console().print
 
 
@@ -58,9 +60,13 @@ def main():
         for g in graphs:
             g.update()
 
-        os.system('cls')
-
-        print(Columns(graphs))
+        print(
+            RenderGroup(
+                CLEAR_SCREEN,
+                Columns(graphs),
+                Text(datetime.now().isoformat(), style='blue'),
+            )
+        )
 
         time.sleep(1)
 
