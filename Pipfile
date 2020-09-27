@@ -24,6 +24,7 @@ factory-boy = "*"
 isort = "*"
 pytest-asyncio = "*"
 async-asgi-testclient = "*"
+rich-sparklines = "*"
 
 [packages]
 flask = "*"
