@@ -3,6 +3,7 @@ import os
 import traceback
 from functools import wraps
 from itertools import chain
+from os import getpid
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Type, Union
 from urllib.parse import urlencode
@@ -163,6 +164,7 @@ def pool(sessionlocal=Depends(get_session_local)):
 
     pool = sessionlocal.kw['bind'].pool
     return {
+        'worker_id': getpid(),
         'size': get('size'),
         'checkedin': get('checkedin'),
         'overflow': get('overflow'),

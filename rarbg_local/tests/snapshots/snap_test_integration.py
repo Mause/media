@@ -4,13 +4,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['test_pool_status 1'] = {
-    'checkedin': None,
-    'checkedout': None,
-    'overflow': None,
-    'size': 5,
-}
-
 snapshots['test_schema 1'] = {
     'definitions': {
         'MediaType': {
@@ -1137,4 +1130,12 @@ snapshots['test_select_season 1'] = {
     'number_of_seasons': 1,
     'seasons': [{'episode_count': 1, 'season_number': 1}],
     'title': 'hello',
+}
+
+snapshots['test_pool_status 1'] = {
+    'checkedin': None,
+    'checkedout': None,
+    'overflow': None,
+    'size': 5,
+    'worker_id': 1,
 }
