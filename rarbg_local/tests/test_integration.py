@@ -542,4 +542,4 @@ async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
 
     assert ei.match(message)
 
-    assert caplog.text.count(message) == 6  # five plus the last time
+    assert caplog.text.count(message) == 6 + 1  # five plus the last time
