@@ -121,9 +121,14 @@ async def get_settings():
 def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = settings.database_url
     logging.info('db_url: %s', db_url)
-    ca = {"check_same_thread": False} if 'sqlite' in db_url else {}
-    engine = create_engine(db_url, connect_args=ca, pool_size=20, echo_pool='debug')
-    if 'sqlite' in db_url:
+
+    sqlite = 'sqlite' in db_url
+
+    ca = {"check_same_thread": False} if sqlite else {}
+    engine_args = {} if sqlite else {'max_overflow': 10, 'pool_size': 5, 'recycle': 300}
+    engine = create_engine(db_url, connect_args=ca, **engine_args, echo_pool='debug')
+
+    if sqlite:
 
         @event.listens_for(engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
