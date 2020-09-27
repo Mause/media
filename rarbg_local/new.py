@@ -154,6 +154,22 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     return sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
+@api.get('/diagnostics/pool')
+def pool(sessionlocal=Depends(get_session_local)):
+    def get(field):
+        value = getattr(pool, field, None)
+
+        return value() if callable(value) else value
+
+    pool = sessionlocal.kw['bind'].pool
+    return {
+        'size': get('size'),
+        'checkedin': get('checkedin'),
+        'overflow': get('overflow'),
+        'checkedout': get('checkedout'),
+    }
+
+
 def get_db(session_local=Depends(get_session_local)):
     sl = session_local()
     try:
