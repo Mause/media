@@ -1647,11 +1647,11 @@
         },
         "rich-sparklines": {
             "hashes": [
-                "sha256:351245e98d4fa4ca4b2b8d678bf1332d3ef166213a8c5a1c1f1e4dfdc2468545",
-                "sha256:b4c6915dcd6fd0ff17fc2b4d36f9dab39d51979fa383eb745944e71f7e9859ed"
+                "sha256:2001de32c6dbe33a925a5cd53907c0b4e06e1eabe507d3cbf26f25ea7e02a126",
+                "sha256:999ed9362c9074598d3339c5cdbc3569cdc3f885fc3328d7626a72043872b5da"
             ],
             "index": "pypi",
-            "version": "==0.1.3"
+            "version": "==0.1.5"
         },
         "selenium": {
             "hashes": [
