@@ -636,10 +636,10 @@
         },
         "plexapi": {
             "hashes": [
-                "sha256:10f7141246dd800d587eab44d667e34a8cad34313d1c4c55f54c2a8056c958ee"
+                "sha256:5de36cc26a1e919dbc7ecc3e62733e1332a6257646cbaca73846238b297d387d"
             ],
             "index": "pypi",
-            "version": "==4.1.1"
+            "version": "==4.1.2"
         },
         "psycopg2-binary": {
             "hashes": [
@@ -1610,10 +1610,11 @@
         },
         "snapshottest": {
             "hashes": [
-                "sha256:2cc7157e77674ea8ebeb2351466ff50cd4b5ad8e213adc06df9c16a75ab5bafc"
+                "sha256:9b177cffe0870c589df8ddbee0a770149c5474b251955bdbde58b7f32a4ec429",
+                "sha256:bbcaf81d92d8e330042e5c928e13d9f035e99e91b314fe55fda949c2f17b653c"
             ],
             "index": "pypi",
-            "version": "==0.5.1"
+            "version": "==0.6.0"
         },
         "sparklines": {
             "hashes": [
