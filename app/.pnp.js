@@ -151,7 +151,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "jest-junit",
-        "npm:11.1.0"
+        "npm:12.0.0"
       ],
       [
         "lodash",
@@ -267,7 +267,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["colors.css", "npm:3.0.0"],
             ["history", "npm:4.10.1"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
-            ["jest-junit", "npm:11.1.0"],
+            ["jest-junit", "npm:12.0.0"],
             ["lodash", "npm:4.17.20"],
             ["mockdate", "npm:3.0.2"],
             ["moment", "npm:2.29.0"],
@@ -4819,7 +4819,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["colors.css", "npm:3.0.0"],
             ["history", "npm:4.10.1"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
-            ["jest-junit", "npm:11.1.0"],
+            ["jest-junit", "npm:12.0.0"],
             ["lodash", "npm:4.17.20"],
             ["mockdate", "npm:3.0.2"],
             ["moment", "npm:2.29.0"],
@@ -11131,10 +11131,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["jest-junit", [
-        ["npm:11.1.0", {
-          "packageLocation": "./.yarn/cache/jest-junit-npm-11.1.0-02e4bee68f-1166ceac6f.zip/node_modules/jest-junit/",
+        ["npm:12.0.0", {
+          "packageLocation": "./.yarn/cache/jest-junit-npm-12.0.0-edd1892400-2cdd446aea.zip/node_modules/jest-junit/",
           "packageDependencies": [
-            ["jest-junit", "npm:11.1.0"],
+            ["jest-junit", "npm:12.0.0"],
             ["mkdirp", "npm:1.0.4"],
             ["strip-ansi", "npm:5.2.0"],
             ["uuid", "npm:3.4.0"],
