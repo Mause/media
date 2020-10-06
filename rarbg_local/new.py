@@ -32,6 +32,7 @@ from .db import (
     safe_delete,
 )
 from .health import router as health
+from .graphql_endpoint import api as graphql
 from .main import (
     add_single,
     extract_marker,
@@ -415,6 +416,7 @@ def create_app():
         prefix='/api',
         dependencies=[security],
     )
+    app.include_router(graphql, prefix='/graphql')
     app.include_router(root, prefix='')
 
     origins = []
