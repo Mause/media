@@ -426,10 +426,10 @@
         },
         "h11": {
             "hashes": [
-                "sha256:311dc5478c2568cc07262e0381cdfc5b9c6ba19775905736c87e81ae6662b9fd",
-                "sha256:9eecfbafc980976dbff26a01dd3487644dd5d00f8038584451fc64a660f7c502"
+                "sha256:3c6c61d69c6f13d41f1b80ab0322f1872702a3ba26e12aa864c928f6a43fbaab",
+                "sha256:ab6c335e1b6ef34b205d5ca3e228c9299cc7218b049819ec84a388c2525e5d87"
             ],
-            "version": "==0.10.0"
+            "version": "==0.11.0"
         },
         "idna": {
             "hashes": [
@@ -614,10 +614,10 @@
         },
         "passlib": {
             "hashes": [
-                "sha256:68c35c98a7968850e17f1b6892720764cc7eed0ef2b7cb3116a89a28e43fe177",
-                "sha256:8d666cef936198bc2ab47ee9b0410c94adf2ba798e5a84bf220be079ae7ab6a8"
+                "sha256:0fe8b86a900b2885fed00cf5e96f040c7abd61496d65dec4c814e462f8499d8a",
+                "sha256:a203263a2dbb97f3103603c780dce7a7253722951c717b424ed8cd7c72587ae1"
             ],
-            "version": "==1.7.2"
+            "version": "==1.7.3"
         },
         "pika": {
             "hashes": [
@@ -1120,10 +1120,10 @@
         },
         "faker": {
             "hashes": [
-                "sha256:6d57066eb7a0dd089f85cee99d0e75a7dcd86d74f9d5af7ccc4ace204b994cd6",
-                "sha256:a69c06e1f160e14a6da96ef6bff98e7b931f8e30d4e4e8ba399aff859965bb19"
+                "sha256:ba4f98ed8c4c3e817c39626e996a913e3b6478b02625e1cfe9feb7fd8f2f4883",
+                "sha256:c7c7dcede34e10bfdb8601bea807bf065ec3dd3e90884aabcfd4e3f7ae2dbe3b"
             ],
-            "version": "==4.4.0"
+            "version": "==4.5.0"
         },
         "fancycompleter": {
             "hashes": [
@@ -1211,11 +1211,11 @@
         },
         "isort": {
             "hashes": [
-                "sha256:36f0c6659b9000597e92618d05b72d4181104cf59472b1c6a039e3783f930c95",
-                "sha256:ba040c24d20aa302f78f4747df549573ae1eaf8e1084269199154da9c483f07f"
+                "sha256:47e0fdc03aed3a9ba507284f90e4b3b6f2a4725d919816a7b547675befc38ffb",
+                "sha256:87355bbc3465bf096a8bf09c4dd949b6b9294958c478740442fd9fbd01b817f2"
             ],
             "index": "pypi",
-            "version": "==5.5.4"
+            "version": "==5.5.5"
         },
         "itsdangerous": {
             "hashes": [
