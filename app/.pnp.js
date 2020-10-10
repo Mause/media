@@ -79,7 +79,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@testing-library/user-event",
-        "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.6"
+        "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.7"
       ],
       [
         "@types/history",
@@ -123,7 +123,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/socket.io-client",
-        "npm:1.4.33"
+        "npm:1.4.34"
       ],
       [
         "@use-it/interval",
@@ -151,7 +151,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "jest-junit",
-        "npm:11.1.0"
+        "npm:12.0.0"
       ],
       [
         "lodash",
@@ -163,7 +163,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "moment",
-        "npm:2.29.0"
+        "npm:2.29.1"
       ],
       [
         "moxios",
@@ -215,7 +215,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "swr",
-        "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.4"
+        "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.5"
       ],
       [
         "typescript",
@@ -249,7 +249,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.24.2"],
             ["@testing-library/jest-dom", "npm:5.11.4"],
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.4"],
-            ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.6"],
+            ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.7"],
             ["@types/history", "npm:4.7.7"],
             ["@types/jest", "npm:26.0.13"],
             ["@types/lodash", "npm:4.14.161"],
@@ -260,17 +260,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:16.9.8"],
             ["@types/react-helmet", "npm:6.1.0"],
             ["@types/react-router-dom", "npm:5.1.5"],
-            ["@types/socket.io-client", "npm:1.4.33"],
+            ["@types/socket.io-client", "npm:1.4.34"],
             ["@use-it/interval", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.3"],
             ["@vtex/axios-concurrent-retry", "npm:4.0.11"],
             ["axios", "npm:0.20.0"],
             ["colors.css", "npm:3.0.0"],
             ["history", "npm:4.10.1"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
-            ["jest-junit", "npm:11.1.0"],
+            ["jest-junit", "npm:12.0.0"],
             ["lodash", "npm:4.17.20"],
             ["mockdate", "npm:3.0.2"],
-            ["moment", "npm:2.29.0"],
+            ["moment", "npm:2.29.1"],
             ["moxios", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.4.0"],
             ["prop-types", "npm:15.7.2"],
             ["qs", "npm:6.9.4"],
@@ -283,7 +283,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-loading", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:2.0.3"],
             ["react-router-dom", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.2.0"],
             ["react-scripts", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:3.4.1"],
-            ["swr", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.4"],
+            ["swr", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.5"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"],
             ["typescript-string-operations", "npm:1.3.3"],
             ["use-socketio", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:2.0.3"]
@@ -3720,10 +3720,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@testing-library/user-event", [
-        ["virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.6", {
-          "packageLocation": "./.yarn/$$virtual/@testing-library-user-event-virtual-86bb9d7ffe/0/cache/@testing-library-user-event-npm-12.1.6-6111da9339-547bb93b22.zip/node_modules/@testing-library/user-event/",
+        ["virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.7", {
+          "packageLocation": "./.yarn/$$virtual/@testing-library-user-event-virtual-64e709eea2/0/cache/@testing-library-user-event-npm-12.1.7-1070d920b8-b0a855a5a0.zip/node_modules/@testing-library/user-event/",
           "packageDependencies": [
-            ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.6"],
+            ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.7"],
             ["@babel/runtime", "npm:7.10.5"],
             ["@testing-library/dom", null]
           ],
@@ -4053,10 +4053,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/socket.io-client", [
-        ["npm:1.4.33", {
-          "packageLocation": "./.yarn/cache/@types-socket.io-client-npm-1.4.33-0d7fba9832-c79ae7b256.zip/node_modules/@types/socket.io-client/",
+        ["npm:1.4.34", {
+          "packageLocation": "./.yarn/cache/@types-socket.io-client-npm-1.4.34-b4c23d0c31-50b19bdca4.zip/node_modules/@types/socket.io-client/",
           "packageDependencies": [
-            ["@types/socket.io-client", "npm:1.4.33"]
+            ["@types/socket.io-client", "npm:1.4.34"]
           ],
           "linkType": "HARD",
         }]
@@ -4801,7 +4801,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.24.2"],
             ["@testing-library/jest-dom", "npm:5.11.4"],
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.0.4"],
-            ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.6"],
+            ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.7"],
             ["@types/history", "npm:4.7.7"],
             ["@types/jest", "npm:26.0.13"],
             ["@types/lodash", "npm:4.14.161"],
@@ -4812,17 +4812,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:16.9.8"],
             ["@types/react-helmet", "npm:6.1.0"],
             ["@types/react-router-dom", "npm:5.1.5"],
-            ["@types/socket.io-client", "npm:1.4.33"],
+            ["@types/socket.io-client", "npm:1.4.34"],
             ["@use-it/interval", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.3"],
             ["@vtex/axios-concurrent-retry", "npm:4.0.11"],
             ["axios", "npm:0.20.0"],
             ["colors.css", "npm:3.0.0"],
             ["history", "npm:4.10.1"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
-            ["jest-junit", "npm:11.1.0"],
+            ["jest-junit", "npm:12.0.0"],
             ["lodash", "npm:4.17.20"],
             ["mockdate", "npm:3.0.2"],
-            ["moment", "npm:2.29.0"],
+            ["moment", "npm:2.29.1"],
             ["moxios", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.4.0"],
             ["prop-types", "npm:15.7.2"],
             ["qs", "npm:6.9.4"],
@@ -4835,7 +4835,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-loading", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:2.0.3"],
             ["react-router-dom", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.2.0"],
             ["react-scripts", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:3.4.1"],
-            ["swr", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.4"],
+            ["swr", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.5"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"],
             ["typescript-string-operations", "npm:1.3.3"],
             ["use-socketio", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:2.0.3"]
@@ -11131,10 +11131,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["jest-junit", [
-        ["npm:11.1.0", {
-          "packageLocation": "./.yarn/cache/jest-junit-npm-11.1.0-02e4bee68f-1166ceac6f.zip/node_modules/jest-junit/",
+        ["npm:12.0.0", {
+          "packageLocation": "./.yarn/cache/jest-junit-npm-12.0.0-edd1892400-2cdd446aea.zip/node_modules/jest-junit/",
           "packageDependencies": [
-            ["jest-junit", "npm:11.1.0"],
+            ["jest-junit", "npm:12.0.0"],
             ["mkdirp", "npm:1.0.4"],
             ["strip-ansi", "npm:5.2.0"],
             ["uuid", "npm:3.4.0"],
@@ -12669,10 +12669,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["moment", [
-        ["npm:2.29.0", {
-          "packageLocation": "./.yarn/cache/moment-npm-2.29.0-f9cef938dc-ad48501913.zip/node_modules/moment/",
+        ["npm:2.29.1", {
+          "packageLocation": "./.yarn/cache/moment-npm-2.29.1-787d9fdafd-86729013fe.zip/node_modules/moment/",
           "packageDependencies": [
-            ["moment", "npm:2.29.0"]
+            ["moment", "npm:2.29.1"]
           ],
           "linkType": "HARD",
         }]
@@ -17371,10 +17371,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["swr", [
-        ["virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.4", {
-          "packageLocation": "./.yarn/$$virtual/swr-virtual-2774b6febe/0/cache/swr-npm-0.3.4-977b1f4570-f3fdac0883.zip/node_modules/swr/",
+        ["virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.5", {
+          "packageLocation": "./.yarn/$$virtual/swr-virtual-b12a57c64e/0/cache/swr-npm-0.3.5-4657b13232-c0747ebb2e.zip/node_modules/swr/",
           "packageDependencies": [
-            ["swr", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.4"],
+            ["swr", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.5"],
             ["dequal", "npm:2.0.2"],
             ["react", "npm:16.13.1"]
           ],

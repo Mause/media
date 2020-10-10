@@ -2310,14 +2310,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^12.1.6":
-  version: 12.1.6
-  resolution: "@testing-library/user-event@npm:12.1.6"
+"@testing-library/user-event@npm:^12.1.7":
+  version: 12.1.7
+  resolution: "@testing-library/user-event@npm:12.1.7"
   dependencies:
     "@babel/runtime": ^7.10.2
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
-  checksum: 547bb93b2269c36f1229fabaebca574eaf798e338cfe961f3b55f294b99faa4856b40a95f299e948a087480239d32ae94987479e73dfa5bbf77a0c923b0e40fd
+  checksum: b0a855a5a0c991a9b1e1cd1b1adfc73b54ad10b2baba7f157ca66eb55ad418aa420e1e98af8d5a33dcf62942fb08dea6030986858954d1a5990c648bd7edbadc
   languageName: node
   linkType: hard
 
@@ -2602,10 +2602,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/socket.io-client@npm:^1.4.33":
-  version: 1.4.33
-  resolution: "@types/socket.io-client@npm:1.4.33"
-  checksum: c79ae7b2562eec3a00ff242d1047cdd53a2fd9699eacd71cdedfb635dc6f343191826d90dc9ff90d63890af83ba6d5474c368404fe9910df63492477cae706bb
+"@types/socket.io-client@npm:^1.4.34":
+  version: 1.4.34
+  resolution: "@types/socket.io-client@npm:1.4.34"
+  checksum: 50b19bdca4d04e72f407b2577aa7ee9fdf5dddf722041c7c652a95b0d1bbf5da692aaa7cba294b1da8b563fb4d72a66b5a6d34831b005abb71f84775f1ba0515
   languageName: node
   linkType: hard
 
@@ -3254,7 +3254,7 @@ __metadata:
     "@sentry/react": ^5.24.2
     "@testing-library/jest-dom": ^5.11.4
     "@testing-library/react": ^11.0.4
-    "@testing-library/user-event": ^12.1.6
+    "@testing-library/user-event": ^12.1.7
     "@types/history": 4.7.7
     "@types/jest": ^26.0.13
     "@types/lodash": ^4.14.161
@@ -3265,17 +3265,17 @@ __metadata:
     "@types/react-dom": ^16.9.8
     "@types/react-helmet": ^6.1.0
     "@types/react-router-dom": ^5.1.5
-    "@types/socket.io-client": ^1.4.33
+    "@types/socket.io-client": ^1.4.34
     "@use-it/interval": ^0.1.3
     "@vtex/axios-concurrent-retry": ^4.0.11
     axios: ^0.20.0
     colors.css: ^3.0.0
     history: ^4.9.0
     jest-environment-jsdom-sixteen: ^1.0.3
-    jest-junit: ^11.1.0
+    jest-junit: ^12.0.0
     lodash: ^4.17.20
     mockdate: ^3.0.2
-    moment: ^2.29.0
+    moment: ^2.29.1
     moxios: ^0.4.0
     prop-types: ^15.7.2
     qs: ^6.9.4
@@ -3288,7 +3288,7 @@ __metadata:
     react-loading: ^2.0.3
     react-router-dom: ^5.2.0
     react-scripts: 3.4.1
-    swr: ^0.3.4
+    swr: ^0.3.5
     typescript: 3
     typescript-string-operations: ^1.3.3
     use-socketio: ^2.0.3
@@ -8907,15 +8907,15 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"jest-junit@npm:^11.1.0":
-  version: 11.1.0
-  resolution: "jest-junit@npm:11.1.0"
+"jest-junit@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "jest-junit@npm:12.0.0"
   dependencies:
     mkdirp: ^1.0.4
     strip-ansi: ^5.2.0
     uuid: ^3.3.3
     xml: ^1.0.1
-  checksum: 1166ceac6f77cd7c16fb1efb16f649bc1b7eed02ddb90e6009c376e4598641e07a0071adeec8c60f3d651f7cc67fef27ad419e6c151926c188624027d9c7a6be
+  checksum: 2cdd446aeab75e4e87e3c168bc72b281a5f036b31f04a36795e9f1509afa85ef4bf6609c2f2504dd221bbaedc1181d57d49728655dca828a3e1033f446715d8e
   languageName: node
   linkType: hard
 
@@ -10343,10 +10343,10 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.29.0":
-  version: 2.29.0
-  resolution: "moment@npm:2.29.0"
-  checksum: ad4850191348e75447d4d0b1362c78825b3d966f5abc42b3ed0ae0a6fcda5eb4504789c361d18c762f7467b3a7923b59f8bf1d52769568585516035b6c848a55
+"moment@npm:^2.29.1":
+  version: 2.29.1
+  resolution: "moment@npm:2.29.1"
+  checksum: 86729013febf7160de5b93da69273dd304d674b0224f9544b3abd09a87671ddd2cdd57598261ce57588910d63747ffd5590965e83c790d8bf327083c0e0a06e0
   languageName: node
   linkType: hard
 
@@ -14621,14 +14621,14 @@ resolve@1.15.0:
   languageName: node
   linkType: hard
 
-"swr@npm:^0.3.4":
-  version: 0.3.4
-  resolution: "swr@npm:0.3.4"
+"swr@npm:^0.3.5":
+  version: 0.3.5
+  resolution: "swr@npm:0.3.5"
   dependencies:
     dequal: 2.0.2
   peerDependencies:
     react: ^16.11.0
-  checksum: f3fdac0883a196071fa2b9b7f823d3ef7075f0f0793e59878c81ed0c71db06a468412208fdc1d842bbc9b98fdef6e2ec5a861e383590f4c3523077fd4fb8c1c8
+  checksum: c0747ebb2e1dce32686de3e3bbdcd2db8d29522af4b0b188c8cb9726e3dc97cd74c0a58acb715df972bb8a56904dd75e7e5df542220ff389ec0c0887b527884e
   languageName: node
   linkType: hard
 

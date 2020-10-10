@@ -1,4 +1,5 @@
 # snapshottest: v1 - https://goo.gl/zC4yUc
+
 from snapshottest import Snapshot
 
 snapshots = Snapshot()
@@ -490,6 +491,19 @@ snapshots['test_openapi 1'] = {
                 },
                 'security': [{'XOpenIdConnect': ['openid']}],
                 'summary': 'Diagnostics',
+            }
+        },
+        '/api/diagnostics/pool': {
+            'get': {
+                'operationId': 'pool',
+                'responses': {
+                    '200': {
+                        'content': {'application/json': {'schema': {}}},
+                        'description': 'Successful Response',
+                    }
+                },
+                'security': [{'XOpenIdConnect': ['openid']}],
+                'summary': 'Pool',
             }
         },
         '/api/download': {
@@ -1116,4 +1130,12 @@ snapshots['test_select_season 1'] = {
     'number_of_seasons': 1,
     'seasons': [{'episode_count': 1, 'season_number': 1}],
     'title': 'hello',
+}
+
+snapshots['test_pool_status 1'] = {
+    'checkedin': None,
+    'checkedout': None,
+    'overflow': None,
+    'size': 5,
+    'worker_id': 1,
 }

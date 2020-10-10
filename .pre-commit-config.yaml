@@ -77,4 +77,4 @@ repos:
         - flake8-aaa
       args:
         - --jobs=1
-        - --extend-ignore=W503
+        - --extend-ignore=W503,E203

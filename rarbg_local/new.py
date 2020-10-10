@@ -3,6 +3,7 @@ import os
 import traceback
 from functools import wraps
 from itertools import chain
+from os import getpid
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Type, Union
 from urllib.parse import urlencode
@@ -152,6 +153,23 @@ def get_session_local(settings: Settings = Depends(get_settings)):
             return psycopg2.connect(*cargs, **cparams)
 
     return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+
+
+@api.get('/diagnostics/pool')
+def pool(sessionlocal=Depends(get_session_local)):
+    def get(field):
+        value = getattr(pool, field, None)
+
+        return value() if callable(value) else value
+
+    pool = sessionlocal.kw['bind'].pool
+    return {
+        'worker_id': getpid(),
+        'size': get('size'),
+        'checkedin': get('checkedin'),
+        'overflow': get('overflow'),
+        'checkedout': get('checkedout'),
+    }
 
 
 def get_db(session_local=Depends(get_session_local)):

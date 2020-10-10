@@ -222,7 +222,7 @@ async def test_search(responses, test_client):
     res = await test_client.get('/api/search?query=chernobyl')
     assert res.status_code == 200
     assert res.json() == [
-        {'imdbID': 10000, 'title': 'Chernobyl', 'year': 2019, 'type': 'series',}
+        {'imdbID': 10000, 'title': 'Chernobyl', 'year': 2019, 'type': 'series'}
     ]
 
 
@@ -516,6 +516,12 @@ async def test_plex_redirect(test_client, responses):
         r.headers['Location']
         == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2Faaa'
     )
+
+
+@mark.asyncio
+async def test_pool_status(test_client, snapshot, monkeypatch):
+    monkeypatch.setattr('rarbg_local.new.getpid', lambda: 1)
+    snapshot.assert_match((await test_client.get('/api/diagnostics/pool')).json())
 
 
 @mark.asyncio
