@@ -166,6 +166,7 @@ class TvResponse(TvBaseResponse):
 
 
 class TvApiResponse(TvBaseResponse):
+    id: int
     name: str
 
 

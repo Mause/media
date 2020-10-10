@@ -62,6 +62,7 @@ class TvApiResponseFactory(TvBaseResponseFactory):
     class Meta:
         model = TvApiResponse
 
+    id = Faker('numerify')
     name = Faker('name')
 
 

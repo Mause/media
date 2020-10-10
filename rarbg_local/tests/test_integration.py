@@ -270,11 +270,11 @@ async def test_select_season(
     themoviedb(
         responses,
         '/tv/100000',
-        {
-            'number_of_seasons': 1,
-            'seasons': [{'episode_count': 1, 'season_number': 1}],
-            'name': 'hello',
-        },
+        TvApiResponseFactory(
+            number_of_seasons=1,
+            seasons=[{'episode_count': 1, 'season_number': 1}],
+            name='hello',
+        ).dict(),
     )
     themoviedb(responses, '/tv/100000/external_ids', {'imdb_id': 'tt1000'})
 

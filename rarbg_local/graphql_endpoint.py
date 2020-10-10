@@ -95,9 +95,4 @@ g = GraphQLApp(
     executor_class=AsyncioExecutor,
 )
 
-
-async def t(request):
-    return await g(request.scope, request._receive, request._send)
-
-
-api.add_route('/', t, methods=['POST'])
+api.add_route('/', g, methods=['POST'])
