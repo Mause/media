@@ -66,6 +66,7 @@ pytz = "*"
 uvicorn = "*"
 aiofiles = "*"
 fastapi-utils = "*"
+makefun = "*"
 
 [requires]
 python_version = "3"
