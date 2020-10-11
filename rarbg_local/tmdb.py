@@ -30,7 +30,7 @@ def try_(dic: Dict[str, str], *keys: str) -> Optional[str]:
     backoff.fibo,
     requests.exceptions.RequestException,
     max_tries=5,
-    giveup=lambda e: e.response.status_code != 429,
+    giveup=lambda e: getattr(e.response, 'status_code', None) != 429,
 )
 def get_json(*args, **kwargs):
     r = tmdb.get(*args, **kwargs)
