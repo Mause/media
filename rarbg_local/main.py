@@ -1,13 +1,9 @@
-import json
 import logging
 import os
 import re
 import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from enum import Enum
-from functools import wraps
-from itertools import chain
 from os.path import join
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
@@ -16,7 +12,6 @@ from fastapi.exceptions import HTTPException
 from flask import (
     Blueprint,
     Flask,
-    Response,
     current_app,
     get_flashed_messages,
     redirect,
@@ -48,8 +43,7 @@ from .db import (
     get_episodes,
 )
 from .models import Episode, SeriesDetails
-from .providers import search_for_movie, search_for_tv
-from .tmdb import get_movie_imdb_id, get_tv_episodes, get_tv_imdb_id, resolve_id
+from .tmdb import get_tv_episodes, resolve_id
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import non_null, precondition
 
@@ -163,38 +157,6 @@ def serve_index(path=None):
             pass
 
     return send_from_directory('../app/build/', 'index.html')
-
-
-def eventstream(function: Callable):
-    @wraps(function)
-    def decorator(*args, **kwargs):
-        def default(obj):
-            if isinstance(obj, Enum):
-                return obj.name
-
-            raise Exception()
-
-        return Response(
-            chain(
-                (
-                    f'data: {json.dumps(rset, default=default)}\n\n'
-                    for rset in function(*args, **kwargs)
-                ),
-                ['data:\n\n'],
-            ),
-            mimetype="text/event-stream",
-        )
-
-    return decorator
-
-
-def _stream(type: str, tmdb_id: str, season=None, episode=None):
-    if type == 'series':
-        items = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode)
-    else:
-        items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
-
-    return (item.dict() for item in items)
 
 
 def categorise(string: str) -> str:
