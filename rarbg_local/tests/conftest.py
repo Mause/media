@@ -1,5 +1,7 @@
 import json
+import re
 from asyncio import get_event_loop
+from typing import Pattern, Union
 
 from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
@@ -65,12 +67,16 @@ def themoviedb(responses, path, response, query=''):
     add_json(
         responses,
         'GET',
-        f'https://api.themoviedb.org/3{path}?api_key=' + query,
+        re.compile(
+            re.escape(f'https://api.themoviedb.org/3{path}?api_key=')
+            + '.*'
+            + re.escape(query)
+        ),
         response,
     )
 
 
-def add_json(responses, method: str, url: str, json_body) -> None:
+def add_json(responses, method: str, url: Union[str, Pattern], json_body) -> None:
     responses.add(method=method, url=url, body=json.dumps(json_body))
 
 
