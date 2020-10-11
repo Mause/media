@@ -1,6 +1,7 @@
 from functools import lru_cache as _lru_cache
 from typing import Optional, Set, TypeVar
 
+from asyncache import cached as _cached
 from cachetools.func import ttl_cache as _ttl_cache
 
 T = TypeVar('T')
@@ -21,6 +22,15 @@ def ttl_cache(*args, **kwargs):
         cache = _ttl_cache(*args, **kwargs)(func)
         _caches.add(cache)
         return cache
+
+    return wrapper
+
+
+def cached(cache):
+    def wrapper(func):
+        c = _cached(cache)(func)
+        _caches.add(type('', (), {'cache_clear': cache.clear}))
+        return c
 
     return wrapper
 
