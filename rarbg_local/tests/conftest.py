@@ -108,3 +108,11 @@ def responses():
 
     finally:
         mock.stop()
+
+
+@fixture
+def aioresponses():
+    from aioresponses import aioresponses
+
+    with aioresponses() as e:
+        yield e
