@@ -1,3 +1,4 @@
+import os
 from datetime import date
 from enum import Enum
 from itertools import chain
@@ -14,10 +15,9 @@ from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonRespon
 from .utils import cached, lru_cache, precondition, ttl_cache
 
 base = 'https://api.themoviedb.org/3/'
-api_key = '66b197263af60702ba14852b4ec9b143'
 
 tmdb = BaseUrlSession(base)
-tmdb.params['api_key'] = api_key
+tmdb.params['api_key'] = api_key = os.environ['TMDB_API_KEY']
 
 ThingType = Literal['movie', 'tv']
 

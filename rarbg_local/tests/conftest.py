@@ -65,8 +65,7 @@ def themoviedb(responses, path, response, query=''):
     add_json(
         responses,
         'GET',
-        f'https://api.themoviedb.org/3{path}?api_key=66b197263af60702ba14852b4ec9b143'
-        + query,
+        f'https://api.themoviedb.org/3{path}?api_key=' + query,
         response,
     )
 
