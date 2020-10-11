@@ -1,3 +1,4 @@
+import inspect
 from asyncio import iscoroutinefunction
 from typing import Callable, TypeVar
 
@@ -5,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.dependencies.utils import solve_dependencies
 from fastapi.requests import Request
 from fastapi.routing import get_dependant, run_endpoint_function
+from makefun import add_signature_parameters, create_function
 
 T = TypeVar('T')
 
@@ -27,12 +29,16 @@ async def get(app: FastAPI, func: Callable[..., T], request: Request = None) -> 
 
 
 def singleton(func: Callable):
-    async def wrapper(request: Request):
+    async def wrapper(request: Request, **kwargs):
         app = request.app
 
         value = app.dependency_overrides.get(wrapper)
         if not value:
-            value = await get(app, func)
+            value = await run_endpoint_function(
+                dependant=get_dependant(call=func, path=''),
+                values=kwargs,
+                is_coroutine=iscoroutinefunction(func),
+            )
 
             app.dependency_overrides[wrapper] = lambda: value
         else:
@@ -40,5 +46,14 @@ def singleton(func: Callable):
 
         return value
 
-    wrapper.__name__ = wrapper.__qualname__ = f'singleton wrapper for {func!r}'
+    wrapper = create_function(
+        add_signature_parameters(
+            inspect.signature(func),
+            first=inspect.Parameter(
+                'request', inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=Request
+            ),
+        ),
+        func_impl=wrapper,
+    )
+
     return wrapper

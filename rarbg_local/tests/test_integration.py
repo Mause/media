@@ -202,9 +202,9 @@ async def test_index(responses, test_client, get_torrent, snapshot, session, use
 
 
 @mark.asyncio
-async def test_search(responses, test_client):
+async def test_search(aioresponses, test_client):
     themoviedb(
-        responses,
+        aioresponses,
         '/search/multi',
         {
             'results': [

@@ -25,6 +25,7 @@ isort = "*"
 pytest-asyncio = "*"
 async-asgi-testclient = "*"
 rich-sparklines = "*"
+aioresponses = "*"
 
 [packages]
 flask = "*"
@@ -68,6 +69,8 @@ aiofiles = "*"
 fastapi-utils = "*"
 graphene = "*"
 graphql-core = "==2.3.2"
+asyncache = "*"
+makefun = "*"
 
 [requires]
 python_version = "3"
