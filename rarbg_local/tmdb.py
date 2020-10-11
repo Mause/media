@@ -1,17 +1,23 @@
+import os
 from datetime import date
 from enum import Enum
 from itertools import chain
 from typing import Dict, List, Literal, Optional, Union
 
+import aiohttp
+import aiohttp.web_exceptions
 import backoff
 import requests
+from cachetools import TTLCache
 from requests_toolbelt.sessions import BaseUrlSession
 
 from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonResponse
-from .utils import lru_cache, precondition, ttl_cache
+from .utils import cached, lru_cache, precondition, ttl_cache
 
-tmdb = BaseUrlSession('https://api.themoviedb.org/3/')
-tmdb.params['api_key'] = '66b197263af60702ba14852b4ec9b143'
+base = 'https://api.themoviedb.org/3/'
+
+tmdb = BaseUrlSession(base)
+tmdb.params['api_key'] = api_key = os.environ['TMDB_API_KEY']
 
 ThingType = Literal['movie', 'tv']
 
@@ -32,6 +38,20 @@ def get_json(*args, **kwargs):
     return r.json()
 
 
+# @backoff.on_exception(
+#     backoff.fibo,
+#     aiohttp.web_exceptions.HTTPException,
+#     max_tries=5,
+#     giveup=lambda e: e.response.status_code != 429,
+# )
+async def a_get_json(path, **kwargs):
+    async with aiohttp.ClientSession() as tmdb:
+        kwargs.setdefault('params', {})['api_key'] = api_key
+        r = await tmdb.get(base + path, **kwargs)
+        r.raise_for_status()
+        return await r.json()
+
+
 @lru_cache()
 def get_configuration() -> Dict:
     return get_json('configuration')
@@ -42,10 +62,10 @@ def get_year(result: Dict[str, str]) -> Optional[int]:
     return date.fromisoformat(data).year if data else None
 
 
-@ttl_cache()
-def search_themoviedb(s: str) -> List[SearchResponse]:
+@cached(TTLCache(1024, 360))
+async def search_themoviedb(s: str) -> List[SearchResponse]:
     MAP = {'tv': 'series', 'movie': 'movie'}
-    r = tmdb.get('search/multi', params={'query': s})
+    r = await a_get_json('search/multi', params={'query': s})
     return [
         SearchResponse(
             type=MAP[result['media_type']],
@@ -53,7 +73,7 @@ def search_themoviedb(s: str) -> List[SearchResponse]:
             year=get_year(result),
             imdbID=result['id'],
         )
-        for result in r.json().get('results', [])
+        for result in r.get('results', [])
         if result['media_type'] in MAP
     ]
 

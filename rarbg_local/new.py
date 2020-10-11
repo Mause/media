@@ -398,7 +398,7 @@ async def torrents():
 
 @api.get('/search', response_model=List[SearchResponse])
 async def search(query: str):
-    return search_themoviedb(query)
+    return await search_themoviedb(query)
 
 
 monitor_ns = APIRouter()
