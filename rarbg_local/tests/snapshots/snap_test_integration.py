@@ -826,7 +826,7 @@ snapshots['test_openapi 1'] = {
                     {
                         'in': 'query',
                         'name': 'source',
-                        'required': False,
+                        'required': True,
                         'schema': {'$ref': '#/components/schemas/ProviderSource'},
                     },
                     {
