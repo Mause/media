@@ -10,10 +10,37 @@ from .factories import (
 
 @mark.asyncio
 async def test_main(test_client, snapshot, responses):
-    themoviedb(responses, '/tv/540', TvApiResponseFactory(id=540).dict())
-    themoviedb(responses, '/tv/540/season/1', TvSeasonResponseFactory().dict())
-    themoviedb(responses, '/tv/540/external_ids', {'imdb_id': 'tt000000'})
-    themoviedb(responses, '/movie/540', MovieResponseFactory().dict())
+    imdb_id = 'tt000000'
+    themoviedb(
+        responses,
+        '/tv/540',
+        TvApiResponseFactory(
+            id=540,
+            name='Kathleen Williamson',
+            number_of_seasons=1,
+            seasons=[{'episode_count': 1, 'season_number': 1}],
+        ).dict(),
+    )
+    themoviedb(
+        responses,
+        '/tv/540/season/1',
+        TvSeasonResponseFactory(
+            episodes=[
+                {
+                    'air_date': '1998-08-18',
+                    'episode_number': 564,
+                    'id': '948',
+                    'name': 'Angel Robertson',
+                }
+            ]
+        ).dict(),
+    )
+    themoviedb(responses, '/tv/540/external_ids', {'imdb_id': imdb_id})
+    themoviedb(
+        responses,
+        '/movie/540',
+        MovieResponseFactory(imdb_id='tt293584', title='Christopher Robinson').dict(),
+    )
 
     res = await test_client.post(
         '/graphql/',

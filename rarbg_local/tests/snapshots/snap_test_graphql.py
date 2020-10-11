@@ -22,7 +22,7 @@ snapshots['test_main 1'] = {
                     }
                 ]
             },
-            'seasons': [{'episodeCount': 504, 'seasonNumber': 108}],
+            'seasons': [{'episodeCount': 1, 'seasonNumber': 1}],
         },
     }
 }
