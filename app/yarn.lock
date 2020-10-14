@@ -2045,18 +2045,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/browser@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@sentry/browser@npm:5.25.0"
-  dependencies:
-    "@sentry/core": 5.25.0
-    "@sentry/types": 5.25.0
-    "@sentry/utils": 5.25.0
-    tslib: ^1.9.3
-  checksum: 62104c86cb1333e1d28dc8aa75b74171505ce5d755946182de3999d3ee7ec30373c37c71adbe3c41d0445e960b8a53bc70e0fa07b49a9638e60e8fb7929fc889
-  languageName: node
-  linkType: hard
-
 "@sentry/browser@npm:5.26.0":
   version: 5.26.0
   resolution: "@sentry/browser@npm:5.26.0"
@@ -2066,19 +2054,6 @@ __metadata:
     "@sentry/utils": 5.26.0
     tslib: ^1.9.3
   checksum: 0d694d4c4a210cff5283ab9a8391456c71b23c7d4d55f88fd5fa50a326bae0b0c8456af151fa774faa4f4b1f5bbd73e55b160aa4fedcac38a8802a6b673d24f6
-  languageName: node
-  linkType: hard
-
-"@sentry/core@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@sentry/core@npm:5.25.0"
-  dependencies:
-    "@sentry/hub": 5.25.0
-    "@sentry/minimal": 5.25.0
-    "@sentry/types": 5.25.0
-    "@sentry/utils": 5.25.0
-    tslib: ^1.9.3
-  checksum: 08c148b62d575640d994cfbaff0631d5978eadf67a756d5c7fd0bcb861e8f0d72ae8c32f41d51bf6aea3159f100a1a8703845c3f67b3e20c762d8001f19a56dd
   languageName: node
   linkType: hard
 
@@ -2095,17 +2070,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/hub@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@sentry/hub@npm:5.25.0"
-  dependencies:
-    "@sentry/types": 5.25.0
-    "@sentry/utils": 5.25.0
-    tslib: ^1.9.3
-  checksum: ed5e9401b72d0740c6d80c33d36ef6c671dbcdd838330a7de045cc7751fd895c7feed293531e3cd5102365a3a679234204161462a94f6c3a3f5deb0b0d55c3bb
-  languageName: node
-  linkType: hard
-
 "@sentry/hub@npm:5.26.0":
   version: 5.26.0
   resolution: "@sentry/hub@npm:5.26.0"
@@ -2114,17 +2078,6 @@ __metadata:
     "@sentry/utils": 5.26.0
     tslib: ^1.9.3
   checksum: a349c19cfb98eaf23cc02f24b1de52eda7f7c6bbb612f89ce2549463404def318b5c8acfa55d31c9b5500992098446ec6d64b9f68cdeff404931a70b1c1333bd
-  languageName: node
-  linkType: hard
-
-"@sentry/minimal@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@sentry/minimal@npm:5.25.0"
-  dependencies:
-    "@sentry/hub": 5.25.0
-    "@sentry/types": 5.25.0
-    tslib: ^1.9.3
-  checksum: 06ff9df69d409c7761db99ae28bc1d9018656b906bc482cdf2f644d8a33cc073620a5e0efc188c2689849e0385c139086c9daf3ab018e93258f40ba5d450d571
   languageName: node
   linkType: hard
 
@@ -2139,27 +2092,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/react@npm:^5.25.0":
-  version: 5.25.0
-  resolution: "@sentry/react@npm:5.25.0"
+"@sentry/react@npm:^5.26.0":
+  version: 5.26.0
+  resolution: "@sentry/react@npm:5.26.0"
   dependencies:
-    "@sentry/browser": 5.25.0
-    "@sentry/minimal": 5.25.0
-    "@sentry/types": 5.25.0
-    "@sentry/utils": 5.25.0
+    "@sentry/browser": 5.26.0
+    "@sentry/minimal": 5.26.0
+    "@sentry/types": 5.26.0
+    "@sentry/utils": 5.26.0
     hoist-non-react-statics: ^3.3.2
     tslib: ^1.9.3
   peerDependencies:
     react: 15.x || 16.x
     react-dom: 15.x || 16.x
-  checksum: f38537e25bf02aba30ee13e10c9ddba28157dc06fd729493ca9585b2c3d2bd1a753ec8b7c2ac68e04fec22b0a5db26ed20d59d364830a800280c883f3cd999f6
-  languageName: node
-  linkType: hard
-
-"@sentry/types@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@sentry/types@npm:5.25.0"
-  checksum: ba904711baa67998f608be722fc3d59365e58630fed9537e79a41e06f1cbc4caab73e6a42a5f68bfe003adc1422350ad1a6b1e36f4ea55dbee875abcbad14fec
+  checksum: 0376da7175ea721ce96e5c67004fc060cad205339541f2c2a0bd62966fc76a25c90cd8d1c122272379e1fe6249073d836c06ed593c7437e0cd391549f3e42765
   languageName: node
   linkType: hard
 
@@ -2167,16 +2113,6 @@ __metadata:
   version: 5.26.0
   resolution: "@sentry/types@npm:5.26.0"
   checksum: 45b190df651385ddb86e582a8a50ed3602fc63f9f2a21d27bf052881c136eb8e0c89edebeb4bb394630b5424d8eaa3968a5547a9fcb2333a228700be9bfb2e7c
-  languageName: node
-  linkType: hard
-
-"@sentry/utils@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@sentry/utils@npm:5.25.0"
-  dependencies:
-    "@sentry/types": 5.25.0
-    tslib: ^1.9.3
-  checksum: bc4ba4f2e41e45f0b9c020837fade3b707b46fa107b8cf80d5f57e0af45d562034e357e626a4ed0ce6b026216a8a6d744feeb35f82d59d252ed5c86194fe0b4d
   languageName: node
   linkType: hard
 
@@ -3315,7 +3251,7 @@ __metadata:
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.56
     "@sentry/apm": ^5.26.0
-    "@sentry/react": ^5.25.0
+    "@sentry/react": ^5.26.0
     "@testing-library/jest-dom": ^5.11.4
     "@testing-library/react": ^11.0.4
     "@testing-library/user-event": ^12.1.7
