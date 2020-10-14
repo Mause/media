@@ -91,7 +91,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/lodash",
-        "npm:4.14.161"
+        "npm:4.14.162"
       ],
       [
         "@types/moxios",
@@ -252,7 +252,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.7"],
             ["@types/history", "npm:4.7.7"],
             ["@types/jest", "npm:26.0.13"],
-            ["@types/lodash", "npm:4.14.161"],
+            ["@types/lodash", "npm:4.14.162"],
             ["@types/moxios", "npm:0.4.9"],
             ["@types/node", "npm:14.6.2"],
             ["@types/qs", "npm:6.9.5"],
@@ -3900,10 +3900,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/lodash", [
-        ["npm:4.14.161", {
-          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.161-3f926592cc-c3657517da.zip/node_modules/@types/lodash/",
+        ["npm:4.14.162", {
+          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.162-154c620b3b-16205a1299.zip/node_modules/@types/lodash/",
           "packageDependencies": [
-            ["@types/lodash", "npm:4.14.161"]
+            ["@types/lodash", "npm:4.14.162"]
           ],
           "linkType": "HARD",
         }]
@@ -4804,7 +4804,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.7"],
             ["@types/history", "npm:4.7.7"],
             ["@types/jest", "npm:26.0.13"],
-            ["@types/lodash", "npm:4.14.161"],
+            ["@types/lodash", "npm:4.14.162"],
             ["@types/moxios", "npm:0.4.9"],
             ["@types/node", "npm:14.6.2"],
             ["@types/qs", "npm:6.9.5"],
