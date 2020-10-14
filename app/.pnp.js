@@ -223,7 +223,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "typescript-string-operations",
-        "npm:1.3.3"
+        "npm:1.4.0"
       ],
       [
         "use-socketio",
@@ -285,7 +285,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-scripts", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:3.4.1"],
             ["swr", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.5"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"],
-            ["typescript-string-operations", "npm:1.3.3"],
+            ["typescript-string-operations", "npm:1.4.0"],
             ["use-socketio", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:2.0.3"]
           ],
           "linkType": "SOFT",
@@ -4837,7 +4837,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-scripts", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:3.4.1"],
             ["swr", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.3.5"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"],
-            ["typescript-string-operations", "npm:1.3.3"],
+            ["typescript-string-operations", "npm:1.4.0"],
             ["use-socketio", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:2.0.3"]
           ],
           "linkType": "SOFT",
@@ -17885,11 +17885,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["typescript-string-operations", [
-        ["npm:1.3.3", {
-          "packageLocation": "./.yarn/cache/typescript-string-operations-npm-1.3.3-7633884ef8-5b5bafc333.zip/node_modules/typescript-string-operations/",
+        ["npm:1.4.0", {
+          "packageLocation": "./.yarn/cache/typescript-string-operations-npm-1.4.0-1437a125c1-11bc77a95e.zip/node_modules/typescript-string-operations/",
           "packageDependencies": [
-            ["typescript-string-operations", "npm:1.3.3"],
-            ["@types/node", "npm:14.0.27"]
+            ["typescript-string-operations", "npm:1.4.0"]
           ],
           "linkType": "HARD",
         }]
