@@ -2266,9 +2266,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^7.24.2":
-  version: 7.24.2
-  resolution: "@testing-library/dom@npm:7.24.2"
+"@testing-library/dom@npm:^7.26.0":
+  version: 7.26.0
+  resolution: "@testing-library/dom@npm:7.26.0"
   dependencies:
     "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.10.3
@@ -2276,8 +2276,9 @@ __metadata:
     aria-query: ^4.2.2
     chalk: ^4.1.0
     dom-accessibility-api: ^0.5.1
+    lz-string: ^1.4.4
     pretty-format: ^26.4.2
-  checksum: 544dff249c20543ca3aad6a9bef03bbb8b920c6724f41e89c874d78c23da0a226703f4c8a9264b875c913f05e4fc5b312ef2dae01f0ea865a9552c92541076ba
+  checksum: 9f4d67269d32e41ccae0bacad63d72d7a2ae77b77a14dccd30382ea0b670df3b3bd9767cfb1014b01827dd296db50d0d29d96cf11954f712372ea7b96db59e8e
   languageName: node
   linkType: hard
 
@@ -2297,16 +2298,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^11.0.4":
-  version: 11.0.4
-  resolution: "@testing-library/react@npm:11.0.4"
+"@testing-library/react@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "@testing-library/react@npm:11.1.0"
   dependencies:
     "@babel/runtime": ^7.11.2
-    "@testing-library/dom": ^7.24.2
+    "@testing-library/dom": ^7.26.0
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 3662df0d284b4ad0701aa86ec396652280357cccf22935c6bde02fbb9a08125c216a43c4960b188e6403f053bfa68a680d934a9ea90ff92312e16e57d6eaa986
+  checksum: 73976ec3f70542c8fc67da1a0c6ac5bc99d6edcde1f1c87a8fec706df09267b76b698d19900013277bfa91d09cae22c648dd362c19b0095fc8fa1477561d18ec
   languageName: node
   linkType: hard
 
@@ -3253,7 +3254,7 @@ __metadata:
     "@sentry/apm": ^5.26.0
     "@sentry/react": ^5.26.0
     "@testing-library/jest-dom": ^5.11.4
-    "@testing-library/react": ^11.0.4
+    "@testing-library/react": ^11.1.0
     "@testing-library/user-event": ^12.1.7
     "@types/history": 4.7.7
     "@types/jest": ^26.0.13
@@ -9912,6 +9913,15 @@ fsevents@~2.1.2:
   dependencies:
     yallist: ^3.0.2
   checksum: ffd9a280fa3400e731265db502270c2a65432f3fbfac23d480c72f675ec16dbbeddd57d4baf7aca70ab7af49949fad1bcaaf5a5e6e1cfed7316de71bb5dddf1c
+  languageName: node
+  linkType: hard
+
+"lz-string@npm:^1.4.4":
+  version: 1.4.4
+  resolution: "lz-string@npm:1.4.4"
+  bin:
+    lz-string: bin/bin.js
+  checksum: 60a13f8a724d109cffc7dda4cb98569adfa0516750f8a75b7236f6bc94b47edffb59e8a1e501364404e3867cf399e6612c3981f9c81c2de75751203431bf2e69
   languageName: node
   linkType: hard
 
