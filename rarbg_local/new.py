@@ -2,7 +2,6 @@ import logging
 import os
 import traceback
 from functools import wraps
-from itertools import chain
 from os import getpid
 from pathlib import Path
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
@@ -213,14 +212,12 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
 def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
     @wraps(func)
     async def decorator(*args, **kwargs):
-        sr = StreamingResponse(
-            chain(
-                (f'data: {rset.json()}\n\n' async for rset in func(*args, **kwargs)),
-                ['data:\n\n'],
-            ),
-            media_type="text/event-stream",
-        )
-        return sr
+        async def internal() -> AsyncGenerator[str, None]:
+            async for rset in func(*args, **kwargs):
+                yield f'data: {rset.json()}\n\n'
+            yield 'data:\n\n'
+
+        return StreamingResponse(internal(), media_type="text/event-stream",)
 
     return decorator
 
