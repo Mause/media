@@ -3,7 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from itertools import chain
 from queue import Empty, Queue
 from threading import Semaphore, current_thread
-from typing import Callable, Iterable, List, Optional, Tuple, TypeVar
+from typing import AsyncGenerator, Callable, Iterable, List, Optional, Tuple, TypeVar
 
 from . import horriblesubs, kickass
 from .models import EpisodeInfo, ITorrent, ProviderSource
@@ -124,8 +124,10 @@ class KickassProvider(Provider):
                 ),
             )
 
-    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
-        for item in kickass.search_for_movie(imdb_id, tmdb_id):
+    async def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
+        for item in await kickass.search_for_movie(imdb_id, tmdb_id):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],

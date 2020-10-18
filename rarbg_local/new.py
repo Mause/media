@@ -334,7 +334,7 @@ async def download_post(
             subpath = f'tv_shows/{item.name}/Season {thing.season}'
         else:
             show_title = None
-            title = get_movie(thing.tmdb_id).title
+            title = (await get_movie(thing.tmdb_id)).title
             subpath = 'movies'
 
         results.append(
@@ -386,8 +386,8 @@ async def stats(session: Session = Depends(get_db)):
 
 
 @api.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
-def movie(tmdb_id: int):
-    return get_movie(tmdb_id)
+async def movie(tmdb_id: int):
+    return await get_movie(tmdb_id)
 
 
 @api.get('/torrents', response_model=Dict[str, InnerTorrent])
@@ -418,10 +418,10 @@ async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
     return {}
 
 
-def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
+async def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
     try:
         return (
-            get_movie(tmdb_id).title
+            (await get_movie(tmdb_id)).title
             if type == MonitorMediaType.MOVIE
             else get_tv(tmdb_id).name
         )
@@ -438,7 +438,7 @@ async def monitor_post(
     user: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ):
-    media = validate_id(monitor.type, monitor.tmdb_id)
+    media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         session.query(Monitor)
         .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
