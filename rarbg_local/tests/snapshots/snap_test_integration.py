@@ -4,25 +4,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['test_schema 1'] = {
-    'definitions': {
-        'MediaType': {
-            'description': 'An enumeration.',
-            'enum': ['series', 'movie'],
-            'title': 'MediaType',
-        }
-    },
-    'properties': {
-        'imdbID': {'title': 'Imdbid', 'type': 'integer'},
-        'title': {'title': 'Title', 'type': 'string'},
-        'type': {'$ref': '#/definitions/MediaType'},
-        'year': {'title': 'Year', 'type': 'integer'},
-    },
-    'required': ['title', 'type', 'imdbID'],
-    'title': 'SearchResponse',
-    'type': 'object',
-}
-
 snapshots['test_index 1'] = {
     'movies': [
         {
@@ -826,7 +807,7 @@ snapshots['test_openapi 1'] = {
                     {
                         'in': 'query',
                         'name': 'source',
-                        'required': False,
+                        'required': True,
                         'schema': {'$ref': '#/components/schemas/ProviderSource'},
                     },
                     {
@@ -1121,6 +1102,33 @@ snapshots['test_openapi 1'] = {
     ],
 }
 
+snapshots['test_pool_status 1'] = {
+    'checkedin': None,
+    'checkedout': None,
+    'overflow': None,
+    'size': 5,
+    'worker_id': 1,
+}
+
+snapshots['test_schema 1'] = {
+    'definitions': {
+        'MediaType': {
+            'description': 'An enumeration.',
+            'enum': ['series', 'movie'],
+            'title': 'MediaType',
+        }
+    },
+    'properties': {
+        'imdbID': {'title': 'Imdbid', 'type': 'integer'},
+        'title': {'title': 'Title', 'type': 'string'},
+        'type': {'$ref': '#/definitions/MediaType'},
+        'year': {'title': 'Year', 'type': 'integer'},
+    },
+    'required': ['title', 'type', 'imdbID'],
+    'title': 'SearchResponse',
+    'type': 'object',
+}
+
 snapshots['test_season_info 1'] = {
     'episodes': [{'air_date': None, 'episode_number': 1, 'id': 0, 'name': 'The Pilot'}]
 }
@@ -1130,12 +1138,4 @@ snapshots['test_select_season 1'] = {
     'number_of_seasons': 1,
     'seasons': [{'episode_count': 1, 'season_number': 1}],
     'title': 'hello',
-}
-
-snapshots['test_pool_status 1'] = {
-    'checkedin': None,
-    'checkedout': None,
-    'overflow': None,
-    'size': 5,
-    'worker_id': 1,
 }

@@ -66,13 +66,7 @@ from .models import (
     TvResponse,
     TvSeasonResponse,
 )
-from .providers import (
-    PROVIDERS,
-    FakeProvider,
-    ProviderSource,
-    search_for_movie,
-    search_for_tv,
-)
+from .providers import PROVIDERS, ProviderSource, search_for_movie, search_for_tv
 from .singleton import singleton
 from .tmdb import (
     get_json,
@@ -240,18 +234,15 @@ def eventstream(func: Callable[..., Iterable[BaseModel]]):
 def stream(
     type: str,
     tmdb_id: str,
-    source: ProviderSource = None,
+    source: ProviderSource,
     season: int = None,
     episode: int = None,
 ):
-    if source:
-        provider = next(
-            (provider for provider in PROVIDERS if provider.name == source.value), None,
-        )
-        if not provider:
-            raise HTTPException(422, 'Invalid provider')
-    else:
-        provider = FakeProvider()
+    provider = next(
+        (provider for provider in PROVIDERS if provider.name == source.value), None,
+    )
+    if not provider:
+        raise HTTPException(422, 'Invalid provider')
 
     if type == 'series':
         items = provider.search_for_tv(
