@@ -54,7 +54,9 @@ class Provider(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
+    def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
         raise NotImplementedError()
 
 
@@ -86,7 +88,9 @@ class RarbgProvider(Provider):
                 episode_info=EpisodeInfo(seasonnum=str(season), epnum=str(episode)),
             )
 
-    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
+    async def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
         for item in chain.from_iterable(
             get_rarbg_iter(
                 'https://torrentapi.org/pubapi_v2.php', 'movie', search_imdb=imdb_id
@@ -159,8 +163,10 @@ class HorriblesubsProvider(Provider):
                 ),
             )
 
-    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
-        return []
+    def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
+        pass
 
 
 PROVIDERS = [HorriblesubsProvider(), RarbgProvider(), KickassProvider()]
@@ -198,10 +204,10 @@ def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
     )
 
 
-def search_for_movie(imdb_id: str, tmdb_id: int):
-    return threadable(
-        [provider.search_for_movie for provider in PROVIDERS], (imdb_id, tmdb_id)
-    )
+async def search_for_movie(imdb_id: str, tmdb_id: int):
+    for provider in PROVIDERS:
+        async for result in provider.search_for_movie(imdb_id, tmdb_id):
+            yield result
 
 
 def main():

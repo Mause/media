@@ -5,7 +5,7 @@ from functools import wraps
 from itertools import chain
 from os import getpid
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Type, Union
+from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
 import backoff
@@ -210,12 +210,12 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
     return {}
 
 
-def eventstream(func: Callable[..., Iterable[BaseModel]]):
+def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
     @wraps(func)
     async def decorator(*args, **kwargs):
         sr = StreamingResponse(
             chain(
-                (f'data: {rset.json()}\n\n' for rset in func(*args, **kwargs)),
+                (f'data: {rset.json()}\n\n' async for rset in func(*args, **kwargs)),
                 ['data:\n\n'],
             ),
             media_type="text/event-stream",
@@ -231,13 +231,13 @@ def eventstream(func: Callable[..., Iterable[BaseModel]]):
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
 @eventstream
-def stream(
+async def stream(
     type: str,
     tmdb_id: str,
     source: ProviderSource,
     season: int = None,
     episode: int = None,
-):
+) -> AsyncGenerator[BaseModel, None]:
     provider = next(
         (provider for provider in PROVIDERS if provider.name == source.value), None,
     )
@@ -245,13 +245,15 @@ def stream(
         raise HTTPException(422, 'Invalid provider')
 
     if type == 'series':
-        items = provider.search_for_tv(
+        for item in provider.search_for_tv(
             get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
-        )
+        ):
+            yield item
     else:
-        items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
-
-    return items
+        async for item in provider.search_for_movie(
+            get_movie_imdb_id(tmdb_id), int(tmdb_id)
+        ):
+            yield item
 
 
 @api.get(
