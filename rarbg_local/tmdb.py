@@ -30,7 +30,7 @@ def try_(dic: Dict[str, str], *keys: str) -> Optional[str]:
     backoff.fibo,
     requests.exceptions.RequestException,
     max_tries=5,
-    giveup=lambda e: e.response.status_code != 429,
+    giveup=lambda e: getattr(e.response, 'status_code', None) != 429,
 )
 def get_json(*args, **kwargs):
     r = tmdb.get(*args, **kwargs)
@@ -105,8 +105,8 @@ def resolve_id(imdb_id: str, type: ThingType) -> str:
 
 
 @lru_cache()
-def get_movie(id: str) -> MovieResponse:
-    return MovieResponse(**get_json(f'movie/{id}'))
+async def get_movie(id: str) -> MovieResponse:
+    return MovieResponse(**(await a_get_json(f'movie/{id}')))
 
 
 @ttl_cache()
