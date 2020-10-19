@@ -89,7 +89,7 @@ async def test_download_movie(
     test_client, responses, aioresponses, add_torrent, session
 ):
     themoviedb(
-        responses, '/movie/533985', MovieResponseFactory.build(title='Bit').dict()
+        aioresponses, '/movie/533985', MovieResponseFactory.build(title='Bit').dict()
     )
     themoviedb(aioresponses, '/movie/533985/external_ids', {'imdb_id': "tt8425034"})
 
@@ -299,9 +299,9 @@ async def test_foreign_key_integrity(session: Session):
 
 
 @mark.asyncio
-async def test_delete_monitor(responses, test_client, session):
+async def test_delete_monitor(aioresponses, test_client, session):
     themoviedb(
-        responses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
+        aioresponses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
     )
     ls = (await test_client.get('/api/monitor')).json()
     assert ls == []
@@ -398,8 +398,8 @@ async def test_manifest(test_client):
 
 
 @mark.asyncio
-async def test_movie(test_client, snapshot, responses):
-    themoviedb(responses, '/movie/1', {'title': 'Hello', 'imdb_id': 'tt0000000'})
+async def test_movie(test_client, snapshot, aioresponses):
+    themoviedb(aioresponses, '/movie/1', {'title': 'Hello', 'imdb_id': 'tt0000000'})
     r = await test_client.get('/api/movie/1')
     assert r.status_code == 200
 

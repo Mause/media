@@ -64,7 +64,7 @@ def base(name, imdb_id):
     return fetch(f'https://katcr.co/name/{tokenise(name)}/i{imdb_id.lstrip("t")}')
 
 
-def search_for_movie(imdb_id: str, tmdb_id: int):
-    name = get_movie(tmdb_id).title
+async def search_for_movie(imdb_id: str, tmdb_id: int):
+    name = (await get_movie(tmdb_id)).title
 
     return base(name, imdb_id)

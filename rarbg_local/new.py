@@ -2,10 +2,9 @@ import logging
 import os
 import traceback
 from functools import wraps
-from itertools import chain
 from os import getpid
 from pathlib import Path
-from typing import Callable, Coroutine, Dict, Iterable, List, Optional, Type, Union
+from typing import Callable, Coroutine, Dict, Iterable, List, Optional, Type, Union, AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
 import backoff
@@ -210,17 +209,15 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
     return {}
 
 
-def eventstream(func: Callable[..., Coroutine[None, None, Iterable[BaseModel]]]):
+def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
     @wraps(func)
     async def decorator(*args, **kwargs):
-        sr = StreamingResponse(
-            chain(
-                (f'data: {rset.json()}\n\n' for rset in await func(*args, **kwargs)),
-                ['data:\n\n'],
-            ),
-            media_type="text/event-stream",
-        )
-        return sr
+        async def internal() -> AsyncGenerator[str, None]:
+            async for rset in func(*args, **kwargs):
+                yield f'data: {rset.json()}\n\n'
+            yield 'data:\n\n'
+
+        return StreamingResponse(internal(), media_type="text/event-stream",)
 
     return decorator
 
@@ -237,7 +234,7 @@ async def stream(
     source: ProviderSource,
     season: int = None,
     episode: int = None,
-) -> Iterable[ITorrent]:
+) -> AsyncGenerator[BaseModel, None]:
     provider = next(
         (provider for provider in PROVIDERS if provider.name == source.value), None,
     )
@@ -245,15 +242,15 @@ async def stream(
         raise HTTPException(422, 'Invalid provider')
 
     if type == 'series':
-        items = provider.search_for_tv(
+        for item in provider.search_for_tv(
             await get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
-        )
+        ):
+            yield item
     else:
-        items = provider.search_for_movie(
+        async for item in provider.search_for_movie(
             await get_movie_imdb_id(tmdb_id), int(tmdb_id)
-        )
-
-    return items
+        ):
+            yield item
 
 
 @api.get(
@@ -327,7 +324,7 @@ async def download_post(
             subpath = f'tv_shows/{item.name}/Season {thing.season}'
         else:
             show_title = None
-            title = get_movie(thing.tmdb_id).title
+            title = (await get_movie(thing.tmdb_id)).title
             subpath = 'movies'
 
         results.append(
@@ -379,8 +376,8 @@ async def stats(session: Session = Depends(get_db)):
 
 
 @api.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
-def movie(tmdb_id: int):
-    return get_movie(tmdb_id)
+async def movie(tmdb_id: int):
+    return await get_movie(tmdb_id)
 
 
 @api.get('/torrents', response_model=Dict[str, InnerTorrent])
@@ -411,10 +408,10 @@ async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
     return {}
 
 
-def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
+async def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
     try:
         return (
-            get_movie(tmdb_id).title
+            (await get_movie(tmdb_id)).title
             if type == MonitorMediaType.MOVIE
             else get_tv(tmdb_id).name
         )
@@ -431,7 +428,7 @@ async def monitor_post(
     user: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ):
-    media = validate_id(monitor.type, monitor.tmdb_id)
+    media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         session.query(Monitor)
         .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)

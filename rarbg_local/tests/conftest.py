@@ -1,7 +1,7 @@
 import json
 import re
 from asyncio import get_event_loop
-from typing import Pattern, Union
+from typing import Pattern, Union, AsyncGenerator, List, TypeVar
 
 from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
@@ -121,3 +121,13 @@ def aioresponses():
 
     with aioresponses() as e:
         yield e
+
+
+T = TypeVar('T')
+
+
+async def tolist(a: AsyncGenerator[T, None]) -> List[T]:
+    lst: List[T] = []
+    async for t in a:
+        lst.append(t)
+    return lst

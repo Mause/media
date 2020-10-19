@@ -100,8 +100,8 @@ async def resolve_id(imdb_id: str, type: ThingType) -> str:
 
 
 @lru_cache()
-def get_movie(id: str) -> MovieResponse:
-    return MovieResponse(**get_json(f'movie/{id}'))
+async def get_movie(id: str) -> MovieResponse:
+    return MovieResponse(**(await a_get_json(f'movie/{id}')))
 
 
 @ttl_cache()
