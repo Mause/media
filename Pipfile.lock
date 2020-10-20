@@ -254,11 +254,11 @@
         },
         "eventlet": {
             "hashes": [
-                "sha256:9c7c63e8a80c7d02d692b2cf308312402fa4777335fd3de5da45097383301ff3",
-                "sha256:c8bba2fd235455eb04ae352b4cf975a6c27064f897f9febd48736413801a6930"
+                "sha256:6e84657b81fbea5cfb823104aa1361b164fea96e6557b2e0965d8fcc840ee2af",
+                "sha256:a4f57390198cbd34cc948cfa57a86edd33437b23b57ba7d4be794989f2435c76"
             ],
             "index": "pypi",
-            "version": "==0.28.0"
+            "version": "==0.29.0"
         },
         "fastapi": {
             "hashes": [
