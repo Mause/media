@@ -21,20 +21,6 @@ from ..models import (
 imdb_id = Faker('numerify', text='tt######')
 
 
-class MonitorFactory(Factory):
-    class Meta:
-        model = Monitor
-
-    id = Faker('numerify')
-    type = FuzzyChoice(MonitorMediaType)
-
-    tmdb_id = Faker('numerify')
-
-    added_by = lazy_attribute(lambda instance: UserFactory())
-
-    title = Faker('name')
-
-
 class EpisodeFactory(Factory):
     class Meta:
         model = Episode
@@ -127,6 +113,20 @@ class UserFactory(Factory):
         model = User
 
     username = Faker('name')
+
+
+class MonitorFactory(Factory):
+    class Meta:
+        model = Monitor
+
+    id = Faker('numerify')
+    type = FuzzyChoice(MonitorMediaType)
+
+    tmdb_id = Faker('numerify')
+
+    added_by = SubFactory(UserFactory)
+
+    title = Faker('name')
 
 
 class DownloadFactory(Factory):
