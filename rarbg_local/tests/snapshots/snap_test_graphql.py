@@ -6,7 +6,13 @@ snapshots = Snapshot()
 
 snapshots['test_main 1'] = {
     'data': {
-        'monitors': [],
+        'monitors': [
+            {
+                'addedBy': {'username': 'Vincent Miller'},
+                'title': 'Meagan Pena',
+                'type': 'TV',
+            }
+        ],
         'movie': {'imdbId': 'tt293584', 'title': 'Christopher Robinson'},
         'tv': {
             'imdbId': 'tt000000',
