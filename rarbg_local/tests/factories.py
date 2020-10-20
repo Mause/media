@@ -5,12 +5,13 @@ from factory import Factory, Faker, List, SubFactory, lazy_attribute
 from factory.alchemy import SQLAlchemyModelFactory
 from factory.fuzzy import FuzzyChoice, FuzzyDateTime
 
-from ..db import Download, EpisodeDetails, MovieDetails, User
+from ..db import Download, EpisodeDetails, Monitor, MovieDetails, User
 from ..models import (
     DownloadAllResponse,
     Episode,
     EpisodeInfo,
     ITorrent,
+    MonitorMediaType,
     MovieResponse,
     ProviderSource,
     SeasonMeta,
@@ -26,6 +27,20 @@ imdb_id = Faker('numerify', text='tt######')
 class SQLFactory(SQLAlchemyModelFactory):
     class Meta:
         sqlalchemy_session_factory = session_var.get
+
+
+class MonitorFactory(SQLFactory):
+    class Meta:
+        model = Monitor
+
+    id = Faker('numerify')
+    type = FuzzyChoice(MonitorMediaType)
+
+    tmdb_id = Faker('numerify')
+
+    added_by = lazy_attribute(lambda instance: UserFactory())
+
+    title = Faker('name')
 
 
 class EpisodeFactory(Factory):
