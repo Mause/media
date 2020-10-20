@@ -55,6 +55,7 @@ jobs:
           pipenv run pytest -vv
         env:
           CLOUDAMQP_URL: "https://hello"
+          TMDB_API_KEY:
       - name: Archive test report
         uses: actions/upload-artifact@v1
         if: always()

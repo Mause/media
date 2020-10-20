@@ -1,6 +1,8 @@
+from pytest import mark
+
 from ..models import EpisodeInfo, ITorrent
 from ..providers import KickassProvider, ProviderSource
-from .conftest import themoviedb
+from .conftest import themoviedb, tolist
 from .factories import MovieResponseFactory, TvApiResponseFactory
 
 
@@ -62,13 +64,16 @@ def test_tv_season(responses, clear_cache):
     ]
 
 
-def test_movie(responses, clear_cache):
-    themoviedb(responses, '/movie/1', MovieResponseFactory(title='John Flynn').dict())
+@mark.asyncio
+async def test_movie(responses, aioresponses, clear_cache):
+    themoviedb(
+        aioresponses, '/movie/1', MovieResponseFactory(title='John Flynn').dict()
+    )
     responses.add(
         'GET', 'https://katcr.co/name/john-flynn/i0000000', make('The outer limits')
     )
 
-    res = list(KickassProvider().search_for_movie('tt0000000', 1))
+    res = await tolist(KickassProvider().search_for_movie('tt0000000', 1))
     assert res == [
         ITorrent(
             source=ProviderSource.KICKASS,

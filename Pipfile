@@ -25,6 +25,7 @@ isort = "*"
 pytest-asyncio = "*"
 async-asgi-testclient = "*"
 rich-sparklines = "*"
+aioresponses = "*"
 
 [packages]
 flask = "*"
@@ -66,6 +67,8 @@ pytz = "*"
 uvicorn = "*"
 aiofiles = "*"
 fastapi-utils = "*"
+asyncache = "*"
+makefun = "*"
 
 [requires]
 python_version = "3"
