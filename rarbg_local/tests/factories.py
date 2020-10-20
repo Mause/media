@@ -29,20 +29,6 @@ class SQLFactory(SQLAlchemyModelFactory):
         sqlalchemy_session_factory = session_var.get
 
 
-class MonitorFactory(SQLFactory):
-    class Meta:
-        model = Monitor
-
-    id = Faker('numerify')
-    type = FuzzyChoice(MonitorMediaType)
-
-    tmdb_id = Faker('numerify')
-
-    added_by = lazy_attribute(lambda instance: UserFactory())
-
-    title = Faker('name')
-
-
 class EpisodeFactory(Factory):
     class Meta:
         model = Episode
@@ -135,6 +121,20 @@ class UserFactory(SQLFactory):
         model = User
 
     username = Faker('name')
+
+
+class MonitorFactory(SQLFactory):
+    class Meta:
+        model = Monitor
+
+    id = Faker('numerify')
+    type = FuzzyChoice(MonitorMediaType)
+
+    tmdb_id = Faker('numerify')
+
+    added_by = SubFactory(UserFactory)
+
+    title = Faker('name')
 
 
 class DownloadFactory(SQLFactory):
