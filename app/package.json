@@ -33,7 +33,7 @@
     "react-loading": "^2.0.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "swr": "^0.3.5",
+    "swr": "^0.3.6",
     "typescript": "3",
     "typescript-string-operations": "^1.4.0",
     "use-socketio": "^2.0.3"
