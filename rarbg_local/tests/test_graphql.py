@@ -2,6 +2,7 @@ from pytest import mark
 
 from .conftest import themoviedb
 from .factories import (
+    MonitorFactory,
     MovieResponseFactory,
     TvApiResponseFactory,
     TvSeasonResponseFactory,
@@ -9,7 +10,14 @@ from .factories import (
 
 
 @mark.asyncio
-async def test_main(test_client, snapshot, responses):
+async def test_main(test_client, snapshot, responses, aioresponses, session):
+    session.add(
+        MonitorFactory(
+            title='Meagan Pena', type='TV', added_by__username='Vincent Miller'
+        )
+    )
+    session.commit()
+
     imdb_id = 'tt000000'
     themoviedb(
         responses,
@@ -37,7 +45,7 @@ async def test_main(test_client, snapshot, responses):
     )
     themoviedb(responses, '/tv/540/external_ids', {'imdb_id': imdb_id})
     themoviedb(
-        responses,
+        aioresponses,
         '/movie/540',
         MovieResponseFactory(imdb_id='tt293584', title='Christopher Robinson').dict(),
     )
@@ -48,7 +56,11 @@ async def test_main(test_client, snapshot, responses):
             'query': '''
                 query A {
                     monitors {
-                        name
+                        title
+                        type
+                        addedBy {
+                            username
+                        }
                     }
                     movie(id: 540) {
                         title

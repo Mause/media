@@ -4,6 +4,7 @@ from graphql.execution.executors.asyncio import AsyncioExecutor
 from starlette.graphql import GraphQLApp
 
 from . import tmdb
+from .models import MonitorMediaType
 from .singleton import get
 
 api = APIRouter()
@@ -45,10 +46,16 @@ class Movie(graphene.ObjectType):
     imdb_id = graphene.String()
 
 
+class User(graphene.ObjectType):
+    username = graphene.String()
+    first_name = graphene.String()
+
+
 class Monitor(graphene.ObjectType):
-    name = graphene.String()
+    title = graphene.String()
     id = graphene.ID()
-    type = graphene.String()
+    type = graphene.Field(graphene.Enum.from_enum(MonitorMediaType))
+    added_by = graphene.Field(User)
 
 
 class Query(graphene.ObjectType):
