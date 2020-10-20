@@ -3,12 +3,13 @@ from datetime import datetime, timezone
 from factory import Factory, Faker, List, SubFactory, lazy_attribute
 from factory.fuzzy import FuzzyChoice, FuzzyDateTime
 
-from ..db import Download, EpisodeDetails, MovieDetails, User
+from ..db import Download, EpisodeDetails, Monitor, MovieDetails, User
 from ..models import (
     DownloadAllResponse,
     Episode,
     EpisodeInfo,
     ITorrent,
+    MonitorMediaType,
     MovieResponse,
     ProviderSource,
     SeasonMeta,
@@ -18,6 +19,20 @@ from ..models import (
 )
 
 imdb_id = Faker('numerify', text='tt######')
+
+
+class MonitorFactory(Factory):
+    class Meta:
+        model = Monitor
+
+    id = Faker('numerify')
+    type = FuzzyChoice(MonitorMediaType)
+
+    tmdb_id = Faker('numerify')
+
+    added_by = lazy_attribute(lambda instance: UserFactory())
+
+    title = Faker('name')
 
 
 class EpisodeFactory(Factory):
