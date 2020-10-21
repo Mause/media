@@ -64,7 +64,7 @@ python-multipart = "*"
 jwkaas = "*"
 aniso8601 = "*"
 pytz = "*"
-uvicorn = "*"
+uvicorn = {extras = ["standard"], version = "*"}
 aiofiles = "*"
 fastapi-utils = "*"
 asyncache = "*"
