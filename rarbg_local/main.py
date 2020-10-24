@@ -43,7 +43,7 @@ from .db import (
     get_episodes,
 )
 from .models import Episode, SeriesDetails
-from .tmdb import get_tv_episodes, resolve_id
+from .tmdb import get_tv_episodes
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import non_null, precondition
 
@@ -331,7 +331,7 @@ def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
         title=ep.show_title,
         seasons=resolve_show(show),
         imdb_id=d.imdb_id,
-        tmdb_id=d.tmdb_id or resolve_id(imdb_id, 'tv'),
+        tmdb_id=d.tmdb_id,
     )
 
 

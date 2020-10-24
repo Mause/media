@@ -88,7 +88,7 @@ async def find_themoviedb(imdb_id: str):
     return dict(result, title=result['original_name'])
 
 
-@lru_cache()
+@cached(LRUCache(1024))
 async def resolve_id(imdb_id: str, type: ThingType) -> str:
     precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
     results = await a_get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
@@ -99,7 +99,7 @@ async def resolve_id(imdb_id: str, type: ThingType) -> str:
     return res[0]['id']
 
 
-@lru_cache()
+@cached(LRUCache(256))
 async def get_movie(id: str) -> MovieResponse:
     return MovieResponse(**(await a_get_json(f'movie/{id}')))
 
