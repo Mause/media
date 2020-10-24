@@ -49,7 +49,7 @@ from .db import (
 )
 from .models import Episode, SeriesDetails
 from .providers import search_for_movie, search_for_tv
-from .tmdb import get_movie_imdb_id, get_tv_episodes, get_tv_imdb_id, resolve_id
+from .tmdb import get_movie_imdb_id, get_tv_episodes, get_tv_imdb_id
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import non_null, precondition
 
@@ -369,7 +369,7 @@ def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
         title=ep.show_title,
         seasons=resolve_show(show),
         imdb_id=d.imdb_id,
-        tmdb_id=d.tmdb_id or resolve_id(imdb_id, 'tv'),
+        tmdb_id=d.tmdb_id,
     )
 
 
