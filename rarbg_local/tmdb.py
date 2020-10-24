@@ -8,7 +8,7 @@ import aiohttp
 import aiohttp.web_exceptions
 import backoff
 import requests
-from cachetools import TTLCache
+from cachetools import LRUCache, TTLCache
 from requests_toolbelt.sessions import BaseUrlSession
 
 from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonResponse
@@ -104,7 +104,7 @@ def resolve_id(imdb_id: str, type: ThingType) -> str:
     return res['id']
 
 
-@lru_cache()
+@cached(LRUCache(256))
 async def get_movie(id: str) -> MovieResponse:
     return MovieResponse(**(await a_get_json(f'movie/{id}')))
 
