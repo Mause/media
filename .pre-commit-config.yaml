@@ -1,4 +1,4 @@
-exclude: .*\.snap
+exclude: .*\.snap|\.pnp\.js
 repos:
   - repo: https://github.com/prettier/prettier
     rev: 2.0.5
@@ -77,4 +77,4 @@ repos:
         - flake8-aaa
       args:
         - --jobs=1
-        - --extend-ignore=W503
+        - --extend-ignore=W503,E203

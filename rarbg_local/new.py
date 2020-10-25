@@ -2,11 +2,13 @@ import logging
 import os
 import traceback
 from functools import wraps
-from itertools import chain
+from os import getpid
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Type, Union
+from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
+import backoff
+import psycopg2
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
@@ -63,13 +65,7 @@ from .models import (
     TvResponse,
     TvSeasonResponse,
 )
-from .providers import (
-    PROVIDERS,
-    FakeProvider,
-    ProviderSource,
-    search_for_movie,
-    search_for_tv,
-)
+from .providers import PROVIDERS, ProviderSource, search_for_movie, search_for_tv
 from .singleton import singleton
 from .tmdb import (
     get_json,
@@ -119,19 +115,54 @@ async def get_settings():
 def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = settings.database_url
     logging.info('db_url: %s', db_url)
-    ca = {"check_same_thread": False} if 'sqlite' in db_url else {}
-    engine = create_engine(db_url, connect_args=ca, pool_size=20)
-    if 'sqlite' in db_url:
 
+    sqlite = 'sqlite' in db_url
+
+    ca = {"check_same_thread": False} if sqlite else {}
+    engine_args = (
+        {} if sqlite else {'max_overflow': 10, 'pool_size': 5, 'pool_recycle': 300}
+    )
+    engine = create_engine(db_url, connect_args=ca, **engine_args, echo_pool='debug')
+
+    if sqlite:
+
+        @event.listens_for(engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
             dbapi_con.create_collation(
                 "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
             )
             dbapi_con.execute('pragma foreign_keys=ON')
 
-        event.listen(engine, 'connect', _fk_pragma_on_connect)
+    else:
+
+        @event.listens_for(engine, "do_connect")
+        @backoff.on_exception(
+            backoff.fibo,
+            psycopg2.OperationalError,
+            max_tries=5,
+            giveup=lambda e: "too many connections for role" not in e.args[0],
+        )
+        def receive_do_connect(dialect, conn_rec, cargs, cparams):
+            return psycopg2.connect(*cargs, **cparams)
 
     return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+
+
+@api.get('/diagnostics/pool')
+def pool(sessionlocal=Depends(get_session_local)):
+    def get(field):
+        value = getattr(pool, field, None)
+
+        return value() if callable(value) else value
+
+    pool = sessionlocal.kw['bind'].pool
+    return {
+        'worker_id': getpid(),
+        'size': get('size'),
+        'checkedin': get('checkedin'),
+        'overflow': get('overflow'),
+        'checkedout': get('checkedout'),
+    }
 
 
 def get_db(session_local=Depends(get_session_local)):
@@ -178,17 +209,15 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
     return {}
 
 
-def eventstream(func: Callable[..., Iterable[BaseModel]]):
+def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
     @wraps(func)
     async def decorator(*args, **kwargs):
-        sr = StreamingResponse(
-            chain(
-                (f'data: {rset.json()}\n\n' for rset in func(*args, **kwargs)),
-                ['data:\n\n'],
-            ),
-            media_type="text/event-stream",
-        )
-        return sr
+        async def internal() -> AsyncGenerator[str, None]:
+            async for rset in func(*args, **kwargs):
+                yield f'data: {rset.json()}\n\n'
+            yield 'data:\n\n'
+
+        return StreamingResponse(internal(), media_type="text/event-stream",)
 
     return decorator
 
@@ -199,30 +228,29 @@ def eventstream(func: Callable[..., Iterable[BaseModel]]):
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
 @eventstream
-def stream(
+async def stream(
     type: str,
     tmdb_id: str,
-    source: ProviderSource = None,
+    source: ProviderSource,
     season: int = None,
     episode: int = None,
-):
-    if source:
-        provider = next(
-            (provider for provider in PROVIDERS if provider.name == source.value), None,
-        )
-        if not provider:
-            raise HTTPException(422, 'Invalid provider')
-    else:
-        provider = FakeProvider()
+) -> AsyncGenerator[BaseModel, None]:
+    provider = next(
+        (provider for provider in PROVIDERS if provider.name == source.value), None,
+    )
+    if not provider:
+        raise HTTPException(422, 'Invalid provider')
 
     if type == 'series':
-        items = provider.search_for_tv(
+        for item in provider.search_for_tv(
             get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
-        )
+        ):
+            yield item
     else:
-        items = provider.search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
-
-    return items
+        async for item in provider.search_for_movie(
+            get_movie_imdb_id(tmdb_id), int(tmdb_id)
+        ):
+            yield item
 
 
 @api.get(
@@ -296,7 +324,7 @@ async def download_post(
             subpath = f'tv_shows/{item.name}/Season {thing.season}'
         else:
             show_title = None
-            title = get_movie(thing.tmdb_id).title
+            title = (await get_movie(thing.tmdb_id)).title
             subpath = 'movies'
 
         results.append(
@@ -348,8 +376,8 @@ async def stats(session: Session = Depends(get_db)):
 
 
 @api.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
-def movie(tmdb_id: int):
-    return get_movie(tmdb_id)
+async def movie(tmdb_id: int):
+    return await get_movie(tmdb_id)
 
 
 @api.get('/torrents', response_model=Dict[str, InnerTorrent])
@@ -360,7 +388,7 @@ async def torrents():
 
 @api.get('/search', response_model=List[SearchResponse])
 async def search(query: str):
-    return search_themoviedb(query)
+    return await search_themoviedb(query)
 
 
 monitor_ns = APIRouter()
@@ -380,10 +408,10 @@ async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
     return {}
 
 
-def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
+async def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
     try:
         return (
-            get_movie(tmdb_id).title
+            (await get_movie(tmdb_id)).title
             if type == MonitorMediaType.MOVIE
             else get_tv(tmdb_id).name
         )
@@ -400,7 +428,7 @@ async def monitor_post(
     user: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ):
-    media = validate_id(monitor.type, monitor.tmdb_id)
+    media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         session.query(Monitor)
         .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)

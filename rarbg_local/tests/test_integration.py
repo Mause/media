@@ -7,14 +7,16 @@ from unittest.mock import patch
 from async_asgi_testclient import TestClient
 from lxml.builder import E
 from lxml.etree import tostring
+from psycopg2 import OperationalError
 from pytest import fixture, mark, raises
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
 from ..db import Download, create_episode, create_movie
 from ..main import get_episodes
-from ..new import SearchResponse
+from ..new import SearchResponse, Settings, get_current_user, get_settings
 from .conftest import add_json, themoviedb
 from .factories import (
     EpisodeDetailsFactory,
@@ -83,9 +85,11 @@ async def test_diagnostics(transmission, test_client, user, responses):
 
 
 @mark.asyncio
-async def test_download_movie(test_client, responses, add_torrent, session):
+async def test_download_movie(
+    test_client, responses, aioresponses, add_torrent, session
+):
     themoviedb(
-        responses, '/movie/533985', MovieResponseFactory.build(title='Bit').dict()
+        aioresponses, '/movie/533985', MovieResponseFactory.build(title='Bit').dict()
     )
     themoviedb(responses, '/movie/533985/external_ids', {'imdb_id': "tt8425034"})
 
@@ -200,9 +204,9 @@ async def test_index(responses, test_client, get_torrent, snapshot, session, use
 
 
 @mark.asyncio
-async def test_search(responses, test_client):
+async def test_search(aioresponses, test_client):
     themoviedb(
-        responses,
+        aioresponses,
         '/search/multi',
         {
             'results': [
@@ -220,7 +224,7 @@ async def test_search(responses, test_client):
     res = await test_client.get('/api/search?query=chernobyl')
     assert res.status_code == 200
     assert res.json() == [
-        {'imdbID': 10000, 'title': 'Chernobyl', 'year': 2019, 'type': 'series',}
+        {'imdbID': 10000, 'title': 'Chernobyl', 'year': 2019, 'type': 'series'}
     ]
 
 
@@ -293,9 +297,9 @@ async def test_foreign_key_integrity(session: Session):
 
 
 @mark.asyncio
-async def test_delete_monitor(responses, test_client, session):
+async def test_delete_monitor(aioresponses, test_client, session):
     themoviedb(
-        responses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
+        aioresponses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
     )
     ls = (await test_client.get('/api/monitor')).json()
     assert ls == []
@@ -392,8 +396,8 @@ async def test_manifest(test_client):
 
 
 @mark.asyncio
-async def test_movie(test_client, snapshot, responses):
-    themoviedb(responses, '/movie/1', {'title': 'Hello', 'imdb_id': 'tt0000000'})
+async def test_movie(test_client, snapshot, aioresponses):
+    themoviedb(aioresponses, '/movie/1', {'title': 'Hello', 'imdb_id': 'tt0000000'})
     r = await test_client.get('/api/movie/1')
     assert r.status_code == 200
 
@@ -514,3 +518,36 @@ async def test_plex_redirect(test_client, responses):
         r.headers['Location']
         == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2Faaa'
     )
+
+
+@mark.asyncio
+async def test_pool_status(test_client, snapshot, monkeypatch):
+    monkeypatch.setattr('rarbg_local.new.getpid', lambda: 1)
+    snapshot.assert_match((await test_client.get('/api/diagnostics/pool')).json())
+
+
+@mark.asyncio
+async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
+    def replacement(*args, **kwargs):
+        raise OperationalError(message)
+
+    message = 'FATAL:  too many connections for role "wlhdyudesczvwl"'
+    monkeypatch.setattr('psycopg2.connect', replacement)
+
+    do = fastapi_app.dependency_overrides
+    fastapi_app.dependency_overrides
+    cu = do[get_current_user]
+    do.clear()
+    do.update(
+        {
+            get_current_user: cu,
+            get_settings: lambda: Settings(database_url='postgres:///:memory:'),
+        }
+    )
+
+    with raises(SQLAOperationError) as ei:
+        await test_client.get('/api/stats')
+
+    assert ei.match(message)
+
+    assert caplog.text.count(message) == 6 + 1  # five plus the last time
