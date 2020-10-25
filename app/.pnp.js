@@ -135,7 +135,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "axios",
-        "npm:0.20.0"
+        "npm:0.21.0"
       ],
       [
         "colors.css",
@@ -263,7 +263,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/socket.io-client", "npm:1.4.34"],
             ["@use-it/interval", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.3"],
             ["@vtex/axios-concurrent-retry", "npm:4.0.11"],
-            ["axios", "npm:0.20.0"],
+            ["axios", "npm:0.21.0"],
             ["colors.css", "npm:3.0.0"],
             ["history", "npm:4.10.1"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
@@ -4816,7 +4816,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/socket.io-client", "npm:1.4.34"],
             ["@use-it/interval", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.3"],
             ["@vtex/axios-concurrent-retry", "npm:4.0.11"],
-            ["axios", "npm:0.20.0"],
+            ["axios", "npm:0.21.0"],
             ["colors.css", "npm:3.0.0"],
             ["history", "npm:4.10.1"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
@@ -5199,10 +5199,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:0.20.0", {
-          "packageLocation": "./.yarn/cache/axios-npm-0.20.0-535d9e0086-6cf2e96317.zip/node_modules/axios/",
+        ["npm:0.21.0", {
+          "packageLocation": "./.yarn/cache/axios-npm-0.21.0-9223cb0552-4b08ecab39.zip/node_modules/axios/",
           "packageDependencies": [
-            ["axios", "npm:0.20.0"],
+            ["axios", "npm:0.21.0"],
             ["follow-redirects", "npm:1.13.0"]
           ],
           "linkType": "HARD",
@@ -12707,7 +12707,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/$$virtual/moxios-virtual-90e3788836/0/cache/moxios-npm-0.4.0-6a86cd710c-b1b75c9a77.zip/node_modules/moxios/",
           "packageDependencies": [
             ["moxios", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.4.0"],
-            ["axios", "npm:0.20.0"]
+            ["axios", "npm:0.21.0"]
           ],
           "packagePeers": [
             "axios"
