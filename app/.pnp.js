@@ -142,6 +142,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.0.0"
       ],
       [
+        "eslint-config-react-app",
+        "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:6.0.0"
+      ],
+      [
         "history",
         "npm:4.10.1"
       ],
@@ -265,6 +269,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vtex/axios-concurrent-retry", "npm:4.0.11"],
             ["axios", "npm:0.21.0"],
             ["colors.css", "npm:3.0.0"],
+            ["eslint-config-react-app", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:6.0.0"],
             ["history", "npm:4.10.1"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
             ["jest-junit", "npm:12.0.0"],
@@ -4702,6 +4707,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vtex/axios-concurrent-retry", "npm:4.0.11"],
             ["axios", "npm:0.21.0"],
             ["colors.css", "npm:3.0.0"],
+            ["eslint-config-react-app", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:6.0.0"],
             ["history", "npm:4.10.1"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
             ["jest-junit", "npm:12.0.0"],
@@ -8264,6 +8270,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["eslint-config-react-app", [
+        ["virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:6.0.0", {
+          "packageLocation": "./.yarn/$$virtual/eslint-config-react-app-virtual-1e4d08542c/0/cache/eslint-config-react-app-npm-6.0.0-c5908e735c-ab983e9a31.zip/node_modules/eslint-config-react-app/",
+          "packageDependencies": [
+            ["eslint-config-react-app", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:6.0.0"],
+            ["@typescript-eslint/eslint-plugin", null],
+            ["@typescript-eslint/parser", null],
+            ["babel-eslint", null],
+            ["confusing-browser-globals", "npm:1.0.10"],
+            ["eslint", null],
+            ["eslint-plugin-flowtype", null],
+            ["eslint-plugin-import", null],
+            ["eslint-plugin-jest", null],
+            ["eslint-plugin-jsx-a11y", null],
+            ["eslint-plugin-react", null],
+            ["eslint-plugin-react-hooks", null],
+            ["eslint-plugin-testing-library", null]
+          ],
+          "packagePeers": [
+            "babel-eslint",
+            "eslint",
+            "@typescript-eslint/eslint-plugin",
+            "eslint-plugin-flowtype",
+            "eslint-plugin-import",
+            "eslint-plugin-jest",
+            "eslint-plugin-jsx-a11y",
+            "eslint-plugin-react",
+            "eslint-plugin-react-hooks",
+            "eslint-plugin-testing-library",
+            "@typescript-eslint/parser"
+          ],
+          "linkType": "HARD",
+        }],
         ["virtual:514f92f52adfaac22d242c5b7713e44b316ae410a35ea88b07c9f87854325f54b6a5868f24e7b05a30d45d8fc37cda324e4d3344229adfd94c25f19dc91fd381#npm:6.0.0", {
           "packageLocation": "./.yarn/$$virtual/eslint-config-react-app-virtual-e9a8b6ccf9/0/cache/eslint-config-react-app-npm-6.0.0-c5908e735c-ab983e9a31.zip/node_modules/eslint-config-react-app/",
           "packageDependencies": [

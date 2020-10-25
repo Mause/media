@@ -3735,6 +3735,7 @@ __metadata:
     "@vtex/axios-concurrent-retry": ^4.0.11
     axios: ^0.21.0
     colors.css: ^3.0.0
+    eslint-config-react-app: ^6.0.0
     history: ^4.9.0
     jest-environment-jsdom-sixteen: ^1.0.3
     jest-junit: ^12.0.0
@@ -3752,7 +3753,7 @@ __metadata:
     react-helmet: ^6.1.0
     react-loading: ^2.0.3
     react-router-dom: ^5.2.0
-    react-scripts: ^4.0.0
+    react-scripts: 4.0.0
     swr: ^0.3.6
     typescript: 3
     typescript-string-operations: ^1.4.0
@@ -13530,7 +13531,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-scripts@npm:^4.0.0":
+"react-scripts@npm:4.0.0":
   version: 4.0.0
   resolution: "react-scripts@npm:4.0.0"
   dependencies:
