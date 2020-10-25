@@ -69,7 +69,7 @@ export function MonitorComponent() {
 }
 
 export function MonitorAddComponent() {
-  const { tmdb_id } = useParams();
+  const { tmdb_id } = useParams<{ tmdb_id: string }>();
   const { state } = useLocation<{ type: MediaType }>();
 
   const { done, error } = usePost('monitor', {
@@ -97,7 +97,7 @@ function useDelete(path: string) {
 }
 
 export function MonitorDeleteComponent() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
 
   const done = useDelete(`monitor/${id}`);
 
