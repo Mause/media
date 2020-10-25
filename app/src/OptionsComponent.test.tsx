@@ -28,9 +28,7 @@ class ES {
 Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
-  pending();
-
-  it('failure', async () => {
+  it.skip('failure', async () => {
     let el: RenderResult;
 
     await act(async () => {
@@ -69,7 +67,7 @@ describe('OptionsComponent', () => {
 
     expect(el.container).toMatchSnapshot();
   });
-  it('success', async () => {
+  it.skip('success', async () => {
     let el;
     await act(async () => {
       el = renderWithSWR(
