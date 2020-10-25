@@ -1,16 +1,11 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
-import { Redirect } from 'react-router';
-import { useLocation } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import { usePost } from './utils';
 import { DisplayError } from './IndexComponent';
+import { components } from './schema';
 
-export interface DownloadCall {
-  tmdb_id: string;
-  magnet: string;
-  season?: string;
-  episode?: string;
-}
+export type DownloadCall = components['schemas']['DownloadPost'];
 export interface DownloadState {
   downloads: DownloadCall[];
 }
@@ -20,7 +15,7 @@ export function DownloadComponent() {
 
   const { done, error } = usePost(
     'download',
-    state.downloads.map(item => ({
+    state.downloads.map((item: DownloadCall) => ({
       ...item,
       tmdb_id: Number(item.tmdb_id),
     })),

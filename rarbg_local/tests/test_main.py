@@ -1,20 +1,16 @@
-from dataclasses import dataclass
-from enum import Enum
-from typing import Dict, List
+from typing import List
+from unittest.mock import MagicMock
 
 import pytest
-from dataclasses_json import DataClassJsonMixin
-from flask import Flask
-from flask_restx import Api, Swagger, fields
 
 from ..main import normalise
-from ..schema import TTuple, schema
-from ..utils import as_resource, schema_to_openapi
+from ..models import Episode
+from ..providers import threadable
 
-episodes: List[Dict] = [
-    {'name': '1:23:45', 'episode_number': 1},
-    {'name': 'Open Wide, O Earth', 'episode_number': 3},
-    {'name': 'The Happiness of All Mankind', 'episode_number': 4},
+episodes: List[Episode] = [
+    Episode(name='1:23:45', episode_number=1, id=1),
+    Episode(name='Open Wide, O Earth', episode_number=3, id=3),
+    Episode(name='The Happiness of All Mankind', episode_number=4, id=4),
 ]
 
 
@@ -39,58 +35,10 @@ def test_normalise(original, expected):
     assert normalise(episodes, original) == expected
 
 
-def test_schema_to_openapi():
-    class Enumerable(Enum):
-        A, B = 0, 1
+def test_threadable():
+    m = MagicMock(__name__='Test Thing', return_value=[3])
 
-    @dataclass
-    class D(DataClassJsonMixin):
-        field: Enumerable
+    results: List[int] = list(threadable([m], (1, 2)))
 
-    sc = schema(D)
-    api = Api()
-    result = schema_to_openapi(api, 'D', sc)
-    assert result._schema == {
-        'type': 'object',
-        'properties': {'field': {'type': 'string', 'enum': ['A', 'B']}},
-    }
-
-
-def test_ttuple():
-    api = Api()
-
-    TestModel = api.model(
-        'TestModel',
-        {'field': TTuple([fields.String(example='hello'), fields.Integer(example=1)])},
-    )
-
-    swagger = Swagger(api)
-
-    app = Flask('fake')
-    app.config['SERVER_NAME'] = 'what'
-    app.route('/', endpoint='root')(lambda: '')
-
-    @api.route('/api')
-    @api.expect(TestModel)
-    @as_resource()
-    def fake():
-        ...
-
-    with app.app_context():
-        swagger_def = swagger.as_dict()
-
-    TestModel = swagger_def['definitions']['TestModel']
-
-    assert TestModel == {
-        'type': 'object',
-        'properties': {
-            'field': {
-                'example': ['hello', 1],
-                'type': 'array',
-                'items': [
-                    {'type': 'string', 'example': 'hello'},
-                    {'type': 'integer', 'example': 1},
-                ],
-            }
-        },
-    }
+    assert results == [3]
+    m.assert_called_with(1, 2)

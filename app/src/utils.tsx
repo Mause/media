@@ -7,7 +7,8 @@ import { LocationDescriptor } from 'history';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@material-ui/core';
 import moxios from 'moxios';
-import { unstable_batchedUpdates } from 'react-dom';
+import { useAuth0 } from '@auth0/auth0-react';
+import { FetchEventTarget } from './fetch_stream';
 
 // axiosRetry(Axios, { retries: 3 });
 
@@ -23,68 +24,72 @@ export function subscribe<T>(
   path: string,
   callback: (a: T) => void,
   error: (e: Error) => void,
-  end: (() => void) | null = null,
-): void {
-  const es = new EventSource(path, {
-    withCredentials: true,
+  authorization: string,
+  end: (() => void) | null = () => null,
+): () => void {
+  const es = FetchEventTarget(path, {
+    headers: new Headers({
+      Authorization: 'Bearer ' + authorization,
+    }),
   });
-  es.onerror = (event: Event) => {
+  const onerror = (event: Event) => {
     error((event as unknown) as Error);
   };
-  es.addEventListener('message', ({ data }) => {
-    if (!data) {
-      if (end) {
-        end();
-      }
-      return es.close();
-    }
-    callback(JSON.parse(data));
-  });
+  es.addEventListener('abort', onerror);
+  const internal_callback = (event: Event) => {
+    callback((event as MessageEvent).data);
+  };
+  es.addEventListener('message', internal_callback);
+
+  return () => {
+    es.removeEventListener('close', end);
+    es.removeEventListener('abort', onerror);
+    es.removeEventListener('message', internal_callback);
+  };
 }
 
-export async function load<T>(path: string, params?: string): Promise<T> {
+export async function load<T>(
+  path: string,
+  params?: string,
+  headers?: any,
+): Promise<T> {
   const t = await Axios.get<T>(`/api/${path}`, {
     params,
     withCredentials: true,
+    headers,
   });
   return t && t.data;
+}
+
+interface Res<T> {
+  data?: T;
+  done: boolean;
+  error?: Error;
 }
 
 export function usePost<T>(
   url: string,
   body: object,
 ): { done: boolean; data?: T; error?: Error } {
-  const [done, setDone] = useState<boolean>(false);
-  const [error, setError] = useState<Error>();
-  const [data, setData] = useState<T>();
+  const [result, setResult] = useState<Res<T>>({ done: false });
+  const auth = useAuth0();
 
   useEffect(() => {
-    Axios.post<T>('/api/' + url, body, {
-      withCredentials: true,
-    })
-      .then(
-        (res) => {
-          unstable_batchedUpdates(() => {
-            setDone(true);
-            setData(res.data);
-          });
+    auth.getAccessTokenSilently().then((token) => {
+      Axios.post<T>('/api/' + url, body, {
+        headers: {
+          Authorization: 'Bearer ' + token,
         },
-        (error) => {
-          unstable_batchedUpdates(() => {
-            setDone(true);
-            setError(error);
-          });
-        },
-      )
-      .catch((error) => {
-        unstable_batchedUpdates(() => {
-          setDone(true);
-          setError(error);
-        });
-      });
-  }, [url, body]);
+      })
+        .then(
+          (res) => setResult({ done: true, data: res.data }),
+          (error) => setResult({ done: true, error }),
+        )
+        .catch((error) => setResult({ done: true, error }));
+    });
+  }, [url, body, auth]);
 
-  return { done, error, data };
+  return result;
 }
 
 export function ExtMLink(props: { href: string; children: string }) {

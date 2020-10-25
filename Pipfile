@@ -17,8 +17,15 @@ webdriver-manager = "*"
 pre-commit = "*"
 sqlalchemy-stubs = "*"
 snapshottest = "*"
-black = "*"
+black = {git = "https://github.com/psf/black"}
 flake8 = "*"
+mypy = "*"
+factory-boy = "*"
+isort = "*"
+pytest-asyncio = "*"
+async-asgi-testclient = "*"
+rich-sparklines = "*"
+aioresponses = "*"
 
 [packages]
 flask = "*"
@@ -39,13 +46,8 @@ sentry-sdk = {extras = ["flask"],version = "*"}
 alembic = "*"
 plexapi = "*"
 flask-cors = "*"
-flask-restx = "*"
 werkzeug = "==1.*"
-apispec = "*"
 flask-login = "==0.5.0"
-appdynamics = "*"
-appdynamics-bindeps-linux-x64 = "*"
-appdynamics-proxysupport-linux-x64 = "*"
 fuzzywuzzy = {extras = ["speedup"],version = "*"}
 cachetools = "*"
 lxml = "*"
@@ -55,9 +57,21 @@ timber = "*"
 eventlet = "*"
 email-validator = "*"
 mause-rpc = "*"
+py-healthcheck = "*"
+cffi = "*"
+fastapi = "*"
+python-multipart = "*"
+jwkaas = "*"
+aniso8601 = "*"
+pytz = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+aiofiles = "*"
+fastapi-utils = "*"
+asyncache = "*"
+makefun = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3"
 
 [pipenv]
 allow_prereleases = true

@@ -1,11 +1,12 @@
-from dataclasses import asdict
 from pathlib import Path
 
+from pytest import mark
 from responses import RequestsMock
 
 from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
 from ..providers import HorriblesubsProvider
 from .conftest import themoviedb
+from .factories import TvApiResponseFactory
 
 
 def load_html(filename):
@@ -13,7 +14,8 @@ def load_html(filename):
         return fh.read()
 
 
-def test_parse(responses):
+@mark.asyncio
+async def test_parse(responses):
     responses.add(
         'GET',
         'https://horriblesubs.info/api.php?method=getlatest',
@@ -28,11 +30,17 @@ def test_parse(responses):
         'One Piece': '/shows/one-piece',
         'Kyokou Suiri': '/shows/kyokou-suiri',
         'Magia Record': '/shows/magia-record',
-        'Fate Grand Order - Absolute Demonic Front Babylonia': '/shows/fate-grand-order-absolute-demonic-front-babylonia',
+        'Fate Grand Order - Absolute Demonic Front Babylonia': (
+            '/shows/fate-grand-order-absolute-demonic-front-babylonia'
+        ),
         'Nanabun no Nijyuuni': '/shows/nanabun-no-nijyuuni',
         'Ishuzoku Reviewers': '/shows/ishuzoku-reviewers',
-        'Boku no Tonari ni Ankoku Hakaishin ga Imasu': '/shows/boku-no-tonari-ni-ankoku-hakaishin-ga-imasu',
-        'Cardfight!! Vanguard - Zoku Koukousei-hen': '/shows/cardfight-vanguard-zoku-koukousei-hen',
+        'Boku no Tonari ni Ankoku Hakaishin ga Imasu': (
+            '/shows/boku-no-tonari-ni-ankoku-hakaishin-ga-imasu'
+        ),
+        'Cardfight!! Vanguard - Zoku Koukousei-hen': (
+            '/shows/cardfight-vanguard-zoku-koukousei-hen'
+        ),
         'Detective Conan': '/shows/detective-conan',
         'Boku no Hero Academia': '/shows/boku-no-hero-academia',
         'Runway de Waratte': '/shows/runway-de-waratte',
@@ -50,7 +58,8 @@ def magnet_link(torrent_hash):
     return f'magnet:?xt=urn:btih:{torrent_hash}&tr=udp://tracker.coppersurfer.tk:6969/announce&tr=udp://tracker.internetwarriors.net:1337/announce&tr=udp://tracker.leechersparadise.org:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://open.stealth.si:80/announce&tr=udp://p4p.arenabg.com:1337/announce&tr=udp://mgtracker.org:6969/announce&tr=udp://tracker.tiny-vps.com:6969/announce&tr=udp://peerfect.org:6969/announce&tr=http://share.camoe.cn:8080/announce&tr=http://t.nyaatracker.com:80/announce&tr=https://open.kickasstracker.com:443/announce'
 
 
-def test_get_downloads(responses):
+@mark.asyncio
+async def test_get_downloads(responses):
     mock(
         responses,
         'https://horriblesubs.info/api.php?method=getshows&type=batch&showid=1',
@@ -78,7 +87,8 @@ def test_get_downloads(responses):
     ]
 
 
-def test_get_downloads_single(responses: RequestsMock, snapshot):
+@mark.asyncio
+async def test_get_downloads_single(responses: RequestsMock, snapshot):
     mock(
         responses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=1',
@@ -90,7 +100,8 @@ def test_get_downloads_single(responses: RequestsMock, snapshot):
     snapshot.assert_match(magnets)
 
 
-def test_provider(responses: RequestsMock, snapshot):
+@mark.asyncio
+async def test_provider(responses: RequestsMock, snapshot):
     mock(
         responses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=264',
@@ -115,8 +126,10 @@ def test_provider(responses: RequestsMock, snapshot):
             'title_synonyms': ['Busters that are little'],
         },
     )
-    themoviedb(responses, '/tv/1', {'name': 'Little Busters!'})
+    themoviedb(responses, '/tv/1', TvApiResponseFactory(name='Little Busters!').dict())
 
-    results = list(map(asdict, HorriblesubsProvider().search_for_tv(None, 1, 1, 2)))
+    results = [
+        item.dict() for item in HorriblesubsProvider().search_for_tv(None, 1, 1, 2)
+    ]
 
     snapshot.assert_match(results)

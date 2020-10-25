@@ -1,11 +1,17 @@
 from abc import ABC, abstractmethod
+from concurrent.futures import ThreadPoolExecutor
 from itertools import chain
-from typing import Iterable, Optional
+from queue import Empty, Queue
+from threading import Semaphore, current_thread
+from typing import AsyncGenerator, Callable, Iterable, List, Optional, Tuple, TypeVar
 
 from . import horriblesubs, kickass
 from .models import EpisodeInfo, ITorrent, ProviderSource
 from .rarbg import get_rarbg_iter
 from .tmdb import get_tv
+
+T = TypeVar('T')
+ProviderType = Callable[..., Iterable[T]]
 
 
 def tv_convert(key):
@@ -39,6 +45,8 @@ def movie_convert(key):
 
 
 class Provider(ABC):
+    name: str
+
     @abstractmethod
     def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
@@ -46,11 +54,15 @@ class Provider(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
+    def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
         raise NotImplementedError()
 
 
 class RarbgProvider(Provider):
+    name = 'rarbg'
+
     def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
@@ -73,10 +85,12 @@ class RarbgProvider(Provider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=tv_convert(item['category']),
-                episode_info=EpisodeInfo(str(season), str(episode)),
+                episode_info=EpisodeInfo(seasonnum=str(season), epnum=str(episode)),
             )
 
-    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
+    async def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
         for item in chain.from_iterable(
             get_rarbg_iter(
                 'https://torrentapi.org/pubapi_v2.php', 'movie', search_imdb=imdb_id
@@ -88,11 +102,13 @@ class RarbgProvider(Provider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=movie_convert(item['category']),
-                episode_info=EpisodeInfo(None, None),
+                episode_info=EpisodeInfo(),
             )
 
 
 class KickassProvider(Provider):
+    name = 'kickass'
+
     def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
@@ -106,26 +122,33 @@ class KickassProvider(Provider):
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=tv_convert(item['resolution']),
-                episode_info=EpisodeInfo(str(season), str(episode)),
+                episode_info=EpisodeInfo(
+                    seasonnum=str(season),
+                    epnum=None if episode is None else str(episode),
+                ),
             )
 
-    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
-        for item in kickass.search_for_movie(imdb_id, tmdb_id):
+    async def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
+        for item in await kickass.search_for_movie(imdb_id, tmdb_id):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=movie_convert(item['resolution']),
-                episode_info=EpisodeInfo(None, None),
+                episode_info=EpisodeInfo(),
             )
 
 
 class HorriblesubsProvider(Provider):
+    name = 'horriblesubs'
+
     def search_for_tv(
         self, imdb_id: Optional[str], tmdb_id: int, season: int, episode: int = None
     ) -> Iterable[ITorrent]:
-        name = get_tv(tmdb_id)['name']
+        name = get_tv(tmdb_id).name
         template = f'HorribleSubs {name} S{season:02d}'
 
         for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
@@ -135,27 +158,56 @@ class HorriblesubsProvider(Provider):
                 seeders=0,
                 download=item['download'],
                 category=tv_convert(item['resolution']),
-                episode_info=EpisodeInfo(str(season), str(item['episode'])),
+                episode_info=EpisodeInfo(
+                    seasonnum=str(season), epnum=str(item['episode'])
+                ),
             )
 
-    def search_for_movie(self, imdb_id: str, tmdb_id: int) -> Iterable[ITorrent]:
-        return []
+    def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
+        pass
 
 
 PROVIDERS = [HorriblesubsProvider(), RarbgProvider(), KickassProvider()]
 
 
+def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
+    def worker(function: ProviderType) -> None:
+        try:
+            current_thread().setName(function.__name__)
+
+            for item in function(*args):
+                queue.put(item)
+        finally:
+            s.release()
+
+    s = Semaphore(0)
+    queue: Queue[T] = Queue()
+    executor = ThreadPoolExecutor(len(functions))
+
+    futures = executor.map(worker, functions)
+
+    while getattr(s, '_value') != len(functions) or not queue.empty():
+        try:
+            yield queue.get_nowait()
+        except Empty:
+            pass
+
+    list(futures)  # throw exceptions in this thread
+
+
 def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
-    return chain.from_iterable(
-        provider.search_for_tv(imdb_id, tmdb_id, season, episode)
-        for provider in PROVIDERS
+    return threadable(
+        [provider.search_for_tv for provider in PROVIDERS],
+        (imdb_id, tmdb_id, season, episode),
     )
 
 
-def search_for_movie(imdb_id: str, tmdb_id: int):
-    return chain.from_iterable(
-        provider.search_for_movie(imdb_id, tmdb_id) for provider in PROVIDERS
-    )
+async def search_for_movie(imdb_id: str, tmdb_id: int):
+    for provider in PROVIDERS:
+        async for result in provider.search_for_movie(imdb_id, tmdb_id):
+            yield result
 
 
 def main():

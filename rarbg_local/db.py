@@ -5,9 +5,9 @@ from typing import List, Optional, Type, TypeVar, Union
 
 from flask_jsontools import JsonSerializableBase
 from flask_sqlalchemy import SQLAlchemy
-from flask_user import UserMixin, current_user
+from flask_user import UserMixin
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
-from sqlalchemy.orm import joinedload, relationship
+from sqlalchemy.orm import Session, joinedload, relationship
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
 from sqlalchemy_repr import RepresentableBase
@@ -56,13 +56,13 @@ class EpisodeDetails(db.Model):  # type: ignore
         return self.episode is None
 
     def get_marker(self):
-        return f'S{self.season:02d}E{self.episode:02d}'
+        return f'S{int(self.season):02d}E{int(self.episode):02d}'
 
     def __repr__(self):
         return (
             self.show_title
             + ' '
-            + (self.get_marker() if self.episode else f'S{self.season:02d}')
+            + (self.get_marker() if self.episode else f'S{int(self.season):02d}')
         )
 
 
@@ -84,6 +84,8 @@ class User(db.Model, UserMixin):  # type: ignore
     # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
     username = db.Column(db.String(255, collation='en_AU'), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False, server_default='')
+
+    email = db.Column(db.String(255, collation='en_AU'), nullable=True, unique=True)
 
     # User information
     first_name = db.Column(
@@ -116,6 +118,9 @@ class Role(db.Model):  # type: ignore
 
 
 class _Roles:
+    Admin: Role
+    Member: Role
+
     @lru_cache()
     def __getattr__(self, name):
         return get_or_create(Role, name=name)
@@ -132,7 +137,7 @@ class UserRoles(db.Model):  # type: ignore
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
 
-class MediaType(enum.Enum):
+class MonitorMediaType(enum.Enum):
     MOVIE = 'MOVIE'
     TV = 'TV'
 
@@ -146,10 +151,10 @@ class Monitor(db.Model):  # type: ignore
 
     title = Column(String, nullable=False)
     type = Column(
-        Enum(MediaType),
-        default=MediaType.MOVIE.name,
+        Enum(MonitorMediaType),
+        default=MonitorMediaType.MOVIE.name,
         nullable=False,
-        server_default=MediaType.MOVIE.name,
+        server_default=MonitorMediaType.MOVIE.name,
     )
 
 
@@ -162,8 +167,9 @@ def create_download(
     tmdb_id: int,
     details: Union[MovieDetails, EpisodeDetails],
     id: int = None,
+    added_by: User,
     timestamp: datetime = None,
-):
+) -> Download:
     precondition(not imdb_id or imdb_id.startswith('tt'), f'Invalid imdb_id: {imdb_id}')
     return Download(
         transmission_id=transmission_id,
@@ -173,26 +179,32 @@ def create_download(
         tmdb_id=tmdb_id,
         **{type: details},
         id=id,
-        added_by=current_user._get_current_object(),
+        added_by=added_by,
         timestamp=timestamp,
     )
 
 
 def create_movie(
-    *, transmission_id: str, imdb_id: str, title: str, tmdb_id: int
-) -> None:
+    *,
+    transmission_id: str,
+    imdb_id: str,
+    title: str,
+    tmdb_id: int,
+    added_by: User,
+    timestamp: datetime = None,
+) -> MovieDetails:
     md = MovieDetails()
-    db.session.add(md)
-    db.session.add(
-        create_download(
-            transmission_id=transmission_id,
-            imdb_id=imdb_id,
-            title=title,
-            type='movie',
-            tmdb_id=tmdb_id,
-            details=md,
-        )
+    md.download = create_download(
+        transmission_id=transmission_id,
+        imdb_id=imdb_id,
+        title=title,
+        type='movie',
+        tmdb_id=tmdb_id,
+        details=md,
+        added_by=added_by,
+        timestamp=timestamp,
     )
+    return md
 
 
 def create_episode(
@@ -205,44 +217,43 @@ def create_episode(
     tmdb_id: int,
     id: int = None,
     show_title: str,
+    added_by: User,
     download_id: int = None,
     timestamp: datetime = None,
 ) -> EpisodeDetails:
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
-    db.session.add(ed)
-    db.session.add(
-        create_download(
-            transmission_id=transmission_id,
-            imdb_id=imdb_id,
-            tmdb_id=tmdb_id,
-            title=title,
-            type='episode',
-            details=ed,
-            id=download_id,
-            timestamp=timestamp,
-        )
+    ed.download = create_download(
+        transmission_id=transmission_id,
+        imdb_id=imdb_id,
+        tmdb_id=tmdb_id,
+        title=title,
+        type='episode',
+        details=ed,
+        id=download_id,
+        timestamp=timestamp,
+        added_by=added_by,
     )
     return ed
 
 
-def get_all(model: Type[T]) -> List[T]:
-    return db.session.query(model).options(joinedload('download')).all()
+def get_all(session: Session, model: Type[T]) -> List[T]:
+    return session.query(model).options(joinedload('download')).all()
 
 
-def get_episodes() -> List[EpisodeDetails]:
-    return get_all(EpisodeDetails)
+def get_episodes(session: Session) -> List[EpisodeDetails]:
+    return get_all(session, EpisodeDetails)
 
 
-def get_movies() -> List[MovieDetails]:
-    return get_all(MovieDetails)
+def get_movies(session: Session) -> List[MovieDetails]:
+    return get_all(session, MovieDetails)
 
 
-def get_or_create(model: Type[T], defaults=None, **kwargs) -> T:
-    instance = db.session.query(model).filter_by(**kwargs).first()
+def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> T:
+    instance = session.query(model).filter_by(**kwargs).first()
     if instance:
         return instance
     params = {k: v for k, v in kwargs.items() if not isinstance(v, ClauseElement)}
     params.update(defaults or {})
     instance: T = model(**params)  # type: ignore
-    db.session.add(instance)
+    session.add(instance)
     return instance

@@ -48,11 +48,9 @@ function openPlex(item: { download: { imdb_id: string } }) {
 }
 
 export function contextMenuTrigger(id: string) {
-  // workaround for type issue
-  const props = { mouseButton: 0 };
   return (
     <ContextMenuTrigger
-      {...props}
+      mouseButton={0}
       id={id}
       attributes={{
         style: { cursor: 'pointer', display: 'inline' },
@@ -179,7 +177,7 @@ export function Progress({
   }
 }
 
-export function getMarker(episode: { season: any; episode: any }) {
+export function getMarker(episode: { season?: any; episode?: any }) {
   return String.Format('S{0:00}E{1:00}', episode.season, episode.episode);
 }
 
@@ -291,7 +289,7 @@ function Season({
   i: string;
   torrents?: Torrents;
   season: EpisodeResponse[];
-  tmdb_id: string;
+  tmdb_id: number;
 }) {
   const head = (icon: IconDefinition) => (
     <h4>
@@ -317,7 +315,7 @@ function Season({
     >
       <ol>
         {season.map(episode => (
-          <li key={episode.episode} value={episode.episode}>
+          <li key={episode.id} value={episode.episode}>
             <span>{episode.download.title}</span>
             &nbsp;
             <Progress torrents={torrents} item={episode} />
@@ -329,7 +327,7 @@ function Season({
   );
 }
 
-export function NextEpisodeAirs(props: { tmdb_id: string; season: string; season_episodes: { episode: number }[] }) {
+export function NextEpisodeAirs(props: { tmdb_id: number; season: string; season_episodes: { episode?: number }[] }) {
   const { data } = useSWR<{ episodes: { name: string; air_date: string; episode_number: number }[] }>(
     `tv/${props.tmdb_id}/season/${props.season}`,
   );
@@ -338,7 +336,7 @@ export function NextEpisodeAirs(props: { tmdb_id: string; season: string; season
     return <></>;
   }
 
-  const lastEpisode = _.last(props.season_episodes)!.episode
+  const lastEpisode = _.last(props.season_episodes)!.episode!
 
   const nextEpisode = data.episodes.find(episode =>
     episode.episode_number === (lastEpisode + 1)

@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 # snapshottest: v1 - https://goo.gl/zC4yUc
-from __future__ import unicode_literals
 
 from snapshottest import GenericRepr, Snapshot
 
@@ -180,7 +178,7 @@ snapshots['test_provider 1'] = [
         'download': 'magnet:?xt=urn:btih:VSBAG4BJNDVDWI2GLWOQ3UYIJAFI35Y6&tr=udp://tracker.coppersurfer.tk:6969/announce&tr=udp://tracker.internetwarriors.net:1337/announce&tr=udp://tracker.leechersparadise.org:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://open.stealth.si:80/announce&tr=udp://p4p.arenabg.com:1337/announce&tr=udp://mgtracker.org:6969/announce&tr=udp://tracker.tiny-vps.com:6969/announce&tr=udp://peerfect.org:6969/announce&tr=http://share.camoe.cn:8080/announce&tr=http://t.nyaatracker.com:80/announce&tr=https://open.kickasstracker.com:443/announce',
         'episode_info': {'epnum': '02', 'seasonnum': '1'},
         'seeders': 0,
-        'source': GenericRepr("<ProviderSource.HORRIBLESUBS: 'HORRIBLESUBS'>"),
+        'source': GenericRepr("<ProviderSource.HORRIBLESUBS: 'horriblesubs'>"),
         'title': 'HorribleSubs Little Busters! S01E02 1080',
     },
     {
@@ -188,7 +186,7 @@ snapshots['test_provider 1'] = [
         'download': 'magnet:?xt=urn:btih:RYX6SFXR46N7GZ4MT35ED4RHJ4HERGUR&tr=udp://tracker.coppersurfer.tk:6969/announce&tr=udp://tracker.internetwarriors.net:1337/announce&tr=udp://tracker.leechersparadise.org:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://open.stealth.si:80/announce&tr=udp://p4p.arenabg.com:1337/announce&tr=udp://mgtracker.org:6969/announce&tr=udp://tracker.tiny-vps.com:6969/announce&tr=udp://peerfect.org:6969/announce&tr=http://share.camoe.cn:8080/announce&tr=http://t.nyaatracker.com:80/announce&tr=https://open.kickasstracker.com:443/announce',
         'episode_info': {'epnum': '02', 'seasonnum': '1'},
         'seeders': 0,
-        'source': GenericRepr("<ProviderSource.HORRIBLESUBS: 'HORRIBLESUBS'>"),
+        'source': GenericRepr("<ProviderSource.HORRIBLESUBS: 'horriblesubs'>"),
         'title': 'HorribleSubs Little Busters! S01E02 720',
     },
     {
@@ -196,7 +194,7 @@ snapshots['test_provider 1'] = [
         'download': 'magnet:?xt=urn:btih:KJEI6LCWFZI6BPNE5OJMNUSDWJOK7CYT&tr=udp://tracker.coppersurfer.tk:6969/announce&tr=udp://tracker.internetwarriors.net:1337/announce&tr=udp://tracker.leechersparadise.org:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://open.stealth.si:80/announce&tr=udp://p4p.arenabg.com:1337/announce&tr=udp://mgtracker.org:6969/announce&tr=udp://tracker.tiny-vps.com:6969/announce&tr=udp://peerfect.org:6969/announce&tr=http://share.camoe.cn:8080/announce&tr=http://t.nyaatracker.com:80/announce&tr=https://open.kickasstracker.com:443/announce',
         'episode_info': {'epnum': '02', 'seasonnum': '1'},
         'seeders': 0,
-        'source': GenericRepr("<ProviderSource.HORRIBLESUBS: 'HORRIBLESUBS'>"),
+        'source': GenericRepr("<ProviderSource.HORRIBLESUBS: 'horriblesubs'>"),
         'title': 'HorribleSubs Little Busters! S01E02 480',
     },
 ]

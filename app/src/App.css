@@ -1,6 +1,6 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/typebase.css/0.5.0/typebase.min.css');
 @import url('https://vkbansal.github.io/react-contextmenu/styles.034090.css');
-@import '../node_modules/colors.css/css/colors.css';
+@import '~colors.css/css/colors.css';
 
 body {
   margin: 0 5%;

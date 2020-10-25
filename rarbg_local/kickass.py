@@ -1,15 +1,23 @@
+import logging
 import re
 import string
 from typing import Any, Dict, Iterable
 
 import requests
 from bs4 import BeautifulSoup
+from requests.exceptions import ConnectionError
 
 from .tmdb import get_movie, get_tv
 
 
 def fetch(url: str) -> Iterable[Dict[str, Any]]:
-    soup = BeautifulSoup(requests.get(url).content, "lxml")
+    try:
+        r = requests.get(url)
+    except ConnectionError:
+        logging.exception('Failed to reach kickass')
+        return
+
+    soup = BeautifulSoup(r.content, "lxml")
 
     for i in soup.find_all(
         'div', {'class': 'tab_content', 'id': lambda id: id != 'comments'}
@@ -41,7 +49,7 @@ def tokenise(name: str) -> str:
 
 
 def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
-    name = get_tv(tmdb_id)['name']
+    name = get_tv(tmdb_id).name
 
     if episode is None:
         key = f'S{season:02d}'
@@ -56,7 +64,7 @@ def base(name, imdb_id):
     return fetch(f'https://katcr.co/name/{tokenise(name)}/i{imdb_id.lstrip("t")}')
 
 
-def search_for_movie(imdb_id: str, tmdb_id: int):
-    name = get_movie(tmdb_id)['title']
+async def search_for_movie(imdb_id: str, tmdb_id: int):
+    name = (await get_movie(tmdb_id)).title
 
     return base(name, imdb_id)

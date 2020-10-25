@@ -1,8 +1,12 @@
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/react';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { RouteProps } from 'react-router';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  RouteProps,
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
 import {
   EpisodeSelectComponent,
@@ -13,7 +17,7 @@ import { SearchComponent } from './SearchComponent';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
-import { Link, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { SWRConfig } from 'swr';
 import {
   MonitorComponent,
@@ -25,56 +29,30 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import { Websocket } from './Websocket';
+import { Integrations as ApmIntegrations } from '@sentry/apm';
+import { useProfiler } from '@sentry/react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Link as MaterialLink } from '@material-ui/core';
+import { components } from './schema';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
     release: process.env.HEROKU_SLUG_COMMIT,
     environment: 'development',
+    integrations: [new ApmIntegrations.Tracing()],
+    tracesSampleRate: 0.75, // must be present and non-zero
   });
-  Sentry.configureScope(scope => {
+  Sentry.configureScope((scope) => {
     scope.setUser((window as any).USER);
   });
 }
 
-export interface IndexResponse {
-  series: SeriesResponse[];
-  movies: MovieResponse[];
-}
-export interface Download {
-  id: number;
-  imdb_id: string;
-  title: string;
-  transmission_id: string;
-  added_by?: { first_name: string };
-}
-export interface MovieResponse {
-  download: Download;
-  id: number;
-}
-export interface SeriesResponse {
-  imdb_id: string;
-  tmdb_id: string;
-  title: string;
-  seasons: {
-    [key: string]: EpisodeResponse[];
-  };
-}
-export interface EpisodeResponse {
-  download: Download;
-  episode: number;
-  id: number;
-  season: number;
-  show_title: string;
-}
-export interface TorrentFile {
-  name: string;
-  bytesCompleted: number;
-  length: number;
-}
-export type Torrents = {
-  [key: string]: { eta: number; percentDone: number; files: TorrentFile[] };
-};
+export type Torrents = { [key: string]: components['schemas']['InnerTorrent'] };
+export type IndexResponse = components['schemas']['IndexResponse'];
+export type MovieResponse = components['schemas']['MovieDetailsSchema'];
+export type SeriesResponse = components['schemas']['SeriesDetails'];
+export type EpisodeResponse = components['schemas']['EpisodeDetailsSchema'];
 
 function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
   return (
@@ -88,7 +66,7 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
 }
 
 function reportError(error: Error, componentStack: string) {
-  Sentry.withScope(scope => {
+  Sentry.withScope((scope) => {
     scope.setExtras({ stack: componentStack });
     const eventId = Sentry.captureException(error);
     Sentry.showReportDialog({ eventId: eventId });
@@ -106,8 +84,31 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const Login = () => {
+  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
+
+  if (isAuthenticated) {
+    return (
+      <MaterialLink href="#" onClick={() => logout({})}>
+        Logout
+      </MaterialLink>
+    );
+  } else {
+    return (
+      <MaterialLink href="#" onClick={() => loginWithRedirect({})}>
+        Login
+      </MaterialLink>
+    );
+  }
+};
+
 function ParentComponentInt() {
+  useProfiler('ParentComponentInt');
   const classes = useStyles();
+
+  const auth = useAuth0();
+  console.log(auth.user);
+
   return (
     <Router>
       <h1>Media</h1>
@@ -126,8 +127,13 @@ function ParentComponentInt() {
           <Grid item xs="auto">
             <ExtMLink href="https://app.plex.tv">Plex</ExtMLink>
           </Grid>
+          {auth.user && (
+            <Grid item xs="auto">
+              {auth.user.name}
+            </Grid>
+          )}
           <Grid item xs="auto">
-            <Link href="/user/sign-out">Logout</Link>
+            <Login />
           </Grid>
         </Grid>
       </nav>
@@ -143,11 +149,18 @@ function ParentComponentInt() {
               <code>
                 <pre>
                   {props.error!!.message}
-                  {props.componentStack?.toString().split('\n').map(
-                    line => <span key={line}>{line}<br /></span>
-                  )}
+                  {props
+                    .error!!.stack?.toString()
+                    .split('\n')
+                    .map((line) => (
+                      <span key={line}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
                 </pre>
               </code>
+              <button onClick={props.resetErrorBoundary}>Retry</button>
             </div>
           );
         }}
@@ -157,22 +170,45 @@ function ParentComponentInt() {
     </Router>
   );
 }
-export function swrConfig(WrappedComponent: React.ComponentType<{}>) {
-  return () => (
+function SwrConfigWrapper({
+  WrappedComponent,
+}: {
+  WrappedComponent: React.ComponentType<{}>;
+}) {
+  const auth = useAuth0();
+  return (
     <SWRConfig
       value={{
         // five minute refresh
         refreshInterval: 5 * 60 * 1000,
-        fetcher: (...args) => load(args[0], args[1]),
+        fetcher: async (path, params) =>
+          await load(
+            path,
+            params,
+            auth.isAuthenticated
+              ? {
+                Authorization:
+                  'Bearer ' + (await auth.getAccessTokenSilently()),
+              }
+              : {},
+          ),
       }}
     >
       <WrappedComponent />
     </SWRConfig>
   );
 }
+
+export function swrConfig(WrappedComponent: React.ComponentType<{}>) {
+  return () => <SwrConfigWrapper WrappedComponent={WrappedComponent} />;
+}
 const ParentComponent = swrConfig(ParentComponentInt);
 
 function Routes() {
+  const auth = useAuth0();
+
+  if (!auth.isAuthenticated) return <div>Please login</div>;
+
   return (
     <Switch>
       <RouteWithTitle path="/websocket/:tmdbId" title="Websocket">

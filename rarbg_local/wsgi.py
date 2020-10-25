@@ -2,7 +2,6 @@
 #  --worker-class eventlet -w 1
 #
 # eventlet.monkey_patch()
-
 import json
 import logging
 import os
@@ -26,10 +25,11 @@ if 'SENTRY_DSN' in os.environ:
         os.environ['SENTRY_DSN'],
         integrations=[FlaskIntegration(), SqlalchemyIntegration()],
         release=os.environ['HEROKU_SLUG_COMMIT'],
+        traces_sample_rate=0.75,
     )
 
 
-class CloudflareProxy(object):
+class CloudflareProxy:
     """This middleware sets the proto scheme based on the Cf-Visitor header."""
 
     def __init__(self, app):
