@@ -104,4 +104,4 @@ export function MonitorDeleteComponent() {
   return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
 }
 
-export { Monitor };
+export type { Monitor };
