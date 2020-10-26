@@ -9,17 +9,7 @@ from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
 
 from fastapi.exceptions import HTTPException
-from flask import (
-    Blueprint,
-    Flask,
-    current_app,
-    get_flashed_messages,
-    redirect,
-    render_template,
-    request,
-    send_from_directory,
-    url_for,
-)
+from flask import Blueprint, Flask, current_app, request, url_for
 from flask_admin import Admin
 from flask_cors import CORS
 from flask_user import UserManager, login_required, roles_required
@@ -27,7 +17,6 @@ from marshmallow.exceptions import ValidationError
 from requests.exceptions import ConnectionError
 from sqlalchemy import event
 from sqlalchemy.orm.session import Session, make_transient
-from werkzeug.exceptions import NotFound
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .auth import auth_hook
@@ -113,14 +102,6 @@ def create_app(config: Dict):
     admin.add_view(RoleAdmin(Role, db.session))
     admin.add_view(DownloadAdmin(Download, db.session))
 
-    '''
-    with papp.app_context():
-        Mause = db.session.query(User).filter_by(username='Mause').one_or_none()
-        if Mause:
-            Mause.roles = list(set(Mause.roles) | {Roles.Admin, Roles.Member})
-            db.session.commit()
-    '''
-
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
 
         def _fk_pragma_on_connect(dbapi_con, con_record):
@@ -133,30 +114,10 @@ def create_app(config: Dict):
     return papp
 
 
-@app.route('/user/unauthorized')
-def unauthorized():
-    if get_flashed_messages():
-        return render_template('unauthorized.html')
-    else:
-        return redirect(url_for('.serve_index'))
-
-
 @app.before_request
 def before():
     if not request.path.startswith(('/user', '/manifest.json')):
         return login_required(roles_required('Member')(lambda: None))()
-
-
-@app.route('/')
-@app.route('/<path:path>')
-def serve_index(path=None):
-    if path:
-        try:
-            return send_from_directory('../app/build/', path)
-        except NotFound:
-            pass
-
-    return send_from_directory('../app/build/', 'index.html')
 
 
 def categorise(string: str) -> str:
