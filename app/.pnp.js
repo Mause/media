@@ -71,7 +71,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@testing-library/jest-dom",
-        "npm:5.11.4"
+        "npm:5.11.5"
       ],
       [
         "@testing-library/react",
@@ -251,7 +251,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/lab", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:4.0.0-alpha.56"],
             ["@sentry/apm", "npm:5.27.1"],
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.27.1"],
-            ["@testing-library/jest-dom", "npm:5.11.4"],
+            ["@testing-library/jest-dom", "npm:5.11.5"],
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.1.0"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.10"],
             ["@types/history", "npm:4.7.7"],
@@ -3352,10 +3352,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@testing-library/jest-dom", [
-        ["npm:5.11.4", {
-          "packageLocation": "./.yarn/cache/@testing-library-jest-dom-npm-5.11.4-6e5f38ef88-2d59d58828.zip/node_modules/@testing-library/jest-dom/",
+        ["npm:5.11.5", {
+          "packageLocation": "./.yarn/cache/@testing-library-jest-dom-npm-5.11.5-b180e4bc51-7289600209.zip/node_modules/@testing-library/jest-dom/",
           "packageDependencies": [
-            ["@testing-library/jest-dom", "npm:5.11.4"],
+            ["@testing-library/jest-dom", "npm:5.11.5"],
             ["@babel/runtime", "npm:7.10.5"],
             ["@types/testing-library__jest-dom", "npm:5.9.1"],
             ["aria-query", "npm:4.2.2"],
@@ -4694,7 +4694,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/lab", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:4.0.0-alpha.56"],
             ["@sentry/apm", "npm:5.27.1"],
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.27.1"],
-            ["@testing-library/jest-dom", "npm:5.11.4"],
+            ["@testing-library/jest-dom", "npm:5.11.5"],
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.1.0"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.1.10"],
             ["@types/history", "npm:4.7.7"],

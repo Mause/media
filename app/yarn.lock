@@ -2552,9 +2552,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:^5.11.4":
-  version: 5.11.4
-  resolution: "@testing-library/jest-dom@npm:5.11.4"
+"@testing-library/jest-dom@npm:^5.11.5":
+  version: 5.11.5
+  resolution: "@testing-library/jest-dom@npm:5.11.5"
   dependencies:
     "@babel/runtime": ^7.9.2
     "@types/testing-library__jest-dom": ^5.9.1
@@ -2564,7 +2564,7 @@ __metadata:
     css.escape: ^1.5.1
     lodash: ^4.17.15
     redent: ^3.0.0
-  checksum: 2d59d588285017896060b76c175414adf246639558665ad3a8662d91c320f366d2bd3c95cf60163617090e2ca7bdc4b27d7a101bf96d8318513f15b45855991f
+  checksum: 72896002096a03cd3b46e31891149088ae83f87a129ea4be143f254fb4db6afbf9f7f46b4f6f73e0b9b0520b87428f627508a68a75471e9245b683619ed5d6b6
   languageName: node
   linkType: hard
 
@@ -3717,7 +3717,7 @@ __metadata:
     "@material-ui/lab": ^4.0.0-alpha.56
     "@sentry/apm": ^5.26.0
     "@sentry/react": ^5.26.0
-    "@testing-library/jest-dom": ^5.11.4
+    "@testing-library/jest-dom": ^5.11.5
     "@testing-library/react": ^11.1.0
     "@testing-library/user-event": ^12.1.10
     "@types/history": 4.7.7
