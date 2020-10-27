@@ -38,7 +38,7 @@ export function Shared() {
 }
 
 function SeasonSelectComponent() {
-  const { tmdb_id } = useParams();
+  const { tmdb_id } = useParams<{ tmdb_id: string }>();
   const { data: tv } = useSWR<TV>(`tv/${tmdb_id}`);
 
   return (
@@ -84,7 +84,10 @@ export function EpisodeSelectBreadcrumbs(props: {
 }
 
 function EpisodeSelectComponent() {
-  const { tmdb_id, season: seasonNumber } = useParams();
+  const { tmdb_id, season: seasonNumber } = useParams<{
+    tmdb_id: string;
+    season: string;
+  }>();
   const { data: season } = useSWR<Season>(
     `tv/${tmdb_id}/season/${seasonNumber}`,
   );

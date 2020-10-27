@@ -135,7 +135,8 @@ describe('NextEpisodeAirs', () => {
             season={season}
             tmdb_id={tmdb_id}
             season_episodes={[{ episode: 1 }]}
-          />,
+          />
+          ,
         </MemoryRouter>,
       );
 
@@ -180,7 +181,7 @@ describe('shouldCollapse', () => {
     expect(shouldCollapse('1', tv, [])).toBe(false);
   });
 
-  it('true', () => {
+  it('true 2', () => {
     expect(shouldCollapse('1', tv, [episode, episode])).toBe(true);
   });
 });

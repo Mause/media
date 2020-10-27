@@ -8,30 +8,24 @@ import { useLastMessage, SocketIOProvider } from 'use-socketio';
 function useMessages<T>(initMessage: object) {
   const { data: lastMessage, socket } = useLastMessage('message');
 
-  useEffect(
-    () => {
-      socket.send(JSON.stringify(initMessage));
-    },
-    [socket, initMessage],
-  );
+  useEffect(() => {
+    socket.send(JSON.stringify(initMessage));
+  }, [socket, initMessage]);
 
   const [messages, setMessages] = useState<T[]>([]);
 
-  useEffect(
-    () => {
-      if (lastMessage) {
-        setMessages(messages =>
-          messages.concat([JSON.parse(lastMessage) as T]),
-        );
-      }
-    },
-    [lastMessage],
-  );
+  useEffect(() => {
+    if (lastMessage) {
+      setMessages((messages) =>
+        messages.concat([JSON.parse(lastMessage) as T]),
+      );
+    }
+  }, [lastMessage]);
   return messages;
 }
 
 function Websocket() {
-  const { tmdbId } = useParams();
+  const { tmdbId } = useParams<{ tmdbId: string }>();
   const { search } = useLocation();
   const query = qs.parse(search.slice(1));
 
@@ -50,7 +44,7 @@ function Websocket() {
     <div>
       <span>{tmdbId}</span>
       <ul>
-        {_.uniqBy(messages, 'download').map(message => (
+        {_.uniqBy(messages, 'download').map((message) => (
           <li key={message.download}>
             <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
           </li>

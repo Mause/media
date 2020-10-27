@@ -1,4 +1,4 @@
-exclude: .*\.snap
+exclude: .*\.snap|\.pnp\.js
 repos:
   - repo: https://github.com/prettier/prettier
     rev: 2.0.5

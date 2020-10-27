@@ -48,6 +48,7 @@ export function ManualAddComponent() {
         {
           magnet,
           ...state,
+          tmdb_id: parseInt(state.tmdb_id),
         },
       ],
     };
@@ -59,7 +60,7 @@ export function ManualAddComponent() {
       <h3>{data?.title}</h3>
       <TextField
         placeholder="magnet:..."
-        onChange={e => setMagnet(e.target.value)}
+        onChange={(e) => setMagnet(e.target.value)}
         inputProps={{ pattern: '^magnet:.*' }}
       />
       <Button type="submit" variant="outlined">

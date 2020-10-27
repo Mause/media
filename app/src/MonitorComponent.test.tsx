@@ -4,7 +4,6 @@ import moxios from 'moxios';
 import {
   MonitorComponent,
   Monitor,
-  MediaType,
   MonitorAddComponent,
 } from './MonitorComponent';
 import React from 'react';

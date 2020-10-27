@@ -2,8 +2,8 @@ import os
 
 
 def seed():
+    from rarbg_local.db import Role, User, db
     from rarbg_local.wsgi import _app
-    from rarbg_local.db import User, Role, db
 
     with _app.app_context():
         user = User(

@@ -244,12 +244,12 @@ async def stream(
 
     if type == 'series':
         for item in provider.search_for_tv(
-            get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
+            await get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
         ):
             yield item
     else:
         async for item in provider.search_for_movie(
-            get_movie_imdb_id(tmdb_id), int(tmdb_id)
+            await get_movie_imdb_id(tmdb_id), int(tmdb_id)
         ):
             yield item
 
@@ -259,7 +259,7 @@ async def stream(
 )
 async def select(tmdb_id: int, season: int):
 
-    results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
+    results = search_for_tv(await get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
     episodes = get_tv_episodes(tmdb_id, season).episodes
 
@@ -333,9 +333,9 @@ async def download_post(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
-                    get_tv_imdb_id(str(thing.tmdb_id))
+                    await get_tv_imdb_id(str(thing.tmdb_id))
                     if is_tv
-                    else get_movie_imdb_id(str(thing.tmdb_id))
+                    else await get_movie_imdb_id(str(thing.tmdb_id))
                 )
                 or '',
                 subpath=subpath,
@@ -448,9 +448,9 @@ tv_ns = APIRouter()
 
 
 @tv_ns.get('/{tmdb_id}', tags=['tv'], response_model=TvResponse)
-def api_tv(tmdb_id: int):
+async def api_tv(tmdb_id: int):
     tv = get_tv(tmdb_id)
-    return TvResponse(**tv.dict(), imdb_id=get_tv_imdb_id(tmdb_id), title=tv.name)
+    return TvResponse(**tv.dict(), imdb_id=await get_tv_imdb_id(tmdb_id), title=tv.name)
 
 
 @tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)
@@ -458,11 +458,13 @@ def api_tv_season(tmdb_id: int, season: int):
     return get_tv_episodes(tmdb_id, season)
 
 
-def _stream(type: str, tmdb_id: str, season=None, episode=None):
+async def _stream(type: str, tmdb_id: str, season=None, episode=None):
     if type == 'series':
-        items = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode)
+        items = search_for_tv(
+            await get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode
+        )
     else:
-        items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
+        items = search_for_movie(await get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
     return (item.dict() for item in items)
 
@@ -473,7 +475,7 @@ async def websocket_stream(websocket: WebSocket):
 
     request = await websocket.receive_json()
 
-    for item in _stream(**request):
+    for item in await _stream(**request):
         await websocket.send_json(item)
 
 
@@ -515,17 +517,17 @@ def redirect_to_plex(tmdb_id: str, plex=Depends(get_plex)):
 
 @root.get('/redirect/{type_}/{tmdb_id}')
 @root.get('/redirect/{type_}/{tmdb_id}/{season}/{episode}')
-def redirect_to_imdb(
+async def redirect_to_imdb(
     type_: MediaType, tmdb_id: int, season: int = None, episode: int = None
 ):
     if type_ == 'movie':
-        imdb_id = get_movie_imdb_id(tmdb_id)
+        imdb_id = await get_movie_imdb_id(tmdb_id)
     elif season:
         imdb_id = get_json(
             f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
         )['imdb_id']
     else:
-        imdb_id = get_tv_imdb_id(tmdb_id)
+        imdb_id = await get_tv_imdb_id(tmdb_id)
 
     return RedirectResponse(f'https://www.imdb.com/title/{imdb_id}')
 
