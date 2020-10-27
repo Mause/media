@@ -78,30 +78,25 @@ async def search_themoviedb(s: str) -> List[SearchResponse]:
     ]
 
 
-@lru_cache()
-def find_themoviedb(imdb_id: str):
+@cached(TTLCache(1024, 360))
+async def find_themoviedb(imdb_id: str):
     precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
-    results = tmdb.get(f'find/{imdb_id}', params={'external_source': 'imdb_id'}).json()
+    results = await a_get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
 
     result = next(item for item in chain.from_iterable(results.values()))
 
     return dict(result, title=result['original_name'])
 
 
-@lru_cache()
-def resolve_id(imdb_id: str, type: ThingType) -> str:
+@cached(LRUCache(1024))
+async def resolve_id(imdb_id: str, type: ThingType) -> str:
     precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
-    results = tmdb.get(f'find/{imdb_id}', params={'external_source': 'imdb_id'}).json()
+    results = await a_get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
 
-    if type:
-        res = results[f'{type}_results']
-        precondition(res, f'No results for {imdb_id} as a {type}')
-        res = res[0]
-    else:
-        res = next((item for item in chain.from_iterable(results.values())), None)
-        precondition(res, f'No results for {imdb_id}')
+    res = results[f'{type}_results']
+    precondition(res, f'No results for {imdb_id} as a {type}')
 
-    return res['id']
+    return res[0]['id']
 
 
 @cached(LRUCache(256))
@@ -114,17 +109,17 @@ def get_tv(id: str) -> TvApiResponse:
     return TvApiResponse(**get_json(f'tv/{id}'))
 
 
-def get_movie_imdb_id(movie_id: Union[int, str]) -> str:
-    return get_imdb_id('movie', movie_id)
+async def get_movie_imdb_id(movie_id: Union[int, str]) -> str:
+    return await get_imdb_id('movie', movie_id)
 
 
-def get_tv_imdb_id(tv_id: Union[int, str]) -> str:
-    return get_imdb_id('tv', tv_id)
+async def get_tv_imdb_id(tv_id: Union[int, str]) -> str:
+    return await get_imdb_id('tv', tv_id)
 
 
-@lru_cache()
-def get_imdb_id(type: str, id: Union[int, str]) -> str:
-    return get_json(f'{type}/{id}/external_ids')['imdb_id']
+@cached(LRUCache(360))
+async def get_imdb_id(type: str, id: Union[int, str]) -> str:
+    return (await a_get_json(f'{type}/{id}/external_ids'))['imdb_id']
 
 
 @ttl_cache()

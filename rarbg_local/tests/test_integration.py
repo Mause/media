@@ -91,7 +91,7 @@ async def test_download_movie(
     themoviedb(
         aioresponses, '/movie/533985', MovieResponseFactory.build(title='Bit').dict()
     )
-    themoviedb(responses, '/movie/533985/external_ids', {'imdb_id': "tt8425034"})
+    themoviedb(aioresponses, '/movie/533985/external_ids', {'imdb_id': "tt8425034"})
 
     magnet = 'magnet:...'
 
@@ -107,11 +107,11 @@ async def test_download_movie(
 
 
 @mark.asyncio
-async def test_download(test_client, responses, add_torrent, session):
+async def test_download(test_client, aioresponses, responses, add_torrent, session):
     themoviedb(
         responses, '/tv/95792', TvApiResponseFactory(name='Pocket Monsters').dict()
     )
-    themoviedb(responses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
     themoviedb(
         responses,
         '/tv/95792/season/1',
@@ -143,9 +143,11 @@ async def test_download(test_client, responses, add_torrent, session):
 
 
 @mark.asyncio
-async def test_download_season_pack(test_client, responses, add_torrent, session):
+async def test_download_season_pack(
+    test_client, aioresponses, responses, add_torrent, session
+):
     themoviedb(responses, '/tv/90000', TvApiResponseFactory(name='Watchmen').dict())
-    themoviedb(responses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
 
     magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
 
@@ -267,7 +269,7 @@ async def test_season_info(
 
 @mark.asyncio
 async def test_select_season(
-    responses: RequestsMock, test_client: TestClient, snapshot
+    aioresponses, responses: RequestsMock, test_client: TestClient, snapshot
 ) -> None:
     themoviedb(
         responses,
@@ -278,7 +280,7 @@ async def test_select_season(
             'name': 'hello',
         },
     )
-    themoviedb(responses, '/tv/100000/external_ids', {'imdb_id': 'tt1000'})
+    themoviedb(aioresponses, '/tv/100000/external_ids', {'imdb_id': 'tt1000'})
 
     res = await test_client.get('/api/tv/100000')
 
@@ -413,8 +415,8 @@ async def test_openapi(test_client, snapshot):
 
 
 @mark.asyncio
-async def test_stream(test_client, responses):
-    themoviedb(responses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
+async def test_stream(test_client, responses, aioresponses):
+    themoviedb(aioresponses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
     root = 'https://torrentapi.org/pubapi_v2.php?mode=search&ranked=0&limit=100&format=json_extended&app_id=Sonarr'
     add_json(responses, 'GET', root + '&get_token=get_token', {'token': 'aaaaaaa'})
 
