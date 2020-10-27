@@ -48,8 +48,10 @@ def tokenise(name: str) -> str:
     return name
 
 
-def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
-    name = get_tv(tmdb_id).name
+async def search_for_tv(
+    imdb_id: str, tmdb_id: int, season: int, episode: int = None
+) -> Iterable[Dict]:
+    name = (await get_tv(tmdb_id)).name
 
     if episode is None:
         key = f'S{season:02d}'

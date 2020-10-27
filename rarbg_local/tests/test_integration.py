@@ -9,7 +9,6 @@ from lxml.builder import E
 from lxml.etree import tostring
 from psycopg2 import OperationalError
 from pytest import fixture, mark, raises
-from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
@@ -109,7 +108,7 @@ async def test_download_movie(
 @mark.asyncio
 async def test_download(test_client, aioresponses, responses, add_torrent, session):
     themoviedb(
-        responses, '/tv/95792', TvApiResponseFactory(name='Pocket Monsters').dict()
+        aioresponses, '/tv/95792', TvApiResponseFactory(name='Pocket Monsters').dict()
     )
     themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
     themoviedb(
@@ -146,7 +145,7 @@ async def test_download(test_client, aioresponses, responses, add_torrent, sessi
 async def test_download_season_pack(
     test_client, aioresponses, responses, add_torrent, session
 ):
-    themoviedb(responses, '/tv/90000', TvApiResponseFactory(name='Watchmen').dict())
+    themoviedb(aioresponses, '/tv/90000', TvApiResponseFactory(name='Watchmen').dict())
     themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
 
     magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
@@ -266,11 +265,9 @@ async def test_season_info(aioresponses, test_client: TestClient, snapshot) -> N
 
 
 @mark.asyncio
-async def test_select_season(
-    aioresponses, responses: RequestsMock, test_client: TestClient, snapshot
-) -> None:
+async def test_select_season(aioresponses, test_client: TestClient, snapshot) -> None:
     themoviedb(
-        responses,
+        aioresponses,
         '/tv/100000',
         {
             'number_of_seasons': 1,

@@ -12,7 +12,7 @@ from cachetools import LRUCache, TTLCache
 from requests_toolbelt.sessions import BaseUrlSession
 
 from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonResponse
-from .utils import cached, lru_cache, precondition, ttl_cache
+from .utils import cached, lru_cache, precondition
 
 base = 'https://api.themoviedb.org/3/'
 
@@ -104,9 +104,9 @@ async def get_movie(id: str) -> MovieResponse:
     return MovieResponse(**(await a_get_json(f'movie/{id}')))
 
 
-@ttl_cache()
-def get_tv(id: str) -> TvApiResponse:
-    return TvApiResponse(**get_json(f'tv/{id}'))
+@cached(TTLCache(256, 360))
+async def get_tv(id: str) -> TvApiResponse:
+    return TvApiResponse(**await a_get_json(f'tv/{id}'))
 
 
 async def get_movie_imdb_id(movie_id: Union[int, str]) -> str:

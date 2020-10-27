@@ -4,12 +4,14 @@ from functools import lru_cache
 from itertools import chain
 from typing import Dict, Optional, Set, Tuple
 
+from cachetools import TTLCache
 from cachetools.func import ttl_cache
 from fuzzywuzzy import fuzz
 from lxml.html import fromstring
 from requests_toolbelt.sessions import BaseUrlSession
 
 from .tmdb import get_tv
+from .utils import cached
 
 session = BaseUrlSession('https://horriblesubs.info/')
 jikan = BaseUrlSession('https://api.jikan.moe/v3/')
@@ -69,7 +71,8 @@ def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
     def process(div):
         def fn(res: str):
             t = div.xpath(
-                f'.//div[contains(@class, "link-{res}")]/span/a[@title="Magnet Link"]/@href'
+                f'.//div[contains(@class, "link-{res}")]/span/a[@title="Magnet'
+                ' Link"]/@href'
             )
             return t[0] if t else None
 
@@ -117,9 +120,9 @@ def search(showid: int, search_term: str):
     )
 
 
-@ttl_cache()
-def get_names(tmdb_id: int) -> Set[str]:
-    tv = get_tv(tmdb_id)
+@cached(TTLCache(256, 360))
+async def get_names(tmdb_id: int) -> Set[str]:
+    tv = await get_tv(tmdb_id)
     results = jikan.get('search/anime', params={'q': tv.name, 'limit': 1}).json()[
         'results'
     ]
@@ -139,13 +142,13 @@ def closeness(key, names):
     return max(fuzz.ratio(key.lower(), name.lower()) for name in names)
 
 
-def search_for_tv(tmdb_id, season, episode):
+async def search_for_tv(tmdb_id, season, episode):
     if season != 1:
         return []
 
     shows = get_all_shows()
 
-    names = get_names(tmdb_id)
+    names = await get_names(tmdb_id)
 
     show = max(shows.keys(), key=lambda key: closeness(key, names) > 95)
     if closeness(show, names) < 95:
