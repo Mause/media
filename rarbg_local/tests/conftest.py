@@ -1,7 +1,7 @@
 import json
 import re
 from asyncio import get_event_loop
-from typing import Pattern, Union, AsyncGenerator, List, TypeVar
+from typing import AsyncGenerator, List, Pattern, TypeVar, Union
 
 from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
