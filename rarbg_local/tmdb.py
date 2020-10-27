@@ -12,7 +12,7 @@ from cachetools import LRUCache, TTLCache
 from requests_toolbelt.sessions import BaseUrlSession
 
 from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonResponse
-from .utils import cached, lru_cache, precondition
+from .utils import cached, precondition
 
 base = 'https://api.themoviedb.org/3/'
 
@@ -52,9 +52,9 @@ async def a_get_json(path, **kwargs):
         return await r.json()
 
 
-@lru_cache()
-def get_configuration() -> Dict:
-    return get_json('configuration')
+@cached(LRUCache(360))
+async def get_configuration() -> Dict:
+    return await a_get_json('configuration')
 
 
 def get_year(result: Dict[str, str]) -> Optional[int]:
@@ -136,8 +136,8 @@ class ReleaseType(Enum):
     TV = 6
 
 
-def discover(types=(ReleaseType.PHYSICAL, ReleaseType.DIGITAL)):
-    return get_json(
+async def discover(types=(ReleaseType.PHYSICAL, ReleaseType.DIGITAL)):
+    return await a_get_json(
         'discover/movie',
         params={
             'sort_by': ','.join(('popularity.desc', 'primary_release_date.desc')),
