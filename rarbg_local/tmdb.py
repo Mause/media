@@ -122,9 +122,9 @@ async def get_imdb_id(type: str, id: Union[int, str]) -> str:
     return (await a_get_json(f'{type}/{id}/external_ids'))['imdb_id']
 
 
-@ttl_cache()
-def get_tv_episodes(id: str, season: str) -> TvSeasonResponse:
-    return TvSeasonResponse(**get_json(f'tv/{id}/season/{season}'))
+@cached(TTLCache(256, 360))
+async def get_tv_episodes(id: str, season: str) -> TvSeasonResponse:
+    return TvSeasonResponse(**await a_get_json(f'tv/{id}/season/{season}'))
 
 
 class ReleaseType(Enum):

@@ -113,7 +113,7 @@ async def test_download(test_client, aioresponses, responses, add_torrent, sessi
     )
     themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
     themoviedb(
-        responses,
+        aioresponses,
         '/tv/95792/season/1',
         {
             'episodes': [
@@ -251,11 +251,9 @@ async def test_delete_cascade(test_client: TestClient, session):
 
 
 @mark.asyncio
-async def test_season_info(
-    responses: RequestsMock, test_client: TestClient, snapshot
-) -> None:
+async def test_season_info(aioresponses, test_client: TestClient, snapshot) -> None:
     themoviedb(
-        responses,
+        aioresponses,
         '/tv/100000/season/1',
         {'episodes': [{'name': 'The Pilot', 'id': '00000', 'episode_number': 1}]},
     )

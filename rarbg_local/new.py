@@ -308,7 +308,7 @@ async def download_post(
             if thing.episode is None:
                 title = f'Season {thing.season}'
             else:
-                episodes = get_tv_episodes(thing.tmdb_id, thing.season).episodes
+                episodes = (await get_tv_episodes(thing.tmdb_id, thing.season)).episodes
                 episode = next(
                     (
                         episode
@@ -453,8 +453,8 @@ async def api_tv(tmdb_id: int):
 
 
 @tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)
-def api_tv_season(tmdb_id: int, season: int):
-    return get_tv_episodes(tmdb_id, season)
+async def api_tv_season(tmdb_id: int, season: int):
+    return await get_tv_episodes(tmdb_id, season)
 
 
 async def _stream(type: str, tmdb_id: str, season=None, episode=None):
