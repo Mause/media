@@ -4,7 +4,7 @@ import traceback
 from functools import wraps
 from os import getpid
 from pathlib import Path
-from typing import Callable, Coroutine, Dict, Iterable, List, Optional, Type, Union, AsyncGenerator, Callable, Dict, List, Optional, Type, Union
+from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
 import backoff
