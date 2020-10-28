@@ -111,7 +111,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/react-dom",
-        "npm:16.9.8"
+        "npm:16.9.9"
       ],
       [
         "@types/react-helmet",
@@ -261,7 +261,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:14.6.2"],
             ["@types/qs", "npm:6.9.5"],
             ["@types/react", "npm:16.9.49"],
-            ["@types/react-dom", "npm:16.9.8"],
+            ["@types/react-dom", "npm:16.9.9"],
             ["@types/react-helmet", "npm:6.1.0"],
             ["@types/react-router-dom", "npm:5.1.6"],
             ["@types/socket.io-client", "npm:1.4.34"],
@@ -3755,6 +3755,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:16.9.43"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:16.9.9", {
+          "packageLocation": "./.yarn/cache/@types-react-dom-npm-16.9.9-eac1c70629-d92c166f5b.zip/node_modules/@types/react-dom/",
+          "packageDependencies": [
+            ["@types/react-dom", "npm:16.9.9"],
+            ["@types/react", "npm:16.9.43"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@types/react-helmet", [
@@ -4704,7 +4712,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:14.6.2"],
             ["@types/qs", "npm:6.9.5"],
             ["@types/react", "npm:16.9.49"],
-            ["@types/react-dom", "npm:16.9.8"],
+            ["@types/react-dom", "npm:16.9.9"],
             ["@types/react-helmet", "npm:6.1.0"],
             ["@types/react-router-dom", "npm:5.1.6"],
             ["@types/socket.io-client", "npm:1.4.34"],
