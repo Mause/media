@@ -1,5 +1,7 @@
 import json
+import re
 from asyncio import get_event_loop
+from typing import AsyncGenerator, List, Pattern, TypeVar, Union
 
 from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
@@ -20,6 +22,7 @@ from ..utils import cache_clear
 
 @fixture
 def fastapi_app():
+    cache_clear()
     return create_app()
 
 
@@ -64,13 +67,16 @@ def themoviedb(responses, path, response, query=''):
     add_json(
         responses,
         'GET',
-        f'https://api.themoviedb.org/3{path}?api_key=66b197263af60702ba14852b4ec9b143'
-        + query,
+        re.compile(
+            re.escape(f'https://api.themoviedb.org/3{path}?api_key=')
+            + '.*'
+            + re.escape(query)
+        ),
         response,
     )
 
 
-def add_json(responses, method: str, url: str, json_body) -> None:
+def add_json(responses, method: str, url: Union[str, Pattern], json_body) -> None:
     responses.add(method=method, url=url, body=json.dumps(json_body))
 
 
@@ -107,3 +113,21 @@ def responses():
 
     finally:
         mock.stop()
+
+
+@fixture
+def aioresponses():
+    from aioresponses import aioresponses
+
+    with aioresponses() as e:
+        yield e
+
+
+T = TypeVar('T')
+
+
+async def tolist(a: AsyncGenerator[T, None]) -> List[T]:
+    lst: List[T] = []
+    async for t in a:
+        lst.append(t)
+    return lst

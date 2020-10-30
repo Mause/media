@@ -48,8 +48,10 @@ def tokenise(name: str) -> str:
     return name
 
 
-def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
-    name = get_tv(tmdb_id).name
+async def search_for_tv(
+    imdb_id: str, tmdb_id: int, season: int, episode: int = None
+) -> Iterable[Dict]:
+    name = (await get_tv(tmdb_id)).name
 
     if episode is None:
         key = f'S{season:02d}'
@@ -64,7 +66,7 @@ def base(name, imdb_id):
     return fetch(f'https://katcr.co/name/{tokenise(name)}/i{imdb_id.lstrip("t")}')
 
 
-def search_for_movie(imdb_id: str, tmdb_id: int):
-    name = get_movie(tmdb_id)['title']
+async def search_for_movie(imdb_id: str, tmdb_id: int):
+    name = (await get_movie(tmdb_id)).title
 
     return base(name, imdb_id)

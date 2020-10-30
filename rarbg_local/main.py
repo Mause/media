@@ -1,41 +1,22 @@
-import json
 import logging
 import os
 import re
 import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from enum import Enum
-from functools import lru_cache, wraps
-from itertools import chain
 from os.path import join
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
 
 from fastapi.exceptions import HTTPException
-from flask import (
-    Blueprint,
-    Flask,
-    Response,
-    current_app,
-    get_flashed_messages,
-    redirect,
-    render_template,
-    request,
-    send_from_directory,
-    url_for,
-)
+from flask import Blueprint, Flask, current_app, request, url_for
 from flask_admin import Admin
 from flask_cors import CORS
 from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
-from plexapi.media import Media
-from plexapi.myplex import MyPlexAccount
-from plexapi.server import PlexServer
 from requests.exceptions import ConnectionError
 from sqlalchemy import event
 from sqlalchemy.orm.session import Session, make_transient
-from werkzeug.exceptions import NotFound
 
 from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .auth import auth_hook
@@ -51,8 +32,7 @@ from .db import (
     get_episodes,
 )
 from .models import Episode, SeriesDetails
-from .providers import search_for_movie, search_for_tv
-from .tmdb import get_movie_imdb_id, get_tv_episodes, get_tv_imdb_id, resolve_id
+from .tmdb import get_tv_episodes
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import non_null, precondition
 
@@ -63,14 +43,6 @@ app = Blueprint('rarbg_local', __name__)
 
 K = TypeVar('K')
 V = TypeVar('V')
-
-
-@lru_cache()
-def get_plex() -> PlexServer:
-    acct = MyPlexAccount(os.environ['PLEX_USERNAME'], os.environ['PLEX_PASSWORD'])
-    novell = acct.resource('Novell')
-    novell.connections = [c for c in novell.connections if not c.local]
-    return novell.connect(ssl=True)
 
 
 def cache_busting_url_for(endpoint, **values):
@@ -130,14 +102,6 @@ def create_app(config: Dict):
     admin.add_view(RoleAdmin(Role, db.session))
     admin.add_view(DownloadAdmin(Download, db.session))
 
-    '''
-    with papp.app_context():
-        Mause = db.session.query(User).filter_by(username='Mause').one_or_none()
-        if Mause:
-            Mause.roles = list(set(Mause.roles) | {Roles.Admin, Roles.Member})
-            db.session.commit()
-    '''
-
     if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
 
         def _fk_pragma_on_connect(dbapi_con, con_record):
@@ -150,62 +114,10 @@ def create_app(config: Dict):
     return papp
 
 
-@app.route('/user/unauthorized')
-def unauthorized():
-    if get_flashed_messages():
-        return render_template('unauthorized.html')
-    else:
-        return redirect(url_for('.serve_index'))
-
-
 @app.before_request
 def before():
     if not request.path.startswith(('/user', '/manifest.json')):
         return login_required(roles_required('Member')(lambda: None))()
-
-
-@app.route('/')
-@app.route('/<path:path>')
-def serve_index(path=None):
-    if path:
-        try:
-            return send_from_directory('../app/build/', path)
-        except NotFound:
-            pass
-
-    return send_from_directory('../app/build/', 'index.html')
-
-
-def eventstream(function: Callable):
-    @wraps(function)
-    def decorator(*args, **kwargs):
-        def default(obj):
-            if isinstance(obj, Enum):
-                return obj.name
-
-            raise Exception()
-
-        return Response(
-            chain(
-                (
-                    f'data: {json.dumps(rset, default=default)}\n\n'
-                    for rset in function(*args, **kwargs)
-                ),
-                ['data:\n\n'],
-            ),
-            mimetype="text/event-stream",
-        )
-
-    return decorator
-
-
-def _stream(type: str, tmdb_id: str, season=None, episode=None):
-    if type == 'series':
-        items = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode)
-    else:
-        items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
-
-    return (item.dict() for item in items)
 
 
 def categorise(string: str) -> str:
@@ -380,7 +292,7 @@ def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
         title=ep.show_title,
         seasons=resolve_show(show),
         imdb_id=d.imdb_id,
-        tmdb_id=d.tmdb_id or resolve_id(imdb_id, 'tv'),
+        tmdb_id=d.tmdb_id,
     )
 
 
@@ -393,12 +305,6 @@ def resolve_series(session: Session) -> List[SeriesDetails]:
             episodes, lambda episode: episode.download.tmdb_id
         ).items()
     ]
-
-
-def get_imdb_in_plex(imdb_id: str) -> Optional[Media]:
-    guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
-    items = get_plex().library.search(guid=guid)
-    return items[0] if items else None
 
 
 def get_keyed_torrents() -> Dict[str, Dict]:

@@ -1,4 +1,4 @@
-exclude: .*\.snap
+exclude: .*\.snap|\.pnp\.js
 repos:
   - repo: https://github.com/prettier/prettier
     rev: 2.0.5
@@ -35,7 +35,7 @@ repos:
         args:
           - --py3-plus
   - repo: https://github.com/psf/black
-    rev: b59a524
+    rev: b59a5246577346e6da2cc2802015f08524abf545
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/mirrors-eslint
@@ -77,4 +77,4 @@ repos:
         - flake8-aaa
       args:
         - --jobs=1
-        - --extend-ignore=W503
+        - --extend-ignore=W503,E203
