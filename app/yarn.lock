@@ -3830,7 +3830,7 @@ __metadata:
     swr: ^0.3.6
     typescript: ^4.0.5
     typescript-string-operations: ^1.4.0
-    use-socketio: ^2.0.3
+    use-socketio: ^2.0.4
   languageName: unknown
   linkType: soft
 
@@ -16244,14 +16244,14 @@ typescript@^4.0.5:
   languageName: node
   linkType: hard
 
-"use-socketio@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "use-socketio@npm:2.0.3"
+"use-socketio@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "use-socketio@npm:2.0.4"
   dependencies:
     socket.io-client: ^2.3.0
   peerDependencies:
-    react: ^16.12.0
-  checksum: 178c3246c0c3e16f5722f8cac361e4046ecbfbc6fb48ed2ca087fc162b7aa0590773344d2b23202a6044fd1147746251781cb677e2b597deccda7735402150d2
+    react: ^16.13.1
+  checksum: b22e6a372e84c05e91bdf101f68692f57a606139d4778fffc2bbad4167dc3da412290cc7c4be721b5d9b6a79706e162de146d36564a2c49b1e7fe4109cd73ac6
   languageName: node
   linkType: hard
 
