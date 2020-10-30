@@ -1722,15 +1722,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/react-fontawesome@npm:^0.1.11":
-  version: 0.1.11
-  resolution: "@fortawesome/react-fontawesome@npm:0.1.11"
+"@fortawesome/react-fontawesome@npm:^0.1.12":
+  version: 0.1.12
+  resolution: "@fortawesome/react-fontawesome@npm:0.1.12"
   dependencies:
     prop-types: ^15.7.2
   peerDependencies:
     "@fortawesome/fontawesome-svg-core": ^1.2.20
-    react: 16.x
-  checksum: ede137d0f7d205295d30caeaabb1651f2d60ee2adcefda14578e4259c2c80e8ca47a4f1f6c4a22cca98d6acb19e8cfa3357e3c5dd3897fcc48269a93b1104af6
+    react: ">=16.x"
+  checksum: 204d68ad9e0f385329bc6ff92e06843b68044f7618c9d3d64e6ddf486362fd6218df9f2f1b1422caee730e53bb983d2a1596aa8772737914ded4d0433e51f1e6
   languageName: node
   linkType: hard
 
@@ -2308,6 +2308,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/browser@npm:5.27.2":
+  version: 5.27.2
+  resolution: "@sentry/browser@npm:5.27.2"
+  dependencies:
+    "@sentry/core": 5.27.2
+    "@sentry/types": 5.27.2
+    "@sentry/utils": 5.27.2
+    tslib: ^1.9.3
+  checksum: a745e2bb4476ed05133d9e82fd7f3b5c895cfb603bd8dfc975dbe77f7b7d7a1f44e159e3c7b95cc2d767421505ce5bfa8c10f91c2bb71cf6ece076292e955dd3
+  languageName: node
+  linkType: hard
+
 "@sentry/core@npm:5.27.1":
   version: 5.27.1
   resolution: "@sentry/core@npm:5.27.1"
@@ -2318,6 +2330,19 @@ __metadata:
     "@sentry/utils": 5.27.1
     tslib: ^1.9.3
   checksum: d65a95604b9c0d52c852441c3bcfbacedf79cea1458c2f7e8138caefb6ca57b4467777229fe3178b97f2ffe2b52451b10670e17d3a169d9c938eaa7e209525bc
+  languageName: node
+  linkType: hard
+
+"@sentry/core@npm:5.27.2":
+  version: 5.27.2
+  resolution: "@sentry/core@npm:5.27.2"
+  dependencies:
+    "@sentry/hub": 5.27.2
+    "@sentry/minimal": 5.27.2
+    "@sentry/types": 5.27.2
+    "@sentry/utils": 5.27.2
+    tslib: ^1.9.3
+  checksum: 70c8143343a5d571d7913a9faf1b921e039f17b8ba8f2449e096ebf780c57ccd999d5f05056bcce60688728853145578fe9149ca47e4f80b111459ce8c917a74
   languageName: node
   linkType: hard
 
@@ -2332,6 +2357,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/hub@npm:5.27.2":
+  version: 5.27.2
+  resolution: "@sentry/hub@npm:5.27.2"
+  dependencies:
+    "@sentry/types": 5.27.2
+    "@sentry/utils": 5.27.2
+    tslib: ^1.9.3
+  checksum: c821d7ca580dff9cbbe83a6c99ce566e6808fbadd52459980214ec6921390a8aeccab037a0191e0ef0454d9af5eb6741c58cbffc1346d90935415233b688350d
+  languageName: node
+  linkType: hard
+
 "@sentry/minimal@npm:5.27.1":
   version: 5.27.1
   resolution: "@sentry/minimal@npm:5.27.1"
@@ -2343,20 +2379,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/react@npm:^5.26.0":
-  version: 5.27.1
-  resolution: "@sentry/react@npm:5.27.1"
+"@sentry/minimal@npm:5.27.2":
+  version: 5.27.2
+  resolution: "@sentry/minimal@npm:5.27.2"
   dependencies:
-    "@sentry/browser": 5.27.1
-    "@sentry/minimal": 5.27.1
-    "@sentry/types": 5.27.1
-    "@sentry/utils": 5.27.1
+    "@sentry/hub": 5.27.2
+    "@sentry/types": 5.27.2
+    tslib: ^1.9.3
+  checksum: 0421d7d24e619d68ffa767453a7e4556149fa187637536d75d28eca1aa1e888b7b3110d16a17a258f5101e0b09d8ed79a836b213cbcaed47e62dd557753a63d3
+  languageName: node
+  linkType: hard
+
+"@sentry/react@npm:^5.27.2":
+  version: 5.27.2
+  resolution: "@sentry/react@npm:5.27.2"
+  dependencies:
+    "@sentry/browser": 5.27.2
+    "@sentry/minimal": 5.27.2
+    "@sentry/types": 5.27.2
+    "@sentry/utils": 5.27.2
     hoist-non-react-statics: ^3.3.2
     tslib: ^1.9.3
   peerDependencies:
     react: 15.x || 16.x
     react-dom: 15.x || 16.x
-  checksum: 87e2a0306bfe6254db4d9196bccfe46e7c52fb76bd174d78250c6308f67d290676f84fbeac1d40e2b1630ce44e0232c60dccfaffeaebf1bd14b56a4ba2f88df9
+  checksum: fd304194e8dec428c10dd3b347dcafb5cdb901e7154eac85f4984c4118e1bd2079dc5eb561520d67350a7500f374dc5f315917f583932f8e7f63e7c0214cb211
   languageName: node
   linkType: hard
 
@@ -2367,6 +2414,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/types@npm:5.27.2":
+  version: 5.27.2
+  resolution: "@sentry/types@npm:5.27.2"
+  checksum: 08607f43bdc7a0549d0a021f884f3b688302c244285f2c884ee76b19605763c083ef4b449aec00387886fbc75c1cce31174e519492c92acdffc13642aca2278c
+  languageName: node
+  linkType: hard
+
 "@sentry/utils@npm:5.27.1":
   version: 5.27.1
   resolution: "@sentry/utils@npm:5.27.1"
@@ -2374,6 +2428,16 @@ __metadata:
     "@sentry/types": 5.27.1
     tslib: ^1.9.3
   checksum: 3768eaaa87dab159050db216ce00a290f616852d5e27ce230930346d30fd102e082ce53f2f73d63f95752da9b7984e57e3382e139019b9ec3ee27a8335d9dc16
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:5.27.2":
+  version: 5.27.2
+  resolution: "@sentry/utils@npm:5.27.2"
+  dependencies:
+    "@sentry/types": 5.27.2
+    tslib: ^1.9.3
+  checksum: a4466a391bc2e4cb50b4ae10095300f3ad7a6cc072880b25457418e83065d948ff58f7611a180c57643b4f44d46e2fa04144463bcc34d69c90e245b5dd2a6180
   languageName: node
   linkType: hard
 
@@ -2796,10 +2860,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.14.162":
-  version: 4.14.162
-  resolution: "@types/lodash@npm:4.14.162"
-  checksum: 16205a12995d659ac556f25405cfeec3b9fb427364ed8e24e4e4ab84f646b1a2f6f08f6aee155ebc6127ac6791fd7755fc15be10b6c8dd5a3ab3d3f4917f7173
+"@types/lodash@npm:^4.14.163":
+  version: 4.14.163
+  resolution: "@types/lodash@npm:4.14.163"
+  checksum: f118aab4b74b165962015bfc857d1944048b0fc8837d5b129e54da17d5f76ec9d37dfd332915fda5ff92dd8db6c614705a02bcedf8043d06c091ac3e840a32c5
   languageName: node
   linkType: hard
 
@@ -2875,12 +2939,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:*, @types/react-dom@npm:^16.9.8":
+"@types/react-dom@npm:*":
   version: 16.9.8
   resolution: "@types/react-dom@npm:16.9.8"
   dependencies:
     "@types/react": "*"
   checksum: 53a223c0266178bca9161301d18ee6199e8f75f88caed5c4601c5aaedaf4c68f03bd72f6aafa979254beb20759f0b68a542ce04295d704eb67ae179769c50813
+  languageName: node
+  linkType: hard
+
+"@types/react-dom@npm:^16.9.9":
+  version: 16.9.9
+  resolution: "@types/react-dom@npm:16.9.9"
+  dependencies:
+    "@types/react": "*"
+  checksum: d92c166f5bcd483f175311eec9c472893216d486106a5b5402eb293840c0b0d1aafb484a3fe3f0f4622ae1f6dff46c9fe970873d4dac7fdf70a50931d3cab4a0
   languageName: node
   linkType: hard
 
@@ -2893,14 +2966,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-dom@npm:^5.1.5":
-  version: 5.1.5
-  resolution: "@types/react-router-dom@npm:5.1.5"
+"@types/react-router-dom@npm:^5.1.6":
+  version: 5.1.6
+  resolution: "@types/react-router-dom@npm:5.1.6"
   dependencies:
     "@types/history": "*"
     "@types/react": "*"
     "@types/react-router": "*"
-  checksum: d25c11cb718653a01b0e2cd5e4a44b1910fd506b3141c49e4b47ee197ddc06a05f3ee3c6853c60c15d83b96aeea534321ab200d4fbfd4ba047413b2c7176bfcb
+  checksum: dcff1d613899af1cbfb003eb3994f7ebce5f2633e0018588008be39af8e15971041644b7c99e6448122d661d509ee7cafce7bb5972598e8bb6701e77c9431def
   languageName: node
   linkType: hard
 
@@ -3711,25 +3784,25 @@ __metadata:
     "@csstools/normalize.css": ^11.0.1
     "@fortawesome/fontawesome-svg-core": ^1.2.30
     "@fortawesome/free-solid-svg-icons": ^5.14.0
-    "@fortawesome/react-fontawesome": ^0.1.11
+    "@fortawesome/react-fontawesome": ^0.1.12
     "@material-ui/core": ^4.11.0
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.56
     "@sentry/apm": ^5.26.0
-    "@sentry/react": ^5.26.0
+    "@sentry/react": ^5.27.2
     "@testing-library/jest-dom": ^5.11.5
     "@testing-library/react": ^11.1.0
     "@testing-library/user-event": ^12.1.10
     "@types/history": 4.7.7
     "@types/jest": ^26.0.13
-    "@types/lodash": ^4.14.162
+    "@types/lodash": ^4.14.163
     "@types/moxios": ^0.4.9
     "@types/node": ^14.6.2
     "@types/qs": ^6.9.5
     "@types/react": ^16.9.49
-    "@types/react-dom": ^16.9.8
+    "@types/react-dom": ^16.9.9
     "@types/react-helmet": ^6.1.0
-    "@types/react-router-dom": ^5.1.5
+    "@types/react-router-dom": ^5.1.6
     "@types/socket.io-client": ^1.4.34
     "@use-it/interval": ^0.1.3
     "@vtex/axios-concurrent-retry": ^4.0.11
@@ -3755,7 +3828,7 @@ __metadata:
     react-router-dom: ^5.2.0
     react-scripts: 4.0.0
     swr: ^0.3.6
-    typescript: ^4.0.3
+    typescript: ^4.0.5
     typescript-string-operations: ^1.4.0
     use-socketio: ^2.0.4
   languageName: unknown
@@ -15962,23 +16035,23 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-typescript@^4.0.3:
-  version: 4.0.3
-  resolution: "typescript@npm:4.0.3"
+typescript@^4.0.5:
+  version: 4.0.5
+  resolution: "typescript@npm:4.0.5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 5c892e132756a83d22030d7fb38be47cde27613f71d233dbe7faf79e4a92852c5146bfddcaf8c2da1a37d35ae8bf7b8c888fdcd763d5ad184cea6b21e7466838
+  checksum: ce94d4bbb914cc9d6fbd42e1476ab18c3292b262b8ba7ba76cd167a858545207a604e75bf1efbb75b8654c8f85deaa19795c3ef00098d7612855139b4ecc0240
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.0.3#builtin<compat/typescript>":
-  version: 4.0.3
-  resolution: "typescript@patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=5b02a2"
+"typescript@patch:typescript@^4.0.5#builtin<compat/typescript>":
+  version: 4.0.5
+  resolution: "typescript@patch:typescript@npm%3A4.0.5#builtin<compat/typescript>::version=4.0.5&hash=5b02a2"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 72db87d09f728c83062d64b5e12ed52effb6278963b6bc5c006219b22c104e02b8ce80164261de554923d3c47d894a1ca937ed542328caccb83ebaedeae98a69
+  checksum: d4be0bd2a2050b2d7b132cb2a40329178f181543e9d2ac6d1f06babd9f047208558a736a7effdeb28759ae2e815f070b61d10ee2f02cc93a6221a1490f21ffce
   languageName: node
   linkType: hard
 
