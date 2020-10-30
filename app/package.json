@@ -28,7 +28,7 @@
     "react-collapsible": "^2.8.1",
     "react-contextmenu": "^2.14.0",
     "react-dom": "^16.14.0",
-    "react-error-boundary": "^3.0.1",
+    "react-error-boundary": "^3.0.2",
     "react-helmet": "^6.1.0",
     "react-loading": "^2.0.3",
     "react-router-dom": "^5.2.0",

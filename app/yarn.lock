@@ -3822,7 +3822,7 @@ __metadata:
     react-collapsible: ^2.8.1
     react-contextmenu: ^2.14.0
     react-dom: ^16.14.0
-    react-error-boundary: ^3.0.1
+    react-error-boundary: ^3.0.2
     react-helmet: ^6.1.0
     react-loading: ^2.0.3
     react-router-dom: ^5.2.0
@@ -13497,14 +13497,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "react-error-boundary@npm:3.0.1"
+"react-error-boundary@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "react-error-boundary@npm:3.0.2"
   dependencies:
     "@babel/runtime": ^7.11.2
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 5ba09ea5fa2266b64d35d7e3954e75c5596c2735718a0ad84fb7fa741cfe908154c4f3a4e51026925d91e45fa61f7122857b5146136039c7345b2ce0336e9197
+  checksum: 241a91a7db61350fcd7370e857b127ca232afb47cbc3b437b77f29277eb696785c85bf8e3d2597604ba68273125e3168783037d173cccc72fed4d2b379f6a2f8
   languageName: node
   linkType: hard
 
