@@ -76,8 +76,12 @@ def themoviedb(responses, path, response, query=''):
     )
 
 
-def add_json(responses, method: str, url: Union[str, Pattern], json_body) -> None:
-    responses.add(method=method, url=url, body=json.dumps(json_body))
+def add_json(responses, method: str, url: Union[Pattern, str], json_body) -> None:
+    responses.add(
+        method=method,
+        url=url,
+        body=json.dumps(json_body, default=lambda a: a.isoformat()),
+    )
 
 
 @fixture

@@ -39,6 +39,7 @@ from .db import (
     User,
     get_movies,
 )
+from .graphql_endpoint import api as graphql
 from .health import health
 from .main import (
     add_single,
@@ -570,6 +571,7 @@ def create_app():
         prefix='/api',
         dependencies=[Security(get_current_user, scopes=['openid'])],
     )
+    app.include_router(graphql, prefix='/graphql')
     app.include_router(root, prefix='')
     simplify_operation_ids(app)
 

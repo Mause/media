@@ -67,6 +67,8 @@ pytz = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 aiofiles = "*"
 fastapi-utils = "*"
+graphene = "*"
+graphql-core = "==2.3.2"
 asyncache = "*"
 makefun = "*"
 
