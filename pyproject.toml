@@ -12,6 +12,9 @@ build-backend = "poetry.masonry.api"
 [tool.black]
 skip_string_normalization=true
 
+[tool.isort]
+profile = "black"
+
 [tool.poetry.dependencies]
 python = "^3.8"
 flask = "*"
