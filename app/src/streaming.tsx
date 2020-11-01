@@ -65,11 +65,11 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
   );
 }
 
-function reportError(error: Error, componentStack: string) {
+function reportError(error: Error, info: { componentStack: string }) {
   Sentry.withScope((scope) => {
-    scope.setExtras({ stack: componentStack });
+    scope.setExtras(info);
     const eventId = Sentry.captureException(error);
-    Sentry.showReportDialog({ eventId: eventId });
+    Sentry.showReportDialog({ eventId });
   });
 }
 
@@ -187,9 +187,9 @@ function SwrConfigWrapper({
             params,
             auth.isAuthenticated
               ? {
-                Authorization:
-                  'Bearer ' + (await auth.getAccessTokenSilently()),
-              }
+                  Authorization:
+                    'Bearer ' + (await auth.getAccessTokenSilently()),
+                }
               : {},
           ),
       }}

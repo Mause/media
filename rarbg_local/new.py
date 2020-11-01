@@ -243,7 +243,7 @@ async def stream(
         raise HTTPException(422, 'Invalid provider')
 
     if type == 'series':
-        for item in provider.search_for_tv(
+        async for item in provider.search_for_tv(
             await get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
         ):
             yield item
@@ -305,11 +305,11 @@ async def download_post(
 
         show_title: Optional[str]
         if is_tv:
-            item = get_tv(thing.tmdb_id)
+            item = await get_tv(thing.tmdb_id)
             if thing.episode is None:
                 title = f'Season {thing.season}'
             else:
-                episodes = get_tv_episodes(thing.tmdb_id, thing.season).episodes
+                episodes = (await get_tv_episodes(thing.tmdb_id, thing.season)).episodes
                 episode = next(
                     (
                         episode
@@ -449,13 +449,13 @@ tv_ns = APIRouter()
 
 @tv_ns.get('/{tmdb_id}', tags=['tv'], response_model=TvResponse)
 async def api_tv(tmdb_id: int):
-    tv = get_tv(tmdb_id)
+    tv = await get_tv(tmdb_id)
     return TvResponse(**tv.dict(), imdb_id=await get_tv_imdb_id(tmdb_id), title=tv.name)
 
 
 @tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)
-def api_tv_season(tmdb_id: int, season: int):
-    return get_tv_episodes(tmdb_id, season)
+async def api_tv_season(tmdb_id: int, season: int):
+    return await get_tv_episodes(tmdb_id, season)
 
 
 async def _stream(type: str, tmdb_id: str, season=None, episode=None):

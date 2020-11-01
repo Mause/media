@@ -50,7 +50,7 @@ class Provider(ABC):
     @abstractmethod
     def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
-    ) -> Iterable[ITorrent]:
+    ) -> AsyncGenerator[ITorrent, None]:
         raise NotImplementedError()
 
     @abstractmethod
@@ -63,11 +63,11 @@ class Provider(ABC):
 class RarbgProvider(Provider):
     name = 'rarbg'
 
-    def search_for_tv(
+    async def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
-    ) -> Iterable[ITorrent]:
+    ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
-            return []
+            return
 
         search_string = f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
 
@@ -109,13 +109,13 @@ class RarbgProvider(Provider):
 class KickassProvider(Provider):
     name = 'kickass'
 
-    def search_for_tv(
+    async def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
-    ) -> Iterable[ITorrent]:
+    ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
-            return []
+            return
 
-        for item in kickass.search_for_tv(imdb_id, tmdb_id, season, episode):
+        for item in await kickass.search_for_tv(imdb_id, tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],
@@ -145,13 +145,13 @@ class KickassProvider(Provider):
 class HorriblesubsProvider(Provider):
     name = 'horriblesubs'
 
-    def search_for_tv(
+    async def search_for_tv(
         self, imdb_id: Optional[str], tmdb_id: int, season: int, episode: int = None
-    ) -> Iterable[ITorrent]:
-        name = get_tv(tmdb_id).name
+    ) -> AsyncGenerator[ITorrent, None]:
+        name = (await get_tv(tmdb_id)).name
         template = f'HorribleSubs {name} S{season:02d}'
 
-        for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
+        for item in await horriblesubs.search_for_tv(tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.HORRIBLESUBS,
                 title=f'{template}E{int(item["episode"], 10):02d} {item["resolution"]}',
@@ -197,11 +197,10 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
     list(futures)  # throw exceptions in this thread
 
 
-def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
-    return threadable(
-        [provider.search_for_tv for provider in PROVIDERS],
-        (imdb_id, tmdb_id, season, episode),
-    )
+async def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
+    for provider in PROVIDERS:
+        async for result in provider.search_for_tv(imdb_id, tmdb_id, season, episode):
+            yield result
 
 
 async def search_for_movie(imdb_id: str, tmdb_id: int):

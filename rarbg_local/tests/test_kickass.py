@@ -22,15 +22,18 @@ def make(title):
     '''
 
 
-def test_tv_episode(responses, clear_cache):
-    themoviedb(responses, '/tv/1', TvApiResponseFactory(name='Little Busters').dict())
+@mark.asyncio
+async def test_tv_episode(responses, aioresponses, clear_cache):
+    themoviedb(
+        aioresponses, '/tv/1', TvApiResponseFactory(name='Little Busters').dict()
+    )
     responses.add(
         'GET',
         'https://katcr.co/name/search/little-busters/i0000000/1/1',
         make('The outer limits S01E01'),
     )
 
-    res = list(KickassProvider().search_for_tv('tt0000000', 1, 1, 1))
+    res = await tolist(KickassProvider().search_for_tv('tt0000000', 1, 1, 1))
     assert res == [
         ITorrent(
             source=ProviderSource.KICKASS,
@@ -43,15 +46,18 @@ def test_tv_episode(responses, clear_cache):
     ]
 
 
-def test_tv_season(responses, clear_cache):
-    themoviedb(responses, '/tv/1', TvApiResponseFactory(name='Little Busters').dict())
+@mark.asyncio
+async def test_tv_season(responses, aioresponses, clear_cache):
+    themoviedb(
+        aioresponses, '/tv/1', TvApiResponseFactory(name='Little Busters').dict()
+    )
     responses.add(
         'GET',
         'https://katcr.co/name/little-busters/i0000000',
         make('The outer limits S01'),
     )
 
-    res = list(KickassProvider().search_for_tv('tt0000000', 1, 1))
+    res = await tolist(KickassProvider().search_for_tv('tt0000000', 1, 1))
     assert res == [
         ITorrent(
             source=ProviderSource.KICKASS,

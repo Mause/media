@@ -5,7 +5,7 @@ from responses import RequestsMock
 
 from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
 from ..providers import HorriblesubsProvider
-from .conftest import themoviedb
+from .conftest import themoviedb, tolist
 from .factories import TvApiResponseFactory
 
 
@@ -101,7 +101,7 @@ async def test_get_downloads_single(responses: RequestsMock, snapshot):
 
 
 @mark.asyncio
-async def test_provider(responses: RequestsMock, snapshot):
+async def test_provider(responses: RequestsMock, aioresponses, snapshot):
     mock(
         responses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=264',
@@ -126,10 +126,13 @@ async def test_provider(responses: RequestsMock, snapshot):
             'title_synonyms': ['Busters that are little'],
         },
     )
-    themoviedb(responses, '/tv/1', TvApiResponseFactory(name='Little Busters!').dict())
+    themoviedb(
+        aioresponses, '/tv/1', TvApiResponseFactory(name='Little Busters!').dict()
+    )
 
     results = [
-        item.dict() for item in HorriblesubsProvider().search_for_tv(None, 1, 1, 2)
+        item.dict()
+        for item in await tolist(HorriblesubsProvider().search_for_tv(None, 1, 1, 2))
     ]
 
     snapshot.assert_match(results)
