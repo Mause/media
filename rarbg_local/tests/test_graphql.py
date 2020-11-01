@@ -10,7 +10,7 @@ from .factories import (
 
 
 @mark.asyncio
-async def test_main(test_client, snapshot, responses, aioresponses, session):
+async def test_main(test_client, snapshot, aioresponses, session):
     session.add(
         MonitorFactory(
             title='Meagan Pena', type='TV', added_by__username='Vincent Miller'
@@ -20,7 +20,7 @@ async def test_main(test_client, snapshot, responses, aioresponses, session):
 
     imdb_id = 'tt000000'
     themoviedb(
-        responses,
+        aioresponses,
         '/tv/540',
         TvApiResponseFactory(
             id=540,
@@ -30,7 +30,7 @@ async def test_main(test_client, snapshot, responses, aioresponses, session):
         ).dict(),
     )
     themoviedb(
-        responses,
+        aioresponses,
         '/tv/540/season/1',
         TvSeasonResponseFactory(
             episodes=[
@@ -43,7 +43,7 @@ async def test_main(test_client, snapshot, responses, aioresponses, session):
             ]
         ).dict(),
     )
-    themoviedb(responses, '/tv/540/external_ids', {'imdb_id': imdb_id})
+    themoviedb(aioresponses, '/tv/540/external_ids', {'imdb_id': imdb_id})
     themoviedb(
         aioresponses,
         '/movie/540',
@@ -94,7 +94,7 @@ async def test_main(test_client, snapshot, responses, aioresponses, session):
 
 
 @mark.asyncio
-async def test_mutation(test_client, snapshot, responses):
+async def test_mutation(test_client, snapshot):
     res = await test_client.post(
         '/graphql/',
         json={
