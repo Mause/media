@@ -256,9 +256,10 @@
         },
         "dill": {
             "hashes": [
-                "sha256:6e12da0d8e49c220e8d6e97ee8882002e624f1160289ce85ec2cc0a5246b3a2e"
+                "sha256:78370261be6ea49037ace8c17e0b7dd06d0393af6513cc23f9b222d9367ce389",
+                "sha256:efb7f6cb65dba7087c1e111bb5390291ba3616741f96840bfc75792a1a9b5ded"
             ],
-            "version": "==0.3.2"
+            "version": "==0.3.3"
         },
         "dnspython": {
             "hashes": [
@@ -698,10 +699,10 @@
         },
         "plexapi": {
             "hashes": [
-                "sha256:5de36cc26a1e919dbc7ecc3e62733e1332a6257646cbaca73846238b297d387d"
+                "sha256:1e9b5467e8550a3cdd43db16fa4b501c103673fcc70a0543505bdc58b0909b99"
             ],
             "index": "pypi",
-            "version": "==4.1.2"
+            "version": "==4.2.0"
         },
         "psycopg2-binary": {
             "hashes": [
