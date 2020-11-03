@@ -2860,10 +2860,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.14.163":
-  version: 4.14.163
-  resolution: "@types/lodash@npm:4.14.163"
-  checksum: f118aab4b74b165962015bfc857d1944048b0fc8837d5b129e54da17d5f76ec9d37dfd332915fda5ff92dd8db6c614705a02bcedf8043d06c091ac3e840a32c5
+"@types/lodash@npm:^4.14.164":
+  version: 4.14.164
+  resolution: "@types/lodash@npm:4.14.164"
+  checksum: 4158045fd1532471e790ea699f4b7bfc2b82834fee8aef7d9aceadfa3abed3a1c5e66965141c0b25dd43548993c7dd171ec820b93f1993f5226937d1ce709fb3
   languageName: node
   linkType: hard
 
@@ -3795,7 +3795,7 @@ __metadata:
     "@testing-library/user-event": ^12.1.10
     "@types/history": 4.7.7
     "@types/jest": ^26.0.13
-    "@types/lodash": ^4.14.163
+    "@types/lodash": ^4.14.164
     "@types/moxios": ^0.4.9
     "@types/node": ^14.6.2
     "@types/qs": ^6.9.5
