@@ -1565,6 +1565,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.12.1":
+  version: 7.12.5
+  resolution: "@babel/runtime@npm:7.12.5"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: 423fb0079353db2faa0dad0cbdf0a90fbc5b511d1f77e5645d1aa0b144a144e24502bb023c12a31d7dca63b6e16ae36afa59992f0404e92e21de211051c361e3
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.10.4, @babel/template@npm:^7.3.3":
   version: 7.10.4
   resolution: "@babel/template@npm:7.10.4"
@@ -2600,9 +2609,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^7.26.0":
-  version: 7.26.3
-  resolution: "@testing-library/dom@npm:7.26.3"
+"@testing-library/dom@npm:^7.26.4":
+  version: 7.26.4
+  resolution: "@testing-library/dom@npm:7.26.4"
   dependencies:
     "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.10.3
@@ -2612,7 +2621,7 @@ __metadata:
     dom-accessibility-api: ^0.5.1
     lz-string: ^1.4.4
     pretty-format: ^26.4.2
-  checksum: 972931d5680c7e99d7c077793d42822774709f9c8feb2aa620a4513f8c858b0833996348f99123d88bae9a7c7f2d0236e42bc48cca232f0047ed08e32cd8b408
+  checksum: 9d88312d21b2ddc6fb840f5b05c60446ac89133bb7be3d95096edec5bca07e638d77988b6dfd1911369c0ddbd0eae9a6499757aef31ec59626eec7d6b0d07680
   languageName: node
   linkType: hard
 
@@ -2632,16 +2641,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^11.1.0":
-  version: 11.1.0
-  resolution: "@testing-library/react@npm:11.1.0"
+"@testing-library/react@npm:^11.1.1":
+  version: 11.1.1
+  resolution: "@testing-library/react@npm:11.1.1"
   dependencies:
-    "@babel/runtime": ^7.11.2
-    "@testing-library/dom": ^7.26.0
+    "@babel/runtime": ^7.12.1
+    "@testing-library/dom": ^7.26.4
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 73976ec3f70542c8fc67da1a0c6ac5bc99d6edcde1f1c87a8fec706df09267b76b698d19900013277bfa91d09cae22c648dd362c19b0095fc8fa1477561d18ec
+  checksum: f09d56355dd86c4bae4ae8a1c7abe5270d6e6ccf9db6089f8efa1529e11272a2073cf19bd801f8f6f2c7ae2b3aeb7ba9c4b44aa1cdb2c76ce6dc3f1c46fc795e
   languageName: node
   linkType: hard
 
@@ -3791,7 +3800,7 @@ __metadata:
     "@sentry/apm": ^5.26.0
     "@sentry/react": ^5.27.2
     "@testing-library/jest-dom": ^5.11.5
-    "@testing-library/react": ^11.1.0
+    "@testing-library/react": ^11.1.1
     "@testing-library/user-event": ^12.1.10
     "@types/history": 4.7.7
     "@types/jest": ^26.0.13
