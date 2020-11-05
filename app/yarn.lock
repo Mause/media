@@ -2654,14 +2654,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^12.1.10":
-  version: 12.1.10
-  resolution: "@testing-library/user-event@npm:12.1.10"
+"@testing-library/user-event@npm:^12.2.0":
+  version: 12.2.0
+  resolution: "@testing-library/user-event@npm:12.2.0"
   dependencies:
     "@babel/runtime": ^7.10.2
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
-  checksum: 5b6e64e34fd2a354d608691d421013bc493215f072a709747d945de0ea972d4a643eb70f9d14ce8a65d3a962fd8f5a09c827fab46f313cd9dec9b29aa469adae
+  checksum: 012a3d24c7bbc52d1e6f68f3d7401f61b7a63422e74819f26096b746994ef88962d0698e224bb39966e988ed81d9050e24dab004d60ff91173736e667e2ae9c3
   languageName: node
   linkType: hard
 
@@ -3801,7 +3801,7 @@ __metadata:
     "@sentry/react": ^5.27.3
     "@testing-library/jest-dom": ^5.11.5
     "@testing-library/react": ^11.1.1
-    "@testing-library/user-event": ^12.1.10
+    "@testing-library/user-event": ^12.2.0
     "@types/history": 4.7.7
     "@types/jest": ^26.0.13
     "@types/lodash": ^4.14.164
