@@ -61,7 +61,9 @@ async def test_diagnostics(transmission, test_client, user, responses):
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
 
-    r = await test_client.get('/api/diagnostics',)
+    r = await test_client.get(
+        '/api/diagnostics',
+    )
     assert r.status_code == 200
 
     results = r.json()
@@ -486,7 +488,9 @@ async def test_static(uri, test_client):
 async def test_plex_redirect(test_client, responses):
     responses.add('POST', 'https://plex.tv/users/sign_in.xml')
     responses.add(
-        'GET', 'https://test/', tostring(E.Root(machineIdentifier="aaaa")),
+        'GET',
+        'https://test/',
+        tostring(E.Root(machineIdentifier="aaaa")),
     )
     responses.add('GET', 'https://test/library', tostring(E.Library()))
     responses.add(

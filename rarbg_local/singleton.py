@@ -18,7 +18,9 @@ async def get(app: FastAPI, func: Callable[..., T], request: Request = None) -> 
     )
 
     values, errors, *_ = await solve_dependencies(
-        request=request, dependant=dependant, dependency_overrides_provider=app,
+        request=request,
+        dependant=dependant,
+        dependency_overrides_provider=app,
     )
 
     assert not errors

@@ -19,13 +19,10 @@ afterEach(() => {
 
 function Fake() {
   const [fire, setFire] = useState(false);
-  useEffect(
-    () => {
-      if (fire) axios.get('/');
-      else setFire(true);
-    },
-    [fire],
-  );
+  useEffect(() => {
+    if (fire) axios.get('/');
+    else setFire(true);
+  }, [fire]);
   return <div>Thing</div>;
 }
 
@@ -35,7 +32,7 @@ test('AxiosErrorCatcher', async () => {
     const el = render(
       <ErrorBoundary
         fallback={<div>error</div>}
-        onError={error => (lerror = error)}
+        onError={(error) => (lerror = error)}
       >
         <AxiosErrorCatcher>
           <Fake />

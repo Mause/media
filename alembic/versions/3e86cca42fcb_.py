@@ -8,9 +8,10 @@ Create Date: 2020-01-18 13:52:48.008881
 from datetime import datetime
 
 import sqlalchemy as sa
-from alembic import op
 from sqlalchemy.sql import func
 from sqlalchemy.sql.schema import DefaultClause
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '3e86cca42fcb'

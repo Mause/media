@@ -36,9 +36,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "Pipfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "Pipfile.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run:
           name: Install Dependencies
@@ -49,7 +49,7 @@ jobs:
             pipenv sync --dev
       - save_cache:
           paths:
-            - '.venv'
+            - ".venv"
           key: v1-dependencies-{{ checksum "Pipfile.lock" }}
 
       # run tests!
@@ -60,14 +60,14 @@ jobs:
       - run:
           name: Mypy
           environment:
-            PIPENV_VENV_IN_PROJECT: 'true'
+            PIPENV_VENV_IN_PROJECT: "true"
           command: |
             pipenv run mypy rarbg_local
       - run:
           name: Run Tests
           environment:
-            PIPENV_VENV_IN_PROJECT: 'true'
-            CLOUDAMQP_URL: 'https://hello'
+            PIPENV_VENV_IN_PROJECT: "true"
+            CLOUDAMQP_URL: "https://hello"
           command: |
             mkdir screenshots
             pipenv run py.test -v --junitxml=test-reports/junit/junit.xml
