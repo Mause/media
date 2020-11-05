@@ -21,7 +21,7 @@ class UserAdmin(sqla.ModelView, AdminOnly):
     column_auto_select_related = True
 
     def scaffold_form(self):
-        form_class = super(UserAdmin, self).scaffold_form()
+        form_class = super().scaffold_form()
 
         form_class.password2 = PasswordField('New Password')
         form_class.username.kwargs['validators'] = [validators.DataRequired()]
@@ -41,6 +41,11 @@ class RoleAdmin(sqla.ModelView, AdminOnly):
 
 class DownloadAdmin(sqla.ModelView, AdminOnly):
     column_exclude_list = ('movie',)
-    form_choices = {'type': [('movie', 'movie'), ('episode', 'episode'),]}
+    form_choices = {
+        'type': [
+            ('movie', 'movie'),
+            ('episode', 'episode'),
+        ]
+    }
     column_filters = ['added_by']
     column_searchable_list = ['title', 'episode.show_title']

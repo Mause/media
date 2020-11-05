@@ -217,7 +217,10 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
                 yield f'data: {rset.json()}\n\n'
             yield 'data:\n\n'
 
-        return StreamingResponse(internal(), media_type="text/event-stream",)
+        return StreamingResponse(
+            internal(),
+            media_type="text/event-stream",
+        )
 
     return decorator
 
@@ -236,7 +239,8 @@ async def stream(
     episode: int = None,
 ) -> AsyncGenerator[BaseModel, None]:
     provider = next(
-        (provider for provider in PROVIDERS if provider.name == source.value), None,
+        (provider for provider in PROVIDERS if provider.name == source.value),
+        None,
     )
     if not provider:
         raise HTTPException(422, 'Invalid provider')

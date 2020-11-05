@@ -1,6 +1,5 @@
 import json
 import logging
-from itertools import chain
 from json.decoder import JSONDecodeError
 from typing import Dict, Iterator, List, TypedDict
 
@@ -60,10 +59,6 @@ class RarbgTorrent(TypedDict):
     seeders: int
     title: str
     download: str
-
-
-def get_rarbg(base_url: str, type, **kwargs) -> List[RarbgTorrent]:
-    return list(chain.from_iterable(get_rarbg_iter(base_url, type, **kwargs)))
 
 
 def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[List[RarbgTorrent]]:
