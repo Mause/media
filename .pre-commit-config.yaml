@@ -1,4 +1,4 @@
-exclude: .*\.snap|\.pnp\.js
+exclude: .*\.snap|\.pnp\.js|tsconfig.js
 repos:
   - repo: https://github.com/prettier/prettier
     rev: 2.0.5
@@ -74,7 +74,10 @@ repos:
     hooks:
     - id: flake8
       additional_dependencies:
-        - flake8-aaa
+        - flake8-bugbear
+        - flake8-cognitive-complexity
+        - flake8-functions
+        - flake8-expression-complexity
       args:
         - --jobs=1
         - --extend-ignore=W503,E203
