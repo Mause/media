@@ -77,7 +77,6 @@ repos:
         - flake8-bugbear
         - flake8-cognitive-complexity
         - flake8-functions
-        - flake8-expression-complexity
       args:
         - --jobs=1
         - --extend-ignore=W503,E203
