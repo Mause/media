@@ -1547,7 +1547,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.10.3, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.10.5
   resolution: "@babel/runtime@npm:7.10.5"
   dependencies:
@@ -1565,7 +1565,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.1":
+"@babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5":
   version: 7.12.5
   resolution: "@babel/runtime@npm:7.12.5"
   dependencies:
@@ -2012,19 +2012,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/types@npm:^26.3.0":
-  version: 26.3.0
-  resolution: "@jest/types@npm:26.3.0"
-  dependencies:
-    "@types/istanbul-lib-coverage": ^2.0.0
-    "@types/istanbul-reports": ^3.0.0
-    "@types/node": "*"
-    "@types/yargs": ^15.0.0
-    chalk: ^4.0.0
-  checksum: 151547a8fd46cad58a52fdeedec6a1102c8946bed0f48ae80e12329bcd58b54fd239f43c953f6b076d57abe8ffab25ecda6acc837409e4ae0bcab247847da976
-  languageName: node
-  linkType: hard
-
 "@jest/types@npm:^26.6.0, @jest/types@npm:^26.6.1":
   version: 26.6.1
   resolution: "@jest/types@npm:26.6.1"
@@ -2035,6 +2022,19 @@ __metadata:
     "@types/yargs": ^15.0.0
     chalk: ^4.0.0
   checksum: dd75ac899d412503a22b5daa6402a76de54f143193d239b9f48a1b685b7278034620997d76f1c222455b938f1218bd9728e6ac94bb19d5ae7cfce28339e1e6c0
+  languageName: node
+  linkType: hard
+
+"@jest/types@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "@jest/types@npm:26.6.2"
+  dependencies:
+    "@types/istanbul-lib-coverage": ^2.0.0
+    "@types/istanbul-reports": ^3.0.0
+    "@types/node": "*"
+    "@types/yargs": ^15.0.0
+    chalk: ^4.0.0
+  checksum: 5c511d7807f414b298299ae4a053abf265f39984942e0eefdfb17a7986a36f1047e0fd9a6f785bdddbf7343a5737595dfabe148719a80e118dd77486502009cc
   languageName: node
   linkType: hard
 
@@ -2609,19 +2609,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^7.26.4":
-  version: 7.26.4
-  resolution: "@testing-library/dom@npm:7.26.4"
+"@testing-library/dom@npm:^7.26.6":
+  version: 7.26.6
+  resolution: "@testing-library/dom@npm:7.26.6"
   dependencies:
     "@babel/code-frame": ^7.10.4
-    "@babel/runtime": ^7.10.3
+    "@babel/runtime": ^7.12.5
     "@types/aria-query": ^4.2.0
     aria-query: ^4.2.2
     chalk: ^4.1.0
-    dom-accessibility-api: ^0.5.1
+    dom-accessibility-api: ^0.5.4
     lz-string: ^1.4.4
-    pretty-format: ^26.4.2
-  checksum: 9d88312d21b2ddc6fb840f5b05c60446ac89133bb7be3d95096edec5bca07e638d77988b6dfd1911369c0ddbd0eae9a6499757aef31ec59626eec7d6b0d07680
+    pretty-format: ^26.6.2
+  checksum: 4b7b1e2802a685bfee5a7f6dfbf446f4e0c937e1af1e72677c34e514a685d607005a591a575d04ffdff17d3ad7544c7ea7b7be7389bb8a0c6ee9bda4686a0178
   languageName: node
   linkType: hard
 
@@ -2641,16 +2641,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^11.1.1":
-  version: 11.1.1
-  resolution: "@testing-library/react@npm:11.1.1"
+"@testing-library/react@npm:^11.1.2":
+  version: 11.1.2
+  resolution: "@testing-library/react@npm:11.1.2"
   dependencies:
     "@babel/runtime": ^7.12.1
-    "@testing-library/dom": ^7.26.4
+    "@testing-library/dom": ^7.26.6
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: f09d56355dd86c4bae4ae8a1c7abe5270d6e6ccf9db6089f8efa1529e11272a2073cf19bd801f8f6f2c7ae2b3aeb7ba9c4b44aa1cdb2c76ce6dc3f1c46fc795e
+  checksum: 64895ea94b2a17eb2c9c0b9b25fb45b32100e50939fa2608756a0c4e8475b7ad6885743d8fc29edc466a8a45ff561eccec44c594624f34e64784e8c04a342eec
   languageName: node
   linkType: hard
 
@@ -3800,7 +3800,7 @@ __metadata:
     "@sentry/apm": ^5.26.0
     "@sentry/react": ^5.27.3
     "@testing-library/jest-dom": ^5.11.5
-    "@testing-library/react": ^11.1.1
+    "@testing-library/react": ^11.1.2
     "@testing-library/user-event": ^12.2.2
     "@types/history": 4.7.7
     "@types/jest": ^26.0.13
@@ -6381,10 +6381,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dom-accessibility-api@npm:^0.5.1":
-  version: 0.5.2
-  resolution: "dom-accessibility-api@npm:0.5.2"
-  checksum: 247b9183d20a659890b9d7dd5b92a341c8a9ba8b0232ec6f3f34859b025de6fd05da8011f65b019fdfa19d0f7ff1bf3e610a13c3c38cd2649e20b3980ed834ba
+"dom-accessibility-api@npm:^0.5.4":
+  version: 0.5.4
+  resolution: "dom-accessibility-api@npm:0.5.4"
+  checksum: 39351d26a3732312f14411effef698204bf6c79a7d5eb0664441897541243f2cdf2e508aca52684ccf3b10df6708a6c265d1fde323eebcb8363a1093f5927b10
   languageName: node
   linkType: hard
 
@@ -13134,18 +13134,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^26.4.2":
-  version: 26.4.2
-  resolution: "pretty-format@npm:26.4.2"
-  dependencies:
-    "@jest/types": ^26.3.0
-    ansi-regex: ^5.0.0
-    ansi-styles: ^4.0.0
-    react-is: ^16.12.0
-  checksum: 06cdf6684cce00fd7df63bac8f29e47bcfaab1a68d41c6e7905c9fa78bfe31c52726b36891b2a3991a1cadab710de8818661464128367332183e3f0c1f86e640
-  languageName: node
-  linkType: hard
-
 "pretty-format@npm:^26.6.0, pretty-format@npm:^26.6.1":
   version: 26.6.1
   resolution: "pretty-format@npm:26.6.1"
@@ -13155,6 +13143,18 @@ fsevents@^1.2.7:
     ansi-styles: ^4.0.0
     react-is: ^17.0.1
   checksum: a9e31328106e91efde5b49aef7f7b2e668bdaec4a890598bf7ee32560c628738341f5ac5a2985cfbf627e168325492a8c72892b64a0ecea0c9224f93c27f55f2
+  languageName: node
+  linkType: hard
+
+"pretty-format@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "pretty-format@npm:26.6.2"
+  dependencies:
+    "@jest/types": ^26.6.2
+    ansi-regex: ^5.0.0
+    ansi-styles: ^4.0.0
+    react-is: ^17.0.1
+  checksum: 5ad34fc128218485732cf0271d396158a00584708fc97bf063c1c3c000fe14da572e9a1d3d7b92d95c5e24965434656c56ed0e45804dea2435ca59a1f86f1b07
   languageName: node
   linkType: hard
 
