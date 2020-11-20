@@ -3838,7 +3838,7 @@ __metadata:
     react-scripts: 4.0.0
     swr: ^0.3.9
     typescript: ^4.0.5
-    typescript-string-operations: ^1.4.0
+    typescript-string-operations: ^1.4.1
     use-socketio: ^2.0.4
   languageName: unknown
   linkType: soft
@@ -16035,10 +16035,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"typescript-string-operations@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "typescript-string-operations@npm:1.4.0"
-  checksum: 11bc77a95e7b71c15ccdc3af5cb2ee682f2b106722bd6ac70488f2b8758eaad0cfd54746e1bcbfdcd3e894fc110a1ad3b8689b554a3312b53c27896060441c7b
+"typescript-string-operations@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "typescript-string-operations@npm:1.4.1"
+  checksum: 33bc323f30481bbf7357f644e217fa16184fca3dcea2047b5fc757494217e571e9ac9b17aa23f96feeeaa9387ad89f404f724b726cb02cbfba2cd3fd94311b53
   languageName: node
   linkType: hard
 
