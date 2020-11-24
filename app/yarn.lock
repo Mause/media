@@ -3284,12 +3284,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@use-it/interval@npm:^0.1.4":
-  version: 0.1.4
-  resolution: "@use-it/interval@npm:0.1.4"
+"@use-it/interval@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@use-it/interval@npm:1.0.0"
   peerDependencies:
-    react: ^16.8.0
-  checksum: 076d7902908b304699d5a89a582e344fc5e0df6c9c2fcc32df28dc6f3b38c4d5743d07549ea669c461e724be3a9f1d5c5b8e7bf939775b3ca067dc8a3c447c9c
+    react: ">=16.8"
+  checksum: 5150adf141dfb5e4721ee0d70dc694df4b4e70fb060372ee1709171d024769482f6c47a5eb55f7826d43e851e2c0e7a593f27bcf705827f8de07e71a8eb19999
   languageName: node
   linkType: hard
 
@@ -3813,7 +3813,7 @@ __metadata:
     "@types/react-helmet": ^6.1.0
     "@types/react-router-dom": ^5.1.6
     "@types/socket.io-client": ^1.4.34
-    "@use-it/interval": ^0.1.4
+    "@use-it/interval": ^1.0.0
     "@vtex/axios-concurrent-retry": ^4.0.11
     axios: ^0.21.0
     colors.css: ^3.0.0
