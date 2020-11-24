@@ -17,7 +17,7 @@
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.0",
     "@testing-library/user-event": "^12.2.2",
-    "@use-it/interval": "^0.1.4",
+    "@use-it/interval": "^1.0.0",
     "@vtex/axios-concurrent-retry": "^4.0.11",
     "axios": "^0.21.0",
     "lodash": "^4.17.20",
