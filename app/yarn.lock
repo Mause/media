@@ -1731,15 +1731,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/react-fontawesome@npm:^0.1.12":
-  version: 0.1.12
-  resolution: "@fortawesome/react-fontawesome@npm:0.1.12"
+"@fortawesome/react-fontawesome@npm:^0.1.13":
+  version: 0.1.13
+  resolution: "@fortawesome/react-fontawesome@npm:0.1.13"
   dependencies:
     prop-types: ^15.7.2
   peerDependencies:
     "@fortawesome/fontawesome-svg-core": ^1.2.20
     react: ">=16.x"
-  checksum: 204d68ad9e0f385329bc6ff92e06843b68044f7618c9d3d64e6ddf486362fd6218df9f2f1b1422caee730e53bb983d2a1596aa8772737914ded4d0433e51f1e6
+  checksum: f38f64856fa9c7c2568b5b7036096c890810cf18e63472c33dda5dd69e49c6b1a5e1ba7fcdb36c4b7bf58a6f8d9342b9909114c5408f03cc54cdb79be10d18c5
   languageName: node
   linkType: hard
 
@@ -2957,12 +2957,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^16.9.9":
-  version: 16.9.9
-  resolution: "@types/react-dom@npm:16.9.9"
+"@types/react-dom@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "@types/react-dom@npm:17.0.0"
   dependencies:
     "@types/react": "*"
-  checksum: d92c166f5bcd483f175311eec9c472893216d486106a5b5402eb293840c0b0d1aafb484a3fe3f0f4622ae1f6dff46c9fe970873d4dac7fdf70a50931d3cab4a0
+  checksum: 7ca9351b6c2523327cd7afe40082a37034898f65e9d86700236682efed910ba7c9cec10e9a3b829aa7b804b18791a28743ce468fcb42e9a788bfc33b84137e45
   languageName: node
   linkType: hard
 
@@ -3284,12 +3284,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@use-it/interval@npm:^0.1.4":
-  version: 0.1.4
-  resolution: "@use-it/interval@npm:0.1.4"
+"@use-it/interval@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@use-it/interval@npm:1.0.0"
   peerDependencies:
-    react: ^16.8.0
-  checksum: 076d7902908b304699d5a89a582e344fc5e0df6c9c2fcc32df28dc6f3b38c4d5743d07549ea669c461e724be3a9f1d5c5b8e7bf939775b3ca067dc8a3c447c9c
+    react: ">=16.8"
+  checksum: 5150adf141dfb5e4721ee0d70dc694df4b4e70fb060372ee1709171d024769482f6c47a5eb55f7826d43e851e2c0e7a593f27bcf705827f8de07e71a8eb19999
   languageName: node
   linkType: hard
 
@@ -3793,7 +3793,7 @@ __metadata:
     "@csstools/normalize.css": ^11.0.1
     "@fortawesome/fontawesome-svg-core": ^1.2.30
     "@fortawesome/free-solid-svg-icons": ^5.14.0
-    "@fortawesome/react-fontawesome": ^0.1.12
+    "@fortawesome/react-fontawesome": ^0.1.13
     "@material-ui/core": ^4.11.0
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.56
@@ -3809,11 +3809,11 @@ __metadata:
     "@types/node": ^14.6.2
     "@types/qs": ^6.9.5
     "@types/react": ^16.9.49
-    "@types/react-dom": ^16.9.9
+    "@types/react-dom": ^17.0.0
     "@types/react-helmet": ^6.1.0
     "@types/react-router-dom": ^5.1.6
     "@types/socket.io-client": ^1.4.34
-    "@use-it/interval": ^0.1.4
+    "@use-it/interval": ^1.0.0
     "@vtex/axios-concurrent-retry": ^4.0.11
     axios: ^0.21.0
     colors.css: ^3.0.0
@@ -3835,7 +3835,7 @@ __metadata:
     react-helmet: ^6.1.0
     react-loading: ^2.0.3
     react-router-dom: ^5.2.0
-    react-scripts: 4.0.0
+    react-scripts: ^4.0.1
     swr: ^0.3.9
     typescript: ^4.0.5
     typescript-string-operations: ^1.4.1
@@ -5003,13 +5003,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chardet@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "chardet@npm:0.7.0"
-  checksum: b71a4ee4648489291af86418b96247824a8c1ee4f4f95d6268967fb40e9fbf70500e72fb737d5186a23cf98c8a02b91d68cb2f426d7428e92883af9d31a037ec
-  languageName: node
-  linkType: hard
-
 "check-types@npm:^11.1.1":
   version: 11.1.2
   resolution: "check-types@npm:11.1.2"
@@ -5138,22 +5131,6 @@ __metadata:
   version: 2.2.0
   resolution: "clean-stack@npm:2.2.0"
   checksum: e291ce2b8c8c59e6449ac9a7a726090264bea6696e5343b21385e16d279c808ca09d73a1abea8fd23a9b7699e6ef5ce582df203511f71c8c27666bf3b2e300c5
-  languageName: node
-  linkType: hard
-
-"cli-cursor@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "cli-cursor@npm:3.1.0"
-  dependencies:
-    restore-cursor: ^3.1.0
-  checksum: 15dbfc222f27da8cbc61680e4948b189e811224271f6ee5be9db0dcbabe23ae3b2c5a5663be6f17ee51f6203ab44abddd4f4cffb20d69458fc845fa86976f96a
-  languageName: node
-  linkType: hard
-
-"cli-width@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "cli-width@npm:3.0.0"
-  checksum: 6e5bc71774e202bfd3782d0be56eacee9462bfc7dc4a601dad10636163ab9c8abe625e760b0f28e590f9044bc23df3927ee3406f8c961fd2e4a51ef3f67fab2f
   languageName: node
   linkType: hard
 
@@ -7433,17 +7410,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"external-editor@npm:^3.0.3":
-  version: 3.1.0
-  resolution: "external-editor@npm:3.1.0"
-  dependencies:
-    chardet: ^0.7.0
-    iconv-lite: ^0.4.24
-    tmp: ^0.0.33
-  checksum: 22163643f9938f4d46bab20ee0417cf1131aaf9ea4c546184d3668f689b8f7fc0d750b5a60857cb8ea09e4651b2c49fe30eb5a0903697e3c2d837da1e90d2d7c
-  languageName: node
-  linkType: hard
-
 "extglob@npm:^2.0.4":
   version: 2.0.4
   resolution: "extglob@npm:2.0.4"
@@ -7563,15 +7529,6 @@ __metadata:
   version: 3.5.2
   resolution: "figgy-pudding@npm:3.5.2"
   checksum: 737645f602631734ad53b7445128e255939f809565350b376b3b8fad7673f37c82525a16463f176643ff4b989bb79ed0ecc18111a364ead1082a74c99195a6ca
-  languageName: node
-  linkType: hard
-
-"figures@npm:^3.0.0":
-  version: 3.2.0
-  resolution: "figures@npm:3.2.0"
-  dependencies:
-    escape-string-regexp: ^1.0.5
-  checksum: 6c8acb1c17c4d27eeb6ff06801b5ae39a999c4794ec50eacf858a1e32746d92af77a9a907c3e1865e2e6ac7d9f1aa765f0f8a01a16a4676b79b6e90a7cc23f44
   languageName: node
   linkType: hard
 
@@ -8576,7 +8533,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:0.4.24, iconv-lite@npm:^0.4.24":
+"iconv-lite@npm:0.4.24":
   version: 0.4.24
   resolution: "iconv-lite@npm:0.4.24"
   dependencies:
@@ -8770,27 +8727,6 @@ fsevents@^1.2.7:
   version: 1.3.5
   resolution: "ini@npm:1.3.5"
   checksum: 304a78d1e0ec49c6dc316b6a21bee5340ba85159c6581235b26a4cf27e2bac5f66f2c8f0e074ceaf3c48085f89fb974691cbf812df2128d2d74c5ef726d1b19a
-  languageName: node
-  linkType: hard
-
-"inquirer@npm:7.3.3":
-  version: 7.3.3
-  resolution: "inquirer@npm:7.3.3"
-  dependencies:
-    ansi-escapes: ^4.2.1
-    chalk: ^4.1.0
-    cli-cursor: ^3.1.0
-    cli-width: ^3.0.0
-    external-editor: ^3.0.3
-    figures: ^3.0.0
-    lodash: ^4.17.19
-    mute-stream: 0.0.8
-    run-async: ^2.4.0
-    rxjs: ^6.6.0
-    string-width: ^4.1.0
-    strip-ansi: ^6.0.0
-    through: ^2.3.6
-  checksum: fa0cbd9594a04e04c5c10a806e9a86b23986acdc7d07c75afdbc03412ff03b1d201efa83d9d64929afe99a901a093bfc9ae7ab13560f8e557cb98eddbe5bf37d
   languageName: node
   linkType: hard
 
@@ -11172,13 +11108,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mute-stream@npm:0.0.8":
-  version: 0.0.8
-  resolution: "mute-stream@npm:0.0.8"
-  checksum: 315c40f463ec31deee54c5b8779207feb6b63dd4c58fe0f84ad46abdd6dac1ada578d53efde4a47b0ae4d29d453d35bb39ecdd98ee9ebf538929039a3a9945df
-  languageName: node
-  linkType: hard
-
 "nan@npm:^2.12.1":
   version: 2.14.1
   resolution: "nan@npm:2.14.1"
@@ -11762,7 +11691,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"os-tmpdir@npm:^1.0.0, os-tmpdir@npm:~1.0.2":
+"os-tmpdir@npm:^1.0.0":
   version: 1.0.2
   resolution: "os-tmpdir@npm:1.0.2"
   checksum: ca158a3c2e48748adc7736cdbe4c593723f8ed8581d2aae2f2a30fdb9417d4ba14bed1cd487d47561898a7b1ece88bce69745e9ce0303e1dea9ea7d22d1f1082
@@ -13202,6 +13131,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"prompts@npm:2.4.0":
+  version: 2.4.0
+  resolution: "prompts@npm:2.4.0"
+  dependencies:
+    kleur: ^3.0.3
+    sisteransi: ^1.0.5
+  checksum: fd375679ad53bb6a85ac1edf6d3f48b4a120a9aac87d3f0e50756c02013f1e9ee835f10ba18edc2f21048cf8423a986aff8f75ee42f03ce1ebf1d1c65f5ef3cf
+  languageName: node
+  linkType: hard
+
 "prompts@npm:^2.0.1":
   version: 2.3.2
   resolution: "prompts@npm:2.3.2"
@@ -13458,9 +13397,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-dev-utils@npm:^11.0.0":
-  version: 11.0.0
-  resolution: "react-dev-utils@npm:11.0.0"
+"react-dev-utils@npm:^11.0.1":
+  version: 11.0.1
+  resolution: "react-dev-utils@npm:11.0.1"
   dependencies:
     "@babel/code-frame": 7.10.4
     address: 1.1.2
@@ -13476,17 +13415,17 @@ fsevents@^1.2.7:
     globby: 11.0.1
     gzip-size: 5.1.1
     immer: 7.0.9
-    inquirer: 7.3.3
     is-root: 2.1.0
     loader-utils: 2.0.0
     open: ^7.0.2
     pkg-up: 3.1.0
+    prompts: 2.4.0
     react-error-overlay: ^6.0.8
     recursive-readdir: 2.2.2
     shell-quote: 1.7.2
     strip-ansi: 6.0.0
     text-table: 0.2.0
-  checksum: 9f356c8bfefd3d8098b9d53078aa8e3799e9803e4f06534b04d1be1073d5ad37017d5f9386b8473256d20b2823412ba2d7c3d4372d89d12214175294c9b38699
+  checksum: f9bfd513f59ada7c5e3f3cdb24709383eebbd750d85a91fb1b91d1712f8ea3ab18d5ae0685e19572ecdb691b4506bf6bdedb845fc8635cb3e8e880c3b7a93ba5
   languageName: node
   linkType: hard
 
@@ -13611,9 +13550,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-scripts@npm:4.0.0":
-  version: 4.0.0
-  resolution: "react-scripts@npm:4.0.0"
+"react-scripts@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "react-scripts@npm:4.0.1"
   dependencies:
     "@babel/core": 7.12.3
     "@pmmmwh/react-refresh-webpack-plugin": 0.4.2
@@ -13658,8 +13597,9 @@ fsevents@^1.2.7:
     postcss-normalize: 8.0.1
     postcss-preset-env: 6.7.0
     postcss-safe-parser: 5.0.2
+    prompts: 2.4.0
     react-app-polyfill: ^2.0.0
-    react-dev-utils: ^11.0.0
+    react-dev-utils: ^11.0.1
     react-refresh: ^0.8.3
     resolve: 1.18.1
     resolve-url-loader: ^3.1.2
@@ -13683,7 +13623,7 @@ fsevents@^1.2.7:
       optional: true
   bin:
     react-scripts: ./bin/react-scripts.js
-  checksum: 508ceb13ad7ccc6f1d524d5421f4e8635bd0a3de0616df9b6cb0e7edf86bd1ac8c2ea3985247fea2365087d9596b5110e3474d1f4669673a6aeb19fdd8e20e84
+  checksum: 1d37d97d1bfa6705d412ea1bd3d02bb42ff8893138ae242f958ba408ad7a909b0961a3b8820908cafdfc4f9b09d75c50dae1932c968de47c80d9b7a0d48b9a99
   languageName: node
   linkType: hard
 
@@ -14180,16 +14120,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"restore-cursor@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "restore-cursor@npm:3.1.0"
-  dependencies:
-    onetime: ^5.1.0
-    signal-exit: ^3.0.2
-  checksum: 38e0af0830336dbc7d36b8d02e9194489dc52aaf64f41d02c427303a78552019434ad87082d67ce171a569a8be898caf7c70d5e17bd347cf6f7bd38d332d0bd4
-  languageName: node
-  linkType: hard
-
 "ret@npm:~0.1.10":
   version: 0.1.15
   resolution: "ret@npm:0.1.15"
@@ -14342,13 +14272,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"run-async@npm:^2.4.0":
-  version: 2.4.1
-  resolution: "run-async@npm:2.4.1"
-  checksum: b1f06da336029be9c08312309ccdda107558ebf3e1212e960d7a54020f888a449ade2cb8b432a9a6750537ed80119a3c798f7592e8f8518f193ff4c50c13d4a3
-  languageName: node
-  linkType: hard
-
 "run-parallel@npm:^1.1.9":
   version: 1.1.9
   resolution: "run-parallel@npm:1.1.9"
@@ -14362,15 +14285,6 @@ fsevents@^1.2.7:
   dependencies:
     aproba: ^1.1.1
   checksum: ffc37a7b55630b3d878c77be5125ba71c4f38345bf9ee83f2a122d546cc3fc74985f8e639d926fcfb33f475bf4a0ae122791bd8dd24bce5355eed0968420ba34
-  languageName: node
-  linkType: hard
-
-"rxjs@npm:^6.6.0":
-  version: 6.6.0
-  resolution: "rxjs@npm:6.6.0"
-  dependencies:
-    tslib: ^1.9.0
-  checksum: 32d733487caf42cc87bb0f93da5be400f2817f94a9f8af9580ab36f480aa553f584e0cfb4625b8321e8f9490094a510f9eb5e951a1d6219281d1eac1525d007b
   languageName: node
   linkType: hard
 
@@ -14797,7 +14711,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"sisteransi@npm:^1.0.4":
+"sisteransi@npm:^1.0.4, sisteransi@npm:^1.0.5":
   version: 1.0.5
   resolution: "sisteransi@npm:1.0.5"
   checksum: 6554debe10fa4c6a7e8d58531313fdb61c39bb435ba420f8d7a01d8aaffecc654cca846b586e33f3c904350e24f229d5bbd8069abdb583c93252849a0f73e933
@@ -15712,13 +15626,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"through@npm:^2.3.6":
-  version: 2.3.8
-  resolution: "through@npm:2.3.8"
-  checksum: 918d9151680b5355990011eb8c4b02e8cb8cf6e9fb6ea3d3e5a1faa688343789e261634ae35de4ea9167ab029d1e7bac6af2fe61b843931768d405fdc3e8897c
-  languageName: node
-  linkType: hard
-
 "thunky@npm:^1.0.2":
   version: 1.1.0
   resolution: "thunky@npm:1.1.0"
@@ -15753,15 +15660,6 @@ fsevents@^1.2.7:
   version: 1.0.3
   resolution: "tiny-warning@npm:1.0.3"
   checksum: 6cf9f66cb765b893976b8cd1c1310338861f30fb04d02ef2c8e0a748cbc2ed5acd8bb1954b78c15f640ad4116def67134d7d705f2a0c9bf27e6e2eb3e92bff29
-  languageName: node
-  linkType: hard
-
-"tmp@npm:^0.0.33":
-  version: 0.0.33
-  resolution: "tmp@npm:0.0.33"
-  dependencies:
-    os-tmpdir: ~1.0.2
-  checksum: 77666ca424a78fcfcc27a6576f24f01aa1300b10d22e4f1808809e560777672dd2d4a112604ab2ad86ec7cafd24472b9ccc41373c2b5b83797f27e6aff06cbe5
   languageName: node
   linkType: hard
 
