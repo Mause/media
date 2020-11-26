@@ -2038,12 +2038,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/core@npm:^4.11.0":
-  version: 4.11.0
-  resolution: "@material-ui/core@npm:4.11.0"
+"@material-ui/core@npm:^4.11.1":
+  version: 4.11.1
+  resolution: "@material-ui/core@npm:4.11.1"
   dependencies:
     "@babel/runtime": ^7.4.4
-    "@material-ui/styles": ^4.10.0
+    "@material-ui/styles": ^4.11.1
     "@material-ui/system": ^4.9.14
     "@material-ui/types": ^5.1.0
     "@material-ui/utils": ^4.10.2
@@ -2061,7 +2061,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 02b3ada79f258f5e5d64fbab804c65d07ea3e8b2533e40c18fcab49c8065ebcb5acfea4ea0b033f2d91dee1fee3a6720f567c0c60f3be1bb5bd754be2d9bf322
+  checksum: 81d083208f017c18ff01f533f918b0bb4eb30092192c4b5f896233e5131029fe8531d2df6ba6570af633c211747e146f8f70acbdd7c8c8ee315b41be00a55772
   languageName: node
   linkType: hard
 
@@ -2103,9 +2103,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/styles@npm:^4.10.0":
-  version: 4.10.0
-  resolution: "@material-ui/styles@npm:4.10.0"
+"@material-ui/styles@npm:^4.11.1":
+  version: 4.11.1
+  resolution: "@material-ui/styles@npm:4.11.1"
   dependencies:
     "@babel/runtime": ^7.4.4
     "@emotion/hash": ^0.8.0
@@ -2130,7 +2130,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 928821cb46416d494703f57d1c1f4d20137679d5eb23f01695b4a1afaec80dbb0f4011be2936496b1b5092bde4fb69f9cb1e747de927d05a5a05451cd24699a0
+  checksum: 5279637e630da3de20c1f8dc909eed5c63ed3599c2670707ee0c673c490cf6bc68f9e9fa825e93e35b32c3963aee8bff8b6465f922769e033679b55ee522595d
   languageName: node
   linkType: hard
 
@@ -2957,12 +2957,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^16.9.9":
-  version: 16.9.9
-  resolution: "@types/react-dom@npm:16.9.9"
+"@types/react-dom@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "@types/react-dom@npm:17.0.0"
   dependencies:
     "@types/react": "*"
-  checksum: d92c166f5bcd483f175311eec9c472893216d486106a5b5402eb293840c0b0d1aafb484a3fe3f0f4622ae1f6dff46c9fe970873d4dac7fdf70a50931d3cab4a0
+  checksum: 7ca9351b6c2523327cd7afe40082a37034898f65e9d86700236682efed910ba7c9cec10e9a3b829aa7b804b18791a28743ce468fcb42e9a788bfc33b84137e45
   languageName: node
   linkType: hard
 
@@ -3794,7 +3794,7 @@ __metadata:
     "@fortawesome/fontawesome-svg-core": ^1.2.30
     "@fortawesome/free-solid-svg-icons": ^5.14.0
     "@fortawesome/react-fontawesome": ^0.1.13
-    "@material-ui/core": ^4.11.0
+    "@material-ui/core": ^4.11.1
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.56
     "@sentry/apm": ^5.26.0
@@ -3809,7 +3809,7 @@ __metadata:
     "@types/node": ^14.6.2
     "@types/qs": ^6.9.5
     "@types/react": ^16.9.49
-    "@types/react-dom": ^16.9.9
+    "@types/react-dom": ^17.0.0
     "@types/react-helmet": ^6.1.0
     "@types/react-router-dom": ^5.1.6
     "@types/socket.io-client": ^1.4.34
