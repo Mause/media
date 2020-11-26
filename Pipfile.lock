@@ -1714,11 +1714,11 @@
         },
         "pre-commit": {
             "hashes": [
-                "sha256:4aee0db4808fa48d2458cedd5b9a084ef24dda1a0fa504432a11977a4d1cfd0a",
-                "sha256:b2d106d51c6ba6217e859d81774aae33fd825fe7de0dcf0c46e2586333d7a92e"
+                "sha256:bf1da4848f2b7f51fd0b5e5bf0131095d7d3c121e8efaaeea5c957e05c365c4e",
+                "sha256:f5612b2be1eeabc3c038745257ce634c3ea2e7ce3d54a079ff80e69d5b4ce181"
             ],
             "index": "pypi",
-            "version": "==2.9.0"
+            "version": "==2.9.1"
         },
         "prompt-toolkit": {
             "hashes": [
