@@ -1,7 +1,7 @@
 exclude: .*\.snap|\.pnp\.js
 repos:
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.2.0
+    rev: v2.2.1
     hooks:
       - id: prettier
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -22,7 +22,7 @@ repos:
         args:
           - --float-to-top
   - repo: https://github.com/humitos/mirrors-autoflake
-    rev: v1.3
+    rev: v1.1
     hooks:
       - id: autoflake
         args:
