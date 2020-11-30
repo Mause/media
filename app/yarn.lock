@@ -1556,15 +1556,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.11.2":
-  version: 7.11.2
-  resolution: "@babel/runtime@npm:7.11.2"
-  dependencies:
-    regenerator-runtime: ^0.13.4
-  checksum: 2f127ad60a0f0568faa0044e5b48329d8166c7fd3a0a3ce774070010a1c441ebf5570f526dd6bb26e214fb1a01bb987ab6a4c3f60a00f04d02448939f4c61e1e
-  languageName: node
-  linkType: hard
-
 "@babel/runtime@npm:^7.12.5":
   version: 7.12.5
   resolution: "@babel/runtime@npm:7.12.5"
@@ -3831,7 +3822,7 @@ __metadata:
     react-collapsible: ^2.8.1
     react-contextmenu: ^2.14.0
     react-dom: ^16.14.0
-    react-error-boundary: ^3.0.2
+    react-error-boundary: ^3.1.0
     react-helmet: ^6.1.0
     react-loading: ^2.0.3
     react-router-dom: ^5.2.0
@@ -13443,14 +13434,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "react-error-boundary@npm:3.0.2"
+"react-error-boundary@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "react-error-boundary@npm:3.1.0"
   dependencies:
-    "@babel/runtime": ^7.11.2
+    "@babel/runtime": ^7.12.5
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 241a91a7db61350fcd7370e857b127ca232afb47cbc3b437b77f29277eb696785c85bf8e3d2597604ba68273125e3168783037d173cccc72fed4d2b379f6a2f8
+  checksum: 0df44cd3ac6fb9990b500eb052544cbf166bf5b544ca415fd8ed3c39b67daf5376c977ee03da4a34478af22809fe99a82a7ed53719b8a16c87ad53211508b461
   languageName: node
   linkType: hard
 
