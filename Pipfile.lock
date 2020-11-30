@@ -288,11 +288,11 @@
         },
         "fastapi": {
             "hashes": [
-                "sha256:8c8517680a221e69eb34073adf46c503092db2f24845b7bdc7f85b54f24ff0df",
-                "sha256:9e0494fcbba98f85b8cc9b2606bb6b625246e1b12f79ca61f508b0b00843eca6"
+                "sha256:62074dd38541d9d7245f3aacbbd0d44340c53d56186c9b249d261a18dad4874b",
+                "sha256:8f4c64cd9cea67fb7dd175ca5015961efa572b9f43a8731014dac8929d86225f"
             ],
             "index": "pypi",
-            "version": "==0.61.2"
+            "version": "==0.62.0"
         },
         "fastapi-utils": {
             "hashes": [
@@ -851,10 +851,10 @@
         },
         "python-engineio": {
             "hashes": [
-                "sha256:36b33c6aa702d9b6a7f527eec6387a2da1a9a24484ec2f086d76576413cef04b",
-                "sha256:cfded18156862f94544a9f8ef37f56727df731c8552d7023f5afee8369be2db6"
+                "sha256:5a9e6086d192463b04a1428ff1f85b6ba631bbb19d453b144ffc04f530542b84",
+                "sha256:eab4553f2804c1ce97054c8b22cf0d5a9ab23128075248b97e1a5b2f29553085"
             ],
-            "version": "==3.13.2"
+            "version": "==3.14.2"
         },
         "python-levenshtein": {
             "hashes": [
@@ -871,10 +871,10 @@
         },
         "python-socketio": {
             "hashes": [
-                "sha256:358d8fbbc029c4538ea25bcaa283e47f375be0017fcba829de8a3a731c9df25a",
-                "sha256:d437f797c44b6efba2f201867cf02b8c96b97dff26d4e4281ac08b45817cd522"
+                "sha256:5a21da53fdbdc6bb6c8071f40e13d100e0b279ad997681c2492478e06f370523",
+                "sha256:cd1f5aa492c1eb2be77838e837a495f117e17f686029ebc03d62c09e33f4fa10"
             ],
-            "version": "==4.6.0"
+            "version": "==4.6.1"
         },
         "pytz": {
             "hashes": [
@@ -1671,10 +1671,10 @@
         },
         "packaging": {
             "hashes": [
-                "sha256:4357f74f47b9c12db93624a82154e9b120fa8293699949152b22065d556079f8",
-                "sha256:998416ba6962ae7fbd6596850b80e17859a5753ba17c32284f67bfff33784181"
+                "sha256:05af3bb85d320377db281cf254ab050e1a7ebcbf5410685a9a407e18a1f81236",
+                "sha256:eb41423378682dadb7166144a4926e443093863024de508ca5c9737d6bc08376"
             ],
-            "version": "==20.4"
+            "version": "==20.7"
         },
         "parso": {
             "hashes": [
@@ -1816,10 +1816,10 @@
         },
         "pytest-metadata": {
             "hashes": [
-                "sha256:b7e6e0a45adacb17a03a97bf7a2ef60cc1f4e172bcce9732ce5e814191932315",
-                "sha256:fcbcc5781aee450107c620c79c57e50796b6777b82b3c504be9cbc3017201169"
+                "sha256:576055b8336dd4a9006dd2a47615f76f2f8c30ab12b1b1c039d99e834583523f",
+                "sha256:71b506d49d34e539cc3cfdb7ce2c5f072bea5c953320002c95968e0238f8ecf1"
             ],
-            "version": "==1.10.0"
+            "version": "==1.11.0"
         },
         "pytest-selenium": {
             "hashes": [
