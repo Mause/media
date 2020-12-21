@@ -358,11 +358,11 @@
         },
         "flask-socketio": {
             "hashes": [
-                "sha256:6fef2bcd94fd6d9bf88fe9b69c6c76da77a945b3d0814941d1741984ec24a2ce",
-                "sha256:c535cf2ebe427acdeb463e549386253fc5e6cba6a2bb96138b2c2e17e20a99da"
+                "sha256:5c4319f5214ada20807857dc8fdf3dc7d2afe8d6dd38f5c516c72e2be47d2227",
+                "sha256:5d9a4438bafd806c5a3b832e74b69758781a8ee26fb6c9b1dbdda9b4fced432e"
             ],
             "index": "pypi",
-            "version": "==5.0.0"
+            "version": "==5.0.1"
         },
         "flask-sqlalchemy": {
             "hashes": [
