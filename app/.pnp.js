@@ -47,19 +47,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/lab", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:4.0.0-alpha.56"],
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.29.2"],
             ["@sentry/tracing", "npm:5.29.2"],
-            ["@testing-library/jest-dom", "npm:5.11.6"],
+            ["@testing-library/jest-dom", "npm:5.11.8"],
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.2.2"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.6.0"],
             ["@types/history", "npm:4.7.7"],
             ["@types/jest", "npm:26.0.13"],
-            ["@types/lodash", "npm:4.14.166"],
+            ["@types/lodash", "npm:4.14.167"],
             ["@types/moxios", "npm:0.4.9"],
             ["@types/node", "npm:14.6.2"],
             ["@types/qs", "npm:6.9.5"],
             ["@types/react", "npm:17.0.0"],
             ["@types/react-dom", "npm:17.0.0"],
             ["@types/react-helmet", "npm:6.1.0"],
-            ["@types/react-router-dom", "npm:5.1.6"],
+            ["@types/react-router-dom", "npm:5.1.7"],
             ["@types/socket.io-client", "npm:1.4.34"],
             ["@use-it/interval", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0"],
             ["@vtex/axios-concurrent-retry", "npm:4.0.11"],
@@ -3544,10 +3544,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@testing-library/jest-dom", [
-        ["npm:5.11.6", {
-          "packageLocation": "./.yarn/cache/@testing-library-jest-dom-npm-5.11.6-617e89cd3c-6c7eefa4ea.zip/node_modules/@testing-library/jest-dom/",
+        ["npm:5.11.8", {
+          "packageLocation": "./.yarn/cache/@testing-library-jest-dom-npm-5.11.8-0e0cbd6505-4b44e8f2c8.zip/node_modules/@testing-library/jest-dom/",
           "packageDependencies": [
-            ["@testing-library/jest-dom", "npm:5.11.6"],
+            ["@testing-library/jest-dom", "npm:5.11.8"],
             ["@babel/runtime", "npm:7.10.5"],
             ["@types/testing-library__jest-dom", "npm:5.9.1"],
             ["aria-query", "npm:4.2.2"],
@@ -3827,10 +3827,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/lodash", [
-        ["npm:4.14.166", {
-          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.166-1b25adbae9-e8ce1ef998.zip/node_modules/@types/lodash/",
+        ["npm:4.14.167", {
+          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.167-275fff817a-40778f83a8.zip/node_modules/@types/lodash/",
           "packageDependencies": [
-            ["@types/lodash", "npm:4.14.166"]
+            ["@types/lodash", "npm:4.14.167"]
           ],
           "linkType": "HARD",
         }]
@@ -3984,10 +3984,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/react-router-dom", [
-        ["npm:5.1.6", {
-          "packageLocation": "./.yarn/cache/@types-react-router-dom-npm-5.1.6-d10d920490-dcff1d6138.zip/node_modules/@types/react-router-dom/",
+        ["npm:5.1.7", {
+          "packageLocation": "./.yarn/cache/@types-react-router-dom-npm-5.1.7-94984451d7-c5afe043f9.zip/node_modules/@types/react-router-dom/",
           "packageDependencies": [
-            ["@types/react-router-dom", "npm:5.1.6"],
+            ["@types/react-router-dom", "npm:5.1.7"],
             ["@types/history", "npm:4.7.7"],
             ["@types/react", "npm:16.9.43"],
             ["@types/react-router", "npm:5.1.8"]
@@ -4931,19 +4931,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/lab", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:4.0.0-alpha.56"],
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.29.2"],
             ["@sentry/tracing", "npm:5.29.2"],
-            ["@testing-library/jest-dom", "npm:5.11.6"],
+            ["@testing-library/jest-dom", "npm:5.11.8"],
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.2.2"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.6.0"],
             ["@types/history", "npm:4.7.7"],
             ["@types/jest", "npm:26.0.13"],
-            ["@types/lodash", "npm:4.14.166"],
+            ["@types/lodash", "npm:4.14.167"],
             ["@types/moxios", "npm:0.4.9"],
             ["@types/node", "npm:14.6.2"],
             ["@types/qs", "npm:6.9.5"],
             ["@types/react", "npm:17.0.0"],
             ["@types/react-dom", "npm:17.0.0"],
             ["@types/react-helmet", "npm:6.1.0"],
-            ["@types/react-router-dom", "npm:5.1.6"],
+            ["@types/react-router-dom", "npm:5.1.7"],
             ["@types/socket.io-client", "npm:1.4.34"],
             ["@use-it/interval", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0"],
             ["@vtex/axios-concurrent-retry", "npm:4.0.11"],
