@@ -47,7 +47,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/lab", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:4.0.0-alpha.56"],
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.29.2"],
             ["@sentry/tracing", "npm:5.29.2"],
-            ["@testing-library/jest-dom", "npm:5.11.8"],
+            ["@testing-library/jest-dom", "npm:5.11.9"],
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.2.2"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.6.0"],
             ["@types/history", "npm:4.7.7"],
@@ -3544,10 +3544,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@testing-library/jest-dom", [
-        ["npm:5.11.8", {
-          "packageLocation": "./.yarn/cache/@testing-library-jest-dom-npm-5.11.8-0e0cbd6505-4b44e8f2c8.zip/node_modules/@testing-library/jest-dom/",
+        ["npm:5.11.9", {
+          "packageLocation": "./.yarn/cache/@testing-library-jest-dom-npm-5.11.9-ad0c7dbe3e-c285c044ed.zip/node_modules/@testing-library/jest-dom/",
           "packageDependencies": [
-            ["@testing-library/jest-dom", "npm:5.11.8"],
+            ["@testing-library/jest-dom", "npm:5.11.9"],
             ["@babel/runtime", "npm:7.10.5"],
             ["@types/testing-library__jest-dom", "npm:5.9.1"],
             ["aria-query", "npm:4.2.2"],
@@ -4931,7 +4931,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/lab", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:4.0.0-alpha.56"],
             ["@sentry/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:5.29.2"],
             ["@sentry/tracing", "npm:5.29.2"],
-            ["@testing-library/jest-dom", "npm:5.11.8"],
+            ["@testing-library/jest-dom", "npm:5.11.9"],
             ["@testing-library/react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:11.2.2"],
             ["@testing-library/user-event", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:12.6.0"],
             ["@types/history", "npm:4.7.7"],
