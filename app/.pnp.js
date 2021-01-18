@@ -39,7 +39,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@auth0/auth0-react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.2.0"],
             ["@csstools/normalize.css", "npm:11.0.1"],
-            ["@fortawesome/fontawesome-svg-core", "npm:1.2.30"],
+            ["@fortawesome/fontawesome-svg-core", "npm:1.2.34"],
             ["@fortawesome/free-solid-svg-icons", "npm:5.14.0"],
             ["@fortawesome/react-fontawesome", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.14"],
             ["@material-ui/core", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:4.11.2"],
@@ -2527,14 +2527,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@fortawesome/fontawesome-common-types", "npm:0.2.30"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:0.2.34", {
+          "packageLocation": "./.yarn/unplugged/@fortawesome-fontawesome-common-types-npm-0.2.34-43235071e1/node_modules/@fortawesome/fontawesome-common-types/",
+          "packageDependencies": [
+            ["@fortawesome/fontawesome-common-types", "npm:0.2.34"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@fortawesome/fontawesome-svg-core", [
-        ["npm:1.2.30", {
-          "packageLocation": "./.yarn/cache/@fortawesome-fontawesome-svg-core-npm-1.2.30-42d5c77ff9-56ab4184ec.zip/node_modules/@fortawesome/fontawesome-svg-core/",
+        ["npm:1.2.34", {
+          "packageLocation": "./.yarn/unplugged/@fortawesome-fontawesome-svg-core-npm-1.2.34-3078bdc3cc/node_modules/@fortawesome/fontawesome-svg-core/",
           "packageDependencies": [
-            ["@fortawesome/fontawesome-svg-core", "npm:1.2.30"],
-            ["@fortawesome/fontawesome-common-types", "npm:0.2.30"]
+            ["@fortawesome/fontawesome-svg-core", "npm:1.2.34"],
+            ["@fortawesome/fontawesome-common-types", "npm:0.2.34"]
           ],
           "linkType": "HARD",
         }]
@@ -2554,7 +2561,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/$$virtual/@fortawesome-react-fontawesome-virtual-7538b996f5/0/cache/@fortawesome-react-fontawesome-npm-0.1.14-a74287f90f-8e9f2b94d3.zip/node_modules/@fortawesome/react-fontawesome/",
           "packageDependencies": [
             ["@fortawesome/react-fontawesome", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.14"],
-            ["@fortawesome/fontawesome-svg-core", "npm:1.2.30"],
+            ["@fortawesome/fontawesome-svg-core", "npm:1.2.34"],
             ["@types/fortawesome__fontawesome-svg-core", null],
             ["@types/react", "npm:17.0.0"],
             ["prop-types", "npm:15.7.2"],
@@ -4923,7 +4930,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["app", "workspace:."],
             ["@auth0/auth0-react", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.2.0"],
             ["@csstools/normalize.css", "npm:11.0.1"],
-            ["@fortawesome/fontawesome-svg-core", "npm:1.2.30"],
+            ["@fortawesome/fontawesome-svg-core", "npm:1.2.34"],
             ["@fortawesome/free-solid-svg-icons", "npm:5.14.0"],
             ["@fortawesome/react-fontawesome", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:0.1.14"],
             ["@material-ui/core", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:4.11.2"],
