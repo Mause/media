@@ -1324,10 +1324,10 @@
         },
         "async-asgi-testclient": {
             "hashes": [
-                "sha256:e961c61123eca6dc30c4f67df7fe8a3f695ca9c8b013d97272b930d6d5af4509"
+                "sha256:46630a1da821810a931248706f3a908dbf29938a1035710cb5663932ea9013be"
             ],
             "index": "pypi",
-            "version": "==1.4.4"
+            "version": "==1.4.5"
         },
         "async-timeout": {
             "hashes": [
