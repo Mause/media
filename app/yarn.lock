@@ -2974,10 +2974,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/socket.io-client@npm:*, @types/socket.io-client@npm:^1.4.34":
+"@types/socket.io-client@npm:*":
   version: 1.4.34
   resolution: "@types/socket.io-client@npm:1.4.34"
   checksum: 50b19bdca4d04e72f407b2577aa7ee9fdf5dddf722041c7c652a95b0d1bbf5da692aaa7cba294b1da8b563fb4d72a66b5a6d34831b005abb71f84775f1ba0515
+  languageName: node
+  linkType: hard
+
+"@types/socket.io-client@npm:^1.4.35":
+  version: 1.4.35
+  resolution: "@types/socket.io-client@npm:1.4.35"
+  checksum: 367bceb6edd3491898cf9eebbec9f6663737a470047573a262462f0492f7171a59fa79113f494dfdd4c37548d05e45284d88d8881a692417900b82df869c8ced
   languageName: node
   linkType: hard
 
@@ -3752,7 +3759,7 @@ __metadata:
     "@types/react-dom": ^17.0.0
     "@types/react-helmet": ^6.1.0
     "@types/react-router-dom": ^5.1.7
-    "@types/socket.io-client": ^1.4.34
+    "@types/socket.io-client": ^1.4.35
     "@use-it/interval": ^1.0.0
     "@vtex/axios-concurrent-retry": ^4.0.11
     axios: ^0.21.0

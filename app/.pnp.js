@@ -60,7 +60,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:17.0.0"],
             ["@types/react-helmet", "npm:6.1.0"],
             ["@types/react-router-dom", "npm:5.1.7"],
-            ["@types/socket.io-client", "npm:1.4.34"],
+            ["@types/socket.io-client", "npm:1.4.35"],
             ["@use-it/interval", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0"],
             ["@vtex/axios-concurrent-retry", "npm:4.0.11"],
             ["axios", "npm:0.21.0"],
@@ -4022,6 +4022,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/socket.io-client", "npm:1.4.34"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:1.4.35", {
+          "packageLocation": "./.yarn/cache/@types-socket.io-client-npm-1.4.35-4ae93397ba-367bceb6ed.zip/node_modules/@types/socket.io-client/",
+          "packageDependencies": [
+            ["@types/socket.io-client", "npm:1.4.35"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@types/source-list-map", [
@@ -4944,7 +4951,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:17.0.0"],
             ["@types/react-helmet", "npm:6.1.0"],
             ["@types/react-router-dom", "npm:5.1.7"],
-            ["@types/socket.io-client", "npm:1.4.34"],
+            ["@types/socket.io-client", "npm:1.4.35"],
             ["@use-it/interval", "virtual:0460f86c7587ee75dac643681550c044e8047ba46e219a5baac054fc0fea2d0af97a9bd3fe4b22de0884797215e0a1a4368bb60f9ef7087a69c4008789f4e032#npm:1.0.0"],
             ["@vtex/axios-concurrent-retry", "npm:4.0.11"],
             ["axios", "npm:0.21.0"],
