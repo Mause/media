@@ -754,11 +754,11 @@
         },
         "plexapi": {
             "hashes": [
-                "sha256:33b9172d939426b94fe6dcbcf3c08e14b1a983e1fc48121665b9c3fa9502b5d3",
-                "sha256:40ba5cf064e40ee56116774e1ff19f17fbf88b69b8a0387396d5be5c40d5edf2"
+                "sha256:1fc14397908a68b39e26d93dc1a8257fa90d91a203e9127e19462a1fd5dc7cfc",
+                "sha256:c17026e035d311626bc84607fe18a341ce44f2f112ece7c66dc4a6cb800f6d98"
             ],
             "index": "pypi",
-            "version": "==4.3.0"
+            "version": "==4.3.1"
         },
         "psycopg2-binary": {
             "hashes": [
