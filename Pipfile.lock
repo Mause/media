@@ -2100,11 +2100,11 @@
         },
         "webdriver-manager": {
             "hashes": [
-                "sha256:18a665c6400bb7cf1a9ec9e1030ac5539cd5c892c97075f58940c62971470ce3",
-                "sha256:c2d4ee0a78226c355f3657dd0337e515187585a1497229af2ce5f4705234da9c"
+                "sha256:22ae0ace4da117472302c21ead8ec05eb5c1312eeeba97547395d79f83afb241",
+                "sha256:6b54b18f75379f97f9e49f504a8e79010d47af1da8e7b5d7d7a103ca535b1e46"
             ],
             "index": "pypi",
-            "version": "==3.2.2"
+            "version": "==3.3.0"
         },
         "werkzeug": {
             "hashes": [
