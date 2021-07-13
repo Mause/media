@@ -15,9 +15,11 @@ function IndexComponent() {
     'index',
     CFG,
   );
-  const { data: torrents, isValidating: loadingTorrents, error } = useSWR<
-    Torrents
-  >('torrents', CFG);
+  const {
+    data: torrents,
+    isValidating: loadingTorrents,
+    error,
+  } = useSWR<Torrents>('torrents', CFG);
 
   const loading = loadingState || loadingTorrents;
 
