@@ -99,7 +99,11 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     (season ? 'tv' : 'movie') + '/' + tmdb_id,
   );
   const { data: torrents } = useSWR<Torrents>('torrents');
-  const { items: results, loading, errors } = useSubscribes<ITorrent>(
+  const {
+    items: results,
+    loading,
+    errors,
+  } = useSubscribes<ITorrent>(
     `/api/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
   );
   const dt = (result: ITorrent) => (
@@ -242,9 +246,11 @@ function useToken() {
   return token;
 }
 
-function useSubscribes<T>(
-  url: string,
-): { items: T[]; loading: boolean; errors: { [key: string]: Error } } {
+function useSubscribes<T>(url: string): {
+  items: T[];
+  loading: boolean;
+  errors: { [key: string]: Error };
+} {
   const token = useToken();
 
   const p = ['rarbg', 'horriblesubs', 'kickass'];

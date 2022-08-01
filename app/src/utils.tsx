@@ -33,7 +33,7 @@ export function subscribe<T>(
     }),
   });
   const onerror = (event: Event) => {
-    error((event as unknown) as Error);
+    error(event as unknown as Error);
   };
   es.addEventListener('abort', onerror);
   const internal_callback = (event: Event) => {

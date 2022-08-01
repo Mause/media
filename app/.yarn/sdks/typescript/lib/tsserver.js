@@ -17,10 +17,8 @@ const moduleWrapper = (tsserver) => {
   const { isAbsolute } = require(`path`);
 
   const Session = tsserver.server.Session;
-  const {
-    onMessage: originalOnMessage,
-    send: originalSend,
-  } = Session.prototype;
+  const { onMessage: originalOnMessage, send: originalSend } =
+    Session.prototype;
 
   return Object.assign(Session.prototype, {
     onMessage(/** @type {string} */ message) {
