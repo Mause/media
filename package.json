@@ -3,8 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "make prod"
@@ -20,7 +18,7 @@
   },
   "homepage": "https://github.com/Mause/rarbg_local#readme",
   "engines": {
-    "yarn": "1.22.4",
-    "node": "12.14.1"
-  }
+    "node": "^18"
+  },
+  "packageManager": "yarn@4.0.2"
 }
