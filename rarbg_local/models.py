@@ -41,6 +41,7 @@ class ProviderSource(Enum):
     KICKASS = 'kickass'
     HORRIBLESUBS = 'horriblesubs'
     RARBG = 'rarbg'
+    PIRATEBAY = 'piratebay'
 
 
 class EpisodeInfo(BaseModel):
