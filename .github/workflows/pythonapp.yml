@@ -29,7 +29,7 @@ jobs:
           sudo apt install libxml2-dev libxslt-dev
       - name: Cache pipenv virtualenv
         id: cache-pipenv
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-pipenv-${{ matrix.python-version }}-${{ hashFiles('**/Pipfile.lock') }}-2
@@ -57,7 +57,7 @@ jobs:
           CLOUDAMQP_URL: "https://hello"
           TMDB_API_KEY: word
       - name: Archive test report
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: report.html

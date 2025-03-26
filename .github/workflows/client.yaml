@@ -20,7 +20,7 @@ jobs:
       with:
               java-version: 8
     - run: npx @openapitools/openapi-generator-cli generate -i https://media.mause.me/openapi.json -g python -o client --skip-validate-spec
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: client
         path: client
