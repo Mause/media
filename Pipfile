@@ -62,7 +62,7 @@ python-multipart = "==0.0.5"
 jwkaas = "==0.7"
 aniso8601 = "==8.1.1"
 pytz = "==2021.1"
-uvicorn = { extras = [ "standard",], version = "==0.13.3" }
+uvicorn = { extras = [ "standard",], version = "*" }
 aiofiles = "==0.6.0"
 fastapi-utils = "==0.2.1"
 asyncache = "==0.1.1"
