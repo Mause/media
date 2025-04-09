@@ -65,6 +65,8 @@ snapshots['test_openapi 1'] = {
                                     'type': 'array',
                                 },
                             ],
+                            'maxItems': 2,
+                            'minItems': 2,
                             'type': 'array',
                         },
                         'title': 'Complete',
@@ -79,6 +81,8 @@ snapshots['test_openapi 1'] = {
                                     'type': 'array',
                                 },
                             ],
+                            'maxItems': 2,
+                            'minItems': 2,
                             'type': 'array',
                         },
                         'title': 'Incomplete',
@@ -414,9 +418,7 @@ snapshots['test_openapi 1'] = {
         },
         'securitySchemes': {
             'XOpenIdConnect': {
-                'openIdConnectUrl': (
-                    'https://mause.au.auth0.com/.well-known/openid-configuration'
-                ),
+                'openIdConnectUrl': 'https://mause.au.auth0.com/.well-known/openid-configuration',
                 'type': 'openIdConnect',
             }
         },
