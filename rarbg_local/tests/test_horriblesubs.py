@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from pytest import mark
@@ -97,7 +98,7 @@ async def test_get_downloads_single(responses: RequestsMock, snapshot):
 
     magnets = list(get_downloads(1, HorriblesubsDownloadType.SHOW))
 
-    snapshot.assert_match(magnets)
+    snapshot.assert_match(json.dumps(magnets, indent=2, default=repr), 'magnets.json')
 
 
 @mark.asyncio
@@ -135,4 +136,4 @@ async def test_provider(responses: RequestsMock, aioresponses, snapshot):
         for item in await tolist(HorriblesubsProvider().search_for_tv(None, 1, 1, 2))
     ]
 
-    snapshot.assert_match(results)
+    snapshot.assert_match(json.dumps(results, indent=2, default=repr), 'results.json')

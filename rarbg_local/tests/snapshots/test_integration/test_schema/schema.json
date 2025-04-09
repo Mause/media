@@ -1,0 +1,36 @@
+{
+  "title": "SearchResponse",
+  "type": "object",
+  "properties": {
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "type": {
+      "$ref": "#/definitions/MediaType"
+    },
+    "year": {
+      "title": "Year",
+      "type": "integer"
+    },
+    "imdbID": {
+      "title": "Imdbid",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "title",
+    "type",
+    "imdbID"
+  ],
+  "definitions": {
+    "MediaType": {
+      "title": "MediaType",
+      "description": "An enumeration.",
+      "enum": [
+        "series",
+        "movie"
+      ]
+    }
+  }
+}

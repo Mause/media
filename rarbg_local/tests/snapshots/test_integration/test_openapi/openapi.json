@@ -1,0 +1,1587 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Media",
+    "version": "0.1.0-dev"
+  },
+  "servers": [
+    {
+      "url": "{protocol}://localhost:5000/",
+      "description": "Development",
+      "variables": {
+        "protocol": {
+          "enum": [
+            "http",
+            "https"
+          ],
+          "default": "https"
+        }
+      }
+    },
+    {
+      "url": "https://media-staging.herokuapps.com/",
+      "description": "Staging"
+    },
+    {
+      "url": "https://media.mause.me/",
+      "description": "Production"
+    }
+  ],
+  "paths": {
+    "/api/diagnostics/pool": {
+      "get": {
+        "summary": "Pool",
+        "operationId": "pool",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/unauthorized": {
+      "get": {
+        "summary": "User",
+        "operationId": "user",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/delete/{type}/{id}": {
+      "get": {
+        "summary": "Delete",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/MediaType"
+            },
+            "name": "type",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "integer"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/stream/{type}/{tmdb_id}": {
+      "get": {
+        "summary": "Stream",
+        "operationId": "stream",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Type",
+              "type": "string"
+            },
+            "name": "type",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Tmdb Id",
+              "type": "string"
+            },
+            "name": "tmdb_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ProviderSource"
+            },
+            "name": "source",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Season",
+              "type": "integer"
+            },
+            "name": "season",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Episode",
+              "type": "integer"
+            },
+            "name": "episode",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/event-stream": {},
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ITorrent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/select/{tmdb_id}/season/{season}/download_all": {
+      "get": {
+        "summary": "Select",
+        "operationId": "select",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tmdb Id",
+              "type": "integer"
+            },
+            "name": "tmdb_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Season",
+              "type": "integer"
+            },
+            "name": "season",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadAllResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/diagnostics": {
+      "get": {
+        "summary": "Diagnostics",
+        "operationId": "diagnostics",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/download": {
+      "post": {
+        "summary": "Download Post",
+        "operationId": "download_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Things",
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DownloadPost"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Download Post Api Download Post",
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/MovieDetailsSchema"
+                      },
+                      {
+                        "$ref": "#/components/schemas/EpisodeDetailsSchema"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/index": {
+      "get": {
+        "summary": "Index",
+        "operationId": "index",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndexResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/stats": {
+      "get": {
+        "summary": "Stats",
+        "operationId": "stats",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Stats Api Stats Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatsResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/movie/{tmdb_id}": {
+      "get": {
+        "summary": "Movie",
+        "operationId": "movie",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tmdb Id",
+              "type": "integer"
+            },
+            "name": "tmdb_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/torrents": {
+      "get": {
+        "summary": "Torrents",
+        "operationId": "torrents",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Torrents Api Torrents Get",
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/InnerTorrent"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/search": {
+      "get": {
+        "summary": "Search",
+        "operationId": "search",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Query",
+              "type": "string"
+            },
+            "name": "query",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Search Api Search Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchResponse"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/tv/{tmdb_id}": {
+      "get": {
+        "tags": [
+          "tv"
+        ],
+        "summary": "Api Tv",
+        "operationId": "api_tv",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tmdb Id",
+              "type": "integer"
+            },
+            "name": "tmdb_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TvResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/tv/{tmdb_id}/season/{season}": {
+      "get": {
+        "tags": [
+          "tv"
+        ],
+        "summary": "Api Tv Season",
+        "operationId": "api_tv_season",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tmdb Id",
+              "type": "integer"
+            },
+            "name": "tmdb_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Season",
+              "type": "integer"
+            },
+            "name": "season",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TvSeasonResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/monitor": {
+      "get": {
+        "tags": [
+          "monitor"
+        ],
+        "summary": "Monitor Get",
+        "operationId": "monitor_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Monitor Get Api Monitor Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MonitorGet"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "monitor"
+        ],
+        "summary": "Monitor Post",
+        "operationId": "monitor_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonitorPost"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorGet"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/monitor/{monitor_id}": {
+      "delete": {
+        "tags": [
+          "monitor"
+        ],
+        "summary": "Monitor Delete",
+        "operationId": "monitor_delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Monitor Id",
+              "type": "integer"
+            },
+            "name": "monitor_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/redirect/plex/{tmdb_id}": {
+      "get": {
+        "summary": "Redirect To Plex",
+        "operationId": "redirect_to_plex",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tmdb Id",
+              "type": "string"
+            },
+            "name": "tmdb_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/redirect/{type_}/{tmdb_id}/{season}/{episode}": {
+      "get": {
+        "summary": "Redirect To Imdb",
+        "operationId": "redirect_to_imdb",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/MediaType"
+            },
+            "name": "type_",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Tmdb Id",
+              "type": "integer"
+            },
+            "name": "tmdb_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Season",
+              "type": "integer"
+            },
+            "name": "season",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Episode",
+              "type": "integer"
+            },
+            "name": "episode",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/redirect/{type_}/{tmdb_id}": {
+      "get": {
+        "summary": "Redirect To Imdb",
+        "operationId": "redirect_to_imdb",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/MediaType"
+            },
+            "name": "type_",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Tmdb Id",
+              "type": "integer"
+            },
+            "name": "tmdb_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Season",
+              "type": "integer"
+            },
+            "name": "season",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Episode",
+              "type": "integer"
+            },
+            "name": "episode",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DownloadAllResponse": {
+        "title": "DownloadAllResponse",
+        "required": [
+          "packs",
+          "complete",
+          "incomplete"
+        ],
+        "type": "object",
+        "properties": {
+          "packs": {
+            "title": "Packs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ITorrent"
+            }
+          },
+          "complete": {
+            "title": "Complete",
+            "type": "array",
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ITorrent"
+                  }
+                }
+              ]
+            }
+          },
+          "incomplete": {
+            "title": "Incomplete",
+            "type": "array",
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ITorrent"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "DownloadPost": {
+        "title": "DownloadPost",
+        "required": [
+          "tmdb_id",
+          "magnet"
+        ],
+        "type": "object",
+        "properties": {
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "magnet": {
+            "title": "Magnet",
+            "pattern": "^magnet:",
+            "type": "string"
+          },
+          "season": {
+            "title": "Season",
+            "type": "string"
+          },
+          "episode": {
+            "title": "Episode",
+            "type": "string"
+          }
+        }
+      },
+      "DownloadSchema": {
+        "title": "DownloadSchema",
+        "required": [
+          "id",
+          "tmdb_id",
+          "transmission_id",
+          "imdb_id",
+          "type",
+          "title",
+          "timestamp",
+          "added_by"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "transmission_id": {
+            "title": "Transmission Id",
+            "type": "string"
+          },
+          "imdb_id": {
+            "title": "Imdb Id",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string",
+            "format": "date-time"
+          },
+          "added_by": {
+            "$ref": "#/components/schemas/UserSchema"
+          }
+        }
+      },
+      "Episode": {
+        "title": "Episode",
+        "required": [
+          "name",
+          "id",
+          "episode_number"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "episode_number": {
+            "title": "Episode Number",
+            "type": "integer"
+          },
+          "air_date": {
+            "title": "Air Date",
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "EpisodeDetailsSchema": {
+        "title": "EpisodeDetailsSchema",
+        "required": [
+          "id",
+          "download",
+          "show_title",
+          "season"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "download": {
+            "$ref": "#/components/schemas/DownloadSchema"
+          },
+          "show_title": {
+            "title": "Show Title",
+            "type": "string"
+          },
+          "season": {
+            "title": "Season",
+            "type": "integer"
+          },
+          "episode": {
+            "title": "Episode",
+            "type": "integer"
+          }
+        }
+      },
+      "EpisodeInfo": {
+        "title": "EpisodeInfo",
+        "type": "object",
+        "properties": {
+          "seasonnum": {
+            "title": "Seasonnum",
+            "type": "string"
+          },
+          "epnum": {
+            "title": "Epnum",
+            "type": "string"
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ITorrent": {
+        "title": "ITorrent",
+        "required": [
+          "source",
+          "title",
+          "seeders",
+          "download",
+          "category",
+          "episode_info"
+        ],
+        "type": "object",
+        "properties": {
+          "source": {
+            "$ref": "#/components/schemas/ProviderSource"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "seeders": {
+            "title": "Seeders",
+            "type": "integer"
+          },
+          "download": {
+            "title": "Download",
+            "type": "string"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "episode_info": {
+            "$ref": "#/components/schemas/EpisodeInfo"
+          }
+        }
+      },
+      "IndexResponse": {
+        "title": "IndexResponse",
+        "required": [
+          "series",
+          "movies"
+        ],
+        "type": "object",
+        "properties": {
+          "series": {
+            "title": "Series",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SeriesDetails"
+            }
+          },
+          "movies": {
+            "title": "Movies",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MovieDetailsSchema"
+            }
+          }
+        }
+      },
+      "InnerTorrent": {
+        "title": "InnerTorrent",
+        "required": [
+          "eta",
+          "hashString",
+          "id",
+          "percentDone",
+          "files"
+        ],
+        "type": "object",
+        "properties": {
+          "eta": {
+            "title": "Eta",
+            "type": "integer"
+          },
+          "hashString": {
+            "title": "Hashstring",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "percentDone": {
+            "title": "Percentdone",
+            "type": "number"
+          },
+          "files": {
+            "title": "Files",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InnerTorrentFile"
+            }
+          }
+        }
+      },
+      "InnerTorrentFile": {
+        "title": "InnerTorrentFile",
+        "required": [
+          "bytesCompleted",
+          "length",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "bytesCompleted": {
+            "title": "Bytescompleted",
+            "type": "integer"
+          },
+          "length": {
+            "title": "Length",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        }
+      },
+      "MediaType": {
+        "title": "MediaType",
+        "enum": [
+          "series",
+          "movie"
+        ],
+        "description": "An enumeration."
+      },
+      "MonitorGet": {
+        "title": "MonitorGet",
+        "required": [
+          "tmdb_id",
+          "type",
+          "id",
+          "title",
+          "added_by"
+        ],
+        "type": "object",
+        "properties": {
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "type": {
+            "$ref": "#/components/schemas/MonitorMediaType"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "added_by": {
+            "title": "Added By",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "MonitorMediaType": {
+        "title": "MonitorMediaType",
+        "enum": [
+          "MOVIE",
+          "TV"
+        ],
+        "description": "An enumeration."
+      },
+      "MonitorPost": {
+        "title": "MonitorPost",
+        "required": [
+          "tmdb_id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "type": {
+            "$ref": "#/components/schemas/MonitorMediaType"
+          }
+        }
+      },
+      "MovieDetailsSchema": {
+        "title": "MovieDetailsSchema",
+        "required": [
+          "id",
+          "download"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "download": {
+            "$ref": "#/components/schemas/DownloadSchema"
+          }
+        }
+      },
+      "MovieResponse": {
+        "title": "MovieResponse",
+        "required": [
+          "title",
+          "imdb_id"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "imdb_id": {
+            "title": "Imdb Id",
+            "type": "string"
+          }
+        }
+      },
+      "ProviderSource": {
+        "title": "ProviderSource",
+        "enum": [
+          "kickass",
+          "horriblesubs",
+          "rarbg"
+        ],
+        "description": "An enumeration."
+      },
+      "SearchResponse": {
+        "title": "SearchResponse",
+        "required": [
+          "title",
+          "type",
+          "imdbID"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/MediaType"
+          },
+          "year": {
+            "title": "Year",
+            "type": "integer"
+          },
+          "imdbID": {
+            "title": "Imdbid",
+            "type": "integer"
+          }
+        }
+      },
+      "SeasonMeta": {
+        "title": "SeasonMeta",
+        "required": [
+          "episode_count",
+          "season_number"
+        ],
+        "type": "object",
+        "properties": {
+          "episode_count": {
+            "title": "Episode Count",
+            "type": "integer"
+          },
+          "season_number": {
+            "title": "Season Number",
+            "type": "integer"
+          }
+        }
+      },
+      "SeriesDetails": {
+        "title": "SeriesDetails",
+        "required": [
+          "title",
+          "imdb_id",
+          "tmdb_id",
+          "seasons"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "imdb_id": {
+            "title": "Imdb Id",
+            "type": "string"
+          },
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "seasons": {
+            "title": "Seasons",
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/EpisodeDetailsSchema"
+              }
+            }
+          }
+        }
+      },
+      "Stats": {
+        "title": "Stats",
+        "type": "object",
+        "properties": {
+          "episode": {
+            "title": "Episode",
+            "type": "integer",
+            "default": 0
+          },
+          "movie": {
+            "title": "Movie",
+            "type": "integer",
+            "default": 0
+          }
+        }
+      },
+      "StatsResponse": {
+        "title": "StatsResponse",
+        "required": [
+          "user",
+          "values"
+        ],
+        "type": "object",
+        "properties": {
+          "user": {
+            "title": "User",
+            "type": "string"
+          },
+          "values": {
+            "$ref": "#/components/schemas/Stats"
+          }
+        }
+      },
+      "TvResponse": {
+        "title": "TvResponse",
+        "required": [
+          "number_of_seasons",
+          "seasons",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "number_of_seasons": {
+            "title": "Number Of Seasons",
+            "type": "integer"
+          },
+          "seasons": {
+            "title": "Seasons",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SeasonMeta"
+            }
+          },
+          "imdb_id": {
+            "title": "Imdb Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        }
+      },
+      "TvSeasonResponse": {
+        "title": "TvSeasonResponse",
+        "required": [
+          "episodes"
+        ],
+        "type": "object",
+        "properties": {
+          "episodes": {
+            "title": "Episodes",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Episode"
+            }
+          }
+        }
+      },
+      "UserSchema": {
+        "title": "UserSchema",
+        "required": [
+          "username",
+          "first_name"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "first_name": {
+            "title": "First Name",
+            "type": "string"
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "XOpenIdConnect": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://mause.au.auth0.com/.well-known/openid-configuration"
+      }
+    }
+  }
+}

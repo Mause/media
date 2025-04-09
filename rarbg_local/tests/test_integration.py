@@ -172,6 +172,10 @@ def shallow(d: Dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 
+def assert_match_json(snapshot, res, name):
+    snapshot.assert_match(json.dumps(res.json(), indent=2), name)
+
+
 @mark.asyncio
 async def test_index(responses, test_client, get_torrent, snapshot, session, user):
     session.add_all(
@@ -203,7 +207,7 @@ async def test_index(responses, test_client, get_torrent, snapshot, session, use
 
     assert res.status_code == 200
 
-    snapshot.assert_match(res.json())
+    assert_match_json(snapshot, res, 'index.json')
 
 
 @mark.asyncio
@@ -263,7 +267,7 @@ async def test_season_info(aioresponses, test_client: TestClient, snapshot) -> N
 
     assert res.status_code == 200
 
-    snapshot.assert_match(res.json())
+    assert_match_json(snapshot, res, 'season_1.json')
 
 
 @mark.asyncio
@@ -283,7 +287,7 @@ async def test_select_season(aioresponses, test_client: TestClient, snapshot) ->
 
     assert res.status_code == 200
 
-    snapshot.assert_match(res.json())
+    assert_match_json(snapshot, res, 'tv_100000.json')
 
 
 @mark.asyncio
@@ -400,7 +404,7 @@ async def test_movie(test_client, snapshot, aioresponses):
     r = await test_client.get('/api/movie/1')
     assert r.status_code == 200
 
-    snapshot.assert_match(r.json())
+    assert_match_json(snapshot, r, 'movie_1.json')
 
 
 @mark.asyncio
@@ -408,7 +412,7 @@ async def test_openapi(test_client, snapshot):
     r = await test_client.get('/openapi.json')
     assert r.status_code == 200
 
-    snapshot.assert_match(r.json())
+    assert_match_json(snapshot, r, 'openapi.json')
 
 
 @mark.asyncio
@@ -472,8 +476,7 @@ async def test_stream(test_client, responses, aioresponses):
 
 @mark.asyncio
 async def test_schema(snapshot):
-
-    snapshot.assert_match(SearchResponse.schema())
+    snapshot.assert_match(json.dumps(SearchResponse.schema(), indent=2), 'schema.json')
 
 
 @mark.skipif("not os.path.exists('app/build/index.html')")
@@ -524,7 +527,11 @@ async def test_plex_redirect(test_client, responses):
 @mark.asyncio
 async def test_pool_status(test_client, snapshot, monkeypatch):
     monkeypatch.setattr('rarbg_local.new.getpid', lambda: 1)
-    snapshot.assert_match((await test_client.get('/api/diagnostics/pool')).json())
+    assert_match_json(
+        snapshot,
+        await test_client.get('/api/diagnostics/pool'),
+        'pool.json',
+    )
 
 
 @mark.asyncio
