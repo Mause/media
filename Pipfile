@@ -23,6 +23,7 @@ pytest-asyncio = "==0.14.0"
 async-asgi-testclient = "==1.4.5"
 rich-sparklines = "==0.1.5"
 aioresponses = "==0.7.1"
+pytest-sugar = "*"
 
 [packages]
 flask = "==1.1.2"
