@@ -49,7 +49,7 @@ class Provider(ABC):
 
     @abstractmethod
     def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         raise NotImplementedError()
 
@@ -64,7 +64,7 @@ class RarbgProvider(Provider):
     name = 'rarbg'
 
     async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
             return
@@ -110,7 +110,7 @@ class KickassProvider(Provider):
     name = 'kickass'
 
     async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
             return
@@ -146,7 +146,11 @@ class HorriblesubsProvider(Provider):
     name = 'horriblesubs'
 
     async def search_for_tv(
-        self, imdb_id: Optional[str], tmdb_id: int, season: int, episode: int = None
+        self,
+        imdb_id: Optional[str],
+        tmdb_id: int,
+        season: int,
+        episode: Optional[int] = None,
     ) -> AsyncGenerator[ITorrent, None]:
         name = (await get_tv(tmdb_id)).name
         template = f'HorribleSubs {name} S{season:02d}'
@@ -163,10 +167,11 @@ class HorriblesubsProvider(Provider):
                 ),
             )
 
-    def search_for_movie(
+    async def search_for_movie(
         self, imdb_id: str, tmdb_id: int
     ) -> AsyncGenerator[ITorrent, None]:
-        pass
+        if not True:
+            yield
 
 
 PROVIDERS = [HorriblesubsProvider(), RarbgProvider(), KickassProvider()]
@@ -197,7 +202,9 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
     list(futures)  # throw exceptions in this thread
 
 
-async def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
+async def search_for_tv(
+    imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+):
     for provider in PROVIDERS:
         async for result in provider.search_for_tv(imdb_id, tmdb_id, season, episode):
             yield result

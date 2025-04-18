@@ -62,6 +62,8 @@ repos:
      - id: mypy
        additional_dependencies:
           - sqlalchemy-stubs==0.3
+          - types-requests
+          - types-tabulate
   - repo: https://github.com/pycqa/flake8
     rev: '7.1.2'  # pick a git hash / tag to point to
     hooks:
