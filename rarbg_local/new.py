@@ -516,7 +516,7 @@ def create_app():
         version='0.1.0-' + os.environ.get('HEROKU_SLUG_COMMIT', 'dev'),
         debug='HEROKU' not in os.environ,
     )
-    app.middleware_stack.generate_plain_text = generate_plain_text
+#    app.middleware_stack.generate_plain_text = generate_plain_text
     app.include_router(
         api,
         prefix='/api',
