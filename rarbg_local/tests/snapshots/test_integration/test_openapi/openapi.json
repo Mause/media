@@ -1371,7 +1371,8 @@
         "enum": [
           "kickass",
           "horriblesubs",
-          "rarbg"
+          "rarbg",
+          "torrentscsv"
         ],
         "description": "An enumeration."
       },

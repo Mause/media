@@ -5,6 +5,8 @@ from queue import Empty, Queue
 from threading import Semaphore, current_thread
 from typing import AsyncGenerator, Callable, Iterable, List, Optional, Tuple, TypeVar
 
+import aiohttp
+
 from . import horriblesubs, kickass
 from .models import EpisodeInfo, ITorrent, ProviderSource
 from .rarbg import get_rarbg_iter
@@ -174,7 +176,37 @@ class HorriblesubsProvider(Provider):
             yield
 
 
-PROVIDERS = [HorriblesubsProvider(), RarbgProvider(), KickassProvider()]
+class TorrentsCsvProvider(Provider):
+    def search_for_tv(
+        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+    ) -> AsyncGenerator[ITorrent, None]:
+        pass
+
+    name = "torrentscsv"
+
+    async def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
+        async with aiohttp.ClientSession() as session:
+            res = await session.get(
+                "https://torrents-csv.com/service/search", params={"q": imdb_id}
+            )
+            for item in (await res.json())['torrents']:
+                yield ITorrent(
+                    source=ProviderSource.TORRENTS_CSV,
+                    title=item['name'],
+                    seeders=item['seeders'],
+                    download=item['infohash'],
+                    episode_info=EpisodeInfo(),
+                )
+
+
+PROVIDERS = [
+    HorriblesubsProvider(),
+    RarbgProvider(),
+    KickassProvider(),
+    TorrentsCsvProvider(),
+]
 
 
 def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
