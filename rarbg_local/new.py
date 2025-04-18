@@ -237,7 +237,7 @@ async def stream(
     source: ProviderSource,
     season: Optional[int] = None,
     episode: Optional[int] = None,
-) -> AsyncGenerator[BaseModel, None]:
+):
     provider = next(
         (provider for provider in PROVIDERS if provider.name == source.value),
         None,
