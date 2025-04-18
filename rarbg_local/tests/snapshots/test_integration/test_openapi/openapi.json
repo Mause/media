@@ -1372,7 +1372,8 @@
           "kickass",
           "horriblesubs",
           "rarbg",
-          "torrentscsv"
+          "torrentscsv",
+          "piratebay"
         ],
         "description": "An enumeration."
       },
