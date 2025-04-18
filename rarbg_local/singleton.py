@@ -1,5 +1,6 @@
 import inspect
 from asyncio import iscoroutinefunction
+from contextlib import AsyncExitStack
 from typing import Callable, Optional, TypeVar
 
 from fastapi import FastAPI
@@ -23,12 +24,15 @@ async def get(
         request=request,
         dependant=dependant,
         dependency_overrides_provider=app,
+        async_exit_stack=AsyncExitStack(),
     )
 
     assert not errors
 
     return await run_endpoint_function(
-        dependant=dependant, values=values, is_coroutine=iscoroutinefunction(func)
+        dependant=dependant,
+        values=values,
+        is_coroutine=iscoroutinefunction(func),
     )
 
 
