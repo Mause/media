@@ -21,7 +21,7 @@ T = TypeVar('T')
 def map_to(config: Dict[str, str]) -> Type:
     class Config:
         class getter_dict(GetterDict):
-            def get(self, name: Any, default: Any = None) -> Any:
+            def get(self, name: Any, default: Optional[Any] = None) -> Any:
                 if name in config:
                     first, *parts = config[name].split('.')
                     v = super().get(first, default)
@@ -41,6 +41,7 @@ class ProviderSource(Enum):
     KICKASS = 'kickass'
     HORRIBLESUBS = 'horriblesubs'
     RARBG = 'rarbg'
+    TORRENTS_CSV = 'torrentscsv'
 
 
 class EpisodeInfo(BaseModel):

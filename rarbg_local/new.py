@@ -235,8 +235,8 @@ async def stream(
     type: str,
     tmdb_id: str,
     source: ProviderSource,
-    season: int = None,
-    episode: int = None,
+    season: Optional[int] = None,
+    episode: Optional[int] = None,
 ) -> AsyncGenerator[BaseModel, None]:
     provider = next(
         (provider for provider in PROVIDERS if provider.name == source.value),
@@ -521,7 +521,10 @@ def redirect_to_plex(tmdb_id: str, plex=Depends(get_plex)):
 @root.get('/redirect/{type_}/{tmdb_id}')
 @root.get('/redirect/{type_}/{tmdb_id}/{season}/{episode}')
 async def redirect_to_imdb(
-    type_: MediaType, tmdb_id: int, season: int = None, episode: int = None
+    type_: MediaType,
+    tmdb_id: int,
+    season: Optional[int] = None,
+    episode: Optional[int] = None,
 ):
     if type_ == 'movie':
         imdb_id = await get_movie_imdb_id(tmdb_id)

@@ -1,7 +1,7 @@
 import logging
 import re
 import string
-from typing import Any, Dict, Iterable
+from typing import Any, Dict, Iterable, Optional
 
 import requests
 from bs4 import BeautifulSoup
@@ -49,7 +49,7 @@ def tokenise(name: str) -> str:
 
 
 async def search_for_tv(
-    imdb_id: str, tmdb_id: int, season: int, episode: int = None
+    imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
 ) -> Iterable[Dict]:
     name = (await get_tv(tmdb_id)).name
 
