@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.2",
+  "openapi": "3.1.0",
   "info": {
     "title": "Media",
     "version": "0.1.0-dev"
@@ -90,8 +90,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Id",
-              "type": "integer"
+              "type": "integer",
+              "title": "Id"
             },
             "name": "id",
             "in": "path"
@@ -134,8 +134,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Type",
-              "type": "string"
+              "type": "string",
+              "title": "Type"
             },
             "name": "type",
             "in": "path"
@@ -143,8 +143,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Tmdb Id",
-              "type": "string"
+              "type": "string",
+              "title": "Tmdb Id"
             },
             "name": "tmdb_id",
             "in": "path"
@@ -160,8 +160,8 @@
           {
             "required": false,
             "schema": {
-              "title": "Season",
-              "type": "integer"
+              "type": "integer",
+              "title": "Season"
             },
             "name": "season",
             "in": "query"
@@ -169,8 +169,8 @@
           {
             "required": false,
             "schema": {
-              "title": "Episode",
-              "type": "integer"
+              "type": "integer",
+              "title": "Episode"
             },
             "name": "episode",
             "in": "query"
@@ -216,8 +216,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Tmdb Id",
-              "type": "integer"
+              "type": "integer",
+              "title": "Tmdb Id"
             },
             "name": "tmdb_id",
             "in": "path"
@@ -225,8 +225,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Season",
-              "type": "integer"
+              "type": "integer",
+              "title": "Season"
             },
             "name": "season",
             "in": "path"
@@ -294,11 +294,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "title": "Things",
-                "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/DownloadPost"
-                }
+                },
+                "type": "array",
+                "title": "Things"
               }
             }
           },
@@ -310,8 +310,6 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Download Post Api Download Post",
-                  "type": "array",
                   "items": {
                     "anyOf": [
                       {
@@ -321,7 +319,9 @@
                         "$ref": "#/components/schemas/EpisodeDetailsSchema"
                       }
                     ]
-                  }
+                  },
+                  "type": "array",
+                  "title": "Response Download Post Api Download Post"
                 }
               }
             }
@@ -342,6 +342,9 @@
             "XOpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "XOpenIdConnect": []
           }
         ]
       }
@@ -381,11 +384,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Stats Api Stats Get",
-                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/StatsResponse"
-                  }
+                  },
+                  "type": "array",
+                  "title": "Response Stats Api Stats Get"
                 }
               }
             }
@@ -408,8 +411,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Tmdb Id",
-              "type": "integer"
+              "type": "integer",
+              "title": "Tmdb Id"
             },
             "name": "tmdb_id",
             "in": "path"
@@ -456,11 +459,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Torrents Api Torrents Get",
-                  "type": "object",
                   "additionalProperties": {
                     "$ref": "#/components/schemas/InnerTorrent"
-                  }
+                  },
+                  "type": "object",
+                  "title": "Response Torrents Api Torrents Get"
                 }
               }
             }
@@ -483,8 +486,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Query",
-              "type": "string"
+              "type": "string",
+              "title": "Query"
             },
             "name": "query",
             "in": "query"
@@ -496,11 +499,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Search Api Search Get",
-                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/SearchResponse"
-                  }
+                  },
+                  "type": "array",
+                  "title": "Response Search Api Search Get"
                 }
               }
             }
@@ -536,8 +539,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Tmdb Id",
-              "type": "integer"
+              "type": "integer",
+              "title": "Tmdb Id"
             },
             "name": "tmdb_id",
             "in": "path"
@@ -585,8 +588,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Tmdb Id",
-              "type": "integer"
+              "type": "integer",
+              "title": "Tmdb Id"
             },
             "name": "tmdb_id",
             "in": "path"
@@ -594,8 +597,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Season",
-              "type": "integer"
+              "type": "integer",
+              "title": "Season"
             },
             "name": "season",
             "in": "path"
@@ -645,11 +648,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Monitor Get Api Monitor Get",
-                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/MonitorGet"
-                  }
+                  },
+                  "type": "array",
+                  "title": "Response Monitor Get Api Monitor Get"
                 }
               }
             }
@@ -660,6 +663,9 @@
             "XOpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "XOpenIdConnect": []
           }
         ]
       },
@@ -706,6 +712,9 @@
             "XOpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "XOpenIdConnect": []
           }
         ]
       }
@@ -721,8 +730,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Monitor Id",
-              "type": "integer"
+              "type": "integer",
+              "title": "Monitor Id"
             },
             "name": "monitor_id",
             "in": "path"
@@ -765,8 +774,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Tmdb Id",
-              "type": "string"
+              "type": "string",
+              "title": "Tmdb Id"
             },
             "name": "tmdb_id",
             "in": "path"
@@ -810,8 +819,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Tmdb Id",
-              "type": "integer"
+              "type": "integer",
+              "title": "Tmdb Id"
             },
             "name": "tmdb_id",
             "in": "path"
@@ -819,8 +828,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Season",
-              "type": "integer"
+              "type": "integer",
+              "title": "Season"
             },
             "name": "season",
             "in": "path"
@@ -828,8 +837,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Episode",
-              "type": "integer"
+              "type": "integer",
+              "title": "Episode"
             },
             "name": "episode",
             "in": "path"
@@ -873,8 +882,8 @@
           {
             "required": true,
             "schema": {
-              "title": "Tmdb Id",
-              "type": "integer"
+              "type": "integer",
+              "title": "Tmdb Id"
             },
             "name": "tmdb_id",
             "in": "path"
@@ -882,8 +891,8 @@
           {
             "required": false,
             "schema": {
-              "title": "Season",
-              "type": "integer"
+              "type": "integer",
+              "title": "Season"
             },
             "name": "season",
             "in": "query"
@@ -891,8 +900,8 @@
           {
             "required": false,
             "schema": {
-              "title": "Episode",
-              "type": "integer"
+              "type": "integer",
+              "title": "Episode"
             },
             "name": "episode",
             "in": "query"
@@ -924,92 +933,126 @@
   "components": {
     "schemas": {
       "DownloadAllResponse": {
-        "title": "DownloadAllResponse",
+        "properties": {
+          "packs": {
+            "items": {
+              "$ref": "#/components/schemas/ITorrent"
+            },
+            "type": "array",
+            "title": "Packs"
+          },
+          "complete": {
+            "items": {
+              "items": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/ITorrent"
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2
+            },
+            "type": "array",
+            "title": "Complete"
+          },
+          "incomplete": {
+            "items": {
+              "items": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/ITorrent"
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2
+            },
+            "type": "array",
+            "title": "Incomplete"
+          }
+        },
+        "type": "object",
         "required": [
           "packs",
           "complete",
           "incomplete"
         ],
-        "type": "object",
-        "properties": {
-          "packs": {
-            "title": "Packs",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ITorrent"
-            }
-          },
-          "complete": {
-            "title": "Complete",
-            "type": "array",
-            "items": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 2,
-              "items": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ITorrent"
-                  }
-                }
-              ]
-            }
-          },
-          "incomplete": {
-            "title": "Incomplete",
-            "type": "array",
-            "items": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 2,
-              "items": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ITorrent"
-                  }
-                }
-              ]
-            }
-          }
-        }
+        "title": "DownloadAllResponse"
       },
       "DownloadPost": {
-        "title": "DownloadPost",
+        "properties": {
+          "tmdb_id": {
+            "type": "integer",
+            "title": "Tmdb Id"
+          },
+          "magnet": {
+            "type": "string",
+            "pattern": "^magnet:",
+            "title": "Magnet"
+          },
+          "season": {
+            "type": "string",
+            "title": "Season"
+          },
+          "episode": {
+            "type": "string",
+            "title": "Episode"
+          }
+        },
+        "type": "object",
         "required": [
           "tmdb_id",
           "magnet"
         ],
-        "type": "object",
-        "properties": {
-          "tmdb_id": {
-            "title": "Tmdb Id",
-            "type": "integer"
-          },
-          "magnet": {
-            "title": "Magnet",
-            "pattern": "^magnet:",
-            "type": "string"
-          },
-          "season": {
-            "title": "Season",
-            "type": "string"
-          },
-          "episode": {
-            "title": "Episode",
-            "type": "string"
-          }
-        }
+        "title": "DownloadPost"
       },
       "DownloadSchema": {
-        "title": "DownloadSchema",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "tmdb_id": {
+            "type": "integer",
+            "title": "Tmdb Id"
+          },
+          "transmission_id": {
+            "type": "string",
+            "title": "Transmission Id"
+          },
+          "imdb_id": {
+            "type": "string",
+            "title": "Imdb Id"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "added_by": {
+            "$ref": "#/components/schemas/UserSchema"
+          }
+        },
+        "type": "object",
         "required": [
           "id",
           "tmdb_id",
@@ -1020,130 +1063,120 @@
           "timestamp",
           "added_by"
         ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "tmdb_id": {
-            "title": "Tmdb Id",
-            "type": "integer"
-          },
-          "transmission_id": {
-            "title": "Transmission Id",
-            "type": "string"
-          },
-          "imdb_id": {
-            "title": "Imdb Id",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "timestamp": {
-            "title": "Timestamp",
-            "type": "string",
-            "format": "date-time"
-          },
-          "added_by": {
-            "$ref": "#/components/schemas/UserSchema"
-          }
-        }
+        "title": "DownloadSchema"
       },
       "Episode": {
-        "title": "Episode",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "episode_number": {
+            "type": "integer",
+            "title": "Episode Number"
+          },
+          "air_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Air Date"
+          }
+        },
+        "type": "object",
         "required": [
           "name",
           "id",
           "episode_number"
         ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "episode_number": {
-            "title": "Episode Number",
-            "type": "integer"
-          },
-          "air_date": {
-            "title": "Air Date",
-            "type": "string",
-            "format": "date"
-          }
-        }
+        "title": "Episode"
       },
       "EpisodeDetailsSchema": {
-        "title": "EpisodeDetailsSchema",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "download": {
+            "$ref": "#/components/schemas/DownloadSchema"
+          },
+          "show_title": {
+            "type": "string",
+            "title": "Show Title"
+          },
+          "season": {
+            "type": "integer",
+            "title": "Season"
+          },
+          "episode": {
+            "type": "integer",
+            "title": "Episode"
+          }
+        },
+        "type": "object",
         "required": [
           "id",
           "download",
           "show_title",
           "season"
         ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "download": {
-            "$ref": "#/components/schemas/DownloadSchema"
-          },
-          "show_title": {
-            "title": "Show Title",
-            "type": "string"
-          },
-          "season": {
-            "title": "Season",
-            "type": "integer"
-          },
-          "episode": {
-            "title": "Episode",
-            "type": "integer"
-          }
-        }
+        "title": "EpisodeDetailsSchema"
       },
       "EpisodeInfo": {
-        "title": "EpisodeInfo",
-        "type": "object",
         "properties": {
           "seasonnum": {
-            "title": "Seasonnum",
-            "type": "string"
+            "type": "string",
+            "title": "Seasonnum"
           },
           "epnum": {
-            "title": "Epnum",
-            "type": "string"
+            "type": "string",
+            "title": "Epnum"
           }
-        }
+        },
+        "type": "object",
+        "title": "EpisodeInfo"
       },
       "HTTPValidationError": {
-        "title": "HTTPValidationError",
-        "type": "object",
         "properties": {
           "detail": {
-            "title": "Detail",
-            "type": "array",
             "items": {
               "$ref": "#/components/schemas/ValidationError"
-            }
+            },
+            "type": "array",
+            "title": "Detail"
           }
-        }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
       },
       "ITorrent": {
-        "title": "ITorrent",
+        "properties": {
+          "source": {
+            "$ref": "#/components/schemas/ProviderSource"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "seeders": {
+            "type": "integer",
+            "title": "Seeders"
+          },
+          "download": {
+            "type": "string",
+            "title": "Download"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "episode_info": {
+            "$ref": "#/components/schemas/EpisodeInfo"
+          }
+        },
+        "type": "object",
         "required": [
           "source",
           "title",
@@ -1152,58 +1185,59 @@
           "category",
           "episode_info"
         ],
-        "type": "object",
-        "properties": {
-          "source": {
-            "$ref": "#/components/schemas/ProviderSource"
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "seeders": {
-            "title": "Seeders",
-            "type": "integer"
-          },
-          "download": {
-            "title": "Download",
-            "type": "string"
-          },
-          "category": {
-            "title": "Category",
-            "type": "string"
-          },
-          "episode_info": {
-            "$ref": "#/components/schemas/EpisodeInfo"
-          }
-        }
+        "title": "ITorrent"
       },
       "IndexResponse": {
-        "title": "IndexResponse",
+        "properties": {
+          "series": {
+            "items": {
+              "$ref": "#/components/schemas/SeriesDetails"
+            },
+            "type": "array",
+            "title": "Series"
+          },
+          "movies": {
+            "items": {
+              "$ref": "#/components/schemas/MovieDetailsSchema"
+            },
+            "type": "array",
+            "title": "Movies"
+          }
+        },
+        "type": "object",
         "required": [
           "series",
           "movies"
         ],
-        "type": "object",
-        "properties": {
-          "series": {
-            "title": "Series",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SeriesDetails"
-            }
-          },
-          "movies": {
-            "title": "Movies",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MovieDetailsSchema"
-            }
-          }
-        }
+        "title": "IndexResponse"
       },
       "InnerTorrent": {
-        "title": "InnerTorrent",
+        "properties": {
+          "eta": {
+            "type": "integer",
+            "title": "Eta"
+          },
+          "hashString": {
+            "type": "string",
+            "title": "Hashstring"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "percentDone": {
+            "type": "number",
+            "title": "Percentdone"
+          },
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/InnerTorrentFile"
+            },
+            "type": "array",
+            "title": "Files"
+          }
+        },
+        "type": "object",
         "required": [
           "eta",
           "hashString",
@@ -1211,66 +1245,67 @@
           "percentDone",
           "files"
         ],
-        "type": "object",
-        "properties": {
-          "eta": {
-            "title": "Eta",
-            "type": "integer"
-          },
-          "hashString": {
-            "title": "Hashstring",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "percentDone": {
-            "title": "Percentdone",
-            "type": "number"
-          },
-          "files": {
-            "title": "Files",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/InnerTorrentFile"
-            }
-          }
-        }
+        "title": "InnerTorrent"
       },
       "InnerTorrentFile": {
-        "title": "InnerTorrentFile",
+        "properties": {
+          "bytesCompleted": {
+            "type": "integer",
+            "title": "Bytescompleted"
+          },
+          "length": {
+            "type": "integer",
+            "title": "Length"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
         "required": [
           "bytesCompleted",
           "length",
           "name"
         ],
-        "type": "object",
-        "properties": {
-          "bytesCompleted": {
-            "title": "Bytescompleted",
-            "type": "integer"
-          },
-          "length": {
-            "title": "Length",
-            "type": "integer"
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          }
-        }
+        "title": "InnerTorrentFile"
       },
       "MediaType": {
-        "title": "MediaType",
         "enum": [
           "series",
           "movie"
         ],
+        "title": "MediaType",
         "description": "An enumeration."
       },
       "MonitorGet": {
-        "title": "MonitorGet",
+        "properties": {
+          "tmdb_id": {
+            "type": "integer",
+            "title": "Tmdb Id"
+          },
+          "type": {
+            "$ref": "#/components/schemas/MonitorMediaType"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "added_by": {
+            "type": "string",
+            "title": "Added By"
+          },
+          "status": {
+            "type": "boolean",
+            "title": "Status",
+            "default": false
+          }
+        },
+        "type": "object",
         "required": [
           "tmdb_id",
           "type",
@@ -1278,304 +1313,285 @@
           "title",
           "added_by"
         ],
-        "type": "object",
-        "properties": {
-          "tmdb_id": {
-            "title": "Tmdb Id",
-            "type": "integer"
-          },
-          "type": {
-            "$ref": "#/components/schemas/MonitorMediaType"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "added_by": {
-            "title": "Added By",
-            "type": "string"
-          },
-          "status": {
-            "title": "Status",
-            "type": "boolean",
-            "default": false
-          }
-        }
+        "title": "MonitorGet"
       },
       "MonitorMediaType": {
-        "title": "MonitorMediaType",
         "enum": [
           "MOVIE",
           "TV"
         ],
+        "title": "MonitorMediaType",
         "description": "An enumeration."
       },
       "MonitorPost": {
-        "title": "MonitorPost",
-        "required": [
-          "tmdb_id",
-          "type"
-        ],
-        "type": "object",
         "properties": {
           "tmdb_id": {
-            "title": "Tmdb Id",
-            "type": "integer"
+            "type": "integer",
+            "title": "Tmdb Id"
           },
           "type": {
             "$ref": "#/components/schemas/MonitorMediaType"
           }
-        }
+        },
+        "type": "object",
+        "required": [
+          "tmdb_id",
+          "type"
+        ],
+        "title": "MonitorPost"
       },
       "MovieDetailsSchema": {
-        "title": "MovieDetailsSchema",
-        "required": [
-          "id",
-          "download"
-        ],
-        "type": "object",
         "properties": {
           "id": {
-            "title": "Id",
-            "type": "integer"
+            "type": "integer",
+            "title": "Id"
           },
           "download": {
             "$ref": "#/components/schemas/DownloadSchema"
           }
-        }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "download"
+        ],
+        "title": "MovieDetailsSchema"
       },
       "MovieResponse": {
-        "title": "MovieResponse",
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "imdb_id": {
+            "type": "string",
+            "title": "Imdb Id"
+          }
+        },
+        "type": "object",
         "required": [
           "title",
           "imdb_id"
         ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "imdb_id": {
-            "title": "Imdb Id",
-            "type": "string"
-          }
-        }
+        "title": "MovieResponse"
       },
       "ProviderSource": {
-        "title": "ProviderSource",
         "enum": [
           "kickass",
           "horriblesubs",
           "rarbg",
           "torrentscsv"
         ],
+        "title": "ProviderSource",
         "description": "An enumeration."
       },
       "SearchResponse": {
-        "title": "SearchResponse",
-        "required": [
-          "title",
-          "type",
-          "imdbID"
-        ],
-        "type": "object",
         "properties": {
           "title": {
-            "title": "Title",
-            "type": "string"
+            "type": "string",
+            "title": "Title"
           },
           "type": {
             "$ref": "#/components/schemas/MediaType"
           },
           "year": {
-            "title": "Year",
-            "type": "integer"
+            "type": "integer",
+            "title": "Year"
           },
           "imdbID": {
-            "title": "Imdbid",
-            "type": "integer"
+            "type": "integer",
+            "title": "Imdbid"
           }
-        }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "type",
+          "imdbID"
+        ],
+        "title": "SearchResponse"
       },
       "SeasonMeta": {
-        "title": "SeasonMeta",
+        "properties": {
+          "episode_count": {
+            "type": "integer",
+            "title": "Episode Count"
+          },
+          "season_number": {
+            "type": "integer",
+            "title": "Season Number"
+          }
+        },
+        "type": "object",
         "required": [
           "episode_count",
           "season_number"
         ],
-        "type": "object",
-        "properties": {
-          "episode_count": {
-            "title": "Episode Count",
-            "type": "integer"
-          },
-          "season_number": {
-            "title": "Season Number",
-            "type": "integer"
-          }
-        }
+        "title": "SeasonMeta"
       },
       "SeriesDetails": {
-        "title": "SeriesDetails",
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "imdb_id": {
+            "type": "string",
+            "title": "Imdb Id"
+          },
+          "tmdb_id": {
+            "type": "integer",
+            "title": "Tmdb Id"
+          },
+          "seasons": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/EpisodeDetailsSchema"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Seasons"
+          }
+        },
+        "type": "object",
         "required": [
           "title",
           "imdb_id",
           "tmdb_id",
           "seasons"
         ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "imdb_id": {
-            "title": "Imdb Id",
-            "type": "string"
-          },
-          "tmdb_id": {
-            "title": "Tmdb Id",
-            "type": "integer"
-          },
-          "seasons": {
-            "title": "Seasons",
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/EpisodeDetailsSchema"
-              }
-            }
-          }
-        }
+        "title": "SeriesDetails"
       },
       "Stats": {
-        "title": "Stats",
-        "type": "object",
         "properties": {
           "episode": {
-            "title": "Episode",
             "type": "integer",
+            "title": "Episode",
             "default": 0
           },
           "movie": {
-            "title": "Movie",
             "type": "integer",
+            "title": "Movie",
             "default": 0
           }
-        }
+        },
+        "type": "object",
+        "title": "Stats"
       },
       "StatsResponse": {
-        "title": "StatsResponse",
-        "required": [
-          "user",
-          "values"
-        ],
-        "type": "object",
         "properties": {
           "user": {
-            "title": "User",
-            "type": "string"
+            "type": "string",
+            "title": "User"
           },
           "values": {
             "$ref": "#/components/schemas/Stats"
           }
-        }
+        },
+        "type": "object",
+        "required": [
+          "user",
+          "values"
+        ],
+        "title": "StatsResponse"
       },
       "TvResponse": {
-        "title": "TvResponse",
+        "properties": {
+          "number_of_seasons": {
+            "type": "integer",
+            "title": "Number Of Seasons"
+          },
+          "seasons": {
+            "items": {
+              "$ref": "#/components/schemas/SeasonMeta"
+            },
+            "type": "array",
+            "title": "Seasons"
+          },
+          "imdb_id": {
+            "type": "string",
+            "title": "Imdb Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          }
+        },
+        "type": "object",
         "required": [
           "number_of_seasons",
           "seasons",
           "title"
         ],
-        "type": "object",
-        "properties": {
-          "number_of_seasons": {
-            "title": "Number Of Seasons",
-            "type": "integer"
-          },
-          "seasons": {
-            "title": "Seasons",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SeasonMeta"
-            }
-          },
-          "imdb_id": {
-            "title": "Imdb Id",
-            "type": "string"
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          }
-        }
+        "title": "TvResponse"
       },
       "TvSeasonResponse": {
-        "title": "TvSeasonResponse",
+        "properties": {
+          "episodes": {
+            "items": {
+              "$ref": "#/components/schemas/Episode"
+            },
+            "type": "array",
+            "title": "Episodes"
+          }
+        },
+        "type": "object",
         "required": [
           "episodes"
         ],
-        "type": "object",
-        "properties": {
-          "episodes": {
-            "title": "Episodes",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Episode"
-            }
-          }
-        }
+        "title": "TvSeasonResponse"
       },
       "UserSchema": {
-        "title": "UserSchema",
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "first_name": {
+            "type": "string",
+            "title": "First Name"
+          }
+        },
+        "type": "object",
         "required": [
           "username",
           "first_name"
         ],
-        "type": "object",
-        "properties": {
-          "username": {
-            "title": "Username",
-            "type": "string"
-          },
-          "first_name": {
-            "title": "First Name",
-            "type": "string"
-          }
-        }
+        "title": "UserSchema"
       },
       "ValidationError": {
-        "title": "ValidationError",
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
         "required": [
           "loc",
           "msg",
           "type"
         ],
-        "type": "object",
-        "properties": {
-          "loc": {
-            "title": "Location",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "msg": {
-            "title": "Message",
-            "type": "string"
-          },
-          "type": {
-            "title": "Error Type",
-            "type": "string"
-          }
-        }
+        "title": "ValidationError"
       }
     },
     "securitySchemes": {
