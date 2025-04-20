@@ -86,7 +86,6 @@
     "colors.css": "^3.0.0",
     "eslint-config-react-app": "^6.0.0",
     "history": "^4.9.0",
-    "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-junit": "^12.0.0",
     "mockdate": "^3.0.2",
     "moxios": "^0.4.0"
