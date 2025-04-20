@@ -17,7 +17,7 @@ export function MLink<S>(props: {
   to: LocationDescriptor<S>;
   color?: TypographyTypeMap['props']['color'];
 }): ReactElement {
-  return <MaterialLink component={Link} {...props} />;
+  return <MaterialLink component={Link} {...props} underline="hover" />;
 }
 
 export function subscribe<T>(
@@ -94,7 +94,12 @@ export function usePost<T>(
 
 export function ExtMLink(props: { href: string; children: string }) {
   return (
-    <MaterialLink href={props.href} target="_blank" rel="noopener noreferrer">
+    <MaterialLink
+      href={props.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      underline="hover"
+    >
       {props.children}
     </MaterialLink>
   );

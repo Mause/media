@@ -92,13 +92,17 @@ const Login = () => {
 
   if (isAuthenticated) {
     return (
-      <MaterialLink href="#" onClick={() => logout({})}>
+      <MaterialLink href="#" onClick={() => logout({})} underline="hover">
         Logout
       </MaterialLink>
     );
   } else {
     return (
-      <MaterialLink href="#" onClick={() => loginWithRedirect({})}>
+      <MaterialLink
+        href="#"
+        onClick={() => loginWithRedirect({})}
+        underline="hover"
+      >
         Login
       </MaterialLink>
     );
