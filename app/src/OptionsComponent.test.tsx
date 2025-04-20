@@ -29,7 +29,7 @@ Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
   it.skip('failure', async () => {
-    let el: RenderResult;
+    let el: RenderResult | undefined;
 
     await act(async () => {
       el = renderWithSWR(
@@ -47,7 +47,7 @@ describe('OptionsComponent', () => {
 
     expect(el).toBeTruthy();
 
-    expect(el.container).toMatchSnapshot();
+    expect(el!.container).toMatchSnapshot();
 
     await act(async () => {
       for (const source of sources) {
@@ -56,7 +56,7 @@ describe('OptionsComponent', () => {
     });
 
     expect(
-      (await el.findAllByTestId('errorMessage')).map((t) => t.textContent),
+      (await el!.findAllByTestId('errorMessage')).map((t) => t.textContent),
     ).toEqual(
       expect.arrayContaining([
         'Error occured whilst loading options from rarbg: [object Event]',
@@ -65,10 +65,10 @@ describe('OptionsComponent', () => {
       ]),
     );
 
-    expect(el.container).toMatchSnapshot();
+    expect(el!.container).toMatchSnapshot();
   });
   it.skip('success', async () => {
-    let el;
+    let el: RenderResult | undefined;
     await act(async () => {
       el = renderWithSWR(
         <MemoryRouter initialEntries={['/select/1/options']}>
@@ -80,10 +80,10 @@ describe('OptionsComponent', () => {
       mock('movie/1', { title: 'Hello World' });
     });
 
-    expect(el.container).toMatchSnapshot();
+    expect(el!.container).toMatchSnapshot();
 
     const torrent: ITorrent = {
-      source: 'RARBG',
+      source: 'rarbg',
       title: 'title',
       seeders: 5,
       download: 'magnet:...',
@@ -107,7 +107,7 @@ describe('OptionsComponent', () => {
       }
     });
 
-    expect(el.container).toMatchSnapshot();
+    expect(el!.container).toMatchSnapshot();
 
     await act(async () => {
       for (const source of sources) {
@@ -115,6 +115,6 @@ describe('OptionsComponent', () => {
       }
     });
 
-    expect(el.container).toMatchSnapshot();
+    expect(el!.container).toMatchSnapshot();
   });
 });

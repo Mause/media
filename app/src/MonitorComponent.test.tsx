@@ -27,8 +27,9 @@ describe('MonitorComponent', () => {
         {
           id: 1,
           title: 'Hello World',
-          tmdb_id: '5',
+          tmdb_id: 5,
           type: 'MOVIE',
+          added_by: 'me',
         },
       ];
       await mock('monitor', res);
