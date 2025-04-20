@@ -55,6 +55,7 @@ export function ManualAddComponent() {
     <form className={classes.root} onSubmit={onSubmit}>
       <h3>{data?.title}</h3>
       <TextField
+        variant="standard"
         placeholder="magnet:..."
         onChange={(e) => setMagnet(e.target.value)}
         inputProps={{ pattern: '^magnet:.*' }}
