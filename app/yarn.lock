@@ -4747,10 +4747,10 @@ __metadata:
     moxios: "npm:^0.4.0"
     prop-types: "npm:^15.7.2"
     qs: "npm:^6.9.4"
-    react: "npm:^16.14.0"
+    react: "npm:^17.0.0"
     react-collapsible: "npm:^2.8.1"
     react-contextmenu: "npm:^2.14.0"
-    react-dom: "npm:^16.14.0"
+    react-dom: "npm:^17.0.0"
     react-error-boundary: "npm:^3.1.0"
     react-helmet: "npm:^6.1.0"
     react-loading: "npm:^2.0.3"
@@ -13297,17 +13297,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^16.14.0":
-  version: 16.14.0
-  resolution: "react-dom@npm:16.14.0"
+"react-dom@npm:^17.0.0":
+  version: 17.0.2
+  resolution: "react-dom@npm:17.0.2"
   dependencies:
     loose-envify: "npm:^1.1.0"
     object-assign: "npm:^4.1.1"
-    prop-types: "npm:^15.6.2"
-    scheduler: "npm:^0.19.1"
+    scheduler: "npm:^0.20.2"
   peerDependencies:
-    react: ^16.14.0
-  checksum: 10/d59f3376ab41ee874fbb9bd738160f6d70f619b4cba40531d5c60dfa289c216cff4d5e6552babdf59843a1a8e7f08faf4a746bf4df6c68d2b406a6c13bdbd92b
+    react: 17.0.2
+  checksum: 10/0b3836131a64da8b1c2c852cc28b09c21a738c33c7a8d6021ac20d5619d753c8ee5fff8f97c95f2fc33053e44c2cbce9657453e21c55900164e6e0c3e955e826
   languageName: node
   linkType: hard
 
@@ -13523,14 +13522,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^16.14.0":
-  version: 16.14.0
-  resolution: "react@npm:16.14.0"
+"react@npm:^17.0.0":
+  version: 17.0.2
+  resolution: "react@npm:17.0.2"
   dependencies:
     loose-envify: "npm:^1.1.0"
     object-assign: "npm:^4.1.1"
-    prop-types: "npm:^15.6.2"
-  checksum: 10/ee04c82f5ecb70fe15a48d8cfc3fb20ce2f7e65277d4adcb56a0ac2b82c54550d4c65eabce0d5dc0cc90d053831b9586d72ee515b11cdf0c5436c7f95aafdcda
+  checksum: 10/ece60c31c1d266d132783aaaffa185d2e4c9b4db144f853933ec690cee1e0600c8929a1dd0a9e79323eea8e2df636c9a06d40f6cfdc9f797f65225433e67f707
   languageName: node
   linkType: hard
 
@@ -14103,13 +14101,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.19.1":
-  version: 0.19.1
-  resolution: "scheduler@npm:0.19.1"
+"scheduler@npm:^0.20.2":
+  version: 0.20.2
+  resolution: "scheduler@npm:0.20.2"
   dependencies:
     loose-envify: "npm:^1.1.0"
     object-assign: "npm:^4.1.1"
-  checksum: 10/2bf42cd56994dd8a97bad0ecb6fbd720674f640c4a95957f9ab453dda28133d5f56755d842e6a0b203efef89a49c52354d151946f50e5c0b633d97d718285c8d
+  checksum: 10/898917fa475386953d998add9107c04bf2c335eee86172833995dee126d12a68bee3c29edbd61fa0bcbcb8ee511c422eaab23b86b02f95aab26ecfaed8df5e64
   languageName: node
   linkType: hard
 
