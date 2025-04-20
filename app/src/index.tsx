@@ -6,6 +6,10 @@ import * as serviceWorker from './serviceWorker';
 import { appUpdated } from './serviceWorkerCallback';
 import { Auth0Provider } from '@auth0/auth0-react';
 
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+const theme = createMuiTheme();
+
 ReactDOM.render(
   <Auth0Provider
     domain="mause.au.auth0.com"
@@ -15,7 +19,9 @@ ReactDOM.render(
     redirectUri={window.location.origin}
     cacheLocation="localstorage"
   >
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </Auth0Provider>,
   document.getElementById('root'),
 );
