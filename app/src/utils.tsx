@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 import Axios from 'axios';
 import { useState, useEffect } from 'react';
-import MaterialLink from '@material-ui/core/Link';
+import MaterialLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import { LocationDescriptor } from 'history';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
-import { TypographyTypeMap } from '@material-ui/core';
+import { TypographyTypeMap } from '@mui/material';
 import moxios from 'moxios';
 import { useAuth0 } from '@auth0/auth0-react';
 import { FetchEventTarget } from './fetch_stream';

@@ -4,7 +4,7 @@ import { IndexResponse, Torrents } from './streaming';
 import { useHistory } from 'react-router-dom';
 import qs from 'qs';
 import useSWR from 'swr';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import _ from 'lodash';
 
 const CFG = {
@@ -15,9 +15,11 @@ function IndexComponent() {
     'index',
     CFG,
   );
-  const { data: torrents, isValidating: loadingTorrents, error } = useSWR<
-    Torrents
-  >('torrents', CFG);
+  const {
+    data: torrents,
+    isValidating: loadingTorrents,
+    error,
+  } = useSWR<Torrents>('torrents', CFG);
 
   const loading = loadingState || loadingTorrents;
 

@@ -6,7 +6,7 @@ import { Torrents } from './streaming';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { Loading } from './render';
-import { Breadcrumbs, Typography } from '@material-ui/core';
+import { Breadcrumbs, Typography } from '@mui/material';
 import { Shared } from './SeasonSelectComponent';
 import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';

@@ -1,12 +1,8 @@
 import { useLocation, Redirect } from 'react-router-dom';
 import useSWR from 'swr';
-import {
-  TextField,
-  Button,
-  makeStyles,
-  Theme,
-  createStyles,
-} from '@material-ui/core';
+import { TextField, Button, Theme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import createStyles from '@mui/styles/createStyles';
 import { DownloadState } from './DownloadComponent';
 import React, { FormEvent, useState } from 'react';
 

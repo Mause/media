@@ -6,9 +6,19 @@ import * as serviceWorker from './serviceWorker';
 import { appUpdated } from './serviceWorkerCallback';
 import { Auth0Provider } from '@auth0/auth0-react';
 
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import {
+  ThemeProvider,
+  Theme,
+  StyledEngineProvider,
+  createTheme,
+} from '@mui/material/styles';
 
-const theme = createMuiTheme();
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
+const theme = createTheme();
 
 ReactDOM.render(
   <Auth0Provider
@@ -19,9 +29,11 @@ ReactDOM.render(
     redirectUri={window.location.origin}
     cacheLocation="localstorage"
   >
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </StyledEngineProvider>
   </Auth0Provider>,
   document.getElementById('root'),
 );
