@@ -3,8 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:5000",
+  "resolutions": {
+    "@material-ui/lab/@babel/runtime": "^7.27.0",
+    "@material-ui/system/@babel/runtime": "^7.27.0",
+    "@material-ui/styles/@babel/runtime": "^7.27.0",
+    "@material-ui/core/@babel/runtime": "^7.27.0",
+    "css-vendor/@babel/runtime": "^7.27.0"
+  },
   "dependencies": {
     "@auth0/auth0-react": "^1.2.0",
+    "@babel/runtime": "^7.27.0",
     "@csstools/normalize.css": "^11.0.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
