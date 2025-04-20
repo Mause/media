@@ -16,7 +16,7 @@ describe('DownloadComponent', () => {
       const state: DownloadState = {
         downloads: [
           {
-            tmdb_id: '10000',
+            tmdb_id: 10000,
             magnet: '...',
           },
         ],
@@ -46,7 +46,7 @@ describe('DownloadComponent', () => {
     const state: DownloadState = {
       downloads: [
         {
-          tmdb_id: '10000',
+          tmdb_id: 10000,
           magnet: '...',
         },
       ],

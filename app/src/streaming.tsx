@@ -48,6 +48,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+export type TorrentFile = components['schemas']['InnerTorrentFile'];
 export type Torrents = { [key: string]: components['schemas']['InnerTorrent'] };
 export type IndexResponse = components['schemas']['IndexResponse'];
 export type MovieResponse = components['schemas']['MovieDetailsSchema'];

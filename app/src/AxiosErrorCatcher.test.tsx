@@ -9,6 +9,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 usesMoxios();
 
+/*
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
 });
@@ -16,6 +17,7 @@ beforeEach(() => {
 afterEach(() => {
   console.error.mockRestore();
 });
+*/
 
 function Fake() {
   const [fire, setFire] = useState(false);
