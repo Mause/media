@@ -204,17 +204,21 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
 
 interface SubscriptionShape<T> {
   items: T[];
+  name: string;
   loading: boolean;
   error?: Error;
 }
 
 function useSubscribe<T>(
-  url: string,
+  baseUrl: string,
+  name: string,
   authorization?: string,
 ): SubscriptionShape<T> {
+  const url = baseUrl + '&source=' + name;
   const [subscription, setSubscription] = useState<SubscriptionShape<T>>({
     items: [],
     loading: true,
+    name,
     error: undefined,
   });
 
@@ -228,12 +232,13 @@ function useSubscribe<T>(
         items.push(data);
         setSubscription({
           items,
+          name,
           loading: true,
         });
       },
-      (error) => setSubscription({ error, loading: false, items }),
+      (error) => setSubscription({ name, error, loading: false, items }),
       authorization,
-      () => setSubscription({ loading: false, items }),
+      () => setSubscription({ name, loading: false, items }),
     );
   }, [url, authorization]);
 
@@ -261,10 +266,10 @@ function useSubscribes<T>(
     'torrentscsv',
   ];
   const providers = [
-    useSubscribe<T>(url + '&source=' + p[0], token),
-    useSubscribe<T>(url + '&source=' + p[1], token),
-    useSubscribe<T>(url + '&source=' + p[2], token),
-    useSubscribe<T>(url + '&source=' + p[3], token),
+    useSubscribe<T>(url, p[0], token),
+    useSubscribe<T>(url, p[1], token),
+    useSubscribe<T>(url, p[2], token),
+    useSubscribe<T>(url, p[3], token),
   ];
 
   return {
