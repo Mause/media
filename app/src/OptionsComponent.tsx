@@ -12,6 +12,7 @@ import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
 import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
+import { Alert } from '@material-ui/lab';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
@@ -157,7 +158,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     <div>
       {header}
       <div style={{ textAlign: 'center' }}>
-        <Loading loading={loading} large={true} />
+        <Loading loading={loading.length !== 0} large={true} />
       </div>
       {Object.entries(errors).map(([key, error]) => (
         <DisplayError
@@ -166,7 +167,12 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           error={error}
         />
       ))}
-      {bits.length || loading ? (
+      {loading.map((source) => (
+        <Alert key={source} color="info">
+          Loading options from {source}
+        </Alert>
+      ))}
+      {bits.length || loading.length !== 0 ? (
         <div>
           <p>Auto selection: {auto ? dt(auto) : 'None'}</p>
           <ul>{bits}</ul>
@@ -256,7 +262,7 @@ function useToken() {
 
 function useSubscribes<T>(
   url: string,
-): { items: T[]; loading: boolean; errors: { [key: string]: Error } } {
+): { items: T[]; loading: string[]; errors: { [key: string]: Error } } {
   const token = useToken();
 
   const p: ProviderSource[] = [
@@ -276,7 +282,7 @@ function useSubscribes<T>(
     items: providers
       .map((t) => t.items || [])
       .reduce((a, b) => a.concat(b), []),
-    loading: providers.some((t) => t.loading),
+    loading: providers.filter((t) => t.loading).map((t) => t.name),
     errors: _.fromPairs(
       providers.filter((t) => t.error).map((t, i) => [p[i], t.error]),
     ) as { [key: string]: Error },
