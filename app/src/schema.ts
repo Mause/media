@@ -39,7 +39,7 @@ export interface components {
       season: number;
       episode?: number;
     };
-    EpisodeInfo: { seasonnum?: string; epnum?: string };
+    EpisodeInfo: { seasonnum: string; epnum?: string };
     HTTPValidationError: {
       detail?: components['schemas']['ValidationError'][];
     };
@@ -49,7 +49,7 @@ export interface components {
       seeders: number;
       download: string;
       category: string;
-      episode_info: components['schemas']['EpisodeInfo'];
+      episode_info?: components['schemas']['EpisodeInfo'];
     };
     IndexResponse: {
       series: components['schemas']['SeriesDetails'][];
@@ -91,7 +91,12 @@ export interface components {
     /**
      * An enumeration.
      */
-    ProviderSource: 'kickass' | 'horriblesubs' | 'rarbg' | 'torrentscsv';
+    ProviderSource:
+      | 'kickass'
+      | 'horriblesubs'
+      | 'rarbg'
+      | 'torrentscsv'
+      | 'nyaasi';
     SearchResponse: {
       title: string;
       type: components['schemas']['MediaType'];
@@ -111,9 +116,9 @@ export interface components {
     StatsResponse: { user: string; values: components['schemas']['Stats'] };
     TvResponse: {
       number_of_seasons: number;
-      title: string;
-      imdb_id?: string;
       seasons: components['schemas']['SeasonMeta'][];
+      imdb_id?: string;
+      title: string;
     };
     TvSeasonResponse: { episodes: components['schemas']['Episode'][] };
     UserSchema: { username: string; first_name: string };
