@@ -13,7 +13,7 @@ from NyaaPy import nyaa
 from . import horriblesubs, kickass
 from .models import EpisodeInfo, ITorrent, ProviderSource
 from .rarbg import get_rarbg_iter
-from .tmdb import get_tv, resolve_id
+from .tmdb import get_tv
 
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]
@@ -222,7 +222,8 @@ class NyaaProvider(Provider):
         self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         ny = nyaa.Nyaa()
-        name = (await get_tv(await resolve_id(tmdb_id, 'tv'))).name
+
+        name = (await get_tv(tmdb_id)).name
         page = 0
         template = f'{name} ' + format(season, episode)
 
@@ -309,19 +310,37 @@ async def search_for_movie(imdb_id: str, tmdb_id: int):
             logging.exception('Unable to load [MOVIE] from %s', provider.name)
 
 
-def main():
-    from tabulate import tabulate
+async def main():
+    from rich.console import Console
+    from rich.logging import RichHandler
+    from rich.table import Table
 
-    print(
-        tabulate(
-            list(
-                [row.source, row.title, row.seeders, bool(row.download)]
-                for row in search_for_tv('tt0436992', 1, 1)
-            ),
-            headers=('Source', 'Title', 'Seeders', 'Has magnet'),
-        )
+    from .tmdb import resolve_id
+
+    logging.basicConfig(level=logging.DEBUG, handlers=[RichHandler()])
+
+    table = Table(
+        'Source',
+        'Title',
+        'Seeders',
+        'Has magnet',
+        show_header=True,
+        header_style="bold magenta",
     )
+
+    imdb_id = 'tt28454008'
+    tmdb_id = await resolve_id(imdb_id, 'tv')
+    async for row in search_for_tv(
+        imdb_id=imdb_id, tmdb_id=tmdb_id, season=1, episode=1
+    ):
+        table.add_row(
+            row.source.name, row.title, str(row.seeders), str(bool(row.download))
+        )
+
+    Console().print(table)
 
 
 if __name__ == '__main__':
-    main()
+    import uvloop
+
+    uvloop.run(main())
