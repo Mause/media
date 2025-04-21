@@ -246,7 +246,7 @@ function useSubscribe<T>(
       authorization,
       () => setSubscription({ name, loading: false, items }),
     );
-  }, [url, authorization]);
+  }, [url, authorization, name]);
 
   return subscription;
 }
