@@ -1149,8 +1149,7 @@
           "title",
           "seeders",
           "download",
-          "category",
-          "episode_info"
+          "category"
         ],
         "type": "object",
         "properties": {

@@ -55,7 +55,7 @@ class ITorrent(BaseModel):
     seeders: int
     download: str
     category: str
-    episode_info: EpisodeInfo
+    episode_info: Optional[EpisodeInfo] = None
 
 
 class UserSchema(Orm):

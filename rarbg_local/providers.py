@@ -104,7 +104,6 @@ class RarbgProvider(Provider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=movie_convert(item['category']),
-                episode_info=EpisodeInfo(),
             )
 
 
@@ -140,7 +139,6 @@ class KickassProvider(Provider):
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=movie_convert(item['resolution']),
-                episode_info=EpisodeInfo(),
             )
 
 
@@ -197,7 +195,6 @@ class TorrentsCsvProvider(Provider):
                     title=item['name'],
                     seeders=item['seeders'],
                     download=item['infohash'],
-                    episode_info=EpisodeInfo(),
                 )
 
 
