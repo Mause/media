@@ -270,12 +270,14 @@ function useSubscribes<T>(
     'horriblesubs',
     'kickass',
     'torrentscsv',
+    'nyaasi',
   ];
   const providers = [
     useSubscribe<T>(url, p[0], token),
     useSubscribe<T>(url, p[1], token),
     useSubscribe<T>(url, p[2], token),
     useSubscribe<T>(url, p[3], token),
+    useSubscribe<T>(url, p[4], token),
   ];
 
   return {
