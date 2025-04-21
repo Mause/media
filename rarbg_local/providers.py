@@ -48,6 +48,7 @@ def movie_convert(key):
 
 class Provider(ABC):
     name: str
+    type: ProviderSource
 
     @abstractmethod
     def search_for_tv(
@@ -64,6 +65,7 @@ class Provider(ABC):
 
 class RarbgProvider(Provider):
     name = 'rarbg'
+    type = ProviderSource.RARBG
 
     async def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
@@ -110,6 +112,7 @@ class RarbgProvider(Provider):
 
 class KickassProvider(Provider):
     name = 'kickass'
+    type = ProviderSource.KICKASS
 
     async def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
@@ -146,6 +149,7 @@ class KickassProvider(Provider):
 
 class HorriblesubsProvider(Provider):
     name = 'horriblesubs'
+    type = ProviderSource.HORRIBLESUBS
 
     async def search_for_tv(
         self,
@@ -177,13 +181,14 @@ class HorriblesubsProvider(Provider):
 
 
 class TorrentsCsvProvider(Provider):
+    name = "torrentscsv"
+    type = ProviderSource.TORRENTS_CSV
+
     async def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         if not True:
             yield None
-
-    name = "torrentscsv"
 
     async def search_for_movie(
         self, imdb_id: str, tmdb_id: int
