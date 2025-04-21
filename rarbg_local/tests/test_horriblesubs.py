@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
+from aioresponses import aioresponses as AioResponses
 from pytest import mark
-from responses import RequestsMock
 
 from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
 from ..providers import HorriblesubsProvider
@@ -16,14 +16,14 @@ def load_html(filename):
 
 
 @mark.asyncio
-async def test_parse(responses):
-    responses.add(
-        'GET',
+async def test_parse(aioresponses):
+    aioresponses.add(
         'https://horriblesubs.info/api.php?method=getlatest',
+        'GET',
         body=load_html('test_parse.html'),
     )
 
-    shows = get_latest()
+    shows = await get_latest()
 
     assert shows == {
         'Boruto - Naruto Next Generations': '/shows/boruto-naruto-next-generations',
@@ -48,10 +48,10 @@ async def test_parse(responses):
     }
 
 
-def mock(responses: RequestsMock, url: str, html: str) -> None:
-    responses.add('GET', url + '&nextid=0', body=load_html(html))
-    responses.add(
-        'GET', url + '&nextid=1', body='There are no batches for this show yet'
+def mock(aioresponses: AioResponses, url: str, html: str) -> None:
+    aioresponses.add(url + '&nextid=0', 'GET', body=load_html(html))
+    aioresponses.add(
+        url + '&nextid=1', 'GET', body='There are no batches for this show yet'
     )
 
 
@@ -60,14 +60,14 @@ def magnet_link(torrent_hash):
 
 
 @mark.asyncio
-async def test_get_downloads(responses):
+async def test_get_downloads(aioresponses):
     mock(
-        responses,
+        aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=batch&showid=1',
         'results.html',
     )
 
-    batches = list(get_downloads(1, HorriblesubsDownloadType.BATCH))
+    batches = await tolist(get_downloads(1, HorriblesubsDownloadType.BATCH))
 
     assert batches == [
         {
@@ -89,29 +89,31 @@ async def test_get_downloads(responses):
 
 
 @mark.asyncio
-async def test_get_downloads_single(responses: RequestsMock, snapshot):
+async def test_get_downloads_single(aioresponses: AioResponses, snapshot):
     mock(
-        responses,
+        aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=1',
         'show.html',
     )
 
-    magnets = list(get_downloads(1, HorriblesubsDownloadType.SHOW))
+    magnets = await tolist(get_downloads(1, HorriblesubsDownloadType.SHOW))
 
     snapshot.assert_match(json.dumps(magnets, indent=2, default=repr), 'magnets.json')
 
 
 @mark.asyncio
-async def test_provider(responses: RequestsMock, aioresponses, snapshot):
+async def test_provider(aioresponses: AioResponses, snapshot):
     mock(
-        responses,
+        aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=264',
         'show.html',
     )
-    responses.add('GET', 'https://horriblesubs.info/shows/', load_html('shows.html'))
-    responses.add(
-        'GET',
+    aioresponses.add(
+        'https://horriblesubs.info/shows/', 'GET', body=load_html('shows.html')
+    )
+    aioresponses.add(
         'https://horriblesubs.info/shows/little-busters',
+        'GET',
         load_html('show_page.html'),
     )
     add_json(
