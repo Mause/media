@@ -33,6 +33,7 @@ jobs:
         run: |
           uv run mypy rarbg_local
       - run: uv run alembic upgrade head --sql
+      - uses: pre-commit/action@v3.0.1
       - name: Test with pytest
         run: |
           uv run pytest -vv
