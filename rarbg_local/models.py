@@ -45,7 +45,7 @@ class ProviderSource(Enum):
 
 
 class EpisodeInfo(BaseModel):
-    seasonnum: Optional[str]
+    seasonnum: str
     epnum: Optional[str]
 
 

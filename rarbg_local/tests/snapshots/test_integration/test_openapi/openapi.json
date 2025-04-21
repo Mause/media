@@ -1117,6 +1117,9 @@
       },
       "EpisodeInfo": {
         "title": "EpisodeInfo",
+        "required": [
+          "seasonnum"
+        ],
         "type": "object",
         "properties": {
           "seasonnum": {
