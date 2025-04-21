@@ -131,7 +131,7 @@ async def search(showid: int, search_term: str):
 
 async def search_for_tv(tmdb_id, season, episode):
     if season != 1:
-        return []
+        return
 
     shows = await get_all_shows()
 
@@ -139,17 +139,15 @@ async def search_for_tv(tmdb_id, season, episode):
 
     show = max(shows.keys(), key=lambda key: closeness(key, names) > 95)
     if closeness(show, names) < 95:
-        return []
+        return
 
     show_id = await get_show_id(shows[show])
     if not show_id:
-        return []
+        return
 
-    results = get_downloads(show_id, HorriblesubsDownloadType.SHOW)
-    if episode is None:
-        return results
-    else:
-        return (item async for item in results if item['episode'] == f'{episode:02d}')
+    async for item in get_downloads(show_id, HorriblesubsDownloadType.SHOW):
+        if episode is None or item['episode'] == f'{episode:02d}':
+            yield item
 
 
 async def main():
