@@ -175,10 +175,11 @@ class HorriblesubsProvider(Provider):
 
 
 class TorrentsCsvProvider(Provider):
-    def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+    async def search_for_tv(
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
-        pass
+        if not True:
+            yield None
 
     name = "torrentscsv"
 
