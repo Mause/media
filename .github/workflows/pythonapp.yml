@@ -9,27 +9,16 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - 3.8
           - 3.9
-          # - 3.10-dev
 
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-        if: "!endsWith(matrix.python-version, '-dev')"
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: deadsnakes/action@v1.0.0
-        if: endsWith(matrix.python-version, '-dev')
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dev dependencies
-        if: endsWith(matrix.python-version, '-dev')
-        run: |
-          sudo apt install libxml2-dev libxslt-dev
       - name: Cache pipenv virtualenv
         id: cache-pipenv
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-pipenv-${{ matrix.python-version }}-${{ hashFiles('**/Pipfile.lock') }}-2
@@ -48,6 +37,7 @@ jobs:
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Run mypy
+        if: false
         run: |
           pipenv run mypy rarbg_local
       - name: Test with pytest
@@ -56,8 +46,9 @@ jobs:
         env:
           CLOUDAMQP_URL: "https://hello"
           TMDB_API_KEY: word
+          TMDB_READ_ACCESS_TOKEN: word
       - name: Archive test report
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: report.html

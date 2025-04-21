@@ -6,7 +6,7 @@ import { ReactElement } from 'react';
 import { Auth0Context, Auth0ContextInterface } from '@auth0/auth0-react';
 
 export function wait() {
-  return new Promise((resolve) => moxios.wait(resolve));
+  return new Promise<void>((resolve) => moxios.wait(resolve));
 }
 
 export async function mock<T>(path: string, response: T) {
@@ -16,12 +16,12 @@ export async function mock<T>(path: string, response: T) {
 }
 
 export function renderWithSWR(el: ReactElement) {
-  const c: Auth0ContextInterface = {
+  const c = {
     isAuthenticated: true,
     getAccessTokenSilently() {
       return Promise.resolve('TOKEN');
     },
-  };
+  } as Auth0ContextInterface;
   return render(
     <Auth0Context.Provider value={c}>
       {swrConfig(() => el)()}

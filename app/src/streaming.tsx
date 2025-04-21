@@ -29,7 +29,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import { Websocket } from './Websocket';
-import { Integrations as ApmIntegrations } from '@sentry/apm';
+import { Integrations as TracingIntegrations } from '@sentry/tracing';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link as MaterialLink } from '@material-ui/core';
@@ -40,7 +40,7 @@ if (process.env.NODE_ENV === 'production') {
     dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
     release: process.env.HEROKU_SLUG_COMMIT,
     environment: 'development',
-    integrations: [new ApmIntegrations.Tracing()],
+    integrations: [new TracingIntegrations.BrowserTracing()],
     tracesSampleRate: 0.75, // must be present and non-zero
   });
   Sentry.configureScope((scope) => {
@@ -48,6 +48,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+export type TorrentFile = components['schemas']['InnerTorrentFile'];
 export type Torrents = { [key: string]: components['schemas']['InnerTorrent'] };
 export type IndexResponse = components['schemas']['IndexResponse'];
 export type MovieResponse = components['schemas']['MovieDetailsSchema'];

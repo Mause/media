@@ -1,9 +1,14 @@
+import logging
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from itertools import chain
 from queue import Empty, Queue
 from threading import Semaphore, current_thread
 from typing import AsyncGenerator, Callable, Iterable, List, Optional, Tuple, TypeVar
+
+import aiohttp
+from fastapi.concurrency import run_in_threadpool
+from NyaaPy import nyaa
 
 from . import horriblesubs, kickass
 from .models import EpisodeInfo, ITorrent, ProviderSource
@@ -46,10 +51,11 @@ def movie_convert(key):
 
 class Provider(ABC):
     name: str
+    type: ProviderSource
 
     @abstractmethod
     def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         raise NotImplementedError()
 
@@ -60,16 +66,21 @@ class Provider(ABC):
         raise NotImplementedError()
 
 
+def format(season: int, episode: Optional[int]) -> str:
+    return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
+
+
 class RarbgProvider(Provider):
     name = 'rarbg'
+    type = ProviderSource.RARBG
 
     async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
             return
 
-        search_string = f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
+        search_string = format(season, episode)
 
         for item in chain.from_iterable(
             get_rarbg_iter(
@@ -102,20 +113,20 @@ class RarbgProvider(Provider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=movie_convert(item['category']),
-                episode_info=EpisodeInfo(),
             )
 
 
 class KickassProvider(Provider):
     name = 'kickass'
+    type = ProviderSource.KICKASS
 
     async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
             return
 
-        for item in await kickass.search_for_tv(imdb_id, tmdb_id, season, episode):
+        async for item in kickass.search_for_tv(imdb_id, tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],
@@ -131,27 +142,31 @@ class KickassProvider(Provider):
     async def search_for_movie(
         self, imdb_id: str, tmdb_id: int
     ) -> AsyncGenerator[ITorrent, None]:
-        for item in await kickass.search_for_movie(imdb_id, tmdb_id):
+        async for item in kickass.search_for_movie(imdb_id, tmdb_id):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=movie_convert(item['resolution']),
-                episode_info=EpisodeInfo(),
             )
 
 
 class HorriblesubsProvider(Provider):
     name = 'horriblesubs'
+    type = ProviderSource.HORRIBLESUBS
 
     async def search_for_tv(
-        self, imdb_id: Optional[str], tmdb_id: int, season: int, episode: int = None
+        self,
+        imdb_id: Optional[str],
+        tmdb_id: int,
+        season: int,
+        episode: Optional[int] = None,
     ) -> AsyncGenerator[ITorrent, None]:
         name = (await get_tv(tmdb_id)).name
         template = f'HorribleSubs {name} S{season:02d}'
 
-        for item in await horriblesubs.search_for_tv(tmdb_id, season, episode):
+        async for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.HORRIBLESUBS,
                 title=f'{template}E{int(item["episode"], 10):02d} {item["resolution"]}',
@@ -163,13 +178,86 @@ class HorriblesubsProvider(Provider):
                 ),
             )
 
-    def search_for_movie(
+    async def search_for_movie(
         self, imdb_id: str, tmdb_id: int
     ) -> AsyncGenerator[ITorrent, None]:
-        pass
+        if not True:
+            yield
 
 
-PROVIDERS = [HorriblesubsProvider(), RarbgProvider(), KickassProvider()]
+class TorrentsCsvProvider(Provider):
+    name = "torrentscsv"
+    type = ProviderSource.TORRENTS_CSV
+
+    async def search_for_tv(
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+    ) -> AsyncGenerator[ITorrent, None]:
+        if not True:
+            yield None
+
+    async def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
+        async with aiohttp.ClientSession() as session:
+            res = await session.get(
+                "https://torrents-csv.com/service/search", params={"q": imdb_id}
+            )
+            for item in (await res.json())['torrents']:
+                yield ITorrent(
+                    source=ProviderSource.TORRENTS_CSV,
+                    title=item['name'],
+                    seeders=item['seeders'],
+                    download=item['infohash'],
+                )
+
+
+class NyaaProvider(Provider):
+    name = 'nyaa'
+    type = ProviderSource.NYAA_SI
+
+    async def search_for_tv(
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+    ) -> AsyncGenerator[ITorrent, None]:
+        ny = nyaa.Nyaa()
+
+        name = (await get_tv(tmdb_id)).name
+        page = 0
+        template = f'{name} ' + format(season, episode)
+
+        def search():
+            return ny.search(keyword=template, page=page)
+
+        while True:
+            items = await run_in_threadpool(search)
+            if items:
+                page += 1
+            else:
+                break
+
+            for item in items:
+                yield ITorrent(
+                    source=ProviderSource.NYAA_SI,
+                    title=item.name,
+                    seeders=item.seeders,
+                    download=item.magnet,
+                    category=tv_convert(item.category),
+                    episode_info=EpisodeInfo(season=season, episode=episode),
+                )
+
+    async def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
+        if not True:
+            yield None
+
+
+PROVIDERS = [
+    HorriblesubsProvider(),
+    RarbgProvider(),
+    KickassProvider(),
+    TorrentsCsvProvider(),
+    NyaaProvider(),
+]
 
 
 def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
@@ -197,31 +285,59 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
     list(futures)  # throw exceptions in this thread
 
 
-async def search_for_tv(imdb_id: str, tmdb_id: int, season: int, episode: int = None):
+async def search_for_tv(
+    imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+):
     for provider in PROVIDERS:
-        async for result in provider.search_for_tv(imdb_id, tmdb_id, season, episode):
-            yield result
+        try:
+            async for result in provider.search_for_tv(
+                imdb_id, tmdb_id, season, episode
+            ):
+                yield result
+        except Exception:
+            logging.exception('Unable to load [TV] from %s', provider.name)
 
 
 async def search_for_movie(imdb_id: str, tmdb_id: int):
     for provider in PROVIDERS:
-        async for result in provider.search_for_movie(imdb_id, tmdb_id):
-            yield result
+        try:
+            async for result in provider.search_for_movie(imdb_id, tmdb_id):
+                yield result
+        except Exception:
+            logging.exception('Unable to load [MOVIE] from %s', provider.name)
 
 
-def main():
-    from tabulate import tabulate
+async def main():
+    from rich.console import Console
+    from rich.logging import RichHandler
+    from rich.table import Table
 
-    print(
-        tabulate(
-            list(
-                [row.source, row.title, row.seeders, bool(row.download)]
-                for row in search_for_tv('tt0436992', 1, 1)
-            ),
-            headers=('Source', 'Title', 'Seeders', 'Has magnet'),
-        )
+    from .tmdb import resolve_id
+
+    logging.basicConfig(level=logging.DEBUG, handlers=[RichHandler()])
+
+    table = Table(
+        'Source',
+        'Title',
+        'Seeders',
+        'Has magnet',
+        show_header=True,
+        header_style="bold magenta",
     )
+
+    imdb_id = 'tt28454008'
+    tmdb_id = await resolve_id(imdb_id, 'tv')
+    async for row in search_for_tv(
+        imdb_id=imdb_id, tmdb_id=tmdb_id, season=1, episode=1
+    ):
+        table.add_row(
+            row.source.name, row.title, str(row.seeders), str(bool(row.download))
+        )
+
+    Console().print(table)
 
 
 if __name__ == '__main__':
-    main()
+    import uvloop
+
+    uvloop.run(main())
