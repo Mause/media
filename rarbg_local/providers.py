@@ -65,6 +65,10 @@ class Provider(ABC):
         raise NotImplementedError()
 
 
+def format(season: int, episode: Optional[int]) -> str:
+    return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
+
+
 class RarbgProvider(Provider):
     name = 'rarbg'
     type = ProviderSource.RARBG
@@ -75,7 +79,7 @@ class RarbgProvider(Provider):
         if not imdb_id:
             return
 
-        search_string = f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
+        search_string = format(season, episode)
 
         for item in chain.from_iterable(
             get_rarbg_iter(
@@ -218,10 +222,8 @@ class NyaaProvider(Provider):
     ) -> AsyncGenerator[ITorrent, None]:
         ny = nyaa.Nyaa()
         name = (await get_tv(await resolve_id(tmdb_id, 'tv'))).name
-        template = f'{name} S{season:02d}'
         page = 0
-        if episode is not None:
-            template += f'E{episode:02d}'
+        template = f'{name} ' + format(season, episode)
 
         def search():
             return ny.search(keyword=template, page=page)
