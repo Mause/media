@@ -14,6 +14,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
 
 export type ITorrent = components['schemas']['ITorrent'];
+type ProviderSource = components['schemas']['ProviderSource'];
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
@@ -247,11 +248,17 @@ function useSubscribes<T>(
 ): { items: T[]; loading: boolean; errors: { [key: string]: Error } } {
   const token = useToken();
 
-  const p = ['rarbg', 'horriblesubs', 'kickass'];
+  const p: ProviderSource[] = [
+    'rarbg',
+    'horriblesubs',
+    'kickass',
+    'torrentscsv',
+  ];
   const providers = [
     useSubscribe<T>(url + '&source=' + p[0], token),
     useSubscribe<T>(url + '&source=' + p[1], token),
     useSubscribe<T>(url + '&source=' + p[2], token),
+    useSubscribe<T>(url + '&source=' + p[3], token),
   ];
 
   return {

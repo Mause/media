@@ -91,7 +91,7 @@ export interface components {
     /**
      * An enumeration.
      */
-    ProviderSource: 'kickass' | 'horriblesubs' | 'rarbg';
+    ProviderSource: 'kickass' | 'horriblesubs' | 'rarbg' | 'torrentscsv';
     SearchResponse: {
       title: string;
       type: components['schemas']['MediaType'];
