@@ -43,7 +43,7 @@ sentry-sdk = { extras = [ "flask",], version = "==0.19.5" }
 alembic = "==1.4.3"
 plexapi = "==4.3.1"
 flask-cors = "==3.0.9"
-werkzeug = "==1.0.1"
+werkzeug = "==3.0.6"
 fuzzywuzzy = { extras = [ "speedup",], version = "==0.18.0" }
 cachetools = "==4.2.2"
 lxml = "*"# "==4.6.2"
