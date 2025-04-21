@@ -46,6 +46,7 @@ jobs:
         env:
           CLOUDAMQP_URL: "https://hello"
           TMDB_API_KEY: word
+          TMDB_READ_ACCESS_TOKEN: word
       - name: Archive test report
         uses: actions/upload-artifact@v4
         if: always()

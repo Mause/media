@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from itertools import chain
@@ -12,7 +13,7 @@ from NyaaPy import nyaa
 from . import horriblesubs, kickass
 from .models import EpisodeInfo, ITorrent, ProviderSource
 from .rarbg import get_rarbg_iter
-from .tmdb import get_tv, resolve_id
+from .tmdb import get_tv
 
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]
@@ -112,7 +113,6 @@ class RarbgProvider(Provider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=movie_convert(item['category']),
-                episode_info=EpisodeInfo(),
             )
 
 
@@ -149,7 +149,6 @@ class KickassProvider(Provider):
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=movie_convert(item['resolution']),
-                episode_info=EpisodeInfo(),
             )
 
 
@@ -209,7 +208,6 @@ class TorrentsCsvProvider(Provider):
                     title=item['name'],
                     seeders=item['seeders'],
                     download=item['infohash'],
-                    episode_info=EpisodeInfo(),
                 )
 
 
@@ -221,7 +219,8 @@ class NyaaProvider(Provider):
         self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         ny = nyaa.Nyaa()
-        name = (await get_tv(await resolve_id(tmdb_id, 'tv'))).name
+
+        name = (await get_tv(tmdb_id)).name
         page = 0
         template = f'{name} ' + format(season, episode)
 
@@ -290,29 +289,55 @@ async def search_for_tv(
     imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
 ):
     for provider in PROVIDERS:
-        async for result in provider.search_for_tv(imdb_id, tmdb_id, season, episode):
-            yield result
+        try:
+            async for result in provider.search_for_tv(
+                imdb_id, tmdb_id, season, episode
+            ):
+                yield result
+        except Exception:
+            logging.exception('Unable to load [TV] from %s', provider.name)
 
 
 async def search_for_movie(imdb_id: str, tmdb_id: int):
     for provider in PROVIDERS:
-        async for result in provider.search_for_movie(imdb_id, tmdb_id):
-            yield result
+        try:
+            async for result in provider.search_for_movie(imdb_id, tmdb_id):
+                yield result
+        except Exception:
+            logging.exception('Unable to load [MOVIE] from %s', provider.name)
 
 
-def main():
-    from tabulate import tabulate
+async def main():
+    from rich.console import Console
+    from rich.logging import RichHandler
+    from rich.table import Table
 
-    print(
-        tabulate(
-            list(
-                [row.source, row.title, row.seeders, bool(row.download)]
-                for row in search_for_tv('tt0436992', 1, 1)
-            ),
-            headers=('Source', 'Title', 'Seeders', 'Has magnet'),
-        )
+    from .tmdb import resolve_id
+
+    logging.basicConfig(level=logging.DEBUG, handlers=[RichHandler()])
+
+    table = Table(
+        'Source',
+        'Title',
+        'Seeders',
+        'Has magnet',
+        show_header=True,
+        header_style="bold magenta",
     )
+
+    imdb_id = 'tt28454008'
+    tmdb_id = await resolve_id(imdb_id, 'tv')
+    async for row in search_for_tv(
+        imdb_id=imdb_id, tmdb_id=tmdb_id, season=1, episode=1
+    ):
+        table.add_row(
+            row.source.name, row.title, str(row.seeders), str(bool(row.download))
+        )
+
+    Console().print(table)
 
 
 if __name__ == '__main__':
-    main()
+    import uvloop
+
+    uvloop.run(main())
