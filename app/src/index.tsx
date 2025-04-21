@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { appUpdated } from './serviceWorkerCallback';
+// import { appUpdated } from './serviceWorkerCallback';
 import { Auth0Provider } from '@auth0/auth0-react';
 
 ReactDOM.render(
