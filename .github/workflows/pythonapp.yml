@@ -30,7 +30,6 @@ jobs:
         run: |
           uv sync --dev --locked
       - name: Run mypy
-        if: false
         run: |
           uv run mypy rarbg_local
       - run: uv run alembic upgrade head --sql
