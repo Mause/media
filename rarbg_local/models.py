@@ -42,6 +42,7 @@ class ProviderSource(Enum):
     HORRIBLESUBS = 'horriblesubs'
     RARBG = 'rarbg'
     TORRENTS_CSV = 'torrentscsv'
+    NYAA_SI = 'nyaasi'
 
 
 class EpisodeInfo(BaseModel):
