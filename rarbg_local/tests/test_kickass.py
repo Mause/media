@@ -23,14 +23,14 @@ def make(title):
 
 
 @mark.asyncio
-async def test_tv_episode(responses, aioresponses, clear_cache):
+async def test_tv_episode(aioresponses, clear_cache):
     themoviedb(
         aioresponses, '/tv/1', TvApiResponseFactory(name='Little Busters').dict()
     )
-    responses.add(
-        'GET',
+    aioresponses.add(
         'https://katcr.co/name/search/little-busters/i0000000/1/1',
-        make('The outer limits S01E01'),
+        'GET',
+        body=make('The outer limits S01E01'),
     )
 
     res = await tolist(KickassProvider().search_for_tv('tt0000000', 1, 1, 1))
@@ -47,14 +47,14 @@ async def test_tv_episode(responses, aioresponses, clear_cache):
 
 
 @mark.asyncio
-async def test_tv_season(responses, aioresponses, clear_cache):
+async def test_tv_season(aioresponses, clear_cache):
     themoviedb(
         aioresponses, '/tv/1', TvApiResponseFactory(name='Little Busters').dict()
     )
-    responses.add(
-        'GET',
+    aioresponses.add(
         'https://katcr.co/name/little-busters/i0000000',
-        make('The outer limits S01'),
+        'GET',
+        body=make('The outer limits S01'),
     )
 
     res = await tolist(KickassProvider().search_for_tv('tt0000000', 1, 1))
@@ -71,12 +71,14 @@ async def test_tv_season(responses, aioresponses, clear_cache):
 
 
 @mark.asyncio
-async def test_movie(responses, aioresponses, clear_cache):
+async def test_movie(aioresponses, clear_cache):
     themoviedb(
         aioresponses, '/movie/1', MovieResponseFactory(title='John Flynn').dict()
     )
-    responses.add(
-        'GET', 'https://katcr.co/name/john-flynn/i0000000', make('The outer limits')
+    aioresponses.add(
+        'https://katcr.co/name/john-flynn/i0000000',
+        'GET',
+        body=make('The outer limits'),
     )
 
     res = await tolist(KickassProvider().search_for_movie('tt0000000', 1))
