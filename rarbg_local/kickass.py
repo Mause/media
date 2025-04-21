@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from .tmdb import get_movie, get_tv
 
 
-async def fetch(url: str) -> AsyncGenerator[Dict[str, Any]]:
+async def fetch(url: str) -> AsyncGenerator[Dict[str, Any], None]:
     async with ClientSession() as session:
         try:
             r = await session.get(url)
@@ -50,7 +50,7 @@ def tokenise(name: str) -> str:
 
 async def search_for_tv(
     imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
-) -> AsyncGenerator[Dict]:
+) -> AsyncGenerator[Dict, None]:
     name = (await get_tv(tmdb_id)).name
 
     if episode is None:
