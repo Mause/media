@@ -117,7 +117,6 @@ class RarbgProvider(TvProvider, MovieProvider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=movie_convert(item['category']),
-                episode_info=EpisodeInfo(),
             )
 
 
@@ -154,7 +153,6 @@ class KickassProvider(TvProvider, MovieProvider):
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=movie_convert(item['resolution']),
-                episode_info=EpisodeInfo(),
             )
 
 
@@ -172,7 +170,7 @@ class HorriblesubsProvider(TvProvider):
         name = (await get_tv(tmdb_id)).name
         template = f'HorribleSubs {name} S{season:02d}'
 
-        for item in await horriblesubs.search_for_tv(tmdb_id, season, episode):
+        async for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.HORRIBLESUBS,
                 title=f'{template}E{int(item["episode"], 10):02d} {item["resolution"]}',
@@ -202,7 +200,6 @@ class TorrentsCsvProvider(MovieProvider):
                     title=item['name'],
                     seeders=item['seeders'],
                     download=item['infohash'],
-                    episode_info=EpisodeInfo(),
                 )
 
 

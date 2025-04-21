@@ -8,16 +8,13 @@ import aiohttp
 import aiohttp.web_exceptions
 import backoff
 from cachetools import LRUCache, TTLCache
-from requests_toolbelt.sessions import BaseUrlSession
 
 from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonResponse
 from .utils import cached, precondition
 
 base = 'https://api.themoviedb.org/3/'
 
-tmdb = BaseUrlSession(base)
-tmdb.params['api_key'] = api_key = os.environ['TMDB_API_KEY']
-
+access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
 ThingType = Literal['movie', 'tv']
 
 
@@ -32,9 +29,13 @@ def try_(dic: Dict[str, str], *keys: str) -> Optional[str]:
     giveup=lambda e: getattr(e.response, 'status_code', None) != 429,
 )
 async def get_json(path, **kwargs):
-    async with aiohttp.ClientSession() as tmdb:
-        kwargs.setdefault('params', {})['api_key'] = api_key
-        r = await tmdb.get(base + path, **kwargs)
+    async with aiohttp.ClientSession(
+        base_url=base,
+        headers={
+            'Authorization': f'Bearer {access_token}',
+        },
+    ) as tmdb:
+        r = await tmdb.get(path, **kwargs)
         r.raise_for_status()
         return await r.json()
 

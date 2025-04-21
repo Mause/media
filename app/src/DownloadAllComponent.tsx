@@ -65,8 +65,8 @@ function download_all(tmdb_id: number, torrents: ITorrent[]) {
   const downloads: DownloadCall[] = torrents.map((t) => ({
     tmdb_id,
     magnet: t.download,
-    season: t.episode_info.seasonnum,
-    episode: t.episode_info.epnum,
+    season: t.episode_info?.seasonnum,
+    episode: t.episode_info?.epnum,
   }));
 
   return { pathname: '/download', state: { downloads } };
@@ -99,7 +99,7 @@ function Individual(props: {
                       torrent={t}
                       tmdb_id={props.tmdb_id}
                       season={props.season}
-                      episode={t.episode_info.epnum}
+                      episode={t.episode_info?.epnum}
                     />
                   </li>
                 ))}
