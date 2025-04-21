@@ -4,9 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-ipdb = "==0.13.4"
 pytest = "*"
-pdbpp = "==0.10.2"
 responses = "==0.12.1"
 lxml = "*"# ==4.6.2"
 pytest-html = ">=3.1.1"
