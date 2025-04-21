@@ -202,15 +202,21 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   );
 }
 
+interface SubscriptionShape<T> {
+  items: T[];
+  loading: boolean;
+  error?: Error;
+}
+
 function useSubscribe<T>(
   url: string,
   authorization?: string,
-): { items: T[]; loading: boolean; error?: Error } {
-  const [subscription, setSubscription] = useState<{
-    items: T[];
-    loading: boolean;
-    error?: Error;
-  }>({ loading: true, items: [], error: undefined });
+): SubscriptionShape<T> {
+  const [subscription, setSubscription] = useState<SubscriptionShape<T>>({
+    items: [],
+    loading: true,
+    error: undefined,
+  });
 
   useEffect(() => {
     if (!authorization) return; // don't subscribe until we have auth
