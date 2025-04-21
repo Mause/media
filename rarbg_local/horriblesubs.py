@@ -2,21 +2,20 @@ import re
 from enum import Enum
 from functools import lru_cache
 from itertools import chain
-from typing import Dict, Optional, Set, Tuple
+from typing import Dict, Optional, Tuple
 
+from aiohttp import ClientSession
 from cachetools import TTLCache
-from cachetools.func import ttl_cache
-from fuzzywuzzy import fuzz
 from lxml.html import fromstring
-from requests_toolbelt.sessions import BaseUrlSession
 
-from .tmdb import get_tv
+from .jikan import closeness, get_names
 from .utils import cached
 
-session = BaseUrlSession('https://horriblesubs.info/')
-jikan = BaseUrlSession('https://api.jikan.moe/v3/')
-
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
+
+
+def make_session():
+    return ClientSession(base_url='https://horriblesubs.info/')
 
 
 class HorriblesubsDownloadType(Enum):
@@ -24,19 +23,26 @@ class HorriblesubsDownloadType(Enum):
     BATCH = 'batch'
 
 
-@ttl_cache()
-def get_all_shows() -> Dict[str, str]:
-    shows = fromstring(session.get('/shows/').content)
-    shows = shows.xpath('.//div[@class="ind-show"]/a')
+@cached(TTLCache(128, 600))
+async def get_all_shows() -> Dict[str, str]:
+    async with make_session() as session:
+        res = await session.get('/shows/')
+        res.raise_for_status()
+        text = await res.text()
+        shows = fromstring(text)
+        shows = shows.xpath('.//div[@class="ind-show"]/a')
 
-    return {show.attrib['title']: show.attrib['href'] for show in shows}
+        return {show.attrib['title']: show.attrib['href'] for show in shows}
 
 
 @lru_cache()
-def get_show_id(path: str) -> Optional[str]:
-    html = session.get(path).text
-    m = SHOWID_RE.search(html)
-    return m.group(1) if m else None
+async def get_show_id(path: str) -> Optional[str]:
+    async with make_session() as session:
+        res = await session.get(path)
+        res.raise_for_status()
+        html = await res.text()
+        m = SHOWID_RE.search(html)
+        return m.group(1) if m else None
 
 
 def parse(html) -> Dict[str, str]:
@@ -50,24 +56,26 @@ def parse(html) -> Dict[str, str]:
     return dict(process(li) for li in html.xpath('./li'))
 
 
-def get_latest():
-    r = session.get('/api.php', params={'method': 'getlatest'})
-    html = fromstring(r.content)
-    return parse(html)
+async def get_latest():
+    async with make_session() as session:
+        r = await session.get('/api.php', params={'method': 'getlatest'})
+        html = fromstring(await r.text())
+        return parse(html)
 
 
-def get_downloads(showid: int, type: HorriblesubsDownloadType):
+async def get_downloads(showid: int, type: HorriblesubsDownloadType):
     page = 0
     while True:
-        downloads = list(_get_downloads(showid, type, page))
+        downloads = list(await _get_downloads(showid, type, page))
         if downloads:
-            yield from downloads
+            for d in downloads:
+                yield d
             page += 1
         else:
             break
 
 
-def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
+async def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
     def process(div):
         def fn(res: str):
             t = div.xpath(
@@ -86,19 +94,21 @@ def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
             if fn(resolution)
         ]
 
-    r = session.get(
-        '/api.php',
-        params={
-            'method': 'getshows',
-            'type': type.value,
-            'showid': showid,
-            'nextid': page,
-        },
-    )
-    if r.text.strip() == 'There are no batches for this show yet':
-        return ()
+    async with make_session() as session:
+        r = await session.get(
+            '/api.php',
+            params={
+                'method': 'getshows',
+                'type': type.value,
+                'showid': showid,
+                'nextid': page,
+            },
+        )
+        text = await r.text()
+        if text.strip() == 'There are no batches for this show yet':
+            return ()
 
-    html = fromstring(r.content)
+    html = fromstring(text)
 
     if html.attrib.get('class') == 'rls-info-container':
         torrents = [html]
@@ -107,61 +117,46 @@ def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
     return chain.from_iterable(process(div) for div in torrents)
 
 
-def search(showid: int, search_term: str):
-    session.get(
-        'api.php',
-        params={
-            'method': 'getshows',
-            'type': 'show',
-            'mode': 'filter',
-            'showid': showid,
-            'value': search_term,
-        },
-    )
-
-
-@cached(TTLCache(256, 360))
-async def get_names(tmdb_id: int) -> Set[str]:
-    tv = await get_tv(tmdb_id)
-    results = jikan.get('search/anime', params={'q': tv.name, 'limit': 1}).json()[
-        'results'
-    ]
-    if not results:
-        return {tv.name}
-
-    result = results[0]
-    if closeness(tv.name, [result['title']]) < 95:
-        return {tv.name}
-
-    result = jikan.get(f'anime/{results[0]["mal_id"]}').json()
-
-    return set([tv.name, result['title']] + result['title_synonyms'])
-
-
-def closeness(key, names):
-    return max(fuzz.ratio(key.lower(), name.lower()) for name in names)
+async def search(showid: int, search_term: str):
+    async with make_session() as session:
+        await session.get(
+            'api.php',
+            params={
+                'method': 'getshows',
+                'type': 'show',
+                'mode': 'filter',
+                'showid': showid,
+                'value': search_term,
+            },
+        )
 
 
 async def search_for_tv(tmdb_id, season, episode):
     if season != 1:
-        return []
+        return
 
-    shows = get_all_shows()
+    shows = await get_all_shows()
 
     names = await get_names(tmdb_id)
 
     show = max(shows.keys(), key=lambda key: closeness(key, names) > 95)
     if closeness(show, names) < 95:
-        return []
+        return
 
-    show_id = get_show_id(shows[show])
+    show_id = await get_show_id(shows[show])
+    if not show_id:
+        return
 
-    results = get_downloads(show_id, HorriblesubsDownloadType.SHOW)
-    if episode is None:
-        return results
-    else:
-        return (item for item in results if item['episode'] == f'{episode:02d}')
+    async for item in get_downloads(show_id, HorriblesubsDownloadType.SHOW):
+        if episode is None or item['episode'] == f'{episode:02d}':
+            yield item
+
+
+async def main():
+    print(list(await search_for_tv('95550', 1, 1)))
 
 
 if __name__ == '__main__':
-    print(list(search_for_tv('95550', 1, 1)))
+    import uvloop
+
+    uvloop.run(main())
