@@ -412,7 +412,9 @@ async def test_openapi(test_client, snapshot):
     r = await test_client.get('/openapi.json')
     assert r.status_code == 200
 
-    assert_match_json(snapshot, r, 'openapi.json')
+    data = r.json()
+    data['info']['version'] = "0.1.0-dev"
+    snapshot.assert_match(json.dumps(data, indent=2), 'openapi.json')
 
 
 @mark.asyncio
