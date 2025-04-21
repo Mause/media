@@ -20,7 +20,7 @@ isort = "==5.7.0"
 pytest-asyncio = "==0.14.0"
 async-asgi-testclient = "==1.4.5"
 rich-sparklines = "==0.1.5"
-aioresponses = "==0.7.1"
+aioresponses = "==0.7.8"
 pytest-sugar = "*"
 
 [packages]
