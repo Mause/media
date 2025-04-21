@@ -178,7 +178,7 @@ class HorriblesubsProvider(Provider):
 
 class TorrentsCsvProvider(Provider):
     def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         pass
 
@@ -201,11 +201,26 @@ class TorrentsCsvProvider(Provider):
                 )
 
 
+class NyaaProvider(Provider):
+    name = 'nyaa'
+
+    async def search_for_tv(
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+    ) -> AsyncGenerator[ITorrent, None]:
+        pass
+
+    async def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
+        pass
+
+
 PROVIDERS = [
     HorriblesubsProvider(),
     RarbgProvider(),
     KickassProvider(),
     TorrentsCsvProvider(),
+    NyaaProvider(),
 ]
 
 
