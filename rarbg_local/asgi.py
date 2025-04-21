@@ -1,10 +1,6 @@
 import logging
 import os
 
-import sentry_sdk
-from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
-
 from .logger import get_timber_handler
 from .new import create_app
 
@@ -16,6 +12,10 @@ if 'TIMBERIO_APIKEY' in os.environ:
 
 
 if 'SENTRY_DSN' in os.environ:
+    import sentry_sdk
+    from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+    from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+
     sentry_sdk.init(
         os.environ['SENTRY_DSN'],
         integrations=[SqlalchemyIntegration()],
@@ -24,4 +24,6 @@ if 'SENTRY_DSN' in os.environ:
     )
 
 app = create_app()
-app = SentryAsgiMiddleware(app)
+
+if 'SENTRY_DSN' in os.environ:
+    app = SentryAsgiMiddleware(app)
