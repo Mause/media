@@ -46,7 +46,7 @@ class ProviderSource(Enum):
 
 
 class EpisodeInfo(BaseModel):
-    seasonnum: Optional[str]
+    seasonnum: str
     epnum: Optional[str]
 
 
@@ -56,7 +56,7 @@ class ITorrent(BaseModel):
     seeders: int
     download: str
     category: str
-    episode_info: EpisodeInfo
+    episode_info: Optional[EpisodeInfo] = None
 
 
 class UserSchema(Orm):

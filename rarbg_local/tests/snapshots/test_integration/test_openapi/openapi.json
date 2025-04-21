@@ -1117,6 +1117,9 @@
       },
       "EpisodeInfo": {
         "title": "EpisodeInfo",
+        "required": [
+          "seasonnum"
+        ],
         "type": "object",
         "properties": {
           "seasonnum": {
@@ -1149,8 +1152,7 @@
           "title",
           "seeders",
           "download",
-          "category",
-          "episode_info"
+          "category"
         ],
         "type": "object",
         "properties": {
