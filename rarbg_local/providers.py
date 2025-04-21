@@ -104,7 +104,6 @@ class RarbgProvider(Provider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=movie_convert(item['category']),
-                episode_info=EpisodeInfo(),
             )
 
 
@@ -140,7 +139,6 @@ class KickassProvider(Provider):
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=movie_convert(item['resolution']),
-                episode_info=EpisodeInfo(),
             )
 
 
@@ -177,10 +175,11 @@ class HorriblesubsProvider(Provider):
 
 
 class TorrentsCsvProvider(Provider):
-    def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+    async def search_for_tv(
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
-        pass
+        if not True:
+            yield None
 
     name = "torrentscsv"
 
@@ -197,7 +196,6 @@ class TorrentsCsvProvider(Provider):
                     title=item['name'],
                     seeders=item['seeders'],
                     download=item['infohash'],
-                    episode_info=EpisodeInfo(),
                 )
 
 

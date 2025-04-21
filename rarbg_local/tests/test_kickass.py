@@ -87,6 +87,5 @@ async def test_movie(responses, aioresponses, clear_cache):
             seeders=10,
             download='magnet:aaaa',
             category='x264/1080',
-            episode_info=EpisodeInfo(),
         )
     ]
