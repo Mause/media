@@ -53,12 +53,16 @@ class Provider(ABC):
     name: str
     type: ProviderSource
 
+
+class TvProvider(Provider):
     @abstractmethod
     def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         raise NotImplementedError()
 
+
+class MovieProvider(Provider):
     @abstractmethod
     def search_for_movie(
         self, imdb_id: str, tmdb_id: int
@@ -70,7 +74,7 @@ def format(season: int, episode: Optional[int]) -> str:
     return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
 
 
-class RarbgProvider(Provider):
+class RarbgProvider(TvProvider, MovieProvider):
     name = 'rarbg'
     type = ProviderSource.RARBG
 
@@ -117,7 +121,7 @@ class RarbgProvider(Provider):
             )
 
 
-class KickassProvider(Provider):
+class KickassProvider(TvProvider, MovieProvider):
     name = 'kickass'
     type = ProviderSource.KICKASS
 
@@ -154,7 +158,7 @@ class KickassProvider(Provider):
             )
 
 
-class HorriblesubsProvider(Provider):
+class HorriblesubsProvider(TvProvider):
     name = 'horriblesubs'
     type = ProviderSource.HORRIBLESUBS
 
@@ -180,22 +184,10 @@ class HorriblesubsProvider(Provider):
                 ),
             )
 
-    async def search_for_movie(
-        self, imdb_id: str, tmdb_id: int
-    ) -> AsyncGenerator[ITorrent, None]:
-        if not True:
-            yield
 
-
-class TorrentsCsvProvider(Provider):
+class TorrentsCsvProvider(MovieProvider):
     name = "torrentscsv"
     type = ProviderSource.TORRENTS_CSV
-
-    async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
-    ) -> AsyncGenerator[ITorrent, None]:
-        if not True:
-            yield None
 
     async def search_for_movie(
         self, imdb_id: str, tmdb_id: int
@@ -214,7 +206,7 @@ class TorrentsCsvProvider(Provider):
                 )
 
 
-class NyaaProvider(Provider):
+class NyaaProvider(TvProvider):
     name = 'nyaa'
     type = ProviderSource.NYAA_SI
 
@@ -246,12 +238,6 @@ class NyaaProvider(Provider):
                     category=tv_convert(item.category),
                     episode_info=EpisodeInfo(season=season, episode=episode),
                 )
-
-    async def search_for_movie(
-        self, imdb_id: str, tmdb_id: int
-    ) -> AsyncGenerator[ITorrent, None]:
-        if not True:
-            yield None
 
 
 PROVIDERS = [
@@ -292,6 +278,8 @@ async def search_for_tv(
     imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
 ):
     for provider in PROVIDERS:
+        if not isinstance(provider, TvProvider):
+            continue
         try:
             async for result in provider.search_for_tv(
                 imdb_id, tmdb_id, season, episode
@@ -303,6 +291,8 @@ async def search_for_tv(
 
 async def search_for_movie(imdb_id: str, tmdb_id: int):
     for provider in PROVIDERS:
+        if not isinstance(provider, MovieProvider):
+            continue
         try:
             async for result in provider.search_for_movie(imdb_id, tmdb_id):
                 yield result
