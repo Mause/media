@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from itertools import chain
@@ -290,14 +291,22 @@ async def search_for_tv(
     imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
 ):
     for provider in PROVIDERS:
-        async for result in provider.search_for_tv(imdb_id, tmdb_id, season, episode):
-            yield result
+        try:
+            async for result in provider.search_for_tv(
+                imdb_id, tmdb_id, season, episode
+            ):
+                yield result
+        except Exception:
+            logging.exception('Unable to load [TV] from %s', provider.name)
 
 
 async def search_for_movie(imdb_id: str, tmdb_id: int):
     for provider in PROVIDERS:
-        async for result in provider.search_for_movie(imdb_id, tmdb_id):
-            yield result
+        try:
+            async for result in provider.search_for_movie(imdb_id, tmdb_id):
+                yield result
+        except Exception:
+            logging.exception('Unable to load [MOVIE] from %s', provider.name)
 
 
 def main():
