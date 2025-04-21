@@ -114,7 +114,7 @@ async def test_provider(aioresponses: AioResponses, snapshot):
     aioresponses.add(
         'https://horriblesubs.info/shows/little-busters',
         'GET',
-        load_html('show_page.html'),
+        body=load_html('show_page.html'),
     )
     add_json(
         aioresponses,
