@@ -6,7 +6,7 @@ from responses import RequestsMock
 
 from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
 from ..providers import HorriblesubsProvider
-from .conftest import themoviedb, tolist
+from .conftest import add_json, themoviedb, tolist
 from .factories import TvApiResponseFactory
 
 
@@ -114,15 +114,17 @@ async def test_provider(responses: RequestsMock, aioresponses, snapshot):
         'https://horriblesubs.info/shows/little-busters',
         load_html('show_page.html'),
     )
-    responses.add(
+    add_json(
+        aioresponses,
         'GET',
-        'https://api.jikan.moe/v3/search/anime',
-        json={'results': [{'title': 'Little Busters!', 'mal_id': '12345'}]},
+        'https://api.jikan.moe/v3/search/anime?limit=1&q=Little+Busters%2521',
+        {'results': [{'title': 'Little Busters!', 'mal_id': '12345'}]},
     )
-    responses.add(
+    add_json(
+        aioresponses,
         'GET',
         'https://api.jikan.moe/v3/anime/12345',
-        json={
+        {
             'title': 'Little Busters!',
             'title_synonyms': ['Busters that are little'],
         },

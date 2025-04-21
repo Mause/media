@@ -4,6 +4,7 @@ from functools import lru_cache
 from itertools import chain
 from typing import Dict, Optional, Set, Tuple
 
+from aiohttp import ClientSession
 from cachetools import TTLCache
 from cachetools.func import ttl_cache
 from fuzzywuzzy import fuzz
@@ -14,9 +15,12 @@ from .tmdb import get_tv
 from .utils import cached
 
 session = BaseUrlSession('https://horriblesubs.info/')
-jikan = BaseUrlSession('https://api.jikan.moe/v3/')
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
+
+
+def make_jikan():
+    return ClientSession(base_url='https://api.jikan.moe/v3/')
 
 
 class HorriblesubsDownloadType(Enum):
@@ -123,19 +127,19 @@ def search(showid: int, search_term: str):
 @cached(TTLCache(256, 360))
 async def get_names(tmdb_id: int) -> Set[str]:
     tv = await get_tv(tmdb_id)
-    results = jikan.get('search/anime', params={'q': tv.name, 'limit': 1}).json()[
-        'results'
-    ]
-    if not results:
-        return {tv.name}
+    async with make_jikan() as jikan:
+        res = await jikan.get('search/anime', params={'q': tv.name, 'limit': 1})
+        results = (await res.json())['results']
+        if not results:
+            return {tv.name}
 
-    result = results[0]
-    if closeness(tv.name, [result['title']]) < 95:
-        return {tv.name}
+        result = results[0]
+        if closeness(tv.name, [result['title']]) < 95:
+            return {tv.name}
 
-    result = jikan.get(f'anime/{results[0]["mal_id"]}').json()
+        result = await (await jikan.get(f'anime/{results[0]["mal_id"]}')).json()
 
-    return set([tv.name, result['title']] + result['title_synonyms'])
+        return set([tv.name, result['title']] + result['title_synonyms'])
 
 
 def closeness(key, names):
