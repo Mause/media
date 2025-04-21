@@ -6,11 +6,13 @@ from threading import Semaphore, current_thread
 from typing import AsyncGenerator, Callable, Iterable, List, Optional, Tuple, TypeVar
 
 import aiohttp
+from fastapi.concurrency import run_in_threadpool
+from NyaaPy import nyaa
 
 from . import horriblesubs, kickass
 from .models import EpisodeInfo, ITorrent, ProviderSource
 from .rarbg import get_rarbg_iter
-from .tmdb import get_tv
+from .tmdb import get_tv, resolve_id
 
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]
@@ -214,8 +216,32 @@ class NyaaProvider(Provider):
     async def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
-        if not True:
-            yield None
+        ny = nyaa.Nyaa()
+        name = (await get_tv(await resolve_id(tmdb_id, 'tv'))).name
+        template = f'{name} S{season:02d}'
+        page = 0
+        if episode is not None:
+            template += f'E{episode:02d}'
+
+        def search():
+            return ny.search(keyword=template, page=page)
+
+        while True:
+            items = await run_in_threadpool(search)
+            if items:
+                page += 1
+            else:
+                break
+
+            for item in items:
+                yield ITorrent(
+                    source=ProviderSource.NYAA_SI,
+                    title=item.name,
+                    seeders=item.seeders,
+                    download=item.magnet,
+                    category=tv_convert(item.category),
+                    episode_info=EpisodeInfo(season=season, episode=episode),
+                )
 
     async def search_for_movie(
         self, imdb_id: str, tmdb_id: int

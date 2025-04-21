@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3fef869a3be224f20942e7fe282ebe038ce78ffc313c1d8f4da665aedf11a4b5"
+            "sha256": "8b0962f8b3782de4874021fac9262103c88e51aee2c2b648e7a66687b7789d09"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1289,6 +1289,13 @@
             ],
             "markers": "python_version >= '3.5'",
             "version": "==1.0.0"
+        },
+        "nyaapy": {
+            "hashes": [
+                "sha256:d84e5299744c8f93b9c5b52a7a16d79b9f84e88981c10f902dac5ae0d5df5931"
+            ],
+            "index": "pypi",
+            "version": "==0.6.3"
         },
         "packaging": {
             "hashes": [
