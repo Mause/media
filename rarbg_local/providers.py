@@ -130,7 +130,7 @@ class KickassProvider(TvProvider, MovieProvider):
         if not imdb_id:
             return
 
-        for item in await kickass.search_for_tv(imdb_id, tmdb_id, season, episode):
+        async for item in kickass.search_for_tv(imdb_id, tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],
@@ -146,7 +146,7 @@ class KickassProvider(TvProvider, MovieProvider):
     async def search_for_movie(
         self, imdb_id: str, tmdb_id: int
     ) -> AsyncGenerator[ITorrent, None]:
-        for item in await kickass.search_for_movie(imdb_id, tmdb_id):
+        async for item in kickass.search_for_movie(imdb_id, tmdb_id):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],
