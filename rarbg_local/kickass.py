@@ -10,7 +10,7 @@ from .tmdb import get_movie, get_tv
 
 
 async def fetch(url: str) -> AsyncGenerator[Dict[str, Any], None]:
-    async with ClientSession() as session:
+    async with ClientSession(base_url='https://katcr.co') as session:
         try:
             r = await session.get(url)
         except ConnectionError:
@@ -60,13 +60,13 @@ async def search_for_tv(
                 yield item
     else:
         async for item in fetch(
-            f'https://katcr.co/name/search/{tokenise(name)}/i{imdb_id.lstrip("t")}/{season}/{episode}'
+            f'/name/search/{tokenise(name)}/i{imdb_id.lstrip("t")}/{season}/{episode}'
         ):
             yield item
 
 
 def base(name, imdb_id):
-    return fetch(f'https://katcr.co/name/{tokenise(name)}/i{imdb_id.lstrip("t")}')
+    return fetch(f'/name/{tokenise(name)}/i{imdb_id.lstrip("t")}')
 
 
 async def search_for_movie(imdb_id: str, tmdb_id: int):
