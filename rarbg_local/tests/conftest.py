@@ -1,5 +1,4 @@
 import json
-import re
 from asyncio import get_event_loop
 from typing import AsyncGenerator, List, Pattern, TypeVar, Union
 
@@ -67,11 +66,7 @@ def themoviedb(responses, path, response, query=''):
     add_json(
         responses,
         'GET',
-        re.compile(
-            re.escape(f'https://api.themoviedb.org/3{path}?api_key=')
-            + '.*'
-            + re.escape(query)
-        ),
+        'https://api.themoviedb.org/3' + path + ("?" + query if query else ""),
         response,
     )
 
