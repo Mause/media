@@ -77,7 +77,10 @@ def run_migrations_online():
 
     """
     connectable = engine_from_config(
-        alembic_config, prefix='sqlalchemy.', poolclass=pool.NullPool
+        alembic_config,
+        prefix='sqlalchemy.',
+        poolclass=pool.NullPool,
+        connect_args={'connect_timeout': 1000},
     )
 
     with connectable.connect() as connection:
