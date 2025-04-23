@@ -24,7 +24,7 @@ fileConfig(config.config_file_name)
 sys.path.insert(0, '.')
 db = __import__('rarbg_local.db').db.db
 
-if 'HEROKU' in os.environ:
+if 'HEROKU' in os.environ or 'RAILWAY_SERVICE_ID' in os.environ:
     url = os.environ['DATABASE_URL']
 else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
