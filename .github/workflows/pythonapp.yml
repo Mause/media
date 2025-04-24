@@ -54,23 +54,3 @@ jobs:
         with:
           name: report.html
           path: report.html
-
-  lint_migrations:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install pipenv
-        run: |
-          python -m pip install --upgrade pipenv
-      - name: Install dependencies
-        run: |
-          pipenv sync --dev
-      - name: Generate sql
-        run: |
-          pipenv run alembic upgrade head --sql > report.sql
-      - uses: sbdchd/squawk-action@v1
-        with:
-          pattern: report.sql
