@@ -65,10 +65,6 @@ def run_migrations_offline():
         dialect_name='postgresql',
     )
 
-    from sqlalchemy.engine.strategies import MockEngineStrategy
-
-    MockEngineStrategy.MockConnection.close = lambda self: None
-
     with context.begin_transaction():
         context.run_migrations()
 
