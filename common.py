@@ -2,4 +2,5 @@ from alembic import op
 
 
 def get_driver():
-    return op.get_bind().engine.url.drivername
+    engine = op.get_bind().engine
+    return engine.url.drivername if hasattr(engine, 'url') else engine.name

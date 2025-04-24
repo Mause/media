@@ -58,16 +58,14 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        #        url=url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         dialect_name='postgresql',
     )
 
-    from sqlalchemy.engine.strategies import MockEngineStrategy  # .MockConnection
+    from sqlalchemy.engine.strategies import MockEngineStrategy
 
     MockEngineStrategy.MockConnection.close = lambda self: None
 
@@ -93,7 +91,6 @@ def run_migrations_online():
             context.run_migrations()
 
 
-# __import__('ipdb').set_trace()
 if context.is_offline_mode():
     run_migrations_offline()
 else:
