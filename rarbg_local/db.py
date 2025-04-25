@@ -12,7 +12,7 @@ from sqlalchemy_repr import RepresentableBase
 
 from .utils import precondition
 
-Base = declarative_base()
+Base = declarative_base(cls=RepresentableBase)
 
 T = TypeVar('T')
 
