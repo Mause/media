@@ -21,7 +21,7 @@ config = context.config
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
 
-sys.path.insert(0, '.')
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 db = __import__('rarbg_local.db').db.db
 
 if 'HEROKU' in os.environ or 'RAILWAY_SERVICE_ID' in os.environ:
