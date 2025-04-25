@@ -1,74 +1,79 @@
-[tool.poetry]
+[project]
 name = "media"
 version = "0.1.0"
 description = ""
 authors = ["Elliana May <me@mause.me>"]
 license = "MIT"
+requires-python = "==3.9.*"
 
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+dependencies = [
+    "flask==1.1.2",
+    "jinja2==3.0.3",
+    "itsdangerous==2.0.1",
+    "sqlalchemy==1.4.54",
+    "sqlalchemy-repr==0.0.2",
+    "flask-sqlalchemy==2.4.4",
+    "aiohttp==3.11.18",
+    "backoff==1.10.0",
+    "psycopg2-binary",
+    "dataclasses-json==0.5.2",
+    "flask-user==1.0.2.2",
+    "flask-admin==1.5.7",
+    "flask-jsontools==0.1.7",
+    "sentry-sdk[flask]==0.19.5",
+    "alembic==1.15.2",
+    "plexapi==4.3.1",
+    "flask-cors==3.0.9",
+    "werkzeug==1.0.1",
+    "fuzzywuzzy[speedup]==0.18.0",
+    "cachetools==4.2.2",
+    "lxml",
+    "bs4==0.0.1",
+    "flask-socketio==5.0.1",
+    "timber==2.1.0",
+    "eventlet==0.35.2",
+    "email-validator==1.1.2",
+    "mause-rpc==0.0.18",
+    "py-healthcheck==1.10.1",
+    "cffi==1.14.4",
+    "fastapi==0.65.2",
+    "python-multipart==0.0.18",
+    "jwkaas==0.7",
+    "aniso8601==8.1.1",
+    "pytz==2021.1",
+    "uvicorn[standard]",
+    "aiofiles==0.6.0",
+    "fastapi-utils==0.2.1",
+    "asyncache==0.1.1",
+    "makefun==1.9.5",
+    "exceptiongroup",
+    "gunicorn",
+    "nyaapy",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "responses==0.12.1",
+    "lxml",
+    "pytest-html>=3.1.1",
+    "pytest-flask==1.1.0",
+    "pytest-selenium>=3.0.0",
+    "webdriver-manager==3.2.2",
+    "pre-commit==2.10.0",
+    "sqlalchemy-stubs==0.3",
+    "pytest-snapshot",
+    "flake8==3.8.4",
+    "factory-boy==3.2.0",
+    "isort==5.7.0",
+    "pytest-asyncio==0.14.0",
+    "async-asgi-testclient==1.4.5",
+    "aioresponses==0.7.8",
+    "pytest-sugar",
+]
 
 [tool.black]
 skip_string_normalization=true
 
 [tool.isort]
 profile = "black"
-
-[tool.poetry.dependencies]
-python = "^3.8"
-flask = "*"
-requests = "*"
-sqlalchemy = "*"
-sqlalchemy-repr = "*"
-flask-sqlalchemy = "*"
-aiohttp = "*"
-requests-toolbelt = "*"
-backoff = "*"
-gunicorn = {extras = ["gevent"], version = "*"}
-psycopg2-binary = "*"
-dataclasses-json = "*"
-flask-user = "*"
-flask-admin = "*"
-flask-jsontools = "*"
-sentry-sdk = {extras = ["flask"], version = "*"}
-alembic = "*"
-plexapi = "*"
-flask-cors = "*"
-flask-restx = {git = "https://github.com/python-restx/flask-restx"}
-werkzeug = "==1.*"
-apispec = "*"
-flask-login = "==0.5.0"
-fuzzywuzzy = {extras = ["speedup"], version = "*"}
-cachetools = "*"
-lxml = "*"
-bs4 = "*"
-flask-socketio = "*"
-timber = "*"
-eventlet = "*"
-email-validator = "*"
-mause-rpc = "*"
-py-healthcheck = "*"
-cffi = "*"
-fastapi = "*"
-python-multipart = "*"
-jwkaas = "*"
-aniso8601 = "*"
-
-[tool.poetry.dev-dependencies]
-ipdb = "*"
-pytest = "*"
-pdbpp = "*"
-responses = "*"
-lxml = "*"
-selenium = "*"
-pytest-html = "*"
-pytest-flask = "*"
-pytest-selenium = "*"
-webdriver-manager = "*"
-pre-commit = "*"
-sqlalchemy-stubs = "*"
-snapshottest = "*"
-black = "*"
-flake8 = "*"
-mypy = "*"
