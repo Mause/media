@@ -15,22 +15,6 @@ repos:
       - id: check-toml
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/PyCQA/isort
-    rev: 6.0.1
-    hooks:
-      - id: isort
-        args:
-          - --float-to-top
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.1
-    hooks:
-      - id: pyupgrade
-        args:
-          - --py3-plus
-  - repo: https://github.com/psf/black
-    rev: 25.1.0
-    hooks:
-      - id: black
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v9.23.0
     hooks:
@@ -60,14 +44,13 @@ repos:
           - sqlalchemy-stubs==0.4
           - types-requests
           - types-tabulate
-  - repo: https://github.com/pycqa/flake8
-    rev: '7.1.2'  # pick a git hash / tag to point to
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.11.7
     hooks:
-    - id: flake8
-      additional_dependencies:
-        - flake8-bugbear
-        - flake8-cognitive-complexity
-        - flake8-functions
-      args:
-        - --jobs=1
-        - --extend-ignore=W503,E203
+      # Run the linter.
+      - id: ruff
+        args: [ --fix ]
+      # Run the formatter.
+      - id: ruff-format
