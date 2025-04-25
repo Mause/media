@@ -1107,7 +1107,7 @@ dev = [
     { name = "pytest-snapshot" },
     { name = "pytest-sugar" },
     { name = "responses", specifier = "==0.12.1" },
-    { name = "sqlalchemy-stubs", specifier = "==0.3" },
+    { name = "sqlalchemy-stubs", specifier = "==0.4" },
     { name = "webdriver-manager", specifier = "==3.2.2" },
 ]
 
@@ -1821,15 +1821,15 @@ wheels = [
 
 [[package]]
 name = "sqlalchemy-stubs"
-version = "0.3"
+version = "0.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "mypy" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/97/f2/5b77bd9c54267a153d17e7ab70e1038929e0f0765b05d7e90a34687110fd/sqlalchemy-stubs-0.3.tar.gz", hash = "sha256:a3318c810697164e8c818aa2d90bac570c1a0e752ced3ec25455b309c0bee8fd", size = 70241 }
+sdist = { url = "https://files.pythonhosted.org/packages/81/60/db082788267740b17eac2c00666bbea1c8c5a94b569e8b1ea76b0cf42d57/sqlalchemy-stubs-0.4.tar.gz", hash = "sha256:c665d6dd4482ef642f01027fa06c3d5e91befabb219dc71fc2a09e7d7695f7ae", size = 70682 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f9/dd/11bac977c7bb901315371340f55282cbc6a9547037f6f480acc27c1a61dd/sqlalchemy_stubs-0.3-py3-none-any.whl", hash = "sha256:ca1250605a39648cc433f5c70cb1a6f9fe0b60bdda4c51e1f9a2ab3651daadc8", size = 115499 },
+    { url = "https://files.pythonhosted.org/packages/62/ae/cb215ab25b76228bc90c90444b87e323ffba58c212321a53d5bc92903098/sqlalchemy_stubs-0.4-py3-none-any.whl", hash = "sha256:5eec7aa110adf9b957b631799a72fef396b23ff99fe296df726645d01e312aa5", size = 116067 },
 ]
 
 [[package]]
