@@ -8,7 +8,6 @@ import sys
 from logging.config import fileConfig
 from pathlib import Path
 
-from flask import Flask
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
@@ -29,10 +28,6 @@ if 'HEROKU' in os.environ:
 else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
 
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = url
-db.init_app(app)
 
 alembic_config = config.get_section(config.config_ini_section)
 alembic_config['sqlalchemy.url'] = app.config['SQLALCHEMY_DATABASE_URI']
