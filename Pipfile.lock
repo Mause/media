@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "dcfc4487936bead193899c65cec79d2cd683335f9eb60eab39ff1e86a31e6cd2"
+            "sha256": "4cc9d5f9e8401dd012e6356837d222abee8bc1c117305439b68a4f7dd61a8d1c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -494,11 +494,11 @@
         },
         "dnspython": {
             "hashes": [
-                "sha256:36c5e8e38d4369a08b6780b7f27d790a292b2b08eea01607865bf0936c558e01",
-                "sha256:f69c21288a962f4da86e56c4905b49d11aba7938d3d740e80d9e366ee4f1632d"
+                "sha256:b4c34b7d10b51bcc3a5071e7b8dee77939f1e878477eeecc965e9835f63c6c86",
+                "sha256:ce9c432eda0dc91cf618a5cedf1a4e142651196bbcd2c80e89ed5a907e5cfaf1"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-            "version": "==1.16.0"
+            "markers": "python_version >= '3.9'",
+            "version": "==2.7.0"
         },
         "email-validator": {
             "hashes": [
@@ -510,11 +510,12 @@
         },
         "eventlet": {
             "hashes": [
-                "sha256:a58caa60ea936c967d16983f3fe7831583b1dc57ed58778cb9b329d1484b918e",
-                "sha256:d00649a7e17de0bcddff1a96311ed3baf1b295b3223d4b71aceafe7b45e6d6f8"
+                "sha256:8d1263e20b7f816a046ac60e1d272f9e5bc503f7a34d9adc789f8a85b14fa57d",
+                "sha256:8fc1ee60d583f1dd58d6f304bb95fd46d34865ab22f57cb99008a81d61d573db"
             ],
             "index": "pypi",
-            "version": "==0.30.1"
+            "markers": "python_version >= '3.7'",
+            "version": "==0.35.2"
         },
         "exceptiongroup": {
             "hashes": [
