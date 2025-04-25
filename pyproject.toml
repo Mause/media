@@ -72,8 +72,13 @@ dev = [
     "pytest-sugar",
 ]
 
-[tool.black]
-skip_string_normalization=true
+[tool.ruff.format]
+quote-style = "preserve"
 
-[tool.isort]
-profile = "black"
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "W",
+    "I",
+]
