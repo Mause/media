@@ -1,0 +1,42 @@
+[
+  {
+    "checker": "transmission_connectivity",
+    "output": {
+      "consumers": [
+        "ctag1"
+      ],
+      "client_is_alive": true
+    },
+    "passed": true
+  },
+  {
+    "checker": "jikan",
+    "output": {},
+    "passed": true
+  },
+  {
+    "checker": "katcr",
+    "output": "<Response [200]>",
+    "passed": true
+  },
+  {
+    "checker": "rarbg",
+    "output": "<Response [200]>",
+    "passed": true
+  },
+  {
+    "checker": "horriblesubs",
+    "output": "<Response [200]>",
+    "passed": true
+  },
+  {
+    "checker": "nyaa",
+    "output": "<Response [200]>",
+    "passed": true
+  },
+  {
+    "checker": "torrentscsv",
+    "output": "<Response [200]>",
+    "passed": true
+  }
+]

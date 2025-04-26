@@ -19,22 +19,39 @@ def transmission_connectivity():
 
 @health.add_check
 def jikan():
-    return True, requests.get('https://api.jikan.moe/v3').json()
+    return True, requests.get('https://api.jikan.moe/v4').json()
 
 
 @health.add_check
 def katcr():
-    requests.head('https://katcr.co')
-    return True, 'kickass'
+    res = requests.head('https://katcr.co')
+    res.raise_for_status()
+    return True, repr(res)
 
 
 @health.add_check
 def rarbg():
-    requests.head('https://torrentapi.org')
-    return True, 'rarbg'
+    res = requests.head('https://torrentapi.org')
+    res.raise_for_status()
+    return True, repr(res)
 
 
 @health.add_check
 def horriblesubs():
-    requests.head('https://horriblesubs.info')
-    return True, 'horriblesubs'
+    res = requests.head('https://horriblesubs.info')
+    res.raise_for_status()
+    return True, repr(res)
+
+
+@health.add_check
+def nyaa():
+    res = requests.head('https://nyaa.si')
+    res.raise_for_status()
+    return True, repr(res)
+
+
+@health.add_check
+def torrentscsv():
+    res = requests.head('https://torrents-csv.com')
+    res.raise_for_status()
+    return True, repr(res)

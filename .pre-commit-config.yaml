@@ -41,7 +41,8 @@ repos:
     hooks:
      - id: mypy
        additional_dependencies:
-          - sqlalchemy-stubs==0.4
+          - sqlalchemy[mypy]==1.4.54
+          - sqlalchemy2-stubs
           - types-requests
           - types-tabulate
 

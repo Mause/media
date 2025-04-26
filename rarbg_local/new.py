@@ -25,6 +25,7 @@ from plexapi.server import PlexServer
 from pydantic import BaseModel, BaseSettings, SecretStr
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
@@ -65,7 +66,14 @@ from .models import (
     TvResponse,
     TvSeasonResponse,
 )
-from .providers import PROVIDERS, ProviderSource, search_for_movie, search_for_tv
+from .providers import (
+    PROVIDERS,
+    ProviderSource,
+    search_for_movie,
+    search_for_tv,
+    TvProvider,
+    MovieProvider,
+)
 from .singleton import singleton
 from .tmdb import (
     get_json,
@@ -111,20 +119,24 @@ async def get_settings():
     return Settings()
 
 
+def normalise_db_url(database_url: str) -> str:
+    parsed = make_url(database_url)
+    if parsed.drivername == 'postgres':
+        parsed = parsed.set(drivername='postgresql')
+    return parsed.render_as_string(hide_password=False)
+
+
 @singleton
 def get_session_local(settings: Settings = Depends(get_settings)):
-    db_url = settings.database_url
+    db_url = normalise_db_url(settings.database_url)
+
     logging.info('db_url: %s', db_url)
 
     sqlite = 'sqlite' in db_url
-
-    ca = {"check_same_thread": False} if sqlite else {}
-    engine_args = (
-        {} if sqlite else {'max_overflow': 10, 'pool_size': 5, 'pool_recycle': 300}
-    )
-    engine = create_engine(db_url, connect_args=ca, **engine_args, echo_pool='debug')
-
     if sqlite:
+        engine = create_engine(
+            db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
+        )
 
         @event.listens_for(engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
@@ -134,6 +146,9 @@ def get_session_local(settings: Settings = Depends(get_settings)):
             dbapi_con.execute('pragma foreign_keys=ON')
 
     else:
+        engine = create_engine(
+            db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
+        )
 
         @event.listens_for(engine, "do_connect")
         @backoff.on_exception(
@@ -246,11 +261,17 @@ async def stream(
         raise HTTPException(422, 'Invalid provider')
 
     if type == 'series':
+        if not isinstance(provider, TvProvider):
+            return
+
         async for item in provider.search_for_tv(
             await get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
         ):
             yield item
     else:
+        if not isinstance(provider, MovieProvider):
+            return
+
         async for item in provider.search_for_movie(
             await get_movie_imdb_id(tmdb_id), int(tmdb_id)
         ):

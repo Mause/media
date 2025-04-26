@@ -52,11 +52,13 @@ def add_torrent():
 
 @patch('rarbg_local.health.transmission')
 @mark.asyncio
-async def test_diagnostics(transmission, test_client, user, responses):
+async def test_diagnostics(transmission, test_client, user, responses, snapshot):
     responses.add('HEAD', 'https://horriblesubs.info')
     responses.add('HEAD', 'https://torrentapi.org')
     responses.add('HEAD', 'https://katcr.co')
-    responses.add('GET', 'https://api.jikan.moe/v3', body='{}')
+    responses.add('HEAD', 'https://nyaa.si')
+    responses.add('HEAD', 'https://torrents-csv.com')
+    responses.add('GET', 'https://api.jikan.moe/v4', body='{}')
 
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
@@ -72,17 +74,7 @@ async def test_diagnostics(transmission, test_client, user, responses):
         r.pop('timestamp')
         r.pop('expires')
 
-    assert results == [
-        {
-            'checker': 'transmission_connectivity',
-            'output': {'consumers': ['ctag1'], 'client_is_alive': True},
-            'passed': True,
-        },
-        {'checker': 'jikan', 'output': {}, 'passed': True},
-        {'checker': 'katcr', 'output': 'kickass', 'passed': True},
-        {'checker': 'rarbg', 'output': 'rarbg', 'passed': True},
-        {'checker': 'horriblesubs', 'output': 'horriblesubs', 'passed': True},
-    ]
+    snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
 
 
 @mark.asyncio
