@@ -551,7 +551,7 @@ async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
     do.update(
         {
             get_current_user: cu,
-            get_settings: lambda: Settings(database_url='postgres:///:memory:'),
+            get_settings: lambda: Settings(database_url='postgresql:///:memory:'),
         }
     )
 
