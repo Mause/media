@@ -64,6 +64,9 @@ from .models import (
 )
 from .providers import (
     PROVIDERS,
+    MovieProvider,
+    ProviderSource,
+    TvProvider,
     search_for_movie,
     search_for_tv,
 )
@@ -153,8 +156,6 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
         )
 
     return decorator
-
-
 
 
 @api.get(
