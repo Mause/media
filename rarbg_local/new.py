@@ -126,14 +126,10 @@ def get_session_local(settings: Settings = Depends(get_settings)):
     logging.info('db_url: %s', db_url)
 
     sqlite = 'sqlite' in db_url
-
-    ca = {"check_same_thread": False} if sqlite else {}
-    engine_args = (
-        {} if sqlite else {'max_overflow': 10, 'pool_size': 5, 'pool_recycle': 300}
-    )
-    engine = create_engine(db_url, connect_args=ca, **engine_args, echo_pool='debug')
-
     if sqlite:
+        engine = create_engine(
+            db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
+        )
 
         @event.listens_for(engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
@@ -143,6 +139,9 @@ def get_session_local(settings: Settings = Depends(get_settings)):
             dbapi_con.execute('pragma foreign_keys=ON')
 
     else:
+        engine = create_engine(
+            db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
+        )
 
         @event.listens_for(engine, "do_connect")
         @backoff.on_exception(
