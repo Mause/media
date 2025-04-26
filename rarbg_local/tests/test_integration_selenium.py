@@ -9,7 +9,7 @@ from pytest import fixture, mark
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
 
-from ..main import create_app
+# from ..main import create_app
 
 HERE = Path(__name__).resolve().absolute().parent
 
