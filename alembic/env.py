@@ -25,7 +25,7 @@ sys.path.insert(0, '.')
 db = __import__('rarbg_local.db').db.db
 
 if 'HEROKU' in os.environ:
-    url = os.environ['DATABASE_URL']
+    url = os.environ['DATABASE_URL'].replace('postgres://', 'postgresql://')
 else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
 
