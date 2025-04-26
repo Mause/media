@@ -9,23 +9,21 @@ from .utils import cached
 
 
 def make_jikan():
-    return ClientSession(base_url='https://api.jikan.moe/v3/')
+    return ClientSession(base_url='https://api.jikan.moe/v4/')
 
 
 @cached(TTLCache(256, 360))
 async def get_names(tmdb_id: int) -> Set[str]:
     tv = await get_tv(tmdb_id)
     async with make_jikan() as jikan:
-        res = await jikan.get('search/anime', params={'q': tv.name, 'limit': 1})
-        results = (await res.json())['results']
+        res = await jikan.get('anime', params={'q': tv.name, 'limit': 1})
+        results = (await res.json())['data']
         if not results:
             return {tv.name}
 
         result = results[0]
         if closeness(tv.name, [result['title']]) < 95:
             return {tv.name}
-
-        result = await (await jikan.get(f'anime/{results[0]["mal_id"]}')).json()
 
         return set([tv.name, result['title']] + result['title_synonyms'])
 

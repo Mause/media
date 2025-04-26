@@ -19,7 +19,7 @@ def transmission_connectivity():
 
 @health.add_check
 def jikan():
-    return True, requests.get('https://api.jikan.moe/v3').json()
+    return True, requests.get('https://api.jikan.moe/v4').json()
 
 
 @health.add_check
