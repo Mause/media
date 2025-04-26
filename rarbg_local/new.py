@@ -25,6 +25,7 @@ from plexapi.server import PlexServer
 from pydantic import BaseModel, BaseSettings, SecretStr
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
@@ -111,20 +112,24 @@ async def get_settings():
     return Settings()
 
 
+def normalise_db_url(database_url: str) -> str:
+    parsed = make_url(database_url)
+    if parsed.drivername == 'postgres':
+        parsed = parsed.set(drivername='postgresql')
+    return parsed.render_as_string(hide_password=False)
+
+
 @singleton
 def get_session_local(settings: Settings = Depends(get_settings)):
-    db_url = settings.database_url
+    db_url = normalise_db_url(settings.database_url)
+
     logging.info('db_url: %s', db_url)
 
     sqlite = 'sqlite' in db_url
-
-    ca = {"check_same_thread": False} if sqlite else {}
-    engine_args = (
-        {} if sqlite else {'max_overflow': 10, 'pool_size': 5, 'pool_recycle': 300}
-    )
-    engine = create_engine(db_url, connect_args=ca, **engine_args, echo_pool='debug')
-
     if sqlite:
+        engine = create_engine(
+            db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
+        )
 
         @event.listens_for(engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
@@ -134,6 +139,9 @@ def get_session_local(settings: Settings = Depends(get_settings)):
             dbapi_con.execute('pragma foreign_keys=ON')
 
     else:
+        engine = create_engine(
+            db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
+        )
 
         @event.listens_for(engine, "do_connect")
         @backoff.on_exception(
@@ -267,7 +275,6 @@ async def stream(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: int, season: int):
-
     results = search_for_tv(await get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
     episodes = get_tv_episodes(tmdb_id, season).episodes
@@ -306,7 +313,6 @@ async def download_post(
     added_by: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
-
     results: List[Union[MovieDetails, EpisodeDetails]] = []
 
     for thing in things:
@@ -366,13 +372,11 @@ async def download_post(
 
 @api.get('/index', response_model=IndexResponse)
 async def index(session: Session = Depends(get_db)):
-
     return IndexResponse(series=resolve_series(session), movies=get_movies(session))
 
 
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
-
     keys = Download.added_by_id, Download.type
     query = session.query(*keys, func.count(name='count')).group_by(*keys)
 
@@ -392,7 +396,6 @@ async def movie(tmdb_id: int):
 
 @api.get('/torrents', response_model=Dict[str, InnerTorrent])
 async def torrents():
-
     return get_keyed_torrents()
 
 

@@ -1016,7 +1016,7 @@ dependencies = [
     { name = "python-multipart" },
     { name = "pytz" },
     { name = "sentry-sdk", extra = ["flask"] },
-    { name = "sqlalchemy" },
+    { name = "sqlalchemy", extra = ["mypy"] },
     { name = "sqlalchemy-repr" },
     { name = "timber" },
     { name = "uvicorn", extra = ["standard"] },
@@ -1040,7 +1040,7 @@ dev = [
     { name = "pytest-snapshot" },
     { name = "pytest-sugar" },
     { name = "responses" },
-    { name = "sqlalchemy-stubs" },
+    { name = "sqlalchemy2-stubs" },
     { name = "webdriver-manager" },
 ]
 
@@ -1083,7 +1083,7 @@ requires-dist = [
     { name = "python-multipart", specifier = "==0.0.18" },
     { name = "pytz", specifier = "==2021.1" },
     { name = "sentry-sdk", extras = ["flask"], specifier = "==0.19.5" },
-    { name = "sqlalchemy", specifier = "==1.4.54" },
+    { name = "sqlalchemy", extras = ["mypy"], specifier = "==1.4.54" },
     { name = "sqlalchemy-repr", specifier = "==0.0.2" },
     { name = "timber", specifier = "==2.1.0" },
     { name = "uvicorn", extras = ["standard"] },
@@ -1107,7 +1107,7 @@ dev = [
     { name = "pytest-snapshot" },
     { name = "pytest-sugar" },
     { name = "responses", specifier = "==0.12.1" },
-    { name = "sqlalchemy-stubs", specifier = "==0.4" },
+    { name = "sqlalchemy2-stubs" },
     { name = "webdriver-manager", specifier = "==3.2.2" },
 ]
 
@@ -1807,6 +1807,12 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/68/24/70f788b22d0799e0a8b4e952d42629e48beca0e5fb30688b9a431b2c4058/SQLAlchemy-1.4.54-cp39-cp39-win_amd64.whl", hash = "sha256:6da60fb24577f989535b8fc8b2ddc4212204aaf02e53c4c7ac94ac364150ed08", size = 1593546 },
 ]
 
+[package.optional-dependencies]
+mypy = [
+    { name = "mypy" },
+    { name = "sqlalchemy2-stubs" },
+]
+
 [[package]]
 name = "sqlalchemy-repr"
 version = "0.0.2"
@@ -1819,16 +1825,15 @@ wheels = [
 ]
 
 [[package]]
-name = "sqlalchemy-stubs"
-version = "0.4"
+name = "sqlalchemy2-stubs"
+version = "0.0.2a38"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "mypy" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/81/60/db082788267740b17eac2c00666bbea1c8c5a94b569e8b1ea76b0cf42d57/sqlalchemy-stubs-0.4.tar.gz", hash = "sha256:c665d6dd4482ef642f01027fa06c3d5e91befabb219dc71fc2a09e7d7695f7ae", size = 70682 }
+sdist = { url = "https://files.pythonhosted.org/packages/94/df/be9e0062f649fd2e9b9b73a98c250f520fa10beaebddb8948dffad23c3b6/sqlalchemy2-stubs-0.0.2a38.tar.gz", hash = "sha256:861d722abeb12f13eacd775a9f09379b11a5a9076f469ccd4099961b95800f9e", size = 123950 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/62/ae/cb215ab25b76228bc90c90444b87e323ffba58c212321a53d5bc92903098/sqlalchemy_stubs-0.4-py3-none-any.whl", hash = "sha256:5eec7aa110adf9b957b631799a72fef396b23ff99fe296df726645d01e312aa5", size = 116067 },
+    { url = "https://files.pythonhosted.org/packages/ee/ea/6eff437d0a26c894da2982429ed2c148ecaf0526349ddc8cda1e7151c171/sqlalchemy2_stubs-0.0.2a38-py3-none-any.whl", hash = "sha256:b62aa46943807287550e2033dafe07564b33b6a815fbaa3c144e396f9cc53bcb", size = 191786 },
 ]
 
 [[package]]
