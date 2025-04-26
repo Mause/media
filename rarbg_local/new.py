@@ -246,11 +246,17 @@ async def stream(
         raise HTTPException(422, 'Invalid provider')
 
     if type == 'series':
+        if not hasattr(provider, 'search_for_tv'):
+            return
+
         async for item in provider.search_for_tv(
             await get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
         ):
             yield item
     else:
+        if not hasattr(provider, 'search_for_movie'):
+            return
+
         async for item in provider.search_for_movie(
             await get_movie_imdb_id(tmdb_id), int(tmdb_id)
         ):
