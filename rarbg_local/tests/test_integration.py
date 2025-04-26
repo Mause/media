@@ -56,7 +56,7 @@ async def test_diagnostics(transmission, test_client, user, responses):
     responses.add('HEAD', 'https://horriblesubs.info')
     responses.add('HEAD', 'https://torrentapi.org')
     responses.add('HEAD', 'https://katcr.co')
-    responses.add('GET', 'https://api.jikan.moe/v3', body='{}')
+    responses.add('GET', 'https://api.jikan.moe/v4', body='{}')
 
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
