@@ -66,7 +66,14 @@ from .models import (
     TvResponse,
     TvSeasonResponse,
 )
-from .providers import PROVIDERS, ProviderSource, search_for_movie, search_for_tv
+from .providers import (
+    PROVIDERS,
+    ProviderSource,
+    search_for_movie,
+    search_for_tv,
+    TvProvider,
+    MovieProvider,
+)
 from .singleton import singleton
 from .tmdb import (
     get_json,
@@ -254,7 +261,7 @@ async def stream(
         raise HTTPException(422, 'Invalid provider')
 
     if type == 'series':
-        if not hasattr(provider, 'search_for_tv'):
+        if not isinstance(provider, TvProvider):
             return
 
         async for item in provider.search_for_tv(
@@ -262,7 +269,7 @@ async def stream(
         ):
             yield item
     else:
-        if not hasattr(provider, 'search_for_movie'):
+        if not isinstance(provider, MovieProvider):
             return
 
         async for item in provider.search_for_movie(
