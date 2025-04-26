@@ -5,7 +5,7 @@ from functools import wraps
 from os import getpid
 from pathlib import Path
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse, urlunparse
 
 import backoff
 import psycopg2
@@ -113,7 +113,12 @@ async def get_settings():
 
 @singleton
 def get_session_local(settings: Settings = Depends(get_settings)):
-    db_url = settings.database_url
+    parsed = urlparse(settings.database_url)
+    if parsed.scheme == 'postgres':
+        db_url = urlunparse(parsed._replace(scheme='postgresql'))
+    else:
+        db_url = urlunparse(parsed)
+
     logging.info('db_url: %s', db_url)
 
     sqlite = 'sqlite' in db_url
@@ -261,7 +266,6 @@ async def stream(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: int, season: int):
-
     results = search_for_tv(await get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
     episodes = get_tv_episodes(tmdb_id, season).episodes
@@ -300,7 +304,6 @@ async def download_post(
     added_by: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
-
     results: List[Union[MovieDetails, EpisodeDetails]] = []
 
     for thing in things:
@@ -360,13 +363,11 @@ async def download_post(
 
 @api.get('/index', response_model=IndexResponse)
 async def index(session: Session = Depends(get_db)):
-
     return IndexResponse(series=resolve_series(session), movies=get_movies(session))
 
 
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
-
     keys = Download.added_by_id, Download.type
     query = session.query(*keys, func.count(name='count')).group_by(*keys)
 
@@ -386,7 +387,6 @@ async def movie(tmdb_id: int):
 
 @api.get('/torrents', response_model=Dict[str, InnerTorrent])
 async def torrents():
-
     return get_keyed_torrents()
 
 
