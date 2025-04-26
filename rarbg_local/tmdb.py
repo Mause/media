@@ -16,8 +16,9 @@ from .models import (
     TvApiResponse,
     TvSeasonResponse,
 )
+from .types import ImdbId, TmdbId
 from .utils import cached, precondition
-from .types import TmdbID
+
 base = 'https://api.themoviedb.org/3/'
 
 access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
@@ -73,7 +74,7 @@ async def search_themoviedb(s: str) -> List[SearchResponse]:
 
 
 @cached(TTLCache(1024, 360))
-async def find_themoviedb(imdb_id: str):
+async def find_themoviedb(imdb_id: ImdbId) -> Dict[str, str]:
     precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
     results = await get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
 
@@ -83,7 +84,7 @@ async def find_themoviedb(imdb_id: str):
 
 
 @cached(LRUCache(1024))
-async def resolve_id(imdb_id: str, type: ThingType) -> int:
+async def resolve_id(imdb_id: ImdbId, type: ThingType) -> int:
     precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
     results = await get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
 
@@ -94,12 +95,12 @@ async def resolve_id(imdb_id: str, type: ThingType) -> int:
 
 
 @cached(LRUCache(256))
-async def get_movie(id: int) -> MovieResponse:
+async def get_movie(id: TmdbId) -> MovieResponse:
     return MovieResponse(**(await get_json(f'movie/{id}')))
 
 
 @cached(TTLCache(256, 360))
-async def get_tv(id: int) -> TvApiResponse:
+async def get_tv(id: TmdbId) -> TvApiResponse:
     return TvApiResponse(**await get_json(f'tv/{id}'))
 
 
@@ -107,17 +108,17 @@ async def get_movie_imdb_id(movie_id: Union[int, str]) -> str:
     return await get_imdb_id('movie', movie_id)
 
 
-async def get_tv_imdb_id(tv_id: Union[int, str]) -> str:
+async def get_tv_imdb_id(tv_id: TmdbId) -> str:
     return await get_imdb_id('tv', tv_id)
 
 
 @cached(LRUCache(360))
-async def get_imdb_id(type: str, id: Union[int, str]) -> str:
+async def get_imdb_id(type: ThingType, id: TmdbId) -> str:
     return (await get_json(f'{type}/{id}/external_ids'))['imdb_id']
 
 
 @cached(TTLCache(256, 360))
-async def get_tv_episodes(id: TmdbID, season: int) -> TvSeasonResponse:
+async def get_tv_episodes(id: TmdbId, season: int) -> TvSeasonResponse:
     return TvSeasonResponse(**await get_json(f'tv/{id}/season/{season}'))
 
 
