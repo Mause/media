@@ -193,7 +193,9 @@ def assert_match_json(snapshot, res, name):
 
 
 @mark.asyncio
-async def test_index(responses, test_client, get_torrent, snapshot, session, user):
+async def test_index(
+    responses, aioresponses, test_client, get_torrent, snapshot, session, user
+):
     session.add_all(
         [
             create_episode(
@@ -229,6 +231,19 @@ async def test_index(responses, test_client, get_torrent, snapshot, session, use
         ]
     )
     session.commit()
+
+    aioresponses.add(
+        'https://api.themoviedb.org/3/tv/3/season/1',
+        method='GET',
+        body=json.dumps(
+            {
+                "episodes": [
+                    {"name": "The Pilot", "id": "00000", "episode_number": 1},
+                    {"name": "The Fight", "id": "00001", "episode_number": 2},
+                ]
+            }
+        ),
+    )
 
     res = await test_client.get('/api/index')
 

@@ -261,10 +261,9 @@ async def stream(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: int, season: int):
-
     results = search_for_tv(await get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
-    episodes = get_tv_episodes(tmdb_id, season).episodes
+    episodes = (await get_tv_episodes(tmdb_id, season)).episodes
 
     packs_or_not = groupby(
         results, lambda result: extract_marker(result.title)[1] is None
@@ -300,7 +299,6 @@ async def download_post(
     added_by: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
-
     results: List[Union[MovieDetails, EpisodeDetails]] = []
 
     for thing in things:
@@ -360,13 +358,13 @@ async def download_post(
 
 @api.get('/index', response_model=IndexResponse)
 async def index(session: Session = Depends(get_db)):
-
-    return IndexResponse(series=resolve_series(session), movies=get_movies(session))
+    return IndexResponse(
+        series=await resolve_series(session), movies=get_movies(session)
+    )
 
 
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
-
     keys = Download.added_by_id, Download.type
     query = session.query(*keys, func.count(name='count')).group_by(*keys)
 
@@ -386,7 +384,6 @@ async def movie(tmdb_id: int):
 
 @api.get('/torrents', response_model=Dict[str, InnerTorrent])
 async def torrents():
-
     return get_keyed_torrents()
 
 
@@ -417,7 +414,7 @@ async def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
         return (
             (await get_movie(tmdb_id)).title
             if type == MonitorMediaType.MOVIE
-            else get_tv(tmdb_id).name
+            else (await get_tv(tmdb_id)).name
         )
     except HTTPError as e:
         if e.response.status_code == 404:
@@ -529,8 +526,10 @@ async def redirect_to_imdb(
     if type_ == 'movie':
         imdb_id = await get_movie_imdb_id(tmdb_id)
     elif season:
-        imdb_id = get_json(
-            f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
+        imdb_id = (
+            await get_json(
+                f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
+            )
         )['imdb_id']
     else:
         imdb_id = await get_tv_imdb_id(tmdb_id)
