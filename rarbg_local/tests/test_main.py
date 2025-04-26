@@ -5,6 +5,7 @@ import pytest
 
 from ..main import normalise
 from ..models import Episode
+from ..new import normalise_db_url
 from ..providers import threadable
 
 episodes: List[Episode] = [
@@ -42,3 +43,11 @@ def test_threadable():
 
     assert results == [3]
     m.assert_called_with(1, 2)
+
+
+def test_normalise_db_url() -> None:
+    database_url = 'postgres://user:pass@localhost:5432/db'
+    assert normalise_db_url(database_url) == 'postgresql://user:pass@localhost:5432/db'
+
+    database_url = 'sqlite:///:memory:'
+    assert normalise_db_url(database_url) == 'sqlite:///:memory:'
