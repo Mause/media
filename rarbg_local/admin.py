@@ -35,7 +35,6 @@ class UserAdmin(sqla.ModelView, AdminOnly):
 
 # Customized Role model for SQL-Admin
 class RoleAdmin(sqla.ModelView, AdminOnly):
-
     pass
 
 
