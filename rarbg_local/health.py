@@ -38,3 +38,15 @@ def rarbg():
 def horriblesubs():
     requests.head('https://horriblesubs.info')
     return True, 'horriblesubs'
+
+
+@health.add_check
+def nyaa():
+    requests.head('https://nyaa.si').raise_for_status()
+    return True, 'nyaa'
+
+
+@health.add_check
+def torrentscsv():
+    requests.head('https://torrents-csv.com').raise_for_status()
+    return True, 'torrentscsv'
