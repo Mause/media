@@ -5,7 +5,7 @@ from functools import wraps
 from os import getpid
 from pathlib import Path
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
-from urllib.parse import urlencode, urlparse, urlunparse
+from urllib.parse import urlencode
 
 import backoff
 import psycopg2
@@ -25,6 +25,7 @@ from plexapi.server import PlexServer
 from pydantic import BaseModel, BaseSettings, SecretStr
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
@@ -111,13 +112,16 @@ async def get_settings():
     return Settings()
 
 
+def normalise_db_url(database_url: str) -> str:
+    parsed = make_url(database_url)
+    if parsed.drivername == 'postgres':
+        parsed = parsed.set(drivername='postgresql')
+    return parsed.render_as_string(hide_password=False)
+
+
 @singleton
 def get_session_local(settings: Settings = Depends(get_settings)):
-    parsed = urlparse(settings.database_url)
-    if parsed.scheme == 'postgres':
-        db_url = urlunparse(parsed._replace(scheme='postgresql'))
-    else:
-        db_url = urlunparse(parsed)
+    db_url = normalise_db_url(settings.database_url)
 
     logging.info('db_url: %s', db_url)
 
