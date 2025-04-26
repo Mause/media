@@ -1,4 +1,5 @@
 import json
+import logging
 from asyncio import get_event_loop
 from typing import AsyncGenerator, List, Pattern, TypeVar, Union
 
@@ -17,6 +18,8 @@ from ..new import (
 )
 from ..singleton import get
 from ..utils import cache_clear
+
+logging.getLogger('pudb').setLevel(logging.FATAL)
 
 
 @fixture
