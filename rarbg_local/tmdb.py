@@ -17,7 +17,7 @@ from .models import (
     TvSeasonResponse,
 )
 from .utils import cached, precondition
-
+from .types import TmdbID
 base = 'https://api.themoviedb.org/3/'
 
 access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
@@ -117,7 +117,7 @@ async def get_imdb_id(type: str, id: Union[int, str]) -> str:
 
 
 @cached(TTLCache(256, 360))
-async def get_tv_episodes(id: int, season: int) -> TvSeasonResponse:
+async def get_tv_episodes(id: TmdbID, season: int) -> TvSeasonResponse:
     return TvSeasonResponse(**await get_json(f'tv/{id}/season/{season}'))
 
 
