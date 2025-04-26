@@ -2,7 +2,7 @@ import enum
 import logging
 from datetime import datetime
 from functools import lru_cache
-from typing import List, Optional, Type, TypeVar, Union
+from typing import List, Optional, Type, TypeVar, Union, cast
 
 import backoff
 import psycopg2
@@ -19,7 +19,13 @@ from sqlalchemy import (
 )
 from sqlalchemy.engine import URL, make_url
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, joinedload, relationship, sessionmaker
+from sqlalchemy.orm import (
+    RelationshipProperty,
+    Session,
+    joinedload,
+    relationship,
+    sessionmaker,
+)
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
 from sqlalchemy_repr import RepresentableBase
@@ -42,14 +48,20 @@ class Download(Base):  # type: ignore
     transmission_id = Column(String, nullable=False)
     imdb_id = Column(String, nullable=False)
     type = Column(String)
-    movie = relationship('MovieDetails', uselist=False, cascade='all,delete')
+    movie: RelationshipProperty['MovieDetails'] = relationship(
+        'MovieDetails', uselist=False, cascade='all,delete'
+    )
     movie_id = Column(Integer, ForeignKey('movie_details.id', ondelete='CASCADE'))
-    episode = relationship('EpisodeDetails', uselist=False, cascade='all,delete')
+    episode: RepresentableBase['EpisodeDetails'] = relationship(
+        'EpisodeDetails', uselist=False, cascade='all,delete'
+    )
     episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
     title = Column(String)
     timestamp = Column(DateTime(timezone=True), nullable=False, default=func.now())
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by = relationship('User', back_populates='downloads')
+    added_by: RelationshipProperty['User'] = relationship(
+        'User', back_populates='downloads'
+    )
 
     def progress(self):
         from .main import get_keyed_torrents
@@ -60,7 +72,7 @@ class Download(Base):  # type: ignore
 class EpisodeDetails(Base):  # type: ignore
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
-    download = relationship(
+    download: RelationshipProperty[Download] = relationship(
         'Download', back_populates='episode', passive_deletes=True, uselist=False
     )
     show_title = Column(String, nullable=False)
@@ -84,7 +96,7 @@ class EpisodeDetails(Base):  # type: ignore
 class MovieDetails(Base):  # type: ignore
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
-    download = relationship(
+    download: RelationshipProperty[Download] = relationship(
         'Download', back_populates='movie', passive_deletes=True, uselist=False
     )
 
@@ -164,7 +176,7 @@ class Monitor(Base):  # type: ignore
     tmdb_id = Column(Integer)
 
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by = relationship('User')
+    added_by: RelationshipProperty['User'] = relationship('User')
 
     title = Column(String, nullable=False)
     type = Column(
@@ -273,7 +285,7 @@ def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> 
     params.update(defaults or {})
     instance: T = model(**params)  # type: ignore
     session.add(instance)
-    return instance
+    return cast(T, instance)
 
 
 def normalise_db_url(database_url: str) -> URL:
