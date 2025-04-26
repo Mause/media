@@ -4,7 +4,7 @@ import useSWR from 'swr';
 export function DiagnosticsComponent() {
   const { data, isValidating } = useSWR('diagnostics');
 
-  if (!isValidating) return <ReactLoading type="balls" color="#000" />;
+  if (isValidating) return <ReactLoading type="balls" color="#000" />;
 
   return (
     <div>
