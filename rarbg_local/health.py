@@ -24,13 +24,13 @@ def jikan():
 
 @health.add_check
 def katcr():
-    requests.head('https://katcr.co')
+    requests.head('https://katcr.co').raise_for_status()
     return True, 'kickass'
 
 
 @health.add_check
 def rarbg():
-    requests.head('https://torrentapi.org')
+    requests.head('https://torrentapi.org').raise_for_status()
     return True, 'rarbg'
 
 
