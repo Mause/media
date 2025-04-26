@@ -47,8 +47,8 @@ class ProviderSource(Enum):
 
 
 class EpisodeInfo(BaseModel):
-    seasonnum: str
-    epnum: Optional[str]
+    seasonnum: int
+    epnum: Optional[int]
 
 
 class ITorrent(BaseModel):
@@ -138,8 +138,8 @@ class MonitorGet(MonitorPost):
 class DownloadPost(BaseModel):
     tmdb_id: int
     magnet: constr(regex=r'^magnet:')  # type: ignore
-    season: Optional[str] = None
-    episode: Optional[str] = None
+    season: Optional[int] = None
+    episode: Optional[int] = None
 
 
 class Episode(BaseModel):
