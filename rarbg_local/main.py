@@ -9,16 +9,11 @@ from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
 
 from fastapi.exceptions import HTTPException
-from flask import Blueprint, Flask, current_app, request, url_for
-from flask_admin import Admin
-from flask_cors import CORS
-from flask_user import UserManager, login_required, roles_required
 from marshmallow.exceptions import ValidationError
 from requests.exceptions import ConnectionError
 from sqlalchemy import event
 from sqlalchemy.orm.session import Session, make_transient
 
-from .admin import DownloadAdmin, RoleAdmin, UserAdmin
 from .auth import auth_hook
 from .db import (
     Download,
@@ -28,7 +23,6 @@ from .db import (
     User,
     create_episode,
     create_movie,
-    db,
     get_episodes,
 )
 from .models import Episode, SeriesDetails
@@ -38,8 +32,6 @@ from .utils import non_null, precondition
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
-
-app = Blueprint('rarbg_local', __name__)
 
 K = TypeVar('K')
 V = TypeVar('V')
@@ -53,71 +45,6 @@ def cache_busting_url_for(endpoint, **values):
                 os.stat(join(non_null(current_app.static_folder), filename)).st_mtime
             )
     return url_for(endpoint, **values)
-
-
-def create_app(config: Dict):
-    config = config if isinstance(config, dict) else {}
-    papp = Flask(__name__, static_folder='../app/build/static')
-    papp.register_blueprint(app)
-
-    papp.config.update(
-        {
-            'SECRET_KEY': 'hkfircsc',
-            'SQLALCHEMY_ECHO': True,
-            'SQLALCHEMY_DATABASE_URI': 'sqlite:///'
-            + str(Path(__file__).parent.parent / 'db.db'),
-            'SQLALCHEMY_TRACK_MODIFICATIONS': False,
-            'TRANSMISSION_URL': 'http://novell.local:9091/transmission/rpc',
-            'TORRENT_API_URL': 'https://torrentapi.org/pubapi_v2.php',
-            'USER_APP_NAME': 'Media',
-            'USER_CORPORATION_NAME': 'Lysdev',
-            'USER_ENABLE_EMAIL': False,  # Disable email authentication
-            'USER_ENABLE_USERNAME': True,  # Enable username authentication
-            'USER_UNAUTHORIZED_ENDPOINT': 'rarbg_local.unauthorized',
-            **config,
-        }
-    )
-    db.init_app(papp)
-    if not papp.config.get('TESTING', False):
-        CORS(papp, supports_credentials=True)
-
-    if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
-        engine = db.get_engine(papp, None)
-        con = engine.raw_connection().connection
-        import sqlite3
-
-        try:
-            con.create_collation(
-                "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
-            )
-        except sqlite3.ProgrammingError as e:
-            print(e)
-
-    db.create_all(app=papp)
-    UserManager(papp, db, User)
-    papp.login_manager.request_loader(auth_hook)
-
-    admin = Admin(papp, name='Media')
-    admin.add_view(UserAdmin(User, db.session))
-    admin.add_view(RoleAdmin(Role, db.session))
-    admin.add_view(DownloadAdmin(Download, db.session))
-
-    if 'sqlite' in papp.config['SQLALCHEMY_DATABASE_URI']:
-
-        def _fk_pragma_on_connect(dbapi_con, con_record):
-            dbapi_con.execute('pragma foreign_keys=ON')
-
-        engine = db.get_engine(papp, None)
-        event.listen(engine, 'connect', _fk_pragma_on_connect)
-        _fk_pragma_on_connect(engine, None)
-
-    return papp
-
-
-@app.before_request
-def before():
-    if not request.path.startswith(('/user', '/manifest.json')):
-        return login_required(roles_required('Member')(lambda: None))()
 
 
 def categorise(string: str) -> str:
