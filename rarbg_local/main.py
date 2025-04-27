@@ -1,25 +1,19 @@
 import logging
-import os
 import re
 import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from os.path import join
-from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
 
 from fastapi.exceptions import HTTPException
 from marshmallow.exceptions import ValidationError
 from requests.exceptions import ConnectionError
-from sqlalchemy import event
 from sqlalchemy.orm.session import Session, make_transient
 
-from .auth import auth_hook
 from .db import (
     Download,
     EpisodeDetails,
     MovieDetails,
-    Role,
     User,
     create_episode,
     create_movie,
@@ -35,16 +29,6 @@ logging.getLogger("pika").setLevel(logging.WARNING)
 
 K = TypeVar('K')
 V = TypeVar('V')
-
-
-def cache_busting_url_for(endpoint, **values):
-    if endpoint == 'static':
-        filename = values.get('filename')
-        if filename:
-            values['_'] = int(
-                os.stat(join(non_null(current_app.static_folder), filename)).st_mtime
-            )
-    return url_for(endpoint, **values)
 
 
 def categorise(string: str) -> str:
