@@ -3725,9 +3725,9 @@ __metadata:
   linkType: hard
 
 "@types/socket.io-client@npm:^1.4.34":
-  version: 1.4.34
-  resolution: "@types/socket.io-client@npm:1.4.34"
-  checksum: 10/612d228982b23a6ea6d0d2a52c6325a98daf975af2d794a3e9f6ba997786c4f94e84856f87ce604bc1f5ce97d765b4c969fe45ee68fb08eaf8e85b0af4e5e100
+  version: 1.4.36
+  resolution: "@types/socket.io-client@npm:1.4.36"
+  checksum: 10/16ac407420434973d2a5872bdc3a573fd92abebdcf4b5b6878ce8b0bbb044909a42a9c68234cd65aa562a07716681a2e44cbc138b30d337e1c506e0ecea14806
   languageName: node
   linkType: hard
 
