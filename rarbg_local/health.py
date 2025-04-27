@@ -2,19 +2,20 @@ import aiohttp
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
-    HealthcheckDatastoreComponent,
+    HealthcheckHTTPComponent,
+    HealthcheckInternalComponent,
     HealthcheckStatus,
 )
 
 from .transmission_proxy import transmission
 
-health_root = Healthcheck(name='Media')
+health = Healthcheck(name='Media')
 
-health = HealthcheckDatastoreComponent('Root')
-health_root.add_component(health)
+services = HealthcheckInternalComponent('Services')
+health.add_component(services)
 
 
-@health.add_healthcheck
+@services.add_healthcheck
 async def transmission_connectivity():
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,
@@ -25,8 +26,8 @@ async def transmission_connectivity():
     )
 
 
-sources = HealthcheckDatastoreComponent('Sources')
-health_root.add_component(sources)
+sources = HealthcheckHTTPComponent('Sources')
+health.add_component(sources)
 
 
 async def check_http(url: str) -> HealthcheckCallbackResponse:
