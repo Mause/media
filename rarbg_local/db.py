@@ -48,18 +48,18 @@ class Download(Base):  # type: ignore
     transmission_id = Column(String, nullable=False)
     imdb_id = Column(String, nullable=False)
     type = Column(String)
-    movie: RelationshipProperty['MovieDetails'] = relationship(
+    movie: 'RelationshipProperty[MovieDetails]' = relationship(
         'MovieDetails', uselist=False, cascade='all,delete'
     )
     movie_id = Column(Integer, ForeignKey('movie_details.id', ondelete='CASCADE'))
-    episode: RepresentableBase['EpisodeDetails'] = relationship(
+    episode: 'RelationshipProperty[EpisodeDetails]' = relationship(
         'EpisodeDetails', uselist=False, cascade='all,delete'
     )
     episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
     title = Column(String)
     timestamp = Column(DateTime(timezone=True), nullable=False, default=func.now())
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by: RelationshipProperty['User'] = relationship(
+    added_by: 'RelationshipProperty[User]' = relationship(
         'User', back_populates='downloads'
     )
 
@@ -72,7 +72,7 @@ class Download(Base):  # type: ignore
 class EpisodeDetails(Base):  # type: ignore
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
-    download: RelationshipProperty[Download] = relationship(
+    download: 'RelationshipProperty[Download]' = relationship(
         'Download', back_populates='episode', passive_deletes=True, uselist=False
     )
     show_title = Column(String, nullable=False)
@@ -96,7 +96,7 @@ class EpisodeDetails(Base):  # type: ignore
 class MovieDetails(Base):  # type: ignore
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
-    download: RelationshipProperty[Download] = relationship(
+    download: 'RelationshipProperty[Download]' = relationship(
         'Download', back_populates='movie', passive_deletes=True, uselist=False
     )
 
@@ -176,7 +176,7 @@ class Monitor(Base):  # type: ignore
     tmdb_id = Column(Integer)
 
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by: RelationshipProperty['User'] = relationship('User')
+    added_by: 'RelationshipProperty[User]' = relationship('User')
 
     title = Column(String, nullable=False)
     type = Column(
