@@ -69,8 +69,9 @@ async def test_diagnostics(transmission, test_client, user, aioresponses, snapsh
     assert r.status_code == 200
 
     results = r.json()
-    for r in results:
-        r.pop('time')
+    for checks in results['checks'].values():
+        for r in checks:
+            r.pop('time')
 
     snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
 
