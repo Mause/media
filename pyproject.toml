@@ -36,6 +36,7 @@ dependencies = [
     "gunicorn",
     "nyaapy",
     "python-healthchecklib>=0.1.1",
+    "beautifulsoup4>=4.13.4",
 ]
 
 [dependency-groups]
