@@ -615,15 +615,6 @@ wheels = [
 ]
 
 [[package]]
-name = "itsdangerous"
-version = "2.0.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/58/66/d6c5859dcac92b442626427a8c7a42322068c5cd5d4a463ce78b93f730b7/itsdangerous-2.0.1.tar.gz", hash = "sha256:9e724d68fc22902a1435351f84c3fb8623f303fffcc566a4cb952df8c572cff0", size = 59336 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/9c/96/26f935afba9cd6140216da5add223a0c465b99d0f112b68a4ca426441019/itsdangerous-2.0.1-py3-none-any.whl", hash = "sha256:5174094b9637652bdb841a3029700391451bd092ba3db90600dea710ba28e97c", size = 18326 },
-]
-
-[[package]]
 name = "jedi"
 version = "0.19.2"
 source = { registry = "https://pypi.org/simple" }
@@ -825,8 +816,6 @@ dependencies = [
     { name = "fastapi-utils" },
     { name = "fuzzywuzzy", extra = ["speedup"] },
     { name = "gunicorn" },
-    { name = "itsdangerous" },
-    { name = "jinja2" },
     { name = "jwkaas" },
     { name = "lxml" },
     { name = "makefun" },
@@ -842,7 +831,6 @@ dependencies = [
     { name = "sqlalchemy-repr" },
     { name = "timber" },
     { name = "uvicorn", extra = ["standard"] },
-    { name = "werkzeug" },
 ]
 
 [package.dev-dependencies]
@@ -888,8 +876,6 @@ requires-dist = [
     { name = "fastapi-utils", specifier = "==0.2.1" },
     { name = "fuzzywuzzy", extras = ["speedup"], specifier = "==0.18.0" },
     { name = "gunicorn" },
-    { name = "itsdangerous", specifier = "==2.0.1" },
-    { name = "jinja2", specifier = "==3.0.3" },
     { name = "jwkaas", specifier = "==0.7" },
     { name = "lxml" },
     { name = "makefun", specifier = "==1.9.5" },
@@ -905,7 +891,6 @@ requires-dist = [
     { name = "sqlalchemy-repr", specifier = "==0.0.2" },
     { name = "timber", specifier = "==2.1.0" },
     { name = "uvicorn", extras = ["standard"] },
-    { name = "werkzeug", specifier = "==1.0.1" },
 ]
 
 [package.metadata.requires-dev]
@@ -1944,15 +1929,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/04/e4/120ff3180b0872b1fe6637f6f995bcb009fb5c87d597c1fc21456f50c848/websockets-15.0.1-pp39-pypy39_pp73-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4b826973a4a2ae47ba357e4e82fa44a463b8f168e1ca775ac64521442b19e87f", size = 174150 },
     { url = "https://files.pythonhosted.org/packages/cb/c3/30e2f9c539b8da8b1d76f64012f3b19253271a63413b2d3adb94b143407f/websockets-15.0.1-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:21c1fa28a6a7e3cbdc171c694398b6df4744613ce9b36b1a498e816787e28123", size = 176877 },
     { url = "https://files.pythonhosted.org/packages/fa/a8/5b41e0da817d64113292ab1f8247140aac61cbf6cfd085d6a0fa77f4984f/websockets-15.0.1-py3-none-any.whl", hash = "sha256:f7a866fbc1e97b5c617ee4116daaa09b722101d4a3c170c787450ba409f9736f", size = 169743 },
-]
-
-[[package]]
-name = "werkzeug"
-version = "1.0.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/10/27/a33329150147594eff0ea4c33c2036c0eadd933141055be0ff911f7f8d04/Werkzeug-1.0.1.tar.gz", hash = "sha256:6c80b1e5ad3665290ea39320b91e1be1e0d5f60652b964a3070216de83d2e47c", size = 904455 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/cc/94/5f7079a0e00bd6863ef8f1da638721e9da21e5bacee597595b318f71d62e/Werkzeug-1.0.1-py2.py3-none-any.whl", hash = "sha256:2de2a5db0baeae7b2d2664949077c2ac63fbd16d98da0ff71837f7d1dea3fd43", size = 298631 },
 ]
 
 [[package]]
