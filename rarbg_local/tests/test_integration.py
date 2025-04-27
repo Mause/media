@@ -467,6 +467,25 @@ async def test_stream(test_client, responses, aioresponses):
             },
         )
 
+    class S:
+        async def request(self, method, url, **kwargs):
+            if method == 'GET':
+                res = await test_client.get(str(url), **kwargs, stream=True)
+                return type('', (), {'status': res.status_code})()
+            if method == 'POST':
+                return test_client.post(str(url), **kwargs)
+            else:
+                raise ValueError(f'Unknown method {method}')
+
+    from aiohttp_sse_client.client import EventSource
+
+    async with EventSource(
+        '/api/stream/series/1?season=1&episode=1&source=rarbg', session=S()
+    ) as cl:
+        async for event in cl:
+            if event.data == 'data:':
+                break
+
     r = await test_client.get('/api/stream/series/1?season=1&episode=1&source=rarbg')
 
     assert r.status_code == 200, r.json()
