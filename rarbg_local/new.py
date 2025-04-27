@@ -191,7 +191,7 @@ async def stream(
             return
 
         async for item in provider.search_for_movie(
-            await get_movie_imdb_id(tmdb_id), int(tmdb_id)
+            await get_movie_imdb_id(tmdb_id), tmdb_id
         ):
             yield item
 
@@ -200,7 +200,7 @@ async def stream(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: TmdbId, season: int):
-    results = search_for_tv(await get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
+    results = search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
 
     episodes = (await get_tv_episodes(tmdb_id, season)).episodes
 
@@ -394,11 +394,9 @@ async def api_tv_season(tmdb_id: TmdbId, season: int):
 
 async def _stream(type: str, tmdb_id: TmdbId, season=None, episode=None):
     if type == 'series':
-        items = search_for_tv(
-            await get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode
-        )
+        items = search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season, episode)
     else:
-        items = search_for_movie(await get_movie_imdb_id(tmdb_id), int(tmdb_id))
+        items = search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
 
     return (item.dict() for item in items)
 
