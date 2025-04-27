@@ -202,9 +202,9 @@ async def test_index(
             create_episode(
                 transmission_id=HASH_STRING,
                 imdb_id='tt000000',
-                season='1',
+                season=1,
                 tmdb_id=1,
-                episode='1',
+                episode=1,
                 title='Hello world',
                 show_title='Programming',
                 timestamp=datetime(2020, 4, 21),
