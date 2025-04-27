@@ -343,7 +343,7 @@ async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
     return {}
 
 
-async def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
+async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
     try:
         return (
             (await get_movie(tmdb_id)).title
@@ -435,9 +435,9 @@ def get_imdb_in_plex(imdb_id: ImdbId, plex) -> Optional[Media]:
     return items[0] if items else None
 
 
-@root.get('/redirect/plex/{tmdb_id}')
-def redirect_to_plex(tmdb_id: TmdbId, plex=Depends(get_plex)):
-    dat = get_imdb_in_plex(tmdb_id, plex)
+@root.get('/redirect/plex/{imdb_id}')
+def redirect_to_plex(imdb_id: ImdbId, plex=Depends(get_plex)):
+    dat = get_imdb_in_plex(imdb_id, plex)
     if not dat:
         raise HTTPException(404, 'Not found in plex')
 

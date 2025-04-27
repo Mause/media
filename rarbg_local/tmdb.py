@@ -2,7 +2,7 @@ import os
 from datetime import date
 from enum import Enum
 from itertools import chain
-from typing import Dict, List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional
 
 import aiohttp
 import aiohttp.web_exceptions
@@ -84,7 +84,7 @@ async def find_themoviedb(imdb_id: ImdbId) -> Dict[str, str]:
 
 
 @cached(LRUCache(1024))
-async def resolve_id(imdb_id: ImdbId, type: ThingType) -> int:
+async def resolve_id(imdb_id: ImdbId, type: ThingType) -> TmdbId:
     precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
     results = await get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
 
@@ -104,16 +104,16 @@ async def get_tv(id: TmdbId) -> TvApiResponse:
     return TvApiResponse(**await get_json(f'tv/{id}'))
 
 
-async def get_movie_imdb_id(movie_id: Union[int, str]) -> str:
+async def get_movie_imdb_id(movie_id: TmdbId) -> ImdbId:
     return await get_imdb_id('movie', movie_id)
 
 
-async def get_tv_imdb_id(tv_id: TmdbId) -> str:
+async def get_tv_imdb_id(tv_id: TmdbId) -> ImdbId:
     return await get_imdb_id('tv', tv_id)
 
 
 @cached(LRUCache(360))
-async def get_imdb_id(type: ThingType, id: TmdbId) -> str:
+async def get_imdb_id(type: ThingType, id: TmdbId) -> ImdbId:
     return (await get_json(f'{type}/{id}/external_ids'))['imdb_id']
 
 
