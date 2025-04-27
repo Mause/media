@@ -187,11 +187,11 @@ sdist = { url = "https://files.pythonhosted.org/packages/10/ed/7e8b97591f6f45617
 
 [[package]]
 name = "cachetools"
-version = "4.2.2"
+version = "4.2.4"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/52/ba/619250fa6bc11ce6aa4de0604d45843090a53cd7d10d7253b89669313370/cachetools-4.2.2.tar.gz", hash = "sha256:61b5ed1e22a0924aed1d23b478f37e8d52549ff8a961de2909c69bf950020cff", size = 23682, upload_time = "2021-04-27T21:19:57.252Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/69/c457a860456cbf80ecc2e44ed4c201b49ec7ad124d769b71f6d0a7935dca/cachetools-4.2.4.tar.gz", hash = "sha256:89ea6f1b638d5a73a4f9226be57ac5e4f399d22770b92355f92dcb0f7f001693", size = 25487, upload_time = "2021-09-30T10:26:22.593Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bf/28/c4f5796c67ad06bb91d98d543a5e01805c1ff065e08871f78e52d2a331ad/cachetools-4.2.2-py3-none-any.whl", hash = "sha256:2cc0b89715337ab6dbba85b5b50effe2b0c74e035d83ee8ed637cf52f12ae001", size = 11998, upload_time = "2021-04-27T21:19:55.559Z" },
+    { url = "https://files.pythonhosted.org/packages/ea/c1/4740af52db75e6dbdd57fc7e9478439815bbac549c1c05881be27d19a17d/cachetools-4.2.4-py3-none-any.whl", hash = "sha256:92971d3cb7d2a97efff7c7bb1657f21a8f5fb309a37530537c71b1774189f2d1", size = 10358, upload_time = "2021-09-30T10:26:20.649Z" },
 ]
 
 [[package]]
@@ -825,7 +825,7 @@ requires-dist = [
     { name = "asyncache", specifier = "==0.1.1" },
     { name = "backoff", specifier = "==1.10.0" },
     { name = "bs4", specifier = "==0.0.1" },
-    { name = "cachetools", specifier = "==4.2.2" },
+    { name = "cachetools", specifier = "==4.2.4" },
     { name = "cffi", specifier = "==1.14.4" },
     { name = "email-validator", specifier = "==1.1.2" },
     { name = "eventlet", specifier = "==0.35.2" },
