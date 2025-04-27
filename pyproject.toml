@@ -23,7 +23,7 @@ dependencies = [
     "sentry-sdk[flask]==0.19.5",
     "alembic==1.15.2",
     "plexapi==4.3.1",
-    "flask-cors==3.0.9",
+    "flask-cors==4.0.2",
     "werkzeug==1.0.1",
     "fuzzywuzzy[speedup]==0.18.0",
     "cachetools==4.2.2",
