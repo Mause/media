@@ -1,42 +1,27 @@
 [
   {
-    "checker": "transmission_connectivity",
+    "component_name": "Root",
+    "component_type": "datastore",
+    "status": "pass",
     "output": {
       "consumers": [
         "ctag1"
       ],
       "client_is_alive": true
     },
-    "passed": true
+    "component_id": null,
+    "observed_value": null,
+    "observed_unit": null,
+    "_affects_service_health": true
   },
   {
-    "checker": "jikan",
+    "component_name": "Root",
+    "component_type": "datastore",
+    "status": "pass",
     "output": {},
-    "passed": true
-  },
-  {
-    "checker": "katcr",
-    "output": "<Response [200]>",
-    "passed": true
-  },
-  {
-    "checker": "rarbg",
-    "output": "<Response [200]>",
-    "passed": true
-  },
-  {
-    "checker": "horriblesubs",
-    "output": "<Response [200]>",
-    "passed": true
-  },
-  {
-    "checker": "nyaa",
-    "output": "<Response [200]>",
-    "passed": true
-  },
-  {
-    "checker": "torrentscsv",
-    "output": "<Response [200]>",
-    "passed": true
+    "component_id": null,
+    "observed_value": null,
+    "observed_unit": null,
+    "_affects_service_health": true
   }
 ]

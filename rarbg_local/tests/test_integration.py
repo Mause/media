@@ -70,9 +70,7 @@ async def test_diagnostics(transmission, test_client, user, responses, snapshot)
 
     results = r.json()
     for r in results:
-        r.pop('response_time')
-        r.pop('timestamp')
-        r.pop('expires')
+        r.pop('time')
 
     snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
 

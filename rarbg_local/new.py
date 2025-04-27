@@ -308,8 +308,8 @@ async def select(tmdb_id: int, season: int):
 
 
 @api.get('/diagnostics')
-def diagnostics():
-    return health.run()[0]
+async def diagnostics():
+    return await health.run()
 
 
 @api.post(
