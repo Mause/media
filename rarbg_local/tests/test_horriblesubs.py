@@ -119,16 +119,15 @@ async def test_provider(aioresponses: AioResponses, snapshot):
     add_json(
         aioresponses,
         'GET',
-        'https://api.jikan.moe/v3/search/anime?limit=1&q=Little+Busters%2521',
-        {'results': [{'title': 'Little Busters!', 'mal_id': '12345'}]},
-    )
-    add_json(
-        aioresponses,
-        'GET',
-        'https://api.jikan.moe/v3/anime/12345',
+        'https://api.jikan.moe/v4/anime?limit=1&q=Little+Busters%2521',
         {
-            'title': 'Little Busters!',
-            'title_synonyms': ['Busters that are little'],
+            'data': [
+                {
+                    'title': 'Little Busters!',
+                    'mal_id': '12345',
+                    'title_synonyms': ['Busters that are little'],
+                },
+            ]
         },
     )
     themoviedb(
