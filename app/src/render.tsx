@@ -249,6 +249,7 @@ function Series({
               Open in IMDB
             </MenuItem>
           )}
+          <MenuItem onClick={() => openPlex(serie)}>Open in Plex</MenuItem>
           <MenuItem
             onClick={() => history.push(`/select/${serie.tmdb_id}/season`)}
           >
