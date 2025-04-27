@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
 
 from fastapi.exceptions import HTTPException
-from marshmallow.exceptions import ValidationError
 from requests.exceptions import ConnectionError
 from sqlalchemy import event
 from sqlalchemy.orm.session import Session, make_transient
@@ -121,7 +120,7 @@ def add_single(
     print(arguments)
     if not arguments:
         # the error result shape is really weird
-        raise ValidationError(res['result'], data={'message': res['result']})
+        raise ValueError(res['result'], data={'message': res['result']})
 
     transmission_id = (
         arguments['torrent-added']
