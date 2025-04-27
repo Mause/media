@@ -30,9 +30,9 @@ sources = HealthcheckHTTPComponent('Sources')
 health.add_component(sources)
 
 
-async def check_http(url: str) -> HealthcheckCallbackResponse:
+async def check_http(method: str, url: str) -> HealthcheckCallbackResponse:
     async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
+        async with session.request(method, url) as response:
             if response.status == 200:
                 return HealthcheckCallbackResponse(
                     HealthcheckStatus.PASS, repr(response)
@@ -45,29 +45,29 @@ async def check_http(url: str) -> HealthcheckCallbackResponse:
 
 @sources.add_healthcheck
 async def jikan():
-    return await check_http('https://api.jikan.moe/v4')
+    return await check_http('GET', 'https://api.jikan.moe/v4')
 
 
 @sources.add_healthcheck
 async def katcr():
-    return await check_http('https://katcr.co')
+    return await check_http('HEAD', 'https://katcr.co')
 
 
 @sources.add_healthcheck
 async def rarbg():
-    return await check_http('https://torrentapi.org')
+    return await check_http('HEAD', 'https://torrentapi.org')
 
 
 @sources.add_healthcheck
 async def horriblesubs():
-    return await check_http('https://horriblesubs.info')
+    return await check_http('HEAD', 'https://horriblesubs.info')
 
 
 @sources.add_healthcheck
 async def nyaa():
-    return await check_http('https://nyaa.si')
+    return await check_http('HEAD', 'https://nyaa.si')
 
 
 @sources.add_healthcheck
 async def torrentscsv():
-    return await check_http('https://torrents-csv.com')
+    return await check_http('HEAD', 'https://torrents-csv.com')
