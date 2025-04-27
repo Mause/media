@@ -52,13 +52,13 @@ def add_torrent():
 
 @patch('rarbg_local.health.transmission')
 @mark.asyncio
-async def test_diagnostics(transmission, test_client, user, responses, snapshot):
-    responses.add('HEAD', 'https://horriblesubs.info')
-    responses.add('HEAD', 'https://torrentapi.org')
-    responses.add('HEAD', 'https://katcr.co')
-    responses.add('HEAD', 'https://nyaa.si')
-    responses.add('HEAD', 'https://torrents-csv.com')
-    responses.add('GET', 'https://api.jikan.moe/v4', body='{}')
+async def test_diagnostics(transmission, test_client, user, aioresponses, snapshot):
+    aioresponses.add('https://horriblesubs.info', 'HEAD')
+    aioresponses.add('https://torrentapi.org', 'HEAD')
+    aioresponses.add('https://katcr.co', 'HEAD')
+    aioresponses.add('https://nyaa.si', 'HEAD')
+    aioresponses.add('https://torrents-csv.com', 'HEAD')
+    aioresponses.add('https://api.jikan.moe/v4', 'GET', body='{}')
 
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
