@@ -11,7 +11,7 @@ import backoff
 import psycopg2
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
-from fastapi.responses import RedirectResponse, StreamingResponse
+from fastapi.responses import JSONResponse, RedirectResponse, StreamingResponse
 from fastapi.security import (
     HTTPAuthorizationCredentials,
     HTTPBearer,
@@ -68,11 +68,11 @@ from .models import (
 )
 from .providers import (
     PROVIDERS,
+    MovieProvider,
     ProviderSource,
+    TvProvider,
     search_for_movie,
     search_for_tv,
-    TvProvider,
-    MovieProvider,
 )
 from .singleton import singleton
 from .tmdb import (
@@ -308,8 +308,12 @@ async def select(tmdb_id: int, season: int):
 
 
 @api.get('/diagnostics')
-def diagnostics():
-    return health.run()[0]
+async def diagnostics():
+    res = await health.run()
+    return JSONResponse(
+        res.to_json(),
+        res.get_http_status_code(),
+    )
 
 
 @api.post(
