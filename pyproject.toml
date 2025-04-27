@@ -71,6 +71,10 @@ dev = [
     "aioresponses==0.7.8",
     "pytest-sugar",
 ]
+debug = [
+    "pudb",
+    "pdbpp"
+]
 
 [tool.ruff.format]
 quote-style = "preserve"
