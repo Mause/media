@@ -7,7 +7,7 @@ license = "MIT"
 requires-python = "==3.9.*"
 
 dependencies = [
-    "jinja2==3.0.3",
+    "jinja2==3.1.6",
     "itsdangerous==2.0.1",
     "sqlalchemy[mypy]==1.4.54",
     "sqlalchemy-repr==0.0.2",
