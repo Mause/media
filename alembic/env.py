@@ -8,7 +8,6 @@ import sys
 from logging.config import fileConfig
 from pathlib import Path
 
-from flask import Flask
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
@@ -22,7 +21,7 @@ config = context.config
 fileConfig(config.config_file_name)
 
 sys.path.insert(0, '.')
-db = __import__('rarbg_local.db').db.db
+db = __import__('rarbg_local.db').db
 
 if 'HEROKU' in os.environ:
     url = os.environ['DATABASE_URL'].replace('postgres://', 'postgresql://')
@@ -30,15 +29,9 @@ else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
 
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = url
-db.init_app(app)
-
 alembic_config = config.get_section(config.config_ini_section)
-alembic_config['sqlalchemy.url'] = app.config['SQLALCHEMY_DATABASE_URI']
-
-app.app_context().__enter__()
-target_metadata = db.Model.metadata
+alembic_config['sqlalchemy.url'] = url
+target_metadata = db.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
