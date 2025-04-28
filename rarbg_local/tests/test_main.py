@@ -45,9 +45,15 @@ def test_threadable():
     m.assert_called_with(1, 2)
 
 
-def test_normalise_db_url() -> None:
-    database_url = 'postgres://user:pass@localhost:5432/db'
-    assert normalise_db_url(database_url) == 'postgresql://user:pass@localhost:5432/db'
-
-    database_url = 'sqlite:///:memory:'
-    assert normalise_db_url(database_url) == 'sqlite:///:memory:'
+@pytest.mark.parametrize(
+    'original,expected',
+    [
+        (
+            'postgres://user:pass@localhost:5432/db',
+            'postgresql://user:pass@localhost:5432/db',
+        ),
+        ('sqlite:///:memory:', 'sqlite:///:memory:'),
+    ],
+)
+def test_normalise_db_url(original, expected) -> None:
+    assert normalise_db_url(original).render_as_string(hide_password=False) == expected

@@ -25,6 +25,7 @@ from .utils import non_null, precondition
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
+logger = logging.getLogger(__name__)
 
 K = TypeVar('K')
 V = TypeVar('V')
@@ -225,6 +226,6 @@ def get_keyed_torrents() -> Dict[str, Dict]:
         TimeoutError,
         FutureTimeoutError,
     ) as e:
-        logging.exception('Unable to connect to transmission')
+        logger.exception('Unable to connect to transmission')
         error = 'Unable to connect to transmission: ' + str(e)
         raise HTTPException(500, error)
