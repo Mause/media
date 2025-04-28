@@ -263,29 +263,6 @@
         ]
       }
     },
-    "/api/diagnostics": {
-      "get": {
-        "summary": "Diagnostics",
-        "operationId": "diagnostics",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
-      }
-    },
     "/api/download": {
       "post": {
         "summary": "Download Post",
@@ -744,6 +721,29 @@
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
                 }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/diagnostics": {
+      "get": {
+        "summary": "Diagnostics",
+        "operationId": "diagnostics",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           }
