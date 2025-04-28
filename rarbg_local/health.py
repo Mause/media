@@ -4,15 +4,32 @@ from healthcheck import (
     HealthcheckCallbackResponse,
     HealthcheckHTTPComponent,
     HealthcheckInternalComponent,
+    HealthcheckDatastoreComponent,
     HealthcheckStatus,
 )
+import contextvars
 
 from .transmission_proxy import transmission
+
+database_var = contextvars.ContextVar('database_var')
 
 health = Healthcheck(name='Media')
 
 services = HealthcheckInternalComponent('Services')
 health.add_component(services)
+
+database = HealthcheckDatastoreComponent('Database')
+health.add_component(database)
+
+
+@database.add_healthcheck
+async def check_database():
+    engine = AsyncEngine(database_var.get())
+
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        await engine.query('SELECT 1')
+    )
 
 
 @services.add_healthcheck
