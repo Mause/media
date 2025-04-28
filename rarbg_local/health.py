@@ -3,6 +3,8 @@ from functools import partial
 from urllib.parse import urlparse
 
 import aiohttp
+from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -15,7 +17,10 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.sql import text
 
+from .settings import Settings, get_settings
 from .transmission_proxy import transmission
+
+router = APIRouter()
 
 database_var = contextvars.ContextVar[str]('database_var')
 
@@ -25,6 +30,16 @@ health = Healthcheck(name='Media')
 def add_component(decl):
     health.add_component(decl)
     return decl.add_healthcheck
+
+
+@router.get('')
+async def diagnostics(settings: Settings = Depends(get_settings)):
+    database_var.set(settings.database_url)
+    res = await health.run()
+    return JSONResponse(
+        res.to_json(),
+        res.get_http_status_code(),
+    )
 
 
 @add_component(HealthcheckDatastoreComponent('database'))

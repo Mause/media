@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
-from fastapi.responses import JSONResponse, RedirectResponse, StreamingResponse
+from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.security import (
     HTTPAuthorizationCredentials,
     HTTPBearer,
@@ -37,7 +37,7 @@ from .db import (
     get_movies,
     get_session_local,
 )
-from .health import database_var, health
+from .health import router as health
 from .main import (
     add_single,
     extract_marker,
@@ -238,16 +238,6 @@ async def select(tmdb_id: int, season: int):
         packs=packs,
         complete=complete_or_not.get(True, []),
         incomplete=complete_or_not.get(False, []),
-    )
-
-
-@api.get('/diagnostics')
-async def diagnostics(settings: Settings = Depends(get_settings)):
-    database_var.set(settings.database_url)
-    res = await health.run()
-    return JSONResponse(
-        res.to_json(),
-        res.get_http_status_code(),
     )
 
 
@@ -511,6 +501,7 @@ async def static(
 
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
+api.include_router(health, prefix='/diagnostics')
 
 
 def create_app():
