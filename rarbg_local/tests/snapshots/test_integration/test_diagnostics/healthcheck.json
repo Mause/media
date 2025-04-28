@@ -2,6 +2,16 @@
   "status": "pass",
   "description": "Health status of Media",
   "checks": {
+    "database": [
+      {
+        "componentName": "database",
+        "componentType": "datastore",
+        "status": "pass",
+        "output": {
+          "version": "3.45.1"
+        }
+      }
+    ],
     "transmission": [
       {
         "componentName": "transmission",
@@ -12,16 +22,6 @@
             "ctag1"
           ],
           "client_is_alive": true
-        }
-      }
-    ],
-    "database": [
-      {
-        "componentName": "database",
-        "componentType": "datastore",
-        "status": "pass",
-        "output": {
-          "version": "3.45.1"
         }
       }
     ],
