@@ -15,6 +15,16 @@
         }
       }
     ],
+    "Database": [
+      {
+        "componentName": "Database",
+        "componentType": "datastore",
+        "status": "pass",
+        "output": {
+          "version": "3.45.1"
+        }
+      }
+    ],
     "Sources": [
       {
         "componentName": "Sources",

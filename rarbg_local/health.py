@@ -15,7 +15,7 @@ from sqlalchemy.sql import text
 
 from .transmission_proxy import transmission
 
-database_var = contextvars.ContextVar('database_var')
+database_var = contextvars.ContextVar[str]('database_var')
 
 health = Healthcheck(name='Media')
 
@@ -29,14 +29,22 @@ health.add_component(database)
 @database.add_healthcheck
 async def check_database():
     url = make_url(database_var.get())
-    if url.drivername == 'sqlite':
+    is_sqlite = url.drivername == 'sqlite'
+    if is_sqlite:
         url = url.set(drivername='sqlite+aiosqlite')
     engine = create_async_engine(url)
 
     async with engine.connect() as conn:
-        res = await conn.execute(text('SELECT 1'))
+        res = await conn.execute(
+            text('SELECT SQLITE_VERSION()' if is_sqlite else 'SELECT version()')
+        )
 
-        return HealthcheckCallbackResponse(HealthcheckStatus.PASS, res)
+        return HealthcheckCallbackResponse(
+            HealthcheckStatus.PASS,
+            {
+                'version': res.scalar(),
+            },
+        )
 
 
 @services.add_healthcheck
