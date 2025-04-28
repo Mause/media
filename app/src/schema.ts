@@ -5,6 +5,10 @@
 
 export interface components {
   schemas: {
+    /**
+     * Enum used to store the component types.
+     */
+    ComponentType: 'datastore' | 'internal' | 'http' | 'generic';
     DownloadAllResponse: {
       packs: components['schemas']['ITorrent'][];
       complete: [string, components['schemas']['ITorrent'][]][];
@@ -43,6 +47,17 @@ export interface components {
     HTTPValidationError: {
       detail?: components['schemas']['ValidationError'][];
     };
+    HealthcheckResponse: {
+      component_name: string;
+      component_type: components['schemas']['ComponentType'];
+      status: components['schemas']['HealthcheckStatus'];
+      time: string;
+      output?: { [key: string]: any };
+    };
+    /**
+     * Enum used to store the possible service and component health status.
+     */
+    HealthcheckStatus: 'pass' | 'warn' | 'fail';
     ITorrent: {
       source: components['schemas']['ProviderSource'];
       title: string;
