@@ -67,13 +67,16 @@ async def test_diagnostics(transmission, test_client, user, aioresponses, snapsh
         '/api/diagnostics',
     )
     assert r.status_code == 200
-
     results = r.json()
-    for checks in results['checks'].values():
-        for r in checks:
-            r.pop('time')
-
     snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
+
+    for component in results:
+        r = await test_client.get(f'/api/diagnostics/{component}')
+        results = r.json()
+        for check in results:
+            check.pop('time')
+
+        snapshot.assert_match(json.dumps(results, indent=2), f'{component}.json')
 
 
 @mark.asyncio
