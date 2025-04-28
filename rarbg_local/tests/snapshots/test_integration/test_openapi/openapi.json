@@ -112,6 +112,10 @@
             "required": true,
             "schema": {
               "title": "Type",
+              "enum": [
+                "movie",
+                "tv"
+              ],
               "type": "string"
             },
             "name": "type",
@@ -121,7 +125,7 @@
             "required": true,
             "schema": {
               "title": "Tmdb Id",
-              "type": "string"
+              "type": "integer"
             },
             "name": "tmdb_id",
             "in": "path"
@@ -796,7 +800,7 @@
         ]
       }
     },
-    "/redirect/plex/{tmdb_id}": {
+    "/redirect/plex/{imdb_id}": {
       "get": {
         "summary": "Redirect To Plex",
         "operationId": "redirect_to_plex",
@@ -804,10 +808,10 @@
           {
             "required": true,
             "schema": {
-              "title": "Tmdb Id",
+              "title": "Imdb Id",
               "type": "string"
             },
-            "name": "tmdb_id",
+            "name": "imdb_id",
             "in": "path"
           }
         ],
@@ -1050,11 +1054,11 @@
           },
           "season": {
             "title": "Season",
-            "type": "string"
+            "type": "integer"
           },
           "episode": {
             "title": "Episode",
-            "type": "string"
+            "type": "integer"
           }
         }
       },
@@ -1174,11 +1178,11 @@
         "properties": {
           "seasonnum": {
             "title": "Seasonnum",
-            "type": "string"
+            "type": "integer"
           },
           "epnum": {
             "title": "Epnum",
-            "type": "string"
+            "type": "integer"
           }
         }
       },
