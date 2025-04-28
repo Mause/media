@@ -37,6 +37,7 @@ dependencies = [
     "nyaapy",
     "python-healthchecklib>=0.1.1",
     "beautifulsoup4>=4.13.4",
+    "asyncpg>=0.30.0",
 ]
 
 [dependency-groups]
