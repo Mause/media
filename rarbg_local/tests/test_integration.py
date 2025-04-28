@@ -335,11 +335,18 @@ async def test_delete_monitor(aioresponses, test_client, session):
     themoviedb(
         aioresponses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
     )
+    themoviedb(
+        aioresponses, '/tv/5', TvApiResponseFactory.build(name='Hello World').dict()
+    )
     ls = (await test_client.get('/api/monitor')).json()
     assert ls == []
 
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     assert r.status_code == 201
+
+    (
+        await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'TV'})
+    ).raise_for_status()
 
     ls = (await test_client.get('/api/monitor')).json()
 
@@ -351,12 +358,20 @@ async def test_delete_monitor(aioresponses, test_client, session):
             'id': 1,
             'status': False,
             'added_by': 'python',
-        }
+        },
+        {
+            'added_by': 'python',
+            'id': 2,
+            'status': False,
+            'title': 'Hello World',
+            'tmdb_id': 5,
+            'type': 'TV',
+        },
     ]
-    ident = ls[0]['id']
 
-    r = await test_client.delete(f'/api/monitor/{ident}')
-    assert r.status_code == 200
+    for item in ls:
+        r = await test_client.delete(f'/api/monitor/{item["id"]}')
+        assert r.status_code == 200
 
     ls = (await test_client.get('/api/monitor')).json()
     assert ls == []
