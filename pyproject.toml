@@ -2,7 +2,7 @@
 name = "media"
 version = "0.1.0"
 description = ""
-authors = ["Elliana May <me@mause.me>"]
+authors = [{ name = "Elliana May", email = "me@mause.me" }]
 license = "MIT"
 requires-python = "==3.9.*"
 
@@ -16,15 +16,14 @@ dependencies = [
     "alembic==1.15.2",
     "plexapi==4.3.1",
     "fuzzywuzzy[speedup]==0.18.0",
-    "cachetools==4.2.2",
+    "cachetools==5.5.2",
     "lxml",
-    "bs4==0.0.1",
     "eventlet==0.35.2",
     "email-validator==1.1.2",
     "mause-rpc==0.0.18",
-    "cffi==1.14.4",
+    "cffi==1.17.1",
     "fastapi==0.65.2",
-    "python-multipart==0.0.18",
+    "python-multipart==0.0.20",
     "jwkaas==0.7",
     "aniso8601==8.1.1",
     "pytz==2021.1",
@@ -37,6 +36,8 @@ dependencies = [
     "gunicorn",
     "nyaapy",
     "python-healthchecklib>=0.1.1",
+    "beautifulsoup4>=4.13.4",
+    "asyncpg>=0.30.0",
 ]
 
 [dependency-groups]
@@ -54,22 +55,15 @@ dev = [
     "factory-boy==3.2.0",
     "isort==5.7.0",
     "pytest-asyncio==0.14.0",
-    "async-asgi-testclient==1.4.5",
+    "async-asgi-testclient==1.4.11",
     "aioresponses==0.7.8",
     "pytest-sugar",
+    "aiosqlite>=0.21.0",
 ]
-debug = [
-    "pudb",
-    "pdbpp"
-]
+debug = ["pudb", "pdbpp"]
 
 [tool.ruff.format]
 quote-style = "preserve"
 
 [tool.ruff.lint]
-select = [
-    "F",
-    "E",
-    "W",
-    "I",
-]
+select = ["F", "E", "W", "I"]

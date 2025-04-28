@@ -2,14 +2,14 @@ import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 
 export function DiagnosticsComponent() {
-  const { data, isValidating } = useSWR('diagnostics');
-
-  if (isValidating) return <ReactLoading type="balls" color="#000" />;
+  const { error, data, isValidating } = useSWR('diagnostics');
 
   return (
     <div>
+      { isValidating && <ReactLoading type="balls" color="#000" /> }
+
       <pre>
-        <code>{JSON.stringify(data, null, 2)}</code>
+        <code>{JSON.stringify({ data, error }, null, 2)}</code>
       </pre>
     </div>
   );

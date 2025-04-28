@@ -1,24 +1,18 @@
 import logging
-import os
 import re
 import string
 from collections import defaultdict
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from os.path import join
-from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
-from sqlalchemy import event
 from sqlalchemy.orm.session import Session, make_transient
 
-from .auth import auth_hook
 from .db import (
     Download,
     EpisodeDetails,
     MovieDetails,
-    Role,
     User,
     create_episode,
     create_movie,
@@ -31,19 +25,10 @@ from .utils import non_null, precondition
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
+logger = logging.getLogger(__name__)
 
 K = TypeVar('K')
 V = TypeVar('V')
-
-
-def cache_busting_url_for(endpoint, **values):
-    if endpoint == 'static':
-        filename = values.get('filename')
-        if filename:
-            values['_'] = int(
-                os.stat(join(non_null(current_app.static_folder), filename)).st_mtime
-            )
-    return url_for(endpoint, **values)
 
 
 def categorise(string: str) -> str:
@@ -243,6 +228,6 @@ def get_keyed_torrents() -> Dict[str, Dict]:
         TimeoutError,
         FutureTimeoutError,
     ) as e:
-        logging.exception('Unable to connect to transmission')
+        logger.exception('Unable to connect to transmission')
         error = 'Unable to connect to transmission: ' + str(e)
         raise HTTPException(500, error)
