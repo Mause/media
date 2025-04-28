@@ -743,7 +743,63 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "title": "Response Diagnostics Api Diagnostics Get",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/diagnostics/{component_name}": {
+      "get": {
+        "summary": "Component Diagnostics",
+        "operationId": "component_diagnostics",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Component Name",
+              "type": "string"
+            },
+            "name": "component_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Component Diagnostics Api Diagnostics  Component Name  Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HealthcheckResponse"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -923,6 +979,17 @@
   },
   "components": {
     "schemas": {
+      "ComponentType": {
+        "title": "ComponentType",
+        "enum": [
+          "datastore",
+          "internal",
+          "http",
+          "generic"
+        ],
+        "type": "string",
+        "description": "Enum used to store the component types."
+      },
       "DownloadAllResponse": {
         "title": "DownloadAllResponse",
         "required": [
@@ -1144,6 +1211,46 @@
             }
           }
         }
+      },
+      "HealthcheckResponse": {
+        "title": "HealthcheckResponse",
+        "required": [
+          "component_name",
+          "component_type",
+          "status",
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "component_name": {
+            "title": "Component Name",
+            "type": "string"
+          },
+          "component_type": {
+            "$ref": "#/components/schemas/ComponentType"
+          },
+          "status": {
+            "$ref": "#/components/schemas/HealthcheckStatus"
+          },
+          "time": {
+            "title": "Time",
+            "type": "string",
+            "format": "date-time"
+          },
+          "output": {
+            "title": "Output"
+          }
+        }
+      },
+      "HealthcheckStatus": {
+        "title": "HealthcheckStatus",
+        "enum": [
+          "pass",
+          "warn",
+          "fail"
+        ],
+        "type": "string",
+        "description": "Enum used to store the possible service and component health status."
       },
       "ITorrent": {
         "title": "ITorrent",
