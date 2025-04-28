@@ -2,9 +2,9 @@
   "status": "pass",
   "description": "Health status of Media",
   "checks": {
-    "Services": [
+    "transmission": [
       {
-        "componentName": "Services",
+        "componentName": "transmission",
         "componentType": "internal",
         "status": "pass",
         "output": {
@@ -15,9 +15,9 @@
         }
       }
     ],
-    "Database": [
+    "database": [
       {
-        "componentName": "Database",
+        "componentName": "database",
         "componentType": "datastore",
         "status": "pass",
         "output": {

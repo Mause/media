@@ -21,14 +21,13 @@ database_var = contextvars.ContextVar[str]('database_var')
 
 health = Healthcheck(name='Media')
 
-services = HealthcheckInternalComponent('Services')
-health.add_component(services)
 
-database = HealthcheckDatastoreComponent('Database')
-health.add_component(database)
+def add_component(decl):
+    health.add_component(decl)
+    return decl.add_healthcheck
 
 
-@database.add_healthcheck
+@add_component(HealthcheckDatastoreComponent('database'))
 async def check_database():
     url = make_url(database_var.get())
     is_sqlite = url.drivername == 'sqlite'
@@ -51,7 +50,7 @@ async def check_database():
         )
 
 
-@services.add_healthcheck
+@add_component(HealthcheckInternalComponent('transmission'))
 async def transmission_connectivity():
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,
@@ -77,10 +76,8 @@ async def check_http(method: str, url: str) -> HealthcheckCallbackResponse:
 
 def generate_check_http(method: str, url: str):
     parsed_url = urlparse(url)
-    health.add_component(
-        HealthcheckHTTPComponent(parsed_url.netloc).add_healthcheck(
-            partial(check_http, method, url)
-        )
+    add_component(HealthcheckHTTPComponent(parsed_url.netloc))(
+        partial(check_http, method, url)
     )
 
 
