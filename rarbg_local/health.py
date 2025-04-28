@@ -32,6 +32,8 @@ async def check_database():
     is_sqlite = url.drivername == 'sqlite'
     if is_sqlite:
         url = url.set(drivername='sqlite+aiosqlite')
+    else:
+        url = url.set(drivername='postgresql+asyncpg')
     engine = create_async_engine(url)
 
     async with engine.connect() as conn:
