@@ -57,9 +57,9 @@ def session(fastapi_app):
     assert 'sqlite' in repr(engine), repr(engine)
     Base.metadata.create_all(engine)
 
-    session = Session()
-    fastapi_app.dependency_overrides[get_db] = lambda: session
-    return session
+    with Session() as session:
+        fastapi_app.dependency_overrides[get_db] = lambda: session
+        yield session
 
 
 def themoviedb(responses, path, response, query=''):
