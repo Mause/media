@@ -335,6 +335,9 @@ async def test_delete_monitor(aioresponses, test_client, session):
     themoviedb(
         aioresponses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
     )
+    themoviedb(
+        aioresponses, '/tv/5', TvApiResponseFactory.build(name='Hello World').dict()
+    )
     ls = (await test_client.get('/api/monitor')).json()
     assert ls == []
 
@@ -355,7 +358,15 @@ async def test_delete_monitor(aioresponses, test_client, session):
             'id': 1,
             'status': False,
             'added_by': 'python',
-        }
+        },
+        {
+            'added_by': 'python',
+            'id': 2,
+            'status': False,
+            'title': 'Hello World',
+            'tmdb_id': 5,
+            'type': 'TV',
+        },
     ]
     ident = ls[0]['id']
 
