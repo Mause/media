@@ -540,7 +540,7 @@ async def test_static(uri, test_client):
 
 @mark.asyncio
 async def test_plex_redirect(test_client, responses):
-    responses.add('POST', 'https://plex.tv/users/sign_in.xml')
+    responses.add('GET', 'https://plex.tv/users/account')
     responses.add(
         'GET',
         'https://test/',
@@ -600,7 +600,9 @@ async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
     do.update(
         {
             get_current_user: cu,
-            get_settings: lambda: Settings(database_url='postgresql:///:memory:'),
+            get_settings: lambda: Settings(
+                database_url='postgresql:///:memory:', plex_token='plex_token'
+            ),
         }
     )
 

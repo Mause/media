@@ -10,8 +10,7 @@ class Settings(BaseSettings):
     root = Path(__file__).parent.parent.absolute()
     database_url = f"sqlite:///{root}/db.db"
     static_resources_path = root / 'app/build'
-    plex_username: Optional[str] = None
-    plex_password: Optional[SecretStr] = None
+    plex_token: SecretStr
 
 
 @singleton
