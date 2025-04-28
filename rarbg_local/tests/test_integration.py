@@ -341,6 +341,10 @@ async def test_delete_monitor(aioresponses, test_client, session):
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     assert r.status_code == 201
 
+    (
+        await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'TV'})
+    ).raise_for_status()
+
     ls = (await test_client.get('/api/monitor')).json()
 
     assert ls == [
