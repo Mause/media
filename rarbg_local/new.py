@@ -439,7 +439,9 @@ def get_static_files(settings: Settings = Depends(get_settings)):
 
 @singleton
 def get_plex(settings=Depends(get_settings)) -> PlexServer:
-    acct = MyPlexAccount(settings.plex_username, settings.plex_password)
+    acct = MyPlexAccount(
+        settings.plex_username, settings.plex_password.get_secret_value()
+    )
     novell = acct.resource('Novell')
     novell.connections = [c for c in novell.connections if not c.local]
     return novell.connect(ssl=True)
