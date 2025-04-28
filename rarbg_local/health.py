@@ -74,7 +74,7 @@ async def check_http(method: str, url: str) -> HealthcheckCallbackResponse:
                 )
 
 
-def generate_http_check(method: str, url: str):
+def generate_check_http(method: str, url: str):
     health.add_component(HealthcheckHTTPComponent(url).add_healthcheck(partial(check_http, method, url)))
 
 
