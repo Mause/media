@@ -30,7 +30,7 @@ health.add_component(database)
 async def check_database():
     url = make_url(database_var.get())
     if url.drivername == 'sqlite':
-        url = url.set(drivername='aiosqlite')
+        url = url.set(drivername='sqlite+aiosqlite')
     engine = create_async_engine(url)
 
     async with engine.connect() as conn:
