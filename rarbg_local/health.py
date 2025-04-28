@@ -1,13 +1,16 @@
+import contextvars
+
 import aiohttp
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
+    HealthcheckDatastoreComponent,
     HealthcheckHTTPComponent,
     HealthcheckInternalComponent,
-    HealthcheckDatastoreComponent,
     HealthcheckStatus,
 )
-import contextvars
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.sql import text
 
 from .transmission_proxy import transmission
 
@@ -24,12 +27,12 @@ health.add_component(database)
 
 @database.add_healthcheck
 async def check_database():
-    engine = AsyncEngine(database_var.get())
+    engine = create_async_engine(database_var.get())
 
-    return HealthcheckCallbackResponse(
-        HealthcheckStatus.PASS,
-        await engine.query('SELECT 1')
-    )
+    async with engine.connect() as conn:
+        res = await conn.execute(text('SELECT 1'))
+
+        return HealthcheckCallbackResponse(HealthcheckStatus.PASS, res)
 
 
 @services.add_healthcheck

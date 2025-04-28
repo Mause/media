@@ -40,7 +40,7 @@ from .db import (
     User,
     get_movies,
 )
-from .health import health
+from .health import database_var, health
 from .main import (
     add_single,
     extract_marker,
@@ -308,7 +308,8 @@ async def select(tmdb_id: int, season: int):
 
 
 @api.get('/diagnostics')
-async def diagnostics():
+async def diagnostics(settings: Settings = Depends(get_settings)):
+    database_var.set(settings.database_url)
     res = await health.run()
     return JSONResponse(
         res.to_json(),
