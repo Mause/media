@@ -1,4 +1,6 @@
 import contextvars
+from functools import partial
+from urllib.parse import urlparse
 
 import aiohttp
 from healthcheck import (
@@ -19,14 +21,13 @@ database_var = contextvars.ContextVar[str]('database_var')
 
 health = Healthcheck(name='Media')
 
-services = HealthcheckInternalComponent('Services')
-health.add_component(services)
 
-database = HealthcheckDatastoreComponent('Database')
-health.add_component(database)
+def add_component(decl):
+    health.add_component(decl)
+    return decl.add_healthcheck
 
 
-@database.add_healthcheck
+@add_component(HealthcheckDatastoreComponent('database'))
 async def check_database():
     url = make_url(database_var.get())
     is_sqlite = url.drivername == 'sqlite'
@@ -49,7 +50,7 @@ async def check_database():
         )
 
 
-@services.add_healthcheck
+@add_component(HealthcheckInternalComponent('transmission'))
 async def transmission_connectivity():
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,
@@ -58,10 +59,6 @@ async def transmission_connectivity():
             'client_is_alive': transmission()._thread.is_alive(),
         },
     )
-
-
-sources = HealthcheckHTTPComponent('Sources')
-health.add_component(sources)
 
 
 async def check_http(method: str, url: str) -> HealthcheckCallbackResponse:
@@ -77,31 +74,16 @@ async def check_http(method: str, url: str) -> HealthcheckCallbackResponse:
                 )
 
 
-@sources.add_healthcheck
-async def jikan():
-    return await check_http('GET', 'https://api.jikan.moe/v4')
+def generate_check_http(method: str, url: str):
+    parsed_url = urlparse(url)
+    add_component(HealthcheckHTTPComponent(parsed_url.netloc))(
+        partial(check_http, method, url)
+    )
 
 
-@sources.add_healthcheck
-async def katcr():
-    return await check_http('HEAD', 'https://katcr.co')
-
-
-@sources.add_healthcheck
-async def rarbg():
-    return await check_http('HEAD', 'https://torrentapi.org')
-
-
-@sources.add_healthcheck
-async def horriblesubs():
-    return await check_http('HEAD', 'https://horriblesubs.info')
-
-
-@sources.add_healthcheck
-async def nyaa():
-    return await check_http('HEAD', 'https://nyaa.si')
-
-
-@sources.add_healthcheck
-async def torrentscsv():
-    return await check_http('HEAD', 'https://torrents-csv.com')
+generate_check_http('GET', 'https://api.jikan.moe/v4')
+generate_check_http('HEAD', 'https://katcr.co')
+generate_check_http('HEAD', 'https://torrentapi.org')
+generate_check_http('HEAD', 'https://horriblesubs.info')
+generate_check_http('HEAD', 'https://nyaa.si')
+generate_check_http('HEAD', 'https://torrents-csv.com')
