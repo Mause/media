@@ -1,7 +1,6 @@
 import inspect
 from asyncio import iscoroutinefunction
 from typing import Callable, Optional, TypeVar
-from functools import update_wrapper
 
 from fastapi import FastAPI
 from fastapi.dependencies.utils import solve_dependencies
@@ -60,6 +59,6 @@ def singleton(func: Callable):
         ),
         func_impl=wrapper,
     )
-    update_wrapper(wrapper, func)
+    wrapper.__wrapped__ = func
 
     return wrapper
