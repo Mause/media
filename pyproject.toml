@@ -57,6 +57,7 @@ dev = [
     "async-asgi-testclient==1.4.11",
     "aioresponses==0.7.8",
     "pytest-sugar",
+    "aiosqlite>=0.21.0",
 ]
 debug = ["pudb", "pdbpp"]
 
