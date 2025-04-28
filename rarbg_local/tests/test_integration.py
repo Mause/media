@@ -52,11 +52,13 @@ def add_torrent():
 
 @patch('rarbg_local.health.transmission')
 @mark.asyncio
-async def test_diagnostics(transmission, test_client, user, responses):
-    responses.add('HEAD', 'https://horriblesubs.info')
-    responses.add('HEAD', 'https://torrentapi.org')
-    responses.add('HEAD', 'https://katcr.co')
-    responses.add('GET', 'https://api.jikan.moe/v3', body='{}')
+async def test_diagnostics(transmission, test_client, user, aioresponses, snapshot):
+    aioresponses.add('https://horriblesubs.info', 'HEAD')
+    aioresponses.add('https://torrentapi.org', 'HEAD')
+    aioresponses.add('https://katcr.co', 'HEAD')
+    aioresponses.add('https://nyaa.si', 'HEAD')
+    aioresponses.add('https://torrents-csv.com', 'HEAD')
+    aioresponses.add('https://api.jikan.moe/v4', 'GET', body='{}')
 
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
@@ -67,22 +69,11 @@ async def test_diagnostics(transmission, test_client, user, responses):
     assert r.status_code == 200
 
     results = r.json()
-    for r in results:
-        r.pop('response_time')
-        r.pop('timestamp')
-        r.pop('expires')
+    for checks in results['checks'].values():
+        for r in checks:
+            r.pop('time')
 
-    assert results == [
-        {
-            'checker': 'transmission_connectivity',
-            'output': {'consumers': ['ctag1'], 'client_is_alive': True},
-            'passed': True,
-        },
-        {'checker': 'jikan', 'output': {}, 'passed': True},
-        {'checker': 'katcr', 'output': 'kickass', 'passed': True},
-        {'checker': 'rarbg', 'output': 'rarbg', 'passed': True},
-        {'checker': 'horriblesubs', 'output': 'horriblesubs', 'passed': True},
-    ]
+    snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
 
 
 @mark.asyncio
@@ -237,7 +228,6 @@ async def test_search(aioresponses, test_client):
 
 @mark.asyncio
 async def test_delete_cascade(test_client: TestClient, session):
-
     e = EpisodeDetailsFactory()
     session.add(e)
     session.commit()
@@ -292,7 +282,6 @@ async def test_select_season(aioresponses, test_client: TestClient, snapshot) ->
 
 @mark.asyncio
 async def test_foreign_key_integrity(session: Session):
-
     # invalid fkey_id
     ins = Download.__table__.insert().values(id=1, movie_id=99)
     with raises(IntegrityError):

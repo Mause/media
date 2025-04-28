@@ -11,7 +11,7 @@ import backoff
 import psycopg2
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
-from fastapi.responses import RedirectResponse, StreamingResponse
+from fastapi.responses import JSONResponse, RedirectResponse, StreamingResponse
 from fastapi.security import (
     HTTPAuthorizationCredentials,
     HTTPBearer,
@@ -40,7 +40,7 @@ from .db import (
     User,
     get_movies,
 )
-from .health import health
+from .health import database_var, health
 from .main import (
     add_single,
     extract_marker,
@@ -66,7 +66,14 @@ from .models import (
     TvResponse,
     TvSeasonResponse,
 )
-from .providers import PROVIDERS, ProviderSource, search_for_movie, search_for_tv
+from .providers import (
+    PROVIDERS,
+    MovieProvider,
+    ProviderSource,
+    TvProvider,
+    search_for_movie,
+    search_for_tv,
+)
 from .singleton import singleton
 from .tmdb import (
     get_json,
@@ -254,11 +261,17 @@ async def stream(
         raise HTTPException(422, 'Invalid provider')
 
     if type == 'series':
+        if not isinstance(provider, TvProvider):
+            return
+
         async for item in provider.search_for_tv(
             await get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
         ):
             yield item
     else:
+        if not isinstance(provider, MovieProvider):
+            return
+
         async for item in provider.search_for_movie(
             await get_movie_imdb_id(tmdb_id), int(tmdb_id)
         ):
@@ -295,8 +308,13 @@ async def select(tmdb_id: int, season: int):
 
 
 @api.get('/diagnostics')
-def diagnostics():
-    return health.run()[0]
+async def diagnostics(settings: Settings = Depends(get_settings)):
+    database_var.set(settings.database_url)
+    res = await health.run()
+    return JSONResponse(
+        res.to_json(),
+        res.get_http_status_code(),
+    )
 
 
 @api.post(

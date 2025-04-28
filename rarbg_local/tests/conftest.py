@@ -6,7 +6,7 @@ from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
 from responses import RequestsMock
 
-from ..db import Role, User, db
+from ..db import Base, Role, User
 from ..new import (
     Settings,
     create_app,
@@ -55,7 +55,7 @@ def session(fastapi_app):
     assert hasattr(Session, 'kw'), Session
     engine = Session.kw['bind']
     assert 'sqlite' in repr(engine), repr(engine)
-    db.Model.metadata.create_all(engine)
+    Base.metadata.create_all(engine)
 
     session = Session()
     fastapi_app.dependency_overrides[get_db] = lambda: session

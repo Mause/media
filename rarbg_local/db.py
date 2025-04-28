@@ -3,10 +3,8 @@ from datetime import datetime
 from functools import lru_cache
 from typing import List, Optional, Type, TypeVar, Union
 
-from flask_jsontools import JsonSerializableBase
-from flask_sqlalchemy import SQLAlchemy
-from flask_user import UserMixin
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, joinedload, relationship
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
@@ -14,11 +12,12 @@ from sqlalchemy_repr import RepresentableBase
 
 from .utils import precondition
 
-db = SQLAlchemy(model_class=(RepresentableBase, JsonSerializableBase))
+Base = declarative_base(cls=RepresentableBase)
+
 T = TypeVar('T')
 
 
-class Download(db.Model):  # type: ignore
+class Download(Base):  # type: ignore
     __tablename__ = 'download'
     _json_exclude = {'movie', 'episode'}
     _json_include = {'added_by'}
@@ -42,7 +41,7 @@ class Download(db.Model):  # type: ignore
         return get_keyed_torrents()[self.transmission_id]['percentDone'] * 100
 
 
-class EpisodeDetails(db.Model):  # type: ignore
+class EpisodeDetails(Base):  # type: ignore
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
     download = relationship(
@@ -66,7 +65,7 @@ class EpisodeDetails(db.Model):  # type: ignore
         )
 
 
-class MovieDetails(db.Model):  # type: ignore
+class MovieDetails(Base):  # type: ignore
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
     download = relationship(
@@ -74,31 +73,31 @@ class MovieDetails(db.Model):  # type: ignore
     )
 
 
-class User(db.Model, UserMixin):  # type: ignore
+class User(Base):  # type: ignore
     __tablename__ = 'users'
     _json_exclude = {'roles', 'password', 'downloads'}
-    id = db.Column(db.Integer, primary_key=True)
-    active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
+    id = Column(Integer, primary_key=True)
+    active = Column('is_active', Boolean(), nullable=False, server_default='1')
 
     # User authentication information. The collation='en_AU' is required
     # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
-    username = db.Column(db.String(255, collation='en_AU'), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False, server_default='')
+    username = Column(String(255, collation='en_AU'), nullable=False, unique=True)
+    password = Column(String(255), nullable=False, server_default='')
 
-    email = db.Column(db.String(255, collation='en_AU'), nullable=True, unique=True)
+    email = Column(String(255, collation='en_AU'), nullable=True, unique=True)
 
     # User information
-    first_name = db.Column(
-        db.String(100, collation='en_AU'), nullable=False, server_default=''
+    first_name = Column(
+        String(100, collation='en_AU'), nullable=False, server_default=''
     )
-    last_name = db.Column(
-        db.String(100, collation='en_AU'), nullable=False, server_default=''
+    last_name = Column(
+        String(100, collation='en_AU'), nullable=False, server_default=''
     )
 
     # Define the relationship to Role via UserRoles
-    roles = db.relationship('Role', secondary='user_roles')
+    roles = relationship('Role', secondary='user_roles')
 
-    downloads = db.relationship('Download')
+    downloads = relationship('Download')
 
     def __repr__(self):
         return self.username
@@ -108,10 +107,10 @@ class User(db.Model, UserMixin):  # type: ignore
 
 
 # Define the Role data-model
-class Role(db.Model):  # type: ignore
+class Role(Base):  # type: ignore
     __tablename__ = 'roles'
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(50), unique=True)
+    id = Column(Integer(), primary_key=True)
+    name = Column(String(50), unique=True)
 
     def __repr__(self):
         return self.name
@@ -130,11 +129,11 @@ Roles = _Roles()
 
 
 # Define the UserRoles association table
-class UserRoles(db.Model):  # type: ignore
+class UserRoles(Base):  # type: ignore
     __tablename__ = 'user_roles'
-    id = db.Column(db.Integer(), primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
-    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
+    id = Column(Integer(), primary_key=True)
+    user_id = Column(Integer(), ForeignKey('users.id', ondelete='CASCADE'))
+    role_id = Column(Integer(), ForeignKey('roles.id', ondelete='CASCADE'))
 
 
 class MonitorMediaType(enum.Enum):
@@ -142,8 +141,10 @@ class MonitorMediaType(enum.Enum):
     TV = 'TV'
 
 
-class Monitor(db.Model):  # type: ignore
-    id = db.Column(db.Integer(), primary_key=True)
+class Monitor(Base):  # type: ignore
+    __tablename__ = 'monitor'
+
+    id = Column(Integer(), primary_key=True)
     tmdb_id = Column(Integer)
 
     added_by_id = Column(Integer, ForeignKey('users.id'))
