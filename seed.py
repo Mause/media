@@ -6,7 +6,8 @@ from rarbg_local.new import get_session_local, get_settings
 
 
 async def seed():
-    session_maker = get_session_local(await get_settings())
+    settings = await get_settings()
+    session_maker = get_session_local(settings)
     with session_maker() as session:
         user = User(
             username='Mause',
