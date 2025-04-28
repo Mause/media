@@ -3,7 +3,6 @@ import os
 import traceback
 from functools import wraps
 from os import getpid
-from pathlib import Path
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
@@ -22,7 +21,7 @@ from fastapi_utils.openapi import simplify_operation_ids
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
-from pydantic import BaseModel, BaseSettings, SecretStr
+from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
 from sqlalchemy.engine import URL, make_url
@@ -74,6 +73,7 @@ from .providers import (
     search_for_movie,
     search_for_tv,
 )
+from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import (
     get_json,
@@ -105,19 +105,6 @@ class XOpenIdConnect(OpenIdConnect):
 openid_connect = XOpenIdConnect(
     openIdConnectUrl='https://mause.au.auth0.com/.well-known/openid-configuration'
 )
-
-
-class Settings(BaseSettings):
-    root = Path(__file__).parent.parent.absolute()
-    database_url = f"sqlite:///{root}/db.db"
-    static_resources_path = root / 'app/build'
-    plex_username: Optional[str] = None
-    plex_password: Optional[SecretStr] = None
-
-
-@singleton
-async def get_settings():
-    return Settings()
 
 
 def normalise_db_url(database_url: str) -> URL:
