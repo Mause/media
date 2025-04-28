@@ -49,8 +49,7 @@ def user(session):
 def session(fastapi_app):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
         database_url='sqlite:///:memory:',
-        plex_username='plex_username',
-        plex_password='plex_password',
+        plex_token='plex_token',
     )
 
     Session = get_event_loop().run_until_complete(get(fastapi_app, get_session_local))
