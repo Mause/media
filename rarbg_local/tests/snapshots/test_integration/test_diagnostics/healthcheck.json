@@ -25,49 +25,49 @@
         }
       }
     ],
-    "https://api.jikan.moe/v4": [
+    "api.jikan.moe": [
       {
-        "componentName": "https://api.jikan.moe/v4",
+        "componentName": "api.jikan.moe",
         "componentType": "http",
         "status": "pass",
         "output": "<ClientResponse(https://api.jikan.moe/v4) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"
       }
     ],
-    "https://katcr.co": [
+    "katcr.co": [
       {
-        "componentName": "https://katcr.co",
+        "componentName": "katcr.co",
         "componentType": "http",
         "status": "pass",
         "output": "<ClientResponse(https://katcr.co) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"
       }
     ],
-    "https://torrentapi.org": [
+    "torrentapi.org": [
       {
-        "componentName": "https://torrentapi.org",
+        "componentName": "torrentapi.org",
         "componentType": "http",
         "status": "pass",
         "output": "<ClientResponse(https://torrentapi.org) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"
       }
     ],
-    "https://horriblesubs.info": [
+    "horriblesubs.info": [
       {
-        "componentName": "https://horriblesubs.info",
+        "componentName": "horriblesubs.info",
         "componentType": "http",
         "status": "pass",
         "output": "<ClientResponse(https://horriblesubs.info) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"
       }
     ],
-    "https://nyaa.si": [
+    "nyaa.si": [
       {
-        "componentName": "https://nyaa.si",
+        "componentName": "nyaa.si",
         "componentType": "http",
         "status": "pass",
         "output": "<ClientResponse(https://nyaa.si) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"
       }
     ],
-    "https://torrents-csv.com": [
+    "torrents-csv.com": [
       {
-        "componentName": "https://torrents-csv.com",
+        "componentName": "torrents-csv.com",
         "componentType": "http",
         "status": "pass",
         "output": "<ClientResponse(https://torrents-csv.com) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"

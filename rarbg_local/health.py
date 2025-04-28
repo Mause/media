@@ -1,5 +1,6 @@
 import contextvars
 from functools import partial
+from urllib.parse import urlparse
 
 import aiohttp
 from healthcheck import (
@@ -75,7 +76,12 @@ async def check_http(method: str, url: str) -> HealthcheckCallbackResponse:
 
 
 def generate_check_http(method: str, url: str):
-    health.add_component(HealthcheckHTTPComponent(url).add_healthcheck(partial(check_http, method, url)))
+    parsed_url = urlparse(url)
+    health.add_component(
+        HealthcheckHTTPComponent(parsed_url.netloc).add_healthcheck(
+            partial(check_http, method, url)
+        )
+    )
 
 
 generate_check_http('GET', 'https://api.jikan.moe/v4')
