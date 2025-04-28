@@ -5,7 +5,7 @@ import pytest
 
 from ..main import normalise
 from ..models import Episode
-from ..new import normalise_db_url
+from ..db import normalise_db_url
 from ..providers import threadable
 
 episodes: List[Episode] = [
