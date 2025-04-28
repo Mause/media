@@ -6,6 +6,7 @@ from rarbg_local.new import get_session_local, get_settings
 
 
 async def seed():
+    print(get_settings, getattr(get_settings, '__wrapped__', None), get_session_local)
     settings = await get_settings.__wrapped__()
     session_maker = get_session_local(settings)
     with session_maker() as session:
