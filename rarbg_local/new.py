@@ -25,7 +25,7 @@ from plexapi.server import PlexServer
 from pydantic import BaseModel, BaseSettings, SecretStr
 from requests.exceptions import HTTPError
 from sqlalchemy import create_engine, event, func
-from sqlalchemy.engine import make_url
+from sqlalchemy.engine import URL, make_url
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
@@ -87,10 +87,11 @@ from .tmdb import (
 from .utils import non_null, precondition
 
 api = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 def generate_plain_text(exc):
-    logging.exception('Error occured', exc_info=exc)
+    logger.exception('Error occured', exc_info=exc)
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
@@ -119,20 +120,20 @@ async def get_settings():
     return Settings()
 
 
-def normalise_db_url(database_url: str) -> str:
+def normalise_db_url(database_url: str) -> URL:
     parsed = make_url(database_url)
     if parsed.drivername == 'postgres':
         parsed = parsed.set(drivername='postgresql')
-    return parsed.render_as_string(hide_password=False)
+    return parsed
 
 
 @singleton
 def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = normalise_db_url(settings.database_url)
 
-    logging.info('db_url: %s', db_url)
+    logger.info('db_url: %s', db_url)
 
-    sqlite = 'sqlite' in db_url
+    sqlite = db_url.drivername == 'sqlite'
     if sqlite:
         engine = create_engine(
             db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
