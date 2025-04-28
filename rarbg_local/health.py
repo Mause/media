@@ -9,6 +9,7 @@ from healthcheck import (
     HealthcheckInternalComponent,
     HealthcheckStatus,
 )
+from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.sql import text
 
@@ -27,7 +28,10 @@ health.add_component(database)
 
 @database.add_healthcheck
 async def check_database():
-    engine = create_async_engine(database_var.get())
+    url = make_url(database_var.get())
+    if url.drivername == 'sqlite':
+        url = url.set(drivername='aiosqlite')
+    engine = create_async_engine(url)
 
     async with engine.connect() as conn:
         res = await conn.execute(text('SELECT 1'))
