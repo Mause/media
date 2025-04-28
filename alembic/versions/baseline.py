@@ -1,4 +1,4 @@
-"""${message}
+"""Add en_AU collation
 
 Revision ID: baseline
 Create Date: 2025-05-25
