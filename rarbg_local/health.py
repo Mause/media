@@ -1,11 +1,14 @@
 import contextvars
+from datetime import datetime
+from pydantic import BaseModel
 from functools import partial
-from typing import List
+from typing import List, Any
 from urllib.parse import urlparse
 
 import aiohttp
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
+from healthcheck.models import     ComponentType
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -38,7 +41,18 @@ async def diagnostics():
     return [comp.name for comp in health.components]
 
 
-@router.get('/{component_name}')
+class HealthcheckResponse(BaseModel):
+    class Config:
+        orm_mode = True
+
+    component_name: str
+    component_type: ComponentType
+    status: HealthcheckStatus
+    time: datetime
+    output: Any
+
+
+@router.get('/{component_name}', response_model=List[HealthcheckResponse])
 async def component_diagnostics(
     component_name: str, settings: Settings = Depends(get_settings)
 ):
@@ -49,8 +63,7 @@ async def component_diagnostics(
         return JSONResponse({'error': 'Component not found'}, status_code=404)
 
     database_var.set(settings.database_url)
-    res = await component.run()
-    return [check.to_json() for check in res]
+    return await component.run()
 
 
 @add_component(HealthcheckDatastoreComponent('database'))

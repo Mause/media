@@ -783,7 +783,13 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "title": "Response Component Diagnostics Api Diagnostics  Component Name  Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HealthcheckResponse"
+                  }
+                }
               }
             }
           },
@@ -973,6 +979,17 @@
   },
   "components": {
     "schemas": {
+      "ComponentType": {
+        "title": "ComponentType",
+        "enum": [
+          "datastore",
+          "internal",
+          "http",
+          "generic"
+        ],
+        "type": "string",
+        "description": "Enum used to store the component types."
+      },
       "DownloadAllResponse": {
         "title": "DownloadAllResponse",
         "required": [
@@ -1194,6 +1211,46 @@
             }
           }
         }
+      },
+      "HealthcheckResponse": {
+        "title": "HealthcheckResponse",
+        "required": [
+          "component_name",
+          "component_type",
+          "status",
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "component_name": {
+            "title": "Component Name",
+            "type": "string"
+          },
+          "component_type": {
+            "$ref": "#/components/schemas/ComponentType"
+          },
+          "status": {
+            "$ref": "#/components/schemas/HealthcheckStatus"
+          },
+          "time": {
+            "title": "Time",
+            "type": "string",
+            "format": "date-time"
+          },
+          "output": {
+            "title": "Output"
+          }
+        }
+      },
+      "HealthcheckStatus": {
+        "title": "HealthcheckStatus",
+        "enum": [
+          "pass",
+          "warn",
+          "fail"
+        ],
+        "type": "string",
+        "description": "Enum used to store the possible service and component health status."
       },
       "ITorrent": {
         "title": "ITorrent",

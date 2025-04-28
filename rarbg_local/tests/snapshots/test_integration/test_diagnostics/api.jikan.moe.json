@@ -1,7 +1,7 @@
 [
   {
-    "componentName": "api.jikan.moe",
-    "componentType": "http",
+    "component_name": "api.jikan.moe",
+    "component_type": "http",
     "status": "pass",
     "output": "<ClientResponse(https://api.jikan.moe/v4) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"
   }

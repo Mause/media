@@ -1,7 +1,7 @@
 [
   {
-    "componentName": "database",
-    "componentType": "datastore",
+    "component_name": "database",
+    "component_type": "datastore",
     "status": "pass",
     "output": {
       "version": "3.45.1"

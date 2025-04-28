@@ -1,7 +1,7 @@
 [
   {
-    "componentName": "transmission",
-    "componentType": "internal",
+    "component_name": "transmission",
+    "component_type": "internal",
     "status": "pass",
     "output": {
       "consumers": [
