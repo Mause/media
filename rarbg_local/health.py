@@ -1,5 +1,6 @@
 import contextvars
 from functools import partial
+from typing import List
 from urllib.parse import urlparse
 
 import aiohttp
@@ -32,14 +33,24 @@ def add_component(decl):
     return decl.add_healthcheck
 
 
-@router.get('')
-async def diagnostics(settings: Settings = Depends(get_settings)):
-    database_var.set(settings.database_url)
-    res = await health.run()
-    return JSONResponse(
-        res.to_json(),
-        res.get_http_status_code(),
+@router.get('', response_model=List[str])
+async def diagnostics():
+    return [comp.name for comp in health.components]
+
+
+@router.get('/{component_name}')
+async def component_diagnostics(
+    component_name: str, settings: Settings = Depends(get_settings)
+):
+    component = next(
+        (comp for comp in health.components if comp.name == component_name), None
     )
+    if component is None:
+        return JSONResponse({'error': 'Component not found'}, status_code=404)
+
+    database_var.set(settings.database_url)
+    res = await component.run()
+    return [check.to_json() for check in res]
 
 
 @add_component(HealthcheckDatastoreComponent('database'))

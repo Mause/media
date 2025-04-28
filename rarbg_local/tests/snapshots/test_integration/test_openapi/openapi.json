@@ -743,7 +743,57 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
+                "schema": {
+                  "title": "Response Diagnostics Api Diagnostics Get",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/diagnostics/{component_name}": {
+      "get": {
+        "summary": "Component Diagnostics",
+        "operationId": "component_diagnostics",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Component Name",
+              "type": "string"
+            },
+            "name": "component_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
                 "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }

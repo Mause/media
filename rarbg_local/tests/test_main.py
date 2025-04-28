@@ -3,9 +3,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from ..db import normalise_db_url
 from ..main import normalise
 from ..models import Episode
-from ..db import normalise_db_url
 from ..providers import threadable
 
 episodes: List[Episode] = [
