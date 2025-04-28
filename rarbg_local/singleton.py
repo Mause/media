@@ -1,6 +1,7 @@
 import inspect
 from asyncio import iscoroutinefunction
 from typing import Callable, Optional, TypeVar
+from functools import wraps
 
 from fastapi import FastAPI
 from fastapi.dependencies.utils import solve_dependencies
@@ -33,6 +34,7 @@ async def get(
 
 
 def singleton(func: Callable):
+    @wraps(func)
     async def wrapper(request: Request, **kwargs):
         app = request.app
 
