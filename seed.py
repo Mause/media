@@ -21,8 +21,8 @@ async def seed():
         user = User(
             username='Mause',
             roles=[
-                get_or_create(session, Role, 'Admin'),
-                get_or_create(session, Role, 'Member'),
+                get_or_create(session, Role, name='Admin'),
+                get_or_create(session, Role, name='Member'),
             ],
         )
         session.add(user)
