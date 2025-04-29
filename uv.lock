@@ -530,15 +530,15 @@ wheels = [
 
 [[package]]
 name = "fastapi"
-version = "0.73.0"
+version = "0.89.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
     { name = "starlette" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/27/a7/439a8891b22b4f1e45483b8a3b209f2eabcfdd44e75c339d5f2d315342fa/fastapi-0.73.0.tar.gz", hash = "sha256:dcfee92a7f9a72b5d4b7ca364bd2b009f8fc10d95ed5769be20e94f39f7e5a15", size = 6340105, upload-time = "2022-01-23T22:44:14.407Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/09/b3/d259ee31dfe35e583a629f39b16047a9afe455694403bf51510981414721/fastapi-0.89.1.tar.gz", hash = "sha256:15d9271ee52b572a015ca2ae5c72e1ce4241dd8532a534ad4f7ec70c376a580f", size = 9702353, upload-time = "2023-01-10T16:40:40.733Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b3/19/f8a27a1c171aef575aec80aecf0bdbc3880f2f2cb3a190b6cc61efd5617e/fastapi-0.73.0-py3-none-any.whl", hash = "sha256:f0a618aff5f6942862f2d3f20f39b1c037e33314d1b8207fd1c3a2cca76dfd8c", size = 52190, upload-time = "2022-01-23T22:44:12.375Z" },
+    { url = "https://files.pythonhosted.org/packages/8f/89/adf4525d1870021b65ec562e83e9f46d96494ad95f238d0264ef1ab6b604/fastapi-0.89.1-py3-none-any.whl", hash = "sha256:f9773ea22290635b2f48b4275b2bf69a8fa721fda2e38228bed47139839dc877", size = 55797, upload-time = "2023-01-10T16:40:38.502Z" },
 ]
 
 [[package]]
@@ -1130,7 +1130,7 @@ requires-dist = [
     { name = "dnspython", specifier = ">=2.7.0" },
     { name = "email-validator", specifier = "==2.2.0" },
     { name = "eventlet", specifier = "==0.35.2" },
-    { name = "fastapi", specifier = "==0.73.0" },
+    { name = "fastapi", specifier = "==0.89.1" },
     { name = "fastapi-utils", specifier = "==0.2.1" },
     { name = "fuzzywuzzy", extras = ["speedup"], specifier = "==0.18.0" },
     { name = "gunicorn" },
@@ -2012,14 +2012,14 @@ wheels = [
 
 [[package]]
 name = "starlette"
-version = "0.17.1"
+version = "0.22.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/11/d3/c346849b8201f0e0339e23850c8db1cebd477e44e8b5212f40e1acbb490c/starlette-0.17.1.tar.gz", hash = "sha256:57eab3cc975a28af62f6faec94d355a410634940f10b30d68d31cb5ec1b44ae8", size = 48518, upload-time = "2021-11-17T16:11:39.168Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f7/ff/64bd3362f80e81402f21e0f1ba55f8801cd899ad3f2a1bcc4a94d284c786/starlette-0.22.0.tar.gz", hash = "sha256:b092cbc365bea34dd6840b42861bdabb2f507f8671e642e8272d2442e08ea4ff", size = 49215, upload-time = "2022-11-17T06:31:09.396Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/32/57/e9c68acc2845ee4ca66202d19856f6a3581cab2a885d25d490103270ffa2/starlette-0.17.1-py3-none-any.whl", hash = "sha256:26a18cbda5e6b651c964c12c88b36d9898481cd428ed6e063f5f29c418f73050", size = 58440, upload-time = "2021-11-17T16:11:38.131Z" },
+    { url = "https://files.pythonhosted.org/packages/1d/4e/30eda84159d5b3ad7fe663c40c49b16dd17436abe838f10a56c34bee44e8/starlette-0.22.0-py3-none-any.whl", hash = "sha256:b5eda991ad5f0ee5d8ce4c4540202a573bb6691ecd0c712262d0bc85cf8f2c50", size = 64327, upload-time = "2022-11-17T06:31:07.346Z" },
 ]
 
 [[package]]
