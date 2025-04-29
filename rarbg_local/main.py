@@ -25,6 +25,7 @@ from .utils import non_null, precondition
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
+logger = logging.getLogger(__name__)
 
 K = TypeVar('K')
 V = TypeVar('V')
@@ -149,7 +150,7 @@ def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
     return dict(dd)
 
 
-def resolve_season(episodes) -> List[EpisodeDetails]:
+async def resolve_season(episodes) -> List[EpisodeDetails]:
     if not (len(episodes) == 1 and episodes[0].is_season_pack()):
         return episodes
 
@@ -180,37 +181,39 @@ def resolve_season(episodes) -> List[EpisodeDetails]:
             episode=episode.episode_number,
             show_title=pack.show_title,
         )
-        for episode in get_tv_episodes(pack.download.tmdb_id, pack.season).episodes
+        for episode in (
+            await get_tv_episodes(pack.download.tmdb_id, pack.season)
+        ).episodes
     ]
 
 
-def resolve_show(show: List[EpisodeDetails]) -> Dict[str, List[EpisodeDetails]]:
+async def resolve_show(show: List[EpisodeDetails]) -> Dict[str, List[EpisodeDetails]]:
     seasons = groupby(show, lambda episode: episode.season)
     return {
-        str(number): resolve_season(
+        str(number): await resolve_season(
             sorted(season, key=lambda episode: episode.episode or -1)
         )
         for number, season in seasons.items()
     }
 
 
-def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
+async def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
     ep = show[0]
     d = ep.download
 
     return SeriesDetails(
         title=ep.show_title,
-        seasons=resolve_show(show),
+        seasons=await resolve_show(show),
         imdb_id=d.imdb_id,
         tmdb_id=d.tmdb_id,
     )
 
 
-def resolve_series(session: Session) -> List[SeriesDetails]:
+async def resolve_series(session: Session) -> List[SeriesDetails]:
     episodes = get_episodes(session)
 
     return [
-        make_series_details(imdb_id, show)
+        await make_series_details(imdb_id, show)
         for imdb_id, show in groupby(
             episodes, lambda episode: episode.download.tmdb_id
         ).items()
@@ -225,6 +228,6 @@ def get_keyed_torrents() -> Dict[str, Dict]:
         TimeoutError,
         FutureTimeoutError,
     ) as e:
-        logging.exception('Unable to connect to transmission')
+        logger.exception('Unable to connect to transmission')
         error = 'Unable to connect to transmission: ' + str(e)
         raise HTTPException(500, error)

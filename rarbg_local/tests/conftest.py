@@ -6,13 +6,11 @@ from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
 from responses import RequestsMock
 
-from ..db import Base, Role, User
+from ..db import Base, Role, User, get_db, get_session_local
 from ..new import (
     Settings,
     create_app,
     get_current_user,
-    get_db,
-    get_session_local,
     get_settings,
 )
 from ..singleton import get
@@ -48,7 +46,8 @@ def user(session):
 @fixture
 def session(fastapi_app):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
-        database_url='sqlite:///:memory:'
+        database_url='sqlite:///:memory:',
+        plex_token='plex_token',
     )
 
     Session = get_event_loop().run_until_complete(get(fastapi_app, get_session_local))
@@ -57,9 +56,9 @@ def session(fastapi_app):
     assert 'sqlite' in repr(engine), repr(engine)
     Base.metadata.create_all(engine)
 
-    session = Session()
-    fastapi_app.dependency_overrides[get_db] = lambda: session
-    return session
+    with Session() as session:
+        fastapi_app.dependency_overrides[get_db] = lambda: session
+        yield session
 
 
 def themoviedb(responses, path, response, query=''):

@@ -1,19 +1,35 @@
 import enum
+import logging
 from datetime import datetime
 from functools import lru_cache
 from typing import List, Optional, Type, TypeVar, Union
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+import backoff
+import psycopg2
+from fastapi import Depends
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    create_engine,
+    event,
+)
+from sqlalchemy.engine import URL, make_url
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, joinedload, relationship
+from sqlalchemy.orm import Session, joinedload, relationship, sessionmaker
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
 from sqlalchemy_repr import RepresentableBase
 
+from .settings import Settings, get_settings
+from .singleton import singleton
 from .utils import precondition
 
 Base = declarative_base(cls=RepresentableBase)
-
+logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
 
@@ -258,3 +274,55 @@ def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> 
     instance: T = model(**params)  # type: ignore
     session.add(instance)
     return instance
+
+
+def normalise_db_url(database_url: str) -> URL:
+    parsed = make_url(database_url)
+    if parsed.drivername == 'postgres':
+        parsed = parsed.set(drivername='postgresql')
+    return parsed
+
+
+@singleton
+def get_session_local(settings: Settings = Depends(get_settings)):
+    db_url = normalise_db_url(settings.database_url)
+
+    logger.info('db_url: %s', db_url)
+
+    sqlite = db_url.drivername == 'sqlite'
+    if sqlite:
+        engine = create_engine(
+            db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
+        )
+
+        @event.listens_for(engine, 'connect')
+        def _fk_pragma_on_connect(dbapi_con, con_record):
+            dbapi_con.create_collation(
+                "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
+            )
+            dbapi_con.execute('pragma foreign_keys=ON')
+
+    else:
+        engine = create_engine(
+            db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
+        )
+
+        @event.listens_for(engine, "do_connect")
+        @backoff.on_exception(
+            backoff.fibo,
+            psycopg2.OperationalError,
+            max_tries=5,
+            giveup=lambda e: "too many connections for role" not in e.args[0],
+        )
+        def receive_do_connect(dialect, conn_rec, cargs, cparams):
+            return psycopg2.connect(*cargs, **cparams)
+
+    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+
+
+def get_db(session_local=Depends(get_session_local)):
+    sl = session_local()
+    try:
+        yield sl
+    finally:
+        sl.close()

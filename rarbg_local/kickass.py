@@ -8,13 +8,15 @@ from bs4 import BeautifulSoup
 
 from .tmdb import get_movie, get_tv
 
+logger = logging.getLogger(__name__)
+
 
 async def fetch(url: str) -> AsyncGenerator[Dict[str, Any], None]:
     async with ClientSession(base_url='https://katcr.co') as session:
         try:
             r = await session.get(url)
         except ConnectionError:
-            logging.exception('Failed to reach kickass')
+            logger.exception('Failed to reach kickass')
             return
 
         soup = BeautifulSoup(await r.read(), "lxml")

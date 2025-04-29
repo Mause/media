@@ -1,6 +1,14 @@
 import contextvars
+from datetime import datetime
+from functools import partial
+from os import getpid
+from typing import Any, Callable, List, TypeVar
+from urllib.parse import urlparse
 
 import aiohttp
+from fastapi import APIRouter
+from fastapi.requests import Request
+from fastapi.responses import JSONResponse
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -9,26 +17,66 @@ from healthcheck import (
     HealthcheckInternalComponent,
     HealthcheckStatus,
 )
+from healthcheck.models import ComponentType
+from pydantic import BaseModel
 from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.sql import text
 
+from .db import get_session_local
+from .settings import get_settings
+from .singleton import get as _get
 from .transmission_proxy import transmission
 
-database_var = contextvars.ContextVar[str]('database_var')
-
+router = APIRouter()
+request_var = contextvars.ContextVar[Request]('request_var')
 health = Healthcheck(name='Media')
-
-services = HealthcheckInternalComponent('Services')
-health.add_component(services)
-
-database = HealthcheckDatastoreComponent('Database')
-health.add_component(database)
+T = TypeVar('T')
 
 
-@database.add_healthcheck
+async def get(dependent: Callable[..., T]) -> T:
+    return await _get(request_var.get().app, dependent, request_var.get())
+
+
+def add_component(decl):
+    health.add_component(decl)
+    return decl.add_healthcheck
+
+
+@router.get('', response_model=List[str])
+async def diagnostics():
+    return [comp.name for comp in health.components]
+
+
+class HealthcheckResponse(BaseModel):
+    class Config:
+        orm_mode = True
+
+    component_name: str
+    component_type: ComponentType
+    status: HealthcheckStatus
+    time: datetime
+    output: Any
+
+
+@router.get('/{component_name}', response_model=List[HealthcheckResponse])
+async def component_diagnostics(request: Request, component_name: str):
+    component = next(
+        (comp for comp in health.components if comp.name == component_name), None
+    )
+    if component is None:
+        return JSONResponse({'error': 'Component not found'}, status_code=404)
+
+    request_var.set(request)
+
+    return await component.run()
+
+
+@add_component(HealthcheckDatastoreComponent('database'))
 async def check_database():
-    url = make_url(database_var.get())
+    settings = await get(get_settings)
+
+    url = make_url(settings.database_url)
     is_sqlite = url.drivername == 'sqlite'
     if is_sqlite:
         url = url.set(drivername='sqlite+aiosqlite')
@@ -49,7 +97,29 @@ async def check_database():
         )
 
 
-@services.add_healthcheck
+@add_component(HealthcheckDatastoreComponent('pool'))
+async def pool():
+    def pget(field):
+        value = getattr(pool, field, None)
+
+        return value() if callable(value) else value
+
+    sessionlocal = await get(get_session_local)
+
+    pool = sessionlocal.kw['bind'].pool
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {
+            'worker_id': getpid(),
+            'size': pget('size'),
+            'checkedin': pget('checkedin'),
+            'overflow': pget('overflow'),
+            'checkedout': pget('checkedout'),
+        },
+    )
+
+
+@add_component(HealthcheckInternalComponent('transmission'))
 async def transmission_connectivity():
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,
@@ -58,10 +128,6 @@ async def transmission_connectivity():
             'client_is_alive': transmission()._thread.is_alive(),
         },
     )
-
-
-sources = HealthcheckHTTPComponent('Sources')
-health.add_component(sources)
 
 
 async def check_http(method: str, url: str) -> HealthcheckCallbackResponse:
@@ -77,31 +143,16 @@ async def check_http(method: str, url: str) -> HealthcheckCallbackResponse:
                 )
 
 
-@sources.add_healthcheck
-async def jikan():
-    return await check_http('GET', 'https://api.jikan.moe/v4')
+def generate_check_http(method: str, url: str):
+    parsed_url = urlparse(url)
+    add_component(HealthcheckHTTPComponent(parsed_url.netloc))(
+        partial(check_http, method, url)
+    )
 
 
-@sources.add_healthcheck
-async def katcr():
-    return await check_http('HEAD', 'https://katcr.co')
-
-
-@sources.add_healthcheck
-async def rarbg():
-    return await check_http('HEAD', 'https://torrentapi.org')
-
-
-@sources.add_healthcheck
-async def horriblesubs():
-    return await check_http('HEAD', 'https://horriblesubs.info')
-
-
-@sources.add_healthcheck
-async def nyaa():
-    return await check_http('HEAD', 'https://nyaa.si')
-
-
-@sources.add_healthcheck
-async def torrentscsv():
-    return await check_http('HEAD', 'https://torrents-csv.com')
+generate_check_http('GET', 'https://api.jikan.moe/v4')
+generate_check_http('HEAD', 'https://katcr.co')
+generate_check_http('HEAD', 'https://torrentapi.org')
+generate_check_http('HEAD', 'https://horriblesubs.info')
+generate_check_http('HEAD', 'https://nyaa.si')
+generate_check_http('HEAD', 'https://torrents-csv.com')

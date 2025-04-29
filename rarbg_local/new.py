@@ -2,16 +2,12 @@ import logging
 import os
 import traceback
 from functools import wraps
-from os import getpid
-from pathlib import Path
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
-import backoff
-import psycopg2
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
-from fastapi.responses import JSONResponse, RedirectResponse, StreamingResponse
+from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.security import (
     HTTPAuthorizationCredentials,
     HTTPBearer,
@@ -22,11 +18,9 @@ from fastapi_utils.openapi import simplify_operation_ids
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
-from pydantic import BaseModel, BaseSettings, SecretStr
+from pydantic import BaseModel
 from requests.exceptions import HTTPError
-from sqlalchemy import create_engine, event, func
-from sqlalchemy.engine import make_url
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import func
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
 
@@ -38,9 +32,10 @@ from .db import (
     MonitorMediaType,
     MovieDetails,
     User,
+    get_db,
     get_movies,
 )
-from .health import database_var, health
+from .health import router as health
 from .main import (
     add_single,
     extract_marker,
@@ -74,6 +69,7 @@ from .providers import (
     search_for_movie,
     search_for_tv,
 )
+from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import (
     get_json,
@@ -87,10 +83,11 @@ from .tmdb import (
 from .utils import non_null, precondition
 
 api = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 def generate_plain_text(exc):
-    logging.exception('Error occured', exc_info=exc)
+    logger.exception('Error occured', exc_info=exc)
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
@@ -104,88 +101,6 @@ class XOpenIdConnect(OpenIdConnect):
 openid_connect = XOpenIdConnect(
     openIdConnectUrl='https://mause.au.auth0.com/.well-known/openid-configuration'
 )
-
-
-class Settings(BaseSettings):
-    root = Path(__file__).parent.parent.absolute()
-    database_url = f"sqlite:///{root}/db.db"
-    static_resources_path = root / 'app/build'
-    plex_username: Optional[str] = None
-    plex_password: Optional[SecretStr] = None
-
-
-@singleton
-async def get_settings():
-    return Settings()
-
-
-def normalise_db_url(database_url: str) -> str:
-    parsed = make_url(database_url)
-    if parsed.drivername == 'postgres':
-        parsed = parsed.set(drivername='postgresql')
-    return parsed.render_as_string(hide_password=False)
-
-
-@singleton
-def get_session_local(settings: Settings = Depends(get_settings)):
-    db_url = normalise_db_url(settings.database_url)
-
-    logging.info('db_url: %s', db_url)
-
-    sqlite = 'sqlite' in db_url
-    if sqlite:
-        engine = create_engine(
-            db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
-        )
-
-        @event.listens_for(engine, 'connect')
-        def _fk_pragma_on_connect(dbapi_con, con_record):
-            dbapi_con.create_collation(
-                "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
-            )
-            dbapi_con.execute('pragma foreign_keys=ON')
-
-    else:
-        engine = create_engine(
-            db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
-        )
-
-        @event.listens_for(engine, "do_connect")
-        @backoff.on_exception(
-            backoff.fibo,
-            psycopg2.OperationalError,
-            max_tries=5,
-            giveup=lambda e: "too many connections for role" not in e.args[0],
-        )
-        def receive_do_connect(dialect, conn_rec, cargs, cparams):
-            return psycopg2.connect(*cargs, **cparams)
-
-    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
-
-
-@api.get('/diagnostics/pool')
-def pool(sessionlocal=Depends(get_session_local)):
-    def get(field):
-        value = getattr(pool, field, None)
-
-        return value() if callable(value) else value
-
-    pool = sessionlocal.kw['bind'].pool
-    return {
-        'worker_id': getpid(),
-        'size': get('size'),
-        'checkedin': get('checkedin'),
-        'overflow': get('overflow'),
-        'checkedout': get('checkedout'),
-    }
-
-
-def get_db(session_local=Depends(get_session_local)):
-    sl = session_local()
-    try:
-        yield sl
-    finally:
-        sl.close()
 
 
 async def get_current_user(
@@ -284,7 +199,7 @@ async def stream(
 async def select(tmdb_id: int, season: int):
     results = search_for_tv(await get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
-    episodes = get_tv_episodes(tmdb_id, season).episodes
+    episodes = (await get_tv_episodes(tmdb_id, season)).episodes
 
     packs_or_not = groupby(
         results, lambda result: extract_marker(result.title)[1] is None
@@ -304,16 +219,6 @@ async def select(tmdb_id: int, season: int):
         packs=packs,
         complete=complete_or_not.get(True, []),
         incomplete=complete_or_not.get(False, []),
-    )
-
-
-@api.get('/diagnostics')
-async def diagnostics(settings: Settings = Depends(get_settings)):
-    database_var.set(settings.database_url)
-    res = await health.run()
-    return JSONResponse(
-        res.to_json(),
-        res.get_http_status_code(),
     )
 
 
@@ -384,7 +289,9 @@ async def download_post(
 
 @api.get('/index', response_model=IndexResponse)
 async def index(session: Session = Depends(get_db)):
-    return IndexResponse(series=resolve_series(session), movies=get_movies(session))
+    return IndexResponse(
+        series=await resolve_series(session), movies=get_movies(session)
+    )
 
 
 @api.get('/stats', response_model=List[StatsResponse])
@@ -438,7 +345,7 @@ async def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
         return (
             (await get_movie(tmdb_id)).title
             if type == MonitorMediaType.MOVIE
-            else get_tv(tmdb_id).name
+            else (await get_tv(tmdb_id)).name
         )
     except HTTPError as e:
         if e.response.status_code == 404:
@@ -513,7 +420,7 @@ def get_static_files(settings: Settings = Depends(get_settings)):
 
 @singleton
 def get_plex(settings=Depends(get_settings)) -> PlexServer:
-    acct = MyPlexAccount(settings.plex_username, settings.plex_password)
+    acct = MyPlexAccount(token=settings.plex_token.get_secret_value())
     novell = acct.resource('Novell')
     novell.connections = [c for c in novell.connections if not c.local]
     return novell.connect(ssl=True)
@@ -550,8 +457,10 @@ async def redirect_to_imdb(
     if type_ == 'movie':
         imdb_id = await get_movie_imdb_id(tmdb_id)
     elif season:
-        imdb_id = get_json(
-            f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
+        imdb_id = (
+            await get_json(
+                f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
+            )
         )['imdb_id']
     else:
         imdb_id = await get_tv_imdb_id(tmdb_id)
@@ -573,6 +482,7 @@ async def static(
 
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
+api.include_router(health, prefix='/diagnostics')
 
 
 def create_app():

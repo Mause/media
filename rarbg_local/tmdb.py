@@ -9,7 +9,13 @@ import aiohttp.web_exceptions
 import backoff
 from cachetools import LRUCache, TTLCache
 
-from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonResponse
+from .models import (
+    MediaType,
+    MovieResponse,
+    SearchResponse,
+    TvApiResponse,
+    TvSeasonResponse,
+)
 from .utils import cached, precondition
 
 base = 'https://api.themoviedb.org/3/'
@@ -52,7 +58,7 @@ def get_year(result: Dict[str, str]) -> Optional[int]:
 
 @cached(TTLCache(1024, 360))
 async def search_themoviedb(s: str) -> List[SearchResponse]:
-    MAP = {'tv': 'series', 'movie': 'movie'}
+    MAP = {'tv': MediaType.SERIES, 'movie': MediaType.MOVIE}
     r = await get_json('search/multi', params={'query': s})
     return [
         SearchResponse(
@@ -88,12 +94,12 @@ async def resolve_id(imdb_id: str, type: ThingType) -> str:
 
 
 @cached(LRUCache(256))
-async def get_movie(id: str) -> MovieResponse:
+async def get_movie(id: int) -> MovieResponse:
     return MovieResponse(**(await get_json(f'movie/{id}')))
 
 
 @cached(TTLCache(256, 360))
-async def get_tv(id: str) -> TvApiResponse:
+async def get_tv(id: int) -> TvApiResponse:
     return TvApiResponse(**await get_json(f'tv/{id}'))
 
 
@@ -111,7 +117,7 @@ async def get_imdb_id(type: str, id: Union[int, str]) -> str:
 
 
 @cached(TTLCache(256, 360))
-async def get_tv_episodes(id: str, season: str) -> TvSeasonResponse:
+async def get_tv_episodes(id: int, season: int) -> TvSeasonResponse:
     return TvSeasonResponse(**await get_json(f'tv/{id}/season/{season}'))
 
 
