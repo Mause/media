@@ -8,8 +8,8 @@ from aiohttp import ClientSession
 from cachetools import TTLCache
 from lxml.html import fromstring
 
-from .jikan import closeness, get_names
-from .utils import cached
+from ..jikan import closeness, get_names
+from ..utils import cached
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
 
