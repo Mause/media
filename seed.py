@@ -3,7 +3,14 @@ from asyncio import new_event_loop
 
 from fastapi import FastAPI
 
-from rarbg_local.db import Role, User, create_episode, create_movie, get_session_local, get_or_create
+from rarbg_local.db import (
+    Role,
+    User,
+    create_episode,
+    create_movie,
+    get_or_create,
+    get_session_local,
+)
 from rarbg_local.singleton import get
 
 
@@ -13,7 +20,10 @@ async def seed():
     with session_maker() as session:
         user = User(
             username='Mause',
-            roles=[get_or_create(session, Role, 'Admin'), get_or_create(session, Role, 'Member')],
+            roles=[
+                get_or_create(session, Role, 'Admin'),
+                get_or_create(session, Role, 'Member'),
+            ],
         )
         session.add(user)
 
