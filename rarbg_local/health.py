@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 import aiohttp
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-from healthcheck.models import     ComponentType
+from healthcheck.models import ComponentType
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -87,6 +87,26 @@ async def check_database():
                 'version': res.scalar(),
             },
         )
+
+
+@add_component(HealthcheckDatastoreComponent('pool'))
+def pool(sessionlocal=Depends(get_session_local)):
+    def get(field):
+        value = getattr(pool, field, None)
+
+        return value() if callable(value) else value
+
+    pool = sessionlocal.kw['bind'].pool
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {
+            'worker_id': getpid(),
+            'size': get('size'),
+            'checkedin': get('checkedin'),
+            'overflow': get('overflow'),
+            'checkedout': get('checkedout'),
+        }
+    )
 
 
 @add_component(HealthcheckInternalComponent('transmission'))
