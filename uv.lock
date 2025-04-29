@@ -377,15 +377,15 @@ wheels = [
 
 [[package]]
 name = "email-validator"
-version = "1.1.2"
+version = "2.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dnspython" },
     { name = "idna" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3c/e9/b627245ab03a843202611b57bd7329ae0f3924b067b48037379ac160bce2/email-validator-1.1.2.tar.gz", hash = "sha256:1a13bd6050d1db4475f13e444e169b6fe872434922d38968c67cea9568cce2f0", size = 22192, upload_time = "2020-11-05T21:42:19.914Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/48/ce/13508a1ec3f8bb981ae4ca79ea40384becc868bfae97fd1c942bb3a001b1/email_validator-2.2.0.tar.gz", hash = "sha256:cb690f344c617a714f22e66ae771445a1ceb46821152df8e165c5f9a364582b7", size = 48967, upload_time = "2024-06-20T11:30:30.034Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/58/f0/39459bb868ddb4e96ee3f8b1386deeceb1bf4e53de8c18a4afdf5801f24c/email_validator-1.1.2-py2.py3-none-any.whl", hash = "sha256:094b1d1c60d790649989d38d34f69e1ef07792366277a2cf88684d03495d018f", size = 17903, upload_time = "2020-11-05T21:42:18.699Z" },
+    { url = "https://files.pythonhosted.org/packages/d7/ee/bf0adb559ad3c786f12bcbc9296b3f5675f529199bef03e2df281fa1fadb/email_validator-2.2.0-py3-none-any.whl", hash = "sha256:561977c2d73ce3611850a06fa56b414621e0c8faa9d66f2611407d87465da631", size = 33521, upload_time = "2024-06-20T11:30:28.248Z" },
 ]
 
 [[package]]
@@ -858,7 +858,7 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "cachetools", specifier = "==5.5.2" },
     { name = "cffi", specifier = "==1.17.1" },
-    { name = "email-validator", specifier = "==1.1.2" },
+    { name = "email-validator", specifier = "==2.2.0" },
     { name = "eventlet", specifier = "==0.35.2" },
     { name = "exceptiongroup" },
     { name = "fastapi", specifier = "==0.65.2" },
