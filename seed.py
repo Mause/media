@@ -18,7 +18,9 @@ async def seed():
     session_maker = await get(FastAPI(), get_session_local)
 
     with session_maker() as session:
-        user = User(
+        user = get_or_create(
+            session,
+            User,
             username='Mause',
             roles=[
                 get_or_create(session, Role, name='Admin'),
