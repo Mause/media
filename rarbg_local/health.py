@@ -1,14 +1,12 @@
 import contextvars
 from datetime import datetime
-from pydantic import BaseModel
 from functools import partial
-from typing import List, Any
+from typing import Any, List
 from urllib.parse import urlparse
 
 import aiohttp
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-from healthcheck.models import ComponentType
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -17,13 +15,15 @@ from healthcheck import (
     HealthcheckInternalComponent,
     HealthcheckStatus,
 )
+from healthcheck.models import ComponentType
+from pydantic import BaseModel
 from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.sql import text
 
+from .db import get_session_local
 from .settings import Settings, get_settings
 from .transmission_proxy import transmission
-from .db import get_session_local
 
 router = APIRouter()
 
@@ -106,7 +106,7 @@ async def pool(sessionlocal=Depends(get_session_local)):
             'checkedin': get('checkedin'),
             'overflow': get('overflow'),
             'checkedout': get('checkedout'),
-        }
+        },
     )
 
 

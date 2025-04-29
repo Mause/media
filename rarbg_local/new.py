@@ -2,7 +2,6 @@ import logging
 import os
 import traceback
 from functools import wraps
-from os import getpid
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
