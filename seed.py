@@ -18,16 +18,16 @@ async def seed():
     session_maker = await get(FastAPI(), get_session_local)
 
     with session_maker() as session:
-        user = get_or_create(
-            session,
-            User,
-            username='Mause',
-            roles=[
-                get_or_create(session, Role, name='Admin'),
-                get_or_create(session, Role, name='Member'),
-            ],
-        )
-        session.add(user)
+        user = session.query(User).filter_by(username='Mause').first()
+        if not user:
+            user = User(
+                username='Mause',
+                roles=[
+                    get_or_create(session, Role, name='Admin'),
+                    get_or_create(session, Role, name='Member'),
+                ],
+            )
+            session.add(user)
 
         session.add(
             create_movie(
