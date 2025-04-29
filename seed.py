@@ -1,5 +1,5 @@
 import os
-from asyncio import new_event_loop
+import asyncio
 
 from fastapi import FastAPI
 
@@ -57,6 +57,6 @@ if 'IS_REVIEW_APP' in os.environ or (
     and os.environ['RAILWAY_ENVIRONMENT_NAME'].startswith('media-pr-')
 ):
     print('seeding db')
-    new_event_loop().run_until_complete(seed())
+    asyncio.run(seed())
 else:
     print('not seeding db')
