@@ -577,7 +577,7 @@ async def test_plex_redirect(test_client, responses):
 
 @mark.asyncio
 async def test_pool_status(test_client, snapshot, monkeypatch):
-    monkeypatch.setattr('rarbg_local.new.getpid', lambda: 1)
+    monkeypatch.setattr('rarbg_local.health.getpid', lambda: 1)
     assert_match_json(
         snapshot,
         await test_client.get('/api/diagnostics/pool'),
