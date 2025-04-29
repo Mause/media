@@ -99,7 +99,7 @@ async def check_database():
 
 @add_component(HealthcheckDatastoreComponent('pool'))
 async def pool():
-    def get(field):
+    def pget(field):
         value = getattr(pool, field, None)
 
         return value() if callable(value) else value
@@ -111,10 +111,10 @@ async def pool():
         HealthcheckStatus.PASS,
         {
             'worker_id': getpid(),
-            'size': get('size'),
-            'checkedin': get('checkedin'),
-            'overflow': get('overflow'),
-            'checkedout': get('checkedout'),
+            'size': pget('size'),
+            'checkedin': pget('checkedin'),
+            'overflow': pget('overflow'),
+            'checkedout': pget('checkedout'),
         },
     )
 
