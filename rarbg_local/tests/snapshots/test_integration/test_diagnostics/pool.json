@@ -1,8 +1,14 @@
 [
-    {
-      "component_name": "pool",
-      "component_type": "datastore",
-      "status": "pass",
-      "output": {}
+  {
+    "component_name": "pool",
+    "component_type": "datastore",
+    "status": "pass",
+    "output": {
+      "worker_id": 1109891,
+      "size": 5,
+      "checkedin": null,
+      "overflow": null,
+      "checkedout": null
     }
-  ]
+  }
+]
