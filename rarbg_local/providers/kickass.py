@@ -6,7 +6,7 @@ from typing import Any, AsyncGenerator, Dict, Optional
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 
-from .tmdb import get_movie, get_tv
+from ..tmdb import get_movie, get_tv
 
 logger = logging.getLogger(__name__)
 
