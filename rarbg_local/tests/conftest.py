@@ -6,13 +6,11 @@ from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
 from responses import RequestsMock
 
-from ..db import Base, Role, User
+from ..db import Base, Role, User, get_db, get_session_local
 from ..new import (
     Settings,
     create_app,
     get_current_user,
-    get_db,
-    get_session_local,
     get_settings,
 )
 from ..singleton import get
