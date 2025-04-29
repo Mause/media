@@ -23,6 +23,7 @@ from sqlalchemy.sql import text
 
 from .settings import Settings, get_settings
 from .transmission_proxy import transmission
+from .db import get_session_local
 
 router = APIRouter()
 
@@ -90,7 +91,7 @@ async def check_database():
 
 
 @add_component(HealthcheckDatastoreComponent('pool'))
-def pool(sessionlocal=Depends(get_session_local)):
+async def pool(sessionlocal=Depends(get_session_local)):
     def get(field):
         value = getattr(pool, field, None)
 
