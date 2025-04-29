@@ -24,7 +24,7 @@ from sqlalchemy.sql import text
 from .settings import Settings, get_settings
 from .transmission_proxy import transmission
 
-router = APIRouter()
+router = APIRouter(tags=['diagnostics'])
 
 database_var = contextvars.ContextVar[str]('database_var')
 
