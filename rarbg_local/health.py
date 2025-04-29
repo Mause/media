@@ -1,12 +1,14 @@
 import contextvars
 from datetime import datetime
 from functools import partial
-from typing import Any, List
+from typing import Any, List, Callable, TypeVar
 from urllib.parse import urlparse
+from os import getpid
 
 import aiohttp
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
+from fastapi.requests import Request
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -24,12 +26,16 @@ from sqlalchemy.sql import text
 from .db import get_session_local
 from .settings import Settings, get_settings
 from .transmission_proxy import transmission
+from .singleton import get as _get
 
 router = APIRouter()
-
-database_var = contextvars.ContextVar[str]('database_var')
-
+request_var = contextvars.ContextVar[Request]('request_var')
 health = Healthcheck(name='Media')
+T = TypeVar('T')
+
+
+async def get(dependent: Callable[..., T]) -> T:
+    return await _get(request_var.get().app, dependent, request_var.get())
 
 
 def add_component(decl):
@@ -55,7 +61,7 @@ class HealthcheckResponse(BaseModel):
 
 @router.get('/{component_name}', response_model=List[HealthcheckResponse])
 async def component_diagnostics(
-    component_name: str, settings: Settings = Depends(get_settings)
+    request: Request, component_name: str
 ):
     component = next(
         (comp for comp in health.components if comp.name == component_name), None
@@ -63,13 +69,16 @@ async def component_diagnostics(
     if component is None:
         return JSONResponse({'error': 'Component not found'}, status_code=404)
 
-    database_var.set(settings.database_url)
+    request_var.set(request)
+
     return await component.run()
 
 
 @add_component(HealthcheckDatastoreComponent('database'))
 async def check_database():
-    url = make_url(database_var.get())
+    settings = await get(get_settings)
+
+    url = make_url(settings.database_url)
     is_sqlite = url.drivername == 'sqlite'
     if is_sqlite:
         url = url.set(drivername='sqlite+aiosqlite')
@@ -91,11 +100,13 @@ async def check_database():
 
 
 @add_component(HealthcheckDatastoreComponent('pool'))
-async def pool(sessionlocal=Depends(get_session_local)):
+async def pool():
     def get(field):
         value = getattr(pool, field, None)
 
         return value() if callable(value) else value
+
+    sessionlocal = await get(get_session_local)
 
     pool = sessionlocal.kw['bind'].pool
     return HealthcheckCallbackResponse(
