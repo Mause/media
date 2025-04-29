@@ -1,14 +1,14 @@
 import contextvars
 from datetime import datetime
 from functools import partial
-from typing import Any, List, Callable, TypeVar
-from urllib.parse import urlparse
 from os import getpid
+from typing import Any, Callable, List, TypeVar
+from urllib.parse import urlparse
 
 import aiohttp
-from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter
 from fastapi.requests import Request
+from fastapi.responses import JSONResponse
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -24,9 +24,9 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.sql import text
 
 from .db import get_session_local
-from .settings import Settings, get_settings
-from .transmission_proxy import transmission
+from .settings import get_settings
 from .singleton import get as _get
+from .transmission_proxy import transmission
 
 router = APIRouter()
 request_var = contextvars.ContextVar[Request]('request_var')
@@ -60,9 +60,7 @@ class HealthcheckResponse(BaseModel):
 
 
 @router.get('/{component_name}', response_model=List[HealthcheckResponse])
-async def component_diagnostics(
-    request: Request, component_name: str
-):
+async def component_diagnostics(request: Request, component_name: str):
     component = next(
         (comp for comp in health.components if comp.name == component_name), None
     )
