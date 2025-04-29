@@ -65,3 +65,7 @@ repos:
     rev: 0.6.17
     hooks:
       - id: uv-lock
+  - repo: https://github.com/Kludex/bump-testclient
+    rev: 0.3.0
+    hooks:
+      - id: bump_testclient
