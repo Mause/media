@@ -2,7 +2,6 @@ import logging
 import os
 import traceback
 from functools import wraps
-from os import getpid
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
@@ -35,7 +34,6 @@ from .db import (
     User,
     get_db,
     get_movies,
-    get_session_local,
 )
 from .health import router as health
 from .main import (
@@ -103,23 +101,6 @@ class XOpenIdConnect(OpenIdConnect):
 openid_connect = XOpenIdConnect(
     openIdConnectUrl='https://mause.au.auth0.com/.well-known/openid-configuration'
 )
-
-
-@api.get('/diagnostics/pool')
-def pool(sessionlocal=Depends(get_session_local)):
-    def get(field):
-        value = getattr(pool, field, None)
-
-        return value() if callable(value) else value
-
-    pool = sessionlocal.kw['bind'].pool
-    return {
-        'worker_id': getpid(),
-        'size': get('size'),
-        'checkedin': get('checkedin'),
-        'overflow': get('overflow'),
-        'checkedout': get('checkedout'),
-    }
 
 
 async def get_current_user(
