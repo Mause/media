@@ -4,8 +4,8 @@ from pathlib import Path
 from aioresponses import aioresponses as AioResponses
 from pytest import mark
 
-from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
 from ..providers import HorriblesubsProvider
+from ..providers.horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
 from .conftest import add_json, themoviedb, tolist
 from .factories import TvApiResponseFactory
 
