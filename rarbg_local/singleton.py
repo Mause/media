@@ -59,6 +59,5 @@ def singleton(func: Callable):
         ),
         func_impl=wrapper,
     )
-    wrapper.__wrapped__ = func
 
     return wrapper
