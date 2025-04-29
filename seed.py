@@ -1,12 +1,14 @@
 import os
 from asyncio import new_event_loop
 
-from rarbg_local.db import Roles, User, create_episode, create_movie
-from rarbg_local.new import get_session_local, get_settings
+from fastapi import FastAPI
+
+from rarbg_local.db import Roles, User, create_episode, create_movie, get_session_local
+from rarbg_local.singleton import get
 
 
 async def seed():
-    session_maker = get_session_local(await get_settings())
+    session_maker = await get(FastAPI(), get_session_local)
     with session_maker() as session:
         user = User(
             username='Mause',

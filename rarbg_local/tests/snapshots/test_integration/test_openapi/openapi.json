@@ -28,29 +28,6 @@
     }
   ],
   "paths": {
-    "/api/diagnostics/pool": {
-      "get": {
-        "summary": "Pool",
-        "operationId": "pool",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
-      }
-    },
     "/api/user/unauthorized": {
       "get": {
         "summary": "User",

@@ -1,11 +1,13 @@
 import contextvars
 from datetime import datetime
 from functools import partial
-from typing import Any, List
+from os import getpid
+from typing import Any, Callable, List, TypeVar
 from urllib.parse import urlparse
 
 import aiohttp
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
+from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 from healthcheck import (
     Healthcheck,
@@ -21,14 +23,19 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.sql import text
 
-from .settings import Settings, get_settings
+from .db import get_session_local
+from .settings import get_settings
+from .singleton import get as _get
 from .transmission_proxy import transmission
 
 router = APIRouter(tags=['diagnostics'])
-
-database_var = contextvars.ContextVar[str]('database_var')
-
+request_var = contextvars.ContextVar[Request]('request_var')
 health = Healthcheck(name='Media')
+T = TypeVar('T')
+
+
+async def get(dependent: Callable[..., T]) -> T:
+    return await _get(request_var.get().app, dependent, request_var.get())
 
 
 def add_component(decl):
@@ -53,22 +60,23 @@ class HealthcheckResponse(BaseModel):
 
 
 @router.get('/{component_name}', response_model=List[HealthcheckResponse])
-async def component_diagnostics(
-    component_name: str, settings: Settings = Depends(get_settings)
-):
+async def component_diagnostics(request: Request, component_name: str):
     component = next(
         (comp for comp in health.components if comp.name == component_name), None
     )
     if component is None:
         return JSONResponse({'error': 'Component not found'}, status_code=404)
 
-    database_var.set(settings.database_url)
+    request_var.set(request)
+
     return await component.run()
 
 
 @add_component(HealthcheckDatastoreComponent('database'))
 async def check_database():
-    url = make_url(database_var.get())
+    settings = await get(get_settings)
+
+    url = make_url(settings.database_url)
     is_sqlite = url.drivername == 'sqlite'
     if is_sqlite:
         url = url.set(drivername='sqlite+aiosqlite')
@@ -87,6 +95,28 @@ async def check_database():
                 'version': res.scalar(),
             },
         )
+
+
+@add_component(HealthcheckDatastoreComponent('pool'))
+async def pool():
+    def pget(field):
+        value = getattr(pool, field, None)
+
+        return value() if callable(value) else value
+
+    sessionlocal = await get(get_session_local)
+
+    pool = sessionlocal.kw['bind'].pool
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {
+            'worker_id': getpid(),
+            'size': pget('size'),
+            'checkedin': pget('checkedin'),
+            'overflow': pget('overflow'),
+            'checkedout': pget('checkedout'),
+        },
+    )
 
 
 @add_component(HealthcheckInternalComponent('transmission'))
