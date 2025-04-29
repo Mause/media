@@ -28,7 +28,7 @@ from .settings import get_settings
 from .singleton import get as _get
 from .transmission_proxy import transmission
 
-router = APIRouter()
+router = APIRouter(tags=['diagnostics'])
 request_var = contextvars.ContextVar[Request]('request_var')
 health = Healthcheck(name='Media')
 T = TypeVar('T')

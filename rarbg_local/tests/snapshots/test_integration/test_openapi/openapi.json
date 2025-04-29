@@ -713,6 +713,9 @@
     },
     "/api/diagnostics": {
       "get": {
+        "tags": [
+          "diagnostics"
+        ],
         "summary": "Diagnostics",
         "operationId": "diagnostics",
         "responses": {
@@ -742,6 +745,9 @@
     },
     "/api/diagnostics/{component_name}": {
       "get": {
+        "tags": [
+          "diagnostics"
+        ],
         "summary": "Component Diagnostics",
         "operationId": "component_diagnostics",
         "parameters": [

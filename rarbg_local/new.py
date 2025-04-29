@@ -323,17 +323,17 @@ async def search(query: str):
     return await search_themoviedb(query)
 
 
-monitor_ns = APIRouter()
+monitor_ns = APIRouter(tags=['monitor'])
 
 
-@monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
+@monitor_ns.get('', response_model=List[MonitorGet])
 async def monitor_get(
     user: User = Depends(get_current_user), session: Session = Depends(get_db)
 ):
     return session.query(Monitor).all()
 
 
-@monitor_ns.delete('/{monitor_id}', tags=['monitor'])
+@monitor_ns.delete('/{monitor_id}')
 async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
     safe_delete(session, Monitor, monitor_id)
 
@@ -354,7 +354,7 @@ async def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
             raise
 
 
-@monitor_ns.post('', tags=['monitor'], response_model=MonitorGet, status_code=201)
+@monitor_ns.post('', response_model=MonitorGet, status_code=201)
 async def monitor_post(
     monitor: MonitorPost,
     user: User = Depends(get_current_user),
@@ -375,16 +375,16 @@ async def monitor_post(
     return c
 
 
-tv_ns = APIRouter()
+tv_ns = APIRouter(tags=['tv'])
 
 
-@tv_ns.get('/{tmdb_id}', tags=['tv'], response_model=TvResponse)
+@tv_ns.get('/{tmdb_id}', response_model=TvResponse)
 async def api_tv(tmdb_id: int):
     tv = await get_tv(tmdb_id)
     return TvResponse(**tv.dict(), imdb_id=await get_tv_imdb_id(tmdb_id), title=tv.name)
 
 
-@tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)
+@tv_ns.get('/{tmdb_id}/season/{season}', response_model=TvSeasonResponse)
 async def api_tv_season(tmdb_id: int, season: int):
     return await get_tv_episodes(tmdb_id, season)
 
