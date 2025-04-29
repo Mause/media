@@ -4,8 +4,10 @@ Revision ID: baseline
 Create Date: 2025-05-25
 
 """
-from alembic import op
+
 import sqlalchemy as sa
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "baseline"
@@ -16,13 +18,9 @@ depends_on = None
 
 def upgrade():
     conn = op.get_bind()
-    conn.execute(
-        sa.text("CREATE COLLATION \"en_AU\" (LOCALE = 'en_AU.utf8')")
-    )
+    conn.execute(sa.text("CREATE COLLATION \"en_AU\" (LOCALE = 'en_AU.utf8')"))
 
 
 def downgrade():
     conn = op.get_bind()
-    conn.execute(
-        sa.text("DROP COLLATION IF EXISTS \"en_AU\"")
-    )
+    conn.execute(sa.text("DROP COLLATION IF EXISTS \"en_AU\""))
