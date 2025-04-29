@@ -52,7 +52,11 @@ def add_torrent():
 
 @patch('rarbg_local.health.transmission')
 @mark.asyncio
-async def test_diagnostics(transmission, test_client, user, aioresponses, snapshot):
+async def test_diagnostics(
+    transmission, test_client, user, aioresponses, snapshot, monkeypatch
+):
+    monkeypatch.setattr('rarbg_local.health.getpid', lambda: 1)
+
     aioresponses.add('https://horriblesubs.info', 'HEAD')
     aioresponses.add('https://torrentapi.org', 'HEAD')
     aioresponses.add('https://katcr.co', 'HEAD')
@@ -572,16 +576,6 @@ async def test_plex_redirect(test_client, responses):
     assert (
         r.headers['Location']
         == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2Faaa'
-    )
-
-
-@mark.asyncio
-async def test_pool_status(test_client, snapshot, monkeypatch):
-    monkeypatch.setattr('rarbg_local.health.getpid', lambda: 1)
-    assert_match_json(
-        snapshot,
-        await test_client.get('/api/diagnostics/pool'),
-        'pool.json',
     )
 
 
