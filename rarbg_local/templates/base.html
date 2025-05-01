@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>{% block title %} {{ self.header() }} {% endblock %}</title>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/typebase.css/0.5.0/typebase.min.css"
-            integrity="sha256-HJn1xZ1bSmXnkRaVhe7ESScylkr3kWn8usJmi6dxCsc="
-            crossorigin="anonymous"
-        />
-        <link
-            rel="stylesheet"
-            href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-            integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
-            crossorigin="anonymous"
-        />
-        <meta name="viewport" content="width=device-width" />
-        <style>
-            body {
-                margin: 0 5%;
-            }
-            @media only screen and (min-width: 800px) {
-                .colA {
-                    width: 45%;
-                    float: left;
-                    margin-right: 5%;
-                }
-                .colB {
-                    width: 45%;
-                    float: left;
-                }
-            }
-        </style>
-    </head>
+  <head>
+    <title>{% block title %} {{ self.header() }} {% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/typebase.css/0.5.1/typebase.min.css"
+      integrity="sha512-gnicKyFcw5IUgNbZDIxoyitMn3FDNTvjBb5EKBkAy00jtflgcONWBr0u4F2w94q1c6Bxx+3AKeupC/HpcX7RGg=="
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+      integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+      crossorigin="anonymous"
+    />
+    <meta name="viewport" content="width=device-width" />
+    <style>
+      body {
+        margin: 0 5%;
+      }
+      @media only screen and (min-width: 800px) {
+        .colA {
+          width: 45%;
+          float: left;
+          margin-right: 5%;
+        }
+        .colB {
+          width: 45%;
+          float: left;
+        }
+      }
+    </style>
+  </head>
 
-    <body>
-        <h3>{% block header %}{% endblock %}</h3>
+  <body>
+    <h3>{% block header %}{% endblock %}</h3>
 
-        <nav>
-            <a href="{{ url_for('.serve_index') }}">Home</a>
-            {% block nav %}{% endblock %}
-        </nav>
+    <nav>
+      <a href="{{ url_for('.serve_index') }}">Home</a>
+      {% block nav %}{% endblock %}
+    </nav>
 
-        <br/>
+    <br />
 
-        {% block content %}{% endblock %}
-    </body>
+    {% block content %}{% endblock %}
+  </body>
 </html>

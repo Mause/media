@@ -28,10 +28,8 @@ class ES {
 Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
-  pending();
-
-  it('failure', async () => {
-    let el: RenderResult;
+  it.skip('failure', async () => {
+    let el: RenderResult | undefined;
 
     await act(async () => {
       el = renderWithSWR(
@@ -49,7 +47,7 @@ describe('OptionsComponent', () => {
 
     expect(el).toBeTruthy();
 
-    expect(el.container).toMatchSnapshot();
+    expect(el!.container).toMatchSnapshot();
 
     await act(async () => {
       for (const source of sources) {
@@ -58,7 +56,7 @@ describe('OptionsComponent', () => {
     });
 
     expect(
-      (await el.findAllByTestId('errorMessage')).map((t) => t.textContent),
+      (await el!.findAllByTestId('errorMessage')).map((t) => t.textContent),
     ).toEqual(
       expect.arrayContaining([
         'Error occured whilst loading options from rarbg: [object Event]',
@@ -67,10 +65,10 @@ describe('OptionsComponent', () => {
       ]),
     );
 
-    expect(el.container).toMatchSnapshot();
+    expect(el!.container).toMatchSnapshot();
   });
-  it('success', async () => {
-    let el;
+  it.skip('success', async () => {
+    let el: RenderResult | undefined;
     await act(async () => {
       el = renderWithSWR(
         <MemoryRouter initialEntries={['/select/1/options']}>
@@ -82,10 +80,10 @@ describe('OptionsComponent', () => {
       mock('movie/1', { title: 'Hello World' });
     });
 
-    expect(el.container).toMatchSnapshot();
+    expect(el!.container).toMatchSnapshot();
 
     const torrent: ITorrent = {
-      source: 'RARBG',
+      source: 'rarbg',
       title: 'title',
       seeders: 5,
       download: 'magnet:...',
@@ -109,7 +107,7 @@ describe('OptionsComponent', () => {
       }
     });
 
-    expect(el.container).toMatchSnapshot();
+    expect(el!.container).toMatchSnapshot();
 
     await act(async () => {
       for (const source of sources) {
@@ -117,6 +115,6 @@ describe('OptionsComponent', () => {
       }
     });
 
-    expect(el.container).toMatchSnapshot();
+    expect(el!.container).toMatchSnapshot();
   });
 });

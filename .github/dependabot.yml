@@ -1,12 +1,16 @@
 version: 2
 updates:
-  # Keep package.json (& lockfiles) up to date as soon as
-  # new versions are published to the npm registry
-  - package-ecosystem: "npm"
+  - package-ecosystem: npm
     directory: "/app"
     schedule:
-      interval: "daily"
-  - package-ecosystem: "pip"
+      interval: daily
+      time: "07:00"
+      timezone: Australia/Perth
+    open-pull-requests-limit: 10
+  - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: daily
+      time: "07:00"
+      timezone: Australia/Perth
+    open-pull-requests-limit: 10

@@ -4,7 +4,6 @@ import moxios from 'moxios';
 import {
   MonitorComponent,
   Monitor,
-  MediaType,
   MonitorAddComponent,
 } from './MonitorComponent';
 import React from 'react';
@@ -28,8 +27,9 @@ describe('MonitorComponent', () => {
         {
           id: 1,
           title: 'Hello World',
-          tmdb_id: '5',
+          tmdb_id: 5,
           type: 'MOVIE',
+          added_by: 'me',
         },
       ];
       await mock('monitor', res);

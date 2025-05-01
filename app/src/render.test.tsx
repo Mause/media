@@ -26,8 +26,12 @@ test('Movies', () => {
     {
       id: 1,
       download: {
+        type: '',
+        tmdb_id: 0,
+        timestamp: '',
         title: 'Hello',
         added_by: {
+          username: 'david',
           first_name: 'David',
         },
         id: 1,
@@ -46,7 +50,7 @@ test('TVShows', async () => {
   await act(async () => {
     const series: SeriesResponse[] = [
       {
-        tmdb_id: '1',
+        tmdb_id: 1,
         imdb_id: '',
         title: 'Title',
         seasons: {
@@ -80,6 +84,8 @@ describe('Progress', () => {
       eta: -1,
       percentDone: 1,
       files: [],
+      hashString: '',
+      id: 0,
     });
     el.rerender(fn());
     expect(el.container).toMatchSnapshot();
@@ -106,6 +112,8 @@ describe('Progress', () => {
     expect(el.container).toMatchSnapshot();
 
     const torrent = (torrents['GUID'] = {
+      id: 0,
+      hashString: '',
       eta: -1,
       files: [] as TorrentFile[],
       percentDone: 0.5,
@@ -127,7 +135,7 @@ describe('NextEpisodeAirs', () => {
   it('works', async () => {
     await act(async () => {
       MockDate.set('2020-04-20');
-      const tmdb_id = '10000';
+      const tmdb_id = 10000;
       const season = '1';
       const el = renderWithSWR(
         <MemoryRouter>
@@ -135,7 +143,8 @@ describe('NextEpisodeAirs', () => {
             season={season}
             tmdb_id={tmdb_id}
             season_episodes={[{ episode: 1 }]}
-          />,
+          />
+          ,
         </MemoryRouter>,
       );
 
@@ -165,7 +174,19 @@ describe('shouldCollapse', () => {
     title: '',
   };
   const episode: EpisodeResponse = {
-    download: { id: 1, title: '', imdb_id: '', transmission_id: '' },
+    download: {
+      id: 1,
+      title: '',
+      imdb_id: '',
+      transmission_id: '',
+      timestamp: '2022-01-01',
+      tmdb_id: 0,
+      type: '',
+      added_by: {
+        username: 'david',
+        first_name: 'David',
+      },
+    },
     id: 1,
     episode: 1,
     season: 1,
@@ -180,7 +201,7 @@ describe('shouldCollapse', () => {
     expect(shouldCollapse('1', tv, [])).toBe(false);
   });
 
-  it('true', () => {
+  it('true 2', () => {
     expect(shouldCollapse('1', tv, [episode, episode])).toBe(true);
   });
 });

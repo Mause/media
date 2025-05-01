@@ -29,18 +29,19 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import { Websocket } from './Websocket';
-import { Integrations as ApmIntegrations } from '@sentry/apm';
+import { Integrations as TracingIntegrations } from '@sentry/tracing';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link as MaterialLink } from '@material-ui/core';
 import { components } from './schema';
+import { DiagnosticsComponent } from './DiagnosticsComponent';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
     release: process.env.HEROKU_SLUG_COMMIT,
     environment: 'development',
-    integrations: [new ApmIntegrations.Tracing()],
+    integrations: [new TracingIntegrations.BrowserTracing()],
     tracesSampleRate: 0.75, // must be present and non-zero
   });
   Sentry.configureScope((scope) => {
@@ -48,6 +49,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+export type TorrentFile = components['schemas']['InnerTorrentFile'];
 export type Torrents = { [key: string]: components['schemas']['InnerTorrent'] };
 export type IndexResponse = components['schemas']['IndexResponse'];
 export type MovieResponse = components['schemas']['MovieDetailsSchema'];
@@ -65,11 +67,11 @@ function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
   );
 }
 
-function reportError(error: Error, componentStack: string) {
+function reportError(error: Error, info: { componentStack: string }) {
   Sentry.withScope((scope) => {
-    scope.setExtras({ stack: componentStack });
+    scope.setExtras(info);
     const eventId = Sentry.captureException(error);
-    Sentry.showReportDialog({ eventId: eventId });
+    Sentry.showReportDialog({ eventId });
   });
 }
 
@@ -187,9 +189,9 @@ function SwrConfigWrapper({
             params,
             auth.isAuthenticated
               ? {
-                Authorization:
-                  'Bearer ' + (await auth.getAccessTokenSilently()),
-              }
+                  Authorization:
+                    'Bearer ' + (await auth.getAccessTokenSilently()),
+                }
               : {},
           ),
       }}
@@ -249,6 +251,9 @@ function Routes() {
       </RouteWithTitle>
       <RouteWithTitle path="/stats" title="Stats">
         <StatsComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/diagnostics" title="Diagnostics">
+        <DiagnosticsComponent />
       </RouteWithTitle>
       <RouteWithTitle path="/monitor/delete/:id" title="Monitor">
         <MonitorDeleteComponent />

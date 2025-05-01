@@ -2,13 +2,9 @@ import logging
 import os
 import traceback
 from functools import wraps
-from os import getpid
-from pathlib import Path
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
-import backoff
-import psycopg2
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
@@ -22,10 +18,9 @@ from fastapi_utils.openapi import simplify_operation_ids
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
-from pydantic import BaseModel, BaseSettings, SecretStr
+from pydantic import BaseModel
 from requests.exceptions import HTTPError
-from sqlalchemy import create_engine, event, func
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import func
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
 
@@ -37,9 +32,10 @@ from .db import (
     MonitorMediaType,
     MovieDetails,
     User,
+    get_db,
     get_movies,
 )
-from .health import health
+from .health import router as health
 from .main import (
     add_single,
     extract_marker,
@@ -65,7 +61,15 @@ from .models import (
     TvResponse,
     TvSeasonResponse,
 )
-from .providers import PROVIDERS, ProviderSource, search_for_movie, search_for_tv
+from .providers import (
+    PROVIDERS,
+    MovieProvider,
+    ProviderSource,
+    TvProvider,
+    search_for_movie,
+    search_for_tv,
+)
+from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import (
     get_json,
@@ -79,10 +83,11 @@ from .tmdb import (
 from .utils import non_null, precondition
 
 api = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 def generate_plain_text(exc):
-    logging.exception('Error occured', exc_info=exc)
+    logger.exception('Error occured', exc_info=exc)
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
@@ -96,81 +101,6 @@ class XOpenIdConnect(OpenIdConnect):
 openid_connect = XOpenIdConnect(
     openIdConnectUrl='https://mause.au.auth0.com/.well-known/openid-configuration'
 )
-
-
-class Settings(BaseSettings):
-    root = Path(__file__).parent.parent.absolute()
-    database_url = f"sqlite:///{root}/db.db"
-    static_resources_path = root / 'app/build'
-    plex_username: Optional[str] = None
-    plex_password: Optional[SecretStr] = None
-
-
-@singleton
-async def get_settings():
-    return Settings()
-
-
-@singleton
-def get_session_local(settings: Settings = Depends(get_settings)):
-    db_url = settings.database_url
-    logging.info('db_url: %s', db_url)
-
-    sqlite = 'sqlite' in db_url
-
-    ca = {"check_same_thread": False} if sqlite else {}
-    engine_args = (
-        {} if sqlite else {'max_overflow': 10, 'pool_size': 5, 'pool_recycle': 300}
-    )
-    engine = create_engine(db_url, connect_args=ca, **engine_args, echo_pool='debug')
-
-    if sqlite:
-
-        @event.listens_for(engine, 'connect')
-        def _fk_pragma_on_connect(dbapi_con, con_record):
-            dbapi_con.create_collation(
-                "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
-            )
-            dbapi_con.execute('pragma foreign_keys=ON')
-
-    else:
-
-        @event.listens_for(engine, "do_connect")
-        @backoff.on_exception(
-            backoff.fibo,
-            psycopg2.OperationalError,
-            max_tries=5,
-            giveup=lambda e: "too many connections for role" not in e.args[0],
-        )
-        def receive_do_connect(dialect, conn_rec, cargs, cparams):
-            return psycopg2.connect(*cargs, **cparams)
-
-    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
-
-
-@api.get('/diagnostics/pool')
-def pool(sessionlocal=Depends(get_session_local)):
-    def get(field):
-        value = getattr(pool, field, None)
-
-        return value() if callable(value) else value
-
-    pool = sessionlocal.kw['bind'].pool
-    return {
-        'worker_id': getpid(),
-        'size': get('size'),
-        'checkedin': get('checkedin'),
-        'overflow': get('overflow'),
-        'checkedout': get('checkedout'),
-    }
-
-
-def get_db(session_local=Depends(get_session_local)):
-    sl = session_local()
-    try:
-        yield sl
-    finally:
-        sl.close()
 
 
 async def get_current_user(
@@ -217,7 +147,10 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
                 yield f'data: {rset.json()}\n\n'
             yield 'data:\n\n'
 
-        return StreamingResponse(internal(), media_type="text/event-stream",)
+        return StreamingResponse(
+            internal(),
+            media_type="text/event-stream",
+        )
 
     return decorator
 
@@ -232,23 +165,30 @@ async def stream(
     type: str,
     tmdb_id: str,
     source: ProviderSource,
-    season: int = None,
-    episode: int = None,
+    season: Optional[int] = None,
+    episode: Optional[int] = None,
 ) -> AsyncGenerator[BaseModel, None]:
     provider = next(
-        (provider for provider in PROVIDERS if provider.name == source.value), None,
+        (provider for provider in PROVIDERS if provider.name == source.value),
+        None,
     )
     if not provider:
         raise HTTPException(422, 'Invalid provider')
 
     if type == 'series':
-        for item in provider.search_for_tv(
-            get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
+        if not isinstance(provider, TvProvider):
+            return
+
+        async for item in provider.search_for_tv(
+            await get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
         ):
             yield item
     else:
+        if not isinstance(provider, MovieProvider):
+            return
+
         async for item in provider.search_for_movie(
-            get_movie_imdb_id(tmdb_id), int(tmdb_id)
+            await get_movie_imdb_id(tmdb_id), int(tmdb_id)
         ):
             yield item
 
@@ -257,10 +197,9 @@ async def stream(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: int, season: int):
+    results = search_for_tv(await get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
 
-    results = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
-
-    episodes = get_tv_episodes(tmdb_id, season).episodes
+    episodes = (await get_tv_episodes(tmdb_id, season)).episodes
 
     packs_or_not = groupby(
         results, lambda result: extract_marker(result.title)[1] is None
@@ -283,11 +222,6 @@ async def select(tmdb_id: int, season: int):
     )
 
 
-@api.get('/diagnostics')
-def diagnostics():
-    return health.run()[0]
-
-
 @api.post(
     '/download', response_model=List[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
 )
@@ -296,7 +230,6 @@ async def download_post(
     added_by: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
-
     results: List[Union[MovieDetails, EpisodeDetails]] = []
 
     for thing in things:
@@ -304,11 +237,11 @@ async def download_post(
 
         show_title: Optional[str]
         if is_tv:
-            item = get_tv(thing.tmdb_id)
+            item = await get_tv(thing.tmdb_id)
             if thing.episode is None:
                 title = f'Season {thing.season}'
             else:
-                episodes = get_tv_episodes(thing.tmdb_id, thing.season).episodes
+                episodes = (await get_tv_episodes(thing.tmdb_id, thing.season)).episodes
                 episode = next(
                     (
                         episode
@@ -332,9 +265,9 @@ async def download_post(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
-                    get_tv_imdb_id(str(thing.tmdb_id))
+                    await get_tv_imdb_id(str(thing.tmdb_id))
                     if is_tv
-                    else get_movie_imdb_id(str(thing.tmdb_id))
+                    else await get_movie_imdb_id(str(thing.tmdb_id))
                 )
                 or '',
                 subpath=subpath,
@@ -356,13 +289,13 @@ async def download_post(
 
 @api.get('/index', response_model=IndexResponse)
 async def index(session: Session = Depends(get_db)):
-
-    return IndexResponse(series=resolve_series(session), movies=get_movies(session))
+    return IndexResponse(
+        series=await resolve_series(session), movies=get_movies(session)
+    )
 
 
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
-
     keys = Download.added_by_id, Download.type
     query = session.query(*keys, func.count(name='count')).group_by(*keys)
 
@@ -382,7 +315,6 @@ async def movie(tmdb_id: int):
 
 @api.get('/torrents', response_model=Dict[str, InnerTorrent])
 async def torrents():
-
     return get_keyed_torrents()
 
 
@@ -391,17 +323,17 @@ async def search(query: str):
     return await search_themoviedb(query)
 
 
-monitor_ns = APIRouter()
+monitor_ns = APIRouter(tags=['monitor'])
 
 
-@monitor_ns.get('', tags=['monitor'], response_model=List[MonitorGet])
+@monitor_ns.get('', response_model=List[MonitorGet])
 async def monitor_get(
     user: User = Depends(get_current_user), session: Session = Depends(get_db)
 ):
     return session.query(Monitor).all()
 
 
-@monitor_ns.delete('/{monitor_id}', tags=['monitor'])
+@monitor_ns.delete('/{monitor_id}')
 async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
     safe_delete(session, Monitor, monitor_id)
 
@@ -413,7 +345,7 @@ async def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
         return (
             (await get_movie(tmdb_id)).title
             if type == MonitorMediaType.MOVIE
-            else get_tv(tmdb_id).name
+            else (await get_tv(tmdb_id)).name
         )
     except HTTPError as e:
         if e.response.status_code == 404:
@@ -422,7 +354,7 @@ async def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
             raise
 
 
-@monitor_ns.post('', tags=['monitor'], response_model=MonitorGet, status_code=201)
+@monitor_ns.post('', response_model=MonitorGet, status_code=201)
 async def monitor_post(
     monitor: MonitorPost,
     user: User = Depends(get_current_user),
@@ -443,25 +375,27 @@ async def monitor_post(
     return c
 
 
-tv_ns = APIRouter()
+tv_ns = APIRouter(tags=['tv'])
 
 
-@tv_ns.get('/{tmdb_id}', tags=['tv'], response_model=TvResponse)
-def api_tv(tmdb_id: int):
-    tv = get_tv(tmdb_id)
-    return TvResponse(**tv.dict(), imdb_id=get_tv_imdb_id(tmdb_id), title=tv.name)
+@tv_ns.get('/{tmdb_id}', response_model=TvResponse)
+async def api_tv(tmdb_id: int):
+    tv = await get_tv(tmdb_id)
+    return TvResponse(**tv.dict(), imdb_id=await get_tv_imdb_id(tmdb_id), title=tv.name)
 
 
-@tv_ns.get('/{tmdb_id}/season/{season}', tags=['tv'], response_model=TvSeasonResponse)
-def api_tv_season(tmdb_id: int, season: int):
-    return get_tv_episodes(tmdb_id, season)
+@tv_ns.get('/{tmdb_id}/season/{season}', response_model=TvSeasonResponse)
+async def api_tv_season(tmdb_id: int, season: int):
+    return await get_tv_episodes(tmdb_id, season)
 
 
-def _stream(type: str, tmdb_id: str, season=None, episode=None):
+async def _stream(type: str, tmdb_id: str, season=None, episode=None):
     if type == 'series':
-        items = search_for_tv(get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode)
+        items = search_for_tv(
+            await get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode
+        )
     else:
-        items = search_for_movie(get_movie_imdb_id(tmdb_id), int(tmdb_id))
+        items = search_for_movie(await get_movie_imdb_id(tmdb_id), int(tmdb_id))
 
     return (item.dict() for item in items)
 
@@ -472,7 +406,7 @@ async def websocket_stream(websocket: WebSocket):
 
     request = await websocket.receive_json()
 
-    for item in _stream(**request):
+    for item in await _stream(**request):
         await websocket.send_json(item)
 
 
@@ -486,7 +420,7 @@ def get_static_files(settings: Settings = Depends(get_settings)):
 
 @singleton
 def get_plex(settings=Depends(get_settings)) -> PlexServer:
-    acct = MyPlexAccount(settings.plex_username, settings.plex_password)
+    acct = MyPlexAccount(token=settings.plex_token.get_secret_value())
     novell = acct.resource('Novell')
     novell.connections = [c for c in novell.connections if not c.local]
     return novell.connect(ssl=True)
@@ -514,17 +448,22 @@ def redirect_to_plex(tmdb_id: str, plex=Depends(get_plex)):
 
 @root.get('/redirect/{type_}/{tmdb_id}')
 @root.get('/redirect/{type_}/{tmdb_id}/{season}/{episode}')
-def redirect_to_imdb(
-    type_: MediaType, tmdb_id: int, season: int = None, episode: int = None
+async def redirect_to_imdb(
+    type_: MediaType,
+    tmdb_id: int,
+    season: Optional[int] = None,
+    episode: Optional[int] = None,
 ):
     if type_ == 'movie':
-        imdb_id = get_movie_imdb_id(tmdb_id)
+        imdb_id = await get_movie_imdb_id(tmdb_id)
     elif season:
-        imdb_id = get_json(
-            f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
+        imdb_id = (
+            await get_json(
+                f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
+            )
         )['imdb_id']
     else:
-        imdb_id = get_tv_imdb_id(tmdb_id)
+        imdb_id = await get_tv_imdb_id(tmdb_id)
 
     return RedirectResponse(f'https://www.imdb.com/title/{imdb_id}')
 
@@ -543,6 +482,7 @@ async def static(
 
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
+api.include_router(health, prefix='/diagnostics')
 
 
 def create_app():

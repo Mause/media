@@ -1,11 +1,11 @@
-exclude: .*\.snap
+exclude: .*\.snap|\.pnp\.js|.*snapshots.*|tsconfig.js
 repos:
-  - repo: https://github.com/prettier/prettier
-    rev: 2.0.5
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.2.1
     hooks:
       - id: prettier
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.1.0
+    rev: v5.0.0
     hooks:
       - id: check-yaml
       - id: check-json
@@ -15,36 +15,11 @@ repos:
       - id: check-toml
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/timothycrosley/isort
-    rev: 5.4.2
-    hooks:
-      - id: isort
-        args:
-          - --float-to-top
-  - repo: https://github.com/humitos/mirrors-autoflake
-    rev: v1.3
-    hooks:
-      - id: autoflake
-        args:
-          - --in-place
-          - --remove-all-unused-imports
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v2.7.0
-    hooks:
-      - id: pyupgrade
-        args:
-          - --py3-plus
-  - repo: https://github.com/psf/black
-    rev: b59a524
-    hooks:
-      - id: black
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v7.0.0
+    rev: v9.23.0
     hooks:
       - id: eslint
         args:
-          - --config
-          - .eslintrc
           - --ext
           - .js,.jsx,.ts,.tsx
         files: ".*(\\.js|\\.jsx|\\.ts|\\.tsx)$"
@@ -52,29 +27,36 @@ repos:
         types:
           - file
         additional_dependencies:
-          - eslint@6.8.0
-          - "eslint-config-react-app@5.2.1"
-          - babel-eslint@10.1.0
-          - eslint-plugin-flowtype@5.0.3
-          - eslint-plugin-import@2.20.2
-          - eslint-plugin-jsx-a11y@6.2.3
-          - eslint-plugin-react@7.20.0
-          - eslint-plugin-react-hooks@4.0.2
-          - "typescript@3.8.3"
-          - "@typescript-eslint/eslint-plugin@2.23.0"
-          - "@typescript-eslint/parser@2.23.0"
+          - eslint@7.12.1
+          - "eslint-config-react-app@*"
+          - babel-eslint@*
+          - eslint-plugin-flowtype@*
+          - eslint-plugin-import@*
+          - eslint-plugin-jsx-a11y@*
+          - eslint-plugin-react@*
+          - eslint-plugin-react-hooks@*
+          - typescript@*
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.782
+    rev: v1.15.0
     hooks:
      - id: mypy
        additional_dependencies:
-          - sqlalchemy-stubs==0.3
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: ''  # pick a git hash / tag to point to
+          - sqlalchemy[mypy]==1.4.54
+          - sqlalchemy2-stubs
+          - types-requests
+          - types-tabulate
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.11.7
     hooks:
-    - id: flake8
-      additional_dependencies:
-        - flake8-aaa
-      args:
-        - --jobs=1
-        - --extend-ignore=W503,E203
+      # Run the linter.
+      - id: ruff
+        args: [ --fix ]
+      # Run the formatter.
+      - id: ruff-format
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # uv version.
+    rev: 0.6.17
+    hooks:
+      - id: uv-lock

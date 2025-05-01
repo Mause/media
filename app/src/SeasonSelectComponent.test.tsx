@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import {
@@ -24,7 +24,12 @@ test('SeasonSelectComponent  render', async () => {
     await mock<TV>('/api/tv/1', {
       title: 'Hello',
       number_of_seasons: 1,
-      seasons: [{ episode_count: 1 }],
+      seasons: [
+        {
+          season_number: 1,
+          episode_count: 1,
+        },
+      ],
     });
     await wait();
 
@@ -47,7 +52,7 @@ test('EpisodeSelectComponent render', async () => {
       episodes: [
         {
           episode_number: 1,
-          id: '1',
+          id: 1,
           name: 'Episode 1',
         },
       ],
