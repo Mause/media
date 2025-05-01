@@ -245,13 +245,10 @@ class PirateBayProvider(Provider):
     async def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
     ) -> AsyncGenerator[ITorrent, None]:
-        search_string = f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
-
         async with (
             aiohttp.ClientSession() as session,
             await session.get(
-                self.root + '/q.php',
-                params={'q': [imdb_id]},  # , search_string]}
+                self.root + '/q.php', params={'q': imdb_id + ' ' + format(season, episode)}
             ) as resp,
         ):
             data = await resp.json()
