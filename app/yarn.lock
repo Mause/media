@@ -1780,6 +1780,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.23.9":
+  version: 7.27.1
+  resolution: "@babel/runtime@npm:7.27.1"
+  checksum: 10/34cefcbf781ea5a4f1b93f8563327b9ac82694bebdae91e8bd9d7f58d084cbe5b9a6e7f94d77076e15b0bcdaa0040a36cb30737584028df6c4673b4c67b2a31d
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.10.4, @babel/template@npm:^7.3.3":
   version: 7.10.4
   resolution: "@babel/template@npm:7.10.4"
@@ -2580,23 +2587,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/icons@npm:^4.11.2":
-  version: 4.11.2
-  resolution: "@material-ui/icons@npm:4.11.2"
-  dependencies:
-    "@babel/runtime": "npm:^7.4.4"
-  peerDependencies:
-    "@material-ui/core": ^4.0.0
-    "@types/react": ^16.8.6 || ^17.0.0
-    react: ^16.8.0 || ^17.0.0
-    react-dom: ^16.8.0 || ^17.0.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10/3ccd283aecf3e409a5c1af4ae13df22a9afd954caecda1cd39ed89cc49d9942b846a353fc1ed53d0d382717ef9eb8c927e9d9738b9994f74dd62ac9e5f674c91
-  languageName: node
-  linkType: hard
-
 "@material-ui/lab@npm:^4.0.0-alpha.56":
   version: 4.0.0-alpha.56
   resolution: "@material-ui/lab@npm:4.0.0-alpha.56"
@@ -2705,6 +2695,22 @@ __metadata:
     react: ^16.8.0 || ^17.0.0
     react-dom: ^16.8.0 || ^17.0.0
   checksum: 10/65e4ef69370ac91fef9a87a2533c694f8c0a487504abe409037efb87b9c14ee4100e0291f67b73af93f404048ea4dd2bbe967bd74e94b7a17666eacba6d2718a
+  languageName: node
+  linkType: hard
+
+"@mui/icons-material@npm:^5.0.0":
+  version: 5.17.1
+  resolution: "@mui/icons-material@npm:5.17.1"
+  dependencies:
+    "@babel/runtime": "npm:^7.23.9"
+  peerDependencies:
+    "@mui/material": ^5.0.0
+    "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10/5a076981e244d0a698799c8c298402e008b36583ab2211bebad57e9b7b26e112be81272ce5a833f7d9b48f95880d2c2195eccb28e7964d1698d0e891cf1acd99
   languageName: node
   linkType: hard
 
@@ -4531,8 +4537,8 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": "npm:^5.14.0"
     "@fortawesome/react-fontawesome": "npm:^0.2.0"
     "@material-ui/core": "npm:^4.11.2"
-    "@material-ui/icons": "npm:^4.11.2"
     "@material-ui/lab": "npm:^4.0.0-alpha.56"
+    "@mui/icons-material": "npm:^5.0.0"
     "@sentry/react": "npm:^5.29.2"
     "@sentry/tracing": "npm:^5.29.2"
     "@testing-library/jest-dom": "npm:^5.11.9"
