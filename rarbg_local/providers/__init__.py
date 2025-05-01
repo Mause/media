@@ -238,7 +238,7 @@ class NyaaProvider(TvProvider):
                 )
 
 
-class PirateBayProvider(Provider):
+class PirateBayProvider(TvProvider, MovieProvider):
     name = 'piratebay'
     root = 'https://apibay.org'
 
