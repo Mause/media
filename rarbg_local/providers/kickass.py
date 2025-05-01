@@ -6,7 +6,9 @@ from typing import Any, AsyncGenerator, Dict, Optional
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 
-from .tmdb import get_movie, get_tv
+from ..tmdb import get_movie, get_tv
+
+logger = logging.getLogger(__name__)
 
 
 async def fetch(url: str) -> AsyncGenerator[Dict[str, Any], None]:
@@ -14,7 +16,7 @@ async def fetch(url: str) -> AsyncGenerator[Dict[str, Any], None]:
         try:
             r = await session.get(url)
         except ConnectionError:
-            logging.exception('Failed to reach kickass')
+            logger.exception('Failed to reach kickass')
             return
 
         soup = BeautifulSoup(await r.read(), "lxml")

@@ -10,13 +10,14 @@ import aiohttp
 from fastapi.concurrency import run_in_threadpool
 from NyaaPy import nyaa
 
+from ..models import EpisodeInfo, ITorrent, ProviderSource
+from ..tmdb import get_tv
 from . import horriblesubs, kickass
-from .models import EpisodeInfo, ITorrent, ProviderSource
 from .rarbg import get_rarbg_iter
-from .tmdb import get_tv
 
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]
+logger = logging.getLogger(__name__)
 
 
 def tv_convert(key):
@@ -283,7 +284,7 @@ async def search_for_tv(
             ):
                 yield result
         except Exception:
-            logging.exception('Unable to load [TV] from %s', provider.name)
+            logger.exception('Unable to load [TV] from %s', provider.name)
 
 
 async def search_for_movie(imdb_id: str, tmdb_id: int):
@@ -294,7 +295,7 @@ async def search_for_movie(imdb_id: str, tmdb_id: int):
             async for result in provider.search_for_movie(imdb_id, tmdb_id):
                 yield result
         except Exception:
-            logging.exception('Unable to load [MOVIE] from %s', provider.name)
+            logger.exception('Unable to load [MOVIE] from %s', provider.name)
 
 
 async def main():

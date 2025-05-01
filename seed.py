@@ -1,18 +1,33 @@
+import asyncio
 import os
-from asyncio import new_event_loop
 
-from rarbg_local.db import Roles, User, create_episode, create_movie
-from rarbg_local.new import get_session_local, get_settings
+from fastapi import FastAPI
+
+from rarbg_local.db import (
+    Role,
+    User,
+    create_episode,
+    create_movie,
+    get_or_create,
+    get_session_local,
+)
+from rarbg_local.singleton import get
 
 
 async def seed():
-    session_maker = get_session_local(await get_settings())
+    session_maker = await get(FastAPI(), get_session_local)
+
     with session_maker() as session:
-        user = User(
-            username='Mause',
-            roles=[Roles.Admin, Roles.Member],
-        )
-        session.add(user)
+        user = session.query(User).filter_by(username='Mause').first()
+        if not user:
+            user = User(
+                username='Mause',
+                roles=[
+                    get_or_create(session, Role, name='Admin'),
+                    get_or_create(session, Role, name='Member'),
+                ],
+            )
+            session.add(user)
 
         session.add(
             create_movie(
@@ -44,6 +59,6 @@ if 'IS_REVIEW_APP' in os.environ or (
     and os.environ['RAILWAY_ENVIRONMENT_NAME'].startswith('media-pr-')
 ):
     print('seeding db')
-    new_event_loop().run_until_complete(seed())
+    asyncio.run(seed())
 else:
     print('not seeding db')

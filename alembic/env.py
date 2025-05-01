@@ -7,7 +7,10 @@ import os
 import sys
 from logging.config import fileConfig
 from pathlib import Path
+from urllib.parse import urlparse, urlunparse
 
+import dns.rdatatype
+import dns.resolver
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
@@ -20,10 +23,10 @@ config = context.config
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
 
-sys.path.insert(0, '.')
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 db = __import__('rarbg_local.db').db
 
-if 'HEROKU' in os.environ:
+if 'HEROKU' in os.environ or 'RAILWAY_SERVICE_ID' in os.environ:
     url = os.environ['DATABASE_URL'].replace('postgres://', 'postgresql://')
 else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
@@ -56,6 +59,7 @@ def run_migrations_offline():
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         dialect_name='postgresql',
+        transaction_per_migration=True,
     )
 
     with context.begin_transaction():
@@ -69,12 +73,37 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
+
+    parsed = urlparse(url)
+    print(parsed)
+    domain = parsed.hostname
+    results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
+    print('AAAA', results)
+    print(results[0].to_text())
+    alembic_config['sqlalchemy.url'] = urlunparse(
+        parsed._replace(
+            netloc='{}:{}@[{}]:{}'.format(
+                parsed.username, parsed.password, results[0].address, parsed.port
+            )
+        )
+    )
+
     connectable = engine_from_config(
-        alembic_config, prefix='sqlalchemy.', poolclass=pool.NullPool
+        alembic_config,
+        prefix='sqlalchemy.',
+        poolclass=pool.NullPool,
+        connect_args={
+            #            'connection_factory': LoggingConnection,
+            'connect_timeout': 10000,
+        },
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            transaction_per_migration=True,
+        )
 
         with context.begin_transaction():
             context.run_migrations()
