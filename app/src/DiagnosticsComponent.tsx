@@ -1,8 +1,24 @@
 import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 import { components } from './schema';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 type HealthcheckResponse = components['schemas']['HealthcheckResponse'];
+
+
+function getColour(status?: HealthcheckResponse['status']) {
+	switch (status) {
+		case 'pass':
+			return 'green';
+		case 'warn':
+			return 'yellow';
+		case 'fail':
+			return 'red';
+		default:
+			return 'grey';
+	}
+}
 
 function SingleDiagnostic({ component }: { component: string }) {
   const { error, data, isValidating } = useSWR<HealthcheckResponse>(
@@ -11,12 +27,16 @@ function SingleDiagnostic({ component }: { component: string }) {
 
   return (
     <li>
+    <FontAwesomeIcon
+                  icon={faCircle}
+                  className={ getColour(data?.status) }
+                />
       <pre>{component}: </pre>
 
       {isValidating && <ReactLoading type="balls" color="#000" />}
 
       <pre>
-        <code>{JSON.stringify({ data, error }, null, 2)}</code>
+        <code>{JSON.stringify(error ?? data, null, 2)}</code>
       </pre>
     </li>
   );
