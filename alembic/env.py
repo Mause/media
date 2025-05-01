@@ -32,12 +32,6 @@ else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
 
 
-dns.resolver.resolve(
-    urlparse(url).hostname,
-    'A',
-)
-
-
 alembic_config = config.get_section(config.config_ini_section)
 alembic_config['sqlalchemy.url'] = url
 target_metadata = db.Base.metadata
@@ -79,6 +73,11 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
+    dns.resolver.resolve(
+        urlparse(url).hostname,
+        'A',
+    )
+
     connectable = engine_from_config(
         alembic_config,
         prefix='sqlalchemy.',
