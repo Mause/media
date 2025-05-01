@@ -26,7 +26,10 @@ function SingleDiagnostic({ component }: { component: string }) {
 
   return (
     <li>
-      <FontAwesomeIcon icon={faCircle} className={getColour(data &&data[0]?.status)} />
+      <FontAwesomeIcon
+        icon={faCircle}
+        className={getColour(data && data[0]?.status)}
+      />
       <pre>{component}: </pre>
 
       {isValidating && <ReactLoading type="balls" color="#000" />}
