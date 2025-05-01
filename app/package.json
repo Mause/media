@@ -23,7 +23,7 @@
     "@sentry/react": "^5.29.2",
     "@sentry/tracing": "^5.29.2",
     "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.2",
+    "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^12.6.0",
     "@use-it/interval": "^1.0.0",
     "@vtex/axios-concurrent-retry": "^4.0.11",
