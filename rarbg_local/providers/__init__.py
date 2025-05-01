@@ -10,10 +10,10 @@ import aiohttp
 from fastapi.concurrency import run_in_threadpool
 from NyaaPy import nyaa
 
+from ..models import EpisodeInfo, ITorrent, ProviderSource
+from ..tmdb import get_tv
 from . import horriblesubs, kickass
-from .models import EpisodeInfo, ITorrent, ProviderSource
 from .rarbg import get_rarbg_iter
-from .tmdb import get_tv
 
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]
