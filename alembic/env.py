@@ -7,7 +7,9 @@ import os
 import sys
 from logging.config import fileConfig
 from pathlib import Path
+from urllib.parse import urlparse
 
+import dns.resolver
 from psycopg2.extras import LoggingConnection
 from sqlalchemy import engine_from_config, pool
 
@@ -28,6 +30,12 @@ if 'HEROKU' in os.environ or 'RAILWAY_SERVICE_ID' in os.environ:
     url = os.environ['DATABASE_URL'].replace('postgres://', 'postgresql://')
 else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
+
+
+dns.resolver.resolve(
+    urlparse(url).hostname,
+    'A',
+)
 
 
 alembic_config = config.get_section(config.config_ini_section)
