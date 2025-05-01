@@ -9,8 +9,8 @@ from logging.config import fileConfig
 from pathlib import Path
 from urllib.parse import urlparse
 
-import dns.resolver
 import dns.rdatatype
+import dns.resolver
 from psycopg2.extras import LoggingConnection
 from sqlalchemy import engine_from_config, pool
 
