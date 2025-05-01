@@ -7,7 +7,7 @@ import os
 import sys
 from logging.config import fileConfig
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 
 import dns.rdatatype
 import dns.resolver
@@ -80,8 +80,10 @@ def run_migrations_online():
     results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
     print('AAAA', results)
     print(results[0].to_text())
-    alembic_config['sqlalchemy.url'] = parsed._replace(
-        netloc='{}:{}'.format(results[0].address, parsed.port)
+    alembic_config['sqlalchemy.url'] = urlunparse(
+        parsed._replace(
+            netloc='{}:{}'.format(results[0].address, parsed.port)
+        )
     )
 
     connectable = engine_from_config(
