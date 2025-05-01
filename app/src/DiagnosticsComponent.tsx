@@ -6,18 +6,17 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 type HealthcheckResponse = components['schemas']['HealthcheckResponse'];
 
-
 function getColour(status?: HealthcheckResponse['status']) {
-	switch (status) {
-		case 'pass':
-			return 'green';
-		case 'warn':
-			return 'yellow';
-		case 'fail':
-			return 'red';
-		default:
-			return 'grey';
-	}
+  switch (status) {
+    case 'pass':
+      return 'green';
+    case 'warn':
+      return 'yellow';
+    case 'fail':
+      return 'red';
+    default:
+      return 'grey';
+  }
 }
 
 function SingleDiagnostic({ component }: { component: string }) {
@@ -27,10 +26,7 @@ function SingleDiagnostic({ component }: { component: string }) {
 
   return (
     <li>
-    <FontAwesomeIcon
-                  icon={faCircle}
-                  className={ getColour(data?.status) }
-                />
+      <FontAwesomeIcon icon={faCircle} className={getColour(data?.status)} />
       <pre>{component}: </pre>
 
       {isValidating && <ReactLoading type="balls" color="#000" />}
