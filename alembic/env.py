@@ -10,6 +10,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import dns.resolver
+import dns.rdatatype
 from psycopg2.extras import LoggingConnection
 from sqlalchemy import engine_from_config, pool
 
@@ -73,10 +74,13 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
-    dns.resolver.resolve(
-        urlparse(url).hostname,
-        'A',
-    )
+
+    domain = urlparse(url).hostname
+    for query_type in dns.rdatatype.RdataType:
+        try:
+            print(query_type, list(dns.resolver.resolve(domain, query_type)))
+        except dns.exception.DNSException as e:
+            print(query_type, e)
 
     connectable = engine_from_config(
         alembic_config,
