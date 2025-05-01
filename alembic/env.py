@@ -8,8 +8,8 @@ import sys
 from logging.config import fileConfig
 from pathlib import Path
 
-from sqlalchemy import engine_from_config, pool
 from psycopg2.extras import LoggingConnection
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 
@@ -77,7 +77,7 @@ def run_migrations_online():
         poolclass=pool.NullPool,
         connect_args={
             'connection_factory': LoggingConnection,
-            'connect_timeout': 10000
+            'connect_timeout': 10000,
         },
     )
 
