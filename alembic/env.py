@@ -7,8 +7,10 @@ import os
 import sys
 from logging.config import fileConfig
 from pathlib import Path
+from urllib.parse import urlparse, urlunparse
 
-from psycopg2.extras import LoggingConnection
+import dns.rdatatype
+import dns.resolver
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
@@ -71,12 +73,27 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
+
+    parsed = urlparse(url)
+    print(parsed)
+    domain = parsed.hostname
+    results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
+    print('AAAA', results)
+    print(results[0].to_text())
+    alembic_config['sqlalchemy.url'] = urlunparse(
+        parsed._replace(
+            netloc='{}:{}@[{}]:{}'.format(
+                parsed.username, parsed.password, results[0].address, parsed.port
+            )
+        )
+    )
+
     connectable = engine_from_config(
         alembic_config,
         prefix='sqlalchemy.',
         poolclass=pool.NullPool,
         connect_args={
-            'connection_factory': LoggingConnection,
+            #            'connection_factory': LoggingConnection,
             'connect_timeout': 10000,
         },
     )
