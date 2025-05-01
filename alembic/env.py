@@ -11,7 +11,6 @@ from urllib.parse import urlparse
 
 import dns.rdatatype
 import dns.resolver
-from psycopg2.extras import LoggingConnection
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
@@ -86,7 +85,7 @@ def run_migrations_online():
         prefix='sqlalchemy.',
         poolclass=pool.NullPool,
         connect_args={
-#            'connection_factory': LoggingConnection,
+            #            'connection_factory': LoggingConnection,
             'connect_timeout': 10000,
         },
     )
