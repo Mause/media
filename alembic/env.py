@@ -75,19 +75,18 @@ def run_migrations_online():
 
     """
 
-    domain = urlparse(url).hostname
-    for query_type in dns.rdatatype.RdataType:
-        try:
-            print(query_type, list(dns.resolver.resolve(domain, query_type)))
-        except dns.exception.DNSException as e:
-            print(query_type, e)
+    parsed = urlparse(url)
+    domain = parsed.hostname
+    results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
+    print(query_type, results)
+    alembic_config['sqlalchemy.url'] = parsed._replace(hostname=str(results[0].name))
 
     connectable = engine_from_config(
         alembic_config,
         prefix='sqlalchemy.',
         poolclass=pool.NullPool,
         connect_args={
-            'connection_factory': LoggingConnection,
+#            'connection_factory': LoggingConnection,
             'connect_timeout': 10000,
         },
     )
