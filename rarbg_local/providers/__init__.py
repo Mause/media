@@ -5,7 +5,6 @@ from itertools import chain
 from queue import Empty, Queue
 from threading import Semaphore, current_thread
 from typing import AsyncGenerator, Callable, Iterable, List, Optional, Tuple, TypeVar
-import aiohttp
 
 import aiohttp
 from fastapi.concurrency import run_in_threadpool
@@ -248,9 +247,13 @@ class PirateBayProvider(Provider):
     ) -> AsyncGenerator[ITorrent, None]:
         search_string = f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
 
-        async with aiohttp.ClientSession() as session, await session.get(
-            self.root + '/q.php', params={'q': [imdb_id]}  # , search_string]}
-        ) as resp:
+        async with (
+            aiohttp.ClientSession() as session,
+            await session.get(
+                self.root + '/q.php',
+                params={'q': [imdb_id]},  # , search_string]}
+            ) as resp,
+        ):
             data = await resp.json()
 
             if len(data) == 1 and data[0]['name'] == 'No results returned':
