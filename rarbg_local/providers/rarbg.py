@@ -6,6 +6,8 @@ from typing import Dict, Iterator, List, TypedDict
 import backoff
 import requests
 
+logger = logging.getLogger(__name__)
+
 session = requests.Session()
 session.params = {
     'mode': 'search',
@@ -94,7 +96,7 @@ def _get(base_url: str, **kwargs: str) -> List[Dict]:
 
     error = res.get('error')
     if res.get('error_code') == 4:
-        logging.info('Token expired, reacquiring')
+        logger.info('Token expired, reacquiring')
         session.params['token'] = get_token(base_url)
         res = _get(**kwargs)
     elif error:

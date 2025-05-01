@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         if: steps.cache-uv.outputs.cache-hit != 'true'
         run: |
-          uv sync --dev
+          uv sync --dev --locked
       - name: Run mypy
         if: false
         run: |
