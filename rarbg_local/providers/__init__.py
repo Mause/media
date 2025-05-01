@@ -248,7 +248,8 @@ class PirateBayProvider(TvProvider, MovieProvider):
         async with (
             aiohttp.ClientSession() as session,
             await session.get(
-                self.root + '/q.php', params={'q': imdb_id + ' ' + format(season, episode)}
+                self.root + '/q.php',
+                params={'q': imdb_id + ' ' + format(season, episode)},
             ) as resp,
         ):
             data = await resp.json()
