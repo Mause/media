@@ -21,7 +21,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@sentry/react": "^5.29.2",
-    "@sentry/tracing": "^5.29.2",
+    "@sentry/tracing": "^7.120.3",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.6.0",
