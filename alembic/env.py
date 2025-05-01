@@ -77,7 +77,7 @@ def run_migrations_online():
     parsed = urlparse(url)
     domain = parsed.hostname
     results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
-    print(query_type, results)
+    print('AAAA', results)
     alembic_config['sqlalchemy.url'] = parsed._replace(hostname=str(results[0].name))
 
     connectable = engine_from_config(
