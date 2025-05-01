@@ -81,12 +81,11 @@ def run_migrations_online():
     print('AAAA', results)
     print(results[0].to_text())
     alembic_config['sqlalchemy.url'] = urlunparse(
-        parsed._replace(netloc='{}:{}@[{}]:{}'.format(
-            parsed.username,
-            parsed.password,
-            results[0].address,
-            parsed.port
-        ))
+        parsed._replace(
+            netloc='{}:{}@[{}]:{}'.format(
+                parsed.username, parsed.password, results[0].address, parsed.port
+            )
+        )
     )
 
     connectable = engine_from_config(
