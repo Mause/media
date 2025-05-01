@@ -243,7 +243,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
     root = 'https://apibay.org'
 
     async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: int = None
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
     ) -> AsyncGenerator[ITorrent, None]:
         async with (
             aiohttp.ClientSession() as session,
