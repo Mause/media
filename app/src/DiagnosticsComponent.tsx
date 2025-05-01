@@ -20,13 +20,13 @@ function getColour(status?: HealthcheckResponse['status']) {
 }
 
 function SingleDiagnostic({ component }: { component: string }) {
-  const { error, data, isValidating } = useSWR<HealthcheckResponse>(
+  const { error, data, isValidating } = useSWR<HealthcheckResponse[]>(
     `diagnostics/${component}`,
   );
 
   return (
     <li>
-      <FontAwesomeIcon icon={faCircle} className={getColour(data?.status)} />
+      <FontAwesomeIcon icon={faCircle} className={getColour(data &&data[0]?.status)} />
       <pre>{component}: </pre>
 
       {isValidating && <ReactLoading type="balls" color="#000" />}
