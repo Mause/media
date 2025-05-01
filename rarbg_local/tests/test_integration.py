@@ -8,6 +8,7 @@ from async_asgi_testclient import TestClient
 from lxml.builder import E
 from lxml.etree import tostring
 from psycopg2 import OperationalError
+from pydantic import BaseModel
 from pytest import fixture, mark, raises
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
@@ -15,8 +16,10 @@ from sqlalchemy.orm.session import Session
 
 from ..db import Download, create_episode, create_movie
 from ..main import get_episodes
+from ..models import ITorrent
 from ..new import SearchResponse, Settings, get_current_user, get_settings
-from .conftest import add_json, themoviedb
+from ..providers import PirateBayProvider
+from .conftest import add_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
     MovieDetailsFactory,
@@ -606,3 +609,40 @@ async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
     assert ei.match(message)
 
     assert caplog.text.count(message) == 6 + 1  # five plus the last time
+
+
+class ITorrentList(BaseModel):
+    torrents: list[ITorrent]
+
+
+@mark.asyncio
+async def test_piratebay(aioresponses, snapshot):
+    aioresponses.add(
+        'https://apibay.org/q.php?q=tt0000000',
+        body=json.dumps(
+            [
+                {
+                    "id": "70178980",
+                    "name": "Ancient Aliens 480p x264-mSD",
+                    "info_hash": HASH_STRING,
+                    "leechers": "0",
+                    "seeders": "2",
+                    "num_files": "0",
+                    "size": "162330051",
+                    "username": "jajaja",
+                    "added": "1688804411",
+                    "status": "vip",
+                    "category": "205",
+                    "imdb": "",
+                }
+            ]
+        ),
+    )
+    res = await tolist(
+        PirateBayProvider().search_for_movie(imdb_id='tt0000000', tmdb_id=1)
+    )
+
+    snapshot.assert_match(
+        ITorrentList(torrents=res).json(indent=2),
+        'piratebay.json',
+    )
