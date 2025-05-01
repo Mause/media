@@ -20,10 +20,10 @@ config = context.config
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
 
-sys.path.insert(0, '.')
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 db = __import__('rarbg_local.db').db
 
-if 'HEROKU' in os.environ:
+if 'HEROKU' in os.environ or 'RAILWAY_SERVICE_ID' in os.environ:
     url = os.environ['DATABASE_URL'].replace('postgres://', 'postgresql://')
 else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
@@ -56,6 +56,7 @@ def run_migrations_offline():
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         dialect_name='postgresql',
+        transaction_per_migration=True,
     )
 
     with context.begin_transaction():
@@ -70,11 +71,18 @@ def run_migrations_online():
 
     """
     connectable = engine_from_config(
-        alembic_config, prefix='sqlalchemy.', poolclass=pool.NullPool
+        alembic_config,
+        prefix='sqlalchemy.',
+        poolclass=pool.NullPool,
+        connect_args={'connect_timeout': 1000},
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            transaction_per_migration=True,
+        )
 
         with context.begin_transaction():
             context.run_migrations()
