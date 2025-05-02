@@ -13,6 +13,7 @@ def __getattr__(name: str) -> None:
     from .horriblesubs import HorriblesubsProvider
     from .kickass import KickassProvider
     from .nyaasi import NyaaProvider
+    from .piratebay import PirateBayProvider
     from .rarbg import RarbgProvider
     from .torrents_csv import TorrentsCsvProvider
 
