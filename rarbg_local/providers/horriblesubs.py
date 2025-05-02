@@ -169,7 +169,7 @@ class HorriblesubsProvider(TvProvider):
         name = (await get_tv(tmdb_id)).name
         template = f'HorribleSubs {name} S{season:02d}'
 
-        async for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
+        async for item in search_for_tv(tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.HORRIBLESUBS,
                 title=f'{template}E{int(item["episode"], 10):02d} {item["resolution"]}',
