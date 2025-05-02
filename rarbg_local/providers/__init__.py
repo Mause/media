@@ -91,7 +91,7 @@ async def main():
     from rich.logging import RichHandler
     from rich.table import Table
 
-    from .tmdb import resolve_id
+    from ..tmdb import resolve_id
 
     logging.basicConfig(level=logging.DEBUG, handlers=[RichHandler()])
 
