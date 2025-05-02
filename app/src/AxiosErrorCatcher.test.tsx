@@ -29,7 +29,6 @@ function Fake() {
 }
 
 test('AxiosErrorCatcher', async () => {
-  await act(async () => {
     let lerror;
     const { container } = render(
       <ErrorBoundary
@@ -48,8 +47,9 @@ test('AxiosErrorCatcher', async () => {
       status: 500,
       response: { body: {}, message: 'an error has occured' },
     });
+  await act(async () => {
     await wait();
+});
     expect(lerror).toBeTruthy();
     expect(lerror).toEqual(new Error('Request failed with status code 500'));
   });
-});
