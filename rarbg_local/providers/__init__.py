@@ -9,13 +9,22 @@ ProviderType = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
 
 
-PROVIDERS = [
-    HorriblesubsProvider(),
-    RarbgProvider(),
-    KickassProvider(),
-    TorrentsCsvProvider(),
-    NyaaProvider(),
-]
+def __getattr__(name: str) -> None:
+    from .horriblesubs import HorriblesubsProvider
+    from .kickass import KickassProvider
+    from .nyaa import NyaaProvider
+    from .rarbg import RarbgProvider
+    from .torrents_csv import TorrentsCsvProvider
+
+    if name == 'PROVIDERS':
+        return [
+            HorriblesubsProvider(),
+            RarbgProvider(),
+            KickassProvider(),
+            TorrentsCsvProvider(),
+            NyaaProvider(),
+        ]
+    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
 
 
 def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
@@ -46,6 +55,9 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
 async def search_for_tv(
     imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
 ):
+    from . import PROVIDERS
+    from .abc import TvProvider
+
     for provider in PROVIDERS:
         if not isinstance(provider, TvProvider):
             continue
@@ -59,6 +71,9 @@ async def search_for_tv(
 
 
 async def search_for_movie(imdb_id: str, tmdb_id: int):
+    from . import PROVIDERS
+    from .abc import MovieProvider
+
     for provider in PROVIDERS:
         if not isinstance(provider, MovieProvider):
             continue
