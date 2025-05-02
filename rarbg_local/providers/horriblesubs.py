@@ -3,6 +3,7 @@ from enum import Enum
 from functools import lru_cache
 from itertools import chain
 from typing import Dict, Optional, Tuple
+from .abc import TvProvider
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
@@ -151,6 +152,32 @@ async def search_for_tv(tmdb_id, season, episode):
         if episode is None or item['episode'] == f'{episode:02d}':
             yield item
 
+
+class HorriblesubsProvider(TvProvider):
+    name = 'horriblesubs'
+    type = ProviderSource.HORRIBLESUBS
+
+    async def search_for_tv(
+        self,
+        imdb_id: Optional[str],
+        tmdb_id: int,
+        season: int,
+        episode: Optional[int] = None,
+    ) -> AsyncGenerator[ITorrent, None]:
+        name = (await get_tv(tmdb_id)).name
+        template = f'HorribleSubs {name} S{season:02d}'
+
+        async for item in horriblesubs.search_for_tv(tmdb_id, season, episode):
+            yield ITorrent(
+                source=ProviderSource.HORRIBLESUBS,
+                title=f'{template}E{int(item["episode"], 10):02d} {item["resolution"]}',
+                seeders=0,
+                download=item['download'],
+                category=tv_convert(item['resolution']),
+                episode_info=EpisodeInfo(
+                    seasonnum=str(season), epnum=str(item['episode'])
+                ),
+            )
 
 async def main():
     print(list(await search_for_tv('95550', 1, 1)))

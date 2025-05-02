@@ -2,6 +2,7 @@ import logging
 import re
 import string
 from typing import Any, AsyncGenerator, Dict, Optional
+from .abc import TvProvider, MovieProvider
 
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
@@ -76,3 +77,40 @@ async def search_for_movie(imdb_id: str, tmdb_id: int):
 
     async for item in base(name, imdb_id):
         yield item
+
+
+
+class KickassProvider(TvProvider, MovieProvider):
+    name = 'kickass'
+    type = ProviderSource.KICKASS
+
+    async def search_for_tv(
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+    ) -> AsyncGenerator[ITorrent, None]:
+        if not imdb_id:
+            return
+
+        async for item in kickass.search_for_tv(imdb_id, tmdb_id, season, episode):
+            yield ITorrent(
+                source=ProviderSource.KICKASS,
+                title=item['title'],
+                seeders=item['seeders'],
+                download=item['magnet'],
+                category=tv_convert(item['resolution']),
+                episode_info=EpisodeInfo(
+                    seasonnum=str(season),
+                    epnum=None if episode is None else str(episode),
+                ),
+            )
+
+    async def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
+        async for item in kickass.search_for_movie(imdb_id, tmdb_id):
+            yield ITorrent(
+                source=ProviderSource.KICKASS,
+                title=item['title'],
+                seeders=item['seeders'],
+                download=item['magnet'],
+                category=movie_convert(item['resolution']),
+            )

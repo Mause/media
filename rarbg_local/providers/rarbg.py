@@ -2,6 +2,7 @@ import json
 import logging
 from json.decoder import JSONDecodeError
 from typing import Dict, Iterator, List, TypedDict
+from .abc import TvProvider, MovieProvider
 
 import backoff
 import requests
@@ -108,3 +109,48 @@ def _get(base_url: str, **kwargs: str) -> List[Dict]:
             raise Exception(res)
 
     return res.get('torrent_results', [])
+
+class RarbgProvider(TvProvider, MovieProvider):
+    name = 'rarbg'
+    type = ProviderSource.RARBG
+
+    async def search_for_tv(
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+    ) -> AsyncGenerator[ITorrent, None]:
+        if not imdb_id:
+            return
+
+        search_string = format(season, episode)
+
+        for item in chain.from_iterable(
+            get_rarbg_iter(
+                'https://torrentapi.org/pubapi_v2.php',
+                'series',
+                search_imdb=imdb_id,
+                search_string=search_string,
+            )
+        ):
+            yield ITorrent(
+                source=ProviderSource.RARBG,
+                title=item['title'],
+                seeders=item['seeders'],
+                download=item['download'],
+                category=tv_convert(item['category']),
+                episode_info=EpisodeInfo(seasonnum=str(season), epnum=str(episode)),
+            )
+
+    async def search_for_movie(
+        self, imdb_id: str, tmdb_id: int
+    ) -> AsyncGenerator[ITorrent, None]:
+        for item in chain.from_iterable(
+            get_rarbg_iter(
+                'https://torrentapi.org/pubapi_v2.php', 'movie', search_imdb=imdb_id
+            )
+        ):
+            yield ITorrent(
+                source=ProviderSource.RARBG,
+                title=item['title'],
+                seeders=item['seeders'],
+                download=item['download'],
+                category=movie_convert(item['category']),
+            )
