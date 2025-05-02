@@ -32,9 +32,7 @@ describe('MonitorComponent', () => {
       },
     ];
     await mock('monitor', res);
-    await act(async () => {
-      await wait();
-    });
+    await wait();
 
     expect(container).toMatchSnapshot();
   });
@@ -54,17 +52,15 @@ describe('MonitorComponent', () => {
       </Router>,
     );
 
-    await act(async () => {
-      await wait();
-      expectLastRequestBody().toEqual({
-        type: 'MOVIE',
-        tmdb_id: 5,
-      });
-      await moxios.requests
-        .mostRecent()
-        .respondWith({ status: 200, response: {} });
-      await wait();
+    await wait();
+    expectLastRequestBody().toEqual({
+      type: 'MOVIE',
+      tmdb_id: 5,
     });
+    await moxios.requests
+      .mostRecent()
+      .respondWith({ status: 200, response: {} });
+    await wait();
 
     expect(_.map(hist.entries, 'pathname')).toEqual(['/', '/monitor']);
   });
