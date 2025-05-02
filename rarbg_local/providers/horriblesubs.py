@@ -3,12 +3,14 @@ from enum import Enum
 from functools import lru_cache
 from itertools import chain
 from typing import Dict, Optional, Tuple
+from .abc import TvProvider
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
 from lxml.html import fromstring
 
 from ..jikan import closeness, get_names
+from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..utils import cached
 from .abc import TvProvider
 

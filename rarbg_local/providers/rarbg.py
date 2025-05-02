@@ -3,6 +3,9 @@ import logging
 from json.decoder import JSONDecodeError
 from typing import Dict, Iterator, List, TypedDict
 
+from .abc import TvProvider, MovieProvider
+from ..models import EpisodeInfo, ITorrent, ProviderSource
+
 import backoff
 import requests
 

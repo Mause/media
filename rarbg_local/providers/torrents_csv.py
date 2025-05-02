@@ -1,5 +1,6 @@
 from .abc import MovieProvider
 
+from ..models import ITorrent, ProviderSource
 
 class TorrentsCsvProvider(MovieProvider):
     name = "torrentscsv"
