@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import React from 'react';
 import {
   Movies,
@@ -148,9 +148,7 @@ describe('NextEpisodeAirs', () => {
     await mock(`tv/${tmdb_id}/season/${season}`, {
       episodes: [{ name: 'EP2', air_date: '2020-04-24', episode_number: 2 }],
     });
-    await act(async () => {
-      await wait();
-    });
+    await wait();
 
     expect(container).toMatchSnapshot();
   });

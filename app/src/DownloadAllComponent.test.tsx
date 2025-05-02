@@ -1,7 +1,6 @@
 import { renderWithSWR, mock, usesMoxios, wait } from './test.utils';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
 import React from 'react';
 import { ITorrent } from './OptionsComponent';
 
@@ -34,9 +33,7 @@ test('DownloadAllComponent', async () => {
     incomplete: [],
     complete: [],
   });
-  await act(async () => {
-    await wait();
-  });
+  await wait();
 
   expect(container).toMatchSnapshot();
 });

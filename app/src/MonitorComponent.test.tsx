@@ -1,5 +1,4 @@
 import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
-import { act } from 'react-dom/test-utils';
 import moxios from 'moxios';
 import {
   MonitorComponent,
@@ -11,6 +10,7 @@ import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import * as _ from 'lodash';
 import { expectLastRequestBody } from './utils';
+import { act } from '@testing-library/react';
 
 usesMoxios();
 
@@ -53,13 +53,15 @@ describe('MonitorComponent', () => {
     );
 
     await wait();
-    expectLastRequestBody().toEqual({
-      type: 'MOVIE',
-      tmdb_id: 5,
+    await act(async () => {
+      expectLastRequestBody().toEqual({
+        type: 'MOVIE',
+        tmdb_id: 5,
+      });
+      await moxios.requests
+        .mostRecent()
+        .respondWith({ status: 200, response: {} });
     });
-    await moxios.requests
-      .mostRecent()
-      .respondWith({ status: 200, response: {} });
     await wait();
 
     expect(_.map(hist.entries, 'pathname')).toEqual(['/', '/monitor']);
