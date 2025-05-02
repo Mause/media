@@ -1,7 +1,7 @@
+import inspect
 import logging
 import os
 import traceback
-from functools import wraps
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
@@ -15,6 +15,7 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
+from makefun import add_signature_parameters, create_function
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
@@ -139,10 +140,11 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
 
 
 def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
-    @wraps(func)
-    async def decorator(*args, **kwargs):
+    async def decorator(request: Request, *args, **kwargs):
         async def internal() -> AsyncGenerator[str, None]:
             async for rset in func(*args, **kwargs):
+                if await request.is_disconnected():
+                    break
                 yield f'data: {rset.json()}\n\n'
             yield 'data:\n\n'
 
@@ -156,7 +158,16 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
             },
         )
 
-    return decorator
+    return create_function(
+        add_signature_parameters(
+            inspect.signature(func),
+            first=inspect.Parameter(
+                'request', inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=Request
+            ),
+        ),
+        decorator,
+        func.__name__,
+    )
 
 
 @api.get(
