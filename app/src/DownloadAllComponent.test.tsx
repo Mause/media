@@ -29,12 +29,12 @@ test('DownloadAllComponent', async () => {
     },
   ];
 
+  await mock('/api/select/1/season/1/download_all', {
+    packs,
+    incomplete: [],
+    complete: [],
+  });
   await act(async () => {
-    await mock('/api/select/1/season/1/download_all', {
-      packs,
-      incomplete: [],
-      complete: [],
-    });
     await wait();
   });
 

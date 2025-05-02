@@ -16,27 +16,27 @@ usesMoxios();
 
 describe('MonitorComponent', () => {
   it('view', async () => {
+    const { container } = renderWithSWR(
+      <MemoryRouter>
+        <MonitorComponent />
+      </MemoryRouter>,
+    );
+
+    const res: Monitor[] = [
+      {
+        id: 1,
+        title: 'Hello World',
+        tmdb_id: 5,
+        type: 'MOVIE',
+        added_by: 'me',
+      },
+    ];
+    await mock('monitor', res);
     await act(async () => {
-      const { container } = renderWithSWR(
-        <MemoryRouter>
-          <MonitorComponent />
-        </MemoryRouter>,
-      );
-
-      const res: Monitor[] = [
-        {
-          id: 1,
-          title: 'Hello World',
-          tmdb_id: 5,
-          type: 'MOVIE',
-          added_by: 'me',
-        },
-      ];
-      await mock('monitor', res);
       await wait();
-
-      expect(container).toMatchSnapshot();
     });
+
+    expect(container).toMatchSnapshot();
   });
 
   it('add', async () => {
@@ -63,8 +63,9 @@ describe('MonitorComponent', () => {
       await moxios.requests
         .mostRecent()
         .respondWith({ status: 200, response: {} });
-
-      expect(_.map(hist.entries, 'pathname')).toEqual(['/', '/monitor']);
+      await wait();
     });
+
+    expect(_.map(hist.entries, 'pathname')).toEqual(['/', '/monitor']);
   });
 });

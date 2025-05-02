@@ -47,25 +47,23 @@ test('Movies', () => {
 });
 
 test('TVShows', async () => {
-  await act(async () => {
-    const series: SeriesResponse[] = [
-      {
-        tmdb_id: 1,
-        imdb_id: '',
-        title: 'Title',
-        seasons: {
-          1: [],
-        },
+  const series: SeriesResponse[] = [
+    {
+      tmdb_id: 1,
+      imdb_id: '',
+      title: 'Title',
+      seasons: {
+        1: [],
       },
-    ];
-    const { container } = renderWithSWR(
-      <MemoryRouter>
-        <TVShows series={series} loading={false} />
-      </MemoryRouter>,
-    );
+    },
+  ];
+  const { container } = renderWithSWR(
+    <MemoryRouter>
+      <TVShows series={series} loading={false} />
+    </MemoryRouter>,
+  );
 
-    expect(container).toMatchSnapshot();
-  });
+  expect(container).toMatchSnapshot();
 });
 
 describe('Progress', () => {
@@ -147,10 +145,10 @@ describe('NextEpisodeAirs', () => {
       </MemoryRouter>,
     );
 
+    await mock(`tv/${tmdb_id}/season/${season}`, {
+      episodes: [{ name: 'EP2', air_date: '2020-04-24', episode_number: 2 }],
+    });
     await act(async () => {
-      await mock(`tv/${tmdb_id}/season/${season}`, {
-        episodes: [{ name: 'EP2', air_date: '2020-04-24', episode_number: 2 }],
-      });
       await wait();
     });
 
