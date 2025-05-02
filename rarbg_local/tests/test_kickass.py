@@ -1,7 +1,7 @@
 from pytest import mark
 
-from ..models import EpisodeInfo, ITorrent
-from ..providers import KickassProvider, ProviderSource
+from ..models import EpisodeInfo, ITorrent, ProviderSource
+from ..providers.kickass import KickassProvider
 from .conftest import themoviedb, tolist
 from .factories import MovieResponseFactory, TvApiResponseFactory
 

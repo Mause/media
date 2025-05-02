@@ -56,6 +56,7 @@ from .models import (
     MonitorPost,
     MovieDetailsSchema,
     MovieResponse,
+    ProviderSource,
     SearchResponse,
     StatsResponse,
     TvResponse,
@@ -63,12 +64,10 @@ from .models import (
 )
 from .providers import (
     PROVIDERS,
-    MovieProvider,
-    ProviderSource,
-    TvProvider,
     search_for_movie,
     search_for_tv,
 )
+from .providers.abc import MovieProvider, TvProvider
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import (
