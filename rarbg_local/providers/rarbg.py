@@ -1,13 +1,14 @@
 import json
 import logging
+from itertools import chain
 from json.decoder import JSONDecodeError
-from typing import AsyncGenerator, Dict, Iterator, List, TypedDict
+from typing import AsyncGenerator, Dict, Iterator, List, Optional, TypedDict
 
 import backoff
 import requests
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
-from .abc import MovieProvider, TvProvider
+from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)
 

@@ -1,18 +1,8 @@
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from itertools import chain
 from queue import Empty, Queue
 from threading import Semaphore, current_thread
-from typing import AsyncGenerator, Callable, Iterable, List, Optional, Tuple, TypeVar
-
-import aiohttp
-from fastapi.concurrency import run_in_threadpool
-from NyaaPy import nyaa
-
-from ..models import EpisodeInfo, ITorrent, ProviderSource
-from ..tmdb import get_tv
-from . import horriblesubs, kickass
-from .rarbg import get_rarbg_iter
+from typing import Callable, Iterable, List, Optional, Tuple, TypeVar
 
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]

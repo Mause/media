@@ -1,7 +1,11 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Optional
+
+from fastapi.concurrency import run_in_threadpool
+from nyaasi import nyaa
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
-from .abc import TvProvider
+from ..tmdb import get_tv
+from .abc import TvProvider, tv_convert
 
 
 class NyaaProvider(TvProvider):

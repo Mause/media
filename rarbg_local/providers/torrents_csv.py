@@ -1,5 +1,7 @@
 from typing import AsyncGenerator
 
+import aiohttp
+
 from ..models import ITorrent, ProviderSource
 from .abc import MovieProvider
 
