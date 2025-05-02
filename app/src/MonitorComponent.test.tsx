@@ -17,7 +17,7 @@ usesMoxios();
 describe('MonitorComponent', () => {
   it('view', async () => {
     await act(async () => {
-      const el = renderWithSWR(
+      const { container } = renderWithSWR(
         <MemoryRouter>
           <MonitorComponent />
         </MemoryRouter>,
@@ -35,7 +35,7 @@ describe('MonitorComponent', () => {
       await mock('monitor', res);
       await wait();
 
-      expect(el.container).toMatchSnapshot();
+      expect(container).toMatchSnapshot();
     });
   });
 

@@ -7,13 +7,13 @@ usesMoxios();
 
 test('render', async () => {
   await act(async () => {
-    const el = renderWithSWR(<StatsComponent />);
+    const { container } = renderWithSWR(<StatsComponent />);
 
     await mock<StatsResponse[]>('/api/stats', [
       { user: 'Mause', values: { episode: 1, movie: 1 } },
     ]);
     await wait();
 
-    expect(el.container).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
   });
 });

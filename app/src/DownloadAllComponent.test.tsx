@@ -9,7 +9,7 @@ usesMoxios();
 
 test('DownloadAllComponent', async () => {
   await act(async () => {
-    const el = renderWithSWR(
+    const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/season/1/download_all']}>
         <Route path="/select/:tmdb_id/season/:season/download_all">
           <DownloadAllComponent />
@@ -17,7 +17,7 @@ test('DownloadAllComponent', async () => {
       </MemoryRouter>,
     );
 
-    expect(el.container).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 
     const packs: ITorrent[] = [
       {
@@ -37,6 +37,6 @@ test('DownloadAllComponent', async () => {
     });
     await wait();
 
-    expect(el.container).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
   });
 });

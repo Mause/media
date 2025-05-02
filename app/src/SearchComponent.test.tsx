@@ -8,7 +8,7 @@ usesMoxios();
 
 test('SearchComponent', async () => {
   await act(async () => {
-    const el = renderWithSWR(
+    const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/search?query=world']}>
         <Route path="/search">
           <SearchComponent />
@@ -27,6 +27,6 @@ test('SearchComponent', async () => {
     await mock('/api/search?query=world', results);
     await wait();
 
-    expect(el.container).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
   });
 });

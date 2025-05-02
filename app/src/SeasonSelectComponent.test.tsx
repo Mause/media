@@ -13,7 +13,7 @@ usesMoxios();
 
 test('SeasonSelectComponent  render', async () => {
   await act(async () => {
-    const el = renderWithSWR(
+    const { getByTestId, container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/season']}>
         <Route path="/select/:tmdb_id/season">
           <SeasonSelectComponent />
@@ -33,14 +33,14 @@ test('SeasonSelectComponent  render', async () => {
     });
     await wait();
 
-    expect(el.getByTestId('title').textContent).toEqual('Hello');
-    expect(el.container).toMatchSnapshot();
+    expect(getByTestId('title').textContent).toEqual('Hello');
+    expect(container).toMatchSnapshot();
   });
 });
 
 test('EpisodeSelectComponent render', async () => {
   await act(async () => {
-    const el = renderWithSWR(
+    const { container, getByTestId } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/season/1']}>
         <Route path="/select/:tmdb_id/season/:season">
           <EpisodeSelectComponent />
@@ -59,7 +59,7 @@ test('EpisodeSelectComponent render', async () => {
     });
     await wait();
 
-    expect(el.getByTestId('title').textContent).toEqual('Season 1');
-    expect(el.container).toMatchSnapshot();
+    expect(getByTestId('title').textContent).toEqual('Season 1');
+    expect(container).toMatchSnapshot();
   });
 });
