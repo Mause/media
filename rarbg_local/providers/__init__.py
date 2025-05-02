@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def __getattr__(name: str) -> None:
     from .horriblesubs import HorriblesubsProvider
     from .kickass import KickassProvider
-    from .nyaa import NyaaProvider
+    from .nyaasi import NyaaProvider
     from .rarbg import RarbgProvider
     from .torrents_csv import TorrentsCsvProvider
 
