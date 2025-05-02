@@ -1,0 +1,97 @@
+{
+  "series": [
+    {
+      "title": "Programming",
+      "imdb_id": "tt000000",
+      "tmdb_id": 1,
+      "seasons": {
+        "1": [
+          {
+            "id": 1,
+            "download": {
+              "id": 1,
+              "tmdb_id": 1,
+              "transmission_id": "00000000000000000",
+              "imdb_id": "tt000000",
+              "type": "episode",
+              "title": "Hello world",
+              "timestamp": "2020-04-21T00:00:00",
+              "added_by": {
+                "username": "python",
+                "first_name": ""
+              }
+            },
+            "show_title": "Programming",
+            "season": 1,
+            "episode": 1
+          }
+        ]
+      }
+    },
+    {
+      "title": "Coding",
+      "imdb_id": "tt0000002",
+      "tmdb_id": 3,
+      "seasons": {
+        "1": [
+          {
+            "id": -1,
+            "download": {
+              "id": -1,
+              "tmdb_id": 3,
+              "transmission_id": "0000000000000000a.1",
+              "imdb_id": "tt0000002",
+              "type": "episode",
+              "title": "The Pilot",
+              "timestamp": "2020-04-21T00:00:00",
+              "added_by": {
+                "username": "python",
+                "first_name": ""
+              }
+            },
+            "show_title": "Coding",
+            "season": 1,
+            "episode": 1
+          },
+          {
+            "id": -1,
+            "download": {
+              "id": -1,
+              "tmdb_id": 3,
+              "transmission_id": "0000000000000000a.2",
+              "imdb_id": "tt0000002",
+              "type": "episode",
+              "title": "The Fight",
+              "timestamp": "2020-04-21T00:00:00",
+              "added_by": {
+                "username": "python",
+                "first_name": ""
+              }
+            },
+            "show_title": "Coding",
+            "season": 1,
+            "episode": 2
+          }
+        ]
+      }
+    }
+  ],
+  "movies": [
+    {
+      "id": 1,
+      "download": {
+        "id": 2,
+        "tmdb_id": 2,
+        "transmission_id": "000000000000000000",
+        "imdb_id": "tt0000001",
+        "type": "movie",
+        "title": "Other world",
+        "timestamp": "2020-04-20T00:00:00",
+        "added_by": {
+          "username": "python",
+          "first_name": ""
+        }
+      }
+    }
+  ]
+}

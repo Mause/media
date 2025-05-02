@@ -72,7 +72,7 @@ export function Movies({
 }) {
   const sortedMovies = _.groupBy(
     movies,
-    movie => !!(torrents && getProgress(movie, torrents)?.percentDone === 1),
+    (movie) => !!(torrents && getProgress(movie, torrents)?.percentDone === 1),
   );
 
   const head = (icon: IconDefinition) => (
@@ -98,18 +98,16 @@ export function Movies({
           triggerWhenOpen={head(faCaretUp)}
         >
           <ul>
-            {(sortedMovies.true || []).map(movie => (
+            {(sortedMovies.true || []).map((movie) => (
               <li key={movie.id}>
                 <span>{movie.download.title}</span>
               </li>
             ))}
           </ul>
         </Collapsible>
-      ) : (
-        undefined
-      )}
+      ) : undefined}
       <ul>
-        {(sortedMovies.false || []).map(movie => (
+        {(sortedMovies.false || []).map((movie) => (
           <li key={movie.id}>
             <span>{movie.download.title}</span>
             &nbsp;
@@ -163,11 +161,7 @@ export function Progress({
     return <FontAwesomeIcon icon={faCheckCircle} />;
   } else {
     const etaDescr =
-      eta > 0
-        ? Moment()
-            .add(eta, 'seconds')
-            .fromNow(true)
-        : 'Unknown time';
+      eta > 0 ? Moment().add(eta, 'seconds').fromNow(true) : 'Unknown time';
     const title = String.Format(
       '{0:00}% ({1} remaining)',
       percentDone * 100,
@@ -194,7 +188,7 @@ function getProgress(
     const torrent = torrents[tid];
     if (!torrent) return null;
     eta = torrent.eta;
-    const tf = torrent.files.find(file => file.name.includes(marker));
+    const tf = torrent.files.find((file) => file.name.includes(marker));
     if (tf) {
       percentDone = tf.bytesCompleted / tf.length;
     } else {
@@ -222,7 +216,7 @@ export function TVShows({
         <h2>
           TV Shows <Loading loading={loading} />
         </h2>
-        {series.map(serie => (
+        {series.map((serie) => (
           <Series key={serie.tmdb_id} serie={serie} torrents={torrents} />
         ))}
       </div>
@@ -314,32 +308,40 @@ function Season({
       open={!collapse}
     >
       <ol>
-        {season.map(episode => (
+        {season.map((episode) => (
           <li key={episode.id} value={episode.episode}>
             <span>{episode.download.title}</span>
             &nbsp;
             <Progress torrents={torrents} item={episode} />
           </li>
         ))}
-        <NextEpisodeAirs tmdb_id={tmdb_id} season={i} season_episodes={season} />
+        <NextEpisodeAirs
+          tmdb_id={tmdb_id}
+          season={i}
+          season_episodes={season}
+        />
       </ol>
     </Collapsible>
   );
 }
 
-export function NextEpisodeAirs(props: { tmdb_id: number; season: string; season_episodes: { episode?: number }[] }) {
-  const { data } = useSWR<{ episodes: { name: string; air_date: string; episode_number: number }[] }>(
-    `tv/${props.tmdb_id}/season/${props.season}`,
-  );
+export function NextEpisodeAirs(props: {
+  tmdb_id: number;
+  season: string;
+  season_episodes: { episode?: number }[];
+}) {
+  const { data } = useSWR<{
+    episodes: { name: string; air_date: string; episode_number: number }[];
+  }>(`tv/${props.tmdb_id}/season/${props.season}`);
 
   if (!data) {
     return <></>;
   }
 
-  const lastEpisode = _.last(props.season_episodes)!.episode!
+  const lastEpisode = _.last(props.season_episodes)!.episode!;
 
-  const nextEpisode = data.episodes.find(episode =>
-    episode.episode_number === (lastEpisode + 1)
+  const nextEpisode = data.episodes.find(
+    (episode) => episode.episode_number === lastEpisode + 1,
   );
   if (!nextEpisode) {
     return <></>;
@@ -347,8 +349,9 @@ export function NextEpisodeAirs(props: { tmdb_id: number; season: string; season
 
   let message = getMessage(nextEpisode.air_date);
 
-  const ep_num = `Episode ${nextEpisode.episode_number}`
-  if (ep_num === nextEpisode.name) { // unoriginal episode names
+  const ep_num = `Episode ${nextEpisode.episode_number}`;
+  if (ep_num === nextEpisode.name) {
+    // unoriginal episode names
     message = `${ep_num} ${message}`;
   } else {
     message = ep_num + ` "${nextEpisode.name}" ` + message;
@@ -357,7 +360,9 @@ export function NextEpisodeAirs(props: { tmdb_id: number; season: string; season
   return (
     <small>
       {message}&nbsp;
-      <MLink to={`/select/${props.tmdb_id}/season/${props.season}/episode/${nextEpisode.episode_number}/options`}>
+      <MLink
+        to={`/select/${props.tmdb_id}/season/${props.season}/episode/${nextEpisode.episode_number}/options`}
+      >
         <FontAwesomeIcon icon={faSearch} />
       </MLink>
     </small>
@@ -394,7 +399,7 @@ export function shouldCollapse(
   let collapse = false;
   if (data) {
     const i_i = +i;
-    const seasonMeta = data.seasons.find(s => s.season_number === i_i);
+    const seasonMeta = data.seasons.find((s) => s.season_number === i_i);
     if (seasonMeta) {
       const hasNext = true; // !!data.seasons[i_i + 1];
 

@@ -63,7 +63,9 @@ class Query(graphene.ObjectType):
         Tv, id=graphene.ID(), resolver=lambda self, context, id: tmdb.get_tv(id)
     )
     movie = graphene.Field(
-        Movie, id=graphene.ID(), resolver=lambda self, context, id: tmdb.get_movie(id),
+        Movie,
+        id=graphene.ID(),
+        resolver=lambda self, context, id: tmdb.get_movie(id),
     )
     monitors = graphene.List(Monitor)
 

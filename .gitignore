@@ -18,3 +18,6 @@ node_modules/
 .bento/cache
 token.txt
 media_token.txt
+
+.yarn
+.envrc

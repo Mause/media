@@ -16,7 +16,10 @@ from .conftest import add_json
 async def test_auth(responses, user, fastapi_app, test_client):
     # Arrange
     add_json(
-        responses, 'GET', 'https://mause.au.auth0.com/userinfo', {'email': user.email},
+        responses,
+        'GET',
+        'https://mause.au.auth0.com/userinfo',
+        {'email': user.email},
     )
 
     KID = 'kid'

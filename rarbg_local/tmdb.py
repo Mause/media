@@ -8,16 +8,19 @@ import aiohttp
 import aiohttp.web_exceptions
 import backoff
 from cachetools import LRUCache, TTLCache
-from requests_toolbelt.sessions import BaseUrlSession
 
-from .models import MovieResponse, SearchResponse, TvApiResponse, TvSeasonResponse
+from .models import (
+    MediaType,
+    MovieResponse,
+    SearchResponse,
+    TvApiResponse,
+    TvSeasonResponse,
+)
 from .utils import cached, precondition
 
 base = 'https://api.themoviedb.org/3/'
 
-tmdb = BaseUrlSession(base)
-tmdb.params['api_key'] = api_key = os.environ['TMDB_API_KEY']
-
+access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
 ThingType = Literal['movie', 'tv']
 
 
@@ -32,9 +35,13 @@ def try_(dic: Dict[str, str], *keys: str) -> Optional[str]:
     giveup=lambda e: getattr(e.response, 'status_code', None) != 429,
 )
 async def get_json(path, **kwargs):
-    async with aiohttp.ClientSession() as tmdb:
-        kwargs.setdefault('params', {})['api_key'] = api_key
-        r = await tmdb.get(base + path, **kwargs)
+    async with aiohttp.ClientSession(
+        base_url=base,
+        headers={
+            'Authorization': f'Bearer {access_token}',
+        },
+    ) as tmdb:
+        r = await tmdb.get(path, **kwargs)
         r.raise_for_status()
         return await r.json()
 
@@ -51,7 +58,7 @@ def get_year(result: Dict[str, str]) -> Optional[int]:
 
 @cached(TTLCache(1024, 360))
 async def search_themoviedb(s: str) -> List[SearchResponse]:
-    MAP = {'tv': 'series', 'movie': 'movie'}
+    MAP = {'tv': MediaType.SERIES, 'movie': MediaType.MOVIE}
     r = await get_json('search/multi', params={'query': s})
     return [
         SearchResponse(
@@ -76,7 +83,7 @@ async def find_themoviedb(imdb_id: str):
 
 
 @cached(LRUCache(1024))
-async def resolve_id(imdb_id: str, type: ThingType) -> str:
+async def resolve_id(imdb_id: str, type: ThingType) -> int:
     precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
     results = await get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
 
@@ -87,12 +94,12 @@ async def resolve_id(imdb_id: str, type: ThingType) -> str:
 
 
 @cached(LRUCache(256))
-async def get_movie(id: str) -> MovieResponse:
+async def get_movie(id: int) -> MovieResponse:
     return MovieResponse(**(await get_json(f'movie/{id}')))
 
 
 @cached(TTLCache(256, 360))
-async def get_tv(id: str) -> TvApiResponse:
+async def get_tv(id: int) -> TvApiResponse:
     return TvApiResponse(**await get_json(f'tv/{id}'))
 
 
@@ -110,7 +117,7 @@ async def get_imdb_id(type: str, id: Union[int, str]) -> str:
 
 
 @cached(TTLCache(256, 360))
-async def get_tv_episodes(id: str, season: str) -> TvSeasonResponse:
+async def get_tv_episodes(id: int, season: int) -> TvSeasonResponse:
     return TvSeasonResponse(**await get_json(f'tv/{id}/season/{season}'))
 
 

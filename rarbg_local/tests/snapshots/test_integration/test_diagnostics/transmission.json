@@ -1,0 +1,13 @@
+[
+  {
+    "component_name": "transmission",
+    "component_type": "internal",
+    "status": "pass",
+    "output": {
+      "consumers": [
+        "ctag1"
+      ],
+      "client_is_alive": true
+    }
+  }
+]

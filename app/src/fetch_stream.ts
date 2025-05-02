@@ -4,9 +4,7 @@ function makeWriteableEventStream(eventTarget: EventTarget) {
       eventTarget.dispatchEvent(new Event('start'));
     },
     write(message, controller) {
-      eventTarget.dispatchEvent(
-        new MessageEvent('message', { data: message }),
-      );
+      eventTarget.dispatchEvent(new MessageEvent('message', { data: message }));
     },
     close() {
       eventTarget.dispatchEvent(new CloseEvent('close'));
@@ -49,8 +47,8 @@ export function FetchEventTarget(url: string, init: RequestInit) {
   const eventStream = makeWriteableEventStream(eventTarget);
   fetch(url, init)
     .then((response) => {
-      response.body!
-        .pipeThrough(new TextDecoderStream())
+      response
+        .body!.pipeThrough(new TextDecoderStream())
         .pipeThrough(jsonDecoder)
         .pipeTo(eventStream);
     })

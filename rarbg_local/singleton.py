@@ -1,6 +1,6 @@
 import inspect
 from asyncio import iscoroutinefunction
-from typing import Callable, TypeVar
+from typing import Callable, Optional, TypeVar
 
 from fastapi import FastAPI
 from fastapi.dependencies.utils import solve_dependencies
@@ -11,14 +11,18 @@ from makefun import add_signature_parameters, create_function
 T = TypeVar('T')
 
 
-async def get(app: FastAPI, func: Callable[..., T], request: Request = None) -> T:
+async def get(
+    app: FastAPI, func: Callable[..., T], request: Optional[Request] = None
+) -> T:
     dependant = get_dependant(call=func, path='')
     request = request or Request(
         {'type': 'http', 'query_string': '', 'headers': [], 'app': app}
     )
 
     values, errors, *_ = await solve_dependencies(
-        request=request, dependant=dependant, dependency_overrides_provider=app,
+        request=request,
+        dependant=dependant,
+        dependency_overrides_provider=app,
     )
 
     assert not errors
