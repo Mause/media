@@ -149,6 +149,11 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
         return StreamingResponse(
             internal(),
             media_type="text/event-stream",
+            headers={
+                'Connection': 'keep-alive',
+                'Cache-Control': 'no-cache',
+                'X-Accel-Buffering': 'no',
+            },
         )
 
     return decorator
