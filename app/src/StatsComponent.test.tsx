@@ -6,14 +6,14 @@ import { act } from '@testing-library/react';
 usesMoxios();
 
 test('render', async () => {
-  await act(async () => {
-    const { container } = renderWithSWR(<StatsComponent />);
+  const { container } = renderWithSWR(<StatsComponent />);
 
+  await act(async () => {
     await mock<StatsResponse[]>('/api/stats', [
       { user: 'Mause', values: { episode: 1, movie: 1 } },
     ]);
     await wait();
-
-    expect(container).toMatchSnapshot();
   });
+
+  expect(container).toMatchSnapshot();
 });

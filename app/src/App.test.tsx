@@ -12,9 +12,7 @@ test('renders learn react link', () => {
 });
 
 test('renders app update notification', async () => {
-  await act(async () => {
-    renderWithSWR(<App />);
-  });
+  renderWithSWR(<App />);
 
   expect(CallbackMountPoint.onAppUpdate).toBeTruthy();
 

@@ -133,28 +133,28 @@ describe('Progress', () => {
 
 describe('NextEpisodeAirs', () => {
   it('works', async () => {
-    await act(async () => {
-      MockDate.set('2020-04-20');
-      const tmdb_id = 10000;
-      const season = '1';
-      const { container } = renderWithSWR(
-        <MemoryRouter>
-          <NextEpisodeAirs
-            season={season}
-            tmdb_id={tmdb_id}
-            season_episodes={[{ episode: 1 }]}
-          />
-          ,
-        </MemoryRouter>,
-      );
+    MockDate.set('2020-04-20');
+    const tmdb_id = 10000;
+    const season = '1';
+    const { container } = renderWithSWR(
+      <MemoryRouter>
+        <NextEpisodeAirs
+          season={season}
+          tmdb_id={tmdb_id}
+          season_episodes={[{ episode: 1 }]}
+        />
+        ,
+      </MemoryRouter>,
+    );
 
+    await act(async () => {
       await mock(`tv/${tmdb_id}/season/${season}`, {
         episodes: [{ name: 'EP2', air_date: '2020-04-24', episode_number: 2 }],
       });
       await wait();
-
-      expect(container).toMatchSnapshot();
     });
+
+    expect(container).toMatchSnapshot();
   });
 });
 

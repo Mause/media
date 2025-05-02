@@ -40,21 +40,21 @@ describe('MonitorComponent', () => {
   });
 
   it('add', async () => {
+    const hist = createMemoryHistory();
+    hist.push({
+      pathname: '/monitor/add/5',
+      state: { type: 'MOVIE' },
+    });
+
+    renderWithSWR(
+      <Router history={hist}>
+        <Route path="/monitor/add/:tmdb_id">
+          <MonitorAddComponent />
+        </Route>
+      </Router>,
+    );
+
     await act(async () => {
-      const hist = createMemoryHistory();
-      hist.push({
-        pathname: '/monitor/add/5',
-        state: { type: 'MOVIE' },
-      });
-
-      renderWithSWR(
-        <Router history={hist}>
-          <Route path="/monitor/add/:tmdb_id">
-            <MonitorAddComponent />
-          </Route>
-        </Router>,
-      );
-
       await wait();
       expectLastRequestBody().toEqual({
         type: 'MOVIE',
