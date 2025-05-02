@@ -83,7 +83,7 @@ async def find_themoviedb(imdb_id: str):
 
 
 @cached(LRUCache(1024))
-async def resolve_id(imdb_id: str, type: ThingType) -> str:
+async def resolve_id(imdb_id: str, type: ThingType) -> int:
     precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
     results = await get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
 
