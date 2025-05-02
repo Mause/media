@@ -29,27 +29,27 @@ function Fake() {
 }
 
 test('AxiosErrorCatcher', async () => {
-    let lerror;
-    const { container } = render(
-      <ErrorBoundary
-        fallback={<div>error</div>}
-        onError={(error) => (lerror = error)}
-      >
-        <AxiosErrorCatcher>
-          <Fake />
-        </AxiosErrorCatcher>
-      </ErrorBoundary>,
-    );
+  let lerror;
+  const { container } = render(
+    <ErrorBoundary
+      fallback={<div>error</div>}
+      onError={(error) => (lerror = error)}
+    >
+      <AxiosErrorCatcher>
+        <Fake />
+      </AxiosErrorCatcher>
+    </ErrorBoundary>,
+  );
 
-    expect(container).toMatchSnapshot();
+  expect(container).toMatchSnapshot();
 
-    await moxios.stubOnce('GET', /.*/, {
-      status: 500,
-      response: { body: {}, message: 'an error has occured' },
-    });
+  await moxios.stubOnce('GET', /.*/, {
+    status: 500,
+    response: { body: {}, message: 'an error has occured' },
+  });
   await act(async () => {
     await wait();
-});
-    expect(lerror).toBeTruthy();
-    expect(lerror).toEqual(new Error('Request failed with status code 500'));
   });
+  expect(lerror).toBeTruthy();
+  expect(lerror).toEqual(new Error('Request failed with status code 500'));
+});

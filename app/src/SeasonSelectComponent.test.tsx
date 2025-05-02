@@ -1,4 +1,4 @@
-import { act, screen} from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import {
@@ -12,13 +12,13 @@ import { mock, usesMoxios, wait, renderWithSWR } from './test.utils';
 usesMoxios();
 
 test('SeasonSelectComponent  render', async () => {
-    const { container } = renderWithSWR(
-      <MemoryRouter initialEntries={['/select/1/season']}>
-        <Route path="/select/:tmdb_id/season">
-          <SeasonSelectComponent />
-        </Route>
-      </MemoryRouter>,
-    );
+  const { container } = renderWithSWR(
+    <MemoryRouter initialEntries={['/select/1/season']}>
+      <Route path="/select/:tmdb_id/season">
+        <SeasonSelectComponent />
+      </Route>
+    </MemoryRouter>,
+  );
 
   await act(async () => {
     await mock<TV>('/api/tv/1', {
@@ -34,18 +34,18 @@ test('SeasonSelectComponent  render', async () => {
     await wait();
   });
 
-    expect(screen.getByTestId('title').textContent).toEqual('Hello');
-    expect(container).toMatchSnapshot();
+  expect(screen.getByTestId('title').textContent).toEqual('Hello');
+  expect(container).toMatchSnapshot();
 });
 
 test('EpisodeSelectComponent render', async () => {
-    const { container } = renderWithSWR(
-      <MemoryRouter initialEntries={['/select/1/season/1']}>
-        <Route path="/select/:tmdb_id/season/:season">
-          <EpisodeSelectComponent />
-        </Route>
-      </MemoryRouter>,
-    );
+  const { container } = renderWithSWR(
+    <MemoryRouter initialEntries={['/select/1/season/1']}>
+      <Route path="/select/:tmdb_id/season/:season">
+        <EpisodeSelectComponent />
+      </Route>
+    </MemoryRouter>,
+  );
 
   await act(async () => {
     await mock<Season>('/api/tv/1/season/1', {
@@ -60,6 +60,6 @@ test('EpisodeSelectComponent render', async () => {
     await wait();
   });
 
-    expect(screen.getByTestId('title').textContent).toEqual('Season 1');
-    expect(container).toMatchSnapshot();
+  expect(screen.getByTestId('title').textContent).toEqual('Season 1');
+  expect(container).toMatchSnapshot();
 });

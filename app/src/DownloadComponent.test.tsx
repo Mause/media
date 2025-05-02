@@ -11,26 +11,26 @@ usesMoxios();
 
 describe('DownloadComponent', () => {
   it('success', async () => {
-      const history = createMemoryHistory();
-      const state: DownloadState = {
-        downloads: [
-          {
-            tmdb_id: 10000,
-            magnet: '...',
-          },
-        ],
-      };
-      history.push('/download', state);
+    const history = createMemoryHistory();
+    const state: DownloadState = {
+      downloads: [
+        {
+          tmdb_id: 10000,
+          magnet: '...',
+        },
+      ],
+    };
+    history.push('/download', state);
 
-      const { container } = renderWithSWR(
-        <Router history={history}>
-          <Route path="/download">
-            <DownloadComponent />
-          </Route>
-        </Router>,
-      );
+    const { container } = renderWithSWR(
+      <Router history={history}>
+        <Route path="/download">
+          <DownloadComponent />
+        </Route>
+      </Router>,
+    );
 
-      expect(container).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 
     await act(async () => {
       await moxios.stubOnce('POST', /\/api\/download/, {});
@@ -38,8 +38,8 @@ describe('DownloadComponent', () => {
       await wait();
     });
 
-      expect(container).toMatchSnapshot();
-      expect(history.length).toBe(2);
+    expect(container).toMatchSnapshot();
+    expect(history.length).toBe(2);
   });
   it.skip('failure', async () => {
     const history = createMemoryHistory();
@@ -54,12 +54,12 @@ describe('DownloadComponent', () => {
     history.push('/download', state);
 
     renderWithSWR(
-        <Router history={history}>
-          <Route path="/download">
-            <DownloadComponent />
-          </Route>
-        </Router>,
-      );
+      <Router history={history}>
+        <Route path="/download">
+          <DownloadComponent />
+        </Route>
+      </Router>,
+    );
 
     await act(async () => {
       await moxios.stubFailure('POST', /\/api\/download/, {
