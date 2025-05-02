@@ -43,6 +43,7 @@ class ProviderSource(Enum):
     RARBG = 'rarbg'
     TORRENTS_CSV = 'torrentscsv'
     NYAA_SI = 'nyaasi'
+    PIRATEBAY = 'piratebay'
 
 
 class EpisodeInfo(BaseModel):

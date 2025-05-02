@@ -13,6 +13,7 @@ def __getattr__(name: str) -> None:
     from .horriblesubs import HorriblesubsProvider
     from .kickass import KickassProvider
     from .nyaasi import NyaaProvider
+    from .piratebay import PirateBayProvider
     from .rarbg import RarbgProvider
     from .torrents_csv import TorrentsCsvProvider
 
@@ -23,6 +24,7 @@ def __getattr__(name: str) -> None:
             KickassProvider(),
             TorrentsCsvProvider(),
             NyaaProvider(),
+            PirateBayProvider(),
         ]
     raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
 
@@ -89,7 +91,7 @@ async def main():
     from rich.logging import RichHandler
     from rich.table import Table
 
-    from .tmdb import resolve_id
+    from ..tmdb import resolve_id
 
     logging.basicConfig(level=logging.DEBUG, handlers=[RichHandler()])
 
