@@ -8,7 +8,7 @@ import backoff
 import requests
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
-from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
+from .abc import MovieProvider, TvProvider, format, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)
 
