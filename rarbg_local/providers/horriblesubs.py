@@ -2,14 +2,17 @@ import re
 from enum import Enum
 from functools import lru_cache
 from itertools import chain
-from typing import Dict, Optional, Tuple
+from typing import AsyncGenerator, Dict, Optional, Tuple
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
 from lxml.html import fromstring
 
 from ..jikan import closeness, get_names
+from ..models import EpisodeInfo, ITorrent, ProviderSource
+from ..tmdb import get_tv
 from ..utils import cached
+from .abc import TvProvider, tv_convert
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
 
@@ -150,6 +153,33 @@ async def search_for_tv(tmdb_id, season, episode):
     async for item in get_downloads(show_id, HorriblesubsDownloadType.SHOW):
         if episode is None or item['episode'] == f'{episode:02d}':
             yield item
+
+
+class HorriblesubsProvider(TvProvider):
+    name = 'horriblesubs'
+    type = ProviderSource.HORRIBLESUBS
+
+    async def search_for_tv(
+        self,
+        imdb_id: Optional[str],
+        tmdb_id: int,
+        season: int,
+        episode: Optional[int] = None,
+    ) -> AsyncGenerator[ITorrent, None]:
+        name = (await get_tv(tmdb_id)).name
+        template = f'HorribleSubs {name} S{season:02d}'
+
+        async for item in search_for_tv(tmdb_id, season, episode):
+            yield ITorrent(
+                source=ProviderSource.HORRIBLESUBS,
+                title=f'{template}E{int(item["episode"], 10):02d} {item["resolution"]}',
+                seeders=0,
+                download=item['download'],
+                category=tv_convert(item['resolution']),
+                episode_info=EpisodeInfo(
+                    seasonnum=str(season), epnum=str(item['episode'])
+                ),
+            )
 
 
 async def main():
