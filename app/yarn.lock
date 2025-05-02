@@ -4531,7 +4531,7 @@ __metadata:
     "@vtex/axios-concurrent-retry": "npm:^4.0.11"
     axios: "npm:^0.30.0"
     colors.css: "npm:^3.0.0"
-    eslint-config-react-app: "npm:^6.0.0"
+    eslint-config-react-app: "npm:^7.0.0"
     history: "npm:^4.9.0"
     jest-junit: "npm:^12.0.0"
     lodash: "npm:^4.17.20"
@@ -5759,13 +5759,6 @@ __metadata:
   version: 0.0.1
   resolution: "concat-map@npm:0.0.1"
   checksum: 10/9680699c8e2b3af0ae22592cb764acaf973f292a7b71b8a06720233011853a58e256c89216a10cbe889727532fd77f8bcd49a760cedfde271b8e006c20e079f2
-  languageName: node
-  linkType: hard
-
-"confusing-browser-globals@npm:^1.0.10":
-  version: 1.0.10
-  resolution: "confusing-browser-globals@npm:1.0.10"
-  checksum: 10/7ccdc44c2ca419cf6576c3e4336106e18d1c5337f547e461342f51aec4a10f96fdfe45414b522be3c7d24ea0b62bf4372cd37768022e4d6161707ffb2c0987e6
   languageName: node
   linkType: hard
 
@@ -7168,33 +7161,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-react-app@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "eslint-config-react-app@npm:6.0.0"
-  dependencies:
-    confusing-browser-globals: "npm:^1.0.10"
-  peerDependencies:
-    "@typescript-eslint/eslint-plugin": ^4.0.0
-    "@typescript-eslint/parser": ^4.0.0
-    babel-eslint: ^10.0.0
-    eslint: ^7.5.0
-    eslint-plugin-flowtype: ^5.2.0
-    eslint-plugin-import: ^2.22.0
-    eslint-plugin-jest: ^24.0.0
-    eslint-plugin-jsx-a11y: ^6.3.1
-    eslint-plugin-react: ^7.20.3
-    eslint-plugin-react-hooks: ^4.0.8
-    eslint-plugin-testing-library: ^3.9.0
-  peerDependenciesMeta:
-    eslint-plugin-jest:
-      optional: true
-    eslint-plugin-testing-library:
-      optional: true
-  checksum: 10/d10980658b166cc4e772b0c15e3c3d6194d8d41c849bd99155c4a2a85e3d3be2ec9263e7e5c0e4eda5820d294d4e3864952eeed89fa6e8a93bd5c6c04c024106
-  languageName: node
-  linkType: hard
-
-"eslint-config-react-app@npm:^7.0.1":
+"eslint-config-react-app@npm:^7.0.0, eslint-config-react-app@npm:^7.0.1":
   version: 7.0.1
   resolution: "eslint-config-react-app@npm:7.0.1"
   dependencies:
