@@ -19,4 +19,3 @@ class TorrentsCsvProvider(MovieProvider):
                     seeders=item['seeders'],
                     download=item['infohash'],
                 )
-

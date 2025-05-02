@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from ..models import ITorrent, ProviderSource
 from typing import AsyncGenerator, Optional
+
+from ..models import ITorrent, ProviderSource
 
 
 class Provider(ABC):

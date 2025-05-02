@@ -2,10 +2,11 @@ import json
 import logging
 from json.decoder import JSONDecodeError
 from typing import Dict, Iterator, List, TypedDict
-from .abc import TvProvider, MovieProvider
 
 import backoff
 import requests
+
+from .abc import MovieProvider, TvProvider
 
 logger = logging.getLogger(__name__)
 
@@ -109,6 +110,7 @@ def _get(base_url: str, **kwargs: str) -> List[Dict]:
             raise Exception(res)
 
     return res.get('torrent_results', [])
+
 
 class RarbgProvider(TvProvider, MovieProvider):
     name = 'rarbg'

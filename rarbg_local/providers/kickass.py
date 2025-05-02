@@ -2,12 +2,12 @@ import logging
 import re
 import string
 from typing import Any, AsyncGenerator, Dict, Optional
-from .abc import TvProvider, MovieProvider
 
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 
 from ..tmdb import get_movie, get_tv
+from .abc import MovieProvider, TvProvider
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +77,6 @@ async def search_for_movie(imdb_id: str, tmdb_id: int):
 
     async for item in base(name, imdb_id):
         yield item
-
 
 
 class KickassProvider(TvProvider, MovieProvider):

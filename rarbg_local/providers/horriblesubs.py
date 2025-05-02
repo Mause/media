@@ -3,7 +3,6 @@ from enum import Enum
 from functools import lru_cache
 from itertools import chain
 from typing import Dict, Optional, Tuple
-from .abc import TvProvider
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
@@ -11,6 +10,7 @@ from lxml.html import fromstring
 
 from ..jikan import closeness, get_names
 from ..utils import cached
+from .abc import TvProvider
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
 
@@ -178,6 +178,7 @@ class HorriblesubsProvider(TvProvider):
                     seasonnum=str(season), epnum=str(item['episode'])
                 ),
             )
+
 
 async def main():
     print(list(await search_for_tv('95550', 1, 1)))

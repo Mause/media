@@ -49,10 +49,8 @@ def movie_convert(key):
     }.get(key, key)
 
 
-
 def format(season: int, episode: Optional[int]) -> str:
     return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
-
 
 
 PROVIDERS = [
