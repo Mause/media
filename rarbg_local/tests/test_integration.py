@@ -23,7 +23,7 @@ from ..models import ITorrent
 from ..new import ProviderSource, SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
-from .conftest import add_json, themoviedb, tolist
+from .conftest import add_json, assert_match_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
     ITorrentFactory,
@@ -202,10 +202,6 @@ async def test_download_season_pack(
 
 def shallow(d: dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
-
-
-def assert_match_json(snapshot, res, name):
-    snapshot.assert_match(json.dumps(res.json(), indent=2), name)
 
 
 @mark.asyncio

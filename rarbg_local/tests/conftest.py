@@ -152,3 +152,7 @@ async def tolist(a: AsyncGenerator[T, None]) -> list[T]:
     async for t in a:
         lst.append(t)
     return lst
+
+
+def assert_match_json(snapshot, res, name):
+    snapshot.assert_match(json.dumps(res.json(), indent=2), name)

@@ -1,6 +1,6 @@
 from pytest import mark
 
-from .conftest import themoviedb
+from .conftest import assert_match_json, themoviedb
 from .factories import (
     MonitorFactory,
     MovieResponseFactory,
@@ -90,7 +90,7 @@ async def test_main(test_client, snapshot, aioresponses, session):
 
     assert not res.json().get('errors')
 
-    snapshot.assert_match(res.json())
+    assert_match_json(snapshot, res, 'graphql_response.json')
 
 
 @mark.asyncio
@@ -108,4 +108,4 @@ async def test_mutation(test_client, snapshot):
 
     assert not res.json().get('errors')
 
-    snapshot.assert_match(res.json())
+    assert_match_json(snapshot, res, 'graphql_mutation_response.json')
