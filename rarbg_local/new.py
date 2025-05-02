@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 import logging
 import os
@@ -5,6 +6,7 @@ import traceback
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
+from async_timeout import timeout
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
@@ -139,13 +141,33 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
     return {}
 
 
+def aiter(iterable):
+    return iterable.__aiter__()
+
+
+def anext(iterable):
+    return iterable.__anext__()
+
+
 def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
     async def decorator(request: Request, *args, **kwargs):
         async def internal() -> AsyncGenerator[str, None]:
-            async for rset in func(*args, **kwargs):
-                if await request.is_disconnected():
+            iterable = aiter(func(*args, **kwargs))
+
+            while True:
+                try:
+                    async with timeout(10):
+                        rset = await anext(iterable)
+                    yield f'data: {rset.json()}\n\n'
+                except asyncio.TimeoutError:
+                    yield ':\n\n'  # heartbeat
+                except StopAsyncIteration:
                     break
-                yield f'data: {rset.json()}\n\n'
+                except Exception as e:
+                    logger.exception('Error in eventstream')
+                    yield f'data: {{"error": "{str(e)}"}}\n\n'
+                    break
+
             yield 'data:\n\n'
 
         return StreamingResponse(
