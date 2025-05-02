@@ -18,7 +18,7 @@ from ..db import Download, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
 from ..new import SearchResponse, Settings, get_current_user, get_settings
-from ..providers import PirateBayProvider
+from ..providers.piratebay import PirateBayProvider
 from .conftest import add_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
