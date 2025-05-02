@@ -23,7 +23,7 @@ describe('DownloadComponent', () => {
       };
       history.push('/download', state);
 
-      const el = renderWithSWR(
+      const { container } = renderWithSWR(
         <Router history={history}>
           <Route path="/download">
             <DownloadComponent />
@@ -31,13 +31,13 @@ describe('DownloadComponent', () => {
         </Router>,
       );
 
-      expect(el.container).toMatchSnapshot();
+      expect(container).toMatchSnapshot();
 
       await moxios.stubOnce('POST', /\/api\/download/, {});
       expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
       await wait();
 
-      expect(el.container).toMatchSnapshot();
+      expect(container).toMatchSnapshot();
       expect(history.length).toBe(2);
     });
   });

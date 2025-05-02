@@ -31,7 +31,7 @@ function Fake() {
 test('AxiosErrorCatcher', async () => {
   await act(async () => {
     let lerror;
-    const el = render(
+    const { container } = render(
       <ErrorBoundary
         fallback={<div>error</div>}
         onError={(error) => (lerror = error)}
@@ -42,7 +42,7 @@ test('AxiosErrorCatcher', async () => {
       </ErrorBoundary>,
     );
 
-    expect(el.container).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 
     await moxios.stubOnce('GET', /.*/, {
       status: 500,
