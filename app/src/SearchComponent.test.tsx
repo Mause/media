@@ -1,4 +1,4 @@
-import { act } from '@testing-library/react';
+import { act} from '@testing-library/react';
 import React from 'react';
 import { SearchComponent, SearchResult } from './SearchComponent';
 import { Route, MemoryRouter } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { mock, wait, usesMoxios, renderWithSWR } from './test.utils';
 usesMoxios();
 
 test('SearchComponent', async () => {
-  await act(async () => {
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/search?query=world']}>
         <Route path="/search">
@@ -24,9 +23,10 @@ test('SearchComponent', async () => {
         title: 'Hello',
       },
     ];
+  await act(async () => {
     await mock('/api/search?query=world', results);
     await wait();
+  });
 
     expect(container).toMatchSnapshot();
-  });
 });

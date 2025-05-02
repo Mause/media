@@ -1,5 +1,5 @@
 import React from 'react';
-import { act } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
@@ -29,9 +29,7 @@ Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
   it.skip('failure', async () => {
-    // let el: RenderResult | undefined;
-
-    let { container, findAllByTestId } = renderWithSWR(
+    let { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
           <OptionsComponent type="movie" />
@@ -44,10 +42,6 @@ describe('OptionsComponent', () => {
       await wait();
     });
 
-    // console.assert(el);
-
-    // expect(el).toBeTruthy();
-
     expect(container).toMatchSnapshot();
 
     await act(async () => {
@@ -57,7 +51,7 @@ describe('OptionsComponent', () => {
     });
 
     expect(
-      (await findAllByTestId('errorMessage')).map((t) => t.textContent),
+      (await screen.findAllByTestId('errorMessage')).map((t) => t.textContent),
     ).toEqual(
       expect.arrayContaining([
         'Error occured whilst loading options from rarbg: [object Event]',
