@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
@@ -47,9 +47,7 @@ test('AxiosErrorCatcher', async () => {
     status: 500,
     response: { body: {}, message: 'an error has occured' },
   });
-  await act(async () => {
-    await wait();
-  });
+  await wait();
   expect(lerror).toBeTruthy();
   expect(lerror).toEqual(new Error('Request failed with status code 500'));
 });

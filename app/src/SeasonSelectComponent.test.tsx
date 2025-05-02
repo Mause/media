@@ -1,4 +1,4 @@
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import {
@@ -20,19 +20,17 @@ test('SeasonSelectComponent  render', async () => {
     </MemoryRouter>,
   );
 
-  await act(async () => {
-    await mock<TV>('/api/tv/1', {
-      title: 'Hello',
-      number_of_seasons: 1,
-      seasons: [
-        {
-          season_number: 1,
-          episode_count: 1,
-        },
-      ],
-    });
-    await wait();
+  await mock<TV>('/api/tv/1', {
+    title: 'Hello',
+    number_of_seasons: 1,
+    seasons: [
+      {
+        season_number: 1,
+        episode_count: 1,
+      },
+    ],
   });
+  await wait();
 
   expect(screen.getByTestId('title').textContent).toEqual('Hello');
   expect(container).toMatchSnapshot();
@@ -47,18 +45,16 @@ test('EpisodeSelectComponent render', async () => {
     </MemoryRouter>,
   );
 
-  await act(async () => {
-    await mock<Season>('/api/tv/1/season/1', {
-      episodes: [
-        {
-          episode_number: 1,
-          id: 1,
-          name: 'Episode 1',
-        },
-      ],
-    });
-    await wait();
+  await mock<Season>('/api/tv/1/season/1', {
+    episodes: [
+      {
+        episode_number: 1,
+        id: 1,
+        name: 'Episode 1',
+      },
+    ],
   });
+  await wait();
 
   expect(screen.getByTestId('title').textContent).toEqual('Season 1');
   expect(container).toMatchSnapshot();

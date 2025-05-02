@@ -32,11 +32,9 @@ describe('DownloadComponent', () => {
 
     expect(container).toMatchSnapshot();
 
-    await act(async () => {
-      await moxios.stubOnce('POST', /\/api\/download/, {});
-      expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
-      await wait();
-    });
+    await moxios.stubOnce('POST', /\/api\/download/, {});
+    expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
+    await wait();
 
     expect(container).toMatchSnapshot();
     expect(history.length).toBe(2);

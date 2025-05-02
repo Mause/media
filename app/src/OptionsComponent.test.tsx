@@ -37,10 +37,8 @@ describe('OptionsComponent', () => {
       </MemoryRouter>,
     );
 
-    await act(async () => {
-      await mock('movie/1', { title: 'Hello World' });
-      await wait();
-    });
+    await mock('movie/1', { title: 'Hello World' });
+    await wait();
 
     expect(container).toMatchSnapshot();
 

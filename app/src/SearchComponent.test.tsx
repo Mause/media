@@ -1,4 +1,3 @@
-import { act } from '@testing-library/react';
 import React from 'react';
 import { SearchComponent, SearchResult } from './SearchComponent';
 import { Route, MemoryRouter } from 'react-router-dom';
@@ -23,10 +22,8 @@ test('SearchComponent', async () => {
       title: 'Hello',
     },
   ];
-  await act(async () => {
-    await mock('/api/search?query=world', results);
-    await wait();
-  });
+  await mock('/api/search?query=world', results);
+  await wait();
 
   expect(container).toMatchSnapshot();
 });
