@@ -1,3 +1,5 @@
+from typing import AsyncGenerator
+
 from ..models import ITorrent, ProviderSource
 from .abc import MovieProvider
 

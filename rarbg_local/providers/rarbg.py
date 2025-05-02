@@ -1,7 +1,7 @@
 import json
 import logging
 from json.decoder import JSONDecodeError
-from typing import Dict, Iterator, List, TypedDict
+from typing import AsyncGenerator, Dict, Iterator, List, TypedDict
 
 import backoff
 import requests
