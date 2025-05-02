@@ -3,12 +3,10 @@ import logging
 from json.decoder import JSONDecodeError
 from typing import Dict, Iterator, List, TypedDict
 
-from .abc import TvProvider, MovieProvider
-from ..models import EpisodeInfo, ITorrent, ProviderSource
-
 import backoff
 import requests
 
+from ..models import EpisodeInfo, ITorrent, ProviderSource
 from .abc import MovieProvider, TvProvider
 
 logger = logging.getLogger(__name__)

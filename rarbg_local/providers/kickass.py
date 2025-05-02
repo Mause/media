@@ -3,12 +3,10 @@ import re
 import string
 from typing import Any, AsyncGenerator, Dict, Optional
 
-from .abc import TvProvider, MovieProvider
-from ..models import EpisodeInfo, ITorrent, ProviderSource
-
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 
+from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_movie, get_tv
 from .abc import MovieProvider, TvProvider
 

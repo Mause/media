@@ -1,6 +1,6 @@
+from ..models import EpisodeInfo, ITorrent, ProviderSource
 from .abc import TvProvider
 
-from ..models import EpisodeInfo, ITorrent, ProviderSource
 
 class NyaaProvider(TvProvider):
     name = 'nyaa'

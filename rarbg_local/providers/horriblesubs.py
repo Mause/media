@@ -3,7 +3,6 @@ from enum import Enum
 from functools import lru_cache
 from itertools import chain
 from typing import Dict, Optional, Tuple
-from .abc import TvProvider
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
