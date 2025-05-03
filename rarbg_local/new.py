@@ -2,7 +2,7 @@ import logging
 import os
 import traceback
 from functools import wraps
-from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
+from typing import AsyncGenerator, Callable, Dict, List, Literal, Optional, Type, Union
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
@@ -82,7 +82,7 @@ from .tmdb import (
     get_tv_imdb_id,
     search_themoviedb,
 )
-from .types import ImdbId, ThingType, TmdbId
+from .types import ImdbId, TmdbId
 from .utils import non_null, precondition
 
 api = APIRouter()
@@ -165,7 +165,7 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
 )
 @eventstream
 async def stream(
-    type: ThingType,
+    type: Literal['series', 'movie'],
     tmdb_id: TmdbId,
     source: ProviderSource,
     season: Optional[int] = None,

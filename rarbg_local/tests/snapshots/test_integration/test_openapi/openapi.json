@@ -113,8 +113,8 @@
             "schema": {
               "title": "Type",
               "enum": [
-                "movie",
-                "tv"
+                "series",
+                "movie"
               ],
               "type": "string"
             },
