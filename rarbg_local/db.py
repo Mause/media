@@ -2,7 +2,7 @@ import enum
 import logging
 from datetime import datetime
 from functools import lru_cache
-from typing import List, Optional, Type, TypeVar, Union, cast
+from typing import List, Optional, Type, TypeVar, cast
 
 import backoff
 import psycopg2
