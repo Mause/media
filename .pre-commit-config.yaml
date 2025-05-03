@@ -47,6 +47,7 @@ repos:
           - types-tabulate
           - alembic
           - pydantic==1.10.22
+          - lxml
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.

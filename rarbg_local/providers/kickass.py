@@ -1,10 +1,11 @@
 import logging
 import re
 import string
-from typing import Any, AsyncGenerator, Dict, Optional
+from typing import Any, AsyncGenerator, Dict, Optional, Union, cast
 
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
+from lxml.html import PageElement, Tag
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_movie, get_tv
@@ -12,6 +13,12 @@ from ..types import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)
+
+
+def is_node(node: Union[Any, PageElement, int, None]) -> Tag:
+    if not isinstance(node, Tag):
+        raise TypeError(f"Expected PageElement, got {type(node).__name__}")
+    return cast(Tag, node)
 
 
 async def fetch(url: str) -> AsyncGenerator[Dict[str, Any], None]:
@@ -27,9 +34,12 @@ async def fetch(url: str) -> AsyncGenerator[Dict[str, Any], None]:
     for i in soup.find_all(
         'div', {'class': 'tab_content', 'id': lambda id: id != 'comments'}
     ):
-        resolution = i.attrs['id']
+        resolution = is_node(i).attrs['id']
 
-        for row in i.find('table').find('tbody').find_all('tr'):
+        table = is_node(is_node(i).find('table'))
+        tbody = is_node(table.find('tbody'))
+
+        for row in tbody.find_all('tr'):
             magnet = row.find('a', href=lambda href: href.startswith("magnet:")).attrs[
                 'href'
             ]
