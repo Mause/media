@@ -40,13 +40,13 @@ async def get_all_shows() -> Dict[str, str]:
 
 
 @lru_cache()
-async def get_show_id(path: str) -> Optional[str]:
+async def get_show_id(path: str) -> Optional[int]:
     async with make_session() as session:
         res = await session.get(path)
         res.raise_for_status()
         html = await res.text()
         m = SHOWID_RE.search(html)
-        return m.group(1) if m else None
+        return int(m.group(1)) if m else None
 
 
 def parse(html) -> Dict[str, str]:
