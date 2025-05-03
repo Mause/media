@@ -1,26 +1,40 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Optional
 
 import aiohttp
 
 from ..models import ITorrent, ProviderSource
-from .abc import MovieProvider
+from .abc import MovieProvider, TvProvider, format
 
 
-class TorrentsCsvProvider(MovieProvider):
+class TorrentsCsvProvider(MovieProvider, TvProvider):
     name = "torrentscsv"
     type = ProviderSource.TORRENTS_CSV
+
+    async def query(self, q: str):
+        async with aiohttp.ClientSession() as session:
+            res = await session.get(
+                "https://torrents-csv.com/service/search", params={"q": q}
+            )
+            return await res.json()['torrents']
 
     async def search_for_movie(
         self, imdb_id: str, tmdb_id: int
     ) -> AsyncGenerator[ITorrent, None]:
-        async with aiohttp.ClientSession() as session:
-            res = await session.get(
-                "https://torrents-csv.com/service/search", params={"q": imdb_id}
+        for item in await self.query(imdb_id):
+            yield ITorrent(
+                source=ProviderSource.TORRENTS_CSV,
+                title=item['name'],
+                seeders=item['seeders'],
+                download=item['infohash'],
             )
-            for item in (await res.json())['torrents']:
-                yield ITorrent(
-                    source=ProviderSource.TORRENTS_CSV,
-                    title=item['name'],
-                    seeders=item['seeders'],
-                    download=item['infohash'],
-                )
+
+    async def search_for_tv(
+        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+    ) -> AsyncGenerator[ITorrent, None]:
+        for item in await self.query(f"{imdb_id} {format(season, episode)}"):
+            yield ITorrent(
+                source=ProviderSource.TORRENTS_CSV,
+                title=item['name'],
+                seeders=item['seeders'],
+                download=item['infohash'],
+            )
