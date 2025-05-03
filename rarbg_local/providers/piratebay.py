@@ -32,7 +32,6 @@ class PirateBayProvider(TvProvider, MovieProvider):
 
             for item in data:
                 yield ITorrent(
-                    id=item['id'],
                     source=ProviderSource.PIRATEBAY,
                     title=item['name'],
                     seeders=item['seeders'],
@@ -55,7 +54,6 @@ class PirateBayProvider(TvProvider, MovieProvider):
 
             for item in data:
                 yield ITorrent(
-                    id=item['id'],
                     source=ProviderSource.PIRATEBAY,
                     title=item['name'],
                     seeders=item['seeders'],
