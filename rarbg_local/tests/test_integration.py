@@ -202,9 +202,9 @@ async def test_index(
             create_episode(
                 transmission_id=HASH_STRING,
                 imdb_id='tt000000',
-                season='1',
+                season=1,
                 tmdb_id=1,
-                episode='1',
+                episode=1,
                 title='Hello world',
                 show_title='Programming',
                 timestamp=datetime(2020, 4, 21),
@@ -511,7 +511,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '18',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
         {
             'source': 'rarbg',
@@ -519,7 +519,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '41',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
         {
             'source': 'rarbg',
@@ -527,7 +527,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '49',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
     ]
 

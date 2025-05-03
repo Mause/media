@@ -4,12 +4,15 @@ from queue import Empty, Queue
 from threading import Semaphore, current_thread
 from typing import Callable, Iterable, List, Optional, Tuple, TypeVar
 
+from ..types import ImdbId, TmdbId
+from .abc import Provider
+
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
 
 
-def __getattr__(name: str) -> None:
+def get_providers() -> List[Provider]:
     from .horriblesubs import HorriblesubsProvider
     from .kickass import KickassProvider
     from .nyaasi import NyaaProvider
@@ -17,22 +20,20 @@ def __getattr__(name: str) -> None:
     from .rarbg import RarbgProvider
     from .torrents_csv import TorrentsCsvProvider
 
-    if name == 'PROVIDERS':
-        return [
-            HorriblesubsProvider(),
-            RarbgProvider(),
-            KickassProvider(),
-            TorrentsCsvProvider(),
-            NyaaProvider(),
-            PirateBayProvider(),
-        ]
-    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
+    return [
+        HorriblesubsProvider(),
+        RarbgProvider(),
+        KickassProvider(),
+        TorrentsCsvProvider(),
+        NyaaProvider(),
+        PirateBayProvider(),
+    ]
 
 
 def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
     def worker(function: ProviderType) -> None:
         try:
-            current_thread().setName(function.__name__)
+            current_thread().name = function.__name__
 
             for item in function(*args):
                 queue.put(item)
@@ -55,12 +56,11 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
 
 
 async def search_for_tv(
-    imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: Optional[int] = None
 ):
-    from . import PROVIDERS
     from .abc import TvProvider
 
-    for provider in PROVIDERS:
+    for provider in get_providers():
         if not isinstance(provider, TvProvider):
             continue
         try:
@@ -72,11 +72,10 @@ async def search_for_tv(
             logger.exception('Unable to load [TV] from %s', provider.name)
 
 
-async def search_for_movie(imdb_id: str, tmdb_id: int):
-    from . import PROVIDERS
+async def search_for_movie(imdb_id: ImdbId, tmdb_id: TmdbId):
     from .abc import MovieProvider
 
-    for provider in PROVIDERS:
+    for provider in get_providers():
         if not isinstance(provider, MovieProvider):
             continue
         try:
@@ -104,7 +103,7 @@ async def main():
         header_style="bold magenta",
     )
 
-    imdb_id = 'tt28454008'
+    imdb_id = ImdbId('tt28454008')
     tmdb_id = await resolve_id(imdb_id, 'tv')
     async for row in search_for_tv(
         imdb_id=imdb_id, tmdb_id=tmdb_id, season=1, episode=1
