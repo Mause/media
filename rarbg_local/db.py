@@ -58,9 +58,7 @@ class Download(Base):  # type: ignore
     title = Column(String)
     timestamp = Column(DateTime(timezone=True), nullable=False, default=func.now())
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by: 'User' = relationship(
-        'User', back_populates='downloads'
-    )
+    added_by: 'User' = relationship('User', back_populates='downloads')
 
     def progress(self):
         from .main import get_keyed_torrents
