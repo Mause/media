@@ -2,7 +2,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from queue import Empty, Queue
 from threading import Semaphore, current_thread
-from typing import Callable, Iterable, List, Optional, Tuple, TypeVar, TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, Iterable, List, Optional, Tuple, TypeVar
 
 from ..types import ImdbId, TmdbId
 
