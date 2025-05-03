@@ -66,6 +66,22 @@ def run_migrations_offline():
         context.run_migrations()
 
 
+def resolve_db_url():
+    parsed = urlparse(url)
+    print(parsed)
+    domain = parsed.hostname
+    results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
+    print('AAAA', results)
+    print(results[0].to_text())
+    return urlunparse(
+        parsed._replace(
+            netloc='{}:{}@[{}]:{}'.format(
+                parsed.username, parsed.password, results[0].address, parsed.port
+            )
+        )
+    )
+
+
 def run_migrations_online():
     """Run migrations in 'online' mode.
 
@@ -74,26 +90,14 @@ def run_migrations_online():
 
     """
 
-    parsed = urlparse(url)
-    print(parsed)
-    domain = parsed.hostname
-    results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
-    print('AAAA', results)
-    print(results[0].to_text())
-    alembic_config['sqlalchemy.url'] = urlunparse(
-        parsed._replace(
-            netloc='{}:{}@[{}]:{}'.format(
-                parsed.username, parsed.password, results[0].address, parsed.port
-            )
-        )
-    )
+    if 'RAILWAY_ENVIRONMENT_NAME' in os.environ:
+        alembic_config['sqlalchemy.url'] = resolve_db_url()
 
     connectable = engine_from_config(
         alembic_config,
         prefix='sqlalchemy.',
         poolclass=pool.NullPool,
         connect_args={
-            #            'connection_factory': LoggingConnection,
             'connect_timeout': 10000,
         },
     )
