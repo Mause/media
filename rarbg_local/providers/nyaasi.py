@@ -43,5 +43,5 @@ class NyaaProvider(TvProvider):
                     seeders=item.seeders,
                     download=item.magnet,
                     category=tv_convert(item.category),
-                    episode_info=EpisodeInfo(season=season, episode=episode),
+                    episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
                 )
