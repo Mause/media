@@ -1,10 +1,12 @@
+import asyncio
+import inspect
 import logging
 import os
 import traceback
-from functools import wraps
 from typing import AsyncGenerator, Callable, Dict, List, Optional, Type, Union
 from urllib.parse import urlencode
 
+from async_timeout import timeout
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
@@ -15,6 +17,7 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
+from makefun import add_signature_parameters, create_function
 from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
@@ -138,20 +141,55 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
     return {}
 
 
+def aiter(iterable):
+    return iterable.__aiter__()
+
+
+def anext(iterable):
+    return iterable.__anext__()
+
+
 def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
-    @wraps(func)
-    async def decorator(*args, **kwargs):
+    async def decorator(request: Request, *args, **kwargs):
         async def internal() -> AsyncGenerator[str, None]:
-            async for rset in func(*args, **kwargs):
-                yield f'data: {rset.json()}\n\n'
+            iterable = aiter(func(*args, **kwargs))
+
+            while True:
+                try:
+                    async with timeout(10):
+                        rset = await anext(iterable)
+                    yield f'data: {rset.json()}\n\n'
+                except asyncio.TimeoutError:
+                    yield ':\n\n'  # heartbeat
+                except StopAsyncIteration:
+                    break
+                except Exception as e:
+                    logger.exception('Error in eventstream')
+                    yield f'data: {{"error": "{str(e)}"}}\n\n'
+                    break
+
             yield 'data:\n\n'
 
         return StreamingResponse(
             internal(),
             media_type="text/event-stream",
+            headers={
+                'Connection': 'keep-alive',
+                'Cache-Control': 'no-cache',
+                'X-Accel-Buffering': 'no',
+            },
         )
 
-    return decorator
+    return create_function(
+        add_signature_parameters(
+            inspect.signature(func),
+            first=inspect.Parameter(
+                'request', inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=Request
+            ),
+        ),
+        decorator,
+        func.__name__,
+    )
 
 
 @api.get(
