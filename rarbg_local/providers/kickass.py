@@ -1,11 +1,10 @@
 import logging
 import re
 import string
-from typing import Any, AsyncGenerator, Dict, Optional, Union, cast
+from typing import Any, AsyncGenerator, Dict, Optional
 
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
-from lxml.html import PageElement, Tag
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_movie, get_tv
@@ -15,10 +14,8 @@ from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
 logger = logging.getLogger(__name__)
 
 
-def is_node(node: Union[Any, PageElement, int, None]) -> Tag:
-    if not isinstance(node, Tag):
-        raise TypeError(f"Expected PageElement, got {type(node).__name__}")
-    return cast(Tag, node)
+def is_node(node):
+    return node
 
 
 async def fetch(url: str) -> AsyncGenerator[Dict[str, Any], None]:

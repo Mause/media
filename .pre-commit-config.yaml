@@ -45,6 +45,7 @@ repos:
           - sqlalchemy2-stubs
           - types-requests
           - types-tabulate
+          - types-lxml
           - alembic
           - pydantic==1.10.22
           - lxml
