@@ -11,6 +11,7 @@ from lxml.html import fromstring
 from ..jikan import closeness, get_names
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_tv
+from ..types import ImdbId, TmdbId
 from ..utils import cached
 from .abc import TvProvider, tv_convert
 
@@ -134,7 +135,7 @@ async def search(showid: int, search_term: str):
         )
 
 
-async def search_for_tv(tmdb_id, season, episode):
+async def search_for_tv(tmdb_id: TmdbId, season: int, episode: Optional[int] = None):
     if season != 1:
         return
 
@@ -161,8 +162,8 @@ class HorriblesubsProvider(TvProvider):
 
     async def search_for_tv(
         self,
-        imdb_id: Optional[str],
-        tmdb_id: int,
+        imdb_id: ImdbId,
+        tmdb_id: TmdbId,
         season: int,
         episode: Optional[int] = None,
     ) -> AsyncGenerator[ITorrent, None]:

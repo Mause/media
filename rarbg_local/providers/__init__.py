@@ -4,6 +4,8 @@ from queue import Empty, Queue
 from threading import Semaphore, current_thread
 from typing import Callable, Iterable, List, Optional, Tuple, TypeVar
 
+from ..types import ImdbId, TmdbId
+
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
@@ -55,7 +57,7 @@ def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
 
 
 async def search_for_tv(
-    imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: Optional[int] = None
 ):
     from . import PROVIDERS
     from .abc import TvProvider
@@ -72,7 +74,7 @@ async def search_for_tv(
             logger.exception('Unable to load [TV] from %s', provider.name)
 
 
-async def search_for_movie(imdb_id: str, tmdb_id: int):
+async def search_for_movie(imdb_id: ImdbId, tmdb_id: TmdbId):
     from . import PROVIDERS
     from .abc import MovieProvider
 
@@ -104,7 +106,7 @@ async def main():
         header_style="bold magenta",
     )
 
-    imdb_id = 'tt28454008'
+    imdb_id = ImdbId('tt28454008')
     tmdb_id = await resolve_id(imdb_id, 'tv')
     async for row in search_for_tv(
         imdb_id=imdb_id, tmdb_id=tmdb_id, season=1, episode=1

@@ -5,6 +5,7 @@ from NyaaPy import nyaa
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_tv
+from ..types import ImdbId, TmdbId
 from .abc import TvProvider, format, tv_convert
 
 
@@ -13,7 +14,11 @@ class NyaaProvider(TvProvider):
     type = ProviderSource.NYAA_SI
 
     async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+        self,
+        imdb_id: ImdbId,
+        tmdb_id: TmdbId,
+        season: int,
+        episode: Optional[int] = None,
     ) -> AsyncGenerator[ITorrent, None]:
         ny = nyaa.Nyaa()
 

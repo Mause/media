@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_movie, get_tv
+from ..types import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)
@@ -53,7 +54,7 @@ def tokenise(name: str) -> str:
 
 
 async def search_for_tv(
-    imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: Optional[int] = None
 ) -> AsyncGenerator[Dict, None]:
     name = (await get_tv(tmdb_id)).name
 
@@ -69,11 +70,11 @@ async def search_for_tv(
             yield item
 
 
-def base(name, imdb_id):
+def base(name: str, imdb_id: TmdbId):
     return fetch(f'/name/{tokenise(name)}/i{imdb_id.lstrip("t")}')
 
 
-async def search_for_movie(imdb_id: str, tmdb_id: int):
+async def search_for_movie(imdb_id: ImdbId, tmdb_id: TmdbId):
     name = (await get_movie(tmdb_id)).title
 
     async for item in base(name, imdb_id):
@@ -85,7 +86,11 @@ class KickassProvider(TvProvider, MovieProvider):
     type = ProviderSource.KICKASS
 
     async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+        self,
+        imdb_id: ImdbId,
+        tmdb_id: TmdbId,
+        season: int,
+        episode: Optional[int] = None,
     ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
             return
@@ -104,7 +109,7 @@ class KickassProvider(TvProvider, MovieProvider):
             )
 
     async def search_for_movie(
-        self, imdb_id: str, tmdb_id: int
+        self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
         async for item in search_for_movie(imdb_id, tmdb_id):
             yield ITorrent(

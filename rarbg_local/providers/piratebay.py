@@ -3,6 +3,7 @@ from typing import AsyncGenerator, Optional
 import aiohttp
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
+from ..types import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, format, movie_convert, tv_convert
 
 
@@ -11,7 +12,11 @@ class PirateBayProvider(TvProvider, MovieProvider):
     root = 'https://apibay.org'
 
     async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+        self,
+        imdb_id: ImdbId,
+        tmdb_id: TmdbId,
+        season: int,
+        episode: Optional[int] = None,
     ) -> AsyncGenerator[ITorrent, None]:
         async with (
             aiohttp.ClientSession() as session,
@@ -37,7 +42,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
                 )
 
     async def search_for_movie(
-        self, imdb_id: str, tmdb_id: int
+        self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
         async with (
             aiohttp.ClientSession() as session,
