@@ -65,7 +65,6 @@ from .models import (
 from .providers import (
     PROVIDERS,
     MovieProvider,
-    ProviderSource,
     TvProvider,
     search_for_movie,
     search_for_tv,
