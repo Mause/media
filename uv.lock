@@ -830,6 +830,7 @@ dev = [
     { name = "sqlalchemy2-stubs" },
     { name = "types-lxml" },
     { name = "types-requests" },
+    { name = "types-selenium" },
     { name = "types-tabulate" },
     { name = "webdriver-manager" },
 ]
@@ -893,6 +894,7 @@ dev = [
     { name = "sqlalchemy2-stubs" },
     { name = "types-lxml", specifier = ">=2025.3.30" },
     { name = "types-requests", specifier = ">=2.32.0.20250328" },
+    { name = "types-selenium", specifier = ">=3.141.9" },
     { name = "types-tabulate", specifier = ">=0.9.0.20241207" },
     { name = "webdriver-manager", specifier = "==3.2.2" },
 ]
@@ -1670,6 +1672,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/00/7d/eb174f74e3f5634eaacb38031bbe467dfe2e545bc255e5c90096ec46bc46/types_requests-2.32.0.20250328.tar.gz", hash = "sha256:c9e67228ea103bd811c96984fac36ed2ae8da87a36a633964a21f199d60baf32", size = 22995, upload-time = "2025-03-28T02:55:13.271Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/cc/15/3700282a9d4ea3b37044264d3e4d1b1f0095a4ebf860a99914fd544e3be3/types_requests-2.32.0.20250328-py3-none-any.whl", hash = "sha256:72ff80f84b15eb3aa7a8e2625fffb6a93f2ad5a0c20215fc1dcfa61117bcb2a2", size = 20663, upload-time = "2025-03-28T02:55:11.946Z" },
+]
+
+[[package]]
+name = "types-selenium"
+version = "3.141.9"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/8d/e9/4ff535ce02a2c7cbbe6f33ac2aabb3f284977f76609a19ad30edee727c55/types-selenium-3.141.9.tar.gz", hash = "sha256:0817ad9914f5d4c5b064ca2fbf694a1b4c668465a502bd3d1248d82e098132ce", size = 18495, upload-time = "2022-03-06T03:18:28.329Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4b/05/67524387f0b4968ff83462e8526913e563d51d4c0bacbb3a3095d9b11e46/types_selenium-3.141.9-py3-none-any.whl", hash = "sha256:83606e061154bc2241d6eba964263f9cf1dcaa6c7dfff0bb10d3abcfbdaefdc7", size = 39074, upload-time = "2022-03-06T03:18:26.997Z" },
 ]
 
 [[package]]
