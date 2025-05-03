@@ -21,7 +21,9 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+config_file_name = config.config_file_name
+assert config_file_name
+fileConfig(config_file_name)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 db = __import__('rarbg_local.db').db
@@ -33,6 +35,7 @@ else:
 
 
 alembic_config = config.get_section(config.config_ini_section)
+assert alembic_config
 alembic_config['sqlalchemy.url'] = url
 target_metadata = db.Base.metadata
 
