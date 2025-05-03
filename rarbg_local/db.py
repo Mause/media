@@ -120,9 +120,9 @@ class User(Base):  # type: ignore
     )
 
     # Define the relationship to Role via UserRoles
-    roles = relationship('Role', secondary='user_roles', uselist=True)
+    roles: List['Role'] = relationship('Role', secondary='user_roles', uselist=True)
 
-    downloads = relationship('Download')
+    downloads: List[Download] = relationship('Download')
 
     def __repr__(self):
         return self.username
