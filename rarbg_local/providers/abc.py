@@ -1,12 +1,18 @@
 from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
 
+from healthcheck import HealthcheckCallbackResponse
+
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
 
 
 class Provider(ABC):
     type: ProviderSource
+
+    @abstractmethod
+    def health(self) -> HealthcheckCallbackResponse:
+        raise NotImplementedError()
 
 
 class TvProvider(Provider):
