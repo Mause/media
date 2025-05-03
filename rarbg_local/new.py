@@ -63,13 +63,12 @@ from .models import (
     TvSeasonResponse,
 )
 from .providers import (
-    PROVIDERS,
+    get_providers,
     MovieProvider,
     TvProvider,
     search_for_movie,
     search_for_tv,
 )
-from .providers.abc import MovieProvider, TvProvider
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import (
@@ -171,7 +170,7 @@ async def stream(
     episode: Optional[int] = None,
 ) -> AsyncGenerator[BaseModel, None]:
     provider = next(
-        (provider for provider in PROVIDERS if provider.name == source.value),
+        (provider for provider in get_providers() if provider.name == source.value),
         None,
     )
     if not provider:
