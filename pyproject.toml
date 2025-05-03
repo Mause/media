@@ -32,7 +32,6 @@ dependencies = [
     "fastapi-utils==0.2.1",
     "asyncache==0.1.1",
     "makefun==1.9.5",
-    "exceptiongroup",
     "gunicorn",
     "nyaapy",
     "python-healthchecklib>=0.1.1",
