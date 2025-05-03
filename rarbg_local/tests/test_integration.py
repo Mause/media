@@ -511,7 +511,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '18',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
         {
             'source': 'rarbg',
@@ -519,7 +519,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '41',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
         {
             'source': 'rarbg',
@@ -527,7 +527,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '49',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
     ]
 
