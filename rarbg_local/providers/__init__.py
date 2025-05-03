@@ -2,12 +2,10 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from queue import Empty, Queue
 from threading import Semaphore, current_thread
-from typing import TYPE_CHECKING, Callable, Iterable, List, Optional, Tuple, TypeVar
+from typing import Callable, Iterable, List, Optional, Tuple, TypeVar
 
 from ..types import ImdbId, TmdbId
-
-if TYPE_CHECKING:
-    from .abc import Provider
+from .abc import Provider
 
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]
