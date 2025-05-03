@@ -70,7 +70,7 @@ async def search_for_tv(
             yield item
 
 
-def base(name: str, imdb_id: TmdbId):
+def base(name: str, imdb_id: ImdbId):
     return fetch(f'/name/{tokenise(name)}/i{imdb_id.lstrip("t")}')
 
 
