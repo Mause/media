@@ -45,6 +45,7 @@ repos:
           - sqlalchemy2-stubs
           - types-requests
           - types-tabulate
+          - alembic
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.

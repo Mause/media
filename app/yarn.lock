@@ -4538,6 +4538,7 @@ __metadata:
     mockdate: "npm:^3.0.2"
     moment: "npm:^2.29.1"
     moxios: "npm:^0.4.0"
+    prettier: "npm:2.2.1"
     prop-types: "npm:^15.7.2"
     qs: "npm:^6.9.4"
     react: "npm:^16.14.0"
@@ -12683,6 +12684,15 @@ __metadata:
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
   checksum: 10/0b9d2c76801ca652a7f64892dd37b7e3fab149a37d2424920099bf894acccc62abb4424af2155ab36dea8744843060a2d8ddc983518d0b1e22265a22324b72ed
+  languageName: node
+  linkType: hard
+
+"prettier@npm:2.2.1":
+  version: 2.2.1
+  resolution: "prettier@npm:2.2.1"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 10/7bad7ef9cf2da3059a83de0729d480879f5adbe9974419a16a953dee69b2c720ebf1df8d1a713306547a5af8c2b6168a79cd94bda15202de0121348123f7903f
   languageName: node
   linkType: hard
 
