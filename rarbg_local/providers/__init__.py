@@ -32,7 +32,7 @@ def __getattr__(name: str) -> None:
 def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
     def worker(function: ProviderType) -> None:
         try:
-            current_thread().setName(function.__name__)
+            current_thread().name = function.__name__
 
             for item in function(*args):
                 queue.put(item)
