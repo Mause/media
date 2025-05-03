@@ -249,11 +249,12 @@ async def download_post(
                     (
                         episode
                         for episode in episodes
-                        if str(episode.episode_number) == thing.episode
+                        if episode.episode_number == thing.episode
                     ),
                     None,
                 )
-                assert episode, f'Could not find episode: {thing}'
+                if not episode:
+                    raise ValueError(f'Could not find episode: {thing}')
                 title = episode.name
 
             show_title = item.name
