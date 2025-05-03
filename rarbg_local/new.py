@@ -63,9 +63,9 @@ from .models import (
     TvSeasonResponse,
 )
 from .providers import (
-    get_providers,
     MovieProvider,
     TvProvider,
+    get_providers,
     search_for_movie,
     search_for_tv,
 )
