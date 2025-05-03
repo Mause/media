@@ -102,10 +102,7 @@ class KickassProvider(TvProvider, MovieProvider):
                 seeders=item['seeders'],
                 download=item['magnet'],
                 category=tv_convert(item['resolution']),
-                episode_info=EpisodeInfo(
-                    seasonnum=str(season),
-                    epnum=None if episode is None else str(episode),
-                ),
+                episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
             )
 
     async def search_for_movie(

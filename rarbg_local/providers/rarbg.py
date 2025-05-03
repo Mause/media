@@ -145,7 +145,7 @@ class RarbgProvider(TvProvider, MovieProvider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=tv_convert(item['category']),
-                episode_info=EpisodeInfo(seasonnum=str(season), epnum=str(episode)),
+                episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
             )
 
     async def search_for_movie(

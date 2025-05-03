@@ -177,9 +177,7 @@ class HorriblesubsProvider(TvProvider):
                 seeders=0,
                 download=item['download'],
                 category=tv_convert(item['resolution']),
-                episode_info=EpisodeInfo(
-                    seasonnum=str(season), epnum=str(item['episode'])
-                ),
+                episode_info=EpisodeInfo(seasonnum=season, epnum=item['episode']),
             )
 
 
