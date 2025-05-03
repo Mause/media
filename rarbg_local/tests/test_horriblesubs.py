@@ -10,7 +10,7 @@ from ..providers.horriblesubs import (
     get_downloads,
     get_latest,
 )
-from ..types import TmdbId
+from ..types import ImdbId, TmdbId
 from .conftest import add_json, themoviedb, tolist
 from .factories import TvApiResponseFactory
 
@@ -142,7 +142,7 @@ async def test_provider(aioresponses: AioResponses, snapshot):
     results = [
         item.dict()
         for item in await tolist(
-            HorriblesubsProvider().search_for_tv(None, TmdbId(1), 1, 2)
+            HorriblesubsProvider().search_for_tv(ImdbId('tt00000000'), TmdbId(1), 1, 2)
         )
     ]
 
