@@ -300,14 +300,21 @@ async def index(session: Session = Depends(get_db)):
 
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
+    def process(added_by_id: int, values):
+        user = session.query(User).get(added_by_id)
+        if not user:
+            return None
+
+        return {
+            "user": user.username,
+            "values": {type.lower(): value for _, type, value in values},
+        }
+
     keys = Download.added_by_id, Download.type
     query = session.query(*keys, func.count(name='count')).group_by(*keys)
 
     return [
-        {
-            "user": non_null(session.query(User).get(added_by_id)).username,
-            "values": {type.lower(): value for _, type, value in values},
-        }
+        process(added_by_id, values)
         for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
     ]
 
