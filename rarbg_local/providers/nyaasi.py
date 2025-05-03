@@ -5,7 +5,7 @@ from NyaaPy import nyaa
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_tv
-from .abc import TvProvider, tv_convert
+from .abc import TvProvider, format, tv_convert
 
 
 class NyaaProvider(TvProvider):
