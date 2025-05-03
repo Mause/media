@@ -20,7 +20,6 @@ from sqlalchemy import (
 from sqlalchemy.engine import URL, make_url
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
-    RelationshipProperty,
     Session,
     joinedload,
     relationship,
@@ -48,18 +47,18 @@ class Download(Base):  # type: ignore
     transmission_id = Column(String, nullable=False)
     imdb_id = Column(String, nullable=False)
     type = Column(String)
-    movie: 'RelationshipProperty[MovieDetails]' = relationship(
+    movie: 'MovieDetails' = relationship(
         'MovieDetails', uselist=False, cascade='all,delete'
     )
     movie_id = Column(Integer, ForeignKey('movie_details.id', ondelete='CASCADE'))
-    episode: 'RelationshipProperty[EpisodeDetails]' = relationship(
+    episode: 'EpisodeDetails' = relationship(
         'EpisodeDetails', uselist=False, cascade='all,delete'
     )
     episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
     title = Column(String)
     timestamp = Column(DateTime(timezone=True), nullable=False, default=func.now())
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by: 'RelationshipProperty[User]' = relationship(
+    added_by: 'User' = relationship(
         'User', back_populates='downloads'
     )
 
@@ -72,7 +71,7 @@ class Download(Base):  # type: ignore
 class EpisodeDetails(Base):  # type: ignore
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
-    download: 'RelationshipProperty[Download]' = relationship(
+    download: 'Download' = relationship(
         'Download', back_populates='episode', passive_deletes=True, uselist=False
     )
     show_title = Column(String, nullable=False)
@@ -96,7 +95,7 @@ class EpisodeDetails(Base):  # type: ignore
 class MovieDetails(Base):  # type: ignore
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
-    download: 'RelationshipProperty[Download]' = relationship(
+    download: 'Download' = relationship(
         'Download', back_populates='movie', passive_deletes=True, uselist=False
     )
 
@@ -123,7 +122,7 @@ class User(Base):  # type: ignore
     )
 
     # Define the relationship to Role via UserRoles
-    roles = relationship('Role', secondary='user_roles')
+    roles = relationship('Role', secondary='user_roles', uselist=True)
 
     downloads = relationship('Download')
 
@@ -176,7 +175,7 @@ class Monitor(Base):  # type: ignore
     tmdb_id = Column(Integer)
 
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by: 'RelationshipProperty[User]' = relationship('User')
+    added_by: 'User' = relationship('User')
 
     title = Column(String, nullable=False)
     type = Column(
