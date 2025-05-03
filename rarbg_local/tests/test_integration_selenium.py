@@ -152,7 +152,9 @@ def get_status_code(selenium: Chrome) -> Optional[int]:
 
 
 def has_download(selenium: Chrome, name: str) -> bool:
-    return selenium.find_element_by_xpath(f'.//li/span[contains(text(), "{name}")]')
+    return bool(
+        selenium.find_element_by_xpath(f'.//li/span[contains(text(), "{name}")]')
+    )
 
 
 def test_movie(server_url: str, selenium: Chrome) -> None:

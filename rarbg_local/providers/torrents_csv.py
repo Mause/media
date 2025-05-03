@@ -3,6 +3,7 @@ from typing import AsyncGenerator, Optional
 import aiohttp
 
 from ..models import ITorrent, ProviderSource
+from ..types import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, format
 
 
@@ -18,7 +19,7 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
             return await res.json()['torrents']
 
     async def search_for_movie(
-        self, imdb_id: str, tmdb_id: int
+        self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
         for item in await self.query(imdb_id):
             yield ITorrent(
@@ -37,4 +38,5 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
                 title=item['name'],
                 seeders=item['seeders'],
                 download=item['infohash'],
+                category=item['category'],
             )
