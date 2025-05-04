@@ -7,7 +7,6 @@ import {
   Route,
   Routes as Switch,
 } from 'react-router-dom';
-import { RouteProps } from 'react-router';
 import { IndexComponent } from './IndexComponent';
 import {
   EpisodeSelectComponent,
@@ -60,13 +59,19 @@ export type MovieResponse = components['schemas']['MovieDetailsSchema'];
 export type SeriesResponse = components['schemas']['SeriesDetails'];
 export type EpisodeResponse = components['schemas']['EpisodeDetailsSchema'];
 
-function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
+function RouteTitle({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <>
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Route {...props} />
+      {children}
     </>
   );
 }
@@ -224,63 +229,128 @@ function Routes() {
 
   return (
     <Switch>
-      <RouteWithTitle path="/websocket/:tmdbId" title="Websocket">
-        <Websocket />
-      </RouteWithTitle>
-      <RouteWithTitle path="/select/:tmdb_id/options" title="Movie Options">
-        <OptionsComponent type="movie" />
-      </RouteWithTitle>
-      <RouteWithTitle
+      <Route
+        path="/websocket/:tmdbId"
+        element={
+          <RouteTitle title="Websocket">
+            <Websocket />
+          </RouteTitle>
+        }
+      />
+
+      <Route
+        path="/select/:tmdb_id/options"
+        element={
+          <RouteTitle title="Movie Options">
+            <OptionsComponent type="movie" />
+          </RouteTitle>
+        }
+      />
+
+      <Route
         path="/select/:tmdb_id/season/:season/episode/:episode/options"
-        title="TV Options"
-      >
-        <OptionsComponent type="series" />
-      </RouteWithTitle>
-      <RouteWithTitle
+        element={
+          <RouteTitle title="TV Options">
+            <OptionsComponent type="series" />
+          </RouteTitle>
+        }
+      />
+      <Route
         path="/select/:tmdb_id/season/:season/download_all"
-        title="Download Season"
-      >
-        <DownloadAllComponent />
-      </RouteWithTitle>
-      <RouteWithTitle
+        element={
+          <RouteTitle title="Download Season">
+            <DownloadAllComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
         path="/select/:tmdb_id/season/:season"
-        title="Select Episode"
-      >
-        <EpisodeSelectComponent />
-      </RouteWithTitle>
-      <RouteWithTitle path="/select/:tmdb_id/season" title="Select Season">
-        <SeasonSelectComponent />
-      </RouteWithTitle>
-      <RouteWithTitle path="/search" title="Search">
-        <SearchComponent />
-      </RouteWithTitle>
-      <RouteWithTitle path="/download" title="Download">
-        <DownloadComponent />
-      </RouteWithTitle>
-      <RouteWithTitle path="/manual" title="Manual">
-        <ManualAddComponent />
-      </RouteWithTitle>
-      <RouteWithTitle path="/stats" title="Stats">
-        <StatsComponent />
-      </RouteWithTitle>
-      <RouteWithTitle path="/diagnostics" title="Diagnostics">
-        <DiagnosticsComponent />
-      </RouteWithTitle>
-      <RouteWithTitle path="/monitor/delete/:id" title="Monitor">
-        <MonitorDeleteComponent />
-      </RouteWithTitle>
-      <RouteWithTitle path="/monitor/add/:tmdb_id" title="Monitor">
-        <MonitorAddComponent />
-      </RouteWithTitle>
-      <RouteWithTitle path="/monitor" title="Monitor">
-        <MonitorComponent />
-      </RouteWithTitle>
-      <RouteWithTitle path="/storybook" title="Storybook">
-        <Storybook />
-      </RouteWithTitle>
-      <RouteWithTitle path="/" title="Media">
-        <IndexComponent />
-      </RouteWithTitle>
+        element={
+          <RouteTitle title="Select Episode">
+            <EpisodeSelectComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/select/:tmdb_id/season"
+        element={
+          <RouteTitle title="Select Season">
+            <SeasonSelectComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/search"
+        element={
+          <RouteTitle title="Search">
+            <SearchComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/download"
+        element={
+          <RouteTitle title="Download">
+            <DownloadComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/manual"
+        element={
+          <RouteTitle title="Manual">
+            <ManualAddComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/stats"
+        element={
+          <RouteTitle title="Stats">
+            <StatsComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/diagnostics"
+        element={
+          <RouteTitle title="Diagnostics">
+            <DiagnosticsComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/monitor/delete/:id"
+        element={
+          <RouteTitle title="Monitor">
+            <MonitorDeleteComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/monitor/add/:tmdb_id"
+        element={
+          <RouteTitle title="Monitor">
+            <MonitorAddComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/monitor"
+        element={
+          <RouteTitle title="Monitor">
+            <MonitorComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/"
+        element={
+          <RouteTitle title="Media">
+            <IndexComponent />
+          </RouteTitle>
+        }
+      />
     </Switch>
   );
 }
