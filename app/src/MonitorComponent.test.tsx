@@ -1,4 +1,4 @@
-import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
+import { usesMoxios, renderWithSWR, mock, wait, listenTo } from './test.utils';
 import moxios from 'moxios';
 import {
   MonitorComponent,
@@ -13,7 +13,7 @@ import {
 } from 'react-router-dom';
 import * as _ from 'lodash';
 import { expectLastRequestBody } from './utils';
-import { createMemoryHistory, Location } from '@remix-run/router';
+import { createMemoryHistory } from '@remix-run/router';
 import { act } from '@testing-library/react';
 
 usesMoxios();
@@ -53,16 +53,14 @@ describe('MonitorComponent', () => {
       ],
       v5Compat: true,
     });
-    const entries: Location[] = [];
-    hist.listen((hist) => {
-      entries.push(hist.location);
-    });
+    const entries = listenTo(hist);
 
     renderWithSWR(
       <HistoryRouter history={hist}>
         <Routes>
-          <Route index={true} path="/" element={<div>Home</div>} />
           <Route path="/monitor/add/:tmdb_id" Component={MonitorAddComponent} />
+          <Route path="/monitor" element={<div>Monitor</div>} />
+          <Route path="/" element={<div>Home</div>} />
         </Routes>
       </HistoryRouter>,
     );

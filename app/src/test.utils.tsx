@@ -4,6 +4,7 @@ import { swrConfig } from './streaming';
 import { render, act } from '@testing-library/react';
 import { ReactElement } from 'react';
 import { Auth0Context, Auth0ContextInterface } from '@auth0/auth0-react';
+import { Location, MemoryHistory } from '@remix-run/router';
 
 export async function wait() {
   return await act(
@@ -38,4 +39,20 @@ export function usesMoxios() {
   afterEach(() => {
     moxios.uninstall();
   });
+}
+
+export function listenTo(hist: MemoryHistory) {
+  const entries: Location[] = [];
+  const otherListeners: Listener[] = [];
+  hist.listen((hist) => {
+    entries.push(hist.location);
+    for (const listener of otherListeners) {
+      listener(hist);
+    }
+  });
+  hist.listen = (listener) => {
+    otherListeners.push(listener);
+    return () => {};
+  };
+  return entries;
 }
