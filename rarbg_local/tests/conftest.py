@@ -1,7 +1,5 @@
 import json
-from collections.abc import AsyncGenerator
-from re import Pattern
-from typing import Annotated, TypeVar
+from typing import Annotated, AsyncGenerator, Pattern, TypeVar
 
 import uvloop
 from async_asgi_testclient import TestClient
@@ -63,7 +61,7 @@ async def user(session):
 
 
 @fixture
-def session(fastapi_app, tmp_path, _function_event_loop):
+async def session(fastapi_app, tmp_path, _function_event_loop):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
         database_url=str(
             URL.create(
@@ -74,15 +72,15 @@ def session(fastapi_app, tmp_path, _function_event_loop):
         plex_token='plex_token',
     )
 
-    Session = _function_event_loop.run_until_complete(
-        get(fastapi_app, get_session_local)
-    )
+    Session = await get(fastapi_app, get_session_local)
     assert hasattr(Session, 'kw'), Session
     engine = Session.kw['bind']
     assert 'sqlite' in repr(engine.sync_engine), repr(engine.sync_engine)
-    Base.metadata.create_all(engine.sync_engine)
 
-    with Session() as session:
+    async with engine.connect() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    async with Session() as session:
         session_var.set(session)
         yield session
 
