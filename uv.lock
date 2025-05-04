@@ -2088,7 +2088,7 @@ dependencies = [
     { name = "beautifulsoup4" },
     { name = "cssselect" },
     { name = "types-html5lib" },
-    { name = "typing-extensions" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/84/01/9e45ccd26ca36982ef505174a6e5f661abb68565fa27c77d2e56a3f0e9f5/types_lxml-2025.3.30.tar.gz", hash = "sha256:ea4da0d2b61a73e114e14e2dcca1f62671182d80016a483369c553a24ba8f163", size = 152963, upload-time = "2025-03-29T22:29:04.497Z" }
 wheels = [
