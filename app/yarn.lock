@@ -490,23 +490,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helpers@npm:^7.10.4":
+"@babel/helpers@npm:^7.10.4, @babel/helpers@npm:^7.26.10":
   version: 7.27.1
   resolution: "@babel/helpers@npm:7.27.1"
   dependencies:
     "@babel/template": "npm:^7.27.1"
     "@babel/types": "npm:^7.27.1"
   checksum: 10/b86ee2c87d52640c63ec1fdf139d4560efc173ae6379659e0df49a3c0cf1d5f24436132ebb4459a4ee72418b43b39ee001f4e01465b48c8d31911a745ec4fd74
-  languageName: node
-  linkType: hard
-
-"@babel/helpers@npm:^7.26.10":
-  version: 7.27.0
-  resolution: "@babel/helpers@npm:7.27.0"
-  dependencies:
-    "@babel/template": "npm:^7.27.0"
-    "@babel/types": "npm:^7.27.0"
-  checksum: 10/0dd40ba1e5ba4b72d1763bb381384585a56f21a61a19dc1b9a03381fe8e840207fdaa4da645d14dc028ad768087d41aad46347cc6573bd69d82f597f5a12dc6f
   languageName: node
   linkType: hard
 
@@ -1763,39 +1753,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
-  version: 7.10.5
-  resolution: "@babel/runtime@npm:7.10.5"
-  dependencies:
-    regenerator-runtime: "npm:^0.13.4"
-  checksum: 10/b609628c1398c1ada275d753600f9e2efdaf65f0181430b8d05a9dbb3a14340a436790b63b6c5aa871ef290a87833eefc432b642d63e1ad00c14fd507e7340db
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.11.2":
-  version: 7.11.2
-  resolution: "@babel/runtime@npm:7.11.2"
-  dependencies:
-    regenerator-runtime: "npm:^0.13.4"
-  checksum: 10/ecd8101501cbf7128c3dbb2b6ce17b707ac95aa60c4075d3ce9b6649e873afa1ede14e5ae28c5a51d2c18b46d20300ce2a193a16f6c5af67cc29bc68f20defd8
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.12.5":
-  version: 7.12.5
-  resolution: "@babel/runtime@npm:7.12.5"
-  dependencies:
-    regenerator-runtime: "npm:^0.13.4"
-  checksum: 10/72bc865a539d40eabb84b5e2f894c2341301e62bc50e359b53b4027c2bc9e0840cdb0e1fff46488e44df5a531aa0e85901aa9a014897dae99dd383388d677220
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.27.0":
-  version: 7.27.0
-  resolution: "@babel/runtime@npm:7.27.0"
-  dependencies:
-    regenerator-runtime: "npm:^0.14.0"
-  checksum: 10/e6966e03b695feb4c0ac0856a4355231c2580bf9ebd0298f47739f85c0ea658679dd84409daf26378d42c86c1cbe7e33feab709b14e784254b6c441d91606465
+"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.27.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+  version: 7.27.1
+  resolution: "@babel/runtime@npm:7.27.1"
+  checksum: 10/34cefcbf781ea5a4f1b93f8563327b9ac82694bebdae91e8bd9d7f58d084cbe5b9a6e7f94d77076e15b0bcdaa0040a36cb30737584028df6c4673b4c67b2a31d
   languageName: node
   linkType: hard
 
@@ -2834,7 +2795,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/router@npm:1.23.0":
+"@remix-run/router@npm:1.23.0, @remix-run/router@npm:^1.23.0":
   version: 1.23.0
   resolution: "@remix-run/router@npm:1.23.0"
   checksum: 10/0a9f02c26c150d8210b05927c43d2f57ee8b7f812c81abb76df1721c7367ef692e54f4044981e756ce13d0619fb3c6a9b1514524d69aea9b32bfaf565299a8c7
@@ -3647,17 +3608,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:*":
+"@types/qs@npm:*, @types/qs@npm:^6.9.5":
   version: 6.9.18
   resolution: "@types/qs@npm:6.9.18"
   checksum: 10/152fab96efd819cc82ae67c39f089df415da6deddb48f1680edaaaa4e86a2a597de7b2ff0ad391df66d11a07006a08d52c9405e86b8cb8f3d5ba15881fe56cc7
-  languageName: node
-  linkType: hard
-
-"@types/qs@npm:^6.9.5":
-  version: 6.9.5
-  resolution: "@types/qs@npm:6.9.5"
-  checksum: 10/eeb4597a9c5d3e7b3da3f6395fdfc53e435b79c863fd9d56ff14951e644d51d40870a7d8440c0f132299469941d27817b04ef3c7aa71242115eded0953f4f620
   languageName: node
   linkType: hard
 
@@ -4538,6 +4492,7 @@ __metadata:
     "@material-ui/core": "npm:^4.11.2"
     "@material-ui/icons": "npm:^4.11.2"
     "@material-ui/lab": "npm:^4.0.0-alpha.56"
+    "@remix-run/router": "npm:^1.23.0"
     "@sentry/react": "npm:^5.29.2"
     "@sentry/tracing": "npm:^5.29.2"
     "@testing-library/jest-dom": "npm:^5.11.9"
@@ -10627,17 +10582,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
+"lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 10/c08619c038846ea6ac754abd6dd29d2568aa705feb69339e836dfa8d8b09abbb2f859371e86863eda41848221f9af43714491467b5b0299122431e202bb0c532
-  languageName: node
-  linkType: hard
-
-"lodash@npm:^4.17.20":
-  version: 4.17.20
-  resolution: "lodash@npm:4.17.20"
-  checksum: 10/a5f94125d73e38853d37d7307f1ca26df057376c992d4ef13ceda38936fb81bb9e60d53da0b36e47576edcd565f5bed98671704045c6df0730dcf1fcee14851e
   languageName: node
   linkType: hard
 
@@ -13337,13 +13285,6 @@ __metadata:
   version: 0.13.11
   resolution: "regenerator-runtime@npm:0.13.11"
   checksum: 10/d493e9e118abef5b099c78170834f18540c4933cedf9bfabc32d3af94abfb59a7907bd7950259cbab0a929ebca7db77301e8024e5121e6482a82f78283dfd20c
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.14.0":
-  version: 0.14.1
-  resolution: "regenerator-runtime@npm:0.14.1"
-  checksum: 10/5db3161abb311eef8c45bcf6565f4f378f785900ed3945acf740a9888c792f75b98ecb77f0775f3bf95502ff423529d23e94f41d80c8256e8fa05ed4b07cf471
   languageName: node
   linkType: hard
 
