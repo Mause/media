@@ -94,7 +94,10 @@ function EpisodeSelectComponent() {
 
   return (
     <div>
-      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={parseInt(seasonNumber!)} />
+      <EpisodeSelectBreadcrumbs
+        tmdb_id={tmdb_id!}
+        season={parseInt(seasonNumber!)}
+      />
       {season ? (
         <ol>
           {season.episodes.map((episode) => (

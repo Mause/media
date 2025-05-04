@@ -12,7 +12,10 @@ import { DisplayError } from './IndexComponent';
 type MapType = [string, ITorrent[]][];
 
 function DownloadAllComponent() {
-  const { tmdb_id, season: season_s } = useParams<{ tmdb_id: string; season: string}>();
+  const { tmdb_id, season: season_s } = useParams<{
+    tmdb_id: string;
+    season: string;
+  }>();
   const season = parseInt(season_s);
 
   const { data: torrents } = useSWR<Torrents>('torrents');
