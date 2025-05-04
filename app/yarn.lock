@@ -2560,9 +2560,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/icons@npm:^4.11.2":
-  version: 4.11.2
-  resolution: "@material-ui/icons@npm:4.11.2"
+"@material-ui/icons@npm:^4.11.3":
+  version: 4.11.3
+  resolution: "@material-ui/icons@npm:4.11.3"
   dependencies:
     "@babel/runtime": "npm:^7.4.4"
   peerDependencies:
@@ -2573,7 +2573,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/3ccd283aecf3e409a5c1af4ae13df22a9afd954caecda1cd39ed89cc49d9942b846a353fc1ed53d0d382717ef9eb8c927e9d9738b9994f74dd62ac9e5f674c91
+  checksum: 10/be9bf988a8b23e0885ca0c1dc5a4960f6c28f401079dbc13f840f4bd738ef95965cb4f751d609cb6acc819e1c2f8a7293d0a6f26b3685a711506679e4834ab35
   languageName: node
   linkType: hard
 
@@ -4518,7 +4518,7 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": "npm:^5.14.0"
     "@fortawesome/react-fontawesome": "npm:^0.2.0"
     "@material-ui/core": "npm:^4.11.2"
-    "@material-ui/icons": "npm:^4.11.2"
+    "@material-ui/icons": "npm:^4.11.3"
     "@material-ui/lab": "npm:^4.0.0-alpha.56"
     "@sentry/react": "npm:^5.29.2"
     "@sentry/tracing": "npm:^5.29.2"
