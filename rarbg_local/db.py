@@ -299,7 +299,9 @@ def get_or_create(session: Session, model: type[T], defaults=None, **kwargs) -> 
 def normalise_db_url(database_url: str) -> URL:
     parsed = make_url(database_url)
     if parsed.get_backend_name() == 'postgres':
-        parsed = parsed.set(drivername='postgresql')
+        parsed = parsed.set(drivername='postgresql+asyncpg')
+    else:
+        parsed = parsed.set(drivername='sqlite+aiosqlite')
     return parsed
 
 
@@ -376,7 +378,9 @@ async def get_async_engine(
 
 
 @singleton
-def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> sessionmaker:
+def get_session_local(
+    engine: Annotated[Engine, Depends(get_async_engine)],
+) -> sessionmaker:
     return sessionmaker(
         autocommit=False, autoflush=True, bind=engine, class_=AsyncSession
     )
