@@ -16,7 +16,7 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
             res = await session.get(
                 "https://torrents-csv.com/service/search", params={"q": q}
             )
-            return await res.json()['torrents']
+            return (await res.json())['torrents']
 
     async def search_for_movie(
         self, imdb_id: ImdbId, tmdb_id: TmdbId
@@ -27,6 +27,7 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
                 title=item['name'],
                 seeders=item['seeders'],
                 download=item['infohash'],
+                category=item['category'],
             )
 
     async def search_for_tv(
