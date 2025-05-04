@@ -331,8 +331,8 @@ async def get_one(session: AsyncSession, entity: Type[T], id: int) -> Optional[T
 
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: AsyncSession = Depends(get_db)):
-    def process(added_by_id: int, values):
-        user = session.query(User).get(added_by_id)
+    async def process(added_by_id: int, values):
+        user = await get_one(session, User, added_by_id)
         if not user:
             return None
 
@@ -347,7 +347,7 @@ async def stats(session: AsyncSession = Depends(get_db)):
     )
 
     return [
-        process(added_by_id, values)
+        await process(added_by_id, values)
         for added_by_id, values in groupby(
             query.all(), lambda row: row.added_by_id
         ).items()

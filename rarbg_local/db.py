@@ -273,7 +273,9 @@ async def get_movies(session: AsyncSession) -> List[MovieDetails]:
 async def get_or_create(
     session: AsyncSession, model: Type[T], defaults=None, **kwargs
 ) -> T:
-    instance = session.query(model).filter_by(**kwargs).first()
+    instance = (
+        (await session.execute(select(model).filter_by(**kwargs))).scalars().first()
+    )
     if instance:
         return instance
     params = {k: v for k, v in kwargs.items() if not isinstance(v, ClauseElement)}
