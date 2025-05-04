@@ -3064,7 +3064,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/router@npm:1.23.0":
+"@remix-run/router@npm:1.23.0, @remix-run/router@npm:^1.23.0":
   version: 1.23.0
   resolution: "@remix-run/router@npm:1.23.0"
   checksum: 10/0a9f02c26c150d8210b05927c43d2f57ee8b7f812c81abb76df1721c7367ef692e54f4044981e756ce13d0619fb3c6a9b1514524d69aea9b32bfaf565299a8c7
@@ -4783,6 +4783,7 @@ __metadata:
     "@fortawesome/react-fontawesome": "npm:^0.2.0"
     "@mui/material": "npm:^6"
     "@mui/styles": "npm:^6"
+    "@remix-run/router": "npm:^1.23.0"
     "@sentry/react": "npm:^5.29.2"
     "@sentry/tracing": "npm:^5.29.2"
     "@testing-library/jest-dom": "npm:^5.11.9"

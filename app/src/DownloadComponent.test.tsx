@@ -1,9 +1,12 @@
 import { act, screen } from '@testing-library/react';
 import React from 'react';
 import { DownloadComponent, DownloadState } from './DownloadComponent';
-import { Route, Router } from 'react-router-dom';
+import {
+  Route,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom';
 import { wait, usesMoxios, renderWithSWR } from './test.utils';
-import { createMemoryHistory } from 'history';
+import { createMemoryHistory } from '@remix-run/router';
 import moxios from 'moxios';
 import { expectLastRequestBody } from './utils';
 
@@ -12,6 +15,10 @@ usesMoxios();
 describe('DownloadComponent', () => {
   it('success', async () => {
     const history = createMemoryHistory();
+    const entries = [];
+    history.listen((item) => {
+      entries.push(item);
+    });
     const state: DownloadState = {
       downloads: [
         {
@@ -23,11 +30,11 @@ describe('DownloadComponent', () => {
     history.push('/download', state);
 
     const { container } = renderWithSWR(
-      <Router history={history}>
+      <HistoryRouter history={history}>
         <Route path="/download">
           <DownloadComponent />
         </Route>
-      </Router>,
+      </HistoryRouter>,
     );
 
     expect(container).toMatchSnapshot();
@@ -37,7 +44,7 @@ describe('DownloadComponent', () => {
     await wait();
 
     expect(container).toMatchSnapshot();
-    expect(history.length).toBe(2);
+    expect(history).toBe(2);
   });
   it.skip('failure', async () => {
     const history = createMemoryHistory();
@@ -52,11 +59,11 @@ describe('DownloadComponent', () => {
     history.push('/download', state);
 
     renderWithSWR(
-      <Router history={history}>
+      <HistoryRouter history={history}>
         <Route path="/download">
           <DownloadComponent />
         </Route>
-      </Router>,
+      </HistoryRouter>,
     );
 
     await act(async () => {
