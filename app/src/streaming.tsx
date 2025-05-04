@@ -188,7 +188,7 @@ function ParentComponentInt() {
 function SwrConfigWrapper({
   WrappedComponent,
 }: {
-  WrappedComponent: React.ComponentType<{}>;
+  WrappedComponent: React.ComponentType;
 }) {
   const auth = useAuth0();
   return (
@@ -214,7 +214,7 @@ function SwrConfigWrapper({
   );
 }
 
-export function swrConfig(WrappedComponent: React.ComponentType<{}>) {
+export function swrConfig(WrappedComponent: React.ComponentType) {
   return () => <SwrConfigWrapper WrappedComponent={WrappedComponent} />;
 }
 const ParentComponent = swrConfig(ParentComponentInt);
