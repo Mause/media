@@ -22,7 +22,7 @@ test('DownloadAllComponent', async () => {
       source: 'horriblesubs',
       category: 'Movie',
       download: 'magnet:....',
-      episode_info: { seasonnum: '1', epnum: '1' },
+      episode_info: { seasonnum: 1, epnum: 1 },
       seeders: 5,
       title: 'Hello World',
     },
