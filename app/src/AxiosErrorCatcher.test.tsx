@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
@@ -29,27 +29,25 @@ function Fake() {
 }
 
 test('AxiosErrorCatcher', async () => {
-  await act(async () => {
-    let lerror;
-    const el = render(
-      <ErrorBoundary
-        fallback={<div>error</div>}
-        onError={(error) => (lerror = error)}
-      >
-        <AxiosErrorCatcher>
-          <Fake />
-        </AxiosErrorCatcher>
-      </ErrorBoundary>,
-    );
+  let lerror;
+  const { container } = render(
+    <ErrorBoundary
+      fallback={<div>error</div>}
+      onError={(error) => (lerror = error)}
+    >
+      <AxiosErrorCatcher>
+        <Fake />
+      </AxiosErrorCatcher>
+    </ErrorBoundary>,
+  );
 
-    expect(el.container).toMatchSnapshot();
+  expect(container).toMatchSnapshot();
 
-    await moxios.stubOnce('GET', /.*/, {
-      status: 500,
-      response: { body: {}, message: 'an error has occured' },
-    });
-    await wait();
-    expect(lerror).toBeTruthy();
-    expect(lerror).toEqual(new Error('Request failed with status code 500'));
+  await moxios.stubOnce('GET', /.*/, {
+    status: 500,
+    response: { body: {}, message: 'an error has occured' },
   });
+  await wait();
+  expect(lerror).toBeTruthy();
+  expect(lerror).toEqual(new Error('Request failed with status code 500'));
 });

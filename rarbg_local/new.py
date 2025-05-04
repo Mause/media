@@ -2,7 +2,16 @@ import logging
 import os
 import traceback
 from functools import wraps
-from typing import Any, AsyncGenerator, Callable, Dict, List, Optional, Union
+from typing import (
+    Any,
+    AsyncGenerator,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Union,
+)
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
@@ -22,8 +31,6 @@ from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import delete, select
-from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
 
 from .auth import auth_hook, get_my_jwkaas
@@ -58,18 +65,20 @@ from .models import (
     MonitorPost,
     MovieDetailsSchema,
     MovieResponse,
+    ProviderSource,
     SearchResponse,
     StatsResponse,
     TvResponse,
     TvSeasonResponse,
 )
 from .providers import (
-    PROVIDERS,
-    MovieProvider,
-    ProviderSource,
-    TvProvider,
+    get_providers,
     search_for_movie,
     search_for_tv,
+)
+from .providers.abc import (
+    MovieProvider,
+    TvProvider,
 )
 from .settings import Settings, get_settings
 from .singleton import singleton
@@ -82,6 +91,7 @@ from .tmdb import (
     get_tv_imdb_id,
     search_themoviedb,
 )
+from .types import ImdbId, TmdbId
 from .utils import non_null, precondition
 
 api = APIRouter()
@@ -145,8 +155,8 @@ async def delete_item(
 
 
 @api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
-    safe_delete(
+async def api_delete(type: MediaType, id: int, session: AsyncSession = Depends(get_db)):
+    await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
 
@@ -176,14 +186,14 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
 )
 @eventstream
 async def stream(
-    type: str,
-    tmdb_id: str,
+    type: Literal['series', 'movie'],
+    tmdb_id: TmdbId,
     source: ProviderSource,
     season: Optional[int] = None,
     episode: Optional[int] = None,
 ) -> AsyncGenerator[BaseModel, None]:
     provider = next(
-        (provider for provider in PROVIDERS if provider.name == source.value),
+        (provider for provider in get_providers() if provider.name == source.value),
         None,
     )
     if not provider:
@@ -194,7 +204,7 @@ async def stream(
             return
 
         async for item in provider.search_for_tv(
-            await get_tv_imdb_id(tmdb_id), int(tmdb_id), non_null(season), episode
+            await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
         ):
             yield item
     else:
@@ -202,7 +212,7 @@ async def stream(
             return
 
         async for item in provider.search_for_movie(
-            await get_movie_imdb_id(tmdb_id), int(tmdb_id)
+            await get_movie_imdb_id(tmdb_id), tmdb_id
         ):
             yield item
 
@@ -210,8 +220,8 @@ async def stream(
 @api.get(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
-async def api_select(tmdb_id: int, season: int):
-    results = search_for_tv(await get_tv_imdb_id(tmdb_id), int(tmdb_id), int(season))
+async def api_select(tmdb_id: TmdbId, season: int):
+    results = search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
 
     episodes = (await get_tv_episodes(tmdb_id, season)).episodes
 
@@ -260,11 +270,12 @@ async def download_post(
                     (
                         episode
                         for episode in episodes
-                        if str(episode.episode_number) == thing.episode
+                        if episode.episode_number == thing.episode
                     ),
                     None,
                 )
-                assert episode, f'Could not find episode: {thing}'
+                if not episode:
+                    raise ValueError(f'Could not find episode: {thing}')
                 title = episode.name
 
             show_title = item.name
@@ -279,9 +290,9 @@ async def download_post(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
-                    await get_tv_imdb_id(str(thing.tmdb_id))
+                    await get_tv_imdb_id(thing.tmdb_id)
                     if is_tv
-                    else await get_movie_imdb_id(str(thing.tmdb_id))
+                    else await get_movie_imdb_id(thing.tmdb_id)
                 )
                 or '',
                 subpath=subpath,
@@ -316,16 +327,23 @@ async def get_one(session, entity, id):
 
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: AsyncSession = Depends(get_db)):
+    def process(added_by_id: int, values):
+        user = session.query(User).get(added_by_id)
+        if not user:
+            return None
+
+        return {
+            "user": user.username,
+            "values": {type.lower(): value for _, type, value in values},
+        }
+
     keys = Download.added_by_id, Download.type
     query = await session.execute(
         select(*keys, func.count(name='count')).group_by(*keys)
     )
 
     return [
-        {
-            "user": (await get_one(session, User, added_by_id)).username,
-            "values": {type.lower(): value for _, type, value in values},
-        }
+        process(added_by_id, values)
         for added_by_id, values in groupby(
             query.all(), lambda row: row.added_by_id
         ).items()
@@ -333,7 +351,7 @@ async def stats(session: AsyncSession = Depends(get_db)):
 
 
 @api.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
-async def movie(tmdb_id: int):
+async def movie(tmdb_id: TmdbId):
     return await get_movie(tmdb_id)
 
 
@@ -364,7 +382,7 @@ async def monitor_delete(monitor_id: int, session: AsyncSession = Depends(get_db
     return {}
 
 
-async def validate_id(type: MonitorMediaType, tmdb_id: int) -> str:
+async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
     try:
         return (
             (await get_movie(tmdb_id)).title
@@ -405,23 +423,21 @@ tv_ns = APIRouter(tags=['tv'])
 
 
 @tv_ns.get('/{tmdb_id}', response_model=TvResponse)
-async def api_tv(tmdb_id: int):
+async def api_tv(tmdb_id: TmdbId):
     tv = await get_tv(tmdb_id)
     return TvResponse(**tv.dict(), imdb_id=await get_tv_imdb_id(tmdb_id), title=tv.name)
 
 
 @tv_ns.get('/{tmdb_id}/season/{season}', response_model=TvSeasonResponse)
-async def api_tv_season(tmdb_id: int, season: int):
+async def api_tv_season(tmdb_id: TmdbId, season: int):
     return await get_tv_episodes(tmdb_id, season)
 
 
-async def _stream(type: str, tmdb_id: str, season=None, episode=None):
+async def _stream(type: str, tmdb_id: TmdbId, season=None, episode=None):
     if type == 'series':
-        items = search_for_tv(
-            await get_tv_imdb_id(tmdb_id), int(tmdb_id), season, episode
-        )
+        items = search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season, episode)
     else:
-        items = search_for_movie(await get_movie_imdb_id(tmdb_id), int(tmdb_id))
+        items = search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
 
     return (item.dict() for item in items)
 
@@ -452,15 +468,15 @@ def get_plex(settings=Depends(get_settings)) -> PlexServer:
     return novell.connect(ssl=True)
 
 
-def get_imdb_in_plex(imdb_id: str, plex) -> Optional[Media]:
+def get_imdb_in_plex(imdb_id: ImdbId, plex) -> Optional[Media]:
     guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
     items = plex.library.search(guid=guid)
     return items[0] if items else None
 
 
-@root.get('/redirect/plex/{tmdb_id}')
-def redirect_to_plex(tmdb_id: str, plex=Depends(get_plex)):
-    dat = get_imdb_in_plex(tmdb_id, plex)
+@root.get('/redirect/plex/{imdb_id}')
+def redirect_to_plex(imdb_id: ImdbId, plex=Depends(get_plex)):
+    dat = get_imdb_in_plex(imdb_id, plex)
     if not dat:
         raise HTTPException(404, 'Not found in plex')
 
@@ -476,7 +492,7 @@ def redirect_to_plex(tmdb_id: str, plex=Depends(get_plex)):
 @root.get('/redirect/{type_}/{tmdb_id}/{season}/{episode}')
 async def redirect_to_imdb(
     type_: MediaType,
-    tmdb_id: int,
+    tmdb_id: TmdbId,
     season: Optional[int] = None,
     episode: Optional[int] = None,
 ):

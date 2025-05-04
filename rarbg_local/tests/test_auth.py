@@ -46,7 +46,8 @@ async def test_auth(responses, user, fastapi_app, test_client):
             '/simple',
             show,
             response_model=UserSchema,
-            # this should match the one defined in create_app. need to define it here too annoying
+            # this should match the one defined in create_app.
+            # need to define it here too annoying
             dependencies=[Security(get_current_user, scopes=['openid'])],
         ),
     )

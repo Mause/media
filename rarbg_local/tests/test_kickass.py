@@ -1,24 +1,24 @@
 from pytest import mark
 
-from ..models import EpisodeInfo, ITorrent
-from ..providers import KickassProvider, ProviderSource
+from ..models import EpisodeInfo, ITorrent, ProviderSource
+from ..providers.kickass import KickassProvider
 from .conftest import themoviedb, tolist
 from .factories import MovieResponseFactory, TvApiResponseFactory
 
 
 def make(title):
     return f'''
-    <div class="tab_content" id="1080">
-        <table>
-            <tbody>
-                <tr>
-                    <td><a class="torrents_table__torrent_title" href="">{title}</a></td>
-                    <td><a href="magnet:aaaa">Magnet</a></td>
-                    <td data-title="Seed">10</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<div class="tab_content" id="1080">
+    <table>
+        <tbody>
+            <tr>
+                <td><a class="torrents_table__torrent_title" href="">{title}</a></td>
+                <td><a href="magnet:aaaa">Magnet</a></td>
+                <td data-title="Seed">10</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
     '''
 
 

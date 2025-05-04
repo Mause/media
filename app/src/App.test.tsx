@@ -7,14 +7,12 @@ import { usesMoxios, renderWithSWR } from './test.utils';
 usesMoxios();
 
 test('renders learn react link', () => {
-  const el = renderWithSWR(<App />);
-  expect(el.container).toMatchSnapshot();
+  const { container } = renderWithSWR(<App />);
+  expect(container).toMatchSnapshot();
 });
 
 test('renders app update notification', async () => {
-  await act(async () => {
-    renderWithSWR(<App />);
-  });
+  renderWithSWR(<App />);
 
   expect(CallbackMountPoint.onAppUpdate).toBeTruthy();
 
