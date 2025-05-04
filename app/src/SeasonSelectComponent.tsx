@@ -66,7 +66,7 @@ function SeasonSelectComponent() {
 
 export function EpisodeSelectBreadcrumbs(props: {
   tmdb_id: string;
-  season: string;
+  season: number;
 }) {
   const { data: tv } = useSWR<TV>(`tv/${props.tmdb_id}`);
 
@@ -94,7 +94,7 @@ function EpisodeSelectComponent() {
 
   return (
     <div>
-      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={seasonNumber!} />
+      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={parseInt(seasonNumber!)} />
       {season ? (
         <ol>
           {season.episodes.map((episode) => (

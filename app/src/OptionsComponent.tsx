@@ -29,8 +29,8 @@ export function DisplayTorrent({
   season,
   episode,
 }: {
-  season?: string;
-  episode?: string;
+  season?: number;
+  episode?: number;
   tmdb_id: string;
   torrent: ITorrent;
   torrents?: Torrents;
@@ -107,8 +107,8 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   const dt = (result: ITorrent) => (
     <DisplayTorrent
       tmdb_id={tmdb_id}
-      season={season}
-      episode={episode}
+      season={parseInt(season!)}
+      episode={parseInt(episode!)}
       torrents={torrents}
       torrent={result}
     />
