@@ -304,10 +304,11 @@ async def get_session_local(settings: Settings = Depends(get_settings)):
 
         @event.listens_for(engine.sync_engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
-            dbapi_con.create_collation(
+            connection = dbapi_con.driver_connection._connection
+            connection.create_collation(
                 "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
             )
-            dbapi_con.execute('pragma foreign_keys=ON')
+            connection.execute('pragma foreign_keys=ON')
 
     else:
         engine = create_async_engine(
