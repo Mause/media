@@ -3,6 +3,7 @@ import React from 'react';
 import { DownloadComponent, DownloadState } from './DownloadComponent';
 import {
   Route,
+  Routes,
   unstable_HistoryRouter as HistoryRouter,
 } from 'react-router-dom';
 import { wait, usesMoxios, renderWithSWR } from './test.utils';
@@ -31,9 +32,11 @@ describe('DownloadComponent', () => {
 
     const { container } = renderWithSWR(
       <HistoryRouter history={history}>
-        <Route path="/download">
-          <DownloadComponent />
-        </Route>
+        <Routes>
+          <Route path="/download">
+            <DownloadComponent />
+          </Route>
+        </Routes>
       </HistoryRouter>,
     );
 
