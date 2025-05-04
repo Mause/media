@@ -50,9 +50,9 @@ def test_threadable() -> None:
     [
         (
             'postgres://user:pass@localhost:5432/db',
-            'postgresql://user:pass@localhost:5432/db',
+            'postgresql+asyncpg://user:pass@localhost:5432/db',
         ),
-        ('sqlite:///:memory:', 'sqlite:///:memory:'),
+        ('sqlite:///:memory:', 'sqlite+aiosqlite:///:memory:'),
     ],
 )
 def test_normalise_db_url(original, expected) -> None:

@@ -46,7 +46,7 @@ async def user(session):
 @fixture
 async def session(fastapi_app):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
-        database_url='sqlite:///:memory:',
+        database_url='sqlite+aiosqlite:///:memory:',
         plex_token='plex_token',
     )
 
