@@ -33,9 +33,7 @@ describe('DownloadComponent', () => {
     const { container } = renderWithSWR(
       <HistoryRouter history={history}>
         <Routes>
-          <Route path="/download">
-            <DownloadComponent />
-          </Route>
+          <Route path="/download" Component={DownloadComponent} />
         </Routes>
       </HistoryRouter>,
     );
