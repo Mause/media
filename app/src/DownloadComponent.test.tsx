@@ -10,16 +10,14 @@ import { wait, usesMoxios, renderWithSWR } from './test.utils';
 import { createMemoryHistory } from '@remix-run/router';
 import moxios from 'moxios';
 import { expectLastRequestBody } from './utils';
+import { listenTo } from './test.utils';
 
 usesMoxios();
 
 describe('DownloadComponent', () => {
   it('success', async () => {
     const history = createMemoryHistory();
-    const entries = [];
-    history.listen((item) => {
-      entries.push(item);
-    });
+    const entries = listenTo(history);
     const state: DownloadState = {
       downloads: [
         {

@@ -9,6 +9,7 @@ import {
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
+import { Location, MemoryHistory } from '@remix-run/router';
 
 const theme = createTheme();
 
@@ -47,4 +48,20 @@ export function usesMoxios() {
   afterEach(() => {
     moxios.uninstall();
   });
+}
+
+export function listenTo(hist: MemoryHistory) {
+  const entries: Location[] = [];
+  const otherListeners: Listener[] = [];
+  hist.listen((hist) => {
+    entries.push(hist.location);
+    for (const listener of otherListeners) {
+      listener(hist);
+    }
+  });
+  hist.listen = (listener) => {
+    otherListeners.push(listener);
+    return () => {};
+  };
+  return entries;
 }
