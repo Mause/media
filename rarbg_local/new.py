@@ -10,6 +10,8 @@ from typing import (
     List,
     Literal,
     Optional,
+    Type,
+    TypeVar,
     Union,
 )
 from urllib.parse import urlencode
@@ -93,6 +95,8 @@ from .tmdb import (
 )
 from .types import ImdbId, TmdbId
 from .utils import non_null, precondition
+
+T = TypeVar('T')
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -319,7 +323,7 @@ async def index(session: AsyncSession = Depends(get_db)):
     )
 
 
-async def get_one(session, entity, id):
+async def get_one(session: AsyncSession, entity: Type[T], id: int) -> Optional[T]:
     query = select(entity).filter_by(id=id)
     res = await session.execute(query)
     return res.scalar_one()

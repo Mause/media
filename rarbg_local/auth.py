@@ -5,8 +5,8 @@ from cachetools import TTLCache
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, SecurityScopes
 from jwkaas import JWKaas
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session
 
 from .db import User
 from .singleton import singleton
@@ -41,7 +41,7 @@ def get_user_info(
 
 async def auth_hook(
     *,
-    session: Session,
+    session: AsyncSession,
     header: HTTPAuthorizationCredentials,
     security_scopes: SecurityScopes,
     jwkaas=Depends(get_my_jwkaas),

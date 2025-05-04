@@ -20,7 +20,7 @@ from sqlalchemy.engine import URL, make_url
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import select
-from sqlalchemy.orm import Session, joinedload, relationship, sessionmaker
+from sqlalchemy.orm import joinedload, relationship, sessionmaker
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
 from sqlalchemy_repr import RepresentableBase
@@ -254,7 +254,7 @@ def create_episode(
     return ed
 
 
-async def get_all(session: Session, model: Type[T]) -> List[T]:
+async def get_all(session: AsyncSession, model: Type[T]) -> List[T]:
     return (
         (await session.execute(select(model).options(joinedload('download'))))
         .scalars()
@@ -262,15 +262,17 @@ async def get_all(session: Session, model: Type[T]) -> List[T]:
     )
 
 
-async def get_episodes(session: Session) -> List[EpisodeDetails]:
+async def get_episodes(session: AsyncSession) -> List[EpisodeDetails]:
     return await get_all(session, EpisodeDetails)
 
 
-async def get_movies(session: Session) -> List[MovieDetails]:
+async def get_movies(session: AsyncSession) -> List[MovieDetails]:
     return await get_all(session, MovieDetails)
 
 
-def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> T:
+async def get_or_create(
+    session: AsyncSession, model: Type[T], defaults=None, **kwargs
+) -> T:
     instance = session.query(model).filter_by(**kwargs).first()
     if instance:
         return instance
