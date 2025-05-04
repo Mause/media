@@ -22,7 +22,7 @@ dependencies = [
     "email-validator==2.2.0",
     "mause-rpc==0.0.18",
     "cffi==1.17.1",
-    "fastapi==0.67.0",
+    "fastapi==0.73.0",
     "python-multipart==0.0.20",
     "jwkaas==0.7",
     "aniso8601==8.1.1",
