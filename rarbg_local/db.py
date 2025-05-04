@@ -269,7 +269,6 @@ async def get_all(session: AsyncSession, model: type[T]) -> Sequence[T]:
         joint = EpisodeDetails.download
     else:
         raise ValueError(f'Unknown model: {model}')
-
     return (
         (await session.execute(select(model).options(joinedload(joint))))
         .scalars()
