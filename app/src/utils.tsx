@@ -9,17 +9,16 @@ import { TypographyTypeMap } from '@mui/material';
 import moxios from 'moxios';
 import { useAuth0 } from '@auth0/auth0-react';
 import { FetchEventTarget } from './fetch_stream';
-import { To, State } from 'history';
 
 // axiosRetry(Axios, { retries: 3 });
 
-export function MLink(props: {
-  children: React.ReactNode;
-  to: To;
-  state?: State;
-  color?: TypographyTypeMap['props']['color'];
-}): ReactElement {
-  return <MaterialLink component={Link} {...props} underline="hover" />;
+export function MLink(
+  props: {
+    children: React.ReactNode;
+    color?: TypographyTypeMap['props']['color'];
+  } & Pick<Parameters<typeof Link>[0], 'to' | 'state'>,
+): ReactElement {
+  return <MaterialLink component={Link} {...props} />;
 }
 
 export function subscribe<T>(
