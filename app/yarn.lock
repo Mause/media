@@ -3174,14 +3174,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^12.6.0":
-  version: 12.6.0
-  resolution: "@testing-library/user-event@npm:12.6.0"
-  dependencies:
-    "@babel/runtime": "npm:^7.12.5"
+"@testing-library/user-event@npm:^14.6.1":
+  version: 14.6.1
+  resolution: "@testing-library/user-event@npm:14.6.1"
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
-  checksum: 10/100d80dda7a49952c03911f7e6204016bc93f70175174c81bf9052e00b9230da26f599cb351bbacb5e09025dbe3a311aaaa732d2705f5b5ef1d10543cf7684db
+  checksum: 10/34b74fff56a0447731a94b40d4cf246deb8dbc1c1e3aec93acd1c3377a760bb062e979f1572bb34ec164ad28ee2a391744b42d0d6d6cc16c4ce527e5e09610e1
   languageName: node
   linkType: hard
 
@@ -3428,6 +3426,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/history@npm:^4.7.11":
+  version: 4.7.11
+  resolution: "@types/history@npm:4.7.11"
+  checksum: 10/1da529a3485f3015daf794effa3185493bf7dd2551c26932389c614f5a0aab76ab97645897d1eef9c74ead216a3848fcaa019f165bbd6e4b71da6eff164b4c68
+  languageName: node
+  linkType: hard
+
 "@types/html-minifier-terser@npm:^6.0.0":
   version: 6.1.0
   resolution: "@types/html-minifier-terser@npm:6.1.0"
@@ -3567,16 +3572,18 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 14.0.27
-  resolution: "@types/node@npm:14.0.27"
-  checksum: 10/09c6b84ecd640d36fd6f35f283126c36b610b62eb94b4eeef312cf7f426f16ad9939554bde86ffe120e29674abcddda83bc0c4010b34a268e44fea5fc42dac1d
+  version: 22.15.3
+  resolution: "@types/node@npm:22.15.3"
+  dependencies:
+    undici-types: "npm:~6.21.0"
+  checksum: 10/6b4ff03c36598432b419980f828281aa16383e2de6eb61f73275495ef8d2cbf8cb5607659b4cae5ff8b2b2ff69913ea07ffcc0be029e4280b6e8bc138dc6629b
   languageName: node
   linkType: hard
 
 "@types/node@npm:^14.6.2":
-  version: 14.6.2
-  resolution: "@types/node@npm:14.6.2"
-  checksum: 10/ae38b80591577a4461b02d0a6b089fc371350d86d736ff95f52acef1e17b0b24760804ddc4a35c6d1e4ec9ee998d0d879a72e864e140ff7bac832ccac3d99dcb
+  version: 14.18.63
+  resolution: "@types/node@npm:14.18.63"
+  checksum: 10/82a7775898c2ea6db0b610a463512206fb2c7adc1af482c7eb44b99d94375fff51c74f67ae75a63c5532971159f30c866a4d308000624ef02fd9a7175e277019
   languageName: node
   linkType: hard
 
@@ -3641,13 +3648,13 @@ __metadata:
   linkType: hard
 
 "@types/react-router-dom@npm:^5.1.7":
-  version: 5.1.7
-  resolution: "@types/react-router-dom@npm:5.1.7"
+  version: 5.3.3
+  resolution: "@types/react-router-dom@npm:5.3.3"
   dependencies:
-    "@types/history": "npm:*"
+    "@types/history": "npm:^4.7.11"
     "@types/react": "npm:*"
     "@types/react-router": "npm:*"
-  checksum: 10/ad40f55557bb7cd8d19d783c1d7dbca85e8874e03cced37e464f74f9f0a588a9a7e411de74da362d1a5c5bf80f7aaca78fe9a66d26741e47c5c06e49a62d1229
+  checksum: 10/28c4ea48909803c414bf5a08502acbb8ba414669b4b43bb51297c05fe5addc4df0b8fd00e0a9d1e3535ec4073ef38aaafac2c4a2b95b787167d113bc059beff3
   languageName: node
   linkType: hard
 
@@ -4517,7 +4524,7 @@ __metadata:
     "@sentry/tracing": "npm:^5.29.2"
     "@testing-library/jest-dom": "npm:^5.11.9"
     "@testing-library/react": "npm:^11.2.2"
-    "@testing-library/user-event": "npm:^12.6.0"
+    "@testing-library/user-event": "npm:^14.6.1"
     "@types/history": "npm:4.7.7"
     "@types/jest": "npm:^26.0.13"
     "@types/lodash": "npm:^4.17.16"
@@ -4533,13 +4540,14 @@ __metadata:
     "@vtex/axios-concurrent-retry": "npm:^4.0.11"
     axios: "npm:^0.30.0"
     colors.css: "npm:^3.0.0"
-    eslint-config-react-app: "npm:^6.0.0"
+    eslint-config-react-app: "npm:^7.0.0"
     history: "npm:^4.9.0"
     jest-junit: "npm:^12.0.0"
     lodash: "npm:^4.17.20"
     mockdate: "npm:^3.0.2"
     moment: "npm:^2.29.1"
     moxios: "npm:^0.4.0"
+    prettier: "npm:2.2.1"
     prop-types: "npm:^15.7.2"
     qs: "npm:^6.9.4"
     react: "npm:^16.14.0"
@@ -4552,7 +4560,7 @@ __metadata:
     react-router-dom: "npm:^5.2.0"
     react-scripts: "npm:^5"
     swr: "npm:^0.4.0"
-    typescript: "npm:^4.1.3"
+    typescript: "npm:^5"
     typescript-string-operations: "npm:^1.4.1"
     use-socketio: "npm:^2.0.4"
   languageName: unknown
@@ -5761,13 +5769,6 @@ __metadata:
   version: 0.0.1
   resolution: "concat-map@npm:0.0.1"
   checksum: 10/9680699c8e2b3af0ae22592cb764acaf973f292a7b71b8a06720233011853a58e256c89216a10cbe889727532fd77f8bcd49a760cedfde271b8e006c20e079f2
-  languageName: node
-  linkType: hard
-
-"confusing-browser-globals@npm:^1.0.10":
-  version: 1.0.10
-  resolution: "confusing-browser-globals@npm:1.0.10"
-  checksum: 10/7ccdc44c2ca419cf6576c3e4336106e18d1c5337f547e461342f51aec4a10f96fdfe45414b522be3c7d24ea0b62bf4372cd37768022e4d6161707ffb2c0987e6
   languageName: node
   linkType: hard
 
@@ -7170,33 +7171,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-react-app@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "eslint-config-react-app@npm:6.0.0"
-  dependencies:
-    confusing-browser-globals: "npm:^1.0.10"
-  peerDependencies:
-    "@typescript-eslint/eslint-plugin": ^4.0.0
-    "@typescript-eslint/parser": ^4.0.0
-    babel-eslint: ^10.0.0
-    eslint: ^7.5.0
-    eslint-plugin-flowtype: ^5.2.0
-    eslint-plugin-import: ^2.22.0
-    eslint-plugin-jest: ^24.0.0
-    eslint-plugin-jsx-a11y: ^6.3.1
-    eslint-plugin-react: ^7.20.3
-    eslint-plugin-react-hooks: ^4.0.8
-    eslint-plugin-testing-library: ^3.9.0
-  peerDependenciesMeta:
-    eslint-plugin-jest:
-      optional: true
-    eslint-plugin-testing-library:
-      optional: true
-  checksum: 10/d10980658b166cc4e772b0c15e3c3d6194d8d41c849bd99155c4a2a85e3d3be2ec9263e7e5c0e4eda5820d294d4e3864952eeed89fa6e8a93bd5c6c04c024106
-  languageName: node
-  linkType: hard
-
-"eslint-config-react-app@npm:^7.0.1":
+"eslint-config-react-app@npm:^7.0.0, eslint-config-react-app@npm:^7.0.1":
   version: 7.0.1
   resolution: "eslint-config-react-app@npm:7.0.1"
   dependencies:
@@ -12721,6 +12696,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:2.2.1":
+  version: 2.2.1
+  resolution: "prettier@npm:2.2.1"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 10/7bad7ef9cf2da3059a83de0729d480879f5adbe9974419a16a953dee69b2c720ebf1df8d1a713306547a5af8c2b6168a79cd94bda15202de0121348123f7903f
+  languageName: node
+  linkType: hard
+
 "pretty-bytes@npm:^5.3.0":
   version: 5.4.1
   resolution: "pretty-bytes@npm:5.4.1"
@@ -15320,23 +15304,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.1.3":
-  version: 4.1.3
-  resolution: "typescript@npm:4.1.3"
+"typescript@npm:^5":
+  version: 5.8.3
+  resolution: "typescript@npm:5.8.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/674a898cc5c3afc4ad52d7305af7fee8b2ba17721b680d99907d450df9956137de8be456c47959ccbf59bce2281678c7e27e3a78c775cd24471bcd96883c0724
+  checksum: 10/65c40944c51b513b0172c6710ee62e951b70af6f75d5a5da745cb7fab132c09ae27ffdf7838996e3ed603bb015dadd099006658046941bd0ba30340cc563ae92
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^4.1.3#optional!builtin<compat/typescript>":
-  version: 4.1.3
-  resolution: "typescript@patch:typescript@npm%3A4.1.3#optional!builtin<compat/typescript>::version=4.1.3&hash=4a8eb8"
+"typescript@patch:typescript@npm%3A^5#optional!builtin<compat/typescript>":
+  version: 5.8.3
+  resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/085045b2cf7bdd60cb48bdf63469af4488f827df149c92a834f38aa89460e12b47402d8c0414b4e87c65fba3cb154285b3fbb581747985a597cced90c4973f77
+  checksum: 10/b9b1e73dabac5dc730c041325dbd9c99467c1b0d239f1b74ec3b90d831384af3e2ba973946232df670519147eb51a2c20f6f96163cea2b359f03de1e2091cc4f
   languageName: node
   linkType: hard
 
@@ -15349,6 +15333,13 @@ __metadata:
     has-symbols: "npm:^1.1.0"
     which-boxed-primitive: "npm:^1.1.1"
   checksum: 10/fadb347020f66b2c8aeacf8b9a79826fa34cc5e5457af4eb0bbc4e79bd87fed0fa795949825df534320f7c13f199259516ad30abc55a6e7b91d8d996ca069e50
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.21.0":
+  version: 6.21.0
+  resolution: "undici-types@npm:6.21.0"
+  checksum: 10/ec8f41aa4359d50f9b59fa61fe3efce3477cc681908c8f84354d8567bb3701fafdddf36ef6bff307024d3feb42c837cf6f670314ba37fc8145e219560e473d14
   languageName: node
   linkType: hard
 

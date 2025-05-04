@@ -1,12 +1,14 @@
 import React from 'react';
 import moxios from 'moxios';
 import { swrConfig } from './streaming';
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { ReactElement } from 'react';
 import { Auth0Context, Auth0ContextInterface } from '@auth0/auth0-react';
 
-export function wait() {
-  return new Promise<void>((resolve) => moxios.wait(resolve));
+export async function wait() {
+  return await act(
+    async () => await new Promise<void>((resolve) => moxios.wait(resolve)),
+  );
 }
 
 export async function mock<T>(path: string, response: T) {

@@ -4,8 +4,13 @@ from pathlib import Path
 from aioresponses import aioresponses as AioResponses
 from pytest import mark
 
-from ..providers import HorriblesubsProvider
-from ..providers.horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
+from ..providers.horriblesubs import (
+    HorriblesubsDownloadType,
+    HorriblesubsProvider,
+    get_downloads,
+    get_latest,
+)
+from ..types import ImdbId, TmdbId
 from .conftest import add_json, themoviedb, tolist
 from .factories import TvApiResponseFactory
 
@@ -136,7 +141,9 @@ async def test_provider(aioresponses: AioResponses, snapshot):
 
     results = [
         item.dict()
-        for item in await tolist(HorriblesubsProvider().search_for_tv(None, 1, 1, 2))
+        for item in await tolist(
+            HorriblesubsProvider().search_for_tv(ImdbId('tt00000000'), TmdbId(1), 1, 2)
+        )
     ]
 
     snapshot.assert_match(json.dumps(results, indent=2, default=repr), 'results.json')
