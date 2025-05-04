@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = [{ name = "Elliana May", email = "me@mause.me" }]
 license = "MIT"
-requires-python = "==3.11.*"
+requires-python = ">=3.11.0"
 
 dependencies = [
     "sqlalchemy[mypy]==1.4.54",
@@ -28,7 +28,7 @@ dependencies = [
     "aniso8601==8.1.1",
     "pytz==2021.1",
     "uvicorn[standard]",
-    "aiofiles==0.6.0",
+    "aiofiles==0.8.0",
     "fastapi-utils==0.2.1",
     "asyncache==0.1.1",
     "makefun==1.9.5",
