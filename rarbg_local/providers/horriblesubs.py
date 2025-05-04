@@ -11,6 +11,7 @@ from lxml.html import fromstring
 from ..jikan import closeness, get_names
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_tv
+from ..types import ImdbId, TmdbId
 from ..utils import cached
 from .abc import TvProvider, tv_convert
 
@@ -39,13 +40,13 @@ async def get_all_shows() -> Dict[str, str]:
 
 
 @lru_cache()
-async def get_show_id(path: str) -> Optional[str]:
+async def get_show_id(path: str) -> Optional[int]:
     async with make_session() as session:
         res = await session.get(path)
         res.raise_for_status()
         html = await res.text()
         m = SHOWID_RE.search(html)
-        return m.group(1) if m else None
+        return int(m.group(1)) if m else None
 
 
 def parse(html) -> Dict[str, str]:
@@ -134,7 +135,7 @@ async def search(showid: int, search_term: str):
         )
 
 
-async def search_for_tv(tmdb_id, season, episode):
+async def search_for_tv(tmdb_id: TmdbId, season: int, episode: Optional[int] = None):
     if season != 1:
         return
 
@@ -161,8 +162,8 @@ class HorriblesubsProvider(TvProvider):
 
     async def search_for_tv(
         self,
-        imdb_id: Optional[str],
-        tmdb_id: int,
+        imdb_id: ImdbId,
+        tmdb_id: TmdbId,
         season: int,
         episode: Optional[int] = None,
     ) -> AsyncGenerator[ITorrent, None]:
@@ -176,9 +177,7 @@ class HorriblesubsProvider(TvProvider):
                 seeders=0,
                 download=item['download'],
                 category=tv_convert(item['resolution']),
-                episode_info=EpisodeInfo(
-                    seasonnum=str(season), epnum=str(item['episode'])
-                ),
+                episode_info=EpisodeInfo(seasonnum=season, epnum=item['episode']),
             )
 
 

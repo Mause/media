@@ -21,7 +21,9 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+config_file_name = config.config_file_name
+assert config_file_name
+fileConfig(config_file_name)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 db = __import__('rarbg_local.db').db
@@ -33,6 +35,7 @@ else:
 
 
 alembic_config = config.get_section(config.config_ini_section)
+assert alembic_config
 alembic_config['sqlalchemy.url'] = url
 target_metadata = db.Base.metadata
 
@@ -66,6 +69,22 @@ def run_migrations_offline():
         context.run_migrations()
 
 
+def resolve_db_url():
+    parsed = urlparse(url)
+    print(parsed)
+    domain = parsed.hostname
+    results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
+    print('AAAA', results)
+    print(results[0].to_text())
+    return urlunparse(
+        parsed._replace(
+            netloc='{}:{}@[{}]:{}'.format(
+                parsed.username, parsed.password, results[0].address, parsed.port
+            )
+        )
+    )
+
+
 def run_migrations_online():
     """Run migrations in 'online' mode.
 
@@ -74,26 +93,14 @@ def run_migrations_online():
 
     """
 
-    parsed = urlparse(url)
-    print(parsed)
-    domain = parsed.hostname
-    results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
-    print('AAAA', results)
-    print(results[0].to_text())
-    alembic_config['sqlalchemy.url'] = urlunparse(
-        parsed._replace(
-            netloc='{}:{}@[{}]:{}'.format(
-                parsed.username, parsed.password, results[0].address, parsed.port
-            )
-        )
-    )
+    if 'RAILWAY_ENVIRONMENT_NAME' in os.environ:
+        alembic_config['sqlalchemy.url'] = resolve_db_url()
 
     connectable = engine_from_config(
         alembic_config,
         prefix='sqlalchemy.',
         poolclass=pool.NullPool,
         connect_args={
-            #            'connection_factory': LoggingConnection,
             'connect_timeout': 10000,
         },
     )

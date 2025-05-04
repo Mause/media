@@ -8,6 +8,7 @@ from pydantic.main import _missing
 from pydantic.utils import GetterDict
 
 from .db import MonitorMediaType
+from .types import TmdbId
 
 
 class Orm(BaseModel):
@@ -47,8 +48,8 @@ class ProviderSource(Enum):
 
 
 class EpisodeInfo(BaseModel):
-    seasonnum: str
-    epnum: Optional[str]
+    seasonnum: int
+    epnum: Optional[int]
 
 
 class ITorrent(BaseModel):
@@ -118,7 +119,7 @@ class StatsResponse(BaseModel):
 
 
 class MonitorPost(Orm):
-    tmdb_id: int
+    tmdb_id: TmdbId
     type: MonitorMediaType
 
 
@@ -136,10 +137,10 @@ class MonitorGet(MonitorPost):
 
 
 class DownloadPost(BaseModel):
-    tmdb_id: int
+    tmdb_id: TmdbId
     magnet: constr(regex=r'^magnet:')  # type: ignore
-    season: Optional[str] = None
-    episode: Optional[str] = None
+    season: Optional[int] = None
+    episode: Optional[int] = None
 
 
 class Episode(BaseModel):
