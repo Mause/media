@@ -22,7 +22,9 @@ describe('MonitorComponent', () => {
   it('view', async () => {
     const { container } = renderWithSWR(
       <MemoryRouter>
-        <MonitorComponent />
+        <Routes>
+          <Route path="/monitor" Component={MonitorComponent} />
+        </Routes>
       </MemoryRouter>,
     );
 
