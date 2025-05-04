@@ -45,7 +45,7 @@ describe('DownloadComponent', () => {
     await wait();
 
     expect(container).toMatchSnapshot();
-    expect(history).toBe(2);
+    expect(entries.length).toBe(2);
   });
   it.skip('failure', async () => {
     const history = createMemoryHistory();

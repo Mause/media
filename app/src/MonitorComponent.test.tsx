@@ -51,17 +51,17 @@ describe('MonitorComponent', () => {
           state: { type: 'MOVIE' },
         },
       ],
+      v5Compat: true,
     });
     const entries: Location[] = [];
-    hist.listen = () => {
-      return () => {
-        entries.push(hist.location);
-      };
-    };
+    hist.listen((hist) => {
+      entries.push(hist.location);
+    });
 
     renderWithSWR(
       <HistoryRouter history={hist}>
         <Routes>
+          <Route index={true} path="/" element={<div>Home</div>} />
           <Route path="/monitor/add/:tmdb_id" Component={MonitorAddComponent} />
         </Routes>
       </HistoryRouter>,
