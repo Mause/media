@@ -298,7 +298,7 @@ async def stats(session: Annotated[AsyncSession, Depends(get_db)]):
     )
 
     return [
-        process(added_by_id, values)
+        await process(added_by_id, values)
         for added_by_id, values in groupby(
             query.scalars(), lambda row: row.added_by_id
         ).items()
