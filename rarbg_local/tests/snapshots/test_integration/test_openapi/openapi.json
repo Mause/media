@@ -300,6 +300,9 @@
             "XOpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "XOpenIdConnect": []
           }
         ]
       }
@@ -618,6 +621,9 @@
             "XOpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "XOpenIdConnect": []
           }
         ]
       },
@@ -664,6 +670,9 @@
             "XOpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "XOpenIdConnect": []
           }
         ]
       }
@@ -1662,7 +1671,14 @@
             "title": "Location",
             "type": "array",
             "items": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
             }
           },
           "msg": {
