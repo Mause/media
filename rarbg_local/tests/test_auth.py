@@ -13,7 +13,8 @@ from .conftest import add_json
 
 
 @mark.asyncio
-async def test_auth(responses, user, fastapi_app, test_client):
+async def test_auth(responses, session, user, fastapi_app, test_client):
+    await session.refresh(user)
     # Arrange
     add_json(
         responses,

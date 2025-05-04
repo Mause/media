@@ -256,7 +256,13 @@ def create_episode(
 
 async def get_all(session: AsyncSession, model: Type[T]) -> List[T]:
     return (
-        (await session.execute(select(model).options(joinedload('download'))))
+        (
+            await session.execute(
+                select(model).options(
+                    joinedload('download'), joinedload('download.added_by')
+                )
+            )
+        )
         .scalars()
         .all()
     )

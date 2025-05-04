@@ -31,8 +31,10 @@ from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, func
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 from starlette.staticfiles import StaticFiles
 
 from .auth import auth_hook, get_my_jwkaas
@@ -313,6 +315,10 @@ async def download_post(
     session.add_all(results)
     await session.commit()
 
+    for res in results:
+        await session.refresh(res)
+        await session.run_sync(lambda session: res.download.added_by)
+
     return results
 
 
@@ -412,6 +418,7 @@ async def monitor_post(
             select(Monitor)
             .filter_by(tmdb_id=monitor.tmdb_id)
             .filter_by(type=monitor.type)
+            .options(joinedload(Monitor.added_by))
         )
     ).scalar_one_or_none()
     if not c:
@@ -420,6 +427,8 @@ async def monitor_post(
         )
         session.add(c)
         await session.commit()
+        await session.refresh(c)
+        await session.run_sync(lambda session: c.added_by)
     return c
 
 
