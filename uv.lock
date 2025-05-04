@@ -531,15 +531,15 @@ wheels = [
 
 [[package]]
 name = "fastapi"
-version = "0.65.2"
+version = "0.65.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
     { name = "starlette" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8c/5d/66e0777c6702d0f1bc238aca5ef4f8914eb564b27a04c87e158cd26bd69a/fastapi-0.65.2.tar.gz", hash = "sha256:8359e55d8412a5571c0736013d90af235d6949ec4ce978e9b63500c8f4b6f714", size = 5590241, upload-time = "2021-06-09T08:21:16.153Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/59/27/c7402c3e9ba3db1a6e7de187ad9de5d9c3b5ee6582fac43267e0c67f8937/fastapi-0.65.3.tar.gz", hash = "sha256:6ea2286e439c4ced7cce2b2862c25859601bf327a515c12dd6e431ef5d49d12f", size = 5627175, upload-time = "2021-07-03T16:40:18.603Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dc/a8/a6be420593c4061c086e6d2ba47db46401d9af2b98b6cd33d35284f706d3/fastapi-0.65.2-py3-none-any.whl", hash = "sha256:39569a18914075b2f1aaa03bcb9dc96a38e0e5dabaf3972e088c9077dfffa379", size = 51192, upload-time = "2021-06-09T08:21:13.618Z" },
+    { url = "https://files.pythonhosted.org/packages/54/d2/1e5d77c3c16dad9582c4c86722c998b12ba7937e68e7e212dca71808626a/fastapi-0.65.3-py3-none-any.whl", hash = "sha256:d3e3c0ac35110efb22ee3ed28201cf32f9d11a9a0e52d7dd676cad25f5219523", size = 51204, upload-time = "2021-07-03T16:40:16.609Z" },
 ]
 
 [[package]]
@@ -1131,7 +1131,7 @@ requires-dist = [
     { name = "dnspython", specifier = ">=2.7.0" },
     { name = "email-validator", specifier = "==2.2.0" },
     { name = "eventlet", specifier = "==0.35.2" },
-    { name = "fastapi", specifier = "==0.65.2" },
+    { name = "fastapi", specifier = "==0.65.3" },
     { name = "fastapi-utils", specifier = "==0.2.1" },
     { name = "fuzzywuzzy", extras = ["speedup"], specifier = "==0.18.0" },
     { name = "gunicorn" },
