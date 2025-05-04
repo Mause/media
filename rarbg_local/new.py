@@ -270,6 +270,10 @@ async def download_post(
     session.add_all(results)
     await session.commit()
 
+    for res in results:
+        await session.refresh(res)
+        await session.run_sync(lambda session: res.download.added_by)
+
     return results
 
 

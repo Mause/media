@@ -27,7 +27,6 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.future import select
 from sqlalchemy.orm import (
     Mapped,
-    Session,
     declarative_base,
     joinedload,
     relationship,
@@ -270,7 +269,13 @@ async def get_all(session: AsyncSession, model: type[T]) -> Sequence[T]:
     else:
         raise ValueError(f'Unknown model: {model}')
     return (
-        (await session.execute(select(model).options(joinedload(joint))))
+        (
+            await session.execute(
+                select(model).options(
+                    joinedload(joint), joinedload(joint.added_by)
+                )
+            )
+        )
         .scalars()
         .all()
     )
