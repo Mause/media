@@ -997,9 +997,9 @@
             "title": "Complete",
             "type": "array",
             "items": {
-              "type": "array",
-              "minItems": 2,
               "maxItems": 2,
+              "minItems": 2,
+              "type": "array",
               "items": [
                 {
                   "type": "string"
@@ -1017,9 +1017,9 @@
             "title": "Incomplete",
             "type": "array",
             "items": {
-              "type": "array",
-              "minItems": 2,
               "maxItems": 2,
+              "minItems": 2,
+              "type": "array",
               "items": [
                 {
                   "type": "string"

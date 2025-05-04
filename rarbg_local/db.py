@@ -288,6 +288,9 @@ def normalise_db_url(database_url: str) -> URL:
     return parsed
 
 
+MAX_TRIES = 5
+
+
 @singleton
 def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = normalise_db_url(settings.database_url)
@@ -316,7 +319,7 @@ def get_session_local(settings: Settings = Depends(get_settings)):
         @backoff.on_exception(
             backoff.fibo,
             psycopg2.OperationalError,
-            max_tries=5,
+            max_tries=MAX_TRIES,
             giveup=lambda e: "too many connections for role" not in e.args[0],
         )
         def receive_do_connect(dialect, conn_rec, cargs, cparams):
