@@ -60,9 +60,7 @@ describe('MonitorComponent', () => {
     renderWithSWR(
       <HistoryRouter history={hist}>
         <Routes>
-          <Route path="/monitor/add/:tmdb_id">
-            <MonitorAddComponent />
-          </Route>
+          <Route path="/monitor/add/:tmdb_id" Component={MonitorAddComponent} />
         </Routes>
       </HistoryRouter>,
     );
