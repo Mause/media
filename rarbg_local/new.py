@@ -80,7 +80,7 @@ from .tmdb import (
     get_tv_imdb_id,
     search_themoviedb,
 )
-from .types import ImdbId, TmdbId
+from .types import TmdbId
 from .utils import non_null, precondition
 
 api = APIRouter()
