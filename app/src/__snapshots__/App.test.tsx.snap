@@ -9,33 +9,33 @@ exports[`renders learn react link 1`] = `
     class="makeStyles-root-1"
   >
     <div
-      class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1"
+      class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-a5rdam-MuiGrid-root"
     >
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
       >
         <a
-          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
           href="/"
         >
           Home
         </a>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
       >
         <a
-          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
           href="/monitor"
         >
           Monitors
         </a>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
       >
         <a
-          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
           href="http://novell.mause.me:9091"
           rel="noopener noreferrer"
           target="_blank"
@@ -44,10 +44,10 @@ exports[`renders learn react link 1`] = `
         </a>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
       >
         <a
-          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
           href="https://app.plex.tv"
           rel="noopener noreferrer"
           target="_blank"
@@ -56,10 +56,10 @@ exports[`renders learn react link 1`] = `
         </a>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
       >
         <a
-          class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
           href="#"
         >
           Logout
