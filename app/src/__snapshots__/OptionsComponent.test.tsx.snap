@@ -90,3 +90,94 @@ exports[`OptionsComponent failure 1`] = `
   </div>
 </div>
 `;
+
+exports[`OptionsComponent success 1`] = `
+<div>
+  <div>
+    <nav
+      aria-label="breadcrumb"
+      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-63vwl1-MuiTypography-root-MuiBreadcrumbs-root"
+    >
+      <ol
+        class="MuiBreadcrumbs-ol css-4pdmu4-MuiBreadcrumbs-ol"
+      >
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <nav
+            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-63vwl1-MuiTypography-root-MuiBreadcrumbs-root"
+          >
+            <ol
+              class="MuiBreadcrumbs-ol css-4pdmu4-MuiBreadcrumbs-ol"
+            >
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-bvyohc-MuiTypography-root-MuiLink-root"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-hidden="true"
+                class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+              >
+                /
+              </li>
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                >
+                  Search Results
+                </p>
+              </li>
+            </ol>
+          </nav>
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-1gqyz35-MuiTypography-root"
+          >
+            Hello World
+          </p>
+        </li>
+      </ol>
+    </nav>
+    <div>
+      <p>
+        No results
+      </p>
+    </div>
+    <ul>
+      <li>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
+          href="/manual"
+        >
+          Add manually
+        </a>
+      </li>
+      <li>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
+          href="/monitor/add/1"
+        >
+          Add to monitor
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
