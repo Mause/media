@@ -41,7 +41,7 @@ export default function ContextMenu({ children }: { children: ReactNode }) {
 
   return (
     <div onClick={handleContextMenu} style={{ cursor: 'context-menu' }}>
-      <FontAwesomeIcon icon={faList} />
+      <FontAwesomeIcon icon={faList} data-testid="context-menu-open" />
       <Menu
         open={contextMenu !== null}
         onClose={handleClose}
