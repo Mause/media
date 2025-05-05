@@ -1,21 +1,21 @@
-import ReactLoading from 'react-loading';
-import useSWR from 'swr';
-import { components } from './schema';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import ReactLoading from "react-loading";
+import useSWR from "swr";
+import { components } from "./schema";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 
-type HealthcheckResponse = components['schemas']['HealthcheckResponse'];
+type HealthcheckResponse = components["schemas"]["HealthcheckResponse"];
 
-function getColour(status?: HealthcheckResponse['status']) {
+function getColour(status?: HealthcheckResponse["status"]) {
   switch (status) {
-    case 'pass':
-      return 'green';
-    case 'warn':
-      return 'yellow';
-    case 'fail':
-      return 'red';
+    case "pass":
+      return "green";
+    case "warn":
+      return "yellow";
+    case "fail":
+      return "red";
     default:
-      return 'grey';
+      return "grey";
   }
 }
 
@@ -42,7 +42,7 @@ function SingleDiagnostic({ component }: { component: string }) {
 }
 
 export function DiagnosticsComponent() {
-  const { error, data, isValidating } = useSWR<string[]>('diagnostics');
+  const { error, data, isValidating } = useSWR<string[]>("diagnostics");
 
   return (
     <div>

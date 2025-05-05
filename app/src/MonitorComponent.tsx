@@ -1,21 +1,21 @@
-import useSWR from 'swr';
-import React, { useState, useEffect } from 'react';
-import ReactLoading from 'react-loading';
-import { Redirect, useParams, useHistory, useLocation } from 'react-router-dom';
-import { usePost } from './utils';
-import MenuItem from '@mui/material/MenuItem';
-import ContextMenu from './ContextMenu';
-import Axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
-import { DisplayError } from './IndexComponent';
-import { components } from './schema';
+import useSWR from "swr";
+import React, { useState, useEffect } from "react";
+import ReactLoading from "react-loading";
+import { Redirect, useParams, useHistory, useLocation } from "react-router-dom";
+import { usePost } from "./utils";
+import MenuItem from "@mui/material/MenuItem";
+import ContextMenu from "./ContextMenu";
+import Axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle, faTv, faTicketAlt } from "@fortawesome/free-solid-svg-icons";
+import { DisplayError } from "./IndexComponent";
+import { components } from "./schema";
 
-type Monitor = components['schemas']['MonitorGet'];
-type MediaType = components['schemas']['MonitorMediaType'];
+type Monitor = components["schemas"]["MonitorGet"];
+type MediaType = components["schemas"]["MonitorMediaType"];
 
 export function MonitorComponent() {
-  const { data } = useSWR<Monitor[]>('monitor');
+  const { data } = useSWR<Monitor[]>("monitor");
   const history = useHistory();
 
   return (
@@ -27,21 +27,21 @@ export function MonitorComponent() {
             return (
               <li key={m.id}>
                 <FontAwesomeIcon
-                  icon={m.type === 'MOVIE' ? faTicketAlt : faTv}
+                  icon={m.type === "MOVIE" ? faTicketAlt : faTv}
                 />
                 &nbsp;
                 {m.title}
                 &nbsp;
                 <FontAwesomeIcon
                   icon={faCircle}
-                  className={m.status ? 'green' : 'red'}
+                  className={m.status ? "green" : "red"}
                 />
                 &nbsp;
                 <ContextMenu>
                   <MenuItem
                     onClick={() =>
                       history.push(
-                        m.type === 'MOVIE'
+                        m.type === "MOVIE"
                           ? `/select/${m.tmdb_id}/options`
                           : `/select/${m.tmdb_id}/season`,
                       )
@@ -70,9 +70,9 @@ export function MonitorAddComponent() {
   const { tmdb_id } = useParams<{ tmdb_id: string }>();
   const { state } = useLocation<{ type: MediaType }>();
 
-  const { done, error } = usePost('monitor', {
+  const { done, error } = usePost("monitor", {
     tmdb_id: Number(tmdb_id),
-    type: state ? state.type : 'MOVIE',
+    type: state ? state.type : "MOVIE",
   });
 
   if (error) {

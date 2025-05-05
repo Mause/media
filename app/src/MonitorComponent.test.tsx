@@ -1,21 +1,21 @@
-import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
-import moxios from 'moxios';
+import { usesMoxios, renderWithSWR, mock, wait } from "./test.utils";
+import moxios from "moxios";
 import {
   MonitorComponent,
   Monitor,
   MonitorAddComponent,
-} from './MonitorComponent';
-import React from 'react';
-import { MemoryRouter, Route, Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import * as _ from 'lodash';
-import { expectLastRequestBody } from './utils';
-import { act } from '@testing-library/react';
+} from "./MonitorComponent";
+import React from "react";
+import { MemoryRouter, Route, Router } from "react-router-dom";
+import { createMemoryHistory } from "history";
+import * as _ from "lodash";
+import { expectLastRequestBody } from "./utils";
+import { act } from "@testing-library/react";
 
 usesMoxios();
 
-describe('MonitorComponent', () => {
-  it('view', async () => {
+describe("MonitorComponent", () => {
+  it("view", async () => {
     const { container } = renderWithSWR(
       <MemoryRouter>
         <MonitorComponent />
@@ -25,23 +25,23 @@ describe('MonitorComponent', () => {
     const res: Monitor[] = [
       {
         id: 1,
-        title: 'Hello World',
+        title: "Hello World",
         tmdb_id: 5,
-        type: 'MOVIE',
-        added_by: 'me',
+        type: "MOVIE",
+        added_by: "me",
       },
     ];
-    await mock('monitor', res);
+    await mock("monitor", res);
     await wait();
 
     expect(container).toMatchSnapshot();
   });
 
-  it('add', async () => {
+  it("add", async () => {
     const hist = createMemoryHistory();
     hist.push({
-      pathname: '/monitor/add/5',
-      state: { type: 'MOVIE' },
+      pathname: "/monitor/add/5",
+      state: { type: "MOVIE" },
     });
 
     renderWithSWR(
@@ -55,7 +55,7 @@ describe('MonitorComponent', () => {
     await wait();
     await act(async () => {
       expectLastRequestBody().toEqual({
-        type: 'MOVIE',
+        type: "MOVIE",
         tmdb_id: 5,
       });
       await moxios.requests
@@ -64,6 +64,6 @@ describe('MonitorComponent', () => {
     });
     await wait();
 
-    expect(_.map(hist.entries, 'pathname')).toEqual(['/', '/monitor']);
+    expect(_.map(hist.entries, "pathname")).toEqual(["/", "/monitor"]);
   });
 });

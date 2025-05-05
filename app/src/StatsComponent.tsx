@@ -1,6 +1,6 @@
-import React from 'react';
-import ReactLoading from 'react-loading';
-import useSWR from 'swr';
+import React from "react";
+import ReactLoading from "react-loading";
+import useSWR from "swr";
 
 export type StatsResponse = {
   user: string;
@@ -11,7 +11,7 @@ export type StatsResponse = {
 };
 
 export function StatsComponent() {
-  const { data: stats } = useSWR<StatsResponse[]>('stats');
+  const { data: stats } = useSWR<StatsResponse[]>("stats");
 
   if (!stats) return <ReactLoading type="balls" color="#000" />;
 

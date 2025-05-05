@@ -1,21 +1,21 @@
-import React, { ReactElement } from 'react';
-import Axios from 'axios';
-import { useState, useEffect } from 'react';
-import MaterialLink from '@mui/material/Link';
-import { Link } from 'react-router-dom';
-import { LocationDescriptor } from 'history';
+import React, { ReactElement } from "react";
+import Axios from "axios";
+import { useState, useEffect } from "react";
+import MaterialLink from "@mui/material/Link";
+import { Link } from "react-router-dom";
+import { LocationDescriptor } from "history";
 // import axiosRetry from '@vtex/axios-concurrent-retry';
-import { TypographyTypeMap } from '@mui/material';
-import moxios from 'moxios';
-import { useAuth0 } from '@auth0/auth0-react';
-import { FetchEventTarget } from './fetch_stream';
+import { TypographyTypeMap } from "@mui/material";
+import moxios from "moxios";
+import { useAuth0 } from "@auth0/auth0-react";
+import { FetchEventTarget } from "./fetch_stream";
 
 // axiosRetry(Axios, { retries: 3 });
 
 export function MLink<S>(props: {
   children: React.ReactNode;
   to: LocationDescriptor<S>;
-  color?: TypographyTypeMap['props']['color'];
+  color?: TypographyTypeMap["props"]["color"];
 }): ReactElement {
   return <MaterialLink component={Link} {...props} underline="hover" />;
 }
@@ -29,22 +29,22 @@ export function subscribe<T>(
 ): () => void {
   const es = FetchEventTarget(path, {
     headers: new Headers({
-      Authorization: 'Bearer ' + authorization,
+      Authorization: "Bearer " + authorization,
     }),
   });
   const onerror = (event: Event) => {
-    error((event as unknown) as Error);
+    error(event as unknown as Error);
   };
-  es.addEventListener('abort', onerror);
+  es.addEventListener("abort", onerror);
   const internal_callback = (event: Event) => {
     callback((event as MessageEvent).data);
   };
-  es.addEventListener('message', internal_callback);
+  es.addEventListener("message", internal_callback);
 
   return () => {
-    es.removeEventListener('close', end);
-    es.removeEventListener('abort', onerror);
-    es.removeEventListener('message', internal_callback);
+    es.removeEventListener("close", end);
+    es.removeEventListener("abort", onerror);
+    es.removeEventListener("message", internal_callback);
   };
 }
 
@@ -76,9 +76,9 @@ export function usePost<T>(
 
   useEffect(() => {
     auth.getAccessTokenSilently().then((token) => {
-      Axios.post<T>('/api/' + url, body, {
+      Axios.post<T>("/api/" + url, body, {
         headers: {
-          Authorization: 'Bearer ' + token,
+          Authorization: "Bearer " + token,
         },
       })
         .then(

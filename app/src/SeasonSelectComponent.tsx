@@ -1,17 +1,17 @@
-import { useParams, useLocation } from 'react-router-dom';
-import _ from 'lodash';
-import React from 'react';
-import ReactLoading from 'react-loading';
-import Typography from '@mui/material/Typography';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import useSWR from 'swr';
-import qs from 'qs';
-import { MLink } from './utils';
-import { components } from './schema';
+import { useParams, useLocation } from "react-router-dom";
+import _ from "lodash";
+import React from "react";
+import ReactLoading from "react-loading";
+import Typography from "@mui/material/Typography";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import useSWR from "swr";
+import qs from "qs";
+import { MLink } from "./utils";
+import { components } from "./schema";
 
-export type Season = components['schemas']['TvSeasonResponse'];
-export type EpisodeResponse = components['schemas']['Episode'];
-export type TV = components['schemas']['TvResponse'];
+export type Season = components["schemas"]["TvSeasonResponse"];
+export type EpisodeResponse = components["schemas"]["Episode"];
+export type TV = components["schemas"]["TvResponse"];
 
 export function Shared() {
   const { state } = useLocation<{ query: string }>();
@@ -24,7 +24,7 @@ export function Shared() {
         <MLink
           color="inherit"
           to={{
-            pathname: '/search',
+            pathname: "/search",
             search: qs.stringify({ query: state.query }),
           }}
         >
@@ -74,7 +74,7 @@ export function EpisodeSelectBreadcrumbs(props: {
     <Breadcrumbs aria-label="breadcrumb">
       <Shared />
       <MLink color="inherit" to={`/select/${props.tmdb_id}/season`}>
-        {tv ? tv.title : ''}
+        {tv ? tv.title : ""}
       </MLink>
       <Typography color="textPrimary" data-testid="title">
         Season {props.season}

@@ -8,11 +8,11 @@ export interface components {
     /**
      * Enum used to store the component types.
      */
-    ComponentType: 'datastore' | 'internal' | 'http' | 'generic';
+    ComponentType: "datastore" | "internal" | "http" | "generic";
     DownloadAllResponse: {
-      packs: components['schemas']['ITorrent'][];
-      complete: [string, components['schemas']['ITorrent'][]][];
-      incomplete: [string, components['schemas']['ITorrent'][]][];
+      packs: components["schemas"]["ITorrent"][];
+      complete: [string, components["schemas"]["ITorrent"][]][];
+      incomplete: [string, components["schemas"]["ITorrent"][]][];
     };
     DownloadPost: {
       tmdb_id: number;
@@ -28,7 +28,7 @@ export interface components {
       type: string;
       title: string;
       timestamp: string;
-      added_by: components['schemas']['UserSchema'];
+      added_by: components["schemas"]["UserSchema"];
     };
     Episode: {
       name: string;
@@ -38,53 +38,53 @@ export interface components {
     };
     EpisodeDetailsSchema: {
       id: number;
-      download: components['schemas']['DownloadSchema'];
+      download: components["schemas"]["DownloadSchema"];
       show_title: string;
       season: number;
       episode?: number;
     };
     EpisodeInfo: { seasonnum: number; epnum?: number };
     HTTPValidationError: {
-      detail?: components['schemas']['ValidationError'][];
+      detail?: components["schemas"]["ValidationError"][];
     };
     HealthcheckResponse: {
       component_name: string;
-      component_type: components['schemas']['ComponentType'];
-      status: components['schemas']['HealthcheckStatus'];
+      component_type: components["schemas"]["ComponentType"];
+      status: components["schemas"]["HealthcheckStatus"];
       time: string;
       output?: { [key: string]: any };
     };
     /**
      * Enum used to store the possible service and component health status.
      */
-    HealthcheckStatus: 'pass' | 'warn' | 'fail';
+    HealthcheckStatus: "pass" | "warn" | "fail";
     ITorrent: {
-      source: components['schemas']['ProviderSource'];
+      source: components["schemas"]["ProviderSource"];
       title: string;
       seeders: number;
       download: string;
       category: string;
-      episode_info?: components['schemas']['EpisodeInfo'];
+      episode_info?: components["schemas"]["EpisodeInfo"];
     };
     IndexResponse: {
-      series: components['schemas']['SeriesDetails'][];
-      movies: components['schemas']['MovieDetailsSchema'][];
+      series: components["schemas"]["SeriesDetails"][];
+      movies: components["schemas"]["MovieDetailsSchema"][];
     };
     InnerTorrent: {
       eta: number;
       hashString: string;
       id: number;
       percentDone: number;
-      files: components['schemas']['InnerTorrentFile'][];
+      files: components["schemas"]["InnerTorrentFile"][];
     };
     InnerTorrentFile: { bytesCompleted: number; length: number; name: string };
     /**
      * An enumeration.
      */
-    MediaType: 'series' | 'movie';
+    MediaType: "series" | "movie";
     MonitorGet: {
       tmdb_id: number;
-      type: components['schemas']['MonitorMediaType'];
+      type: components["schemas"]["MonitorMediaType"];
       id: number;
       title: string;
       added_by: string;
@@ -93,29 +93,29 @@ export interface components {
     /**
      * An enumeration.
      */
-    MonitorMediaType: 'MOVIE' | 'TV';
+    MonitorMediaType: "MOVIE" | "TV";
     MonitorPost: {
       tmdb_id: number;
-      type: components['schemas']['MonitorMediaType'];
+      type: components["schemas"]["MonitorMediaType"];
     };
     MovieDetailsSchema: {
       id: number;
-      download: components['schemas']['DownloadSchema'];
+      download: components["schemas"]["DownloadSchema"];
     };
     MovieResponse: { title: string; imdb_id: string };
     /**
      * An enumeration.
      */
     ProviderSource:
-      | 'kickass'
-      | 'horriblesubs'
-      | 'rarbg'
-      | 'torrentscsv'
-      | 'nyaasi'
-      | 'piratebay';
+      | "kickass"
+      | "horriblesubs"
+      | "rarbg"
+      | "torrentscsv"
+      | "nyaasi"
+      | "piratebay";
     SearchResponse: {
       title: string;
-      type: components['schemas']['MediaType'];
+      type: components["schemas"]["MediaType"];
       year?: number;
       imdbID: number;
     };
@@ -125,18 +125,18 @@ export interface components {
       imdb_id: string;
       tmdb_id: number;
       seasons: {
-        [key: string]: components['schemas']['EpisodeDetailsSchema'][];
+        [key: string]: components["schemas"]["EpisodeDetailsSchema"][];
       };
     };
     Stats: { episode?: number; movie?: number };
-    StatsResponse: { user: string; values: components['schemas']['Stats'] };
+    StatsResponse: { user: string; values: components["schemas"]["Stats"] };
     TvResponse: {
       number_of_seasons: number;
-      seasons: components['schemas']['SeasonMeta'][];
+      seasons: components["schemas"]["SeasonMeta"][];
       imdb_id?: string;
       title: string;
     };
-    TvSeasonResponse: { episodes: components['schemas']['Episode'][] };
+    TvSeasonResponse: { episodes: components["schemas"]["Episode"][] };
     UserSchema: { username: string; first_name: string };
     ValidationError: { loc: string[]; msg: string; type: string };
   };

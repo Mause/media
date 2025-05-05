@@ -1,19 +1,19 @@
-import React from 'react';
-import ReactLoading from 'react-loading';
-import qs from 'qs';
-import { useLocation } from 'react-router-dom';
-import { SearchBox } from './IndexComponent';
-import useSWR from 'swr';
-import { MLink } from './utils';
-import { components } from './schema';
-export type SearchResult = components['schemas']['SearchResponse'];
+import React from "react";
+import ReactLoading from "react-loading";
+import qs from "qs";
+import { useLocation } from "react-router-dom";
+import { SearchBox } from "./IndexComponent";
+import useSWR from "swr";
+import { MLink } from "./utils";
+import { components } from "./schema";
+export type SearchResult = components["schemas"]["SearchResponse"];
 
 export function SearchComponent() {
   const { search } = useLocation();
   const { query } = qs.parse(search.slice(1));
 
   const { data: results } = useSWR<SearchResult[]>(
-    'search?' + qs.stringify({ query }),
+    "search?" + qs.stringify({ query }),
   );
   return (
     <div>
@@ -25,13 +25,13 @@ export function SearchComponent() {
               <MLink
                 to={{
                   pathname:
-                    result.type === 'movie'
+                    result.type === "movie"
                       ? `/select/${result.imdbID}/options`
                       : `/select/${result.imdbID}/season`,
                   state: { query },
                 }}
               >
-                {result.title} ({result.year ? result.year : 'Unknown year'})
+                {result.title} ({result.year ? result.year : "Unknown year"})
               </MLink>
             </li>
           ))
@@ -39,7 +39,7 @@ export function SearchComponent() {
           <ReactLoading type="balls" color="#000" />
         )}
       </ul>
-      {results && results.length === 0 ? 'No results' : null}
+      {results && results.length === 0 ? "No results" : null}
     </div>
   );
 }

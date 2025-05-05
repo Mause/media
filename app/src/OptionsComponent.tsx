@@ -1,25 +1,25 @@
-import _ from 'lodash';
-import qs from 'qs';
-import React, { useState, useEffect } from 'react';
-import { subscribe, MLink } from './utils';
-import { Torrents } from './streaming';
-import { useParams } from 'react-router-dom';
-import useSWR from 'swr';
-import { Loading } from './render';
-import { Breadcrumbs, Typography } from '@mui/material';
-import { Shared } from './SeasonSelectComponent';
-import { DownloadState } from './DownloadComponent';
-import { DisplayError } from './IndexComponent';
-import { useAuth0 } from '@auth0/auth0-react';
-import { components } from './schema';
-import { Alert } from '@mui/material';
+import _ from "lodash";
+import qs from "qs";
+import React, { useState, useEffect } from "react";
+import { subscribe, MLink } from "./utils";
+import { Torrents } from "./streaming";
+import { useParams } from "react-router-dom";
+import useSWR from "swr";
+import { Loading } from "./render";
+import { Breadcrumbs, Typography } from "@mui/material";
+import { Shared } from "./SeasonSelectComponent";
+import { DownloadState } from "./DownloadComponent";
+import { DisplayError } from "./IndexComponent";
+import { useAuth0 } from "@auth0/auth0-react";
+import { components } from "./schema";
+import { Alert } from "@mui/material";
 
-export type ITorrent = components['schemas']['ITorrent'];
-type ProviderSource = components['schemas']['ProviderSource'];
+export type ITorrent = components["schemas"]["ITorrent"];
+type ProviderSource = components["schemas"]["ProviderSource"];
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
-  return _.last(u.searchParams.get('xt')!.split(':'));
+  return _.last(u.searchParams.get("xt")!.split(":"));
 }
 
 export function DisplayTorrent({
@@ -45,7 +45,7 @@ export function DisplayTorrent({
       },
     ],
   };
-  const url = { pathname: '/download', state };
+  const url = { pathname: "/download", state };
   return (
     <span>
       <strong title={torrent.source}>
@@ -64,33 +64,33 @@ export function DisplayTorrent({
 }
 
 const ranking = [
-  'Movies/XVID',
-  'Movies/x264',
-  'Movies/x264/720',
-  'Movies/XVID/720',
-  'Movies/BD Remux',
-  'Movies/Full BD',
-  'Movies/x264/1080',
-  'Movies/x264/4k',
-  'Movies/x265/4k',
-  'Movies/x264/3D',
-  'Movs/x265/4k/HDR',
+  "Movies/XVID",
+  "Movies/x264",
+  "Movies/x264/720",
+  "Movies/XVID/720",
+  "Movies/BD Remux",
+  "Movies/Full BD",
+  "Movies/x264/1080",
+  "Movies/x264/4k",
+  "Movies/x265/4k",
+  "Movies/x264/3D",
+  "Movs/x265/4k/HDR",
 
-  'TV Episodes',
-  'TV HD Episodes',
-  'TV UHD Episodes',
-  'TV-UHD-episodes',
+  "TV Episodes",
+  "TV HD Episodes",
+  "TV UHD Episodes",
+  "TV-UHD-episodes",
 ];
 
 function remove(bit: string): string {
-  if (bit.startsWith('Mov')) {
-    const parts = bit.split('/');
-    return parts.slice(1).join('/');
+  if (bit.startsWith("Mov")) {
+    const parts = bit.split("/");
+    return parts.slice(1).join("/");
   }
   return bit;
 }
 
-function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
+function OptionsComponent({ type }: { type: "movie" | "series" }) {
   const { season, episode, tmdb_id } = useParams<{
     tmdb_id: string;
     season?: string;
@@ -98,10 +98,14 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   }>();
 
   const { data: meta } = useSWR<{ title: string }>(
-    (season ? 'tv' : 'movie') + '/' + tmdb_id,
+    (season ? "tv" : "movie") + "/" + tmdb_id,
   );
-  const { data: torrents } = useSWR<Torrents>('torrents');
-  const { items: results, loading, errors } = useSubscribes<ITorrent>(
+  const { data: torrents } = useSWR<Torrents>("torrents");
+  const {
+    items: results,
+    loading,
+    errors,
+  } = useSubscribes<ITorrent>(
     `/api/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
   );
   const dt = (result: ITorrent) => (
@@ -113,10 +117,10 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       torrent={result}
     />
   );
-  const grouped = _.groupBy(results, 'category');
+  const grouped = _.groupBy(results, "category");
   const auto = _.maxBy(
-    grouped['x264/1080'] || grouped['TV HD Episodes'] || [],
-    'seeders',
+    grouped["x264/1080"] || grouped["TV HD Episodes"] || [],
+    "seeders",
   );
   const bits = _.sortBy(
     _.toPairs(grouped),
@@ -131,7 +135,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   ));
 
   let header = null;
-  if (type === 'movie') {
+  if (type === "movie") {
     header = (
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
@@ -157,7 +161,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   return (
     <div>
       {header}
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: "center" }}>
         <Loading loading={loading.length !== 0} large={true} />
       </div>
       {Object.entries(errors).map(([key, error]) => (
@@ -174,7 +178,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       ))}
       {bits.length || loading.length !== 0 ? (
         <div>
-          <p>Auto selection: {auto ? dt(auto) : 'None'}</p>
+          <p>Auto selection: {auto ? dt(auto) : "None"}</p>
           <ul>{bits}</ul>
         </div>
       ) : (
@@ -186,7 +190,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
         <li>
           <MLink
             to={{
-              pathname: '/manual',
+              pathname: "/manual",
               state: { tmdb_id, season, episode },
             }}
           >
@@ -197,7 +201,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           <MLink
             to={{
               pathname: `/monitor/add/${tmdb_id}`,
-              state: { type: type === 'movie' ? 'MOVIE' : 'TV' },
+              state: { type: type === "movie" ? "MOVIE" : "TV" },
             }}
           >
             Add to monitor
@@ -220,7 +224,7 @@ function useSubscribe<T>(
   name: string,
   authorization?: string,
 ): SubscriptionShape<T> {
-  const url = baseUrl + '&source=' + name;
+  const url = baseUrl + "&source=" + name;
   const [subscription, setSubscription] = useState<SubscriptionShape<T>>({
     items: [],
     loading: true,
@@ -260,18 +264,20 @@ function useToken() {
   return token;
 }
 
-function useSubscribes<T>(
-  url: string,
-): { items: T[]; loading: string[]; errors: { [key: string]: Error } } {
+function useSubscribes<T>(url: string): {
+  items: T[];
+  loading: string[];
+  errors: { [key: string]: Error };
+} {
   const token = useToken();
 
   const p: ProviderSource[] = [
-    'rarbg',
-    'horriblesubs',
-    'kickass',
-    'torrentscsv',
-    'nyaasi',
-    'piratebay',
+    "rarbg",
+    "horriblesubs",
+    "kickass",
+    "torrentscsv",
+    "nyaasi",
+    "piratebay",
   ];
   const providers = [
     useSubscribe<T>(url, p[0], token),

@@ -1,7 +1,7 @@
-import Menu from '@mui/material/Menu';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faList } from '@fortawesome/free-solid-svg-icons';
-import { useState, ReactNode } from 'react';
+import Menu from "@mui/material/Menu";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faList } from "@fortawesome/free-solid-svg-icons";
+import { useState, ReactNode } from "react";
 
 export default function ContextMenu({ children }: { children: ReactNode }) {
   const [contextMenu, setContextMenu] = useState<{
@@ -45,7 +45,7 @@ export default function ContextMenu({ children }: { children: ReactNode }) {
         icon={faList}
         data-testid="context-menu-open"
         onClick={handleContextMenu}
-        style={{ cursor: 'context-menu' }}
+        style={{ cursor: "context-menu" }}
       />
       <Menu
         open={contextMenu !== null}

@@ -1,19 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
 // import { appUpdated } from './serviceWorkerCallback';
-import { Auth0Provider } from '@auth0/auth0-react';
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import {
   ThemeProvider,
   Theme,
   StyledEngineProvider,
   createTheme,
-} from '@mui/material/styles';
+} from "@mui/material/styles";
 
-declare module '@mui/styles/defaultTheme' {
+declare module "@mui/styles/defaultTheme" {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
@@ -35,7 +35,7 @@ ReactDOM.render(
       </ThemeProvider>
     </StyledEngineProvider>
   </Auth0Provider>,
-  document.getElementById('root'),
+  document.getElementById("root"),
 );
 
 // If you want your app to work offline and load faster, you can change

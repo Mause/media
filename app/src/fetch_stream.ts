@@ -1,32 +1,32 @@
 function makeWriteableEventStream(eventTarget: EventTarget) {
   return new WritableStream({
     start(controller) {
-      eventTarget.dispatchEvent(new Event('start'));
+      eventTarget.dispatchEvent(new Event("start"));
     },
     write(message, controller) {
-      eventTarget.dispatchEvent(new MessageEvent('message', { data: message }));
+      eventTarget.dispatchEvent(new MessageEvent("message", { data: message }));
     },
     close() {
-      eventTarget.dispatchEvent(new CloseEvent('close'));
+      eventTarget.dispatchEvent(new CloseEvent("close"));
     },
     abort(reason) {
-      eventTarget.dispatchEvent(new CloseEvent('abort', { reason }));
+      eventTarget.dispatchEvent(new CloseEvent("abort", { reason }));
     },
   });
 }
 
 function makeJsonDecoder() {
-  let buf = '',
+  let buf = "",
     pos = 0;
   return new TransformStream({
     start(controller) {
-      buf = '';
+      buf = "";
       pos = 0;
     },
     transform(chunk, controller) {
       buf += chunk;
       while (pos < buf.length) {
-        if (buf[pos] === '\n') {
+        if (buf[pos] === "\n") {
           const line = buf.substring(5, pos); // 5 to strip data: prefix
           if (line.trim().length) {
             controller.enqueue(JSON.parse(line));
@@ -53,7 +53,7 @@ export function FetchEventTarget(url: string, init: RequestInit) {
         .pipeTo(eventStream);
     })
     .catch((error) => {
-      eventTarget.dispatchEvent(new CustomEvent('error', { detail: error }));
+      eventTarget.dispatchEvent(new CustomEvent("error", { detail: error }));
     });
   return eventTarget;
 }

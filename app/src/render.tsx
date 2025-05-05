@@ -1,28 +1,28 @@
-import MenuItem from '@mui/material/MenuItem';
-import _ from 'lodash';
+import MenuItem from "@mui/material/MenuItem";
+import _ from "lodash";
 import {
   MovieResponse,
   SeriesResponse,
   Torrents,
   EpisodeResponse,
-} from './streaming';
-import { String } from 'typescript-string-operations';
-import Moment from 'moment';
-import Collapsible from 'react-collapsible';
-import { useHistory } from 'react-router-dom';
-import { TV } from './SeasonSelectComponent';
-import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+} from "./streaming";
+import { String } from "typescript-string-operations";
+import Moment from "moment";
+import Collapsible from "react-collapsible";
+import { useHistory } from "react-router-dom";
+import { TV } from "./SeasonSelectComponent";
+import useSWR from "swr";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
   faSpinner,
   faCaretUp,
   faCaretDown,
   faCheckCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import { MLink } from './utils';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import ContextMenu from './ContextMenu';
+} from "@fortawesome/free-solid-svg-icons";
+import { MLink } from "./utils";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import ContextMenu from "./ContextMenu";
 
 export function Loading({
   loading,
@@ -35,7 +35,7 @@ export function Loading({
     <FontAwesomeIcon
       spin={true}
       icon={faSpinner}
-      size={large ? undefined : 'xs'}
+      size={large ? undefined : "xs"}
     />
   ) : (
     <></>
@@ -70,11 +70,11 @@ export function Movies({
 
   const head = (icon: IconDefinition) => (
     <h4>
-      Finished downloads ({sortedMovies.true.length}){' '}
+      Finished downloads ({sortedMovies.true.length}){" "}
       <FontAwesomeIcon
         icon={icon}
         size="2x"
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: "pointer" }}
         transform={{ y: 2 }}
       />
     </h4>
@@ -151,9 +151,9 @@ export function Progress({
     return <FontAwesomeIcon icon={faCheckCircle} />;
   } else {
     const etaDescr =
-      eta > 0 ? Moment().add(eta, 'seconds').fromNow(true) : 'Unknown time';
+      eta > 0 ? Moment().add(eta, "seconds").fromNow(true) : "Unknown time";
     const title = String.Format(
-      '{0:00}% ({1} remaining)',
+      "{0:00}% ({1} remaining)",
       percentDone * 100,
       etaDescr,
     );
@@ -162,7 +162,7 @@ export function Progress({
 }
 
 export function getMarker(episode: { season?: any; episode?: any }) {
-  return String.Format('S{0:00}E{1:00}', episode.season, episode.episode);
+  return String.Format("S{0:00}E{1:00}", episode.season, episode.episode);
 }
 
 function getProgress(
@@ -172,8 +172,8 @@ function getProgress(
   let eta,
     percentDone,
     tid = item.download.transmission_id;
-  if (tid.includes('.')) {
-    tid = tid.split('.')[0];
+  if (tid.includes(".")) {
+    tid = tid.split(".")[0];
     const marker = getMarker(item as EpisodeResponse);
     const torrent = torrents[tid];
     if (!torrent) return null;
@@ -277,7 +277,7 @@ function Season({
 }) {
   const head = (icon: IconDefinition) => (
     <h4>
-      Season {i} {collapse && '(Complete) '}
+      Season {i} {collapse && "(Complete) "}
       &nbsp;
       <MLink to={`/select/${tmdb_id}/season/${i}`}>
         <FontAwesomeIcon icon={faSearch} />
@@ -286,7 +286,7 @@ function Season({
       <FontAwesomeIcon
         icon={icon}
         size="2x"
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: "pointer" }}
         transform={{ y: 2 }}
       />
     </h4>
@@ -360,23 +360,23 @@ export function NextEpisodeAirs(props: {
 }
 
 function getMessage(air_date: string) {
-  const today = Moment().startOf('day');
-  const tomorrow = today.add(1, 'day');
-  const yesterday = today.subtract(1, 'day');
+  const today = Moment().startOf("day");
+  const tomorrow = today.add(1, "day");
+  const yesterday = today.subtract(1, "day");
   const dt = Moment(air_date);
-  const dts = dt.format('DD/MM/YYYY');
+  const dts = dt.format("DD/MM/YYYY");
 
   let message;
   if (today.isSame(dt)) {
-    message = 'airs today';
+    message = "airs today";
   } else if (dt.isSame(yesterday)) {
-    message = 'aired yesterday';
+    message = "aired yesterday";
   } else if (dt.isSame(tomorrow)) {
-    message = 'airs tomorrow';
+    message = "airs tomorrow";
   } else if (dt.isAfter(today)) {
-    message = 'airs on ' + dts;
+    message = "airs on " + dts;
   } else {
-    message = 'aired on ' + dts;
+    message = "aired on " + dts;
   }
   return message;
 }
@@ -394,7 +394,7 @@ export function shouldCollapse(
       const hasNext = true; // !!data.seasons[i_i + 1];
 
       const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
-      const hasNumbers = _.map(episodes, 'episode');
+      const hasNumbers = _.map(episodes, "episode");
       const hasAllEpisodes =
         _.difference(episodeNumbers, hasNumbers).length === 0;
       collapse = hasNext && hasAllEpisodes;

@@ -1,13 +1,13 @@
-import { useParams } from 'react-router-dom';
-import useSWR from 'swr';
-import { ITorrent, DisplayTorrent } from './OptionsComponent';
-import React from 'react';
-import { Loading } from './render';
-import { EpisodeSelectBreadcrumbs } from './SeasonSelectComponent';
-import { MLink } from './utils';
-import { DownloadCall } from './DownloadComponent';
-import { Torrents } from './streaming';
-import { DisplayError } from './IndexComponent';
+import { useParams } from "react-router-dom";
+import useSWR from "swr";
+import { ITorrent, DisplayTorrent } from "./OptionsComponent";
+import React from "react";
+import { Loading } from "./render";
+import { EpisodeSelectBreadcrumbs } from "./SeasonSelectComponent";
+import { MLink } from "./utils";
+import { DownloadCall } from "./DownloadComponent";
+import { Torrents } from "./streaming";
+import { DisplayError } from "./IndexComponent";
 
 type MapType = [string, ITorrent[]][];
 
@@ -18,7 +18,7 @@ function DownloadAllComponent() {
   }>();
   const season = parseInt(season_s);
 
-  const { data: torrents } = useSWR<Torrents>('torrents');
+  const { data: torrents } = useSWR<Torrents>("torrents");
   const { data, isValidating, error } = useSWR<{
     packs: ITorrent[];
     complete: MapType;
@@ -73,7 +73,7 @@ function download_all(tmdb_id: number, torrents: ITorrent[]) {
     episode: t.episode_info?.epnum,
   }));
 
-  return { pathname: '/download', state: { downloads } };
+  return { pathname: "/download", state: { downloads } };
 }
 
 function Individual(props: {

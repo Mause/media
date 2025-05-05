@@ -1,50 +1,50 @@
-import * as Sentry from '@sentry/react';
-import React from 'react';
-import { Helmet } from 'react-helmet';
+import * as Sentry from "@sentry/react";
+import React from "react";
+import { Helmet } from "react-helmet";
 import {
   RouteProps,
   BrowserRouter as Router,
   useLocation,
   Route,
   Switch,
-} from 'react-router-dom';
-import { IndexComponent } from './IndexComponent';
+} from "react-router-dom";
+import { IndexComponent } from "./IndexComponent";
 import {
   EpisodeSelectComponent,
   SeasonSelectComponent,
-} from './SeasonSelectComponent';
-import { StatsComponent } from './StatsComponent';
-import { SearchComponent } from './SearchComponent';
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-import { OptionsComponent } from './OptionsComponent';
-import { load, MLink, ExtMLink } from './utils';
-import { Grid } from '@mui/material';
-import { SWRConfig } from 'swr';
+} from "./SeasonSelectComponent";
+import { StatsComponent } from "./StatsComponent";
+import { SearchComponent } from "./SearchComponent";
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
+import { OptionsComponent } from "./OptionsComponent";
+import { load, MLink, ExtMLink } from "./utils";
+import { Grid } from "@mui/material";
+import { SWRConfig } from "swr";
 import {
   MonitorComponent,
   MonitorAddComponent,
   MonitorDeleteComponent,
-} from './MonitorComponent';
-import { ManualAddComponent } from './ManualAddComponent';
-import { Theme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import createStyles from '@mui/styles/createStyles';
-import { DownloadComponent } from './DownloadComponent';
-import { DownloadAllComponent } from './DownloadAllComponent';
-import { Websocket } from './Websocket';
-import { Integrations as TracingIntegrations } from '@sentry/tracing';
-import { useProfiler } from '@sentry/react';
-import { useAuth0 } from '@auth0/auth0-react';
-import { Link as MaterialLink } from '@mui/material';
-import { components } from './schema';
-import { DiagnosticsComponent } from './DiagnosticsComponent';
-import Storybook from './Storybook';
+} from "./MonitorComponent";
+import { ManualAddComponent } from "./ManualAddComponent";
+import { Theme } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import createStyles from "@mui/styles/createStyles";
+import { DownloadComponent } from "./DownloadComponent";
+import { DownloadAllComponent } from "./DownloadAllComponent";
+import { Websocket } from "./Websocket";
+import { Integrations as TracingIntegrations } from "@sentry/tracing";
+import { useProfiler } from "@sentry/react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Link as MaterialLink } from "@mui/material";
+import { components } from "./schema";
+import { DiagnosticsComponent } from "./DiagnosticsComponent";
+import Storybook from "./Storybook";
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   Sentry.init({
-    dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
+    dsn: "https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914",
     release: process.env.HEROKU_SLUG_COMMIT,
-    environment: 'development',
+    environment: "development",
     integrations: [new TracingIntegrations.BrowserTracing()],
     tracesSampleRate: 0.75, // must be present and non-zero
   });
@@ -53,12 +53,12 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-export type TorrentFile = components['schemas']['InnerTorrentFile'];
-export type Torrents = { [key: string]: components['schemas']['InnerTorrent'] };
-export type IndexResponse = components['schemas']['IndexResponse'];
-export type MovieResponse = components['schemas']['MovieDetailsSchema'];
-export type SeriesResponse = components['schemas']['SeriesDetails'];
-export type EpisodeResponse = components['schemas']['EpisodeDetailsSchema'];
+export type TorrentFile = components["schemas"]["InnerTorrentFile"];
+export type Torrents = { [key: string]: components["schemas"]["InnerTorrent"] };
+export type IndexResponse = components["schemas"]["IndexResponse"];
+export type MovieResponse = components["schemas"]["MovieDetailsSchema"];
+export type SeriesResponse = components["schemas"]["SeriesDetails"];
+export type EpisodeResponse = components["schemas"]["EpisodeDetailsSchema"];
 
 function RouteWithTitle({ title, ...props }: { title: string } & RouteProps) {
   return (
@@ -82,9 +82,9 @@ function reportError(error: Error, info: { componentStack: string }) {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      '& > *': {
+      "& > *": {
         margin: theme.spacing(1),
-        linkStyle: 'underline',
+        linkStyle: "underline",
       },
     },
   }),
@@ -113,7 +113,7 @@ const Login = () => {
 };
 
 function ParentComponentInt() {
-  useProfiler('ParentComponentInt');
+  useProfiler("ParentComponentInt");
   const classes = useStyles();
 
   const auth = useAuth0();
@@ -161,7 +161,7 @@ function ParentComponentInt() {
                   {props.error!!.message}
                   {props
                     .error!!.stack?.toString()
-                    .split('\n')
+                    .split("\n")
                     .map((line) => (
                       <span key={line}>
                         {line}
@@ -198,7 +198,7 @@ function SwrConfigWrapper({
             auth.isAuthenticated
               ? {
                   Authorization:
-                    'Bearer ' + (await auth.getAccessTokenSilently()),
+                    "Bearer " + (await auth.getAccessTokenSilently()),
                 }
               : {},
           ),
@@ -218,7 +218,7 @@ function Routes() {
   const auth = useAuth0();
   const location = useLocation();
 
-  if (!(auth.isAuthenticated || location.pathname === '/storybook')) {
+  if (!(auth.isAuthenticated || location.pathname === "/storybook")) {
     return <div>Please login</div>;
   }
 
