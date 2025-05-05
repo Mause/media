@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import {
   RouteProps,
   BrowserRouter as Router,
+  useLocation,
   Route,
   Switch,
 } from 'react-router-dom';
@@ -215,8 +216,11 @@ const ParentComponent = swrConfig(ParentComponentInt);
 
 function Routes() {
   const auth = useAuth0();
+  const location = useLocation();
 
-  if (!auth.isAuthenticated) return <div>Please login</div>;
+  if (!(auth.isAuthenticated || location.pathname === '/storybook')) {
+    return <div>Please login</div>;
+  }
 
   return (
     <Switch>
