@@ -40,8 +40,13 @@ export default function ContextMenu({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div onClick={handleContextMenu} style={{ cursor: 'context-menu' }}>
-      <FontAwesomeIcon icon={faList} data-testid="context-menu-open" />
+    <>
+      <FontAwesomeIcon
+        icon={faList}
+        data-testid="context-menu-open"
+        onClick={handleContextMenu}
+        style={{ cursor: 'context-menu' }}
+      />
       <Menu
         open={contextMenu !== null}
         onClose={handleClose}
@@ -54,6 +59,6 @@ export default function ContextMenu({ children }: { children: ReactNode }) {
       >
         {children}
       </Menu>
-    </div>
+    </>
   );
 }
