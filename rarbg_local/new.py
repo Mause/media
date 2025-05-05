@@ -15,9 +15,6 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
-from plexapi.media import Media
-from plexapi.myplex import MyPlexAccount
-from plexapi.server import PlexServer
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sqlalchemy import func
@@ -62,6 +59,7 @@ from .models import (
     TvResponse,
     TvSeasonResponse,
 )
+from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     get_providers,
     search_for_movie,
@@ -425,20 +423,6 @@ root = APIRouter()
 @singleton
 def get_static_files(settings: Settings = Depends(get_settings)):
     return StaticFiles(directory=str(settings.static_resources_path))
-
-
-@singleton
-def get_plex(settings=Depends(get_settings)) -> PlexServer:
-    acct = MyPlexAccount(token=settings.plex_token.get_secret_value())
-    novell = acct.resource('Novell')
-    novell.connections = [c for c in novell.connections if not c.local]
-    return novell.connect(ssl=True)
-
-
-def get_imdb_in_plex(imdb_id: ImdbId, plex) -> Optional[Media]:
-    guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
-    items = plex.library.search(guid=guid)
-    return items[0] if items else None
 
 
 @root.get('/redirect/plex/{imdb_id}')

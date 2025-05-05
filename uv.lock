@@ -220,11 +220,11 @@ wheels = [
 
 [[package]]
 name = "backoff"
-version = "1.10.0"
+version = "1.11.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/55/52/5c209d0e9f1ad857573be96b285626d5e081d86dd50d7617ff0874685dd4/backoff-1.10.0.tar.gz", hash = "sha256:b8fba021fac74055ac05eb7c7bfce4723aedde6cd0a504e5326bcb0bdd6d19a4", size = 13652, upload-time = "2019-12-07T21:07:25.377Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/27/d2/9d2d0f0d6bbe17628b031040b1dadaee616286267e660ad5286a5ed657da/backoff-1.11.1.tar.gz", hash = "sha256:ccb962a2378418c667b3c979b504fdeb7d9e0d29c0579e3b13b86467177728cb", size = 14883, upload-time = "2021-07-14T13:56:15.748Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f0/32/c5dd4f4b0746e9ec05ace2a5045c1fc375ae67ee94355344ad6c7005fd87/backoff-1.10.0-py2.py3-none-any.whl", hash = "sha256:5e73e2cbe780e1915a204799dba0a01896f45f4385e636bcca7a0614d879d0cd", size = 31022, upload-time = "2019-12-07T21:07:23.304Z" },
+    { url = "https://files.pythonhosted.org/packages/d7/dd/88df7d5b2077825d6757a674123062c6e7545cc61556b42739e8757b7b65/backoff-1.11.1-py2.py3-none-any.whl", hash = "sha256:61928f8fa48d52e4faa81875eecf308eccfb1016b018bb6bd21e05b5d90a96c5", size = 13141, upload-time = "2021-07-14T13:56:13.096Z" },
 ]
 
 [[package]]
@@ -1124,7 +1124,7 @@ requires-dist = [
     { name = "aniso8601", specifier = "==8.1.1" },
     { name = "asyncache", specifier = "==0.1.1" },
     { name = "asyncpg", specifier = ">=0.30.0" },
-    { name = "backoff", specifier = "==1.10.0" },
+    { name = "backoff", specifier = "==1.11.1" },
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "cachetools", specifier = "==5.5.2" },
     { name = "cffi", specifier = "==1.17.1" },

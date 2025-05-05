@@ -204,6 +204,14 @@ exports[`TVShows 1`] = `
               role="menuitem"
               tabindex="-1"
             >
+              Open in Plex
+            </div>
+            <div
+              aria-disabled="false"
+              class="react-contextmenu-item"
+              role="menuitem"
+              tabindex="-1"
+            >
               Search
             </div>
           </nav>
