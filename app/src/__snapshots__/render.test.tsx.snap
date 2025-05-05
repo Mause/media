@@ -15,8 +15,7 @@ exports[`Movies 1`] = `
         </span>
          
         <div
-          class="react-contextmenu-wrapper"
-          style="cursor: pointer; display: inline;"
+          style="cursor: context-menu;"
         >
           <svg
             aria-hidden="true"
@@ -34,42 +33,6 @@ exports[`Movies 1`] = `
             />
           </svg>
         </div>
-        <nav
-          class="react-contextmenu"
-          role="menu"
-          style="position: fixed; opacity: 0; pointer-events: none;"
-          tabindex="-1"
-        >
-          <div
-            aria-disabled="false"
-            class="react-contextmenu-item"
-            role="menuitem"
-            tabindex="-1"
-          >
-            <span
-              class="unselectable"
-            >
-              Play in Plex
-            </span>
-          </div>
-          <div
-            aria-disabled="false"
-            class="react-contextmenu-item"
-            role="menuitem"
-            tabindex="-1"
-          >
-            Open in IMDB
-          </div>
-          <div
-            aria-disabled="false"
-            class="react-contextmenu-item"
-            role="menuitem"
-            tabindex="-1"
-          >
-            Added by: 
-            David
-          </div>
-        </nav>
          
       </li>
     </ul>
@@ -172,8 +135,7 @@ exports[`TVShows 1`] = `
           Title
            
           <div
-            class="react-contextmenu-wrapper"
-            style="cursor: pointer; display: inline;"
+            style="cursor: context-menu;"
           >
             <svg
               aria-hidden="true"
@@ -191,30 +153,6 @@ exports[`TVShows 1`] = `
               />
             </svg>
           </div>
-          <nav
-            class="react-contextmenu"
-            role="menu"
-            style="position: fixed; opacity: 0; pointer-events: none;"
-            tabindex="-1"
-          >
-            
-            <div
-              aria-disabled="false"
-              class="react-contextmenu-item"
-              role="menuitem"
-              tabindex="-1"
-            >
-              Open in Plex
-            </div>
-            <div
-              aria-disabled="false"
-              class="react-contextmenu-item"
-              role="menuitem"
-              tabindex="-1"
-            >
-              Search
-            </div>
-          </nav>
         </h3>
         <div
           class="Collapsible"
