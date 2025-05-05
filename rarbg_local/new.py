@@ -299,7 +299,7 @@ async def index(session: Session = Depends(get_db)):
 @api.get('/stats', response_model=List[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
     def process(added_by_id: int, values):
-        user = session.query(User).get(added_by_id)
+        user = session.get(User, added_by_id)
         if not user:
             return None
 

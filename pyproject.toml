@@ -7,7 +7,7 @@ license = "MIT"
 requires-python = ">=3.11.0"
 
 dependencies = [
-    "sqlalchemy[mypy]==1.4.54",
+    "sqlalchemy[mypy]==2.0.40",
     "sqlalchemy-repr==0.0.2",
     "aiohttp==3.11.18",
     "backoff==1.11.1",
@@ -49,7 +49,6 @@ dev = [
     "pytest-selenium>=3.0.0",
     "webdriver-manager==3.2.2",
     "pre-commit>=4.2.0",
-    "sqlalchemy2-stubs",
     "pytest-snapshot",
     "flake8==3.8.4",
     "factory-boy==3.2.0",
