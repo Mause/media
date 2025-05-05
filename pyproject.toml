@@ -10,7 +10,7 @@ dependencies = [
     "sqlalchemy[mypy]==1.4.54",
     "sqlalchemy-repr==0.0.2",
     "aiohttp==3.11.18",
-    "backoff==1.10.0",
+    "backoff==1.11.1",
     "psycopg2-binary",
     "sentry-sdk==2.8.0",
     "alembic==1.15.2",
