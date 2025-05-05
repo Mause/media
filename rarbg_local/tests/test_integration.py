@@ -611,7 +611,7 @@ async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
 
     assert ei.match(message)
 
-    assert caplog.text.count(message) == MAX_TRIES + 3
+    assert caplog.text.count(message) == MAX_TRIES + 1
 
 
 class ITorrentList(BaseModel):
