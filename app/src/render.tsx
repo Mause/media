@@ -46,8 +46,8 @@ export function Loading({
 function OpenPlex({ download }: { download: { imdb_id: string } }) {
   return (
     <MenuItem
-      element="a"
-      href={`/redirect/plex/${item.imdb_id}`}
+      component="a"
+      href={`/redirect/plex/${download.imdb_id}`}
       target="_blank"
     >
       <span className="unselectable">Open in Plex</span>
@@ -121,7 +121,7 @@ export function Movies({
             &nbsp;
             {contextMenuTrigger(`movie_${movie.id}`)}
             <ContextMenu id={`movie_${movie.id}`}>
-              <OpenPlex movie={movie.download} />
+              <OpenPlex download={movie.download} />
               <MenuItem
                 onClick={() =>
                   window.open(
