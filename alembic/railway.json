@@ -4,6 +4,12 @@
     "builder": "DOCKERFILE",
     "dockerfilePath": "alembic/Dockerfile"
   },
+  "plugins": [
+    {
+      "name": "Postgres",
+      "envs": ["DATABASE_URL"]
+    }
+  ],
   "deploy": {
     "runtime": "V2",
     "numReplicas": 1,
