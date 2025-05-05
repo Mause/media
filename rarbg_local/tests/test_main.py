@@ -32,11 +32,11 @@ episodes: List[Episode] = [
         ],
     ],
 )
-def test_normalise(original, expected):
+def test_normalise(original: str, expected: str) -> None:
     assert normalise(episodes, original) == expected
 
 
-def test_threadable():
+def test_threadable() -> None:
     m = MagicMock(__name__='Test Thing', return_value=[3])
 
     results: List[int] = list(threadable([m], (1, 2)))

@@ -112,6 +112,10 @@
             "required": true,
             "schema": {
               "title": "Type",
+              "enum": [
+                "series",
+                "movie"
+              ],
               "type": "string"
             },
             "name": "type",
@@ -121,7 +125,7 @@
             "required": true,
             "schema": {
               "title": "Tmdb Id",
-              "type": "string"
+              "type": "integer"
             },
             "name": "tmdb_id",
             "in": "path"
@@ -296,6 +300,9 @@
             "XOpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "XOpenIdConnect": []
           }
         ]
       }
@@ -614,6 +621,9 @@
             "XOpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "XOpenIdConnect": []
           }
         ]
       },
@@ -660,6 +670,9 @@
             "XOpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "XOpenIdConnect": []
           }
         ]
       }
@@ -796,7 +809,7 @@
         ]
       }
     },
-    "/redirect/plex/{tmdb_id}": {
+    "/redirect/plex/{imdb_id}": {
       "get": {
         "summary": "Redirect To Plex",
         "operationId": "redirect_to_plex",
@@ -804,10 +817,10 @@
           {
             "required": true,
             "schema": {
-              "title": "Tmdb Id",
+              "title": "Imdb Id",
               "type": "string"
             },
-            "name": "tmdb_id",
+            "name": "imdb_id",
             "in": "path"
           }
         ],
@@ -993,9 +1006,9 @@
             "title": "Complete",
             "type": "array",
             "items": {
-              "type": "array",
-              "minItems": 2,
               "maxItems": 2,
+              "minItems": 2,
+              "type": "array",
               "items": [
                 {
                   "type": "string"
@@ -1013,9 +1026,9 @@
             "title": "Incomplete",
             "type": "array",
             "items": {
-              "type": "array",
-              "minItems": 2,
               "maxItems": 2,
+              "minItems": 2,
+              "type": "array",
               "items": [
                 {
                   "type": "string"
@@ -1050,11 +1063,11 @@
           },
           "season": {
             "title": "Season",
-            "type": "string"
+            "type": "integer"
           },
           "episode": {
             "title": "Episode",
-            "type": "string"
+            "type": "integer"
           }
         }
       },
@@ -1174,11 +1187,11 @@
         "properties": {
           "seasonnum": {
             "title": "Seasonnum",
-            "type": "string"
+            "type": "integer"
           },
           "epnum": {
             "title": "Epnum",
-            "type": "string"
+            "type": "integer"
           }
         }
       },
@@ -1658,7 +1671,14 @@
             "title": "Location",
             "type": "array",
             "items": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
             }
           },
           "msg": {

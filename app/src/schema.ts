@@ -17,8 +17,8 @@ export interface components {
     DownloadPost: {
       tmdb_id: number;
       magnet: string;
-      season?: string;
-      episode?: string;
+      season?: number;
+      episode?: number;
     };
     DownloadSchema: {
       id: number;
@@ -43,7 +43,7 @@ export interface components {
       season: number;
       episode?: number;
     };
-    EpisodeInfo: { seasonnum: string; epnum?: string };
+    EpisodeInfo: { seasonnum: number; epnum?: number };
     HTTPValidationError: {
       detail?: components['schemas']['ValidationError'][];
     };
@@ -111,7 +111,8 @@ export interface components {
       | 'horriblesubs'
       | 'rarbg'
       | 'torrentscsv'
-      | 'nyaasi';
+      | 'nyaasi'
+      | 'piratebay';
     SearchResponse: {
       title: string;
       type: components['schemas']['MediaType'];
