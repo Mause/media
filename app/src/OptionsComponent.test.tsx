@@ -4,6 +4,15 @@ import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
 import _ from 'lodash';
+import {
+  ReadableStream,
+  TransformStream,
+  WritableStream,
+} from 'node:stream/web';
+
+globalThis.WritableStream = WritableStream;
+globalThis.ReadableStream = ReadableStream;
+globalThis.TransformStream = TransformStream;
 
 usesMoxios();
 
