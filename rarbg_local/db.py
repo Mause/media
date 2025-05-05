@@ -18,10 +18,10 @@ from sqlalchemy import (
     event,
 )
 from sqlalchemy.engine import URL, make_url
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
     Mapped,
     Session,
+    declarative_base,
     joinedload,
     relationship,
     sessionmaker,
