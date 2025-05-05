@@ -1,4 +1,4 @@
-import { act, RenderResult } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import React from 'react';
 import { DownloadComponent, DownloadState } from './DownloadComponent';
 import { Route, Router } from 'react-router-dom';
@@ -11,35 +11,33 @@ usesMoxios();
 
 describe('DownloadComponent', () => {
   it('success', async () => {
-    await act(async () => {
-      const history = createMemoryHistory();
-      const state: DownloadState = {
-        downloads: [
-          {
-            tmdb_id: 10000,
-            magnet: '...',
-          },
-        ],
-      };
-      history.push('/download', state);
+    const history = createMemoryHistory();
+    const state: DownloadState = {
+      downloads: [
+        {
+          tmdb_id: 10000,
+          magnet: '...',
+        },
+      ],
+    };
+    history.push('/download', state);
 
-      const el = renderWithSWR(
-        <Router history={history}>
-          <Route path="/download">
-            <DownloadComponent />
-          </Route>
-        </Router>,
-      );
+    const { container } = renderWithSWR(
+      <Router history={history}>
+        <Route path="/download">
+          <DownloadComponent />
+        </Route>
+      </Router>,
+    );
 
-      expect(el.container).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 
-      await moxios.stubOnce('POST', /\/api\/download/, {});
-      expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
-      await wait();
+    await moxios.stubOnce('POST', /\/api\/download/, {});
+    expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
+    await wait();
 
-      expect(el.container).toMatchSnapshot();
-      expect(history.length).toBe(2);
-    });
+    expect(container).toMatchSnapshot();
+    expect(history.length).toBe(2);
   });
   it.skip('failure', async () => {
     const history = createMemoryHistory();
@@ -53,23 +51,22 @@ describe('DownloadComponent', () => {
     };
     history.push('/download', state);
 
-    let el: RenderResult;
-    await act(async () => {
-      el = renderWithSWR(
-        <Router history={history}>
-          <Route path="/download">
-            <DownloadComponent />
-          </Route>
-        </Router>,
-      );
+    renderWithSWR(
+      <Router history={history}>
+        <Route path="/download">
+          <DownloadComponent />
+        </Route>
+      </Router>,
+    );
 
+    await act(async () => {
       await moxios.stubFailure('POST', /\/api\/download/, {
         status: 500,
         response: { body: {}, message: 'an error has occured' },
       });
     });
 
-    expect(await el!.findByTestId('errorMessage')).toHaveTextContent(
+    expect(await screen.findByTestId('errorMessage')).toHaveTextContent(
       'an error has occured',
     );
   });

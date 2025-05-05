@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import React from 'react';
 import {
   Movies,
@@ -41,31 +41,29 @@ test('Movies', () => {
     },
   ];
 
-  const el = render(<Movies movies={movies} loading={false} />);
+  const { container } = render(<Movies movies={movies} loading={false} />);
 
-  expect(el.container).toMatchSnapshot();
+  expect(container).toMatchSnapshot();
 });
 
 test('TVShows', async () => {
-  await act(async () => {
-    const series: SeriesResponse[] = [
-      {
-        tmdb_id: 1,
-        imdb_id: '',
-        title: 'Title',
-        seasons: {
-          1: [],
-        },
+  const series: SeriesResponse[] = [
+    {
+      tmdb_id: 1,
+      imdb_id: '',
+      title: 'Title',
+      seasons: {
+        1: [],
       },
-    ];
-    const el = renderWithSWR(
-      <MemoryRouter>
-        <TVShows series={series} loading={false} />
-      </MemoryRouter>,
-    );
+    },
+  ];
+  const { container } = renderWithSWR(
+    <MemoryRouter>
+      <TVShows series={series} loading={false} />
+    </MemoryRouter>,
+  );
 
-    expect(el.container).toMatchSnapshot();
-  });
+  expect(container).toMatchSnapshot();
 });
 
 describe('Progress', () => {
@@ -76,9 +74,9 @@ describe('Progress', () => {
 
     const item = { download: { transmission_id: 'GUID' } };
     const torrents: Torrents = {};
-    const el = render(fn());
+    const { container, rerender } = render(fn());
 
-    expect(el.container).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 
     const torrent = (torrents['GUID'] = {
       eta: -1,
@@ -87,14 +85,14 @@ describe('Progress', () => {
       hashString: '',
       id: 0,
     });
-    el.rerender(fn());
-    expect(el.container).toMatchSnapshot();
+    rerender(fn());
+    expect(container).toMatchSnapshot();
 
     torrent.percentDone = 0.5;
     torrent.eta = 360;
-    el.rerender(fn());
+    rerender(fn());
 
-    expect(el.container).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
   });
 
   it('complex', () => {
@@ -108,8 +106,8 @@ describe('Progress', () => {
     };
     const torrents: Torrents = {};
 
-    const el = render(fn());
-    expect(el.container).toMatchSnapshot();
+    const { container, rerender } = render(fn());
+    expect(container).toMatchSnapshot();
 
     const torrent = (torrents['GUID'] = {
       id: 0,
@@ -118,43 +116,41 @@ describe('Progress', () => {
       files: [] as TorrentFile[],
       percentDone: 0.5,
     });
-    el.rerender(fn());
-    expect(el.container).toMatchSnapshot();
+    rerender(fn());
+    expect(container).toMatchSnapshot();
 
     torrent.files.push({
       name: 'Title.S01E01.mkv',
       bytesCompleted: 3,
       length: 4,
     });
-    el.rerender(fn());
-    expect(el.container).toMatchSnapshot();
+    rerender(fn());
+    expect(container).toMatchSnapshot();
   });
 });
 
 describe('NextEpisodeAirs', () => {
   it('works', async () => {
-    await act(async () => {
-      MockDate.set('2020-04-20');
-      const tmdb_id = 10000;
-      const season = '1';
-      const el = renderWithSWR(
-        <MemoryRouter>
-          <NextEpisodeAirs
-            season={season}
-            tmdb_id={tmdb_id}
-            season_episodes={[{ episode: 1 }]}
-          />
-          ,
-        </MemoryRouter>,
-      );
+    MockDate.set('2020-04-20');
+    const tmdb_id = 10000;
+    const season = '1';
+    const { container } = renderWithSWR(
+      <MemoryRouter>
+        <NextEpisodeAirs
+          season={season}
+          tmdb_id={tmdb_id}
+          season_episodes={[{ episode: 1 }]}
+        />
+        ,
+      </MemoryRouter>,
+    );
 
-      await mock(`tv/${tmdb_id}/season/${season}`, {
-        episodes: [{ name: 'EP2', air_date: '2020-04-24', episode_number: 2 }],
-      });
-      await wait();
-
-      expect(el.container).toMatchSnapshot();
+    await mock(`tv/${tmdb_id}/season/${season}`, {
+      episodes: [{ name: 'EP2', air_date: '2020-04-24', episode_number: 2 }],
     });
+    await wait();
+
+    expect(container).toMatchSnapshot();
   });
 });
 

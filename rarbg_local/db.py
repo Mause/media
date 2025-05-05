@@ -2,7 +2,7 @@ import enum
 import logging
 from datetime import datetime
 from functools import lru_cache
-from typing import List, Optional, Type, TypeVar, Union
+from typing import List, Optional, Type, TypeVar, cast
 
 import backoff
 import psycopg2
@@ -18,8 +18,14 @@ from sqlalchemy import (
     event,
 )
 from sqlalchemy.engine import URL, make_url
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, joinedload, relationship, sessionmaker
+from sqlalchemy.orm import (
+    Mapped,
+    Session,
+    declarative_base,
+    joinedload,
+    relationship,
+    sessionmaker,
+)
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
 from sqlalchemy_repr import RepresentableBase
@@ -42,14 +48,18 @@ class Download(Base):  # type: ignore
     transmission_id = Column(String, nullable=False)
     imdb_id = Column(String, nullable=False)
     type = Column(String)
-    movie = relationship('MovieDetails', uselist=False, cascade='all,delete')
+    movie: Mapped['MovieDetails'] = relationship(
+        'MovieDetails', uselist=False, cascade='all,delete'
+    )
     movie_id = Column(Integer, ForeignKey('movie_details.id', ondelete='CASCADE'))
-    episode = relationship('EpisodeDetails', uselist=False, cascade='all,delete')
+    episode: Mapped['EpisodeDetails'] = relationship(
+        'EpisodeDetails', uselist=False, cascade='all,delete'
+    )
     episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
     title = Column(String)
     timestamp = Column(DateTime(timezone=True), nullable=False, default=func.now())
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by = relationship('User', back_populates='downloads')
+    added_by: Mapped['User'] = relationship('User', back_populates='downloads')
 
     def progress(self):
         from .main import get_keyed_torrents
@@ -60,7 +70,7 @@ class Download(Base):  # type: ignore
 class EpisodeDetails(Base):  # type: ignore
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
-    download = relationship(
+    download: Mapped['Download'] = relationship(
         'Download', back_populates='episode', passive_deletes=True, uselist=False
     )
     show_title = Column(String, nullable=False)
@@ -84,7 +94,7 @@ class EpisodeDetails(Base):  # type: ignore
 class MovieDetails(Base):  # type: ignore
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
-    download = relationship(
+    download: Mapped['Download'] = relationship(
         'Download', back_populates='movie', passive_deletes=True, uselist=False
     )
 
@@ -111,9 +121,11 @@ class User(Base):  # type: ignore
     )
 
     # Define the relationship to Role via UserRoles
-    roles = relationship('Role', secondary='user_roles')
+    roles: Mapped[List['Role']] = relationship(
+        'Role', secondary='user_roles', uselist=True
+    )
 
-    downloads = relationship('Download')
+    downloads: Mapped[List[Download]] = relationship('Download')
 
     def __repr__(self):
         return self.username
@@ -164,7 +176,7 @@ class Monitor(Base):  # type: ignore
     tmdb_id = Column(Integer)
 
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by = relationship('User')
+    added_by: Mapped['User'] = relationship('User')
 
     title = Column(String, nullable=False)
     type = Column(
@@ -182,7 +194,6 @@ def create_download(
     title: str,
     type: str,
     tmdb_id: int,
-    details: Union[MovieDetails, EpisodeDetails],
     id: Optional[int] = None,
     added_by: User,
     timestamp: Optional[datetime] = None,
@@ -194,7 +205,6 @@ def create_download(
         title=title,
         type=type,
         tmdb_id=tmdb_id,
-        **{type: details},
         id=id,
         added_by=added_by,
         timestamp=timestamp,
@@ -217,7 +227,6 @@ def create_movie(
         title=title,
         type='movie',
         tmdb_id=tmdb_id,
-        details=md,
         added_by=added_by,
         timestamp=timestamp,
     )
@@ -228,8 +237,8 @@ def create_episode(
     *,
     transmission_id: str,
     imdb_id: str,
-    season: str,
-    episode: Optional[str],
+    season: int,
+    episode: Optional[int],
     title: str,
     tmdb_id: int,
     id: Optional[int] = None,
@@ -245,7 +254,6 @@ def create_episode(
         tmdb_id=tmdb_id,
         title=title,
         type='episode',
-        details=ed,
         id=download_id,
         timestamp=timestamp,
         added_by=added_by,
@@ -254,7 +262,13 @@ def create_episode(
 
 
 def get_all(session: Session, model: Type[T]) -> List[T]:
-    return session.query(model).options(joinedload('download')).all()
+    if model == MovieDetails:
+        joint = MovieDetails.download
+    elif model == EpisodeDetails:
+        joint = EpisodeDetails.download
+    else:
+        raise ValueError(f'Unknown model: {model}')
+    return session.query(model).options(joinedload(joint)).all()
 
 
 def get_episodes(session: Session) -> List[EpisodeDetails]:
@@ -273,7 +287,7 @@ def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> 
     params.update(defaults or {})
     instance: T = model(**params)  # type: ignore
     session.add(instance)
-    return instance
+    return cast(T, instance)
 
 
 def normalise_db_url(database_url: str) -> URL:
@@ -281,6 +295,9 @@ def normalise_db_url(database_url: str) -> URL:
     if parsed.drivername == 'postgres':
         parsed = parsed.set(drivername='postgresql')
     return parsed
+
+
+MAX_TRIES = 5
 
 
 @singleton
@@ -311,7 +328,7 @@ def get_session_local(settings: Settings = Depends(get_settings)):
         @backoff.on_exception(
             backoff.fibo,
             psycopg2.OperationalError,
-            max_tries=5,
+            max_tries=MAX_TRIES,
             giveup=lambda e: "too many connections for role" not in e.args[0],
         )
         def receive_do_connect(dialect, conn_rec, cargs, cparams):

@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 import Axios from 'axios';
 import { useState, useEffect } from 'react';
-import MaterialLink from '@material-ui/core/Link';
+import MaterialLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import { LocationDescriptor } from 'history';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
-import { TypographyTypeMap } from '@material-ui/core';
+import { TypographyTypeMap } from '@mui/material';
 import moxios from 'moxios';
 import { useAuth0 } from '@auth0/auth0-react';
 import { FetchEventTarget } from './fetch_stream';
@@ -17,7 +17,7 @@ export function MLink<S>(props: {
   to: LocationDescriptor<S>;
   color?: TypographyTypeMap['props']['color'];
 }): ReactElement {
-  return <MaterialLink component={Link} {...props} />;
+  return <MaterialLink component={Link} {...props} underline="hover" />;
 }
 
 export function subscribe<T>(
@@ -94,7 +94,12 @@ export function usePost<T>(
 
 export function ExtMLink(props: { href: string; children: string }) {
   return (
-    <MaterialLink href={props.href} target="_blank" rel="noopener noreferrer">
+    <MaterialLink
+      href={props.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      underline="hover"
+    >
       {props.children}
     </MaterialLink>
   );

@@ -1,5 +1,6 @@
 import inspect
 from asyncio import iscoroutinefunction
+from contextlib import AsyncExitStack
 from typing import Callable, Optional, TypeVar
 
 from fastapi import FastAPI
@@ -19,16 +20,20 @@ async def get(
         {'type': 'http', 'query_string': '', 'headers': [], 'app': app}
     )
 
-    values, errors, *_ = await solve_dependencies(
+    solved = await solve_dependencies(
         request=request,
         dependant=dependant,
         dependency_overrides_provider=app,
+        async_exit_stack=AsyncExitStack(),
+        embed_body_fields=False,
     )
 
-    assert not errors
+    assert not solved.errors
 
     return await run_endpoint_function(
-        dependant=dependant, values=values, is_coroutine=iscoroutinefunction(func)
+        dependant=dependant,
+        values=solved.values,
+        is_coroutine=iscoroutinefunction(func),
     )
 
 

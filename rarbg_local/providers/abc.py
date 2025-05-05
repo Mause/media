@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import AsyncGenerator, Optional
 
 from ..models import ITorrent, ProviderSource
+from ..types import ImdbId, TmdbId
 
 
 class Provider(ABC):
@@ -12,7 +13,11 @@ class Provider(ABC):
 class TvProvider(Provider):
     @abstractmethod
     def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+        self,
+        imdb_id: ImdbId,
+        tmdb_id: TmdbId,
+        season: int,
+        episode: Optional[int] = None,
     ) -> AsyncGenerator[ITorrent, None]:
         raise NotImplementedError()
 
@@ -20,7 +25,7 @@ class TvProvider(Provider):
 class MovieProvider(Provider):
     @abstractmethod
     def search_for_movie(
-        self, imdb_id: str, tmdb_id: int
+        self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
         raise NotImplementedError()
 

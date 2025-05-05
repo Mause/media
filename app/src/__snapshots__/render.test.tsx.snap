@@ -14,62 +14,23 @@ exports[`Movies 1`] = `
           Hello
         </span>
          
-        <div
-          class="react-contextmenu-wrapper"
-          style="cursor: pointer; display: inline;"
+        <svg
+          aria-hidden="true"
+          class="svg-inline--fa fa-list fa-w-16 "
+          data-icon="list"
+          data-prefix="fas"
+          data-testid="context-menu-open"
+          focusable="false"
+          role="img"
+          style="cursor: context-menu;"
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <svg
-            aria-hidden="true"
-            class="svg-inline--fa fa-list fa-w-16 "
-            data-icon="list"
-            data-prefix="fas"
-            focusable="false"
-            role="img"
-            viewBox="0 0 512 512"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M80 368H16a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16zm0-320H16A16 16 0 0 0 0 64v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16V64a16 16 0 0 0-16-16zm0 160H16a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16zm416 176H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-        <nav
-          class="react-contextmenu"
-          role="menu"
-          style="position: fixed; opacity: 0; pointer-events: none;"
-          tabindex="-1"
-        >
-          <div
-            aria-disabled="false"
-            class="react-contextmenu-item"
-            role="menuitem"
-            tabindex="-1"
-          >
-            <span
-              class="unselectable"
-            >
-              Play in Plex
-            </span>
-          </div>
-          <div
-            aria-disabled="false"
-            class="react-contextmenu-item"
-            role="menuitem"
-            tabindex="-1"
-          >
-            Open in IMDB
-          </div>
-          <div
-            aria-disabled="false"
-            class="react-contextmenu-item"
-            role="menuitem"
-            tabindex="-1"
-          >
-            Added by: 
-            David
-          </div>
-        </nav>
+          <path
+            d="M80 368H16a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16zm0-320H16A16 16 0 0 0 0 64v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16V64a16 16 0 0 0-16-16zm0 160H16a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16zm416 176H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z"
+            fill="currentColor"
+          />
+        </svg>
          
       </li>
     </ul>
@@ -83,7 +44,7 @@ exports[`NextEpisodeAirs works 1`] = `
     Episode 2 "EP2" airs on 24/04/2020
      
     <a
-      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
       href="/select/10000/season/1/episode/2/options"
     >
       <svg
@@ -171,42 +132,23 @@ exports[`TVShows 1`] = `
         <h3>
           Title
            
-          <div
-            class="react-contextmenu-wrapper"
-            style="cursor: pointer; display: inline;"
+          <svg
+            aria-hidden="true"
+            class="svg-inline--fa fa-list fa-w-16 "
+            data-icon="list"
+            data-prefix="fas"
+            data-testid="context-menu-open"
+            focusable="false"
+            role="img"
+            style="cursor: context-menu;"
+            viewBox="0 0 512 512"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              aria-hidden="true"
-              class="svg-inline--fa fa-list fa-w-16 "
-              data-icon="list"
-              data-prefix="fas"
-              focusable="false"
-              role="img"
-              viewBox="0 0 512 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M80 368H16a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16zm0-320H16A16 16 0 0 0 0 64v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16V64a16 16 0 0 0-16-16zm0 160H16a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16zm416 176H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
-          <nav
-            class="react-contextmenu"
-            role="menu"
-            style="position: fixed; opacity: 0; pointer-events: none;"
-            tabindex="-1"
-          >
-            
-            <div
-              aria-disabled="false"
-              class="react-contextmenu-item"
-              role="menuitem"
-              tabindex="-1"
-            >
-              Search
-            </div>
-          </nav>
+            <path
+              d="M80 368H16a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16zm0-320H16A16 16 0 0 0 0 64v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16V64a16 16 0 0 0-16-16zm0 160H16a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16zm416 176H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z"
+              fill="currentColor"
+            />
+          </svg>
         </h3>
         <div
           class="Collapsible"
@@ -220,7 +162,7 @@ exports[`TVShows 1`] = `
                
                
               <a
-                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
                 href="/select/1/season/1"
               >
                 <svg

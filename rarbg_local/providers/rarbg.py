@@ -8,6 +8,7 @@ import backoff
 import requests
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
+from ..types import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, format, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)
@@ -119,7 +120,11 @@ class RarbgProvider(TvProvider, MovieProvider):
     type = ProviderSource.RARBG
 
     async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+        self,
+        imdb_id: ImdbId,
+        tmdb_id: TmdbId,
+        season: int,
+        episode: Optional[int] = None,
     ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
             return
@@ -140,11 +145,11 @@ class RarbgProvider(TvProvider, MovieProvider):
                 seeders=item['seeders'],
                 download=item['download'],
                 category=tv_convert(item['category']),
-                episode_info=EpisodeInfo(seasonnum=str(season), epnum=str(episode)),
+                episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
             )
 
     async def search_for_movie(
-        self, imdb_id: str, tmdb_id: int
+        self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
         for item in chain.from_iterable(
             get_rarbg_iter(
