@@ -425,9 +425,9 @@ def get_static_files(settings: Settings = Depends(get_settings)):
     return StaticFiles(directory=str(settings.static_resources_path))
 
 
-@root.get('/redirect/plex/{tmdb_id}')
-def redirect_to_plex(tmdb_id: TmdbId, plex=Depends(get_plex)):
-    dat = get_imdb_in_plex(tmdb_id, plex)
+@root.get('/redirect/plex/{imdb_id}')
+def redirect_to_plex(imdb_id: ImdbId, plex=Depends(get_plex)):
+    dat = get_imdb_in_plex(imdb_id, plex)
     if not dat:
         raise HTTPException(404, 'Not found in plex')
 

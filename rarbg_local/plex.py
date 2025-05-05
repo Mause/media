@@ -7,6 +7,7 @@ from plexapi.server import PlexServer
 
 from .settings import get_settings
 from .singleton import singleton
+from .types import ImdbId
 
 
 @singleton
@@ -17,7 +18,7 @@ def get_plex(settings=Depends(get_settings)) -> PlexServer:
     return novell.connect(ssl=True)
 
 
-def get_imdb_in_plex(imdb_id: str, plex) -> Optional[Media]:
+def get_imdb_in_plex(imdb_id: ImdbId, plex) -> Optional[Media]:
     guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
     items = plex.library.search(guid=guid)
     return items[0] if items else None
