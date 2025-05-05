@@ -49,7 +49,6 @@ dev = [
     "pytest-selenium>=3.0.0",
     "webdriver-manager==3.2.2",
     "pre-commit>=4.2.0",
-    "sqlalchemy2-stubs",
     "pytest-snapshot",
     "flake8==3.8.4",
     "factory-boy==3.2.0",

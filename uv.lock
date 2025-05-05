@@ -1108,7 +1108,6 @@ dev = [
     { name = "pytest-snapshot" },
     { name = "pytest-sugar" },
     { name = "responses" },
-    { name = "sqlalchemy2-stubs" },
     { name = "types-lxml" },
     { name = "types-requests" },
     { name = "types-selenium" },
@@ -1172,7 +1171,6 @@ dev = [
     { name = "pytest-snapshot" },
     { name = "pytest-sugar" },
     { name = "responses", specifier = "==0.12.1" },
-    { name = "sqlalchemy2-stubs" },
     { name = "types-lxml", specifier = ">=2025.3.30" },
     { name = "types-requests", specifier = ">=2.32.0.20250328" },
     { name = "types-selenium", specifier = ">=3.141.9" },
@@ -2026,18 +2024,6 @@ dependencies = [
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a6/3b/405b6756c4461bc8e2b638fdc2822cdfbe677bcdcb62c8da54120cfc145a/sqlalchemy_repr-0.0.2-py3-none-any.whl", hash = "sha256:060272575376e8a906e964cf10de5b40fd3f814db9c61e1269cb5cc15befffb2", size = 3790, upload-time = "2020-04-12T16:33:37.8Z" },
-]
-
-[[package]]
-name = "sqlalchemy2-stubs"
-version = "0.0.2a38"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/94/df/be9e0062f649fd2e9b9b73a98c250f520fa10beaebddb8948dffad23c3b6/sqlalchemy2-stubs-0.0.2a38.tar.gz", hash = "sha256:861d722abeb12f13eacd775a9f09379b11a5a9076f469ccd4099961b95800f9e", size = 123950, upload-time = "2023-12-30T12:15:29.27Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ee/ea/6eff437d0a26c894da2982429ed2c148ecaf0526349ddc8cda1e7151c171/sqlalchemy2_stubs-0.0.2a38-py3-none-any.whl", hash = "sha256:b62aa46943807287550e2033dafe07564b33b6a815fbaa3c144e396f9cc53bcb", size = 191786, upload-time = "2023-12-30T12:15:27.882Z" },
 ]
 
 [[package]]
