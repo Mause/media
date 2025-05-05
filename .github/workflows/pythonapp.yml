@@ -31,7 +31,7 @@ jobs:
         run: |
           uv sync --dev --locked
       - name: Run mypy
-        uses: liskin/gh-problem-matcher-wrap@v2
+        uses: liskin/gh-problem-matcher-wrap@v3
         with:
           linters: mypy
           run: uv run mypy --show-column-numbers rarbg_local
