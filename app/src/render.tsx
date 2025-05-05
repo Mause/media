@@ -1,5 +1,5 @@
+import MenuItem from '@mui/material/MenuItem';
 import _ from 'lodash';
-import React from 'react';
 import {
   MovieResponse,
   SeriesResponse,
@@ -8,7 +8,6 @@ import {
 } from './streaming';
 import { String } from 'typescript-string-operations';
 import Moment from 'moment';
-import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import Collapsible from 'react-collapsible';
 import { useHistory } from 'react-router-dom';
 import { TV } from './SeasonSelectComponent';
@@ -19,11 +18,11 @@ import {
   faSpinner,
   faCaretUp,
   faCaretDown,
-  faList,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { MLink } from './utils';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import ContextMenu from './ContextMenu';
 
 export function Loading({
   loading,
@@ -43,21 +42,15 @@ export function Loading({
   );
 }
 
-function openPlex(item: { imdb_id: string }) {
-  window.open(`/redirect/plex/${item.imdb_id}`);
-}
-
-export function contextMenuTrigger(id: string) {
+function OpenPlex({ download }: { download: { imdb_id: string } }) {
   return (
-    <ContextMenuTrigger
-      mouseButton={0}
-      id={id}
-      attributes={{
-        style: { cursor: 'pointer', display: 'inline' },
-      }}
+    <MenuItem
+      component="a"
+      href={`/redirect/plex/${download.imdb_id}`}
+      target="_blank"
     >
-      <FontAwesomeIcon icon={faList} />
-    </ContextMenuTrigger>
+      <span className="unselectable">Open in Plex</span>
+    </MenuItem>
   );
 }
 
@@ -111,11 +104,8 @@ export function Movies({
           <li key={movie.id}>
             <span>{movie.download.title}</span>
             &nbsp;
-            {contextMenuTrigger(`movie_${movie.id}`)}
-            <ContextMenu id={`movie_${movie.id}`}>
-              <MenuItem onClick={() => openPlex(movie.download)}>
-                <span className="unselectable">Play in Plex</span>
-              </MenuItem>
+            <ContextMenu>
+              <OpenPlex download={movie.download} />
               <MenuItem
                 onClick={() =>
                   window.open(
@@ -238,8 +228,7 @@ function Series({
       <h3>
         {serie.title}
         &nbsp;
-        {contextMenuTrigger(`tv_${serie.imdb_id}`)}
-        <ContextMenu id={`tv_${serie.imdb_id}`}>
+        <ContextMenu>
           {serie.imdb_id && (
             <MenuItem
               onClick={() =>
@@ -249,7 +238,7 @@ function Series({
               Open in IMDB
             </MenuItem>
           )}
-          <MenuItem onClick={() => openPlex(serie)}>Open in Plex</MenuItem>
+          <OpenPlex download={serie} />
           <MenuItem
             onClick={() => history.push(`/select/${serie.tmdb_id}/season`)}
           >

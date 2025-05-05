@@ -4758,7 +4758,6 @@ __metadata:
     qs: "npm:^6.9.4"
     react: "npm:^17.0.0"
     react-collapsible: "npm:^2.8.1"
-    react-contextmenu: "npm:^2.14.0"
     react-dom: "npm:^17.0.0"
     react-error-boundary: "npm:^3.1.0"
     react-helmet: "npm:^6.1.0"
@@ -5711,13 +5710,6 @@ __metadata:
   version: 1.4.3
   resolution: "cjs-module-lexer@npm:1.4.3"
   checksum: 10/d2b92f919a2dedbfd61d016964fce8da0035f827182ed6839c97cac56e8a8077cfa6a59388adfe2bc588a19cef9bbe830d683a76a6e93c51f65852062cfe2591
-  languageName: node
-  linkType: hard
-
-"classnames@npm:^2.2.5":
-  version: 2.2.6
-  resolution: "classnames@npm:2.2.6"
-  checksum: 10/a241cdac6a06d1572e4358eff219ff9be4e2bb83f0a4080b413f32f691e8b7ba4d635b1a99123cbdfef1604e10f398b6f1433364d5645004eea957494ef1f3e8
   languageName: node
   linkType: hard
 
@@ -13123,20 +13115,6 @@ __metadata:
     react: ~15 || ~16
     react-dom: ~15 || ~16
   checksum: 10/8a741bfea8492a0c2099ef2470b2581c44fe7664d9b35c6a2ee99a5ba192449ab9e0be5917b87dbdcca1cac8f1ec1f7051084978b0e1fb99ece029e53be1510f
-  languageName: node
-  linkType: hard
-
-"react-contextmenu@npm:^2.14.0":
-  version: 2.14.0
-  resolution: "react-contextmenu@npm:2.14.0"
-  dependencies:
-    classnames: "npm:^2.2.5"
-    object-assign: "npm:^4.1.0"
-  peerDependencies:
-    prop-types: ^15.0.0
-    react: ^0.14.0 || ^15.0.0 || ^16.0.1
-    react-dom: ^0.14.0 || ^15.0.0 || ^16.0.1
-  checksum: 10/9824f5f143ffe5cc7d88748c41214ddc95ba36d3689dc1b6ab5eedf958f046c0df29e43abd148629f3ec5320855d1ba8f0e423615f07e38e6cf6e5e6722a685d
   languageName: node
   linkType: hard
 

@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import {
   RouteProps,
   BrowserRouter as Router,
+  useLocation,
   Route,
   Switch,
 } from 'react-router-dom';
@@ -37,6 +38,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Link as MaterialLink } from '@mui/material';
 import { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
+import Storybook from './Storybook';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -214,8 +216,11 @@ const ParentComponent = swrConfig(ParentComponentInt);
 
 function Routes() {
   const auth = useAuth0();
+  const location = useLocation();
 
-  if (!auth.isAuthenticated) return <div>Please login</div>;
+  if (!(auth.isAuthenticated || location.pathname === '/storybook')) {
+    return <div>Please login</div>;
+  }
 
   return (
     <Switch>
@@ -269,6 +274,9 @@ function Routes() {
       </RouteWithTitle>
       <RouteWithTitle path="/monitor" title="Monitor">
         <MonitorComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/storybook" title="Storybook">
+        <Storybook />
       </RouteWithTitle>
       <RouteWithTitle path="/" title="Media">
         <IndexComponent />

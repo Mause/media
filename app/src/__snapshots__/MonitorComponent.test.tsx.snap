@@ -43,14 +43,14 @@ exports[`MonitorComponent view 1`] = `
         </svg>
          
         <div
-          class="react-contextmenu-wrapper"
-          style="cursor: pointer; display: inline;"
+          style="cursor: context-menu;"
         >
           <svg
             aria-hidden="true"
             class="svg-inline--fa fa-list fa-w-16 "
             data-icon="list"
             data-prefix="fas"
+            data-testid="context-menu-open"
             focusable="false"
             role="img"
             viewBox="0 0 512 512"
@@ -62,29 +62,6 @@ exports[`MonitorComponent view 1`] = `
             />
           </svg>
         </div>
-        <nav
-          class="react-contextmenu"
-          role="menu"
-          style="position: fixed; opacity: 0; pointer-events: none;"
-          tabindex="-1"
-        >
-          <div
-            aria-disabled="false"
-            class="react-contextmenu-item"
-            role="menuitem"
-            tabindex="-1"
-          >
-            Search
-          </div>
-          <div
-            aria-disabled="false"
-            class="react-contextmenu-item"
-            role="menuitem"
-            tabindex="-1"
-          >
-            Delete
-          </div>
-        </nav>
       </li>
     </ul>
   </div>
