@@ -43,8 +43,14 @@ export function Loading({
   );
 }
 
-function openPlex(item: { imdb_id: string }) {
-  window.open(`/redirect/plex/${item.imdb_id}`);
+function OpenPlex({ download }: {download:{ imdb_id: string }}) {
+  return (
+    <MenuItem element="a"  href={`/redirect/plex/${item.imdb_id}`} target="_blank">
+      <span className="unselectable">
+        Open in Plex
+      </span>
+    </MenuItem>
+  );
 }
 
 export function contextMenuTrigger(id: string) {
@@ -113,9 +119,7 @@ export function Movies({
             &nbsp;
             {contextMenuTrigger(`movie_${movie.id}`)}
             <ContextMenu id={`movie_${movie.id}`}>
-              <MenuItem onClick={() => openPlex(movie.download)}>
-                <span className="unselectable">Play in Plex</span>
-              </MenuItem>
+              <OpenPlex movie={movie.download} />
               <MenuItem
                 onClick={() =>
                   window.open(
@@ -249,7 +253,7 @@ function Series({
               Open in IMDB
             </MenuItem>
           )}
-          <MenuItem onClick={() => openPlex(serie)}>Open in Plex</MenuItem>
+          <OpenPlex download={serie} />
           <MenuItem
             onClick={() => history.push(`/select/${serie.tmdb_id}/season`)}
           >
