@@ -40,7 +40,8 @@
     "recoil": "^0.7.7",
     "swr": "^2.0.0",
     "typescript": "^5",
-    "typescript-string-operations": "^1.5.1"
+    "typescript-string-operations": "^1.5.1",
+    "web-streams-polyfill": "^4.1.0"
   },
   "scripts": {
     "start": "vite",
