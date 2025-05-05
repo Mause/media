@@ -38,7 +38,6 @@ dependencies = [
     "beautifulsoup4>=4.13.4",
     "asyncpg>=0.30.0",
     "dnspython>=2.7.0",
-    "httpx>=0.28.1",
 ]
 
 [dependency-groups]
