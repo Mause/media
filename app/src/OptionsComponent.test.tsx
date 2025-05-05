@@ -8,7 +8,7 @@ import {
   ReadableStream,
   TransformStream,
   WritableStream,
-} from 'node:stream/web';
+} from 'web-streams-polyfill';
 
 globalThis.WritableStream = WritableStream;
 globalThis.ReadableStream = ReadableStream;
