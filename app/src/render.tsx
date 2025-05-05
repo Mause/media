@@ -43,12 +43,14 @@ export function Loading({
   );
 }
 
-function OpenPlex({ download }: {download:{ imdb_id: string }}) {
+function OpenPlex({ download }: { download: { imdb_id: string } }) {
   return (
-    <MenuItem element="a"  href={`/redirect/plex/${item.imdb_id}`} target="_blank">
-      <span className="unselectable">
-        Open in Plex
-      </span>
+    <MenuItem
+      element="a"
+      href={`/redirect/plex/${item.imdb_id}`}
+      target="_blank"
+    >
+      <span className="unselectable">Open in Plex</span>
     </MenuItem>
   );
 }
