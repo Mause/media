@@ -1,15 +1,19 @@
-import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
+import { usesMoxios, renderWithSWR, mock, wait, listenTo } from './test.utils';
 import moxios from 'moxios';
 import {
   MonitorComponent,
   Monitor,
   MonitorAddComponent,
 } from './MonitorComponent';
-import React from 'react';
-import { MemoryRouter, Route, Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import {
+  unstable_HistoryRouter as HistoryRouter,
+  MemoryRouter,
+  Routes,
+  Route,
+} from 'react-router-dom';
 import * as _ from 'lodash';
 import { expectLastRequestBody } from './utils';
+import { createMemoryHistory } from '@remix-run/router';
 import { act } from '@testing-library/react';
 
 usesMoxios();
@@ -18,7 +22,9 @@ describe('MonitorComponent', () => {
   it('view', async () => {
     const { container } = renderWithSWR(
       <MemoryRouter>
-        <MonitorComponent />
+        <Routes>
+          <Route path="/monitor" Component={MonitorComponent} />
+        </Routes>
       </MemoryRouter>,
     );
 
@@ -38,18 +44,25 @@ describe('MonitorComponent', () => {
   });
 
   it('add', async () => {
-    const hist = createMemoryHistory();
-    hist.push({
-      pathname: '/monitor/add/5',
-      state: { type: 'MOVIE' },
+    const hist = createMemoryHistory({
+      initialEntries: [
+        {
+          pathname: '/monitor/add/5',
+          state: { type: 'MOVIE' },
+        },
+      ],
+      v5Compat: true,
     });
+    const entries = listenTo(hist);
 
     renderWithSWR(
-      <Router history={hist}>
-        <Route path="/monitor/add/:tmdb_id">
-          <MonitorAddComponent />
-        </Route>
-      </Router>,
+      <HistoryRouter history={hist}>
+        <Routes>
+          <Route path="/monitor/add/:tmdb_id" Component={MonitorAddComponent} />
+          <Route path="/monitor" element={<div>Monitor</div>} />
+          <Route path="/" element={<div>Home</div>} />
+        </Routes>
+      </HistoryRouter>,
     );
 
     await wait();
@@ -64,6 +77,6 @@ describe('MonitorComponent', () => {
     });
     await wait();
 
-    expect(_.map(hist.entries, 'pathname')).toEqual(['/', '/monitor']);
+    expect(_.map(entries, 'pathname')).toEqual(['/', '/monitor']);
   });
 });

@@ -16,7 +16,7 @@ function DownloadAllComponent() {
     tmdb_id: string;
     season: string;
   }>();
-  const season = parseInt(season_s);
+  const season = parseInt(season_s!);
 
   const { data: torrents } = useSWR<Torrents>('torrents');
   const { data, isValidating, error } = useSWR<{
@@ -28,7 +28,7 @@ function DownloadAllComponent() {
   return (
     <div>
       {error && <DisplayError error={error} />}
-      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id} season={season} />
+      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={season!} />
       <Loading loading={isValidating} />
       <div>
         <h3>Packs</h3>
@@ -40,7 +40,7 @@ function DownloadAllComponent() {
                 <DisplayTorrent
                   torrents={torrents}
                   torrent={t}
-                  tmdb_id={tmdb_id}
+                  tmdb_id={tmdb_id!}
                   season={season}
                 />
               </li>
@@ -50,15 +50,15 @@ function DownloadAllComponent() {
       <Individual
         label="Complete Sets"
         items={data && data.complete}
-        season={season}
-        tmdb_id={tmdb_id}
+        season={season!}
+        tmdb_id={tmdb_id!}
         torrents={torrents}
       />
       <Individual
         label="Incomplete Sets"
         items={data && data.incomplete}
-        season={season}
-        tmdb_id={tmdb_id}
+        season={season!}
+        tmdb_id={tmdb_id!}
         torrents={torrents}
       />
     </div>
@@ -73,7 +73,7 @@ function download_all(tmdb_id: number, torrents: ITorrent[]) {
     episode: t.episode_info?.epnum,
   }));
 
-  return { pathname: '/download', state: { downloads } };
+  return { to: '/download', state: { downloads } };
 }
 
 function Individual(props: {
@@ -91,7 +91,7 @@ function Individual(props: {
           props.items.map(([name, torrents]) => (
             <div key={name}>
               <h4>
-                <MLink to={download_all(parseInt(props.tmdb_id), torrents)}>
+                <MLink {...download_all(parseInt(props.tmdb_id), torrents)}>
                   {name}
                 </MLink>
               </h4>
