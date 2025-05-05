@@ -1,24 +1,44 @@
 import enum
+import logging
 from datetime import datetime
 from functools import lru_cache
-from typing import List, Optional, Type, TypeVar, Union
+from typing import List, Optional, Type, TypeVar, cast
 
-from flask_jsontools import JsonSerializableBase
-from flask_sqlalchemy import SQLAlchemy
-from flask_user import UserMixin
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
-from sqlalchemy.orm import Session, joinedload, relationship
+import backoff
+import psycopg2
+from fastapi import Depends
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    create_engine,
+    event,
+)
+from sqlalchemy.engine import URL, make_url
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import (
+    Session,
+    joinedload,
+    relationship,
+    sessionmaker,
+)
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
 from sqlalchemy_repr import RepresentableBase
 
+from .settings import Settings, get_settings
+from .singleton import singleton
 from .utils import precondition
 
-db = SQLAlchemy(model_class=(RepresentableBase, JsonSerializableBase))
+Base = declarative_base(cls=RepresentableBase)
+logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
 
-class Download(db.Model):  # type: ignore
+class Download(Base):  # type: ignore
     __tablename__ = 'download'
     _json_exclude = {'movie', 'episode'}
     _json_include = {'added_by'}
@@ -27,14 +47,18 @@ class Download(db.Model):  # type: ignore
     transmission_id = Column(String, nullable=False)
     imdb_id = Column(String, nullable=False)
     type = Column(String)
-    movie = relationship('MovieDetails', uselist=False, cascade='all,delete')
+    movie: 'MovieDetails' = relationship(
+        'MovieDetails', uselist=False, cascade='all,delete'
+    )
     movie_id = Column(Integer, ForeignKey('movie_details.id', ondelete='CASCADE'))
-    episode = relationship('EpisodeDetails', uselist=False, cascade='all,delete')
+    episode: 'EpisodeDetails' = relationship(
+        'EpisodeDetails', uselist=False, cascade='all,delete'
+    )
     episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
     title = Column(String)
     timestamp = Column(DateTime(timezone=True), nullable=False, default=func.now())
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by = relationship('User', back_populates='downloads')
+    added_by: 'User' = relationship('User', back_populates='downloads')
 
     def progress(self):
         from .main import get_keyed_torrents
@@ -42,10 +66,10 @@ class Download(db.Model):  # type: ignore
         return get_keyed_torrents()[self.transmission_id]['percentDone'] * 100
 
 
-class EpisodeDetails(db.Model):  # type: ignore
+class EpisodeDetails(Base):  # type: ignore
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
-    download = relationship(
+    download: 'Download' = relationship(
         'Download', back_populates='episode', passive_deletes=True, uselist=False
     )
     show_title = Column(String, nullable=False)
@@ -66,39 +90,39 @@ class EpisodeDetails(db.Model):  # type: ignore
         )
 
 
-class MovieDetails(db.Model):  # type: ignore
+class MovieDetails(Base):  # type: ignore
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
-    download = relationship(
+    download: 'Download' = relationship(
         'Download', back_populates='movie', passive_deletes=True, uselist=False
     )
 
 
-class User(db.Model, UserMixin):  # type: ignore
+class User(Base):  # type: ignore
     __tablename__ = 'users'
     _json_exclude = {'roles', 'password', 'downloads'}
-    id = db.Column(db.Integer, primary_key=True)
-    active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
+    id = Column(Integer, primary_key=True)
+    active = Column('is_active', Boolean(), nullable=False, server_default='1')
 
     # User authentication information. The collation='en_AU' is required
     # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
-    username = db.Column(db.String(255, collation='en_AU'), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False, server_default='')
+    username = Column(String(255, collation='en_AU'), nullable=False, unique=True)
+    password = Column(String(255), nullable=False, server_default='')
 
-    email = db.Column(db.String(255, collation='en_AU'), nullable=True, unique=True)
+    email = Column(String(255, collation='en_AU'), nullable=True, unique=True)
 
     # User information
-    first_name = db.Column(
-        db.String(100, collation='en_AU'), nullable=False, server_default=''
+    first_name = Column(
+        String(100, collation='en_AU'), nullable=False, server_default=''
     )
-    last_name = db.Column(
-        db.String(100, collation='en_AU'), nullable=False, server_default=''
+    last_name = Column(
+        String(100, collation='en_AU'), nullable=False, server_default=''
     )
 
     # Define the relationship to Role via UserRoles
-    roles = db.relationship('Role', secondary='user_roles')
+    roles: List['Role'] = relationship('Role', secondary='user_roles', uselist=True)
 
-    downloads = db.relationship('Download')
+    downloads: List[Download] = relationship('Download')
 
     def __repr__(self):
         return self.username
@@ -108,10 +132,10 @@ class User(db.Model, UserMixin):  # type: ignore
 
 
 # Define the Role data-model
-class Role(db.Model):  # type: ignore
+class Role(Base):  # type: ignore
     __tablename__ = 'roles'
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(50), unique=True)
+    id = Column(Integer(), primary_key=True)
+    name = Column(String(50), unique=True)
 
     def __repr__(self):
         return self.name
@@ -130,11 +154,11 @@ Roles = _Roles()
 
 
 # Define the UserRoles association table
-class UserRoles(db.Model):  # type: ignore
+class UserRoles(Base):  # type: ignore
     __tablename__ = 'user_roles'
-    id = db.Column(db.Integer(), primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
-    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
+    id = Column(Integer(), primary_key=True)
+    user_id = Column(Integer(), ForeignKey('users.id', ondelete='CASCADE'))
+    role_id = Column(Integer(), ForeignKey('roles.id', ondelete='CASCADE'))
 
 
 class MonitorMediaType(enum.Enum):
@@ -142,12 +166,14 @@ class MonitorMediaType(enum.Enum):
     TV = 'TV'
 
 
-class Monitor(db.Model):  # type: ignore
-    id = db.Column(db.Integer(), primary_key=True)
+class Monitor(Base):  # type: ignore
+    __tablename__ = 'monitor'
+
+    id = Column(Integer(), primary_key=True)
     tmdb_id = Column(Integer)
 
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by = relationship('User')
+    added_by: 'User' = relationship('User')
 
     title = Column(String, nullable=False)
     type = Column(
@@ -165,7 +191,6 @@ def create_download(
     title: str,
     type: str,
     tmdb_id: int,
-    details: Union[MovieDetails, EpisodeDetails],
     id: Optional[int] = None,
     added_by: User,
     timestamp: Optional[datetime] = None,
@@ -177,7 +202,6 @@ def create_download(
         title=title,
         type=type,
         tmdb_id=tmdb_id,
-        **{type: details},
         id=id,
         added_by=added_by,
         timestamp=timestamp,
@@ -200,7 +224,6 @@ def create_movie(
         title=title,
         type='movie',
         tmdb_id=tmdb_id,
-        details=md,
         added_by=added_by,
         timestamp=timestamp,
     )
@@ -211,8 +234,8 @@ def create_episode(
     *,
     transmission_id: str,
     imdb_id: str,
-    season: str,
-    episode: Optional[str],
+    season: int,
+    episode: Optional[int],
     title: str,
     tmdb_id: int,
     id: Optional[int] = None,
@@ -228,7 +251,6 @@ def create_episode(
         tmdb_id=tmdb_id,
         title=title,
         type='episode',
-        details=ed,
         id=download_id,
         timestamp=timestamp,
         added_by=added_by,
@@ -256,4 +278,59 @@ def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> 
     params.update(defaults or {})
     instance: T = model(**params)  # type: ignore
     session.add(instance)
-    return instance
+    return cast(T, instance)
+
+
+def normalise_db_url(database_url: str) -> URL:
+    parsed = make_url(database_url)
+    if parsed.drivername == 'postgres':
+        parsed = parsed.set(drivername='postgresql')
+    return parsed
+
+
+MAX_TRIES = 5
+
+
+@singleton
+def get_session_local(settings: Settings = Depends(get_settings)):
+    db_url = normalise_db_url(settings.database_url)
+
+    logger.info('db_url: %s', db_url)
+
+    sqlite = db_url.drivername == 'sqlite'
+    if sqlite:
+        engine = create_engine(
+            db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
+        )
+
+        @event.listens_for(engine, 'connect')
+        def _fk_pragma_on_connect(dbapi_con, con_record):
+            dbapi_con.create_collation(
+                "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
+            )
+            dbapi_con.execute('pragma foreign_keys=ON')
+
+    else:
+        engine = create_engine(
+            db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
+        )
+
+        @event.listens_for(engine, "do_connect")
+        @backoff.on_exception(
+            backoff.fibo,
+            psycopg2.OperationalError,
+            max_tries=MAX_TRIES,
+            giveup=lambda e: "too many connections for role" not in e.args[0],
+        )
+        def receive_do_connect(dialect, conn_rec, cargs, cparams):
+            return psycopg2.connect(*cargs, **cparams)
+
+    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+
+
+def get_db(session_local=Depends(get_session_local)):
+    sl = session_local()
+    try:
+        yield sl
+    finally:
+        sl.close()

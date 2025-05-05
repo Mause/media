@@ -20,3 +20,4 @@ token.txt
 media_token.txt
 
 .yarn
+.envrc

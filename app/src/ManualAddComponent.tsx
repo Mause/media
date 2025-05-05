@@ -22,11 +22,16 @@ export function ManualAddComponent() {
     setSubmitted(true);
   }
 
-  const { state } = useLocation<{
+  const { state: state_s } = useLocation<{
     season?: string;
     episode?: string;
     tmdb_id: string;
   }>();
+  const state = {
+    season: state_s?.season ? parseInt(state_s.season) : undefined,
+    episode: state_s?.episode ? parseInt(state_s.episode) : undefined,
+    tmdb_id: state_s.tmdb_id,
+  };
 
   const classes = useStyles();
   const { data } = useSWR<{ title: string }>(

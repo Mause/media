@@ -4,8 +4,13 @@ from pathlib import Path
 from aioresponses import aioresponses as AioResponses
 from pytest import mark
 
-from ..horriblesubs import HorriblesubsDownloadType, get_downloads, get_latest
-from ..providers import HorriblesubsProvider
+from ..providers.horriblesubs import (
+    HorriblesubsDownloadType,
+    HorriblesubsProvider,
+    get_downloads,
+    get_latest,
+)
+from ..types import ImdbId, TmdbId
 from .conftest import add_json, themoviedb, tolist
 from .factories import TvApiResponseFactory
 
@@ -119,16 +124,15 @@ async def test_provider(aioresponses: AioResponses, snapshot):
     add_json(
         aioresponses,
         'GET',
-        'https://api.jikan.moe/v3/search/anime?limit=1&q=Little+Busters%2521',
-        {'results': [{'title': 'Little Busters!', 'mal_id': '12345'}]},
-    )
-    add_json(
-        aioresponses,
-        'GET',
-        'https://api.jikan.moe/v3/anime/12345',
+        'https://api.jikan.moe/v4/anime?limit=1&q=Little+Busters%2521',
         {
-            'title': 'Little Busters!',
-            'title_synonyms': ['Busters that are little'],
+            'data': [
+                {
+                    'title': 'Little Busters!',
+                    'mal_id': '12345',
+                    'title_synonyms': ['Busters that are little'],
+                },
+            ]
         },
     )
     themoviedb(
@@ -137,7 +141,9 @@ async def test_provider(aioresponses: AioResponses, snapshot):
 
     results = [
         item.dict()
-        for item in await tolist(HorriblesubsProvider().search_for_tv(None, 1, 1, 2))
+        for item in await tolist(
+            HorriblesubsProvider().search_for_tv(ImdbId('tt00000000'), TmdbId(1), 1, 2)
+        )
     ]
 
     snapshot.assert_match(json.dumps(results, indent=2, default=repr), 'results.json')

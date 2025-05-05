@@ -7,8 +7,10 @@ import os
 import sys
 from logging.config import fileConfig
 from pathlib import Path
+from urllib.parse import urlparse, urlunparse
 
-from flask import Flask
+import dns.rdatatype
+import dns.resolver
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
@@ -19,26 +21,23 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+config_file_name = config.config_file_name
+assert config_file_name
+fileConfig(config_file_name)
 
-sys.path.insert(0, '.')
-db = __import__('rarbg_local.db').db.db
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+db = __import__('rarbg_local.db').db
 
-if 'HEROKU' in os.environ:
-    url = os.environ['DATABASE_URL']
+if 'HEROKU' in os.environ or 'RAILWAY_SERVICE_ID' in os.environ:
+    url = os.environ['DATABASE_URL'].replace('postgres://', 'postgresql://')
 else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
 
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = url
-db.init_app(app)
-
 alembic_config = config.get_section(config.config_ini_section)
-alembic_config['sqlalchemy.url'] = app.config['SQLALCHEMY_DATABASE_URI']
-
-app.app_context().__enter__()
-target_metadata = db.Model.metadata
+assert alembic_config
+alembic_config['sqlalchemy.url'] = url
+target_metadata = db.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -58,16 +57,32 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        dialect_name='postgresql',
+        transaction_per_migration=True,
     )
 
     with context.begin_transaction():
         context.run_migrations()
+
+
+def resolve_db_url():
+    parsed = urlparse(url)
+    print(parsed)
+    domain = parsed.hostname
+    results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
+    print('AAAA', results)
+    print(results[0].to_text())
+    return urlunparse(
+        parsed._replace(
+            netloc='{}:{}@[{}]:{}'.format(
+                parsed.username, parsed.password, results[0].address, parsed.port
+            )
+        )
+    )
 
 
 def run_migrations_online():
@@ -77,18 +92,30 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
+
+    if 'RAILWAY_ENVIRONMENT_NAME' in os.environ:
+        alembic_config['sqlalchemy.url'] = resolve_db_url()
+
     connectable = engine_from_config(
-        alembic_config, prefix='sqlalchemy.', poolclass=pool.NullPool
+        alembic_config,
+        prefix='sqlalchemy.',
+        poolclass=pool.NullPool,
+        connect_args={
+            'connect_timeout': 10000,
+        },
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            transaction_per_migration=True,
+        )
 
         with context.begin_transaction():
             context.run_migrations()
 
 
-# __import__('ipdb').set_trace()
 if context.is_offline_mode():
     run_migrations_offline()
 else:

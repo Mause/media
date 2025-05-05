@@ -2,14 +2,18 @@ import re
 from enum import Enum
 from functools import lru_cache
 from itertools import chain
-from typing import Dict, Optional, Tuple
+from typing import AsyncGenerator, Dict, Optional, Tuple
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
 from lxml.html import fromstring
 
-from .jikan import closeness, get_names
-from .utils import cached
+from ..jikan import closeness, get_names
+from ..models import EpisodeInfo, ITorrent, ProviderSource
+from ..tmdb import get_tv
+from ..types import ImdbId, TmdbId
+from ..utils import cached
+from .abc import TvProvider, tv_convert
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
 
@@ -36,13 +40,13 @@ async def get_all_shows() -> Dict[str, str]:
 
 
 @lru_cache()
-async def get_show_id(path: str) -> Optional[str]:
+async def get_show_id(path: str) -> Optional[int]:
     async with make_session() as session:
         res = await session.get(path)
         res.raise_for_status()
         html = await res.text()
         m = SHOWID_RE.search(html)
-        return m.group(1) if m else None
+        return int(m.group(1)) if m else None
 
 
 def parse(html) -> Dict[str, str]:
@@ -131,7 +135,7 @@ async def search(showid: int, search_term: str):
         )
 
 
-async def search_for_tv(tmdb_id, season, episode):
+async def search_for_tv(tmdb_id: TmdbId, season: int, episode: Optional[int] = None):
     if season != 1:
         return
 
@@ -150,6 +154,31 @@ async def search_for_tv(tmdb_id, season, episode):
     async for item in get_downloads(show_id, HorriblesubsDownloadType.SHOW):
         if episode is None or item['episode'] == f'{episode:02d}':
             yield item
+
+
+class HorriblesubsProvider(TvProvider):
+    name = 'horriblesubs'
+    type = ProviderSource.HORRIBLESUBS
+
+    async def search_for_tv(
+        self,
+        imdb_id: ImdbId,
+        tmdb_id: TmdbId,
+        season: int,
+        episode: Optional[int] = None,
+    ) -> AsyncGenerator[ITorrent, None]:
+        name = (await get_tv(tmdb_id)).name
+        template = f'HorribleSubs {name} S{season:02d}'
+
+        async for item in search_for_tv(tmdb_id, season, episode):
+            yield ITorrent(
+                source=ProviderSource.HORRIBLESUBS,
+                title=f'{template}E{int(item["episode"], 10):02d} {item["resolution"]}',
+                seeders=0,
+                download=item['download'],
+                category=tv_convert(item['resolution']),
+                episode_info=EpisodeInfo(seasonnum=season, epnum=item['episode']),
+            )
 
 
 async def main():
