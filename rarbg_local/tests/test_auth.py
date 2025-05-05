@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from pytest import mark
 
 from ..auth import get_my_jwkaas
+from ..models import UserSchema
 from ..new import get_current_user, security
 from .conftest import add_json
 
@@ -37,12 +38,14 @@ async def test_auth(responses, user, fastapi_app, test_client):
 
     router = APIRouter()
 
-    @router.get('/simple', dependencies=[security])
+    @router.get('/simple', dependencies=[security], response_model=UserSchema)
     async def show(user=Depends(get_current_user)):
         return user
 
-    # highest priority
     fastapi_app.include_router(router)
+    fastapi_app.router.routes = [
+        r for r in fastapi_app.router.routes if r.name != 'static'
+    ]
 
     # Act
     r = await test_client.get(

@@ -493,7 +493,10 @@ api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
 
-security = Security(get_current_user, scopes=['openid'])
+security = Security(
+    get_current_user,
+    scopes=['openid'],
+)
 
 
 def create_app():
