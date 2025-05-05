@@ -40,7 +40,7 @@ export default function ContextMenu({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div onContextMenu={handleContextMenu} style={{ cursor: 'context-menu' }}>
+    <div onClick={handleContextMenu} style={{ cursor: 'context-menu' }}>
       <FontAwesomeIcon icon={faList} />
       <Menu
         open={contextMenu !== null}
