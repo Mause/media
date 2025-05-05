@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react';
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
+import { RecoilRoot } from 'recoil';
 import _ from 'lodash';
 
 usesMoxios();
@@ -28,11 +29,13 @@ class ES {
 Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
-  it.skip('failure', async () => {
+  it('failure', async () => {
     let { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
-          <OptionsComponent type="movie" />
+          <RecoilRoot>
+            <OptionsComponent type="movie" />
+          </RecoilRoot>
         </Route>
       </MemoryRouter>,
     );
