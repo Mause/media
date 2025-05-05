@@ -6,13 +6,13 @@ import { Torrents } from './streaming';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { Loading } from './render';
-import { Breadcrumbs, Typography } from '@material-ui/core';
+import { Breadcrumbs, Typography } from '@mui/material';
 import { Shared } from './SeasonSelectComponent';
 import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
 import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
@@ -29,8 +29,8 @@ export function DisplayTorrent({
   season,
   episode,
 }: {
-  season?: string;
-  episode?: string;
+  season?: number;
+  episode?: number;
   tmdb_id: string;
   torrent: ITorrent;
   torrents?: Torrents;
@@ -107,8 +107,8 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   const dt = (result: ITorrent) => (
     <DisplayTorrent
       tmdb_id={tmdb_id}
-      season={season}
-      episode={episode}
+      season={parseInt(season!)}
+      episode={parseInt(episode!)}
       torrents={torrents}
       torrent={result}
     />
@@ -271,6 +271,7 @@ function useSubscribes<T>(
     'kickass',
     'torrentscsv',
     'nyaasi',
+    'piratebay',
   ];
   const providers = [
     useSubscribe<T>(url, p[0], token),
@@ -278,6 +279,7 @@ function useSubscribes<T>(
     useSubscribe<T>(url, p[2], token),
     useSubscribe<T>(url, p[3], token),
     useSubscribe<T>(url, p[4], token),
+    useSubscribe<T>(url, p[5], token),
   ];
 
   return {

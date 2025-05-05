@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import {
   RouteProps,
   BrowserRouter as Router,
+  useLocation,
   Route,
   Switch,
 } from 'react-router-dom';
@@ -17,7 +18,7 @@ import { SearchComponent } from './SearchComponent';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { SWRConfig } from 'swr';
 import {
   MonitorComponent,
@@ -25,16 +26,19 @@ import {
   MonitorDeleteComponent,
 } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
-import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import { Theme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import createStyles from '@mui/styles/createStyles';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import { Websocket } from './Websocket';
 import { Integrations as TracingIntegrations } from '@sentry/tracing';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Link as MaterialLink } from '@material-ui/core';
+import { Link as MaterialLink } from '@mui/material';
 import { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
+import Storybook from './Storybook';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -91,13 +95,17 @@ const Login = () => {
 
   if (isAuthenticated) {
     return (
-      <MaterialLink href="#" onClick={() => logout({})}>
+      <MaterialLink href="#" onClick={() => logout({})} underline="hover">
         Logout
       </MaterialLink>
     );
   } else {
     return (
-      <MaterialLink href="#" onClick={() => loginWithRedirect({})}>
+      <MaterialLink
+        href="#"
+        onClick={() => loginWithRedirect({})}
+        underline="hover"
+      >
         Login
       </MaterialLink>
     );
@@ -208,8 +216,11 @@ const ParentComponent = swrConfig(ParentComponentInt);
 
 function Routes() {
   const auth = useAuth0();
+  const location = useLocation();
 
-  if (!auth.isAuthenticated) return <div>Please login</div>;
+  if (!(auth.isAuthenticated || location.pathname === '/storybook')) {
+    return <div>Please login</div>;
+  }
 
   return (
     <Switch>
@@ -263,6 +274,9 @@ function Routes() {
       </RouteWithTitle>
       <RouteWithTitle path="/monitor" title="Monitor">
         <MonitorComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/storybook" title="Storybook">
+        <Storybook />
       </RouteWithTitle>
       <RouteWithTitle path="/" title="Media">
         <IndexComponent />

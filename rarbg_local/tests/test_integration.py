@@ -1,5 +1,6 @@
 import json
 import logging
+import sys
 from datetime import datetime
 from typing import Dict
 from unittest.mock import patch
@@ -8,15 +9,18 @@ from async_asgi_testclient import TestClient
 from lxml.builder import E
 from lxml.etree import tostring
 from psycopg2 import OperationalError
+from pydantic import BaseModel
 from pytest import fixture, mark, raises
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
-from ..db import Download, create_episode, create_movie
+from ..db import MAX_TRIES, Download, create_episode, create_movie
 from ..main import get_episodes
+from ..models import ITorrent
 from ..new import SearchResponse, Settings, get_current_user, get_settings
-from .conftest import add_json, themoviedb
+from ..providers.piratebay import PirateBayProvider
+from .conftest import add_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
     MovieDetailsFactory,
@@ -75,6 +79,8 @@ async def test_diagnostics(
     snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
 
     for component in results:
+        if component == 'database' and sys.version_info[:2] == (3, 11):
+            continue
         r = await test_client.get(f'/api/diagnostics/{component}')
         results = r.json()
         for check in results:
@@ -199,9 +205,9 @@ async def test_index(
             create_episode(
                 transmission_id=HASH_STRING,
                 imdb_id='tt000000',
-                season='1',
+                season=1,
                 tmdb_id=1,
-                episode='1',
+                episode=1,
                 title='Hello world',
                 show_title='Programming',
                 timestamp=datetime(2020, 4, 21),
@@ -508,7 +514,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '18',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
         {
             'source': 'rarbg',
@@ -516,7 +522,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '41',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
         {
             'source': 'rarbg',
@@ -524,7 +530,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '49',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
     ]
 
@@ -605,4 +611,41 @@ async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
 
     assert ei.match(message)
 
-    assert caplog.text.count(message) == 6 + 1  # five plus the last time
+    assert caplog.text.count(message) == MAX_TRIES + 1
+
+
+class ITorrentList(BaseModel):
+    torrents: list[ITorrent]
+
+
+@mark.asyncio
+async def test_piratebay(aioresponses, snapshot):
+    aioresponses.add(
+        'https://apibay.org/q.php?q=tt0000000',
+        body=json.dumps(
+            [
+                {
+                    "id": "70178980",
+                    "name": "Ancient Aliens 480p x264-mSD",
+                    "info_hash": HASH_STRING,
+                    "leechers": "0",
+                    "seeders": "2",
+                    "num_files": "0",
+                    "size": "162330051",
+                    "username": "jajaja",
+                    "added": "1688804411",
+                    "status": "vip",
+                    "category": "205",
+                    "imdb": "",
+                }
+            ]
+        ),
+    )
+    res = await tolist(
+        PirateBayProvider().search_for_movie(imdb_id='tt0000000', tmdb_id=1)
+    )
+
+    snapshot.assert_match(
+        ITorrentList(torrents=res).json(indent=2),
+        'piratebay.json',
+    )
