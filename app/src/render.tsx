@@ -1,5 +1,5 @@
+import MenuItem from '@mui/material/MenuItem';
 import _ from 'lodash';
-import React from 'react';
 import {
   MovieResponse,
   SeriesResponse,
@@ -8,7 +8,6 @@ import {
 } from './streaming';
 import { String } from 'typescript-string-operations';
 import Moment from 'moment';
-import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import Collapsible from 'react-collapsible';
 import { useHistory } from 'react-router-dom';
 import { TV } from './SeasonSelectComponent';
@@ -19,11 +18,11 @@ import {
   faSpinner,
   faCaretUp,
   faCaretDown,
-  faList,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { MLink } from './utils';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import ContextMenu from './ContextMenu';
 
 export function Loading({
   loading,
@@ -52,20 +51,6 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
     >
       <span className="unselectable">Open in Plex</span>
     </MenuItem>
-  );
-}
-
-export function contextMenuTrigger(id: string) {
-  return (
-    <ContextMenuTrigger
-      mouseButton={0}
-      id={id}
-      attributes={{
-        style: { cursor: 'pointer', display: 'inline' },
-      }}
-    >
-      <FontAwesomeIcon icon={faList} />
-    </ContextMenuTrigger>
   );
 }
 
@@ -119,8 +104,7 @@ export function Movies({
           <li key={movie.id}>
             <span>{movie.download.title}</span>
             &nbsp;
-            {contextMenuTrigger(`movie_${movie.id}`)}
-            <ContextMenu id={`movie_${movie.id}`}>
+            <ContextMenu>
               <OpenPlex download={movie.download} />
               <MenuItem
                 onClick={() =>
@@ -244,8 +228,7 @@ function Series({
       <h3>
         {serie.title}
         &nbsp;
-        {contextMenuTrigger(`tv_${serie.imdb_id}`)}
-        <ContextMenu id={`tv_${serie.imdb_id}`}>
+        <ContextMenu>
           {serie.imdb_id && (
             <MenuItem
               onClick={() =>
