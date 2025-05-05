@@ -1737,12 +1737,11 @@ __metadata:
   linkType: hard
 
 "@babel/runtime-corejs3@npm:^7.10.2":
-  version: 7.10.5
-  resolution: "@babel/runtime-corejs3@npm:7.10.5"
+  version: 7.27.1
+  resolution: "@babel/runtime-corejs3@npm:7.27.1"
   dependencies:
-    core-js-pure: "npm:^3.0.0"
-    regenerator-runtime: "npm:^0.13.4"
-  checksum: 10/0753af3bf18c7c668a3ab643e52ce5d19c53b0571ac67240dc8902cd722a4f42d760d9aa3c622f0100a1af49344a4938a205d2e532bf6b44e4ae01ee893b27bd
+    core-js-pure: "npm:^3.30.2"
+  checksum: 10/07e3ea128d5c2f9bcd84091f56f8451a91ca42cd525586425484e6286b33fce1a4e3a6697e70e22b6412dd238a8d5a308ca94ca23788c9dbbb9cab68d614c162
   languageName: node
   linkType: hard
 
@@ -5775,17 +5774,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js-pure@npm:^3.0.0":
-  version: 3.6.5
-  resolution: "core-js-pure@npm:3.6.5"
-  checksum: 10/191cb7018208643f4e94d80d57e54359e995fdac4104881f95eb85f83e57707718aaa00f525950ba8348b5f413da80905596f8361fcb2de660244e8b77564421
-  languageName: node
-  linkType: hard
-
 "core-js-pure@npm:^3.23.3":
   version: 3.41.0
   resolution: "core-js-pure@npm:3.41.0"
   checksum: 10/69cc1d966d8a177be3d8ddbb4460c778dbfa5a458f74069b55322428524a54544a787fc15fe905aa84e93e0eab0d6a6501fb7026a885b7a8553c8542b01e79fb
+  languageName: node
+  linkType: hard
+
+"core-js-pure@npm:^3.30.2":
+  version: 3.42.0
+  resolution: "core-js-pure@npm:3.42.0"
+  checksum: 10/d8f16fe1b5e74498a4c896cd17a1cf2c2b5fd2bff8a960f86e132ca5dbdec63ccfa2bdd8700b840a8586e192ebe2da1b4e7bdbd0c34854b1d985e8237e473104
   languageName: node
   linkType: hard
 
@@ -13250,13 +13249,6 @@ __metadata:
   version: 1.4.2
   resolution: "regenerate@npm:1.4.2"
   checksum: 10/dc6c95ae4b3ba6adbd7687cafac260eee4640318c7a95239d5ce847d9b9263979758389e862fe9c93d633b5792ea4ada5708df75885dc5aa05a309fa18140a87
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.13.4":
-  version: 0.13.5
-  resolution: "regenerator-runtime@npm:0.13.5"
-  checksum: 10/69aaed4576adec0f3fcbb3f3d863b843c9ce30e8ebc099c961177102cf8c20481569d836ae2157e9e3841b9f1b943aed36de2295584f10992531901e80b678b0
   languageName: node
   linkType: hard
 
