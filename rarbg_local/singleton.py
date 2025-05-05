@@ -25,6 +25,7 @@ async def get(
         dependant=dependant,
         dependency_overrides_provider=app,
         async_exit_stack=AsyncExitStack(),
+        embed_body_fields=False,
     )
 
     assert not errors
