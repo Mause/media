@@ -5,6 +5,10 @@
 
 export interface components {
   schemas: {
+    /**
+     * Enum used to store the component types.
+     */
+    ComponentType: 'datastore' | 'internal' | 'http' | 'generic';
     DownloadAllResponse: {
       packs: components['schemas']['ITorrent'][];
       complete: [string, components['schemas']['ITorrent'][]][];
@@ -13,8 +17,8 @@ export interface components {
     DownloadPost: {
       tmdb_id: number;
       magnet: string;
-      season?: string;
-      episode?: string;
+      season?: number;
+      episode?: number;
     };
     DownloadSchema: {
       id: number;
@@ -39,17 +43,28 @@ export interface components {
       season: number;
       episode?: number;
     };
-    EpisodeInfo: { seasonnum?: string; epnum?: string };
+    EpisodeInfo: { seasonnum: number; epnum?: number };
     HTTPValidationError: {
       detail?: components['schemas']['ValidationError'][];
     };
+    HealthcheckResponse: {
+      component_name: string;
+      component_type: components['schemas']['ComponentType'];
+      status: components['schemas']['HealthcheckStatus'];
+      time: string;
+      output?: { [key: string]: any };
+    };
+    /**
+     * Enum used to store the possible service and component health status.
+     */
+    HealthcheckStatus: 'pass' | 'warn' | 'fail';
     ITorrent: {
       source: components['schemas']['ProviderSource'];
       title: string;
       seeders: number;
       download: string;
       category: string;
-      episode_info: components['schemas']['EpisodeInfo'];
+      episode_info?: components['schemas']['EpisodeInfo'];
     };
     IndexResponse: {
       series: components['schemas']['SeriesDetails'][];
@@ -91,7 +106,13 @@ export interface components {
     /**
      * An enumeration.
      */
-    ProviderSource: 'kickass' | 'horriblesubs' | 'rarbg';
+    ProviderSource:
+      | 'kickass'
+      | 'horriblesubs'
+      | 'rarbg'
+      | 'torrentscsv'
+      | 'nyaasi'
+      | 'piratebay';
     SearchResponse: {
       title: string;
       type: components['schemas']['MediaType'];
@@ -111,9 +132,9 @@ export interface components {
     StatsResponse: { user: string; values: components['schemas']['Stats'] };
     TvResponse: {
       number_of_seasons: number;
-      title: string;
-      imdb_id?: string;
       seasons: components['schemas']['SeasonMeta'][];
+      imdb_id?: string;
+      title: string;
     };
     TvSeasonResponse: { episodes: components['schemas']['Episode'][] };
     UserSchema: { username: string; first_name: string };

@@ -1,10 +1,17 @@
 import json
 import logging
+from itertools import chain
 from json.decoder import JSONDecodeError
-from typing import Dict, Iterator, List, TypedDict
+from typing import AsyncGenerator, Dict, Iterator, List, Optional, TypedDict
 
 import backoff
 import requests
+
+from ..models import EpisodeInfo, ITorrent, ProviderSource
+from ..types import ImdbId, TmdbId
+from .abc import MovieProvider, TvProvider, format, movie_convert, tv_convert
+
+logger = logging.getLogger(__name__)
 
 session = requests.Session()
 session.params = {
@@ -94,7 +101,7 @@ def _get(base_url: str, **kwargs: str) -> List[Dict]:
 
     error = res.get('error')
     if res.get('error_code') == 4:
-        logging.info('Token expired, reacquiring')
+        logger.info('Token expired, reacquiring')
         session.params['token'] = get_token(base_url)
         res = _get(**kwargs)
     elif error:
@@ -106,3 +113,53 @@ def _get(base_url: str, **kwargs: str) -> List[Dict]:
             raise Exception(res)
 
     return res.get('torrent_results', [])
+
+
+class RarbgProvider(TvProvider, MovieProvider):
+    name = 'rarbg'
+    type = ProviderSource.RARBG
+
+    async def search_for_tv(
+        self,
+        imdb_id: ImdbId,
+        tmdb_id: TmdbId,
+        season: int,
+        episode: Optional[int] = None,
+    ) -> AsyncGenerator[ITorrent, None]:
+        if not imdb_id:
+            return
+
+        search_string = format(season, episode)
+
+        for item in chain.from_iterable(
+            get_rarbg_iter(
+                'https://torrentapi.org/pubapi_v2.php',
+                'series',
+                search_imdb=imdb_id,
+                search_string=search_string,
+            )
+        ):
+            yield ITorrent(
+                source=ProviderSource.RARBG,
+                title=item['title'],
+                seeders=item['seeders'],
+                download=item['download'],
+                category=tv_convert(item['category']),
+                episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
+            )
+
+    async def search_for_movie(
+        self, imdb_id: ImdbId, tmdb_id: TmdbId
+    ) -> AsyncGenerator[ITorrent, None]:
+        for item in chain.from_iterable(
+            get_rarbg_iter(
+                'https://torrentapi.org/pubapi_v2.php', 'movie', search_imdb=imdb_id
+            )
+        ):
+            yield ITorrent(
+                source=ProviderSource.RARBG,
+                title=item['title'],
+                seeders=item['seeders'],
+                download=item['download'],
+                category=movie_convert(item['category']),
+            )

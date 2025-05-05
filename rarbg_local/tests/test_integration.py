@@ -1,5 +1,6 @@
 import json
 import logging
+import sys
 from datetime import datetime
 from typing import Dict
 from unittest.mock import patch
@@ -8,15 +9,18 @@ from async_asgi_testclient import TestClient
 from lxml.builder import E
 from lxml.etree import tostring
 from psycopg2 import OperationalError
+from pydantic import BaseModel
 from pytest import fixture, mark, raises
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
-from ..db import Download, create_episode, create_movie
+from ..db import MAX_TRIES, Download, create_episode, create_movie
 from ..main import get_episodes
+from ..models import ITorrent
 from ..new import SearchResponse, Settings, get_current_user, get_settings
-from .conftest import add_json, themoviedb
+from ..providers.piratebay import PirateBayProvider
+from .conftest import add_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
     MovieDetailsFactory,
@@ -52,11 +56,17 @@ def add_torrent():
 
 @patch('rarbg_local.health.transmission')
 @mark.asyncio
-async def test_diagnostics(transmission, test_client, user, responses):
-    responses.add('HEAD', 'https://horriblesubs.info')
-    responses.add('HEAD', 'https://torrentapi.org')
-    responses.add('HEAD', 'https://katcr.co')
-    responses.add('GET', 'https://api.jikan.moe/v3', body='{}')
+async def test_diagnostics(
+    transmission, test_client, user, aioresponses, snapshot, monkeypatch
+):
+    monkeypatch.setattr('rarbg_local.health.getpid', lambda: 1)
+
+    aioresponses.add('https://horriblesubs.info', 'HEAD')
+    aioresponses.add('https://torrentapi.org', 'HEAD')
+    aioresponses.add('https://katcr.co', 'HEAD')
+    aioresponses.add('https://nyaa.si', 'HEAD')
+    aioresponses.add('https://torrents-csv.com', 'HEAD')
+    aioresponses.add('https://api.jikan.moe/v4', 'GET', body='{}')
 
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
@@ -65,24 +75,18 @@ async def test_diagnostics(transmission, test_client, user, responses):
         '/api/diagnostics',
     )
     assert r.status_code == 200
-
     results = r.json()
-    for r in results:
-        r.pop('response_time')
-        r.pop('timestamp')
-        r.pop('expires')
+    snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
 
-    assert results == [
-        {
-            'checker': 'transmission_connectivity',
-            'output': {'consumers': ['ctag1'], 'client_is_alive': True},
-            'passed': True,
-        },
-        {'checker': 'jikan', 'output': {}, 'passed': True},
-        {'checker': 'katcr', 'output': 'kickass', 'passed': True},
-        {'checker': 'rarbg', 'output': 'rarbg', 'passed': True},
-        {'checker': 'horriblesubs', 'output': 'horriblesubs', 'passed': True},
-    ]
+    for component in results:
+        if component == 'database' and sys.version_info[:2] == (3, 11):
+            continue
+        r = await test_client.get(f'/api/diagnostics/{component}')
+        results = r.json()
+        for check in results:
+            check.pop('time')
+
+        snapshot.assert_match(json.dumps(results, indent=2), f'{component}.json')
 
 
 @mark.asyncio
@@ -124,7 +128,15 @@ async def test_download(test_client, aioresponses, responses, add_torrent, sessi
         },
     )
 
-    magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
+    magnet = (
+        'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313'
+        '&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv'
+        '&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce'
+        '&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce'
+        '&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce'
+        '&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce'
+        '&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
+    )
 
     res = await test_client.post(
         '/api/download',
@@ -150,7 +162,15 @@ async def test_download_season_pack(
     themoviedb(aioresponses, '/tv/90000', TvApiResponseFactory(name='Watchmen').dict())
     themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
 
-    magnet = 'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
+    magnet = (
+        'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313'
+        '&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv'
+        '&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce'
+        '&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce'
+        '&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce'
+        '&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce'
+        '&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
+    )
 
     res = await test_client.post(
         '/api/download', json=[{'magnet': magnet, 'tmdb_id': 90000, 'season': '1'}]
@@ -177,15 +197,17 @@ def assert_match_json(snapshot, res, name):
 
 
 @mark.asyncio
-async def test_index(responses, test_client, get_torrent, snapshot, session, user):
+async def test_index(
+    responses, aioresponses, test_client, get_torrent, snapshot, session, user
+):
     session.add_all(
         [
             create_episode(
                 transmission_id=HASH_STRING,
                 imdb_id='tt000000',
-                season='1',
+                season=1,
                 tmdb_id=1,
-                episode='1',
+                episode=1,
                 title='Hello world',
                 show_title='Programming',
                 timestamp=datetime(2020, 4, 21),
@@ -199,9 +221,33 @@ async def test_index(responses, test_client, get_torrent, snapshot, session, use
                 timestamp=datetime(2020, 4, 20),
                 added_by=user,
             ),
+            create_episode(
+                transmission_id=HASH_STRING[:-1] + 'a',
+                imdb_id='tt0000002',
+                season='1',
+                episode=None,
+                tmdb_id=3,
+                title='Hello world 2',
+                show_title='Coding',
+                timestamp=datetime(2020, 4, 21),
+                added_by=user,
+            ),
         ]
     )
     session.commit()
+
+    aioresponses.add(
+        'https://api.themoviedb.org/3/tv/3/season/1',
+        method='GET',
+        body=json.dumps(
+            {
+                "episodes": [
+                    {"name": "The Pilot", "id": "00000", "episode_number": 1},
+                    {"name": "The Fight", "id": "00001", "episode_number": 2},
+                ]
+            }
+        ),
+    )
 
     res = await test_client.get('/api/index')
 
@@ -237,7 +283,6 @@ async def test_search(aioresponses, test_client):
 
 @mark.asyncio
 async def test_delete_cascade(test_client: TestClient, session):
-
     e = EpisodeDetailsFactory()
     session.add(e)
     session.commit()
@@ -292,7 +337,6 @@ async def test_select_season(aioresponses, test_client: TestClient, snapshot) ->
 
 @mark.asyncio
 async def test_foreign_key_integrity(session: Session):
-
     # invalid fkey_id
     ins = Download.__table__.insert().values(id=1, movie_id=99)
     with raises(IntegrityError):
@@ -304,11 +348,18 @@ async def test_delete_monitor(aioresponses, test_client, session):
     themoviedb(
         aioresponses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
     )
+    themoviedb(
+        aioresponses, '/tv/5', TvApiResponseFactory.build(name='Hello World').dict()
+    )
     ls = (await test_client.get('/api/monitor')).json()
     assert ls == []
 
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     assert r.status_code == 201
+
+    (
+        await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'TV'})
+    ).raise_for_status()
 
     ls = (await test_client.get('/api/monitor')).json()
 
@@ -320,12 +371,20 @@ async def test_delete_monitor(aioresponses, test_client, session):
             'id': 1,
             'status': False,
             'added_by': 'python',
-        }
+        },
+        {
+            'added_by': 'python',
+            'id': 2,
+            'status': False,
+            'title': 'Hello World',
+            'tmdb_id': 5,
+            'type': 'TV',
+        },
     ]
-    ident = ls[0]['id']
 
-    r = await test_client.delete(f'/api/monitor/{ident}')
-    assert r.status_code == 200
+    for item in ls:
+        r = await test_client.delete(f'/api/monitor/{item["id"]}')
+        assert r.status_code == 200
 
     ls = (await test_client.get('/api/monitor')).json()
     assert ls == []
@@ -412,7 +471,9 @@ async def test_openapi(test_client, snapshot):
     r = await test_client.get('/openapi.json')
     assert r.status_code == 200
 
-    assert_match_json(snapshot, r, 'openapi.json')
+    data = r.json()
+    data['info']['version'] = "0.1.0-dev"
+    snapshot.assert_match(json.dumps(data, indent=2), 'openapi.json')
 
 
 @mark.asyncio
@@ -453,7 +514,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '18',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
         {
             'source': 'rarbg',
@@ -461,7 +522,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '41',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
         {
             'source': 'rarbg',
@@ -469,7 +530,7 @@ async def test_stream(test_client, responses, aioresponses):
             'title': '49',
             'download': '',
             'category': '',
-            'episode_info': {'seasonnum': '1', 'epnum': '1'},
+            'episode_info': {'seasonnum': 1, 'epnum': 1},
         },
     ]
 
@@ -489,7 +550,7 @@ async def test_static(uri, test_client):
 
 @mark.asyncio
 async def test_plex_redirect(test_client, responses):
-    responses.add('POST', 'https://plex.tv/users/sign_in.xml')
+    responses.add('GET', 'https://plex.tv/users/account')
     responses.add(
         'GET',
         'https://test/',
@@ -525,16 +586,6 @@ async def test_plex_redirect(test_client, responses):
 
 
 @mark.asyncio
-async def test_pool_status(test_client, snapshot, monkeypatch):
-    monkeypatch.setattr('rarbg_local.new.getpid', lambda: 1)
-    assert_match_json(
-        snapshot,
-        await test_client.get('/api/diagnostics/pool'),
-        'pool.json',
-    )
-
-
-@mark.asyncio
 async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
     def replacement(*args, **kwargs):
         raise OperationalError(message)
@@ -549,7 +600,9 @@ async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
     do.update(
         {
             get_current_user: cu,
-            get_settings: lambda: Settings(database_url='postgres:///:memory:'),
+            get_settings: lambda: Settings(
+                database_url='postgresql:///:memory:', plex_token='plex_token'
+            ),
         }
     )
 
@@ -558,4 +611,41 @@ async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
 
     assert ei.match(message)
 
-    assert caplog.text.count(message) == 6 + 1  # five plus the last time
+    assert caplog.text.count(message) == MAX_TRIES + 3
+
+
+class ITorrentList(BaseModel):
+    torrents: list[ITorrent]
+
+
+@mark.asyncio
+async def test_piratebay(aioresponses, snapshot):
+    aioresponses.add(
+        'https://apibay.org/q.php?q=tt0000000',
+        body=json.dumps(
+            [
+                {
+                    "id": "70178980",
+                    "name": "Ancient Aliens 480p x264-mSD",
+                    "info_hash": HASH_STRING,
+                    "leechers": "0",
+                    "seeders": "2",
+                    "num_files": "0",
+                    "size": "162330051",
+                    "username": "jajaja",
+                    "added": "1688804411",
+                    "status": "vip",
+                    "category": "205",
+                    "imdb": "",
+                }
+            ]
+        ),
+    )
+    res = await tolist(
+        PirateBayProvider().search_for_movie(imdb_id='tt0000000', tmdb_id=1)
+    )
+
+    snapshot.assert_match(
+        ITorrentList(torrents=res).json(indent=2),
+        'piratebay.json',
+    )

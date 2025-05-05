@@ -34,6 +34,7 @@ import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link as MaterialLink } from '@material-ui/core';
 import { components } from './schema';
+import { DiagnosticsComponent } from './DiagnosticsComponent';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -250,6 +251,9 @@ function Routes() {
       </RouteWithTitle>
       <RouteWithTitle path="/stats" title="Stats">
         <StatsComponent />
+      </RouteWithTitle>
+      <RouteWithTitle path="/diagnostics" title="Diagnostics">
+        <DiagnosticsComponent />
       </RouteWithTitle>
       <RouteWithTitle path="/monitor/delete/:id" title="Monitor">
         <MonitorDeleteComponent />

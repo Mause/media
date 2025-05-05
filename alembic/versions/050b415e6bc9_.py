@@ -1,17 +1,18 @@
 """Initial database schema
 
 Revision ID: 050b415e6bc9
-Revises:
+Revises: baseline
 Create Date: 2020-01-08 18:23:24.931828
 
 """
+
 import sqlalchemy as sa
 
 from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '050b415e6bc9'
-down_revision = None
+down_revision = 'baseline'
 branch_labels = None
 depends_on = None
 
