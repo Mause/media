@@ -20,7 +20,7 @@ async def get(
         {'type': 'http', 'query_string': '', 'headers': [], 'app': app}
     )
 
-    values, errors, *_ = await solve_dependencies(
+    solved = await solve_dependencies(
         request=request,
         dependant=dependant,
         dependency_overrides_provider=app,
@@ -28,11 +28,11 @@ async def get(
         embed_body_fields=False,
     )
 
-    assert not errors
+    assert not solved.errors
 
     return await run_endpoint_function(
         dependant=dependant,
-        values=values,
+        values=solved.values,
         is_coroutine=iscoroutinefunction(func),
     )
 
