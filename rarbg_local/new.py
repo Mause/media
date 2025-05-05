@@ -107,7 +107,7 @@ openid_connect = XOpenIdConnect(
 async def get_current_user(
     security_scopes: SecurityScopes,
     session=Depends(get_db),
-    header=Depends(openid_connect),
+    header=Security(openid_connect, scopes=['openid']),
     jwkaas=Depends(get_my_jwkaas),
 ):
     user = auth_hook(
@@ -479,7 +479,6 @@ api.include_router(health, prefix='/diagnostics')
 
 security = Security(
     get_current_user,
-    scopes=['openid'],
 )
 
 
