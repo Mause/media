@@ -170,7 +170,7 @@ async def stream(
     source: ProviderSource,
     season: Optional[int] = None,
     episode: Optional[int] = None,
-) -> AsyncGenerator[BaseModel, None]:
+):
     provider = next(
         (provider for provider in get_providers() if provider.name == source.value),
         None,
@@ -493,6 +493,11 @@ api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
 
+security = Security(
+    get_current_user,
+    scopes=['openid'],
+)
+
 
 def create_app():
     app = FastAPI(
@@ -515,7 +520,7 @@ def create_app():
     app.include_router(
         api,
         prefix='/api',
-        dependencies=[Security(get_current_user, scopes=['openid'])],
+        dependencies=[security],
     )
     app.include_router(root, prefix='')
     simplify_operation_ids(app)

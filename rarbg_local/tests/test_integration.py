@@ -15,7 +15,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
-from ..db import Download, create_episode, create_movie
+from ..db import MAX_TRIES, Download, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
 from ..new import SearchResponse, Settings, get_current_user, get_settings
@@ -611,7 +611,7 @@ async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
 
     assert ei.match(message)
 
-    assert caplog.text.count(message) == 6 + 1  # five plus the last time
+    assert caplog.text.count(message) == MAX_TRIES + 3
 
 
 class ITorrentList(BaseModel):
