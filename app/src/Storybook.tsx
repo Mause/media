@@ -5,7 +5,9 @@ export default function Storybook() {
   return (
     <div>
       <ContextMenu>
-        <MenuItem>Hello</MenuItem>
+        <MenuItem component="a" href="http://google.com" target="_blank">
+          Hello
+        </MenuItem>
         <MenuItem>World</MenuItem>
       </ContextMenu>
     </div>
