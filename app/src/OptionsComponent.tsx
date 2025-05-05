@@ -12,7 +12,7 @@ import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
 import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
