@@ -234,7 +234,7 @@ function TorrentProvider({ baseUrl, name }: { baseUrl: string; name: string }) {
       {loading && (
         <div style={{ textAlign: 'center' }}>
           <Alert color="info">Loading options from {name}</Alert>
-          <Loading large={true} />
+          <Loading loading={true} large={true} />
         </div>
       )}
       {error && (
