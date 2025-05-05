@@ -259,7 +259,13 @@ def create_episode(
 
 
 def get_all(session: Session, model: Type[T]) -> List[T]:
-    return session.query(model).options(joinedload('download')).all()
+    if model == MovieDetails:
+        joint = MovieDetails.download
+    elif model == EpisodeDetails:
+        joint = EpisodeDetails.download
+    else:
+        raise ValueError(f'Unknown model: {model}')
+    return session.query(model).options(joinedload(joint)).all()
 
 
 def get_episodes(session: Session) -> List[EpisodeDetails]:
