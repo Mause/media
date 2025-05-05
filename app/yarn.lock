@@ -4769,6 +4769,7 @@ __metadata:
     typescript: "npm:^5"
     typescript-string-operations: "npm:^1.4.1"
     use-socketio: "npm:^2.1.0"
+    web-streams-polyfill: "npm:^4.1.0"
   languageName: unknown
   linkType: soft
 
@@ -15725,6 +15726,13 @@ __metadata:
   dependencies:
     minimalistic-assert: "npm:^1.0.0"
   checksum: 10/c18b51c4e1fb19705c94b93c0cf093ba014606abceee949399d56074ef1863bf4897a8d884be24e8d224d18c9ce411cf6924006d0a5430492729af51256e067a
+  languageName: node
+  linkType: hard
+
+"web-streams-polyfill@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "web-streams-polyfill@npm:4.1.0"
+  checksum: 10/c6e802e6b83a8dc72acee8ec14b3a4af46d5ea4a15d0260303d7e4cab3c600716ff998b70457bc3ac0998073c0e73344c89400bfcc5f49a9bc0b10bb263c2f5f
   languageName: node
   linkType: hard
 
