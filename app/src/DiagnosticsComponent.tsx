@@ -26,27 +26,25 @@ function SingleDiagnostic({ component }: { component: string }) {
 
   return (
     <li>
-      {component}: </pre>
+      {component}: {isValidating && <ReactLoading type="balls" color="#000" />}
 
-      {isValidating && <ReactLoading type="balls" color="#000" />}
-
-<ul>
-  {data && data.map(
-    item => (
-      <li>
-      <FontAwesomeIcon
-        icon={faCircle}
-        className={getColour(item.status)}
-      />
-      <pre>
-        <code>{JSON.stringify(item, null, 2)}</code>
-      </pre>
-      </li>
-      ))}
-</ul>
+      <ul>
+        {data && data.map(
+          item => (
+            <li>
+            <FontAwesomeIcon
+              icon={faCircle}
+              className={getColour(item.status)}
+            />
+            <pre>
+              <code>{JSON.stringify(item, null, 2)}</code>
+            </pre>
+            </li>
+            ))}
+      </ul>
 
 
-  {error &&      <pre>
+      {error && <pre>
         <code>{JSON.stringify(error, null, 2)}</code>
       </pre>}
     </li>
