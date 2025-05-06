@@ -300,9 +300,6 @@
             "XOpenIdConnect": [
               "openid"
             ]
-          },
-          {
-            "XOpenIdConnect": []
           }
         ]
       }
@@ -621,9 +618,6 @@
             "XOpenIdConnect": [
               "openid"
             ]
-          },
-          {
-            "XOpenIdConnect": []
           }
         ]
       },
@@ -670,9 +664,6 @@
             "XOpenIdConnect": [
               "openid"
             ]
-          },
-          {
-            "XOpenIdConnect": []
           }
         ]
       }

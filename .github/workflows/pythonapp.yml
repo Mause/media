@@ -36,7 +36,6 @@ jobs:
           linters: mypy
           run: uv run mypy --show-column-numbers rarbg_local
       - run: uv run alembic upgrade head --sql
-      - uses: pre-commit/action@v3.0.1
       - name: Test with pytest
         run: |
           uv run pytest -vv
@@ -50,3 +49,10 @@ jobs:
         with:
           name: report-${{ matrix.python-version }}.html
           path: report.html
+
+  pre-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pre-commit/action@v3.0.1
