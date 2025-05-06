@@ -50,8 +50,8 @@ export function SimpleDiagnosticDisplay({
       {component}: {isValidating && <ReactLoading type="balls" color="#000" />}
       <ul>
         {data &&
-          data.map((item) => (
-            <li>
+          data.map((item, i) => (
+            <li key={i}>
               <FontAwesomeIcon
                 icon={faCircle}
                 className={getColour(item.status)}
