@@ -1776,7 +1776,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.27.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.27.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.27.1
   resolution: "@babel/runtime@npm:7.27.1"
   checksum: 10/34cefcbf781ea5a4f1b93f8563327b9ac82694bebdae91e8bd9d7f58d084cbe5b9a6e7f94d77076e15b0bcdaa0040a36cb30737584028df6c4673b4c67b2a31d
@@ -3624,10 +3624,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/history@npm:*, @types/history@npm:4.7.7":
+"@types/history@npm:*":
   version: 4.7.7
   resolution: "@types/history@npm:4.7.7"
   checksum: 10/a81a60ef01e031b77793d821253ed59d563019ee90718730d7e3decaa20343b7f68cb0ab0062b45d750b422e22fc762fc74aab7cdde182f86fda4c8f3d385e86
+  languageName: node
+  linkType: hard
+
+"@types/history@npm:5.0.0":
+  version: 5.0.0
+  resolution: "@types/history@npm:5.0.0"
+  dependencies:
+    history: "npm:*"
+  checksum: 10/53d35a7b3b7425dd1bac33ea024e3446eb9b8b1a390fef9bedb9428a6cfe84d9716d69c74364068dfca082abbbc5d5d126c5472ee5507150c4f55127422b5462
   languageName: node
   linkType: hard
 
@@ -4731,7 +4740,7 @@ __metadata:
     "@testing-library/jest-dom": "npm:^5.11.9"
     "@testing-library/react": "npm:^11.2.2"
     "@testing-library/user-event": "npm:^14.6.1"
-    "@types/history": "npm:4.7.7"
+    "@types/history": "npm:5.0.0"
     "@types/jest": "npm:^26.0.13"
     "@types/lodash": "npm:^4.17.16"
     "@types/moxios": "npm:^0.4.9"
@@ -4747,7 +4756,7 @@ __metadata:
     axios: "npm:^0.30.0"
     colors.css: "npm:^3.0.0"
     eslint-config-react-app: "npm:^7.0.0"
-    history: "npm:^4.9.0"
+    history: "npm:^5.0.0"
     jest-junit: "npm:^12.0.0"
     lodash: "npm:^4.17.20"
     mockdate: "npm:^3.0.2"
@@ -8658,6 +8667,15 @@ __metadata:
   bin:
     he: bin/he
   checksum: 10/d09b2243da4e23f53336e8de3093e5c43d2c39f8d0d18817abfa32ce3e9355391b2edb4bb5edc376aea5d4b0b59d6a0482aab4c52bc02ef95751e4b818e847f1
+  languageName: node
+  linkType: hard
+
+"history@npm:*, history@npm:^5.0.0":
+  version: 5.3.0
+  resolution: "history@npm:5.3.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.7.6"
+  checksum: 10/52ba685b842ca6438ff11ef459951eb13d413ae715866a8dc5f7c3b1ea0cdeb8db6aabf7254551b85f56abc205e6e2d7e1d5afb36b711b401cdaff4f2cf187e9
   languageName: node
   linkType: hard
 
