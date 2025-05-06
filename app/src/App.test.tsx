@@ -28,8 +28,7 @@ test('renders app update notification', async () => {
 });
 
 function getAlertMessage(): Element | null {
-  const messages = window.document.body.getElementsByClassName(
-    'MuiAlert-message',
-  );
+  const messages =
+    window.document.body.getElementsByClassName('MuiAlert-message');
   return messages.length ? messages[0] : null;
 }
