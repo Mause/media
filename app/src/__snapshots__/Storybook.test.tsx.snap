@@ -46,9 +46,7 @@ exports[`Storybook renders without crashing 1`] = `
           <pre>
             <code>
               {
-  "component_name": "Storybook",
   "component_type": "datastore",
-  "status": "pass",
   "time": "2022-01-01T10:10:00",
   "output": {
     "hello": "world"

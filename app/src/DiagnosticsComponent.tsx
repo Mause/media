@@ -57,7 +57,17 @@ export function SimpleDiagnosticDisplay({
                 className={getColour(item.status)}
               />
               <pre>
-                <code>{JSON.stringify(item, null, 2)}</code>
+                <code>
+                  {JSON.stringify(
+                    {
+                      component_type: item.component_type,
+                      time: item.time,
+                      output: item.output,
+                    },
+                    null,
+                    2,
+                  )}
+                </code>
               </pre>
             </li>
           ))}
