@@ -22,6 +22,41 @@ exports[`Storybook renders without crashing 1`] = `
         fill="currentColor"
       />
     </svg>
+    <hr />
+    <li>
+      Storybook
+      : 
+      <ul>
+        <li>
+          <svg
+            aria-hidden="true"
+            class="svg-inline--fa fa-circle fa-w-16 green"
+            data-icon="circle"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            viewBox="0 0 512 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"
+              fill="currentColor"
+            />
+          </svg>
+          <pre>
+            <code>
+              {
+  "component_type": "datastore",
+  "time": "2022-01-01T10:10:00",
+  "output": {
+    "hello": "world"
+  }
+}
+            </code>
+          </pre>
+        </li>
+      </ul>
+    </li>
   </div>
 </div>
 `;
