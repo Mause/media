@@ -567,16 +567,16 @@ wheels = [
 
 [[package]]
 name = "flake8"
-version = "3.8.4"
+version = "3.9.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "mccabe" },
     { name = "pycodestyle" },
     { name = "pyflakes" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/71/6a/b3341ef7e7f3585add027d876a7d9837cdfe3320b6c6b5fd0cddfa9ceeac/flake8-3.8.4.tar.gz", hash = "sha256:aadae8761ec651813c24be05c6f7b4680857ef6afaae4651a4eccaef97ce6c3b", size = 163583, upload-time = "2020-10-02T23:34:03.958Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9e/47/15b267dfe7e03dca4c4c06e7eadbd55ef4dfd368b13a0bab36d708b14366/flake8-3.9.2.tar.gz", hash = "sha256:07528381786f2a6237b061f6e96610a4167b226cb926e2aa2b6b1d78057c576b", size = 164777, upload-time = "2021-05-08T19:52:34.369Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d4/ca/3971802ee6251da1abead1a22831d7f4743781e2f743bd266bdd2f46c19b/flake8-3.8.4-py2.py3-none-any.whl", hash = "sha256:749dbbd6bfd0cf1318af27bf97a14e28e5ff548ef8e5b1566ccfb25a11e7c839", size = 72910, upload-time = "2020-10-02T23:34:01.861Z" },
+    { url = "https://files.pythonhosted.org/packages/fc/80/35a0716e5d5101e643404dabd20f07f5528a21f3ef4032d31a49c913237b/flake8-3.9.2-py2.py3-none-any.whl", hash = "sha256:bf8fd333346d844f616e8d47905ef3a3384edae6b4e9beb0c5101e25e3110907", size = 73147, upload-time = "2021-05-08T19:52:32.476Z" },
 ]
 
 [[package]]
@@ -1160,7 +1160,7 @@ dev = [
     { name = "aiosqlite", specifier = ">=0.21.0" },
     { name = "async-asgi-testclient", specifier = "==1.4.11" },
     { name = "factory-boy", specifier = "==3.2.0" },
-    { name = "flake8", specifier = "==3.8.4" },
+    { name = "flake8", specifier = "==3.9.2" },
     { name = "isort", specifier = "==5.7.0" },
     { name = "lxml" },
     { name = "pre-commit", specifier = ">=4.2.0" },
@@ -1498,11 +1498,11 @@ wheels = [
 
 [[package]]
 name = "pycodestyle"
-version = "2.6.0"
+version = "2.7.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/bb/82/0df047a5347d607be504ad5faa255caa7919562962b934f9372b157e8a70/pycodestyle-2.6.0.tar.gz", hash = "sha256:c58a7d2815e0e8d7972bf1803331fb0152f867bd89adf8a01dfd55085434192e", size = 100213, upload-time = "2020-05-11T20:02:55.636Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/02/b3/c832123f2699892c715fcdfebb1a8fdeffa11bb7b2350e46ecdd76b45a20/pycodestyle-2.7.0.tar.gz", hash = "sha256:c389c1d06bf7904078ca03399a4816f974a1d590090fecea0c63ec26ebaf1cef", size = 103640, upload-time = "2021-03-14T18:44:04.177Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/10/5b/88879fb861ab79aef45c7e199cae3ef7af487b5603dcb363517a50602dd7/pycodestyle-2.6.0-py2.py3-none-any.whl", hash = "sha256:2295e7b2f6b5bd100585ebcb1f616591b652db8a741695b3d8f5d28bdc934367", size = 41364, upload-time = "2020-05-11T20:02:52.968Z" },
+    { url = "https://files.pythonhosted.org/packages/de/cc/227251b1471f129bc35e966bb0fceb005969023926d744139642d847b7ae/pycodestyle-2.7.0-py2.py3-none-any.whl", hash = "sha256:514f76d918fcc0b55c6680472f0a37970994e07bbb80725808c17089be302068", size = 41725, upload-time = "2021-03-14T18:44:02.097Z" },
 ]
 
 [[package]]
@@ -1549,11 +1549,11 @@ wheels = [
 
 [[package]]
 name = "pyflakes"
-version = "2.2.0"
+version = "2.3.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f1/e2/e02fc89959619590eec0c35f366902535ade2728479fc3082c8af8840013/pyflakes-2.2.0.tar.gz", hash = "sha256:35b2d75ee967ea93b55750aa9edbbf72813e06a66ba54438df2cfac9e3c27fc8", size = 65307, upload-time = "2020-04-10T03:52:19.335Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a8/0f/0dc480da9162749bf629dca76570972dd9cce5bedc60196a3c912875c87d/pyflakes-2.3.1.tar.gz", hash = "sha256:f5bc8ecabc05bb9d291eb5203d6810b49040f6ff446a756326104746cc00c1db", size = 68567, upload-time = "2021-03-24T16:32:56.157Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/69/5b/fd01b0c696f2f9a6d2c839883b642493b431f28fa32b29abc465ef675473/pyflakes-2.2.0-py2.py3-none-any.whl", hash = "sha256:0d94e0e05a19e57a99444b6ddcf9a6eb2e5c68d3ca1e98e90707af8152c90a92", size = 66950, upload-time = "2020-04-10T03:52:17.62Z" },
+    { url = "https://files.pythonhosted.org/packages/6c/11/2a745612f1d3cbbd9c69ba14b1b43a35a2f5c3c81cd0124508c52c64307f/pyflakes-2.3.1-py2.py3-none-any.whl", hash = "sha256:7893783d01b8a89811dd72d7dfd4d84ff098e5eed95cfa8905b22bbffe52efc3", size = 68805, upload-time = "2021-03-24T16:32:54.562Z" },
 ]
 
 [[package]]
