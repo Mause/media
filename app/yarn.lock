@@ -4757,7 +4757,7 @@ __metadata:
     prop-types: "npm:^15.7.2"
     qs: "npm:^6.9.4"
     react: "npm:^17.0.0"
-    react-collapsible: "npm:^2.8.1"
+    react-collapsible: "npm:^2.10.0"
     react-dom: "npm:^17.0.0"
     react-error-boundary: "npm:^3.1.0"
     react-helmet: "npm:^6.1.0"
@@ -13107,14 +13107,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-collapsible@npm:^2.8.1":
-  version: 2.8.1
-  resolution: "react-collapsible@npm:2.8.1"
+"react-collapsible@npm:^2.10.0":
+  version: 2.10.0
+  resolution: "react-collapsible@npm:2.10.0"
   peerDependencies:
-    prop-types: ^15.5.8
-    react: ~15 || ~16
-    react-dom: ~15 || ~16
-  checksum: 10/8a741bfea8492a0c2099ef2470b2581c44fe7664d9b35c6a2ee99a5ba192449ab9e0be5917b87dbdcca1cac8f1ec1f7051084978b0e1fb99ece029e53be1510f
+    react: ~15 || ~16 || ~17 || ~18
+    react-dom: ~15 || ~16 || ~17 || ~18
+  checksum: 10/6e90d71966545436ff07da8b1bd87cb280828cf9f049ea0442149b68ba7793f137bb6aad48ee0f00aca75cea2cc49973c6b7cf6a160510105be903cdd82cefd1
   languageName: node
   linkType: hard
 
