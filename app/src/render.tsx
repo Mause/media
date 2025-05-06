@@ -107,11 +107,9 @@ export function Movies({
             <ContextMenu>
               <OpenPlex download={movie.download} />
               <MenuItem
-                onClick={() =>
-                  window.open(
-                    `https://www.imdb.com/title/${movie.download.imdb_id}`,
-                  )
-                }
+                component="a"
+                href={`https://www.imdb.com/title/${movie.download.imdb_id}`}
+                target="_blank"
               >
                 Open in IMDB
               </MenuItem>
@@ -231,9 +229,9 @@ function Series({
         <ContextMenu>
           {serie.imdb_id && (
             <MenuItem
-              onClick={() =>
-                window.open(`https://www.imdb.com/title/${serie.imdb_id}`)
-              }
+              component="a"
+              href={`https://www.imdb.com/title/${serie.imdb_id}`}
+              target="_blank"
             >
               Open in IMDB
             </MenuItem>
