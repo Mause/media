@@ -17,7 +17,7 @@ function useMessages<T>(initMessage: object) {
   useEffect(() => {
     if (lastMessage) {
       setMessages((messages) =>
-        messages.concat([JSON.parse((lastMessage as unknown) as string) as T]),
+        messages.concat([JSON.parse(lastMessage as unknown as string) as T]),
       );
     }
   }, [lastMessage]);
