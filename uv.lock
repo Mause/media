@@ -170,12 +170,15 @@ sdist = { url = "https://files.pythonhosted.org/packages/52/9a/0eb3fd37d4f9ad1e9
 
 [[package]]
 name = "asyncache"
-version = "0.1.1"
+version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cachetools" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5b/41/698635e80887e59dab88ccb908531fd79514edd1582ec340cfce65039574/asyncache-0.1.1.tar.gz", hash = "sha256:c741b3ccef2c5291b3da05d97bab3cc8d50f2ac8efd7fd79d47e3d7b6a3774de", size = 6655, upload-time = "2018-11-03T12:40:44.516Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/49/cf/17f8a6b6b97f77b5981fbce1266913e718daaa3467b46f60a785cbaadc29/asyncache-0.3.1.tar.gz", hash = "sha256:9a1e60a75668e794657489bdea6540ee7e3259c483517b934670db7600bf5035", size = 3797, upload-time = "2022-11-15T10:06:47.476Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2f/94/51927deb4f40872361ec4f5534f68f7a9ce81c4ef20bf5cd765307f4c15d/asyncache-0.3.1-py3-none-any.whl", hash = "sha256:ef20a1024d265090dd1e0785c961cf98b9c32cc7d9478973dcf25ac1b80011f5", size = 3722, upload-time = "2022-11-15T10:06:45.546Z" },
+]
 
 [[package]]
 name = "asyncpg"
@@ -1097,7 +1100,7 @@ requires-dist = [
     { name = "aiohttp", specifier = "==3.11.18" },
     { name = "alembic", specifier = "==1.15.2" },
     { name = "aniso8601", specifier = "==8.1.1" },
-    { name = "asyncache", specifier = "==0.1.1" },
+    { name = "asyncache", specifier = "==0.3.1" },
     { name = "asyncpg", specifier = ">=0.30.0" },
     { name = "backoff", specifier = "==1.11.1" },
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
