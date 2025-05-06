@@ -24,6 +24,10 @@ function SingleDiagnostic({ component }: { component: string }) {
     `diagnostics/${component}`,
   );
 
+  return <SimpleDiagnosticDisplay component={component} error={error} data={data} isValidating={isValidating} />
+}
+
+export function SimpleDiagnosticDisplay({ component, data, error, isValidating }: { component: string, data?: HealthcheckResponse[], error: unknown, isValidating: boolean }) {
   return (
     <li>
       {component}: {isValidating && <ReactLoading type="balls" color="#000" />}
