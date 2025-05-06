@@ -105,6 +105,10 @@ def run_migrations_online():
         poolclass=pool.NullPool,
         connect_args={
             'connect_timeout': 10000,
+            "keepalives": 1,
+            "keepalives_idle": 30,
+            "keepalives_interval": 5,
+            "keepalives_count": 5,
         },
     )
 
