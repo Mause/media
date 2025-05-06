@@ -13,7 +13,7 @@ export default function Storybook() {
       </ContextMenu>
       <hr />
       <SimpleDiagnosticDisplay
-        component='Storybook'
+        component="Storybook"
         data={[
           {
             component_name: 'Storybook',
@@ -21,9 +21,9 @@ export default function Storybook() {
             status: 'pass',
             time: '2022-01-01T10:10:00',
             output: {
-              hello: 'world'
-            }
-          }
+              hello: 'world',
+            },
+          },
         ]}
         error={undefined}
         isValidating={false}
