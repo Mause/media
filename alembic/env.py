@@ -73,7 +73,10 @@ def resolve_db_url():
     parsed = urlparse(url)
     print(parsed)
     domain = parsed.hostname
-    results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
+    resolver = dns.resolver.Resolver()
+    resolver.timeout = 1000
+    resolver.lifetime = 1000
+    results = list(resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
     print('AAAA', results)
     print(results[0].to_text())
     return urlunparse(
