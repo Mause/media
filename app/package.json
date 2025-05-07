@@ -15,8 +15,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@mui/material": "^5",
-    "@mui/styles": "^5",
+    "@mui/material": "^6",
+    "@mui/styles": "^6",
     "@sentry/react": "^5.29.2",
     "@sentry/tracing": "^5.29.2",
     "@testing-library/jest-dom": "^5.11.9",
@@ -39,7 +39,7 @@
     "react-scripts": "^5",
     "swr": "^0.4.0",
     "typescript": "^5",
-    "typescript-string-operations": "^1.4.1",
+    "typescript-string-operations": "^1.5.1",
     "use-socketio": "^2.1.0"
   },
   "scripts": {
@@ -68,7 +68,7 @@
     ]
   },
   "devDependencies": {
-    "@types/history": "4.7.7",
+    "@types/history": "4.7.11",
     "@types/jest": "^26.0.13",
     "@types/lodash": "^4.17.16",
     "@types/moxios": "^0.4.9",
