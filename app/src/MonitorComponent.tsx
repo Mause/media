@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
 import { Redirect, useParams, useHistory, useLocation } from 'react-router-dom';
 import { usePost } from './utils';
-import { ContextMenu, MenuItem } from 'react-contextmenu';
-import { contextMenuTrigger } from './render';
+import MenuItem from '@mui/material/MenuItem';
+import ContextMenu from './ContextMenu';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
@@ -24,7 +24,6 @@ export function MonitorComponent() {
       {data ? (
         <ul>
           {data.map((m) => {
-            const id = `monitor_${m.id}`;
             return (
               <li key={m.id}>
                 <FontAwesomeIcon
@@ -38,8 +37,7 @@ export function MonitorComponent() {
                   className={m.status ? 'green' : 'red'}
                 />
                 &nbsp;
-                {contextMenuTrigger(id)}
-                <ContextMenu id={id}>
+                <ContextMenu>
                   <MenuItem
                     onClick={() =>
                       history.push(

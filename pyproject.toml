@@ -4,13 +4,13 @@ version = "0.1.0"
 description = ""
 authors = [{ name = "Elliana May", email = "me@mause.me" }]
 license = "MIT"
-requires-python = "==3.11.*"
+requires-python = ">=3.11.0"
 
 dependencies = [
-    "sqlalchemy[mypy]==1.4.54",
+    "sqlalchemy[mypy]==2.0.40",
     "sqlalchemy-repr==0.0.2",
     "aiohttp==3.11.18",
-    "backoff==1.10.0",
+    "backoff==1.11.1",
     "psycopg2-binary",
     "sentry-sdk==2.8.0",
     "alembic==1.15.2",
@@ -18,18 +18,18 @@ dependencies = [
     "fuzzywuzzy[speedup]==0.18.0",
     "cachetools==5.5.2",
     "lxml",
-    "eventlet==0.35.2",
+    "eventlet==0.39.1",
     "email-validator==2.2.0",
     "mause-rpc==0.0.18",
     "cffi==1.17.1",
-    "fastapi==0.65.2",
+    "fastapi==0.115.12",
     "python-multipart==0.0.20",
     "jwkaas==0.7",
     "aniso8601==8.1.1",
     "pytz==2021.1",
     "uvicorn[standard]",
-    "aiofiles==0.6.0",
-    "fastapi-utils==0.2.1",
+    "aiofiles==0.8.0",
+    "fastapi-utils==0.8.0",
     "asyncache==0.1.1",
     "makefun==1.9.5",
     "gunicorn",
@@ -49,9 +49,7 @@ dev = [
     "pytest-selenium>=3.0.0",
     "webdriver-manager==3.2.2",
     "pre-commit>=4.2.0",
-    "sqlalchemy2-stubs",
     "pytest-snapshot",
-    "flake8==3.8.4",
     "factory-boy==3.2.0",
     "isort==5.7.0",
     "pytest-asyncio==0.14.0",

@@ -26,9 +26,6 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
-from plexapi.media import Media
-from plexapi.myplex import MyPlexAccount
-from plexapi.server import PlexServer
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sqlalchemy import delete, func
@@ -75,6 +72,7 @@ from .models import (
     TvResponse,
     TvSeasonResponse,
 )
+from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     get_providers,
     search_for_movie,
@@ -124,7 +122,7 @@ openid_connect = XOpenIdConnect(
 async def get_current_user(
     security_scopes: SecurityScopes,
     session=Depends(get_db),
-    header=Depends(openid_connect),
+    header=Security(openid_connect, scopes=['openid']),
     jwkaas=Depends(get_my_jwkaas),
 ):
     user = await auth_hook(
@@ -197,7 +195,7 @@ async def stream(
     source: ProviderSource,
     season: Optional[int] = None,
     episode: Optional[int] = None,
-) -> AsyncGenerator[BaseModel, None]:
+):
     provider = next(
         (provider for provider in get_providers() if provider.name == source.value),
         None,
@@ -473,20 +471,6 @@ def get_static_files(settings: Settings = Depends(get_settings)):
     return StaticFiles(directory=str(settings.static_resources_path))
 
 
-@singleton
-def get_plex(settings=Depends(get_settings)) -> PlexServer:
-    acct = MyPlexAccount(token=settings.plex_token.get_secret_value())
-    novell = acct.resource('Novell')
-    novell.connections = [c for c in novell.connections if not c.local]
-    return novell.connect(ssl=True)
-
-
-def get_imdb_in_plex(imdb_id: ImdbId, plex) -> Optional[Media]:
-    guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
-    items = plex.library.search(guid=guid)
-    return items[0] if items else None
-
-
 @root.get('/redirect/plex/{imdb_id}')
 def redirect_to_plex(imdb_id: ImdbId, plex=Depends(get_plex)):
     dat = get_imdb_in_plex(imdb_id, plex)
@@ -539,8 +523,15 @@ api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
 
+security = Security(
+    get_current_user,
+)
+
 
 def create_app():
+    keys = ['HEROKU_SLUG_COMMIT', 'RAILWAY_GIT_COMMIT_SHA']
+    value = next((os.environ[key] for key in keys if key in os.environ), None)
+
     app = FastAPI(
         servers=[
             {
@@ -554,14 +545,14 @@ def create_app():
             {"url": "https://media.mause.me/", "description": "Production"},
         ],
         title='Media',
-        version='0.1.0-' + os.environ.get('HEROKU_SLUG_COMMIT', 'dev'),
-        debug='HEROKU' not in os.environ,
+        version='0.1.0-' + (value or 'dev'),
+        debug=not ('HEROKU' in os.environ or 'RAILWAY_ENVIRONMENT_NAME' in os.environ),
     )
-    app.middleware_stack.generate_plain_text = generate_plain_text
+    #    app.middleware_stack.generate_plain_text = generate_plain_text
     app.include_router(
         api,
         prefix='/api',
-        dependencies=[Security(get_current_user, scopes=['openid'])],
+        dependencies=[security],
     )
     app.include_router(root, prefix='')
     simplify_operation_ids(app)

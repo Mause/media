@@ -6,13 +6,13 @@ import { Torrents } from './streaming';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { Loading } from './render';
-import { Breadcrumbs, Typography } from '@material-ui/core';
+import { Breadcrumbs, Typography } from '@mui/material';
 import { Shared } from './SeasonSelectComponent';
 import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
 import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
@@ -29,8 +29,8 @@ export function DisplayTorrent({
   season,
   episode,
 }: {
-  season?: string;
-  episode?: string;
+  season?: number;
+  episode?: number;
   tmdb_id: string;
   torrent: ITorrent;
   torrents?: Torrents;
@@ -101,14 +101,18 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     (season ? 'tv' : 'movie') + '/' + tmdb_id,
   );
   const { data: torrents } = useSWR<Torrents>('torrents');
-  const { items: results, loading, errors } = useSubscribes<ITorrent>(
+  const {
+    items: results,
+    loading,
+    errors,
+  } = useSubscribes<ITorrent>(
     `/api/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
   );
   const dt = (result: ITorrent) => (
     <DisplayTorrent
       tmdb_id={tmdb_id}
-      season={season}
-      episode={episode}
+      season={parseInt(season!)}
+      episode={parseInt(episode!)}
       torrents={torrents}
       torrent={result}
     />
@@ -260,9 +264,11 @@ function useToken() {
   return token;
 }
 
-function useSubscribes<T>(
-  url: string,
-): { items: T[]; loading: string[]; errors: { [key: string]: Error } } {
+function useSubscribes<T>(url: string): {
+  items: T[];
+  loading: string[];
+  errors: { [key: string]: Error };
+} {
   const token = useToken();
 
   const p: ProviderSource[] = [
@@ -271,6 +277,7 @@ function useSubscribes<T>(
     'kickass',
     'torrentscsv',
     'nyaasi',
+    'piratebay',
   ];
   const providers = [
     useSubscribe<T>(url, p[0], token),
@@ -278,6 +285,7 @@ function useSubscribes<T>(
     useSubscribe<T>(url, p[2], token),
     useSubscribe<T>(url, p[3], token),
     useSubscribe<T>(url, p[4], token),
+    useSubscribe<T>(url, p[5], token),
   ];
 
   return {

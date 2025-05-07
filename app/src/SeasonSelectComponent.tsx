@@ -2,8 +2,8 @@ import { useParams, useLocation } from 'react-router-dom';
 import _ from 'lodash';
 import React from 'react';
 import ReactLoading from 'react-loading';
-import Typography from '@material-ui/core/Typography';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Typography from '@mui/material/Typography';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 import useSWR from 'swr';
 import qs from 'qs';
 import { MLink } from './utils';
@@ -66,7 +66,7 @@ function SeasonSelectComponent() {
 
 export function EpisodeSelectBreadcrumbs(props: {
   tmdb_id: string;
-  season: string;
+  season: number;
 }) {
   const { data: tv } = useSWR<TV>(`tv/${props.tmdb_id}`);
 
@@ -94,7 +94,10 @@ function EpisodeSelectComponent() {
 
   return (
     <div>
-      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={seasonNumber!} />
+      <EpisodeSelectBreadcrumbs
+        tmdb_id={tmdb_id!}
+        season={parseInt(seasonNumber!)}
+      />
       {season ? (
         <ol>
           {season.episodes.map((episode) => (

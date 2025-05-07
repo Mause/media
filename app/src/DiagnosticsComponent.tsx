@@ -25,18 +25,58 @@ function SingleDiagnostic({ component }: { component: string }) {
   );
 
   return (
+    <SimpleDiagnosticDisplay
+      component={component}
+      error={error}
+      data={data}
+      isValidating={isValidating}
+    />
+  );
+}
+
+export function SimpleDiagnosticDisplay({
+  component,
+  data,
+  error,
+  isValidating,
+}: {
+  component: string;
+  data?: HealthcheckResponse[];
+  error: unknown;
+  isValidating: boolean;
+}) {
+  return (
     <li>
-      <FontAwesomeIcon
-        icon={faCircle}
-        className={getColour(data && data[0]?.status)}
-      />
-      <pre>{component}: </pre>
-
-      {isValidating && <ReactLoading type="balls" color="#000" />}
-
-      <pre>
-        <code>{JSON.stringify(error ?? data, null, 2)}</code>
-      </pre>
+      {component}: {isValidating && <ReactLoading type="balls" color="#000" />}
+      <ul>
+        {data &&
+          data.map((item, i) => (
+            <li key={i}>
+              <FontAwesomeIcon
+                icon={faCircle}
+                className={getColour(item.status)}
+              />
+              <pre>
+                <code>
+                  {JSON.stringify(
+                    {
+                      component_type: item.component_type,
+                      time: item.time,
+                      output: item.output,
+                    },
+                    null,
+                    2,
+                  )}
+                </code>
+              </pre>
+            </li>
+          ))}
+      </ul>
+      {error && (
+        <pre>
+          <code>{JSON.stringify(error, null, 2)}</code>
+        </pre>
+      )}
     </li>
   );
 }

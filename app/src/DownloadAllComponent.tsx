@@ -12,7 +12,11 @@ import { DisplayError } from './IndexComponent';
 type MapType = [string, ITorrent[]][];
 
 function DownloadAllComponent() {
-  const { tmdb_id, season } = useParams<{ tmdb_id: string; season: string }>();
+  const { tmdb_id, season: season_s } = useParams<{
+    tmdb_id: string;
+    season: string;
+  }>();
+  const season = parseInt(season_s);
 
   const { data: torrents } = useSWR<Torrents>('torrents');
   const { data, isValidating, error } = useSWR<{
@@ -75,7 +79,7 @@ function download_all(tmdb_id: number, torrents: ITorrent[]) {
 function Individual(props: {
   label: string;
   items?: MapType;
-  season: string;
+  season: number;
   tmdb_id: string;
   torrents?: Torrents;
 }) {

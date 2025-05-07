@@ -18,6 +18,8 @@ t = TTLCache(maxsize=10, ttl=3600)
 
 @singleton
 def get_my_jwkaas():
+    from jwkaas import JWKaas
+
     return JWKaas(
         ['https://localhost:3000/api/v2', f'{AUTH0_DOMAIN}userinfo'],
         AUTH0_DOMAIN,

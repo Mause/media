@@ -20,7 +20,14 @@ from sqlalchemy.engine import URL, make_url
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import select
-from sqlalchemy.orm import joinedload, relationship, sessionmaker
+from sqlalchemy.orm import (
+    Mapped,
+    Session,
+    declarative_base,
+    joinedload,
+    relationship,
+    sessionmaker,
+)
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
 from sqlalchemy_repr import RepresentableBase
@@ -43,18 +50,18 @@ class Download(Base):  # type: ignore
     transmission_id = Column(String, nullable=False)
     imdb_id = Column(String, nullable=False)
     type = Column(String)
-    movie: 'MovieDetails' = relationship(
+    movie: Mapped['MovieDetails'] = relationship(
         'MovieDetails', uselist=False, cascade='all,delete'
     )
     movie_id = Column(Integer, ForeignKey('movie_details.id', ondelete='CASCADE'))
-    episode: 'EpisodeDetails' = relationship(
+    episode: Mapped['EpisodeDetails'] = relationship(
         'EpisodeDetails', uselist=False, cascade='all,delete'
     )
     episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
     title = Column(String)
     timestamp = Column(DateTime(timezone=True), nullable=False, default=func.now())
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by: 'User' = relationship('User', back_populates='downloads')
+    added_by: Mapped['User'] = relationship('User', back_populates='downloads')
 
     def progress(self):
         from .main import get_keyed_torrents
@@ -65,7 +72,7 @@ class Download(Base):  # type: ignore
 class EpisodeDetails(Base):  # type: ignore
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
-    download: 'Download' = relationship(
+    download: Mapped['Download'] = relationship(
         'Download', back_populates='episode', passive_deletes=True, uselist=False
     )
     show_title = Column(String, nullable=False)
@@ -89,7 +96,7 @@ class EpisodeDetails(Base):  # type: ignore
 class MovieDetails(Base):  # type: ignore
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
-    download: 'Download' = relationship(
+    download: Mapped['Download'] = relationship(
         'Download', back_populates='movie', passive_deletes=True, uselist=False
     )
 
@@ -116,9 +123,11 @@ class User(Base):  # type: ignore
     )
 
     # Define the relationship to Role via UserRoles
-    roles: List['Role'] = relationship('Role', secondary='user_roles', uselist=True)
+    roles: Mapped[List['Role']] = relationship(
+        'Role', secondary='user_roles', uselist=True
+    )
 
-    downloads: List[Download] = relationship('Download')
+    downloads: Mapped[List[Download]] = relationship('Download')
 
     def __repr__(self):
         return self.username
@@ -169,7 +178,7 @@ class Monitor(Base):  # type: ignore
     tmdb_id = Column(Integer)
 
     added_by_id = Column(Integer, ForeignKey('users.id'))
-    added_by: 'User' = relationship('User')
+    added_by: Mapped['User'] = relationship('User')
 
     title = Column(String, nullable=False)
     type = Column(
@@ -255,11 +264,17 @@ def create_episode(
 
 
 async def get_all(session: AsyncSession, model: Type[T]) -> List[T]:
+    if model == MovieDetails:
+        joint = MovieDetails.download
+    elif model == EpisodeDetails:
+        joint = EpisodeDetails.download
+    else:
+        raise ValueError(f'Unknown model: {model}')
     return (
         (
             await session.execute(
                 select(model).options(
-                    joinedload('download'), joinedload('download.added_by')
+                    joinedload(joint), joinedload(joint.added_by)
                 )
             )
         )
@@ -300,6 +315,9 @@ def normalise_db_url(database_url: str) -> URL:
     return parsed
 
 
+MAX_TRIES = 5
+
+
 @singleton
 async def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = normalise_db_url(settings.database_url)
@@ -329,7 +347,7 @@ async def get_session_local(settings: Settings = Depends(get_settings)):
         @backoff.on_exception(
             backoff.fibo,
             psycopg2.OperationalError,
-            max_tries=5,
+            max_tries=MAX_TRIES,
             giveup=lambda e: "too many connections for role" not in e.args[0],
         )
         def receive_do_connect(dialect, conn_rec, cargs, cparams):
