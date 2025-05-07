@@ -4764,10 +4764,12 @@ __metadata:
     react-loading: "npm:^2.0.3"
     react-router-dom: "npm:^5.2.0"
     react-scripts: "npm:^5"
+    recoil: "npm:^0.7.7"
     swr: "npm:^0.4.0"
     typescript: "npm:^5"
     typescript-string-operations: "npm:^1.4.1"
     use-socketio: "npm:^2.1.0"
+    web-streams-polyfill: "npm:^4.1.0"
   languageName: unknown
   linkType: soft
 
@@ -8524,6 +8526,13 @@ __metadata:
   dependencies:
     duplexer: "npm:^0.1.2"
   checksum: 10/2df97f359696ad154fc171dcb55bc883fe6e833bca7a65e457b9358f3cb6312405ed70a8da24a77c1baac0639906cd52358dc0ce2ec1a937eaa631b934c94194
+  languageName: node
+  linkType: hard
+
+"hamt_plus@npm:1.0.2":
+  version: 1.0.2
+  resolution: "hamt_plus@npm:1.0.2"
+  checksum: 10/3680a1820b8e03c79e5977edb7e1ccb48b9db853f5a1fbee2d3b3615f8dded7fa276e158f52d3eea8cb6192a27b2622ae2112e197be7602a8f99814793dc096f
   languageName: node
   linkType: hard
 
@@ -13429,6 +13438,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"recoil@npm:^0.7.7":
+  version: 0.7.7
+  resolution: "recoil@npm:0.7.7"
+  dependencies:
+    hamt_plus: "npm:1.0.2"
+  peerDependencies:
+    react: ">=16.13.1"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 10/4ac9dfeddda2795f213b14290de09767b04fb98f1a760bcabe796c53830229f51de63a02cf54c18991c557f25cfeb9571a129ae0a19d734bd98cfc45eebbc82d
+  languageName: node
+  linkType: hard
+
 "recursive-readdir@npm:^2.2.2":
   version: 2.2.3
   resolution: "recursive-readdir@npm:2.2.3"
@@ -15701,6 +15726,13 @@ __metadata:
   dependencies:
     minimalistic-assert: "npm:^1.0.0"
   checksum: 10/c18b51c4e1fb19705c94b93c0cf093ba014606abceee949399d56074ef1863bf4897a8d884be24e8d224d18c9ce411cf6924006d0a5430492729af51256e067a
+  languageName: node
+  linkType: hard
+
+"web-streams-polyfill@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "web-streams-polyfill@npm:4.1.0"
+  checksum: 10/c6e802e6b83a8dc72acee8ec14b3a4af46d5ea4a15d0260303d7e4cab3c600716ff998b70457bc3ac0998073c0e73344c89400bfcc5f49a9bc0b10bb263c2f5f
   languageName: node
   linkType: hard
 
