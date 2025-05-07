@@ -32,8 +32,8 @@ if (!(clientId && audience)) {
 ReactDOM.render(
   <Auth0Provider
     domain="mause.au.auth0.com"
-    clientId={clientId}
-    audience={audience}
+    clientId={clientId!}
+    audience={audience!}
     useRefreshTokens={true}
     redirectUri={window.location.origin}
     cacheLocation="localstorage"
