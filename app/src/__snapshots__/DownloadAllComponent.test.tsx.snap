@@ -5,25 +5,25 @@ exports[`DownloadAllComponent 1`] = `
   <div>
     <nav
       aria-label="breadcrumb"
-      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-63vwl1-MuiTypography-root-MuiBreadcrumbs-root"
+      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
     >
       <ol
-        class="MuiBreadcrumbs-ol css-4pdmu4-MuiBreadcrumbs-ol"
+        class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
       >
         <li
           class="MuiBreadcrumbs-li"
         >
           <nav
-            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-63vwl1-MuiTypography-root-MuiBreadcrumbs-root"
+            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
           >
             <ol
-              class="MuiBreadcrumbs-ol css-4pdmu4-MuiBreadcrumbs-ol"
+              class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
             >
               <li
                 class="MuiBreadcrumbs-li"
               >
                 <a
-                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-bvyohc-MuiTypography-root-MuiLink-root"
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
                   href="/"
                 >
                   Home
@@ -31,7 +31,7 @@ exports[`DownloadAllComponent 1`] = `
               </li>
               <li
                 aria-hidden="true"
-                class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+                class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
               >
                 /
               </li>
@@ -39,7 +39,7 @@ exports[`DownloadAllComponent 1`] = `
                 class="MuiBreadcrumbs-li"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 css-rizt0-MuiTypography-root"
                 >
                   Search Results
                 </p>
@@ -49,7 +49,7 @@ exports[`DownloadAllComponent 1`] = `
         </li>
         <li
           aria-hidden="true"
-          class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+          class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
         >
           /
         </li>
@@ -57,13 +57,13 @@ exports[`DownloadAllComponent 1`] = `
           class="MuiBreadcrumbs-li"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-bvyohc-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
             href="/select/1/season"
           />
         </li>
         <li
           aria-hidden="true"
-          class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+          class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
         >
           /
         </li>
@@ -71,7 +71,7 @@ exports[`DownloadAllComponent 1`] = `
           class="MuiBreadcrumbs-li"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 css-1gqyz35-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 css-1bgbmvw-MuiTypography-root"
             data-testid="title"
           >
             Season 
@@ -122,25 +122,25 @@ exports[`DownloadAllComponent 2`] = `
   <div>
     <nav
       aria-label="breadcrumb"
-      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-63vwl1-MuiTypography-root-MuiBreadcrumbs-root"
+      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
     >
       <ol
-        class="MuiBreadcrumbs-ol css-4pdmu4-MuiBreadcrumbs-ol"
+        class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
       >
         <li
           class="MuiBreadcrumbs-li"
         >
           <nav
-            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-63vwl1-MuiTypography-root-MuiBreadcrumbs-root"
+            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
           >
             <ol
-              class="MuiBreadcrumbs-ol css-4pdmu4-MuiBreadcrumbs-ol"
+              class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
             >
               <li
                 class="MuiBreadcrumbs-li"
               >
                 <a
-                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-bvyohc-MuiTypography-root-MuiLink-root"
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
                   href="/"
                 >
                   Home
@@ -148,7 +148,7 @@ exports[`DownloadAllComponent 2`] = `
               </li>
               <li
                 aria-hidden="true"
-                class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+                class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
               >
                 /
               </li>
@@ -156,7 +156,7 @@ exports[`DownloadAllComponent 2`] = `
                 class="MuiBreadcrumbs-li"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 css-rizt0-MuiTypography-root"
                 >
                   Search Results
                 </p>
@@ -166,7 +166,7 @@ exports[`DownloadAllComponent 2`] = `
         </li>
         <li
           aria-hidden="true"
-          class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+          class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
         >
           /
         </li>
@@ -174,13 +174,13 @@ exports[`DownloadAllComponent 2`] = `
           class="MuiBreadcrumbs-li"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-bvyohc-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
             href="/select/1/season"
           />
         </li>
         <li
           aria-hidden="true"
-          class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+          class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
         >
           /
         </li>
@@ -188,7 +188,7 @@ exports[`DownloadAllComponent 2`] = `
           class="MuiBreadcrumbs-li"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 css-1gqyz35-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 css-1bgbmvw-MuiTypography-root"
             data-testid="title"
           >
             Season 
@@ -211,7 +211,7 @@ exports[`DownloadAllComponent 2`] = `
             </strong>
              
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
               href="/download"
             >
               Hello World
