@@ -20,11 +20,20 @@ declare module '@mui/styles/defaultTheme' {
 
 const theme = createTheme();
 
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
+
+if (!(clientId && audience)) {
+  console.error(
+    'Missing Auth0 client ID or audience. Please check your environment variables.',
+  );
+}
+
 ReactDOM.render(
   <Auth0Provider
     domain="mause.au.auth0.com"
-    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID!}
-    audience={process.env.REACT_APP_AUTH0_AUDIENCE!}
+    clientId={clientId}
+    audience={audience}
     useRefreshTokens={true}
     redirectUri={window.location.origin}
     cacheLocation="localstorage"
