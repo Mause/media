@@ -20,12 +20,12 @@ from sqlalchemy import (
 )
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
+    AsyncAttrs,
     AsyncEngine,
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import select
 from sqlalchemy.orm import (
     Mapped,
@@ -35,14 +35,13 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
-from sqlalchemy_repr import RepresentableBase
 
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .types import TmdbId
 from .utils import precondition
 
-Base = declarative_base(cls=RepresentableBase)
+Base = declarative_base(cls=AsyncAttrs)
 logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
