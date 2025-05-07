@@ -17,7 +17,12 @@ from sqlalchemy import (
     event,
 )
 from sqlalchemy.engine import URL, make_url
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker, AsyncAttrs
+from sqlalchemy.ext.asyncio import (
+    AsyncAttrs,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import select
 from sqlalchemy.orm import (
@@ -348,9 +353,7 @@ async def get_session_local(settings: Settings = Depends(get_settings)):
         def receive_do_connect(dialect, conn_rec, cargs, cparams):
             return psycopg2.connect(*cargs, **cparams)
 
-    return async_sessionmaker(
-        autocommit=False, autoflush=True, bind=engine
-    )
+    return async_sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
 async def get_db(session_local=Depends(get_session_local)):
