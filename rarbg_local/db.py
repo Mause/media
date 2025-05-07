@@ -22,7 +22,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import select
 from sqlalchemy.orm import (
     Mapped,
-    Session,
     declarative_base,
     joinedload,
     relationship,
@@ -273,9 +272,7 @@ async def get_all(session: AsyncSession, model: Type[T]) -> List[T]:
     return (
         (
             await session.execute(
-                select(model).options(
-                    joinedload(joint), joinedload(joint.added_by)
-                )
+                select(model).options(joinedload(joint), joinedload(joint.added_by))
             )
         )
         .scalars()
