@@ -42,11 +42,10 @@
     "use-socketio": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "generate": "npx @manifoldco/swagger-to-ts https://media.mause.me/openapi.json -o src/schema.ts",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "build": "vite build",
+    "test": "vitest",
+    "generate": "npx @manifoldco/swagger-to-ts https://media.mause.me/openapi.json -o src/schema.ts"
   },
   "eslintConfig": {
     "extends": [
