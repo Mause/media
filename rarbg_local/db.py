@@ -22,15 +22,16 @@ from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
+    async_sessionmaker,
     create_async_engine,
 )
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import select
 from sqlalchemy.orm import (
     Mapped,
     declarative_base,
     joinedload,
     relationship,
-    sessionmaker,
 )
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
@@ -386,10 +387,8 @@ async def get_async_engine(
 @singleton
 def get_session_local(
     engine: Annotated[Engine, Depends(get_async_engine)],
-) -> sessionmaker:
-    return sessionmaker(
-        autocommit=False, autoflush=True, bind=engine, class_=AsyncSession
-    )
+) -> async_sessionmaker:
+    return async_sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
 async def get_db(session_local=Depends(get_session_local)):
