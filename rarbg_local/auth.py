@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Dict, Optional
 
 import requests
@@ -9,6 +10,7 @@ from sqlalchemy.orm.session import Session
 from .db import User
 from .singleton import singleton
 
+logger = logging.getLogger(__name__)
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
 
 t = TTLCache(maxsize=10, ttl=3600)
@@ -48,11 +50,14 @@ def auth_hook(
 ) -> Optional[User]:
     token_info = jwkaas.get_token_info(header.credentials)
     if token_info is None:
+        logger.info("Token info is None")
         return None
 
     assert security_scopes.scopes
+    logger.info(f"Security scopes: {security_scopes.scopes}")
     for scope in security_scopes.scopes:
         if scope not in token_info['scope'].split():
+            logger.info(f"Scope {scope} not in token info")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Not enough permissions",
