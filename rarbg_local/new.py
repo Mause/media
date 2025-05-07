@@ -480,6 +480,7 @@ api.include_router(health, prefix='/diagnostics')
 
 security = Security(
     get_current_user,
+    scopes=['openid'],
 )
 
 
