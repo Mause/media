@@ -24,7 +24,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@use-it/interval": "^1.0.0",
     "@vtex/axios-concurrent-retry": "^4.0.11",
-    "axios": "^1.8.2",
+    "axios": "^0.30.0",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
