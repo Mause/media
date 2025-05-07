@@ -41,11 +41,10 @@
     "typescript-string-operations": "^1.5.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
+    "build": "vite build",
     "test": "vitest",
-    "generate": "npx @manifoldco/swagger-to-ts https://media.mause.me/openapi.json -o src/schema.ts",
-    "eject": "react-scripts eject"
+    "generate": "npx @manifoldco/swagger-to-ts https://media.mause.me/openapi.json -o src/schema.ts"
   },
   "eslintConfig": {
     "extends": [
