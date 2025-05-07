@@ -62,7 +62,18 @@ def auth_hook(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Not enough permissions",
             )
+    logger.info("Has required scopes")
 
     us = get_user_info(token_info, header)
 
-    return session.query(User).filter_by(email=us['email']).one_or_none()
+    user = session.query(User).filter_by(email=us['email']).one_or_none()
+
+    if user is None:
+        logger.info("User not found")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+        )
+    else:
+        logger.info(f"User found: {user}")
+        return user
