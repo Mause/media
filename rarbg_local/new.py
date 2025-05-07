@@ -483,6 +483,9 @@ security = Security(
 
 
 def create_app():
+    keys = ['HEROKU_SLUG_COMMIT', 'RAILWAY_GIT_COMMIT_SHA']
+    value = next((os.environ[key] for key in keys if key in os.environ), None)
+
     app = FastAPI(
         servers=[
             {
@@ -496,8 +499,8 @@ def create_app():
             {"url": "https://media.mause.me/", "description": "Production"},
         ],
         title='Media',
-        version='0.1.0-' + os.environ.get('HEROKU_SLUG_COMMIT', 'dev'),
-        debug='HEROKU' not in os.environ,
+        version='0.1.0-' + (value or 'dev'),
+        debug=not ('HEROKU' in os.environ or 'RAILWAY_ENVIRONMENT_NAME' in os.environ),
     )
     #    app.middleware_stack.generate_plain_text = generate_plain_text
     app.include_router(
