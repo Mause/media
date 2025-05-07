@@ -6,6 +6,7 @@ from typing import AsyncGenerator, Callable, Dict, List, Literal, Optional, Type
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.security import (
@@ -509,6 +510,18 @@ def create_app():
         dependencies=[security],
     )
     app.include_router(root, prefix='')
+
+    origins = []
+    if 'FRONTEND_DOMAIN' in os.environ:
+        origins.append('https://' + os.environ['FRONTEND_DOMAIN'])
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
     simplify_operation_ids(app)
 
     return app
