@@ -14,27 +14,31 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
-    create_engine,
     event,
 )
 from sqlalchemy.engine import URL, make_url
+from sqlalchemy.ext.asyncio import (
+    AsyncAttrs,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.future import select
 from sqlalchemy.orm import (
     Mapped,
-    Session,
     declarative_base,
     joinedload,
     relationship,
-    sessionmaker,
 )
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
-from sqlalchemy_repr import RepresentableBase
 
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .utils import precondition
 
-Base = declarative_base(cls=RepresentableBase)
+Base = declarative_base(cls=AsyncAttrs)
 logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
@@ -261,26 +265,38 @@ def create_episode(
     return ed
 
 
-def get_all(session: Session, model: Type[T]) -> List[T]:
+async def get_all(session: AsyncSession, model: Type[T]) -> List[T]:
     if model == MovieDetails:
         joint = MovieDetails.download
     elif model == EpisodeDetails:
         joint = EpisodeDetails.download
     else:
         raise ValueError(f'Unknown model: {model}')
-    return session.query(model).options(joinedload(joint)).all()
+    return (
+        (
+            await session.execute(
+                select(model).options(joinedload(joint), joinedload(joint.added_by))
+            )
+        )
+        .scalars()
+        .all()
+    )
 
 
-def get_episodes(session: Session) -> List[EpisodeDetails]:
-    return get_all(session, EpisodeDetails)
+async def get_episodes(session: AsyncSession) -> List[EpisodeDetails]:
+    return await get_all(session, EpisodeDetails)
 
 
-def get_movies(session: Session) -> List[MovieDetails]:
-    return get_all(session, MovieDetails)
+async def get_movies(session: AsyncSession) -> List[MovieDetails]:
+    return await get_all(session, MovieDetails)
 
 
-def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> T:
-    instance = session.query(model).filter_by(**kwargs).first()
+async def get_or_create(
+    session: AsyncSession, model: Type[T], defaults=None, **kwargs
+) -> T:
+    instance = (
+        (await session.execute(select(model).filter_by(**kwargs))).scalars().first()
+    )
     if instance:
         return instance
     params = {k: v for k, v in kwargs.items() if not isinstance(v, ClauseElement)}
@@ -292,8 +308,10 @@ def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> 
 
 def normalise_db_url(database_url: str) -> URL:
     parsed = make_url(database_url)
-    if parsed.drivername == 'postgres':
-        parsed = parsed.set(drivername='postgresql')
+    if parsed.get_backend_name() == 'postgres':
+        parsed = parsed.set(drivername='postgresql+asyncpg')
+    else:
+        parsed = parsed.set(drivername='sqlite+aiosqlite')
     return parsed
 
 
@@ -301,30 +319,31 @@ MAX_TRIES = 5
 
 
 @singleton
-def get_session_local(settings: Settings = Depends(get_settings)):
+async def get_session_local(settings: Settings = Depends(get_settings)):
     db_url = normalise_db_url(settings.database_url)
 
     logger.info('db_url: %s', db_url)
 
-    sqlite = db_url.drivername == 'sqlite'
+    sqlite = db_url.get_backend_name() == 'sqlite'
     if sqlite:
-        engine = create_engine(
+        engine = create_async_engine(
             db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
         )
 
-        @event.listens_for(engine, 'connect')
+        @event.listens_for(engine.sync_engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
-            dbapi_con.create_collation(
+            connection = dbapi_con.driver_connection._connection
+            connection.create_collation(
                 "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
             )
-            dbapi_con.execute('pragma foreign_keys=ON')
+            connection.execute('pragma foreign_keys=ON')
 
     else:
-        engine = create_engine(
+        engine = create_async_engine(
             db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
         )
 
-        @event.listens_for(engine, "do_connect")
+        @event.listens_for(engine.sync_engine, "do_connect")
         @backoff.on_exception(
             backoff.fibo,
             psycopg2.OperationalError,
@@ -334,12 +353,12 @@ def get_session_local(settings: Settings = Depends(get_settings)):
         def receive_do_connect(dialect, conn_rec, cargs, cparams):
             return psycopg2.connect(*cargs, **cparams)
 
-    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    return async_sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
-def get_db(session_local=Depends(get_session_local)):
+async def get_db(session_local=Depends(get_session_local)):
     sl = session_local()
     try:
         yield sl
     finally:
-        sl.close()
+        await sl.close()

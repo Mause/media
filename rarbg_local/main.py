@@ -7,7 +7,9 @@ from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Uni
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
-from sqlalchemy.orm.session import Session, make_transient
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.orm.session import make_transient
 
 from .db import (
     Download,
@@ -86,9 +88,9 @@ def extract_marker(title: str) -> Tuple[str, Optional[str]]:
     return cast(Tuple[str, str], tuple(m.groups()[1:]))
 
 
-def add_single(
+async def add_single(
     *,
-    session: Session,
+    session: AsyncSession,
     magnet: str,
     subpath: str,
     is_tv: bool,
@@ -114,8 +116,10 @@ def add_single(
     )['hashString']
 
     already = (
-        session.query(Download).filter_by(transmission_id=transmission_id).one_or_none()
-    )
+        await session.execute(
+            select(Download).filter_by(transmission_id=transmission_id)
+        )
+    ).one_or_none()
 
     print('already', already)
     if not already:
@@ -209,8 +213,8 @@ async def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDeta
     )
 
 
-async def resolve_series(session: Session) -> List[SeriesDetails]:
-    episodes = get_episodes(session)
+async def resolve_series(session: AsyncSession) -> List[SeriesDetails]:
+    episodes = await get_episodes(session)
 
     return [
         await make_series_details(imdb_id, show)

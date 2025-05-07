@@ -4,7 +4,9 @@ import requests
 from cachetools import TTLCache
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, SecurityScopes
-from sqlalchemy.orm.session import Session
+from jwkaas import JWKaas
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
 from .db import User
 from .singleton import singleton
@@ -16,8 +18,6 @@ t = TTLCache(maxsize=10, ttl=3600)
 
 @singleton
 def get_my_jwkaas():
-    from jwkaas import JWKaas
-
     return JWKaas(
         ['https://localhost:3000/api/v2', f'{AUTH0_DOMAIN}userinfo'],
         AUTH0_DOMAIN,
@@ -39,9 +39,9 @@ def get_user_info(
     return get_user_info(token_info, rest)
 
 
-def auth_hook(
+async def auth_hook(
     *,
-    session: Session,
+    session: AsyncSession,
     header: HTTPAuthorizationCredentials,
     security_scopes: SecurityScopes,
     jwkaas=Depends(get_my_jwkaas),
@@ -60,4 +60,8 @@ def auth_hook(
 
     us = get_user_info(token_info, header)
 
-    return session.query(User).filter_by(email=us['email']).one_or_none()
+    return (
+        (await session.execute(select(User).filter_by(email=us['email'])))
+        .scalars()
+        .one_or_none()
+    )

@@ -7,11 +7,20 @@ from ..new import get_current_user, security
 
 
 @mark.asyncio
-async def test_auth(responses, user, fastapi_app, test_client):
+async def test_auth(responses, session, user, fastapi_app, test_client):
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives.asymmetric import rsa
     from jwkaas import JWKaas
     from jwt.api_jwt import PyJWT
+
+    await session.refresh(user)
+    # Arrange
+    add_json(
+        responses,
+        'GET',
+        'https://mause.au.auth0.com/userinfo',
+        {'email': user.email},
+    )
 
     # Arrange
     KID = 'kid'
