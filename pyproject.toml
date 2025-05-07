@@ -50,7 +50,6 @@ dev = [
     "webdriver-manager==3.2.2",
     "pre-commit>=4.2.0",
     "pytest-snapshot",
-    "flake8==3.8.4",
     "factory-boy==3.2.0",
     "isort==5.7.0",
     "pytest-asyncio==0.14.0",
