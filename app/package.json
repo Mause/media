@@ -36,7 +36,6 @@
     "react-helmet": "^6.1.0",
     "react-loading": "^2.0.3",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^5",
     "swr": "^0.4.0",
     "typescript": "^5",
     "typescript-string-operations": "^1.5.1",
@@ -84,13 +83,15 @@
     "@types/react-helmet": "^6.1.0",
     "@types/react-router-dom": "^5.1.7",
     "@types/socket.io-client": "^1.4.34",
+    "@vitejs/plugin-react": "^4.4.1",
     "colors.css": "^3.0.0",
     "eslint-config-react-app": "^7.0.0",
     "history": "^4.9.0",
     "jest-junit": "^12.0.0",
     "mockdate": "^3.0.2",
     "moxios": "^0.4.0",
-    "prettier": "2.2.1"
+    "prettier": "2.2.1",
+    "vite": "^6.3.5"
   },
   "prettier": {
     "singleQuote": true,
