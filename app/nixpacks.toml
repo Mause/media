@@ -4,6 +4,7 @@
 [variables]
     NPM_CONFIG_UPDATE_NOTIFIER = 'false' # the update notification is relatively useless in a production environment
     NPM_CONFIG_FUND = 'false' # the fund notification is also pretty useless in a production environment
+    REACT_APP_API_PREFIX = "${{api.RAILWAY_PUBLIC_DOMAIN}}"
 
 # download caddy from nix
 [phases.caddy]
