@@ -385,7 +385,7 @@ async def get_async_engine(
 
 @singleton
 def get_session_local(
-    engine: Annotated[Engine, Depends(get_async_engine)],
+    engine: Annotated[AsyncEngine, Depends(get_async_engine)],
 ) -> async_sessionmaker:
     return async_sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
