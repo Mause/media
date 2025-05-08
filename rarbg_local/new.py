@@ -162,7 +162,7 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
     async def decorator(*args, **kwargs):
         async def internal() -> AsyncGenerator[str, None]:
             async for rset in func(*args, **kwargs):
-                yield f'data: {rset.json()}\n\n'
+                yield f'data: {rset.model_dump_json()}\n\n'
             yield 'data:\n\n'
 
         return StreamingResponse(
@@ -407,7 +407,9 @@ tv_ns = APIRouter(tags=['tv'])
 @tv_ns.get('/{tmdb_id}', response_model=TvResponse)
 async def api_tv(tmdb_id: TmdbId):
     tv = await get_tv(tmdb_id)
-    return TvResponse(**tv.dict(), imdb_id=await get_tv_imdb_id(tmdb_id), title=tv.name)
+    return TvResponse(
+        **tv.model_dump(), imdb_id=await get_tv_imdb_id(tmdb_id), title=tv.name
+    )
 
 
 @tv_ns.get('/{tmdb_id}/season/{season}', response_model=TvSeasonResponse)
