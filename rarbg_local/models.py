@@ -1,12 +1,9 @@
 from datetime import date, datetime
 from enum import Enum
-from functools import reduce
-from typing import Annotated, Any, Dict, List, Optional, Tuple, TypeVar
+from typing import Annotated, Dict, List, Optional, Tuple, TypeVar
 
 from pydantic import BaseModel, ConfigDict
-from pydantic.main import _missing
 from pydantic.types import StringConstraints  # type: ignore[attr-defined]
-from pydantic.utils import GetterDict
 
 from .db import MonitorMediaType
 from .types import TmdbId
@@ -17,22 +14,6 @@ class Orm(BaseModel):
 
 
 T = TypeVar('T')
-
-
-def map_to(config: Dict[str, str]) -> ConfigDict:
-    class getter_dict(GetterDict):
-        def get(self, name: Any, default: Optional[Any] = None) -> Any:
-            if name in config:
-                first, *parts = config[name].split('.')
-                v = super().get(first, default)
-                if v is _missing:
-                    return v
-                return reduce(getattr, parts, v)
-            else:
-                v = super().get(name, default)
-            return v
-
-    return {'getter_dict': getter_dict, 'orm_mode': True}
 
 
 class ProviderSource(Enum):
@@ -127,10 +108,8 @@ class UserShim(Orm):
 class MonitorGet(MonitorPost):
     id: int
     title: str
-    added_by: str
+    added_by: UserSchema
     status: bool = False
-
-    model_config = map_to({'added_by': 'added_by.username'})
 
 
 class DownloadPost(BaseModel):

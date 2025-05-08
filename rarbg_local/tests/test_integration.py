@@ -363,6 +363,10 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
     ls = (await test_client.get('/api/monitor')).json()
 
+    added_by = {
+        'first_name': '',
+        'username': 'python',
+    }
     assert ls == [
         {
             'type': 'MOVIE',
@@ -370,10 +374,10 @@ async def test_delete_monitor(aioresponses, test_client, session):
             'tmdb_id': 5,
             'id': 1,
             'status': False,
-            'added_by': 'python',
+            'added_by': added_by,
         },
         {
-            'added_by': 'python',
+            'added_by': added_by,
             'id': 2,
             'status': False,
             'title': 'Hello World',

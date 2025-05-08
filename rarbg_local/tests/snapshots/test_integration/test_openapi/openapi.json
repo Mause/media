@@ -1469,8 +1469,7 @@
             "title": "Title"
           },
           "added_by": {
-            "type": "string",
-            "title": "Added By"
+            "$ref": "#/components/schemas/UserSchema"
           },
           "status": {
             "type": "boolean",
