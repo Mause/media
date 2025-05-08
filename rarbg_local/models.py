@@ -1,9 +1,9 @@
 from datetime import date, datetime
 from enum import Enum
 from functools import reduce
-from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar
+from typing import Any, Dict, List, Optional, Tuple, TypeVar
 
-from pydantic import BaseModel, constr
+from pydantic import BaseModel, ConfigDict, constr
 from pydantic.main import _missing
 from pydantic.utils import GetterDict
 
@@ -12,30 +12,26 @@ from .types import TmdbId
 
 
 class Orm(BaseModel):
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict({'orm_mode': True})
 
 
 T = TypeVar('T')
 
 
-def map_to(config: Dict[str, str]) -> Type:
-    class Config:
-        class getter_dict(GetterDict):
-            def get(self, name: Any, default: Optional[Any] = None) -> Any:
-                if name in config:
-                    first, *parts = config[name].split('.')
-                    v = super().get(first, default)
-                    if v is _missing:
-                        return v
-                    return reduce(getattr, parts, v)
-                else:
-                    v = super().get(name, default)
-                return v
+def map_to(config: Dict[str, str]) -> ConfigDict:
+    class getter_dict(GetterDict):
+        def get(self, name: Any, default: Optional[Any] = None) -> Any:
+            if name in config:
+                first, *parts = config[name].split('.')
+                v = super().get(first, default)
+                if v is _missing:
+                    return v
+                return reduce(getattr, parts, v)
+            else:
+                v = super().get(name, default)
+            return v
 
-        orm_mode = True
-
-    return Config
+    return {'getter_dict': getter_dict, 'orm_mode': True}
 
 
 class ProviderSource(Enum):
@@ -133,7 +129,7 @@ class MonitorGet(MonitorPost):
     added_by: str
     status: bool = False
 
-    Config = map_to({'added_by': 'added_by.username'})
+    model_config = map_to({'added_by': 'added_by.username'})
 
 
 class DownloadPost(BaseModel):
