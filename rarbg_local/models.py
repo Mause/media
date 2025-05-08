@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from enum import Enum
 from functools import reduce
-from typing import Any, Dict, List, Optional, Tuple, TypeVar
+from typing import Annotated, Any, Dict, List, Optional, Tuple, TypeVar
 
 from pydantic import BaseModel, ConfigDict, constr
 from pydantic.main import _missing
@@ -134,7 +134,7 @@ class MonitorGet(MonitorPost):
 
 class DownloadPost(BaseModel):
     tmdb_id: TmdbId
-    magnet: constr(regex=r'^magnet:')  # type: ignore
+    magnet: Annotated[str, constr(pattern=r'^magnet:')]
     season: Optional[int] = None
     episode: Optional[int] = None
 
