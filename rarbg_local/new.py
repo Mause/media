@@ -2,7 +2,17 @@ import logging
 import os
 import traceback
 from functools import wraps
-from typing import AsyncGenerator, Callable, Dict, List, Literal, Optional, Type, Union
+from typing import (
+    Annotated,
+    AsyncGenerator,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Type,
+    Union,
+)
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
@@ -108,7 +118,7 @@ openid_connect = XOpenIdConnect(
 async def get_current_user(
     security_scopes: SecurityScopes,
     session=Depends(get_db),
-    header=Security(openid_connect, scopes=['openid']),
+    header=Depends(openid_connect),
     jwkaas=Depends(get_my_jwkaas),
 ):
     user = auth_hook(
@@ -118,6 +128,12 @@ async def get_current_user(
         return user
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+security = Security(
+    get_current_user,
+    scopes=['openid'],
+)
 
 
 @api.get('/user/unauthorized')
@@ -229,7 +245,7 @@ async def select(tmdb_id: TmdbId, season: int):
 )
 async def download_post(
     things: List[DownloadPost],
-    added_by: User = Depends(get_current_user),
+    added_by: Annotated[User, security],
     session: Session = Depends(get_db),
 ) -> List[Union[MovieDetails, EpisodeDetails]]:
     results: List[Union[MovieDetails, EpisodeDetails]] = []
@@ -338,7 +354,7 @@ monitor_ns = APIRouter(tags=['monitor'])
 
 @monitor_ns.get('', response_model=List[MonitorGet])
 async def monitor_get(
-    user: User = Depends(get_current_user), session: Session = Depends(get_db)
+    user: Annotated[User, security], session: Session = Depends(get_db)
 ):
     return session.query(Monitor).all()
 
@@ -367,7 +383,7 @@ async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
 @monitor_ns.post('', response_model=MonitorGet, status_code=201)
 async def monitor_post(
     monitor: MonitorPost,
-    user: User = Depends(get_current_user),
+    user: Annotated[User, security],
     session: Session = Depends(get_db),
 ):
     media = await validate_id(monitor.type, monitor.tmdb_id)
@@ -477,10 +493,6 @@ async def static(
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
-
-security = Security(
-    get_current_user,
-)
 
 
 def create_app():
