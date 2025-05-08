@@ -1,0 +1,38 @@
+{
+  "data": {
+    "monitors": [
+      {
+        "title": "Meagan Pena",
+        "type": "TV",
+        "addedBy": {
+          "username": "Vincent Miller"
+        }
+      }
+    ],
+    "movie": {
+      "title": "Christopher Robinson",
+      "imdbId": "tt293584"
+    },
+    "tv": {
+      "name": "Kathleen Williamson",
+      "imdbId": "tt000000",
+      "numberOfSeasons": 1,
+      "seasons": [
+        {
+          "episodeCount": 1,
+          "seasonNumber": 1
+        }
+      ],
+      "season": {
+        "episodes": [
+          {
+            "name": "Angel Robertson",
+            "id": "948",
+            "airDate": "1998-08-18",
+            "episodeNumber": 564
+          }
+        ]
+      }
+    }
+  }
+}

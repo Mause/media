@@ -20,7 +20,7 @@ from ..main import get_episodes
 from ..models import ITorrent
 from ..new import SearchResponse, Settings, get_current_user, get_settings
 from ..providers.piratebay import PirateBayProvider
-from .conftest import add_json, themoviedb, tolist
+from .conftest import add_json, assert_match_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
     MovieDetailsFactory,
@@ -192,10 +192,6 @@ def shallow(d: Dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 
-def assert_match_json(snapshot, res, name):
-    snapshot.assert_match(json.dumps(res.json(), indent=2), name)
-
-
 @mark.asyncio
 async def test_index(
     responses, aioresponses, test_client, get_torrent, snapshot, session, user
@@ -320,11 +316,11 @@ async def test_select_season(aioresponses, test_client: TestClient, snapshot) ->
     themoviedb(
         aioresponses,
         '/tv/100000',
-        {
-            'number_of_seasons': 1,
-            'seasons': [{'episode_count': 1, 'season_number': 1}],
-            'name': 'hello',
-        },
+        TvApiResponseFactory(
+            number_of_seasons=1,
+            seasons=[{'episode_count': 1, 'season_number': 1}],
+            name='hello',
+        ).dict(),
     )
     themoviedb(aioresponses, '/tv/100000/external_ids', {'imdb_id': 'tt1000'})
 

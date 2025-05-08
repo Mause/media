@@ -43,6 +43,7 @@ from .db import (
     get_db,
     get_movies,
 )
+from .graphql_endpoint import api as graphql
 from .health import router as health
 from .main import (
     add_single,
@@ -521,6 +522,7 @@ def create_app():
         prefix='/api',
         dependencies=[security],
     )
+    app.include_router(graphql, prefix='/graphql')
     app.include_router(root, prefix='')
 
     origins = []
