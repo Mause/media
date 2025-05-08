@@ -3,8 +3,9 @@ from enum import Enum
 from functools import reduce
 from typing import Annotated, Any, Dict, List, Optional, Tuple, TypeVar
 
-from pydantic import BaseModel, ConfigDict, constr
+from pydantic import BaseModel, ConfigDict
 from pydantic.main import _missing
+from pydantic.types import StringConstraints  # type: ignore[attr-defined]
 from pydantic.utils import GetterDict
 
 from .db import MonitorMediaType
@@ -134,7 +135,7 @@ class MonitorGet(MonitorPost):
 
 class DownloadPost(BaseModel):
     tmdb_id: TmdbId
-    magnet: Annotated[str, constr(pattern=r'^magnet:')]
+    magnet: Annotated[str, StringConstraints(pattern=r'^magnet:')]
     season: Optional[int] = None
     episode: Optional[int] = None
 
