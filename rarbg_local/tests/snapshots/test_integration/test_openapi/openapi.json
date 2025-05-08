@@ -150,7 +150,14 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Season"
             }
           },
@@ -159,7 +166,14 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Episode"
             }
           }
@@ -864,7 +878,14 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Season"
             }
           },
@@ -873,7 +894,14 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Episode"
             }
           }
@@ -927,7 +955,14 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Season"
             }
           },
@@ -936,7 +971,14 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Episode"
             }
           }
@@ -1047,11 +1089,25 @@
             "title": "Magnet"
           },
           "season": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Season"
           },
           "episode": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Episode"
           }
         },
@@ -1125,8 +1181,15 @@
             "title": "Episode Number"
           },
           "air_date": {
-            "type": "string",
-            "format": "date",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Air Date"
           }
         },
@@ -1156,7 +1219,14 @@
             "title": "Season"
           },
           "episode": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Episode"
           }
         },
@@ -1165,7 +1235,8 @@
           "id",
           "download",
           "show_title",
-          "season"
+          "season",
+          "episode"
         ],
         "title": "EpisodeDetailsSchema"
       },
@@ -1176,7 +1247,14 @@
             "title": "Seasonnum"
           },
           "epnum": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Epnum"
           }
         },
@@ -1225,7 +1303,8 @@
           "component_name",
           "component_type",
           "status",
-          "time"
+          "time",
+          "output"
         ],
         "title": "HealthcheckResponse"
       },
@@ -1261,7 +1340,14 @@
             "title": "Category"
           },
           "episode_info": {
-            "$ref": "#/components/schemas/EpisodeInfo"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EpisodeInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -1484,7 +1570,14 @@
             "$ref": "#/components/schemas/MediaType"
           },
           "year": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Year"
           },
           "imdbID": {
@@ -1496,6 +1589,7 @@
         "required": [
           "title",
           "type",
+          "year",
           "imdbID"
         ],
         "title": "SearchResponse"
@@ -1599,7 +1693,14 @@
             "title": "Seasons"
           },
           "imdb_id": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Imdb Id"
           },
           "title": {
@@ -1611,6 +1712,7 @@
         "required": [
           "number_of_seasons",
           "seasons",
+          "imdb_id",
           "title"
         ],
         "title": "TvResponse"

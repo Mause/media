@@ -10,8 +10,15 @@
       "$ref": "#/definitions/MediaType"
     },
     "year": {
-      "title": "Year",
-      "type": "integer"
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Year"
     },
     "imdbID": {
       "title": "Imdbid",
@@ -21,6 +28,7 @@
   "required": [
     "title",
     "type",
+    "year",
     "imdbID"
   ],
   "definitions": {
