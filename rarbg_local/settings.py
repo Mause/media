@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from pydantic import BaseSettings, SecretStr
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings
 
 from .singleton import singleton
 
