@@ -46,6 +46,7 @@ repos:
           - types-tabulate
           - types-lxml
           - types-selenium
+          - types-cachetools
           - alembic
           - pydantic==1.10.22
           - lxml
