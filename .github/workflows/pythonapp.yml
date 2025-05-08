@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           uv sync --dev --locked
-      - run: uvx ty rarbg_local
+      - run: uvx ty check rarbg_local
       - name: Run mypy
         uses: liskin/gh-problem-matcher-wrap@v3
         with:
