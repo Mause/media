@@ -170,12 +170,15 @@ sdist = { url = "https://files.pythonhosted.org/packages/52/9a/0eb3fd37d4f9ad1e9
 
 [[package]]
 name = "asyncache"
-version = "0.1.1"
+version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cachetools" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5b/41/698635e80887e59dab88ccb908531fd79514edd1582ec340cfce65039574/asyncache-0.1.1.tar.gz", hash = "sha256:c741b3ccef2c5291b3da05d97bab3cc8d50f2ac8efd7fd79d47e3d7b6a3774de", size = 6655, upload-time = "2018-11-03T12:40:44.516Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/49/cf/17f8a6b6b97f77b5981fbce1266913e718daaa3467b46f60a785cbaadc29/asyncache-0.3.1.tar.gz", hash = "sha256:9a1e60a75668e794657489bdea6540ee7e3259c483517b934670db7600bf5035", size = 3797, upload-time = "2022-11-15T10:06:47.476Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2f/94/51927deb4f40872361ec4f5534f68f7a9ce81c4ef20bf5cd765307f4c15d/asyncache-0.3.1-py3-none-any.whl", hash = "sha256:ef20a1024d265090dd1e0785c961cf98b9c32cc7d9478973dcf25ac1b80011f5", size = 3722, upload-time = "2022-11-15T10:06:45.546Z" },
+]
 
 [[package]]
 name = "asyncpg"
@@ -777,15 +780,6 @@ wheels = [
 ]
 
 [[package]]
-name = "isort"
-version = "5.7.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a2/f7/f50fc9555dc0fe2dc1e7f69d93f71961d052857c296cad0fb6d275b20008/isort-5.7.0.tar.gz", hash = "sha256:c729845434366216d320e936b8ad6f9d681aab72dc7cbc2d51bedc3582f3ad1e", size = 169353, upload-time = "2020-12-31T01:15:43.126Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/cc/89/6888f573886e9dc0906ec98f1b15888de20919a142c355d7f57ebd977d36/isort-5.7.0-py3-none-any.whl", hash = "sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc", size = 104240, upload-time = "2020-12-31T01:15:41.299Z" },
-]
-
-[[package]]
 name = "jedi"
 version = "0.19.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1074,7 +1068,6 @@ dev = [
     { name = "aiosqlite" },
     { name = "async-asgi-testclient" },
     { name = "factory-boy" },
-    { name = "isort" },
     { name = "lxml" },
     { name = "pre-commit" },
     { name = "pytest" },
@@ -1084,6 +1077,7 @@ dev = [
     { name = "pytest-snapshot" },
     { name = "pytest-sugar" },
     { name = "responses" },
+    { name = "types-cachetools" },
     { name = "types-lxml" },
     { name = "types-requests" },
     { name = "types-selenium" },
@@ -1097,7 +1091,7 @@ requires-dist = [
     { name = "aiohttp", specifier = "==3.11.18" },
     { name = "alembic", specifier = "==1.15.2" },
     { name = "aniso8601", specifier = "==8.1.1" },
-    { name = "asyncache", specifier = "==0.1.1" },
+    { name = "asyncache", specifier = "==0.3.1" },
     { name = "asyncpg", specifier = ">=0.30.0" },
     { name = "backoff", specifier = "==1.11.1" },
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
@@ -1136,7 +1130,6 @@ dev = [
     { name = "aiosqlite", specifier = ">=0.21.0" },
     { name = "async-asgi-testclient", specifier = "==1.4.11" },
     { name = "factory-boy", specifier = "==3.2.0" },
-    { name = "isort", specifier = "==5.7.0" },
     { name = "lxml" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pytest" },
@@ -1146,6 +1139,7 @@ dev = [
     { name = "pytest-snapshot" },
     { name = "pytest-sugar" },
     { name = "responses", specifier = "==0.12.1" },
+    { name = "types-cachetools", specifier = ">=5.5.0.20240820" },
     { name = "types-lxml", specifier = ">=2025.3.30" },
     { name = "types-requests", specifier = ">=2.32.0.20250328" },
     { name = "types-selenium", specifier = ">=3.141.9" },
@@ -2042,6 +2036,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/d1/3c/8b4358e81f2f2cfe71b66a267f023a91db20a817b9425dd964873796980a/trio_websocket-0.12.2.tar.gz", hash = "sha256:22c72c436f3d1e264d0910a3951934798dcc5b00ae56fc4ee079d46c7cf20fae", size = 33549, upload-time = "2025-02-25T05:16:58.947Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c7/19/eb640a397bba49ba49ef9dbe2e7e5c04202ba045b6ce2ec36e9cadc51e04/trio_websocket-0.12.2-py3-none-any.whl", hash = "sha256:df605665f1db533f4a386c94525870851096a223adcb97f72a07e8b4beba45b6", size = 21221, upload-time = "2025-02-25T05:16:57.545Z" },
+]
+
+[[package]]
+name = "types-cachetools"
+version = "5.5.0.20240820"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c2/7e/ad6ba4a56b2a994e0f0a04a61a50466b60ee88a13d10a18c83ac14a66c61/types-cachetools-5.5.0.20240820.tar.gz", hash = "sha256:b888ab5c1a48116f7799cd5004b18474cd82b5463acb5ffb2db2fc9c7b053bc0", size = 4198, upload-time = "2024-08-20T02:30:07.525Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/27/4d/fd7cc050e2d236d5570c4d92531c0396573a1e14b31735870e849351c717/types_cachetools-5.5.0.20240820-py3-none-any.whl", hash = "sha256:efb2ed8bf27a4b9d3ed70d33849f536362603a90b8090a328acf0cd42fda82e2", size = 4149, upload-time = "2024-08-20T02:30:06.461Z" },
 ]
 
 [[package]]

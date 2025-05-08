@@ -46,6 +46,7 @@ repos:
           - types-tabulate
           - types-lxml
           - types-selenium
+          - types-cachetools
           - alembic
           - pydantic==1.10.22
           - lxml
@@ -61,6 +62,6 @@ repos:
       - id: ruff-format
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv version.
-    rev: 0.7.2
+    rev: 0.7.3
     hooks:
       - id: uv-lock

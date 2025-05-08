@@ -53,11 +53,15 @@ export async function load<T>(
   params?: string,
   headers?: any,
 ): Promise<T> {
-  const t = await Axios.get<T>(`/api/${path}`, {
-    params,
-    withCredentials: true,
-    headers,
-  });
+  const prefix = process.env.REACT_APP_API_PREFIX;
+  const t = await Axios.get<T>(
+    `${prefix ? `https://${prefix}` : ''}/api/${path}`,
+    {
+      params,
+      withCredentials: true,
+      headers,
+    },
+  );
   return t && t.data;
 }
 
