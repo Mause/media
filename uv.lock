@@ -780,15 +780,6 @@ wheels = [
 ]
 
 [[package]]
-name = "isort"
-version = "5.7.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a2/f7/f50fc9555dc0fe2dc1e7f69d93f71961d052857c296cad0fb6d275b20008/isort-5.7.0.tar.gz", hash = "sha256:c729845434366216d320e936b8ad6f9d681aab72dc7cbc2d51bedc3582f3ad1e", size = 169353, upload-time = "2020-12-31T01:15:43.126Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/cc/89/6888f573886e9dc0906ec98f1b15888de20919a142c355d7f57ebd977d36/isort-5.7.0-py3-none-any.whl", hash = "sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc", size = 104240, upload-time = "2020-12-31T01:15:41.299Z" },
-]
-
-[[package]]
 name = "jedi"
 version = "0.19.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1077,7 +1068,6 @@ dev = [
     { name = "aiosqlite" },
     { name = "async-asgi-testclient" },
     { name = "factory-boy" },
-    { name = "isort" },
     { name = "lxml" },
     { name = "pre-commit" },
     { name = "pytest" },
@@ -1140,7 +1130,6 @@ dev = [
     { name = "aiosqlite", specifier = ">=0.21.0" },
     { name = "async-asgi-testclient", specifier = "==1.4.11" },
     { name = "factory-boy", specifier = "==3.2.0" },
-    { name = "isort", specifier = "==5.7.0" },
     { name = "lxml" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pytest" },
