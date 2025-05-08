@@ -15,7 +15,9 @@ if 'SENTRY_DSN' in os.environ:
     sentry_sdk.init(
         os.environ['SENTRY_DSN'],
         integrations=[SqlalchemyIntegration()],
-        release=os.environ.get('HEROKU_SLUG_COMMIT', os.environ.get('RAILWAY_GIT_COMMIT_SHA')),
+        release=os.environ.get(
+            'HEROKU_SLUG_COMMIT', os.environ.get('RAILWAY_GIT_COMMIT_SHA')
+        ),
         traces_sample_rate=1,
     )
 else:
