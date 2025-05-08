@@ -21,7 +21,7 @@ if 'SENTRY_DSN' in os.environ:
         traces_sample_rate=1,
     )
 else:
-    logger.warn('Not configuring sentry')
+    logger.warning('Not configuring sentry')
 
 app = create_app()
 
