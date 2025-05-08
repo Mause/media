@@ -1444,12 +1444,12 @@
         "title": "InnerTorrentFile"
       },
       "MediaType": {
+        "type": "string",
         "enum": [
           "series",
           "movie"
         ],
-        "title": "MediaType",
-        "description": "An enumeration."
+        "title": "MediaType"
       },
       "MonitorGet": {
         "properties": {
@@ -1489,12 +1489,12 @@
         "title": "MonitorGet"
       },
       "MonitorMediaType": {
+        "type": "string",
         "enum": [
           "MOVIE",
           "TV"
         ],
-        "title": "MonitorMediaType",
-        "description": "An enumeration."
+        "title": "MonitorMediaType"
       },
       "MonitorPost": {
         "properties": {
@@ -1549,6 +1549,7 @@
         "title": "MovieResponse"
       },
       "ProviderSource": {
+        "type": "string",
         "enum": [
           "kickass",
           "horriblesubs",
@@ -1557,8 +1558,7 @@
           "nyaasi",
           "piratebay"
         ],
-        "title": "ProviderSource",
-        "description": "An enumeration."
+        "title": "ProviderSource"
       },
       "SearchResponse": {
         "properties": {
