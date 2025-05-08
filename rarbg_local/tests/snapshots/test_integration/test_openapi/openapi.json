@@ -988,7 +988,7 @@
           },
           "complete": {
             "items": {
-              "items": [
+              "prefixItems": [
                 {
                   "type": "string"
                 },
@@ -1008,7 +1008,7 @@
           },
           "incomplete": {
             "items": {
-              "items": [
+              "prefixItems": [
                 {
                   "type": "string"
                 },
