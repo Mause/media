@@ -9873,14 +9873,14 @@ __metadata:
   linkType: hard
 
 "jest-junit@npm:^12.0.0":
-  version: 12.0.0
-  resolution: "jest-junit@npm:12.0.0"
+  version: 12.3.0
+  resolution: "jest-junit@npm:12.3.0"
   dependencies:
     mkdirp: "npm:^1.0.4"
     strip-ansi: "npm:^5.2.0"
-    uuid: "npm:^3.3.3"
+    uuid: "npm:^8.3.2"
     xml: "npm:^1.0.1"
-  checksum: 10/14c44d1be5cc6cbccba4383e410f00db814a3edd98e15c9f43dd528bc6bb9acdbcb2aa6ccf98847254fa45fcecd85c5785100d648bc079c229ffb7428cb9787e
+  checksum: 10/71a959f17a7cdd7b2a8b8f788cdb3826fac1197c9d36e239b0ab187926dc27e054cf84ba51c3dbf7b6f5e1bdb77da98e909d24f12c40ee44cc6a5b2f399a441e
   languageName: node
   linkType: hard
 
@@ -15609,7 +15609,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^3.3.2, uuid@npm:^3.3.3":
+"uuid@npm:^3.3.2":
   version: 3.4.0
   resolution: "uuid@npm:3.4.0"
   bin:
