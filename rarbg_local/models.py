@@ -45,7 +45,7 @@ class ProviderSource(Enum):
 
 class EpisodeInfo(BaseModel):
     seasonnum: int
-    epnum: Optional[int]
+    epnum: Optional[int] = None
 
 
 class ITorrent(BaseModel):
@@ -143,7 +143,7 @@ class Episode(BaseModel):
     name: str
     id: int
     episode_number: int
-    air_date: Optional[date]
+    air_date: Optional[date] = None
 
 
 class TvSeasonResponse(BaseModel):
