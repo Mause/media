@@ -22,6 +22,7 @@ async def seed():
         if not user:
             user = User(
                 username='Mause',
+                email='me@mause.me',
                 roles=[
                     get_or_create(session, Role, name='Admin'),
                     get_or_create(session, Role, name='Member'),
