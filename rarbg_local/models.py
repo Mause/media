@@ -2,7 +2,7 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Annotated, Dict, List, Optional, Tuple, TypeVar
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 from pydantic.types import StringConstraints  # type: ignore[attr-defined]
 
 from .db import MonitorMediaType
@@ -10,7 +10,7 @@ from .types import TmdbId
 
 
 class Orm(BaseModel):
-    model_config = ConfigDict({'orm_mode': True})
+    model_config = {'from_attributes': True}
 
 
 T = TypeVar('T')
