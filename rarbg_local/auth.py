@@ -2,7 +2,7 @@ import logging
 from typing import Any, Dict, Optional
 
 import requests
-from cachetools import TTLCache
+from cachetools import TTLCache, cached
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, SecurityScopes
 from sqlalchemy.orm.session import Session
@@ -13,7 +13,7 @@ from .singleton import singleton
 logger = logging.getLogger(__name__)
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
 
-t = TTLCache(maxsize=10, ttl=3600)
+t = TTLCache[str, dict](maxsize=10, ttl=3600)
 
 
 @singleton
@@ -27,18 +27,14 @@ def get_my_jwkaas():
     )
 
 
+@cached(t, key=lambda token_info, rest: token_info['sub'])
 def get_user_info(
     token_info: Dict[str, Any], rest: HTTPAuthorizationCredentials
 ) -> Dict:
-    key = token_info['sub']
-    if key in t:
-        return t[key]
-    else:
-        t[key] = requests.get(
-            f'{AUTH0_DOMAIN}userinfo',
-            headers={'Authorization': rest.scheme.title() + ' ' + rest.credentials},
-        ).json()
-    return get_user_info(token_info, rest)
+    return requests.get(
+        f'{AUTH0_DOMAIN}userinfo',
+        headers={'Authorization': rest.scheme.title() + ' ' + rest.credentials},
+    ).json()
 
 
 def auth_hook(

@@ -55,23 +55,30 @@
       "get": {
         "summary": "Delete",
         "operationId": "delete",
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ],
         "parameters": [
           {
+            "name": "type",
+            "in": "path",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/MediaType"
-            },
-            "name": "type",
-            "in": "path"
+            }
           },
           {
+            "name": "id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Id"
-            },
-            "name": "id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -93,68 +100,82 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
+        }
       }
     },
     "/api/stream/{type}/{tmdb_id}": {
       "get": {
         "summary": "Stream",
         "operationId": "stream",
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ],
         "parameters": [
           {
+            "name": "type",
+            "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
               "enum": [
                 "series",
                 "movie"
               ],
+              "type": "string",
               "title": "Type"
-            },
-            "name": "type",
-            "in": "path"
+            }
           },
           {
+            "name": "tmdb_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Tmdb Id"
-            },
-            "name": "tmdb_id",
-            "in": "path"
+            }
           },
           {
+            "name": "source",
+            "in": "query",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/ProviderSource"
-            },
-            "name": "source",
-            "in": "query"
+            }
           },
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "title": "Season"
-            },
             "name": "season",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "title": "Episode"
-            },
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Season"
+            }
+          },
+          {
             "name": "episode",
-            "in": "query"
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Episode"
+            }
           }
         ],
         "responses": {
@@ -179,38 +200,38 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
+        }
       }
     },
     "/api/select/{tmdb_id}/season/{season}/download_all": {
       "get": {
         "summary": "Select",
         "operationId": "select",
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ],
         "parameters": [
           {
+            "name": "tmdb_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Tmdb Id"
-            },
-            "name": "tmdb_id",
-            "in": "path"
+            }
           },
           {
+            "name": "season",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Season"
-            },
-            "name": "season",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -234,14 +255,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
+        }
       }
     },
     "/api/download": {
@@ -362,15 +376,22 @@
       "get": {
         "summary": "Movie",
         "operationId": "movie",
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ],
         "parameters": [
           {
+            "name": "tmdb_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Tmdb Id"
-            },
-            "name": "tmdb_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -394,14 +415,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
+        }
       }
     },
     "/api/torrents": {
@@ -437,15 +451,22 @@
       "get": {
         "summary": "Search",
         "operationId": "search",
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ],
         "parameters": [
           {
+            "name": "query",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string",
               "title": "Query"
-            },
-            "name": "query",
-            "in": "query"
+            }
           }
         ],
         "responses": {
@@ -454,10 +475,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/SearchResponse"
                   },
-                  "type": "array",
                   "title": "Response Search Api Search Get"
                 }
               }
@@ -473,14 +494,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
+        }
       }
     },
     "/api/tv/{tmdb_id}": {
@@ -490,15 +504,22 @@
         ],
         "summary": "Api Tv",
         "operationId": "api_tv",
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ],
         "parameters": [
           {
+            "name": "tmdb_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Tmdb Id"
-            },
-            "name": "tmdb_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -522,14 +543,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
+        }
       }
     },
     "/api/tv/{tmdb_id}/season/{season}": {
@@ -539,24 +553,31 @@
         ],
         "summary": "Api Tv Season",
         "operationId": "api_tv_season",
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ],
         "parameters": [
           {
+            "name": "tmdb_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Tmdb Id"
-            },
-            "name": "tmdb_id",
-            "in": "path"
+            }
           },
           {
+            "name": "season",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Season"
-            },
-            "name": "season",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -580,14 +601,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
+        }
       }
     },
     "/api/monitor": {
@@ -675,15 +689,22 @@
         ],
         "summary": "Monitor Delete",
         "operationId": "monitor_delete",
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ],
         "parameters": [
           {
+            "name": "monitor_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Monitor Id"
-            },
-            "name": "monitor_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -705,14 +726,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
+        }
       }
     },
     "/api/diagnostics": {
@@ -754,15 +768,22 @@
         ],
         "summary": "Component Diagnostics",
         "operationId": "component_diagnostics",
+        "security": [
+          {
+            "XOpenIdConnect": [
+              "openid"
+            ]
+          }
+        ],
         "parameters": [
           {
+            "name": "component_name",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "title": "Component Name"
-            },
-            "name": "component_name",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -771,10 +792,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/HealthcheckResponse"
                   },
-                  "type": "array",
                   "title": "Response Component Diagnostics Api Diagnostics  Component Name  Get"
                 }
               }
@@ -790,14 +811,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "XOpenIdConnect": [
-              "openid"
-            ]
-          }
-        ]
+        }
       }
     },
     "/redirect/plex/{imdb_id}": {
@@ -806,13 +820,13 @@
         "operationId": "redirect_to_plex",
         "parameters": [
           {
+            "name": "imdb_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "title": "Imdb Id"
-            },
-            "name": "imdb_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -843,39 +857,53 @@
         "operationId": "redirect_to_imdb",
         "parameters": [
           {
+            "name": "type_",
+            "in": "path",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/MediaType"
-            },
-            "name": "type_",
-            "in": "path"
+            }
           },
           {
+            "name": "tmdb_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Tmdb Id"
-            },
-            "name": "tmdb_id",
-            "in": "path"
+            }
           },
           {
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Season"
-            },
             "name": "season",
-            "in": "path"
-          },
-          {
+            "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "title": "Episode"
-            },
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Season"
+            }
+          },
+          {
             "name": "episode",
-            "in": "path"
+            "in": "path",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Episode"
+            }
           }
         ],
         "responses": {
@@ -906,39 +934,53 @@
         "operationId": "redirect_to_imdb",
         "parameters": [
           {
+            "name": "type_",
+            "in": "path",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/MediaType"
-            },
-            "name": "type_",
-            "in": "path"
+            }
           },
           {
+            "name": "tmdb_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Tmdb Id"
-            },
-            "name": "tmdb_id",
-            "in": "path"
+            }
           },
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "title": "Season"
-            },
             "name": "season",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "title": "Episode"
-            },
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Season"
+            }
+          },
+          {
             "name": "episode",
-            "in": "query"
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Episode"
+            }
           }
         ],
         "responses": {
@@ -988,7 +1030,7 @@
           },
           "complete": {
             "items": {
-              "items": [
+              "prefixItems": [
                 {
                   "type": "string"
                 },
@@ -1008,7 +1050,7 @@
           },
           "incomplete": {
             "items": {
-              "items": [
+              "prefixItems": [
                 {
                   "type": "string"
                 },
@@ -1047,11 +1089,25 @@
             "title": "Magnet"
           },
           "season": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Season"
           },
           "episode": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Episode"
           }
         },
@@ -1125,8 +1181,15 @@
             "title": "Episode Number"
           },
           "air_date": {
-            "type": "string",
-            "format": "date",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Air Date"
           }
         },
@@ -1156,7 +1219,14 @@
             "title": "Season"
           },
           "episode": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Episode"
           }
         },
@@ -1165,7 +1235,8 @@
           "id",
           "download",
           "show_title",
-          "season"
+          "season",
+          "episode"
         ],
         "title": "EpisodeDetailsSchema"
       },
@@ -1176,7 +1247,14 @@
             "title": "Seasonnum"
           },
           "epnum": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Epnum"
           }
         },
@@ -1225,7 +1303,8 @@
           "component_name",
           "component_type",
           "status",
-          "time"
+          "time",
+          "output"
         ],
         "title": "HealthcheckResponse"
       },
@@ -1261,7 +1340,14 @@
             "title": "Category"
           },
           "episode_info": {
-            "$ref": "#/components/schemas/EpisodeInfo"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EpisodeInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -1358,12 +1444,12 @@
         "title": "InnerTorrentFile"
       },
       "MediaType": {
+        "type": "string",
         "enum": [
           "series",
           "movie"
         ],
-        "title": "MediaType",
-        "description": "An enumeration."
+        "title": "MediaType"
       },
       "MonitorGet": {
         "properties": {
@@ -1383,8 +1469,7 @@
             "title": "Title"
           },
           "added_by": {
-            "type": "string",
-            "title": "Added By"
+            "$ref": "#/components/schemas/UserSchema"
           },
           "status": {
             "type": "boolean",
@@ -1403,12 +1488,12 @@
         "title": "MonitorGet"
       },
       "MonitorMediaType": {
+        "type": "string",
         "enum": [
           "MOVIE",
           "TV"
         ],
-        "title": "MonitorMediaType",
-        "description": "An enumeration."
+        "title": "MonitorMediaType"
       },
       "MonitorPost": {
         "properties": {
@@ -1463,6 +1548,7 @@
         "title": "MovieResponse"
       },
       "ProviderSource": {
+        "type": "string",
         "enum": [
           "kickass",
           "horriblesubs",
@@ -1471,8 +1557,7 @@
           "nyaasi",
           "piratebay"
         ],
-        "title": "ProviderSource",
-        "description": "An enumeration."
+        "title": "ProviderSource"
       },
       "SearchResponse": {
         "properties": {
@@ -1484,7 +1569,14 @@
             "$ref": "#/components/schemas/MediaType"
           },
           "year": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Year"
           },
           "imdbID": {
@@ -1496,6 +1588,7 @@
         "required": [
           "title",
           "type",
+          "year",
           "imdbID"
         ],
         "title": "SearchResponse"
@@ -1599,7 +1692,14 @@
             "title": "Seasons"
           },
           "imdb_id": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Imdb Id"
           },
           "title": {
@@ -1611,6 +1711,7 @@
         "required": [
           "number_of_seasons",
           "seasons",
+          "imdb_id",
           "title"
         ],
         "title": "TvResponse"

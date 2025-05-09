@@ -136,11 +136,11 @@ async def test_provider(aioresponses: AioResponses, snapshot):
         },
     )
     themoviedb(
-        aioresponses, '/tv/1', TvApiResponseFactory(name='Little Busters!').dict()
+        aioresponses, '/tv/1', TvApiResponseFactory(name='Little Busters!').model_dump()
     )
 
     results = [
-        item.dict()
+        item.model_dump()
         for item in await tolist(
             HorriblesubsProvider().search_for_tv(ImdbId('tt00000000'), TmdbId(1), 1, 2)
         )

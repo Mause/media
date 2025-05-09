@@ -94,7 +94,9 @@ async def test_download_movie(
     test_client, responses, aioresponses, add_torrent, session
 ):
     themoviedb(
-        aioresponses, '/movie/533985', MovieResponseFactory.build(title='Bit').dict()
+        aioresponses,
+        '/movie/533985',
+        MovieResponseFactory.build(title='Bit').model_dump(),
     )
     themoviedb(aioresponses, '/movie/533985/external_ids', {'imdb_id': "tt8425034"})
 
@@ -114,7 +116,9 @@ async def test_download_movie(
 @mark.asyncio
 async def test_download(test_client, aioresponses, responses, add_torrent, session):
     themoviedb(
-        aioresponses, '/tv/95792', TvApiResponseFactory(name='Pocket Monsters').dict()
+        aioresponses,
+        '/tv/95792',
+        TvApiResponseFactory(name='Pocket Monsters').model_dump(),
     )
     themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
     themoviedb(
@@ -159,7 +163,9 @@ async def test_download(test_client, aioresponses, responses, add_torrent, sessi
 async def test_download_season_pack(
     test_client, aioresponses, responses, add_torrent, session
 ):
-    themoviedb(aioresponses, '/tv/90000', TvApiResponseFactory(name='Watchmen').dict())
+    themoviedb(
+        aioresponses, '/tv/90000', TvApiResponseFactory(name='Watchmen').model_dump()
+    )
     themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
 
     magnet = (
@@ -346,10 +352,14 @@ async def test_foreign_key_integrity(session: Session):
 @mark.asyncio
 async def test_delete_monitor(aioresponses, test_client, session):
     themoviedb(
-        aioresponses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
+        aioresponses,
+        '/movie/5',
+        MovieResponseFactory.build(title='Hello World').model_dump(),
     )
     themoviedb(
-        aioresponses, '/tv/5', TvApiResponseFactory.build(name='Hello World').dict()
+        aioresponses,
+        '/tv/5',
+        TvApiResponseFactory.build(name='Hello World').model_dump(),
     )
     ls = (await test_client.get('/api/monitor')).json()
     assert ls == []
@@ -363,6 +373,10 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
     ls = (await test_client.get('/api/monitor')).json()
 
+    added_by = {
+        'first_name': '',
+        'username': 'python',
+    }
     assert ls == [
         {
             'type': 'MOVIE',
@@ -370,10 +384,10 @@ async def test_delete_monitor(aioresponses, test_client, session):
             'tmdb_id': 5,
             'id': 1,
             'status': False,
-            'added_by': 'python',
+            'added_by': added_by,
         },
         {
-            'added_by': 'python',
+            'added_by': added_by,
             'id': 2,
             'status': False,
             'title': 'Hello World',
@@ -537,7 +551,9 @@ async def test_stream(test_client, responses, aioresponses):
 
 @mark.asyncio
 async def test_schema(snapshot):
-    snapshot.assert_match(json.dumps(SearchResponse.schema(), indent=2), 'schema.json')
+    snapshot.assert_match(
+        json.dumps(SearchResponse.model_json_schema(), indent=2), 'schema.json'
+    )
 
 
 @mark.skipif("not os.path.exists('app/build/index.html')")
@@ -646,6 +662,6 @@ async def test_piratebay(aioresponses, snapshot):
     )
 
     snapshot.assert_match(
-        ITorrentList(torrents=res).json(indent=2),
+        ITorrentList(torrents=res).model_dump_json(indent=2),
         'piratebay.json',
     )

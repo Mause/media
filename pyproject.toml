@@ -21,7 +21,6 @@ dependencies = [
     "eventlet==0.39.1",
     "email-validator==2.2.0",
     "mause-rpc==0.0.18",
-    "cffi==1.17.1",
     "fastapi==0.115.12",
     "python-multipart==0.0.20",
     "jwkaas==0.7",
@@ -30,7 +29,7 @@ dependencies = [
     "uvicorn[standard]",
     "aiofiles==0.8.0",
     "fastapi-utils==0.8.0",
-    "asyncache==0.1.1",
+    "asyncache==0.3.1",
     "makefun==1.9.5",
     "gunicorn",
     "nyaapy",
@@ -38,6 +37,9 @@ dependencies = [
     "beautifulsoup4>=4.13.4",
     "asyncpg>=0.30.0",
     "dnspython>=2.7.0",
+    "pydantic-settings>=2.9.1",
+    "pydantic>=2.11.4",
+    "typing-inspect>=0.9.0",
 ]
 
 [dependency-groups]
@@ -51,7 +53,6 @@ dev = [
     "pre-commit>=4.2.0",
     "pytest-snapshot",
     "factory-boy==3.2.0",
-    "isort==5.7.0",
     "pytest-asyncio==0.14.0",
     "async-asgi-testclient==1.4.11",
     "aioresponses==0.7.8",
@@ -61,6 +62,7 @@ dev = [
     "types-requests>=2.32.0.20250328",
     "types-lxml>=2025.3.30",
     "types-selenium>=3.141.9",
+    "types-cachetools>=5.5.0.20240820",
 ]
 debug = ["pudb", "pdbpp"]
 
