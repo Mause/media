@@ -1,7 +1,7 @@
 import enum
 import logging
 from datetime import datetime
-from typing import Optional, TypeVar, cast
+from typing import TypeVar, cast
 
 import backoff
 import psycopg2
@@ -181,9 +181,9 @@ def create_download(
     title: str,
     type: str,
     tmdb_id: int,
-    id: Optional[int] = None,
+    id: int | None = None,
     added_by: User,
-    timestamp: Optional[datetime] = None,
+    timestamp: datetime | None = None,
 ) -> Download:
     precondition(not imdb_id or imdb_id.startswith('tt'), f'Invalid imdb_id: {imdb_id}')
     return Download(
@@ -205,7 +205,7 @@ def create_movie(
     title: str,
     tmdb_id: int,
     added_by: User,
-    timestamp: Optional[datetime] = None,
+    timestamp: datetime | None = None,
 ) -> MovieDetails:
     md = MovieDetails()
     md.download = create_download(
@@ -225,14 +225,14 @@ def create_episode(
     transmission_id: str,
     imdb_id: str,
     season: int,
-    episode: Optional[int],
+    episode: int | None,
     title: str,
     tmdb_id: int,
-    id: Optional[int] = None,
+    id: int | None = None,
     show_title: str,
     added_by: User,
-    download_id: Optional[int] = None,
-    timestamp: Optional[datetime] = None,
+    download_id: int | None = None,
+    timestamp: datetime | None = None,
 ) -> EpisodeDetails:
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
     ed.download = create_download(

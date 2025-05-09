@@ -3,7 +3,6 @@ from collections.abc import AsyncGenerator
 from enum import Enum
 from functools import lru_cache
 from itertools import chain
-from typing import Optional
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
@@ -41,7 +40,7 @@ async def get_all_shows() -> dict[str, str]:
 
 
 @lru_cache
-async def get_show_id(path: str) -> Optional[int]:
+async def get_show_id(path: str) -> int | None:
     async with make_session() as session:
         res = await session.get(path)
         res.raise_for_status()
@@ -136,7 +135,7 @@ async def search(showid: int, search_term: str):
         )
 
 
-async def search_for_tv(tmdb_id: TmdbId, season: int, episode: Optional[int] = None):
+async def search_for_tv(tmdb_id: TmdbId, season: int, episode: int | None = None):
     if season != 1:
         return
 
@@ -166,7 +165,7 @@ class HorriblesubsProvider(TvProvider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
         season: int,
-        episode: Optional[int] = None,
+        episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
         name = (await get_tv(tmdb_id)).name
         template = f'HorribleSubs {name} S{season:02d}'

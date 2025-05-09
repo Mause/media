@@ -2,7 +2,7 @@ import os
 from datetime import date
 from enum import Enum
 from itertools import chain
-from typing import Literal, Optional
+from typing import Literal
 
 import aiohttp
 import aiohttp.web_exceptions
@@ -25,7 +25,7 @@ access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
 ThingType = Literal['movie', 'tv']
 
 
-def try_(dic: dict[str, str], *keys: str) -> Optional[str]:
+def try_(dic: dict[str, str], *keys: str) -> str | None:
     return next((dic[key] for key in keys if key in dic), None)
 
 
@@ -52,7 +52,7 @@ async def get_configuration() -> dict:
     return await get_json('configuration')
 
 
-def get_year(result: dict[str, str]) -> Optional[int]:
+def get_year(result: dict[str, str]) -> int | None:
     data = try_(result, 'first_air_date', 'release_date')
     return date.fromisoformat(data).year if data else None
 

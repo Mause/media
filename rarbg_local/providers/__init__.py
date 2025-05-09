@@ -1,9 +1,9 @@
 import logging
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor
 from queue import Empty, Queue
 from threading import Semaphore, current_thread
-from typing import Callable, Optional, TypeVar
+from typing import TypeVar
 
 from ..types import ImdbId, TmdbId
 from .abc import Provider
@@ -57,7 +57,7 @@ def threadable(functions: list[ProviderType], args: tuple) -> Iterable[T]:
 
 
 async def search_for_tv(
-    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: Optional[int] = None
+    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: int | None = None
 ):
     from .abc import TvProvider
 

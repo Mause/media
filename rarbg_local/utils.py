@@ -1,5 +1,5 @@
 from functools import lru_cache as _lru_cache
-from typing import Optional, Protocol, TypeVar
+from typing import Protocol, TypeVar
 
 from asyncache import cached as _cached
 from cachetools.func import ttl_cache as _ttl_cache
@@ -50,13 +50,13 @@ class NullPointerException(Exception):
     pass
 
 
-def non_null(thing: Optional[T]) -> T:
+def non_null(thing: T | None) -> T:
     if not thing:
         raise NullPointerException()
     return thing
 
 
-def precondition(res: Optional[T], message: str) -> T:
+def precondition(res: T | None, message: str) -> T:
     if not res:
         raise AssertionError(message)
     return res

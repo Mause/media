@@ -2,7 +2,7 @@ import logging
 import re
 import string
 from collections.abc import AsyncGenerator
-from typing import Any, Optional
+from typing import Any
 
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
@@ -62,7 +62,7 @@ def tokenise(name: str) -> str:
 
 
 async def search_for_tv(
-    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: Optional[int] = None
+    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: int | None = None
 ) -> AsyncGenerator[dict, None]:
     name = (await get_tv(tmdb_id)).name
 
@@ -98,7 +98,7 @@ class KickassProvider(TvProvider, MovieProvider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
         season: int,
-        episode: Optional[int] = None,
+        episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
             return

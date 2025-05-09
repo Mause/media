@@ -3,7 +3,7 @@ import logging
 from collections.abc import AsyncGenerator, Iterator
 from itertools import chain
 from json.decoder import JSONDecodeError
-from typing import Optional, TypedDict
+from typing import TypedDict
 
 import backoff
 import requests
@@ -125,7 +125,7 @@ class RarbgProvider(TvProvider, MovieProvider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
         season: int,
-        episode: Optional[int] = None,
+        episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
             return

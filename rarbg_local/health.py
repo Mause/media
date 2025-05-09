@@ -1,8 +1,9 @@
 import contextvars
+from collections.abc import Callable
 from datetime import datetime
 from functools import partial
 from os import getpid
-from typing import Any, Callable, TypeVar
+from typing import Any, TypeVar
 from urllib.parse import urlparse
 
 import aiohttp

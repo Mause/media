@@ -1,5 +1,4 @@
 from collections.abc import AsyncGenerator
-from typing import Optional
 
 from fastapi.concurrency import run_in_threadpool
 from NyaaPy import nyaa
@@ -19,7 +18,7 @@ class NyaaProvider(TvProvider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
         season: int,
-        episode: Optional[int] = None,
+        episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
         ny = nyaa.Nyaa()
 

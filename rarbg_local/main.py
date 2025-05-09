@@ -2,9 +2,9 @@ import logging
 import re
 import string
 from collections import defaultdict
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from typing import Callable, Optional, TypeVar, Union, cast
+from typing import TypeVar, cast
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
@@ -47,7 +47,7 @@ season_re = re.compile(r'\W(S\d{2})\W')
 punctuation_re = re.compile(f'[{string.punctuation} ]')
 
 
-def normalise(episodes: list[Episode], title: str) -> Optional[str]:
+def normalise(episodes: list[Episode], title: str) -> str | None:
     sel = full_marker_re.search(title)
     if not sel:
         sel = season_re.search(title)
@@ -78,7 +78,7 @@ def normalise(episodes: list[Episode], title: str) -> Optional[str]:
     return title
 
 
-def extract_marker(title: str) -> tuple[str, Optional[str]]:
+def extract_marker(title: str) -> tuple[str, str | None]:
     m = full_marker_re.search(title)
     if not m:
         m = partial_marker_re.search(title)
@@ -95,12 +95,12 @@ def add_single(
     is_tv: bool,
     imdb_id: str,
     tmdb_id: int,
-    season: Optional[int],
-    episode: Optional[int],
+    season: int | None,
+    episode: int | None,
     title: str,
-    show_title: Optional[str],
+    show_title: str | None,
     added_by: User,
-) -> Union[MovieDetails, EpisodeDetails]:
+) -> MovieDetails | EpisodeDetails:
     res = torrent_add(magnet, subpath)
     arguments = res['arguments']
     print(arguments)

@@ -1,6 +1,7 @@
 import os
+from collections.abc import Callable
 from functools import lru_cache
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from mause_rpc.client import Client, get_client
 from pika.connection import URLParameters

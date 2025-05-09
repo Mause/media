@@ -2,7 +2,7 @@ import json
 from asyncio import get_event_loop
 from collections.abc import AsyncGenerator
 from re import Pattern
-from typing import TypeVar, Union
+from typing import TypeVar
 
 from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
@@ -72,7 +72,7 @@ def themoviedb(responses, path, response, query=''):
     )
 
 
-def add_json(responses, method: str, url: Union[str, Pattern], json_body) -> None:
+def add_json(responses, method: str, url: str | Pattern, json_body) -> None:
     responses.add(method=method, url=url, body=json.dumps(json_body))
 
 

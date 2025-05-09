@@ -1,5 +1,5 @@
 from itertools import count
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import parse_qsl, urlparse
 from uuid import uuid4
 
@@ -13,9 +13,7 @@ def get_session():
     return '', 409, {'x-transmission-session-id': uuid4().hex}
 
 
-def torrent_get(
-    fields: Optional[dict[str, Any]] = None, ids: Optional[set[str]] = None
-):
+def torrent_get(fields: dict[str, Any] | None = None, ids: set[str] | None = None):
     return jsonify({'arguments': {'torrents': []}})
 
 

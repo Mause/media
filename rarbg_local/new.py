@@ -1,13 +1,11 @@
 import logging
 import os
 import traceback
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
     Annotated,
-    Callable,
     Literal,
-    Optional,
     TypeVar,
     Union,
 )
@@ -105,7 +103,7 @@ def generate_plain_text(exc):
 class XOpenIdConnect(OpenIdConnect):
     async def __call__(  # type: ignore[override]
         self, request: Request
-    ) -> Optional[HTTPAuthorizationCredentials]:
+    ) -> HTTPAuthorizationCredentials | None:
         return await HTTPBearer().__call__(request)
 
 
@@ -182,8 +180,8 @@ async def stream(
     type: Literal['series', 'movie'],
     tmdb_id: TmdbId,
     source: ProviderSource,
-    season: Optional[int] = None,
-    episode: Optional[int] = None,
+    season: int | None = None,
+    episode: int | None = None,
 ):
     provider = next(
         (provider for provider in get_providers() if provider.name == source.value),
@@ -246,13 +244,13 @@ async def download_post(
     things: list[DownloadPost],
     added_by: Annotated[User, security],
     session: Session = Depends(get_db),
-) -> list[Union[MovieDetails, EpisodeDetails]]:
-    results: list[Union[MovieDetails, EpisodeDetails]] = []
+) -> list[MovieDetails | EpisodeDetails]:
+    results: list[MovieDetails | EpisodeDetails] = []
 
     for thing in things:
         is_tv = thing.season is not None
 
-        show_title: Optional[str]
+        show_title: str | None
         if is_tv:
             item = await get_tv(thing.tmdb_id)
             if thing.episode is None:
@@ -462,8 +460,8 @@ def redirect_to_plex(imdb_id: ImdbId, plex=Depends(get_plex)):
 async def redirect_to_imdb(
     type_: MediaType,
     tmdb_id: TmdbId,
-    season: Optional[int] = None,
-    episode: Optional[int] = None,
+    season: int | None = None,
+    episode: int | None = None,
 ):
     if type_ == 'movie':
         imdb_id = await get_movie_imdb_id(tmdb_id)

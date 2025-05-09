@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Optional
+from typing import Any
 
 import requests
 from cachetools import TTLCache, cached
@@ -43,7 +43,7 @@ def auth_hook(
     header: HTTPAuthorizationCredentials,
     security_scopes: SecurityScopes,
     jwkaas=Depends(get_my_jwkaas),
-) -> Optional[User]:
+) -> User | None:
     token_info = jwkaas.get_token_info(header.credentials)
     if token_info is None:
         logger.info("Token info is None")

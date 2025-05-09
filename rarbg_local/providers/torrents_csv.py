@@ -1,5 +1,4 @@
 from collections.abc import AsyncGenerator
-from typing import Optional
 
 import aiohttp
 
@@ -32,7 +31,7 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
             )
 
     async def search_for_tv(
-        self, imdb_id: str, tmdb_id: int, season: int, episode: Optional[int] = None
+        self, imdb_id: str, tmdb_id: int, season: int, episode: int | None = None
     ) -> AsyncGenerator[ITorrent, None]:
         for item in await self.query(f"{imdb_id} {format(season, episode)}"):
             yield ITorrent(

@@ -1,4 +1,4 @@
-from typing import Optional, TypedDict
+from typing import TypedDict
 
 import requests
 
@@ -59,7 +59,7 @@ TorrentAddArguments = TypedDict(
 
 class TorrentAdd(TypedDict):
     arguments: TorrentAddArguments
-    result: Optional[str]
+    result: str | None
 
 
 def torrent_add(magnet: str, subpath: str) -> TorrentAdd:

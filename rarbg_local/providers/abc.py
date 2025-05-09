@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
-from typing import Optional
 
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
@@ -18,7 +17,7 @@ class TvProvider(Provider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
         season: int,
-        episode: Optional[int] = None,
+        episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
         raise NotImplementedError()
 
@@ -61,5 +60,5 @@ def movie_convert(key):
     }.get(key, key)
 
 
-def format(season: int, episode: Optional[int]) -> str:
+def format(season: int, episode: int | None) -> str:
     return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'

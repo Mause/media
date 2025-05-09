@@ -1,5 +1,4 @@
 from collections.abc import AsyncGenerator
-from typing import Optional
 
 import aiohttp
 
@@ -17,7 +16,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
         season: int,
-        episode: Optional[int] = None,
+        episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
         async with (
             aiohttp.ClientSession() as session,
