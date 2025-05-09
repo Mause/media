@@ -17,6 +17,7 @@ from ..new import (
 )
 from ..singleton import get
 from ..utils import cache_clear
+from .factories import session_var
 
 
 @fixture
@@ -60,6 +61,7 @@ def session(fastapi_app):
 
     with Session() as session:
         fastapi_app.dependency_overrides[get_db] = lambda: session
+        session_var.set(session)
         yield session
 
 
