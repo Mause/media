@@ -10,7 +10,6 @@ from typing import (
     List,
     Literal,
     Optional,
-    Protocol,
     Type,
     Union,
 )
@@ -27,6 +26,7 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
+from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sqlalchemy import func
 from sqlalchemy.orm.session import Session
@@ -157,11 +157,7 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
     return {}
 
 
-class HasModelDumpJson(Protocol):
-    def model_dump_json(self) -> str: ...
-
-
-def eventstream(func: Callable[..., AsyncGenerator[HasModelDumpJson, None]]):
+def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
     @wraps(func)
     async def decorator(*args, **kwargs):
         async def internal() -> AsyncGenerator[str, None]:
