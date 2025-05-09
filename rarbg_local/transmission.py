@@ -47,7 +47,10 @@ def get_torrent(*ids: str) -> Dict:
     return call("torrent-get", arguments)
 
 
-TorrentAddTorrent = TypedDict('TorrentAddTorrent', {'hashString': str})
+class TorrentAddTorrent(TypedDict):
+    hashString: str
+
+
 TorrentAddArguments = TypedDict(
     'TorrentAddArguments',
     {'torrent-added': TorrentAddTorrent, 'torrent-duplicate': TorrentAddTorrent},
