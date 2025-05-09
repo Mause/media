@@ -8,6 +8,7 @@ from typing import (
     Callable,
     Literal,
     Optional,
+    TypeVar,
     Union,
 )
 from urllib.parse import urlencode
@@ -93,6 +94,7 @@ from .utils import non_null, precondition
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
+T = TypeVar('T')
 
 
 def generate_plain_text(exc):
@@ -138,7 +140,7 @@ def user():
     pass
 
 
-def safe_delete(session: Session, entity: type, id: int):
+def safe_delete(session: Session, entity: type[T], id: int):
     query = session.query(entity).filter_by(id=id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
