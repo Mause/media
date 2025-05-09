@@ -170,6 +170,9 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
     return decorator
 
 
+StreamType = Literal['series', 'movie']
+
+
 @api.get(
     '/stream/{type}/{tmdb_id}',
     response_class=StreamingResponse,
@@ -177,7 +180,7 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
 )
 @eventstream
 async def stream(
-    type: Literal['series', 'movie'],
+    type: StreamType,
     tmdb_id: TmdbId,
     source: ProviderSource,
     season: int | None = None,
@@ -415,7 +418,7 @@ async def api_tv_season(tmdb_id: TmdbId, season: int):
 
 
 class StreamArgs(BaseModel):
-    type: Literal['series', 'movie']
+    type: StreamType
     tmdb_id: TmdbId
     season: int | None = None
     episode: int | None = None
