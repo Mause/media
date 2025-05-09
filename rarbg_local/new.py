@@ -230,11 +230,11 @@ async def select(tmdb_id: TmdbId, season: int):
         grouped_results.items(), lambda rset: len(rset[1]) == len(episodes)
     )
 
-    return dict(
-        packs=packs,
-        complete=complete_or_not.get(True, []),
-        incomplete=complete_or_not.get(False, []),
-    )
+    return {
+        'packs': packs,
+        'complete': complete_or_not.get(True, []),
+        'incomplete': complete_or_not.get(False, []),
+    }
 
 
 @api.post(

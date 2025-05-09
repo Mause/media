@@ -80,7 +80,7 @@ async def find_themoviedb(imdb_id: ImdbId) -> dict[str, str]:
 
     result = next(item for item in chain.from_iterable(results.values()))
 
-    return dict(result, title=result['original_name'])
+    return {**result, 'title': result['original_name']}
 
 
 @cached(LRUCache(1024))
