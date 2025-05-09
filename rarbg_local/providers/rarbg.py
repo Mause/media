@@ -74,7 +74,7 @@ def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[list[RarbgTor
     categories = [codes[key] for key in CATEGORIES[type]]
 
     return map(
-        lambda category: _get(base_url, **dict(kwargs, category=str(category))),
+        lambda category: _get(base_url, category=str(category), **kwargs),
         categories,
     )
 
