@@ -2,8 +2,7 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Annotated, Dict, List, Optional, Tuple, TypeVar
 
-from pydantic import BaseModel
-from pydantic.types import StringConstraints  # type: ignore[attr-defined]
+from pydantic import BaseModel, StringConstraints
 
 from .db import MonitorMediaType
 from .types import TmdbId
