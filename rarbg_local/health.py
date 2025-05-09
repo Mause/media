@@ -49,8 +49,7 @@ async def diagnostics():
 
 
 class HealthcheckResponse(BaseModel):
-    class Config:
-        orm_mode = True
+    model_config = {'from_attributes': True}
 
     component_name: str
     component_type: ComponentType

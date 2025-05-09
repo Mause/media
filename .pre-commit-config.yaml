@@ -48,7 +48,7 @@ repos:
           - types-selenium
           - types-cachetools
           - alembic
-          - pydantic==1.10.22
+          - pydantic==2.11.4
           - lxml
 
   - repo: https://github.com/astral-sh/ruff-pre-commit

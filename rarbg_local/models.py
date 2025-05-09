@@ -1,41 +1,18 @@
 from datetime import date, datetime
 from enum import Enum
-from functools import reduce
-from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar
+from typing import Annotated, Dict, List, Optional, Tuple, TypeVar
 
-from pydantic import BaseModel, constr
-from pydantic.main import _missing
-from pydantic.utils import GetterDict
+from pydantic import BaseModel, StringConstraints
 
 from .db import MonitorMediaType
 from .types import TmdbId
 
 
 class Orm(BaseModel):
-    class Config:
-        orm_mode = True
+    model_config = {'from_attributes': True}
 
 
 T = TypeVar('T')
-
-
-def map_to(config: Dict[str, str]) -> Type:
-    class Config:
-        class getter_dict(GetterDict):
-            def get(self, name: Any, default: Optional[Any] = None) -> Any:
-                if name in config:
-                    first, *parts = config[name].split('.')
-                    v = super().get(first, default)
-                    if v is _missing:
-                        return v
-                    return reduce(getattr, parts, v)
-                else:
-                    v = super().get(name, default)
-                return v
-
-        orm_mode = True
-
-    return Config
 
 
 class ProviderSource(Enum):
@@ -49,7 +26,7 @@ class ProviderSource(Enum):
 
 class EpisodeInfo(BaseModel):
     seasonnum: int
-    epnum: Optional[int]
+    epnum: Optional[int] = None
 
 
 class ITorrent(BaseModel):
@@ -130,15 +107,13 @@ class UserShim(Orm):
 class MonitorGet(MonitorPost):
     id: int
     title: str
-    added_by: str
+    added_by: UserSchema
     status: bool = False
-
-    Config = map_to({'added_by': 'added_by.username'})
 
 
 class DownloadPost(BaseModel):
     tmdb_id: TmdbId
-    magnet: constr(regex=r'^magnet:')  # type: ignore
+    magnet: Annotated[str, StringConstraints(pattern=r'^magnet:')]
     season: Optional[int] = None
     episode: Optional[int] = None
 
@@ -147,7 +122,7 @@ class Episode(BaseModel):
     name: str
     id: int
     episode_number: int
-    air_date: Optional[date]
+    air_date: Optional[date] = None
 
 
 class TvSeasonResponse(BaseModel):
