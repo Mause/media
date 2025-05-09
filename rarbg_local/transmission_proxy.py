@@ -10,7 +10,7 @@ transmission: Callable[[], Client]
 if TYPE_CHECKING:
     from .transmission import get_torrent, torrent_add
 else:
-    transmission = lru_cache()(
+    transmission = lru_cache(
         lambda: get_client(
             'rpc.server.queue', URLParameters(os.environ['CLOUDAMQP_URL'])
         )

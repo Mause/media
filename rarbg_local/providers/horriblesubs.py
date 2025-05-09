@@ -39,7 +39,7 @@ async def get_all_shows() -> Dict[str, str]:
         return {show.attrib['title']: show.attrib['href'] for show in shows}
 
 
-@lru_cache()
+@lru_cache
 async def get_show_id(path: str) -> Optional[int]:
     async with make_session() as session:
         res = await session.get(path)
