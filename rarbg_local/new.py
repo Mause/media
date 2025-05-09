@@ -104,7 +104,7 @@ def generate_plain_text(exc):
 
 
 class XOpenIdConnect(OpenIdConnect):
-    async def __call__(  # type: ignore[override]
+    async def __call__(
         self, request: Request
     ) -> Optional[HTTPAuthorizationCredentials]:
         return await HTTPBearer().__call__(request)
