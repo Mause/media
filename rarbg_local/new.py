@@ -1,16 +1,12 @@
 import logging
 import os
 import traceback
+from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
     Annotated,
-    AsyncGenerator,
-    Callable,
-    Dict,
-    List,
     Literal,
-    Optional,
-    Type,
+    TypeVar,
     Union,
 )
 from urllib.parse import urlencode
@@ -96,6 +92,7 @@ from .utils import non_null, precondition
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
+T = TypeVar('T')
 
 
 def generate_plain_text(exc):
@@ -106,7 +103,7 @@ def generate_plain_text(exc):
 class XOpenIdConnect(OpenIdConnect):
     async def __call__(  # type: ignore[override]
         self, request: Request
-    ) -> Optional[HTTPAuthorizationCredentials]:
+    ) -> HTTPAuthorizationCredentials | None:
         return await HTTPBearer().__call__(request)
 
 
@@ -141,7 +138,7 @@ def user():
     pass
 
 
-def safe_delete(session: Session, entity: Type, id: int):
+def safe_delete(session: Session, entity: type[T], id: int):
     query = session.query(entity).filter_by(id=id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
@@ -183,8 +180,8 @@ async def stream(
     type: Literal['series', 'movie'],
     tmdb_id: TmdbId,
     source: ProviderSource,
-    season: Optional[int] = None,
-    episode: Optional[int] = None,
+    season: int | None = None,
+    episode: int | None = None,
 ):
     provider = next(
         (provider for provider in get_providers() if provider.name == source.value),
@@ -241,19 +238,19 @@ async def select(tmdb_id: TmdbId, season: int):
 
 
 @api.post(
-    '/download', response_model=List[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
+    '/download', response_model=list[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
 )
 async def download_post(
-    things: List[DownloadPost],
+    things: list[DownloadPost],
     added_by: Annotated[User, security],
     session: Session = Depends(get_db),
-) -> List[Union[MovieDetails, EpisodeDetails]]:
-    results: List[Union[MovieDetails, EpisodeDetails]] = []
+) -> list[MovieDetails | EpisodeDetails]:
+    results: list[MovieDetails | EpisodeDetails] = []
 
     for thing in things:
         is_tv = thing.season is not None
 
-        show_title: Optional[str]
+        show_title: str | None
         if is_tv:
             item = await get_tv(thing.tmdb_id)
             if thing.episode is None:
@@ -313,7 +310,7 @@ async def index(session: Session = Depends(get_db)):
     )
 
 
-@api.get('/stats', response_model=List[StatsResponse])
+@api.get('/stats', response_model=list[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
     def process(added_by_id: int, values):
         user = session.get(User, added_by_id)
@@ -339,12 +336,12 @@ async def movie(tmdb_id: TmdbId):
     return await get_movie(tmdb_id)
 
 
-@api.get('/torrents', response_model=Dict[str, InnerTorrent])
+@api.get('/torrents', response_model=dict[str, InnerTorrent])
 async def torrents():
     return get_keyed_torrents()
 
 
-@api.get('/search', response_model=List[SearchResponse])
+@api.get('/search', response_model=list[SearchResponse])
 async def search(query: str):
     return await search_themoviedb(query)
 
@@ -352,7 +349,7 @@ async def search(query: str):
 monitor_ns = APIRouter(tags=['monitor'])
 
 
-@monitor_ns.get('', response_model=List[MonitorGet])
+@monitor_ns.get('', response_model=list[MonitorGet])
 async def monitor_get(
     user: Annotated[User, security], session: Session = Depends(get_db)
 ):
@@ -463,8 +460,8 @@ def redirect_to_plex(imdb_id: ImdbId, plex=Depends(get_plex)):
 async def redirect_to_imdb(
     type_: MediaType,
     tmdb_id: TmdbId,
-    season: Optional[int] = None,
-    episode: Optional[int] = None,
+    season: int | None = None,
+    episode: int | None = None,
 ):
     if type_ == 'movie':
         imdb_id = await get_movie_imdb_id(tmdb_id)

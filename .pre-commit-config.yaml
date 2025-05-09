@@ -65,3 +65,9 @@ repos:
     rev: 0.7.3
     hooks:
       - id: uv-lock
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks:
+    -   id: pyupgrade
+        args:
+          - --py311-plus
