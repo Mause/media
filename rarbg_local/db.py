@@ -1,7 +1,6 @@
 import enum
 import logging
 from datetime import datetime
-from functools import lru_cache
 from typing import List, Optional, Type, TypeVar, cast
 
 import backoff
@@ -142,18 +141,6 @@ class Role(Base):
 
     def __repr__(self):
         return self.name
-
-
-class _Roles:
-    Admin: Role
-    Member: Role
-
-    @lru_cache()
-    def __getattr__(self, name):
-        return get_or_create(Role, name=name)
-
-
-Roles = _Roles()
 
 
 # Define the UserRoles association table
