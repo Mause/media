@@ -96,12 +96,12 @@ async def resolve_id(imdb_id: ImdbId, type: ThingType) -> TmdbId:
 
 @cached(LRUCache(256))
 async def get_movie(id: TmdbId) -> MovieResponse:
-    return MovieResponse(**(await get_json(f'movie/{id}')))
+    return MovieResponse.model_validate(await get_json(f'movie/{id}'))
 
 
 @cached(TTLCache(256, 360))
 async def get_tv(id: TmdbId) -> TvApiResponse:
-    return TvApiResponse(**await get_json(f'tv/{id}'))
+    return TvApiResponse.model_validate(await get_json(f'tv/{id}'))
 
 
 async def get_movie_imdb_id(movie_id: TmdbId) -> ImdbId:
@@ -119,7 +119,7 @@ async def get_imdb_id(type: ThingType, id: TmdbId) -> ImdbId:
 
 @cached(TTLCache(256, 360))
 async def get_tv_episodes(id: TmdbId, season: int) -> TvSeasonResponse:
-    return TvSeasonResponse(**await get_json(f'tv/{id}/season/{season}'))
+    return TvSeasonResponse.model_validate(await get_json(f'tv/{id}/season/{season}'))
 
 
 class ReleaseType(Enum):

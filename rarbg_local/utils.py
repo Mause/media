@@ -1,11 +1,17 @@
 from functools import lru_cache as _lru_cache
-from typing import Optional, Set, TypeVar
+from typing import Optional, Protocol, Set, TypeVar
 
 from asyncache import cached as _cached
 from cachetools.func import ttl_cache as _ttl_cache
 
+
+class LRUCache(Protocol):
+    def cache_clear(self):
+        pass
+
+
 T = TypeVar('T')
-_caches: Set[_lru_cache] = set()  # type: ignore
+_caches: Set[LRUCache] = set()
 
 
 def lru_cache(*args, **kwargs):
@@ -37,7 +43,7 @@ def cached(cache):
 
 def cache_clear():
     for c in _caches:
-        c.cache_clear()  # type: ignore
+        c.cache_clear()
 
 
 class NullPointerException(Exception):

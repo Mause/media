@@ -1,7 +1,6 @@
 import enum
 import logging
 from datetime import datetime
-from functools import lru_cache
 from typing import List, Optional, Type, TypeVar, cast
 
 import backoff
@@ -39,7 +38,7 @@ logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
 
-class Download(Base):  # type: ignore
+class Download(Base):
     __tablename__ = 'download'
     _json_exclude = {'movie', 'episode'}
     _json_include = {'added_by'}
@@ -67,7 +66,7 @@ class Download(Base):  # type: ignore
         return get_keyed_torrents()[self.transmission_id]['percentDone'] * 100
 
 
-class EpisodeDetails(Base):  # type: ignore
+class EpisodeDetails(Base):
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
     download: Mapped['Download'] = relationship(
@@ -91,7 +90,7 @@ class EpisodeDetails(Base):  # type: ignore
         )
 
 
-class MovieDetails(Base):  # type: ignore
+class MovieDetails(Base):
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
     download: Mapped['Download'] = relationship(
@@ -99,7 +98,7 @@ class MovieDetails(Base):  # type: ignore
     )
 
 
-class User(Base):  # type: ignore
+class User(Base):
     __tablename__ = 'users'
     _json_exclude = {'roles', 'password', 'downloads'}
     id = Column(Integer, primary_key=True)
@@ -135,7 +134,7 @@ class User(Base):  # type: ignore
 
 
 # Define the Role data-model
-class Role(Base):  # type: ignore
+class Role(Base):
     __tablename__ = 'roles'
     id = Column(Integer(), primary_key=True)
     name = Column(String(50), unique=True)
@@ -144,20 +143,8 @@ class Role(Base):  # type: ignore
         return self.name
 
 
-class _Roles:
-    Admin: Role
-    Member: Role
-
-    @lru_cache()
-    def __getattr__(self, name):
-        return get_or_create(Role, name=name)
-
-
-Roles = _Roles()
-
-
 # Define the UserRoles association table
-class UserRoles(Base):  # type: ignore
+class UserRoles(Base):
     __tablename__ = 'user_roles'
     id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.id', ondelete='CASCADE'))
@@ -169,7 +156,7 @@ class MonitorMediaType(enum.Enum):
     TV = 'TV'
 
 
-class Monitor(Base):  # type: ignore
+class Monitor(Base):
     __tablename__ = 'monitor'
 
     id = Column(Integer(), primary_key=True)
