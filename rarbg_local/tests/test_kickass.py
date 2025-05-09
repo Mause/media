@@ -25,7 +25,9 @@ def make(title):
 @mark.asyncio
 async def test_tv_episode(aioresponses, clear_cache):
     themoviedb(
-        aioresponses, '/tv/1', TvApiResponseFactory(name='Little Busters').model_dump()
+        aioresponses,
+        '/tv/1',
+        TvApiResponseFactory.create(name='Little Busters').model_dump(),
     )
     aioresponses.add(
         'https://katcr.co/name/search/little-busters/i0000000/1/1',
@@ -49,7 +51,9 @@ async def test_tv_episode(aioresponses, clear_cache):
 @mark.asyncio
 async def test_tv_season(aioresponses, clear_cache):
     themoviedb(
-        aioresponses, '/tv/1', TvApiResponseFactory(name='Little Busters').model_dump()
+        aioresponses,
+        '/tv/1',
+        TvApiResponseFactory.create(name='Little Busters').model_dump(),
     )
     aioresponses.add(
         'https://katcr.co/name/little-busters/i0000000',
@@ -73,7 +77,9 @@ async def test_tv_season(aioresponses, clear_cache):
 @mark.asyncio
 async def test_movie(aioresponses, clear_cache):
     themoviedb(
-        aioresponses, '/movie/1', MovieResponseFactory(title='John Flynn').model_dump()
+        aioresponses,
+        '/movie/1',
+        MovieResponseFactory.create(title='John Flynn').model_dump(),
     )
     aioresponses.add(
         'https://katcr.co/name/john-flynn/i0000000',

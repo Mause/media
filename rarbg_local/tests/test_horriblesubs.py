@@ -136,7 +136,9 @@ async def test_provider(aioresponses: AioResponses, snapshot):
         },
     )
     themoviedb(
-        aioresponses, '/tv/1', TvApiResponseFactory(name='Little Busters!').model_dump()
+        aioresponses,
+        '/tv/1',
+        TvApiResponseFactory.create(name='Little Busters!').model_dump(),
     )
 
     results = [
