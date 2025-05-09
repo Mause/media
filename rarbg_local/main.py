@@ -162,13 +162,13 @@ async def resolve_season(episodes) -> list[EpisodeDetails]:
         make_transient(download.added_by)
     else:
         added_by = None
-    common = dict(
-        imdb_id=download.imdb_id,
-        type='episode',
-        tmdb_id=download.tmdb_id,
-        timestamp=download.timestamp,
-        added_by=added_by,
-    )
+    common = {
+        'imdb_id': download.imdb_id,
+        'type': 'episode',
+        'tmdb_id': download.tmdb_id,
+        'timestamp': download.timestamp,
+        'added_by': added_by,
+    }
     return [
         EpisodeDetails(
             id=-1,
