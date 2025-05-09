@@ -1,7 +1,7 @@
 import enum
 import logging
 from datetime import datetime
-from typing import List, Optional, Type, TypeVar, cast
+from typing import Optional, TypeVar, cast
 
 import backoff
 import psycopg2
@@ -120,11 +120,11 @@ class User(Base):
     )
 
     # Define the relationship to Role via UserRoles
-    roles: Mapped[List['Role']] = relationship(
+    roles: Mapped[list['Role']] = relationship(
         'Role', secondary='user_roles', uselist=True
     )
 
-    downloads: Mapped[List[Download]] = relationship('Download')
+    downloads: Mapped[list[Download]] = relationship('Download')
 
     def __repr__(self):
         return self.username
@@ -248,7 +248,7 @@ def create_episode(
     return ed
 
 
-def get_all(session: Session, model: Type[T]) -> List[T]:
+def get_all(session: Session, model: type[T]) -> list[T]:
     if model == MovieDetails:
         joint = MovieDetails.download
     elif model == EpisodeDetails:
@@ -258,15 +258,15 @@ def get_all(session: Session, model: Type[T]) -> List[T]:
     return session.query(model).options(joinedload(joint)).all()
 
 
-def get_episodes(session: Session) -> List[EpisodeDetails]:
+def get_episodes(session: Session) -> list[EpisodeDetails]:
     return get_all(session, EpisodeDetails)
 
 
-def get_movies(session: Session) -> List[MovieDetails]:
+def get_movies(session: Session) -> list[MovieDetails]:
     return get_all(session, MovieDetails)
 
 
-def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> T:
+def get_or_create(session: Session, model: type[T], defaults=None, **kwargs) -> T:
     instance = session.query(model).filter_by(**kwargs).first()
     if instance:
         return instance

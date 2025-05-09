@@ -1,4 +1,4 @@
-from typing import Dict, Optional, TypedDict
+from typing import Optional, TypedDict
 
 import requests
 
@@ -7,10 +7,10 @@ from .utils import lru_cache
 config = {'TRANSMISSION_URL': 'http://novell.local:9091/transmission/rpc'}
 
 
-def get_torrent(*ids: str) -> Dict:
+def get_torrent(*ids: str) -> dict:
     call = get_session(config['TRANSMISSION_URL'])
 
-    arguments: Dict = {
+    arguments: dict = {
         "fields": [
             "id",
             # "error",

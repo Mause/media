@@ -1,5 +1,5 @@
 from functools import lru_cache as _lru_cache
-from typing import Optional, Protocol, Set, TypeVar
+from typing import Optional, Protocol, TypeVar
 
 from asyncache import cached as _cached
 from cachetools.func import ttl_cache as _ttl_cache
@@ -11,7 +11,7 @@ class LRUCache(Protocol):
 
 
 T = TypeVar('T')
-_caches: Set[LRUCache] = set()
+_caches: set[LRUCache] = set()
 
 
 def lru_cache(*args, **kwargs):

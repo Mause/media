@@ -2,7 +2,6 @@ import json
 import logging
 import sys
 from datetime import datetime
-from typing import Dict
 from unittest.mock import patch
 
 from async_asgi_testclient import TestClient
@@ -196,7 +195,7 @@ async def test_download_season_pack(
     assert download.episode.show_title == 'Watchmen'
 
 
-def shallow(d: Dict):
+def shallow(d: dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 

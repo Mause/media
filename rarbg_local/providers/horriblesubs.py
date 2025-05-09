@@ -1,8 +1,9 @@
 import re
+from collections.abc import AsyncGenerator
 from enum import Enum
 from functools import lru_cache
 from itertools import chain
-from typing import AsyncGenerator, Dict, Optional, Tuple
+from typing import Optional
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
@@ -28,7 +29,7 @@ class HorriblesubsDownloadType(Enum):
 
 
 @cached(TTLCache(128, 600))
-async def get_all_shows() -> Dict[str, str]:
+async def get_all_shows() -> dict[str, str]:
     async with make_session() as session:
         res = await session.get('/shows/')
         res.raise_for_status()
@@ -49,8 +50,8 @@ async def get_show_id(path: str) -> Optional[int]:
         return int(m.group(1)) if m else None
 
 
-def parse(html) -> Dict[str, str]:
-    def process(li) -> Tuple[str, str]:
+def parse(html) -> dict[str, str]:
+    def process(li) -> tuple[str, str]:
         line = ' '.join(line.strip('- \n') for line in li.xpath('./a/text()')).strip()
         return (
             ' '.join(map(str.strip, line.splitlines())),

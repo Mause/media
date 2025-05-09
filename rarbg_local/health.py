@@ -2,7 +2,7 @@ import contextvars
 from datetime import datetime
 from functools import partial
 from os import getpid
-from typing import Any, Callable, List, TypeVar
+from typing import Any, Callable, TypeVar
 from urllib.parse import urlparse
 
 import aiohttp
@@ -43,7 +43,7 @@ def add_component(decl):
     return decl.add_healthcheck
 
 
-@router.get('', response_model=List[str])
+@router.get('', response_model=list[str])
 async def diagnostics():
     return [comp.name for comp in health.components]
 
@@ -58,7 +58,7 @@ class HealthcheckResponse(BaseModel):
     output: Any
 
 
-@router.get('/{component_name}', response_model=List[HealthcheckResponse])
+@router.get('/{component_name}', response_model=list[HealthcheckResponse])
 async def component_diagnostics(request: Request, component_name: str):
     component = next(
         (comp for comp in health.components if comp.name == component_name), None

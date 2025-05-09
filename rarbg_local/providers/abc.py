@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
+from typing import Optional
 
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId

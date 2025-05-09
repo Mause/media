@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Annotated, Dict, List, Optional, Tuple, TypeVar
+from typing import Annotated, Optional, TypeVar
 
 from pydantic import BaseModel, StringConstraints
 
@@ -66,7 +66,7 @@ class SeriesDetails(Orm):
     title: str
     imdb_id: str
     tmdb_id: int
-    seasons: Dict[str, List[EpisodeDetailsSchema]]
+    seasons: dict[str, list[EpisodeDetailsSchema]]
 
 
 class MovieDetailsSchema(Orm):
@@ -75,14 +75,14 @@ class MovieDetailsSchema(Orm):
 
 
 class IndexResponse(Orm):
-    series: List[SeriesDetails]
-    movies: List[MovieDetailsSchema]
+    series: list[SeriesDetails]
+    movies: list[MovieDetailsSchema]
 
 
 class DownloadAllResponse(BaseModel):
-    packs: List[ITorrent]
-    complete: List[Tuple[str, List[ITorrent]]]
-    incomplete: List[Tuple[str, List[ITorrent]]]
+    packs: list[ITorrent]
+    complete: list[tuple[str, list[ITorrent]]]
+    incomplete: list[tuple[str, list[ITorrent]]]
 
 
 class Stats(BaseModel):
@@ -126,7 +126,7 @@ class Episode(BaseModel):
 
 
 class TvSeasonResponse(BaseModel):
-    episodes: List[Episode]
+    episodes: list[Episode]
 
 
 class SeasonMeta(BaseModel):
@@ -136,7 +136,7 @@ class SeasonMeta(BaseModel):
 
 class TvBaseResponse(BaseModel):
     number_of_seasons: int
-    seasons: List[SeasonMeta]
+    seasons: list[SeasonMeta]
 
 
 class TvResponse(TvBaseResponse):
@@ -179,4 +179,4 @@ class InnerTorrent(BaseModel):
     hashString: str
     id: int
     percentDone: float
-    files: List[InnerTorrentFile]
+    files: list[InnerTorrentFile]

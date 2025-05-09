@@ -1,7 +1,8 @@
 import logging
 import re
 import string
-from typing import Any, AsyncGenerator, Dict, Optional
+from collections.abc import AsyncGenerator
+from typing import Any, Optional
 
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
@@ -18,7 +19,7 @@ def is_node(node):
     return node
 
 
-async def fetch(url: str) -> AsyncGenerator[Dict[str, Any], None]:
+async def fetch(url: str) -> AsyncGenerator[dict[str, Any], None]:
     async with ClientSession(base_url='https://katcr.co') as session:
         try:
             r = await session.get(url)
@@ -62,7 +63,7 @@ def tokenise(name: str) -> str:
 
 async def search_for_tv(
     imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: Optional[int] = None
-) -> AsyncGenerator[Dict, None]:
+) -> AsyncGenerator[dict, None]:
     name = (await get_tv(tmdb_id)).name
 
     if episode is None:

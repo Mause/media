@@ -2,8 +2,9 @@ import logging
 import re
 import string
 from collections import defaultdict
+from collections.abc import Iterable
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, Union, cast
+from typing import Callable, Optional, TypeVar, Union, cast
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
@@ -46,7 +47,7 @@ season_re = re.compile(r'\W(S\d{2})\W')
 punctuation_re = re.compile(f'[{string.punctuation} ]')
 
 
-def normalise(episodes: List[Episode], title: str) -> Optional[str]:
+def normalise(episodes: list[Episode], title: str) -> Optional[str]:
     sel = full_marker_re.search(title)
     if not sel:
         sel = season_re.search(title)
@@ -77,13 +78,13 @@ def normalise(episodes: List[Episode], title: str) -> Optional[str]:
     return title
 
 
-def extract_marker(title: str) -> Tuple[str, Optional[str]]:
+def extract_marker(title: str) -> tuple[str, Optional[str]]:
     m = full_marker_re.search(title)
     if not m:
         m = partial_marker_re.search(title)
         precondition(m, f'Cannot find marker in: {title}')
         return non_null(m).group(2), None
-    return cast(Tuple[str, str], tuple(m.groups()[1:]))
+    return cast(tuple[str, str], tuple(m.groups()[1:]))
 
 
 def add_single(
@@ -143,14 +144,14 @@ def add_single(
     return already.episode if is_tv else already.movie
 
 
-def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> Dict[K, List[V]]:
-    dd: Dict[K, List[V]] = defaultdict(list)
+def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> dict[K, list[V]]:
+    dd: dict[K, list[V]] = defaultdict(list)
     for item in iterable:
         dd[key(item)].append(item)
     return dict(dd)
 
 
-async def resolve_season(episodes) -> List[EpisodeDetails]:
+async def resolve_season(episodes) -> list[EpisodeDetails]:
     if not (len(episodes) == 1 and episodes[0].is_season_pack()):
         return episodes
 
@@ -187,7 +188,7 @@ async def resolve_season(episodes) -> List[EpisodeDetails]:
     ]
 
 
-async def resolve_show(show: List[EpisodeDetails]) -> Dict[str, List[EpisodeDetails]]:
+async def resolve_show(show: list[EpisodeDetails]) -> dict[str, list[EpisodeDetails]]:
     seasons = groupby(show, lambda episode: episode.season)
     return {
         str(number): await resolve_season(
@@ -197,7 +198,7 @@ async def resolve_show(show: List[EpisodeDetails]) -> Dict[str, List[EpisodeDeta
     }
 
 
-async def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDetails:
+async def make_series_details(imdb_id, show: list[EpisodeDetails]) -> SeriesDetails:
     ep = show[0]
     d = ep.download
 
@@ -209,7 +210,7 @@ async def make_series_details(imdb_id, show: List[EpisodeDetails]) -> SeriesDeta
     )
 
 
-async def resolve_series(session: Session) -> List[SeriesDetails]:
+async def resolve_series(session: Session) -> list[SeriesDetails]:
     episodes = get_episodes(session)
 
     return [
@@ -220,7 +221,7 @@ async def resolve_series(session: Session) -> List[SeriesDetails]:
     ]
 
 
-def get_keyed_torrents() -> Dict[str, Dict]:
+def get_keyed_torrents() -> dict[str, dict]:
     try:
         return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
     except (

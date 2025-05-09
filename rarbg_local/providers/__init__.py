@@ -1,8 +1,9 @@
 import logging
+from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
 from queue import Empty, Queue
 from threading import Semaphore, current_thread
-from typing import Callable, Iterable, List, Optional, Tuple, TypeVar
+from typing import Callable, Optional, TypeVar
 
 from ..types import ImdbId, TmdbId
 from .abc import Provider
@@ -12,7 +13,7 @@ ProviderType = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
 
 
-def get_providers() -> List[Provider]:
+def get_providers() -> list[Provider]:
     from .horriblesubs import HorriblesubsProvider
     from .kickass import KickassProvider
     from .nyaasi import NyaaProvider
@@ -30,7 +31,7 @@ def get_providers() -> List[Provider]:
     ]
 
 
-def threadable(functions: List[ProviderType], args: Tuple) -> Iterable[T]:
+def threadable(functions: list[ProviderType], args: tuple) -> Iterable[T]:
     def worker(function: ProviderType) -> None:
         try:
             current_thread().name = function.__name__

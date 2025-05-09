@@ -1,16 +1,13 @@
 import logging
 import os
 import traceback
+from collections.abc import AsyncGenerator
 from functools import wraps
 from typing import (
     Annotated,
-    AsyncGenerator,
     Callable,
-    Dict,
-    List,
     Literal,
     Optional,
-    Type,
     Union,
 )
 from urllib.parse import urlencode
@@ -141,7 +138,7 @@ def user():
     pass
 
 
-def safe_delete(session: Session, entity: Type, id: int):
+def safe_delete(session: Session, entity: type, id: int):
     query = session.query(entity).filter_by(id=id)
     precondition(query.count() > 0, 'Nothing to delete')
     query.delete()
@@ -241,14 +238,14 @@ async def select(tmdb_id: TmdbId, season: int):
 
 
 @api.post(
-    '/download', response_model=List[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
+    '/download', response_model=list[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
 )
 async def download_post(
-    things: List[DownloadPost],
+    things: list[DownloadPost],
     added_by: Annotated[User, security],
     session: Session = Depends(get_db),
-) -> List[Union[MovieDetails, EpisodeDetails]]:
-    results: List[Union[MovieDetails, EpisodeDetails]] = []
+) -> list[Union[MovieDetails, EpisodeDetails]]:
+    results: list[Union[MovieDetails, EpisodeDetails]] = []
 
     for thing in things:
         is_tv = thing.season is not None
@@ -313,7 +310,7 @@ async def index(session: Session = Depends(get_db)):
     )
 
 
-@api.get('/stats', response_model=List[StatsResponse])
+@api.get('/stats', response_model=list[StatsResponse])
 async def stats(session: Session = Depends(get_db)):
     def process(added_by_id: int, values):
         user = session.get(User, added_by_id)
@@ -339,12 +336,12 @@ async def movie(tmdb_id: TmdbId):
     return await get_movie(tmdb_id)
 
 
-@api.get('/torrents', response_model=Dict[str, InnerTorrent])
+@api.get('/torrents', response_model=dict[str, InnerTorrent])
 async def torrents():
     return get_keyed_torrents()
 
 
-@api.get('/search', response_model=List[SearchResponse])
+@api.get('/search', response_model=list[SearchResponse])
 async def search(query: str):
     return await search_themoviedb(query)
 
@@ -352,7 +349,7 @@ async def search(query: str):
 monitor_ns = APIRouter(tags=['monitor'])
 
 
-@monitor_ns.get('', response_model=List[MonitorGet])
+@monitor_ns.get('', response_model=list[MonitorGet])
 async def monitor_get(
     user: Annotated[User, security], session: Session = Depends(get_db)
 ):

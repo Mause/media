@@ -1,8 +1,9 @@
 import json
 import logging
+from collections.abc import AsyncGenerator, Iterator
 from itertools import chain
 from json.decoder import JSONDecodeError
-from typing import AsyncGenerator, Dict, Iterator, List, Optional, TypedDict
+from typing import Optional, TypedDict
 
 import backoff
 import requests
@@ -56,7 +57,7 @@ NONE = {
 }
 
 
-def load_category_codes() -> Dict[str, int]:
+def load_category_codes() -> dict[str, int]:
     with open('categories.json') as fh:
         return json.load(fh)
 
@@ -68,7 +69,7 @@ class RarbgTorrent(TypedDict):
     download: str
 
 
-def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[List[RarbgTorrent]]:
+def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[list[RarbgTorrent]]:
     codes = load_category_codes()
     categories = [codes[key] for key in CATEGORIES[type]]
 
@@ -83,7 +84,7 @@ class TooManyRequests(Exception):
 
 
 @backoff.on_exception(backoff.expo, (TooManyRequests,))
-def _get(base_url: str, **kwargs: str) -> List[Dict]:
+def _get(base_url: str, **kwargs: str) -> list[dict]:
     assert isinstance(session.params, dict)
     if 'token' not in session.params:
         session.params['token'] = get_token(base_url)

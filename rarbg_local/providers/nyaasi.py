@@ -1,4 +1,5 @@
-from typing import AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
+from typing import Optional
 
 from fastapi.concurrency import run_in_threadpool
 from NyaaPy import nyaa
