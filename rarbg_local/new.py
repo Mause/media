@@ -414,9 +414,23 @@ async def api_tv_season(tmdb_id: TmdbId, season: int):
     return await get_tv_episodes(tmdb_id, season)
 
 
-async def _stream(type: str, tmdb_id: TmdbId, season=None, episode=None):
+class StreamArgs(BaseModel):
+    type: Literal['series', 'movie']
+    tmdb_id: TmdbId
+    season: int | None = None
+    episode: int | None = None
+
+
+async def _stream(
+    type: str,
+    tmdb_id: TmdbId,
+    season: int | None = None,
+    episode: int | None = None,
+):
     if type == 'series':
-        items = search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season, episode)
+        items = search_for_tv(
+            await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
+        )
     else:
         items = search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
 
@@ -427,9 +441,14 @@ async def _stream(type: str, tmdb_id: TmdbId, season=None, episode=None):
 async def websocket_stream(websocket: WebSocket):
     await websocket.accept()
 
-    request = await websocket.receive_json()
+    request = StreamArgs.model_validate(await websocket.receive_json())
 
-    for item in await _stream(**request):
+    for item in await _stream(
+        type=request.type,
+        tmdb_id=request.tmdb_id,
+        season=request.season,
+        episode=request.episode,
+    ):
         await websocket.send_json(item)
 
 
