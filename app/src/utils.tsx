@@ -4,9 +4,7 @@ import { useState, useEffect } from 'react';
 import MaterialLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import { LocationDescriptor } from 'history';
-// import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@mui/material';
-import moxios from 'moxios';
 import { useAuth0 } from '@auth0/auth0-react';
 import { FetchEventTarget } from './fetch_stream';
 
@@ -107,8 +105,4 @@ export function ExtMLink(props: { href: string; children: string }) {
       {props.children}
     </MaterialLink>
   );
-}
-
-export function expectLastRequestBody() {
-  return expect(JSON.parse(moxios.requests.mostRecent().config.data));
 }
