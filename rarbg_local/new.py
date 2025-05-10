@@ -16,9 +16,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.security import (
-    HTTPAuthorizationCredentials,
-    HTTPBearer,
-    OpenIdConnect,
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
@@ -100,26 +97,13 @@ def generate_plain_text(exc):
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
-class XOpenIdConnect(OpenIdConnect):
-    async def __call__(  # type: ignore[override]
-        self, request: Request
-    ) -> HTTPAuthorizationCredentials | None:
-        return await HTTPBearer().__call__(request)
-
-
-openid_connect = XOpenIdConnect(
-    openIdConnectUrl='https://mause.au.auth0.com/.well-known/openid-configuration'
-)
-
-
 async def get_current_user(
     security_scopes: SecurityScopes,
     session=Depends(get_db),
-    header=Depends(openid_connect),
     jwkaas=Depends(get_my_jwkaas),
 ):
     user = auth_hook(
-        session=session, header=header, security_scopes=security_scopes, jwkaas=jwkaas
+        session=session, header='header', security_scopes=security_scopes, jwkaas=jwkaas
     )
     if user:
         return user
