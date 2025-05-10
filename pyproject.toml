@@ -14,7 +14,7 @@ dependencies = [
     "psycopg2-binary",
     "sentry-sdk==2.8.0",
     "alembic==1.15.2",
-    "plexapi==4.7.0",
+    "plexapi==4.8.0",
     "fuzzywuzzy[speedup]==0.18.0",
     "cachetools==5.5.2",
     "lxml",
