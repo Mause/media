@@ -1,6 +1,8 @@
+from contextvars import ContextVar
 from datetime import datetime, timezone
 
 from factory import Factory, Faker, List, SubFactory, lazy_attribute
+from factory.alchemy import SQLAlchemyModelFactory
 from factory.fuzzy import FuzzyChoice, FuzzyDateTime
 
 from ..db import Download, EpisodeDetails, MovieDetails, User
@@ -17,7 +19,13 @@ from ..models import (
     TvSeasonResponse,
 )
 
+session_var = ContextVar('session', default=None)
 imdb_id = Faker('numerify', text='tt######')
+
+
+class SQLFactory(SQLAlchemyModelFactory):
+    class Meta:
+        sqlalchemy_session_factory = session_var.get
 
 
 class EpisodeFactory(Factory):
@@ -93,7 +101,7 @@ class ITorrentFactory(Factory):
     episode_info = SubFactory(EpisodeInfoFactory)
 
 
-ITorrentList = List([ITorrentFactory()])
+ITorrentList = List([ITorrentFactory.build()])
 PackList = List([List([Faker('file_name'), ITorrentList])])
 
 
@@ -106,14 +114,14 @@ class DownloadAllResponseFactory(Factory):
     incomplete = PackList
 
 
-class UserFactory(Factory):
+class UserFactory(SQLFactory):
     class Meta:
         model = User
 
     username = Faker('name')
 
 
-class DownloadFactory(Factory):
+class DownloadFactory(SQLFactory):
     class Meta:
         model = Download
 
@@ -126,7 +134,7 @@ class DownloadFactory(Factory):
     timestamp = FuzzyDateTime(start_dt=datetime(2000, 1, 1, tzinfo=timezone.utc))
 
 
-class EpisodeDetailsFactory(Factory):
+class EpisodeDetailsFactory(SQLFactory):
     class Meta:
         model = EpisodeDetails
 
@@ -137,7 +145,7 @@ class EpisodeDetailsFactory(Factory):
     episode = Faker('numerify', text='#')
 
 
-class MovieDetailsFactory(Factory):
+class MovieDetailsFactory(SQLFactory):
     class Meta:
         model = MovieDetails
 

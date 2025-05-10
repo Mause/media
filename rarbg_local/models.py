@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Annotated, Dict, List, Optional, Tuple, TypeVar
+from typing import Annotated, TypeVar
 
 from pydantic import BaseModel, StringConstraints
 
@@ -26,7 +26,7 @@ class ProviderSource(Enum):
 
 class EpisodeInfo(BaseModel):
     seasonnum: int
-    epnum: Optional[int] = None
+    epnum: int | None = None
 
 
 class ITorrent(BaseModel):
@@ -35,7 +35,7 @@ class ITorrent(BaseModel):
     seeders: int
     download: str
     category: str
-    episode_info: Optional[EpisodeInfo] = None
+    episode_info: EpisodeInfo | None = None
 
 
 class UserSchema(Orm):
@@ -59,14 +59,14 @@ class EpisodeDetailsSchema(Orm):
     download: DownloadSchema
     show_title: str
     season: int
-    episode: Optional[int]
+    episode: int | None
 
 
 class SeriesDetails(Orm):
     title: str
     imdb_id: str
     tmdb_id: int
-    seasons: Dict[str, List[EpisodeDetailsSchema]]
+    seasons: dict[str, list[EpisodeDetailsSchema]]
 
 
 class MovieDetailsSchema(Orm):
@@ -75,14 +75,14 @@ class MovieDetailsSchema(Orm):
 
 
 class IndexResponse(Orm):
-    series: List[SeriesDetails]
-    movies: List[MovieDetailsSchema]
+    series: list[SeriesDetails]
+    movies: list[MovieDetailsSchema]
 
 
 class DownloadAllResponse(BaseModel):
-    packs: List[ITorrent]
-    complete: List[Tuple[str, List[ITorrent]]]
-    incomplete: List[Tuple[str, List[ITorrent]]]
+    packs: list[ITorrent]
+    complete: list[tuple[str, list[ITorrent]]]
+    incomplete: list[tuple[str, list[ITorrent]]]
 
 
 class Stats(BaseModel):
@@ -114,19 +114,19 @@ class MonitorGet(MonitorPost):
 class DownloadPost(BaseModel):
     tmdb_id: TmdbId
     magnet: Annotated[str, StringConstraints(pattern=r'^magnet:')]
-    season: Optional[int] = None
-    episode: Optional[int] = None
+    season: int | None = None
+    episode: int | None = None
 
 
 class Episode(BaseModel):
     name: str
     id: int
     episode_number: int
-    air_date: Optional[date] = None
+    air_date: date | None = None
 
 
 class TvSeasonResponse(BaseModel):
-    episodes: List[Episode]
+    episodes: list[Episode]
 
 
 class SeasonMeta(BaseModel):
@@ -136,11 +136,11 @@ class SeasonMeta(BaseModel):
 
 class TvBaseResponse(BaseModel):
     number_of_seasons: int
-    seasons: List[SeasonMeta]
+    seasons: list[SeasonMeta]
 
 
 class TvResponse(TvBaseResponse):
-    imdb_id: Optional[str]
+    imdb_id: str | None
     title: str
 
 
@@ -156,7 +156,7 @@ class MediaType(Enum):
 class SearchResponse(BaseModel):
     title: str
     type: MediaType
-    year: Optional[int]
+    year: int | None
     imdbID: int
 
 
@@ -179,4 +179,4 @@ class InnerTorrent(BaseModel):
     hashString: str
     id: int
     percentDone: float
-    files: List[InnerTorrentFile]
+    files: list[InnerTorrentFile]

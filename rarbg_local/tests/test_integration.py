@@ -2,7 +2,6 @@ import json
 import logging
 import sys
 from datetime import datetime
-from typing import Dict
 from unittest.mock import patch
 
 from async_asgi_testclient import TestClient
@@ -118,7 +117,7 @@ async def test_download(test_client, aioresponses, responses, add_torrent, sessi
     themoviedb(
         aioresponses,
         '/tv/95792',
-        TvApiResponseFactory(name='Pocket Monsters').model_dump(),
+        TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
     )
     themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
     themoviedb(
@@ -164,7 +163,9 @@ async def test_download_season_pack(
     test_client, aioresponses, responses, add_torrent, session
 ):
     themoviedb(
-        aioresponses, '/tv/90000', TvApiResponseFactory(name='Watchmen').model_dump()
+        aioresponses,
+        '/tv/90000',
+        TvApiResponseFactory.create(name='Watchmen').model_dump(),
     )
     themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
 
@@ -194,7 +195,7 @@ async def test_download_season_pack(
     assert download.episode.show_title == 'Watchmen'
 
 
-def shallow(d: Dict):
+def shallow(d: dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 
@@ -289,7 +290,7 @@ async def test_search(aioresponses, test_client):
 
 @mark.asyncio
 async def test_delete_cascade(test_client: TestClient, session):
-    e = EpisodeDetailsFactory()
+    e = EpisodeDetailsFactory.create()
     session.add(e)
     session.commit()
 
@@ -406,14 +407,14 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
 @mark.asyncio
 async def test_stats(test_client, session):
-    user1 = UserFactory(username='user1')
-    user2 = UserFactory(username='user2')
+    user1 = UserFactory.create(username='user1')
+    user2 = UserFactory.create(username='user2')
 
     session.add_all(
         [
-            EpisodeDetailsFactory(download__added_by=user1),
-            EpisodeDetailsFactory(download__added_by=user2),
-            MovieDetailsFactory(download__added_by=user1),
+            EpisodeDetailsFactory.create(download__added_by=user1),
+            EpisodeDetailsFactory.create(download__added_by=user2),
+            MovieDetailsFactory.create(download__added_by=user1),
         ]
     )
     session.commit()
@@ -566,7 +567,7 @@ async def test_static(uri, test_client):
 
 @mark.asyncio
 async def test_plex_redirect(test_client, responses):
-    responses.add('GET', 'https://plex.tv/users/account')
+    responses.add('GET', 'https://plex.tv/api/v2/user')
     responses.add(
         'GET',
         'https://test/',
@@ -581,11 +582,11 @@ async def test_plex_redirect(test_client, responses):
 
     responses.add(
         'GET',
-        'https://plex.tv/api/resources?includeHttps=1&includeRelay=1',
+        'https://plex.tv/api/v2/resources?includeHttps=1&includeRelay=1',
         tostring(
             E.Resources(
                 E.Resource(
-                    E.Connection(uri="https://test", secure="True"),
+                    E.connections(E.connection(uri="https://test", secure="True")),
                     name="Novell",
                     provides="server",
                 )

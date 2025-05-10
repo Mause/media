@@ -505,14 +505,14 @@ wheels = [
 
 [[package]]
 name = "factory-boy"
-version = "3.2.0"
+version = "3.3.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "faker" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7e/37/b046abce36a5fc19827e3662fd6c63ae3489b93f96dbd099cd412bbff6c3/factory_boy-3.2.0.tar.gz", hash = "sha256:401cc00ff339a022f84d64a4339503d1689e8263a4478d876e58a3295b155c5b", size = 153844, upload-time = "2020-12-28T08:48:34.619Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ba/98/75cacae9945f67cfe323829fc2ac451f64517a8a330b572a06a323997065/factory_boy-3.3.3.tar.gz", hash = "sha256:866862d226128dfac7f2b4160287e899daf54f2612778327dd03d0e2cb1e3d03", size = 164146, upload-time = "2025-02-03T09:49:04.433Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/69/62/41a5a7ed8a474072d491521562ffbeb18a869c090c21506f890298433fab/factory_boy-3.2.0-py2.py3-none-any.whl", hash = "sha256:1d3db4b44b8c8c54cdd8b83ae4bdb9aeb121e464400035f1f03ae0e1eade56a4", size = 35313, upload-time = "2020-12-28T08:48:32.646Z" },
+    { url = "https://files.pythonhosted.org/packages/27/8d/2bc5f5546ff2ccb3f7de06742853483ab75bf74f36a92254702f8baecc79/factory_boy-3.3.3-py2.py3-none-any.whl", hash = "sha256:1c39e3289f7e667c4285433f305f8d506efc2fe9c73aaea4151ebd5cdea394fc", size = 37036, upload-time = "2025-02-03T09:49:01.659Z" },
 ]
 
 [[package]]
@@ -1119,7 +1119,7 @@ requires-dist = [
     { name = "makefun", specifier = "==1.9.5" },
     { name = "mause-rpc", specifier = "==0.0.18" },
     { name = "nyaapy" },
-    { name = "plexapi", specifier = "==4.3.1" },
+    { name = "plexapi", specifier = "==4.15.0" },
     { name = "psycopg2-binary" },
     { name = "pydantic", specifier = ">=2.11.4" },
     { name = "pydantic-settings", specifier = ">=2.9.1" },
@@ -1142,7 +1142,7 @@ dev = [
     { name = "aioresponses", specifier = "==0.7.8" },
     { name = "aiosqlite", specifier = ">=0.21.0" },
     { name = "async-asgi-testclient", specifier = "==1.4.11" },
-    { name = "factory-boy", specifier = "==3.2.0" },
+    { name = "factory-boy", specifier = "==3.3.3" },
     { name = "lxml" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pytest" },
@@ -1288,14 +1288,14 @@ wheels = [
 
 [[package]]
 name = "plexapi"
-version = "4.3.1"
+version = "4.15.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/53/a1/6fdf789bf2f66d78a7a4d90e1b9ed99b87e266a6aab1e3b58885319b150b/PlexAPI-4.3.1.tar.gz", hash = "sha256:1fc14397908a68b39e26d93dc1a8257fa90d91a203e9127e19462a1fd5dc7cfc", size = 102991, upload-time = "2021-02-02T21:50:26.89Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2f/11/65eeaf740e35a93eb289f23b8f4d748c0cc13adcc9e6c4ef031cf5ae153b/PlexAPI-4.15.0.tar.gz", hash = "sha256:c202abdc0645bf1109819d59b4701bf556e434515ace41a96633e14e717c8f22", size = 145738, upload-time = "2023-07-30T14:25:59.84Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2c/48/1e32e6f103aa610efe993c19acb25752d2cb47415d869b3fdcd5504c5482/PlexAPI-4.3.1-py3-none-any.whl", hash = "sha256:c17026e035d311626bc84607fe18a341ce44f2f112ece7c66dc4a6cb800f6d98", size = 114772, upload-time = "2021-02-02T21:50:25.443Z" },
+    { url = "https://files.pythonhosted.org/packages/5b/cd/b46c5e05c96913d6ba40da098d1e807bd7ba7fd4d65a4842244423efaa98/PlexAPI-4.15.0-py3-none-any.whl", hash = "sha256:21587fd242b75c95d0bee02c211dd8cc2eb456838c70ce20efbeae74408c9dea", size = 156848, upload-time = "2023-07-30T14:25:57.762Z" },
 ]
 
 [[package]]
