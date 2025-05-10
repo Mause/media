@@ -43,7 +43,7 @@ import Storybook from './Storybook';
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
-    release: process.env.HEROKU_SLUG_COMMIT,
+    release: import.meta.env.REACT_APP_HEROKU_SLUG_COMMIT,
     environment: 'development',
     integrations: [new TracingIntegrations.BrowserTracing()],
     tracesSampleRate: 0.75, // must be present and non-zero
