@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 import requests
 from cachetools import TTLCache, cached
@@ -29,8 +29,8 @@ def get_my_jwkaas():
 
 @cached(t, key=lambda token_info, rest: token_info['sub'])
 def get_user_info(
-    token_info: Dict[str, Any], rest: HTTPAuthorizationCredentials
-) -> Dict:
+    token_info: dict[str, Any], rest: HTTPAuthorizationCredentials
+) -> dict:
     return requests.get(
         f'{AUTH0_DOMAIN}userinfo',
         headers={'Authorization': rest.scheme.title() + ' ' + rest.credentials},
@@ -43,7 +43,7 @@ def auth_hook(
     header: HTTPAuthorizationCredentials,
     security_scopes: SecurityScopes,
     jwkaas=Depends(get_my_jwkaas),
-) -> Optional[User]:
+) -> User | None:
     token_info = jwkaas.get_token_info(header.credentials)
     if token_info is None:
         logger.info("Token info is None")

@@ -1,8 +1,8 @@
 import re
+from collections.abc import AsyncGenerator
 from enum import Enum
 from functools import lru_cache
 from itertools import chain
-from typing import AsyncGenerator, Dict, Optional, Tuple
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
@@ -28,7 +28,7 @@ class HorriblesubsDownloadType(Enum):
 
 
 @cached(TTLCache(128, 600))
-async def get_all_shows() -> Dict[str, str]:
+async def get_all_shows() -> dict[str, str]:
     async with make_session() as session:
         res = await session.get('/shows/')
         res.raise_for_status()
@@ -39,8 +39,8 @@ async def get_all_shows() -> Dict[str, str]:
         return {show.attrib['title']: show.attrib['href'] for show in shows}
 
 
-@lru_cache()
-async def get_show_id(path: str) -> Optional[int]:
+@lru_cache
+async def get_show_id(path: str) -> int | None:
     async with make_session() as session:
         res = await session.get(path)
         res.raise_for_status()
@@ -49,8 +49,8 @@ async def get_show_id(path: str) -> Optional[int]:
         return int(m.group(1)) if m else None
 
 
-def parse(html) -> Dict[str, str]:
-    def process(li) -> Tuple[str, str]:
+def parse(html) -> dict[str, str]:
+    def process(li) -> tuple[str, str]:
         line = ' '.join(line.strip('- \n') for line in li.xpath('./a/text()')).strip()
         return (
             ' '.join(map(str.strip, line.splitlines())),
@@ -135,7 +135,7 @@ async def search(showid: int, search_term: str):
         )
 
 
-async def search_for_tv(tmdb_id: TmdbId, season: int, episode: Optional[int] = None):
+async def search_for_tv(tmdb_id: TmdbId, season: int, episode: int | None = None):
     if season != 1:
         return
 
@@ -165,7 +165,7 @@ class HorriblesubsProvider(TvProvider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
         season: int,
-        episode: Optional[int] = None,
+        episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
         name = (await get_tv(tmdb_id)).name
         template = f'HorribleSubs {name} S{season:02d}'
