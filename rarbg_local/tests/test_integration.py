@@ -567,7 +567,7 @@ async def test_static(uri, test_client):
 
 @mark.asyncio
 async def test_plex_redirect(test_client, responses):
-    responses.add('GET', 'https://plex.tv/users/account')
+    responses.add('GET', 'https://plex.tv/api/v2/user')
     responses.add(
         'GET',
         'https://test/',
@@ -582,11 +582,11 @@ async def test_plex_redirect(test_client, responses):
 
     responses.add(
         'GET',
-        'https://plex.tv/api/resources?includeHttps=1&includeRelay=1',
+        'https://plex.tv/api/v2/resources?includeHttps=1&includeRelay=1',
         tostring(
             E.Resources(
                 E.Resource(
-                    E.Connection(uri="https://test", secure="True"),
+                    E.connections(E.connection(uri="https://test", secure="True")),
                     name="Novell",
                     provides="server",
                 )
