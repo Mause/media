@@ -1,8 +1,5 @@
 import { renderWithSWR } from './test.utils';
-import {
-  MonitorComponent,
-  MonitorAddComponent,
-} from './MonitorComponent';
+import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
 import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
