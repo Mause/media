@@ -44,7 +44,7 @@
         },
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -57,7 +57,7 @@
         "operationId": "delete",
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -109,7 +109,7 @@
         "operationId": "stream",
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -209,7 +209,7 @@
         "operationId": "select",
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -311,7 +311,7 @@
         },
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -336,7 +336,7 @@
         },
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -365,7 +365,7 @@
         },
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -378,7 +378,7 @@
         "operationId": "movie",
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -440,7 +440,7 @@
         },
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -453,7 +453,7 @@
         "operationId": "search",
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -506,7 +506,7 @@
         "operationId": "api_tv",
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -555,7 +555,7 @@
         "operationId": "api_tv_season",
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -629,7 +629,7 @@
         },
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -675,7 +675,7 @@
         },
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -691,7 +691,7 @@
         "operationId": "monitor_delete",
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -754,7 +754,7 @@
         },
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -770,7 +770,7 @@
         "operationId": "component_diagnostics",
         "security": [
           {
-            "XOpenIdConnect": [
+            "OpenIdConnect": [
               "openid"
             ]
           }
@@ -1785,9 +1785,9 @@
       }
     },
     "securitySchemes": {
-      "XOpenIdConnect": {
+      "OpenIdConnect": {
         "type": "openIdConnect",
-        "openIdConnectUrl": "https://mause.au.auth0.com/.well-known/openid-configuration"
+        "openIdConnectUrl": "https://mause.au.auth0.com//.well-known/openid-configuration"
       }
     }
   }

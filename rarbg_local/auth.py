@@ -9,24 +9,21 @@ from fastapi_oidc import get_auth
 from sqlalchemy.orm.session import Session
 
 from .db import User
-from .singleton import singleton
 
 logger = logging.getLogger(__name__)
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
 
 t = TTLCache[str, dict](maxsize=10, ttl=3600)
 
-
-@singleton
-def get_my_jwkaas():
-    return get_auth(
-        ['https://localhost:3000/api/v2', f'{AUTH0_DOMAIN}userinfo'],
-        AUTH0_DOMAIN,
-        jwks_url=f'{AUTH0_DOMAIN}.well-known/jwks.json',
-    )
+get_my_jwkaas = get_auth(
+    client_id="",
+    base_authorization_server_uri=AUTH0_DOMAIN,
+    issuer=AUTH0_DOMAIN,
+    signature_cache_ttl=3600,
+)
 
 
-@cached(t, key=lambda token_info, rest: token_info['sub'])
+@cached(t, key=lambda token_info, rest: token_info.sub)
 def get_user_info(
     token_info: dict[str, Any], rest: HTTPAuthorizationCredentials
 ) -> dict:
@@ -43,7 +40,7 @@ def auth_hook(
     security_scopes: SecurityScopes,
     jwkaas=Depends(get_my_jwkaas),
 ) -> User | None:
-    token_info = jwkaas.get_token_info(header.credentials)
+    token_info = jwkaas
     if token_info is None:
         logger.info("Token info is None")
         return None
@@ -51,7 +48,7 @@ def auth_hook(
     assert security_scopes.scopes
     logger.info(f"Security scopes: {security_scopes.scopes}")
     for scope in security_scopes.scopes:
-        if scope not in token_info['scope'].split():
+        if scope not in token_info.scope.split():
             logger.info(f"Scope {scope} not in token info")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
