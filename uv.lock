@@ -1119,7 +1119,7 @@ requires-dist = [
     { name = "makefun", specifier = "==1.9.5" },
     { name = "mause-rpc", specifier = "==0.0.18" },
     { name = "nyaapy" },
-    { name = "plexapi", specifier = "==4.15.0" },
+    { name = "plexapi", specifier = "==4.17.0" },
     { name = "psycopg2-binary" },
     { name = "pydantic", specifier = ">=2.11.4" },
     { name = "pydantic-settings", specifier = ">=2.9.1" },
@@ -1288,14 +1288,14 @@ wheels = [
 
 [[package]]
 name = "plexapi"
-version = "4.15.0"
+version = "4.17.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2f/11/65eeaf740e35a93eb289f23b8f4d748c0cc13adcc9e6c4ef031cf5ae153b/PlexAPI-4.15.0.tar.gz", hash = "sha256:c202abdc0645bf1109819d59b4701bf556e434515ace41a96633e14e717c8f22", size = 145738, upload-time = "2023-07-30T14:25:59.84Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/94/79/129a01479ae08d934782a4ae2ece5bb1eee7e9576c14cf41b467a403dcb6/plexapi-4.17.0.tar.gz", hash = "sha256:065ff984a9500e049a9cc30927ab3245e518e39edc2f4058e31528be1a0a2aef", size = 154599, upload-time = "2025-04-19T02:24:08.532Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5b/cd/b46c5e05c96913d6ba40da098d1e807bd7ba7fd4d65a4842244423efaa98/PlexAPI-4.15.0-py3-none-any.whl", hash = "sha256:21587fd242b75c95d0bee02c211dd8cc2eb456838c70ce20efbeae74408c9dea", size = 156848, upload-time = "2023-07-30T14:25:57.762Z" },
+    { url = "https://files.pythonhosted.org/packages/24/42/400828990b1884bb3d18d6cdbd1c26f91f1ca256619d057bd5f5d8a9ec7b/plexapi-4.17.0-py3-none-any.whl", hash = "sha256:cf42a990205c0327a2ab1d2871087a91b50596e6e960b99a185bf657525e6938", size = 166667, upload-time = "2025-04-19T02:24:06.899Z" },
 ]
 
 [[package]]
