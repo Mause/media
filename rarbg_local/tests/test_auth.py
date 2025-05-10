@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends
 from pytest import mark
 
-from ..auth import get_my_jwkaas
 from ..models import UserSchema
 from ..new import get_current_user, security
 
@@ -10,7 +9,6 @@ from ..new import get_current_user, security
 async def test_auth(responses, user, fastapi_app, test_client):
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives.asymmetric import rsa
-    from jwkaas import JWKaas
     from jwt.api_jwt import PyJWT
 
     # Arrange
@@ -22,11 +20,6 @@ async def test_auth(responses, user, fastapi_app, test_client):
     jw = PyJWT().encode(
         {'sub': 'python', 'scope': 'openid'}, private_key, 'RS256', {'kid': KID}
     )
-
-    jwkaas = JWKaas(None, None)
-    jwkaas.pubkeys = {KID: private_key.public_key()}
-
-    fastapi_app.dependency_overrides[get_my_jwkaas] = lambda: jwkaas
 
     router = APIRouter()
 
@@ -40,9 +33,7 @@ async def test_auth(responses, user, fastapi_app, test_client):
     ]
 
     # Act
-    r = await test_client.get(
-        '/simple', headers={'Authorization': 'Bearer ' + jw.decode()}
-    )
+    r = await test_client.get('/simple', headers={'Authorization': 'Bearer ' + jw})
 
     # Assert
     assert r.status_code == 200, r.text
