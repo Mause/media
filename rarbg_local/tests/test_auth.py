@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
+from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from jose import constants, jwk
 from pytest import mark
 
 from ..auth import AUTH0_DOMAIN
+from ..db import User
 from ..models import UserSchema
 from ..new import get_current_user, security
 from .conftest import add_json
@@ -79,7 +81,7 @@ async def test_auth(responses, user, fastapi_app, test_client):
     router = APIRouter()
 
     @router.get('/simple', dependencies=[security], response_model=UserSchema)
-    async def show(user=Depends(get_current_user)):
+    async def show(user: Annotated[User, security]):
         return user
 
     fastapi_app.include_router(router)
