@@ -1,17 +1,32 @@
 {
-  "title": "SearchResponse",
-  "type": "object",
+  "$defs": {
+    "MediaType": {
+      "enum": [
+        "series",
+        "movie"
+      ],
+      "title": "MediaType",
+      "type": "string"
+    }
+  },
   "properties": {
     "title": {
       "title": "Title",
       "type": "string"
     },
     "type": {
-      "$ref": "#/definitions/MediaType"
+      "$ref": "#/$defs/MediaType"
     },
     "year": {
-      "title": "Year",
-      "type": "integer"
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Year"
     },
     "imdbID": {
       "title": "Imdbid",
@@ -21,16 +36,9 @@
   "required": [
     "title",
     "type",
+    "year",
     "imdbID"
   ],
-  "definitions": {
-    "MediaType": {
-      "title": "MediaType",
-      "description": "An enumeration.",
-      "enum": [
-        "series",
-        "movie"
-      ]
-    }
-  }
+  "title": "SearchResponse",
+  "type": "object"
 }

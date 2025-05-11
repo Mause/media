@@ -1,6 +1,8 @@
 import json
 from asyncio import get_event_loop
-from typing import AsyncGenerator, List, Pattern, TypeVar, Union
+from collections.abc import AsyncGenerator
+from re import Pattern
+from typing import TypeVar
 
 from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
@@ -15,6 +17,7 @@ from ..new import (
 )
 from ..singleton import get
 from ..utils import cache_clear
+from .factories import session_var
 
 
 @fixture
@@ -58,6 +61,7 @@ def session(fastapi_app):
 
     with Session() as session:
         fastapi_app.dependency_overrides[get_db] = lambda: session
+        session_var.set(session)
         yield session
 
 
@@ -70,7 +74,7 @@ def themoviedb(responses, path, response, query=''):
     )
 
 
-def add_json(responses, method: str, url: Union[str, Pattern], json_body) -> None:
+def add_json(responses, method: str, url: str | Pattern, json_body) -> None:
     responses.add(method=method, url=url, body=json.dumps(json_body))
 
 
@@ -120,8 +124,8 @@ def aioresponses():
 T = TypeVar('T')
 
 
-async def tolist(a: AsyncGenerator[T, None]) -> List[T]:
-    lst: List[T] = []
+async def tolist(a: AsyncGenerator[T, None]) -> list[T]:
+    lst: list[T] = []
     async for t in a:
         lst.append(t)
     return lst

@@ -1,7 +1,8 @@
 import inspect
 from asyncio import iscoroutinefunction
+from collections.abc import Callable
 from contextlib import AsyncExitStack
-from typing import Callable, Optional, TypeVar
+from typing import TypeVar
 
 from fastapi import FastAPI
 from fastapi.dependencies.utils import solve_dependencies
@@ -13,7 +14,7 @@ T = TypeVar('T')
 
 
 async def get(
-    app: FastAPI, func: Callable[..., T], request: Optional[Request] = None
+    app: FastAPI, func: Callable[..., T], request: Request | None = None
 ) -> T:
     dependant = get_dependant(call=func, path='')
     request = request or Request(

@@ -1,8 +1,7 @@
 import enum
 import logging
 from datetime import datetime
-from functools import lru_cache
-from typing import List, Optional, Type, TypeVar, cast
+from typing import TypeVar, cast
 
 import backoff
 import psycopg2
@@ -39,7 +38,7 @@ logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
 
-class Download(Base):  # type: ignore
+class Download(Base):
     __tablename__ = 'download'
     _json_exclude = {'movie', 'episode'}
     _json_include = {'added_by'}
@@ -67,7 +66,7 @@ class Download(Base):  # type: ignore
         return get_keyed_torrents()[self.transmission_id]['percentDone'] * 100
 
 
-class EpisodeDetails(Base):  # type: ignore
+class EpisodeDetails(Base):
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
     download: Mapped['Download'] = relationship(
@@ -91,7 +90,7 @@ class EpisodeDetails(Base):  # type: ignore
         )
 
 
-class MovieDetails(Base):  # type: ignore
+class MovieDetails(Base):
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
     download: Mapped['Download'] = relationship(
@@ -99,7 +98,7 @@ class MovieDetails(Base):  # type: ignore
     )
 
 
-class User(Base):  # type: ignore
+class User(Base):
     __tablename__ = 'users'
     _json_exclude = {'roles', 'password', 'downloads'}
     id = Column(Integer, primary_key=True)
@@ -121,11 +120,11 @@ class User(Base):  # type: ignore
     )
 
     # Define the relationship to Role via UserRoles
-    roles: Mapped[List['Role']] = relationship(
+    roles: Mapped[list['Role']] = relationship(
         'Role', secondary='user_roles', uselist=True
     )
 
-    downloads: Mapped[List[Download]] = relationship('Download')
+    downloads: Mapped[list[Download]] = relationship('Download')
 
     def __repr__(self):
         return self.username
@@ -135,7 +134,7 @@ class User(Base):  # type: ignore
 
 
 # Define the Role data-model
-class Role(Base):  # type: ignore
+class Role(Base):
     __tablename__ = 'roles'
     id = Column(Integer(), primary_key=True)
     name = Column(String(50), unique=True)
@@ -144,20 +143,8 @@ class Role(Base):  # type: ignore
         return self.name
 
 
-class _Roles:
-    Admin: Role
-    Member: Role
-
-    @lru_cache()
-    def __getattr__(self, name):
-        return get_or_create(Role, name=name)
-
-
-Roles = _Roles()
-
-
 # Define the UserRoles association table
-class UserRoles(Base):  # type: ignore
+class UserRoles(Base):
     __tablename__ = 'user_roles'
     id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.id', ondelete='CASCADE'))
@@ -169,7 +156,7 @@ class MonitorMediaType(enum.Enum):
     TV = 'TV'
 
 
-class Monitor(Base):  # type: ignore
+class Monitor(Base):
     __tablename__ = 'monitor'
 
     id = Column(Integer(), primary_key=True)
@@ -194,9 +181,9 @@ def create_download(
     title: str,
     type: str,
     tmdb_id: int,
-    id: Optional[int] = None,
+    id: int | None = None,
     added_by: User,
-    timestamp: Optional[datetime] = None,
+    timestamp: datetime | None = None,
 ) -> Download:
     precondition(not imdb_id or imdb_id.startswith('tt'), f'Invalid imdb_id: {imdb_id}')
     return Download(
@@ -218,7 +205,7 @@ def create_movie(
     title: str,
     tmdb_id: int,
     added_by: User,
-    timestamp: Optional[datetime] = None,
+    timestamp: datetime | None = None,
 ) -> MovieDetails:
     md = MovieDetails()
     md.download = create_download(
@@ -238,14 +225,14 @@ def create_episode(
     transmission_id: str,
     imdb_id: str,
     season: int,
-    episode: Optional[int],
+    episode: int | None,
     title: str,
     tmdb_id: int,
-    id: Optional[int] = None,
+    id: int | None = None,
     show_title: str,
     added_by: User,
-    download_id: Optional[int] = None,
-    timestamp: Optional[datetime] = None,
+    download_id: int | None = None,
+    timestamp: datetime | None = None,
 ) -> EpisodeDetails:
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
     ed.download = create_download(
@@ -261,7 +248,7 @@ def create_episode(
     return ed
 
 
-def get_all(session: Session, model: Type[T]) -> List[T]:
+def get_all(session: Session, model: type[T]) -> list[T]:
     if model == MovieDetails:
         joint = MovieDetails.download
     elif model == EpisodeDetails:
@@ -271,15 +258,15 @@ def get_all(session: Session, model: Type[T]) -> List[T]:
     return session.query(model).options(joinedload(joint)).all()
 
 
-def get_episodes(session: Session) -> List[EpisodeDetails]:
+def get_episodes(session: Session) -> list[EpisodeDetails]:
     return get_all(session, EpisodeDetails)
 
 
-def get_movies(session: Session) -> List[MovieDetails]:
+def get_movies(session: Session) -> list[MovieDetails]:
     return get_all(session, MovieDetails)
 
 
-def get_or_create(session: Session, model: Type[T], defaults=None, **kwargs) -> T:
+def get_or_create(session: Session, model: type[T], defaults=None, **kwargs) -> T:
     instance = session.query(model).filter_by(**kwargs).first()
     if instance:
         return instance

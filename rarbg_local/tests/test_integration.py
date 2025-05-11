@@ -2,7 +2,6 @@ import json
 import logging
 import sys
 from datetime import datetime
-from typing import Dict
 from unittest.mock import patch
 
 from async_asgi_testclient import TestClient
@@ -94,7 +93,9 @@ async def test_download_movie(
     test_client, responses, aioresponses, add_torrent, session
 ):
     themoviedb(
-        aioresponses, '/movie/533985', MovieResponseFactory.build(title='Bit').dict()
+        aioresponses,
+        '/movie/533985',
+        MovieResponseFactory.build(title='Bit').model_dump(),
     )
     themoviedb(aioresponses, '/movie/533985/external_ids', {'imdb_id': "tt8425034"})
 
@@ -114,7 +115,9 @@ async def test_download_movie(
 @mark.asyncio
 async def test_download(test_client, aioresponses, responses, add_torrent, session):
     themoviedb(
-        aioresponses, '/tv/95792', TvApiResponseFactory(name='Pocket Monsters').dict()
+        aioresponses,
+        '/tv/95792',
+        TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
     )
     themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
     themoviedb(
@@ -159,7 +162,11 @@ async def test_download(test_client, aioresponses, responses, add_torrent, sessi
 async def test_download_season_pack(
     test_client, aioresponses, responses, add_torrent, session
 ):
-    themoviedb(aioresponses, '/tv/90000', TvApiResponseFactory(name='Watchmen').dict())
+    themoviedb(
+        aioresponses,
+        '/tv/90000',
+        TvApiResponseFactory.create(name='Watchmen').model_dump(),
+    )
     themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
 
     magnet = (
@@ -188,7 +195,7 @@ async def test_download_season_pack(
     assert download.episode.show_title == 'Watchmen'
 
 
-def shallow(d: Dict):
+def shallow(d: dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 
@@ -283,7 +290,7 @@ async def test_search(aioresponses, test_client):
 
 @mark.asyncio
 async def test_delete_cascade(test_client: TestClient, session):
-    e = EpisodeDetailsFactory()
+    e = EpisodeDetailsFactory.create()
     session.add(e)
     session.commit()
 
@@ -346,10 +353,14 @@ async def test_foreign_key_integrity(session: Session):
 @mark.asyncio
 async def test_delete_monitor(aioresponses, test_client, session):
     themoviedb(
-        aioresponses, '/movie/5', MovieResponseFactory.build(title='Hello World').dict()
+        aioresponses,
+        '/movie/5',
+        MovieResponseFactory.build(title='Hello World').model_dump(),
     )
     themoviedb(
-        aioresponses, '/tv/5', TvApiResponseFactory.build(name='Hello World').dict()
+        aioresponses,
+        '/tv/5',
+        TvApiResponseFactory.build(name='Hello World').model_dump(),
     )
     ls = (await test_client.get('/api/monitor')).json()
     assert ls == []
@@ -363,6 +374,10 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
     ls = (await test_client.get('/api/monitor')).json()
 
+    added_by = {
+        'first_name': '',
+        'username': 'python',
+    }
     assert ls == [
         {
             'type': 'MOVIE',
@@ -370,10 +385,10 @@ async def test_delete_monitor(aioresponses, test_client, session):
             'tmdb_id': 5,
             'id': 1,
             'status': False,
-            'added_by': 'python',
+            'added_by': added_by,
         },
         {
-            'added_by': 'python',
+            'added_by': added_by,
             'id': 2,
             'status': False,
             'title': 'Hello World',
@@ -392,14 +407,14 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
 @mark.asyncio
 async def test_stats(test_client, session):
-    user1 = UserFactory(username='user1')
-    user2 = UserFactory(username='user2')
+    user1 = UserFactory.create(username='user1')
+    user2 = UserFactory.create(username='user2')
 
     session.add_all(
         [
-            EpisodeDetailsFactory(download__added_by=user1),
-            EpisodeDetailsFactory(download__added_by=user2),
-            MovieDetailsFactory(download__added_by=user1),
+            EpisodeDetailsFactory.create(download__added_by=user1),
+            EpisodeDetailsFactory.create(download__added_by=user2),
+            MovieDetailsFactory.create(download__added_by=user1),
         ]
     )
     session.commit()
@@ -537,7 +552,9 @@ async def test_stream(test_client, responses, aioresponses):
 
 @mark.asyncio
 async def test_schema(snapshot):
-    snapshot.assert_match(json.dumps(SearchResponse.schema(), indent=2), 'schema.json')
+    snapshot.assert_match(
+        json.dumps(SearchResponse.model_json_schema(), indent=2), 'schema.json'
+    )
 
 
 @mark.skipif("not os.path.exists('app/build/index.html')")
@@ -550,7 +567,7 @@ async def test_static(uri, test_client):
 
 @mark.asyncio
 async def test_plex_redirect(test_client, responses):
-    responses.add('GET', 'https://plex.tv/users/account')
+    responses.add('GET', 'https://plex.tv/api/v2/user')
     responses.add(
         'GET',
         'https://test/',
@@ -565,11 +582,11 @@ async def test_plex_redirect(test_client, responses):
 
     responses.add(
         'GET',
-        'https://plex.tv/api/resources?includeHttps=1&includeRelay=1',
+        'https://plex.tv/api/v2/resources?includeHttps=1&includeRelay=1',
         tostring(
             E.Resources(
                 E.Resource(
-                    E.Connection(uri="https://test", secure="True"),
+                    E.connections(E.connection(uri="https://test", secure="True")),
                     name="Novell",
                     provides="server",
                 )
@@ -646,6 +663,6 @@ async def test_piratebay(aioresponses, snapshot):
     )
 
     snapshot.assert_match(
-        ITorrentList(torrents=res).json(indent=2),
+        ITorrentList(torrents=res).model_dump_json(indent=2),
         'piratebay.json',
     )
