@@ -122,7 +122,7 @@ function ParentComponentInt() {
   const classes = useStyles();
 
   const auth = useAuth0();
-  console.log(auth.user);
+  console.log({ user: auth.user });
 
   return (
     <Router>
