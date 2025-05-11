@@ -1,4 +1,3 @@
-import React from 'react';
 import moxios from 'moxios';
 import { swrConfig } from './streaming';
 import { render, act } from '@testing-library/react';
@@ -10,6 +9,7 @@ import {
   createTheme,
 } from '@mui/material/styles';
 import { Location, MemoryHistory } from '@remix-run/router';
+import { Listener } from '@remix-run/router/dist/history';
 
 const theme = createTheme();
 
