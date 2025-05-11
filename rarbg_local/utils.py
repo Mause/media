@@ -1,23 +1,18 @@
+from collections.abc import Callable
 from functools import lru_cache as _lru_cache
-from typing import Protocol, TypeVar
+from typing import TypeVar
 
 from asyncache import cached as _cached
 from cachetools.func import ttl_cache as _ttl_cache
 
-
-class LRUCache(Protocol):
-    def cache_clear(self):
-        pass
-
-
 T = TypeVar('T')
-_caches: set[LRUCache] = set()
+_caches: set[Callable[[], None]] = set()
 
 
 def lru_cache(*args, **kwargs):
     def wrapper(func):
         cache = _lru_cache(*args, **kwargs)(func)
-        _caches.add(cache)
+        _caches.add(cache.clear)
         return cache
 
     return wrapper
@@ -26,7 +21,7 @@ def lru_cache(*args, **kwargs):
 def ttl_cache(*args, **kwargs):
     def wrapper(func):
         cache = _ttl_cache(*args, **kwargs)(func)
-        _caches.add(cache)
+        _caches.add(cache.clear)
         return cache
 
     return wrapper
@@ -35,15 +30,15 @@ def ttl_cache(*args, **kwargs):
 def cached(cache):
     def wrapper(func):
         c = _cached(cache)(func)
-        _caches.add(type('', (), {'cache_clear': cache.clear}))
+        _caches.add(cache.clear)
         return c
 
     return wrapper
 
 
 def cache_clear():
-    for c in _caches:
-        c.cache_clear()
+    for cache_clear in _caches:
+        cache_clear()
 
 
 class NullPointerException(Exception):
