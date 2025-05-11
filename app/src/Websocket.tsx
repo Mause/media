@@ -5,12 +5,14 @@ import _ from 'lodash';
 import qs from 'qs';
 import io from 'socket.io-client';
 
-const SocketContext = createContext<{ url: string } | undefined>(undefined);
+const SocketContext = createContext<{ url: string | undefined }>({
+  url: undefined,
+});
 const SocketIOProvider = SocketContext.Provider;
 
 function useLastMessage(type: string) {
   const [lastMessage, setLastMessage] = useState<string | null>(null);
-  const url = useContext(SocketContext);
+  const { url } = useContext(SocketContext);
   const socket = io(url);
 
   useEffect(() => {
