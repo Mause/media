@@ -15,6 +15,7 @@ t = TTLCache[str, dict](maxsize=10, ttl=3600)
 
 get_my_jwkaas = get_auth(
     client_id="",
+    audience=AUTH0_DOMAIN + 'userinfo',
     base_authorization_server_uri=AUTH0_DOMAIN,
     issuer=AUTH0_DOMAIN,
     signature_cache_ttl=3600,
