@@ -18,7 +18,7 @@ export function MLink(
     color?: TypographyTypeMap['props']['color'];
   } & Pick<Parameters<typeof Link>[0], 'to' | 'state'>,
 ): ReactElement {
-  return <MaterialLink component={Link} {...props} />;
+  return <MaterialLink component={Link} {...props} underline="hover" />;
 }
 
 export function subscribe<T>(
