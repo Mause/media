@@ -3864,21 +3864,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:<18.0.0":
+"@types/react-dom@npm:<18.0.0, @types/react-dom@npm:^17.0.0":
   version: 17.0.26
   resolution: "@types/react-dom@npm:17.0.26"
   peerDependencies:
     "@types/react": ^17.0.0
   checksum: 10/86be1faf019b58f2b470a037c291c9c9efa5cf8b3927bfec436d83b12dd7a6a0369554c567c4ca8b59e1ee341b835c1b272cd0340628cbbea75ec43168858e5b
-  languageName: node
-  linkType: hard
-
-"@types/react-dom@npm:^17.0.0":
-  version: 17.0.0
-  resolution: "@types/react-dom@npm:17.0.0"
-  dependencies:
-    "@types/react": "npm:*"
-  checksum: 10/d300c87f436954d6a3f804a9b534c9ee38a87b888417710b8fcbef856206b19e4c6f36b039a165751a4049390373a0cbd5bb68f66b41e5c05a23cd3dfa7ed079
   languageName: node
   linkType: hard
 
@@ -3922,22 +3913,22 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*":
-  version: 16.9.43
-  resolution: "@types/react@npm:16.9.43"
+  version: 19.1.3
+  resolution: "@types/react@npm:19.1.3"
   dependencies:
-    "@types/prop-types": "npm:*"
-    csstype: "npm:^2.2.0"
-  checksum: 10/6a8d8716de6b242f3f55de6cee62a8ee24f4d023d1ba88db7dce9705c1aa4a4c6ec0c7e1aa472abc77f953e9a4f193075e8b71e6203d7e9649ed706221618d28
+    csstype: "npm:^3.0.2"
+  checksum: 10/f2ccb0b5eb7f4f1c83bbc351aadce9c7c72177d03ce70881655d7773112670e60eff9872f572b58d2ad71e1524577ad00d1d4e3566aa00456458fdd2662e8284
   languageName: node
   linkType: hard
 
 "@types/react@npm:^17.0.0":
-  version: 17.0.0
-  resolution: "@types/react@npm:17.0.0"
+  version: 17.0.85
+  resolution: "@types/react@npm:17.0.85"
   dependencies:
     "@types/prop-types": "npm:*"
+    "@types/scheduler": "npm:^0.16"
     csstype: "npm:^3.0.2"
-  checksum: 10/051c2ab7c604f6b7b3f24b2ef4827bd3242856395e5e060695d3078e6e64404daaad54913c6db4a990e6556c0000f1d18b15d33cb4e105231722bd48cffb5815
+  checksum: 10/6c0f55a20dd90487f5ebb04f4ff1fb4da3ea38846f1037d7b75992e0a1fff48bc9b5a5d3ce49fb8b71da0a39e069d6a5c65ac98fc71cfec4dc8797e6949dd6bd
   languageName: node
   linkType: hard
 
@@ -3954,6 +3945,13 @@ __metadata:
   version: 0.12.0
   resolution: "@types/retry@npm:0.12.0"
   checksum: 10/bbd0b88f4b3eba7b7acfc55ed09c65ef6f2e1bcb4ec9b4dca82c66566934351534317d294a770a7cc6c0468d5573c5350abab6e37c65f8ef254443e1b028e44d
+  languageName: node
+  linkType: hard
+
+"@types/scheduler@npm:^0.16":
+  version: 0.16.8
+  resolution: "@types/scheduler@npm:0.16.8"
+  checksum: 10/6c091b096daa490093bf30dd7947cd28e5b2cd612ec93448432b33f724b162587fed9309a0acc104d97b69b1d49a0f3fc755a62282054d62975d53d7fd13472d
   languageName: node
   linkType: hard
 
@@ -6441,7 +6439,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^2.2.0, csstype@npm:^2.6.7":
+"csstype@npm:^2.6.7":
   version: 2.6.11
   resolution: "csstype@npm:2.6.11"
   checksum: 10/6fa4c8929b4f2d23e79ac5318f08ec8d92cc299ae520dc76ce311cc1b22306de17973e0ad9a5342ee75a2cd4e4dc6edd5b5e2bf85292129f7654c36f1f73a692
