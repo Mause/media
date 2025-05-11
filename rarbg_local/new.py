@@ -100,10 +100,10 @@ def generate_plain_text(exc):
 async def get_current_user(
     security_scopes: SecurityScopes,
     session=Depends(get_db),
-    jwkaas=Depends(get_my_jwkaas),
+    token_info=Depends(get_my_jwkaas),
 ):
     user = auth_hook(
-        session=session, header='header', security_scopes=security_scopes, jwkaas=jwkaas
+        session=session, security_scopes=security_scopes, token_info=token_info
     )
     if user:
         return user
