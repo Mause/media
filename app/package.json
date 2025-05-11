@@ -35,10 +35,10 @@
     "react-loading": "^2.0.3",
     "react-router-dom": "^6",
     "react-scripts": "^5",
+    "socket.io-client": "^4.8.1",
     "swr": "^0.4.0",
     "typescript": "^5",
-    "typescript-string-operations": "^1.5.1",
-    "use-socketio": "^2.1.0"
+    "typescript-string-operations": "^1.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -81,7 +81,6 @@
     "@types/qs": "^6.9.5",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/socket.io-client": "^1.4.34",
     "colors.css": "^3.0.0",
     "eslint-config-react-app": "^7.0.0",
     "jest-junit": "^12.0.0",
