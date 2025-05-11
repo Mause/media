@@ -1,7 +1,12 @@
 import useSWR from 'swr';
 import React, { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
-import { Redirect, useParams, useHistory, useLocation } from 'react-router-dom';
+import {
+  useParams,
+  useLocation,
+  useNavigate,
+  Navigate,
+} from 'react-router-dom';
 import { usePost } from './utils';
 import MenuItem from '@mui/material/MenuItem';
 import ContextMenu from './ContextMenu';
@@ -16,7 +21,7 @@ type MediaType = components['schemas']['MonitorMediaType'];
 
 export function MonitorComponent() {
   const { data } = useSWR<Monitor[]>('monitor');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -40,7 +45,7 @@ export function MonitorComponent() {
                 <ContextMenu>
                   <MenuItem
                     onClick={() =>
-                      history.push(
+                      navigate(
                         m.type === 'MOVIE'
                           ? `/select/${m.tmdb_id}/options`
                           : `/select/${m.tmdb_id}/season`,
@@ -49,9 +54,7 @@ export function MonitorComponent() {
                   >
                     Search
                   </MenuItem>
-                  <MenuItem
-                    onClick={() => history.push(`/monitor/delete/${m.id}`)}
-                  >
+                  <MenuItem onClick={() => navigate(`/monitor/delete/${m.id}`)}>
                     Delete
                   </MenuItem>
                 </ContextMenu>
@@ -68,7 +71,7 @@ export function MonitorComponent() {
 
 export function MonitorAddComponent() {
   const { tmdb_id } = useParams<{ tmdb_id: string }>();
-  const { state } = useLocation<{ type: MediaType }>();
+  const { state } = useLocation();
 
   const { done, error } = usePost('monitor', {
     tmdb_id: Number(tmdb_id),
@@ -79,7 +82,7 @@ export function MonitorAddComponent() {
     return <DisplayError error={error} />;
   }
 
-  return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
+  return done ? <Navigate to="/monitor" /> : <ReactLoading color="#000000" />;
 }
 
 function useDelete(path: string) {
@@ -99,7 +102,7 @@ export function MonitorDeleteComponent() {
 
   const done = useDelete(`monitor/${id}`);
 
-  return done ? <Redirect to="/monitor" /> : <ReactLoading color="#000000" />;
+  return done ? <Navigate to="/monitor" /> : <ReactLoading color="#000000" />;
 }
 
 export type { Monitor };

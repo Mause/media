@@ -5,7 +5,6 @@ import {
   Monitor,
   MonitorAddComponent,
 } from './MonitorComponent';
-import React from 'react';
 import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import * as _ from 'lodash';
