@@ -1,10 +1,8 @@
 import logging
-from typing import Any
 
-import requests
-from cachetools import TTLCache, cached
+from cachetools import TTLCache
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, SecurityScopes
+from fastapi.security import SecurityScopes
 from fastapi_oidc import get_auth
 from sqlalchemy.orm.session import Session
 
@@ -23,24 +21,12 @@ get_my_jwkaas = get_auth(
 )
 
 
-@cached(t, key=lambda token_info, rest: token_info.sub)
-def get_user_info(
-    token_info: dict[str, Any], rest: HTTPAuthorizationCredentials
-) -> dict:
-    return requests.get(
-        f'{AUTH0_DOMAIN}userinfo',
-        headers={'Authorization': rest.scheme.title() + ' ' + rest.credentials},
-    ).json()
-
-
 def auth_hook(
     *,
     session: Session,
-    header: HTTPAuthorizationCredentials,
     security_scopes: SecurityScopes,
-    jwkaas=Depends(get_my_jwkaas),
+    token_info=Depends(get_my_jwkaas),
 ) -> User | None:
-    token_info = jwkaas
     if token_info is None:
         logger.info("Token info is None")
         return None
@@ -56,7 +42,7 @@ def auth_hook(
             )
     logger.info("Has required scopes")
 
-    us = get_user_info(token_info, header)
+    us = getattr(token_info, 'https://media.mause.me/email')
 
     user = session.query(User).filter_by(email=us['email']).one_or_none()
 

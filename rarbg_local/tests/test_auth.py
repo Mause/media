@@ -44,11 +44,12 @@ async def test_auth(responses, user, fastapi_app, test_client):
     jw = PyJWT().encode(
         {
             'sub': 'python',
-            'scope': 'openid',
             'iss': AUTH0_DOMAIN,
-            'aud': '',
             'exp': exp,
             'iat': iat,
+            'https://media.mause.me/email': 'me@mause.me',
+            'aud': ['https://media.mause.me', 'https://mause.au.auth0.com/userinfo'],
+            'scope': 'openid profile email',
         },
         key,
         'RS256',
