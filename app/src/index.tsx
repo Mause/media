@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { createRoot } from 'react-dom/client';
 // import { appUpdated } from './serviceWorkerCallback';
 import { Auth0Provider } from '@auth0/auth0-react';
 
@@ -29,7 +29,9 @@ if (!(clientId && audience)) {
   );
 }
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(
   <Auth0Provider
     domain="mause.au.auth0.com"
     clientId={clientId!}
@@ -44,7 +46,6 @@ ReactDOM.render(
       </ThemeProvider>
     </StyledEngineProvider>
   </Auth0Provider>,
-  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change
