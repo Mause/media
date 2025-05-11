@@ -21,8 +21,9 @@ usesMoxios();
 describe('MonitorComponent', () => {
   it('view', async () => {
     const { container } = renderWithSWR(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={['/monitor']}>
         <Routes>
+          <Route path="/" index element={<div>Home</div>} />
           <Route path="/monitor" Component={MonitorComponent} />
         </Routes>
       </MemoryRouter>,
