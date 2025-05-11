@@ -43,9 +43,9 @@ def auth_hook(
             )
     logger.info("Has required scopes")
 
-    us = getattr(token_info, 'https://media.mause.me/email')
+    email = getattr(token_info, 'https://media.mause.me/email')
 
-    user = session.query(User).filter_by(email=us['email']).one_or_none()
+    user = session.query(User).filter_by(email=email).one_or_none()
 
     if user is None:
         logger.info("User not found")

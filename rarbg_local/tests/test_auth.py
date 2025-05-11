@@ -47,7 +47,7 @@ async def test_auth(responses, user, fastapi_app, test_client):
             'iss': AUTH0_DOMAIN,
             'exp': exp,
             'iat': iat,
-            'https://media.mause.me/email': 'me@mause.me',
+            'https://media.mause.me/email': user.email,
             'aud': ['https://media.mause.me', 'https://mause.au.auth0.com/userinfo'],
             'scope': 'openid profile email',
         },
