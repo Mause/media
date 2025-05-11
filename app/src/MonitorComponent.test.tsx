@@ -38,7 +38,9 @@ describe('MonitorComponent', () => {
         added_by: 'me',
       },
     ];
+    console.log('mocking');
     await mock('monitor', res);
+    console.log('mocked');
     await wait();
 
     expect(container).toMatchSnapshot();

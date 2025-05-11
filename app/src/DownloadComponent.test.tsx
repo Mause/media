@@ -43,9 +43,13 @@ describe('DownloadComponent', () => {
 
     expect(container).toMatchSnapshot();
 
+    console.log('mocking');
     await moxios.stubOnce('POST', /\/api\/download/, {});
+    console.log('mocked');
     expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
+    console.log('waiting');
     await wait();
+    console.log('done');
 
     expect(container).toMatchSnapshot();
     expect(entries.length).toBe(2);
