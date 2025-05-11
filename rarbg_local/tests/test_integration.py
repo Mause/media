@@ -576,7 +576,17 @@ def add_xml(responses, method, url, body):
 
 @mark.asyncio
 async def test_plex_redirect(test_client, responses):
-    responses.add('GET', 'https://plex.tv/api/v2/user')
+    add_xml(
+        responses,
+        'GET',
+        'https://plex.tv/api/v2/user',
+        E.User(
+            E.subscription(),
+            E.profile(),
+            accessToken='plex_token',
+            scrobbleTypes='all',
+        ),
+    )
     add_xml(
         responses,
         'GET',
