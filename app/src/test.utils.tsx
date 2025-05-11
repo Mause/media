@@ -1,7 +1,7 @@
 import moxios from 'moxios';
 import { swrConfig } from './streaming';
-import { render, act } from '@testing-library/react';
-import { ReactElement } from 'react';
+import { render } from '@testing-library/react';
+import { act, ReactElement } from 'react';
 import { Auth0Context, Auth0ContextInterface } from '@auth0/auth0-react';
 import {
   ThemeProvider,
@@ -10,6 +10,7 @@ import {
 } from '@mui/material/styles';
 import { Location, MemoryHistory } from '@remix-run/router';
 import { Listener } from '@remix-run/router/dist/history';
+import { HelmetProvider } from 'react-helmet-async';
 
 const theme = createTheme();
 
@@ -35,7 +36,9 @@ export function renderWithSWR(el: ReactElement) {
   return render(
     <Auth0Context.Provider value={c}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>{swrConfig(() => el)()}</ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <HelmetProvider>{swrConfig(() => el)()}</HelmetProvider>
+        </ThemeProvider>
       </StyledEngineProvider>
     </Auth0Context.Provider>,
   );

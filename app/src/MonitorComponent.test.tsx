@@ -14,7 +14,7 @@ import {
 import * as _ from 'lodash';
 import { expectLastRequestBody } from './utils';
 import { createMemoryHistory } from '@remix-run/router';
-import { act } from '@testing-library/react';
+import { act } from 'react';
 
 usesMoxios();
 

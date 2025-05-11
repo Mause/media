@@ -1,4 +1,4 @@
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { DownloadComponent, DownloadState } from './DownloadComponent';
 import {
   Route,
@@ -10,6 +10,7 @@ import { createMemoryHistory } from '@remix-run/router';
 import moxios from 'moxios';
 import { expectLastRequestBody } from './utils';
 import { listenTo } from './test.utils';
+import { act } from 'react';
 
 usesMoxios();
 
