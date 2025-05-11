@@ -37,6 +37,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Link as MaterialLink } from '@mui/material';
 import { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
+import Storybook from './Storybook';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -315,6 +316,14 @@ function Routes() {
         element={
           <RouteTitle title="Diagnostics">
             <DiagnosticsComponent />
+          </RouteTitle>
+        }
+      />
+      <Route
+        path="/storybook"
+        element={
+          <RouteTitle title="Storybook">
+            <Storybook />
           </RouteTitle>
         }
       />
