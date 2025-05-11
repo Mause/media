@@ -1,5 +1,4 @@
 import { act, screen } from '@testing-library/react';
-import React from 'react';
 import { DownloadComponent, DownloadState } from './DownloadComponent';
 import {
   Route,
@@ -16,17 +15,23 @@ usesMoxios();
 
 describe('DownloadComponent', () => {
   it('success', async () => {
-    const history = createMemoryHistory();
-    const entries = listenTo(history);
-    const state: DownloadState = {
-      downloads: [
+    const history = createMemoryHistory({
+      initialEntries: [
         {
-          tmdb_id: 10000,
-          magnet: '...',
+          pathname: '/monitor/add/5',
+          state: {
+            downloads: [
+              {
+                tmdb_id: 10000,
+                magnet: '...',
+              },
+            ],
+          } satisfies DownloadState,
         },
       ],
-    };
-    history.push('/download', state);
+      v5Compat: true,
+    });
+    const entries = listenTo(history);
 
     const { container } = renderWithSWR(
       <HistoryRouter history={history}>
