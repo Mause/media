@@ -19,9 +19,6 @@
     "@mui/styles": "^6",
     "@sentry/react": "^5.29.2",
     "@sentry/tracing": "^5.29.2",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.2",
-    "@testing-library/user-event": "^14.6.1",
     "@use-it/interval": "^1.0.0",
     "@vtex/axios-concurrent-retry": "^4.0.11",
     "axios": "^1.8.2",
@@ -73,6 +70,9 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^12",
+    "@testing-library/user-event": "^14.6.1",
     "@types/history": "4.7.11",
     "@types/jest": "^26.0.13",
     "@types/lodash": "^4.17.16",
