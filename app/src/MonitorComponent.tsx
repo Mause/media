@@ -1,15 +1,10 @@
 import useSWR from 'swr';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
-import {
-  useParams,
-  useLocation,
-  useNavigate,
-  Navigate,
-} from 'react-router-dom';
-import { usePost } from './utils';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import ContextMenu from './ContextMenu';
+import { usePost, useLocation } from './utils';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
@@ -71,7 +66,7 @@ export function MonitorComponent() {
 
 export function MonitorAddComponent() {
   const { tmdb_id } = useParams<{ tmdb_id: string }>();
-  const { state } = useLocation();
+  const { state } = useLocation<{ type: MediaType }>();
 
   const { done, error } = usePost('monitor', {
     tmdb_id: Number(tmdb_id),

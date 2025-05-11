@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import {
   BrowserRouter as Router,
   useLocation,
@@ -37,7 +37,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Link as MaterialLink } from '@mui/material';
 import { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
-import Storybook from './Storybook';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({

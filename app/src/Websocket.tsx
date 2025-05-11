@@ -1,9 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { DisplayTorrent, ITorrent } from './OptionsComponent';
 import _ from 'lodash';
 import qs from 'qs';
-import { useLastMessage, SocketIOProvider } from 'use-socketio';
+import io from 'socket.io-client';
+
+const SocketContext = createContext<{ url: string | undefined }>({
+  url: undefined,
+});
+const SocketIOProvider = SocketContext.Provider;
+
+function useLastMessage(type: string) {
+  const [lastMessage, setLastMessage] = useState<string | null>(null);
+  const { url } = useContext(SocketContext);
+  const socket = io(url);
+
+  useEffect(() => {
+    socket.on(type, (message) => {
+      setLastMessage(message);
+    });
+    return () => {
+      socket.off(type);
+    };
+  }, [type, socket]);
+
+  return { data: lastMessage, socket };
+}
 
 function useMessages<T>(initMessage: object) {
   const { data: lastMessage, socket } = useLastMessage('message');
@@ -56,11 +78,11 @@ function Websocket() {
 
 const IOWebsocket = () => (
   <SocketIOProvider
-    url={
-      window.location.hostname.includes('localhost')
+    value={{
+      url: window.location.hostname.includes('localhost')
         ? 'http://localhost:5000'
-        : '/'
-    }
+        : '/',
+    }}
   >
     <Websocket />
   </SocketIOProvider>
