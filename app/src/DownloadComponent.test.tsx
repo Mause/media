@@ -19,7 +19,7 @@ describe('DownloadComponent', () => {
     const history = createMemoryHistory({
       initialEntries: [
         {
-          pathname: '/monitor/add/5',
+          pathname: '/download',
           state: {
             downloads: [
               {
@@ -37,6 +37,7 @@ describe('DownloadComponent', () => {
     const { container } = renderWithSWR(
       <HistoryRouter history={history}>
         <Routes>
+          <Route path="/" element={<div>Home</div>} />
           <Route path="/download" Component={DownloadComponent} />
         </Routes>
       </HistoryRouter>,
@@ -44,16 +45,12 @@ describe('DownloadComponent', () => {
 
     expect(container).toMatchSnapshot();
 
-    console.log('mocking');
     await moxios.stubOnce('POST', /\/api\/download/, {});
-    console.log('mocked');
     expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
-    console.log('waiting');
     await wait();
-    console.log('done');
 
     expect(container).toMatchSnapshot();
-    expect(entries.length).toBe(2);
+    expect(entries.map((e) => e.pathname)).toEqual(['/']);
   });
   it.skip('failure', async () => {
     const history = createMemoryHistory();
