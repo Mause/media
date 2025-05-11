@@ -66,7 +66,7 @@ export function MonitorComponent() {
 
 export function MonitorAddComponent() {
   const { tmdb_id } = useParams<{ tmdb_id: string }>();
-  const { state } = useLocation<{ type: 'MOVIE' | 'TV' }>();
+  const { state } = useLocation<{ type: MediaType }>();
 
   const { done, error } = usePost('monitor', {
     tmdb_id: Number(tmdb_id),
