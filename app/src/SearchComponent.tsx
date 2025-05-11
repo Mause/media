@@ -23,13 +23,12 @@ export function SearchComponent() {
           results.map((result) => (
             <li key={result.imdbID}>
               <MLink
-                to={{
-                  pathname:
-                    result.type === 'movie'
-                      ? `/select/${result.imdbID}/options`
-                      : `/select/${result.imdbID}/season`,
-                  state: { query },
-                }}
+                to={
+                  result.type === 'movie'
+                    ? `/select/${result.imdbID}/options`
+                    : `/select/${result.imdbID}/season`
+                }
+                state={{ query }}
               >
                 {result.title} ({result.year ? result.year : 'Unknown year'})
               </MLink>
