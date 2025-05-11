@@ -40,7 +40,7 @@ async def test_auth(responses, user, fastapi_app, test_client):
     )
 
     iat = datetime.utcnow()
-    exp = iat + timedelta(seconds=60)
+    exp = iat + timedelta(seconds=36000)
     jw = PyJWT().encode(
         {
             'sub': 'python',
