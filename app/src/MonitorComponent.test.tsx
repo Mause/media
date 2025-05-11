@@ -78,6 +78,6 @@ describe('MonitorComponent', () => {
     });
     await wait();
 
-    expect(_.map(entries, 'pathname')).toEqual(['/', '/monitor']);
+    expect(_.map(entries, 'pathname')).toEqual(['/monitor']);
   });
 });
