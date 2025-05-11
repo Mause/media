@@ -565,32 +565,42 @@ async def test_static(uri, test_client):
     assert r.status_code == 200
 
 
+def add_xml(responses, method, url, body):
+    responses.add(
+        method,
+        url,
+        tostring(body),
+        content_type='application/xml',
+    )
+
+
 @mark.asyncio
 async def test_plex_redirect(test_client, responses):
     responses.add('GET', 'https://plex.tv/api/v2/user')
-    responses.add(
+    add_xml(
+        responses,
         'GET',
         'https://test/',
-        tostring(E.Root(machineIdentifier="aaaa")),
+        E.Root(machineIdentifier="aaaa"),
     )
-    responses.add('GET', 'https://test/library', tostring(E.Library()))
-    responses.add(
+    add_xml(responses, 'GET', 'https://test/library', E.Library())
+    add_xml(
+        responses,
         'GET',
         'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2F10000%3Flang%3Den',
-        tostring(E.Search(E.Video(type='Video.episode', ratingKey='aaa'))),
+        E.Search(E.Video(type='Video.episode', ratingKey='aaa')),
     )
 
-    responses.add(
+    add_xml(
+        responses,
         'GET',
         'https://plex.tv/api/v2/resources?includeHttps=1&includeRelay=1',
-        tostring(
-            E.Resources(
-                E.Resource(
-                    E.connections(E.connection(uri="https://test", secure="True")),
-                    name="Novell",
-                    provides="server",
-                )
-            ),
+        E.Resources(
+            E.Resource(
+                E.connections(E.connection(uri="https://test", secure="True")),
+                name="Novell",
+                provides="server",
+            )
         ),
     )
 
