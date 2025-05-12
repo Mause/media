@@ -8,16 +8,10 @@ import { Auth0Provider } from '@auth0/auth0-react';
 
 import {
   ThemeProvider,
-  Theme,
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
 import { HelmetProvider } from 'react-helmet-async';
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 const theme = createTheme();
 

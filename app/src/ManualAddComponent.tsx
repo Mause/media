@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import useSWR from 'swr';
-import { TextField, Button, Theme } from '@mui/material';
+import { TextField, Button } from '@mui/material';
 import { DownloadState } from './DownloadComponent';
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useLocation } from './utils';
 
 const PREFIX = 'ManualAddComponent';
@@ -12,7 +12,7 @@ const classes = {
   root: `${PREFIX}-root`,
 };
 
-const Root = styled('form')(({ theme: Theme }) => ({
+const Root = styled('form')(({ theme }) => ({
   [`&.${classes.root}`]: {
     '& > *': {
       margin: theme.spacing(1),
