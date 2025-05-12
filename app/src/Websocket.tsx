@@ -79,9 +79,9 @@ function Websocket() {
 const IOWebsocket = () => (
   <SocketIOProvider
     value={{
-      url: window.location.hostname.includes('localhost')
+      url: (window.location.hostname.includes('localhost')
         ? 'http://localhost:5000'
-        : '/',
+        : '') + '/ws',
     }}
   >
     <Websocket />
