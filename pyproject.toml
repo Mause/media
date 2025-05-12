@@ -46,7 +46,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest",
-    "responses==0.12.1",
+    "responses==0.25.7",
     "lxml",
     "pytest-html>=3.1.1",
     "pytest-selenium>=3.0.0",
