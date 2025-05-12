@@ -8,7 +8,6 @@ from .abc import MovieProvider, TvProvider, format
 
 
 class TorrentsCsvProvider(MovieProvider, TvProvider):
-    name = "torrentscsv"
     type = ProviderSource.TORRENTS_CSV
 
     async def query(self, q: str):

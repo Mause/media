@@ -8,7 +8,7 @@ from .abc import MovieProvider, TvProvider, format, movie_convert, tv_convert
 
 
 class PirateBayProvider(TvProvider, MovieProvider):
-    name = 'piratebay'
+    type = ProviderSource.PIRATEBAY
     root = 'https://apibay.org'
 
     async def search_for_tv(

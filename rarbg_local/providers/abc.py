@@ -6,7 +6,6 @@ from ..types import ImdbId, TmdbId
 
 
 class Provider(ABC):
-    name: str
     type: ProviderSource
 
 

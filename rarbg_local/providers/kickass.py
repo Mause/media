@@ -90,7 +90,6 @@ async def search_for_movie(imdb_id: ImdbId, tmdb_id: TmdbId):
 
 
 class KickassProvider(TvProvider, MovieProvider):
-    name = 'kickass'
     type = ProviderSource.KICKASS
 
     async def search_for_tv(

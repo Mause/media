@@ -117,7 +117,6 @@ def _get(base_url: str, **kwargs: str) -> list[dict]:
 
 
 class RarbgProvider(TvProvider, MovieProvider):
-    name = 'rarbg'
     type = ProviderSource.RARBG
 
     async def search_for_tv(
