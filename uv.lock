@@ -394,27 +394,6 @@ wheels = [
 ]
 
 [[package]]
-name = "configparser"
-version = "7.2.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/8b/ac/ea19242153b5e8be412a726a70e82c7b5c1537c83f61b20995b2eda3dcd7/configparser-7.2.0.tar.gz", hash = "sha256:b629cc8ae916e3afbd36d1b3d093f34193d851e11998920fdcfc4552218b7b70", size = 51273, upload-time = "2025-03-08T16:04:09.339Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/09/fe/f61e7129e9e689d9e40bbf8a36fb90f04eceb477f4617c02c6a18463e81f/configparser-7.2.0-py3-none-any.whl", hash = "sha256:fee5e1f3db4156dcd0ed95bc4edfa3580475537711f67a819c966b389d09ce62", size = 17232, upload-time = "2025-03-08T16:04:07.743Z" },
-]
-
-[[package]]
-name = "crayons"
-version = "0.4.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "colorama" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/b8/6b/12a1dea724c82f1c19f410365d3e25356625b48e8009a7c3c9ec4c42488d/crayons-0.4.0.tar.gz", hash = "sha256:bd33b7547800f2cfbd26b38431f9e64b487a7de74a947b0fafc89b45a601813f", size = 4582, upload-time = "2020-08-26T21:34:16.592Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/5b/0d/e3fad4ca1de8e70e06444e7d777a5984261e1db98758b5be3e8296c03fe9/crayons-0.4.0-py2.py3-none-any.whl", hash = "sha256:e73ad105c78935d71fe454dd4b85c5c437ba199294e7ffd3341842bc683654b1", size = 4629, upload-time = "2020-08-26T21:34:15.284Z" },
-]
-
-[[package]]
 name = "cryptography"
 version = "3.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1176,7 +1155,7 @@ dev = [
     { name = "types-requests", specifier = ">=2.32.0.20250328" },
     { name = "types-selenium", specifier = ">=3.141.9" },
     { name = "types-tabulate", specifier = ">=0.9.0.20241207" },
-    { name = "webdriver-manager", specifier = "==3.2.2" },
+    { name = "webdriver-manager", specifier = "==3.9.1" },
 ]
 
 [[package]]
@@ -2436,16 +2415,16 @@ wheels = [
 
 [[package]]
 name = "webdriver-manager"
-version = "3.2.2"
+version = "3.9.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "configparser" },
-    { name = "crayons" },
+    { name = "packaging" },
+    { name = "python-dotenv" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/13/1b/88c07014d330fb6e814048921d4fef27a98d05de8ea2d90deecd81535d20/webdriver_manager-3.2.2.tar.gz", hash = "sha256:c2d4ee0a78226c355f3657dd0337e515187585a1497229af2ce5f4705234da9c", size = 10803, upload-time = "2020-08-20T07:21:56.363Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/97/a8/b16286fc3f5c78cc44e8c716d792b8c8acd4f43521070e95b58cdfa5e15a/webdriver_manager-3.9.1.tar.gz", hash = "sha256:cd1f49ebb325a98b4dc3c41056f5b645e82fff3f83e346607844ec0bdf561c0b", size = 25093, upload-time = "2023-07-23T15:07:46.677Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2a/88/bc1f85fd733cf6bcae3c6e5c86ea124e91c49eb694d47dfef7f37f4394eb/webdriver_manager-3.2.2-py2.py3-none-any.whl", hash = "sha256:18a665c6400bb7cf1a9ec9e1030ac5539cd5c892c97075f58940c62971470ce3", size = 16243, upload-time = "2020-08-20T07:21:55.169Z" },
+    { url = "https://files.pythonhosted.org/packages/7d/47/a719c25b777275d96e24c4f7f3612db05de4d077400fb945bffef58819c7/webdriver_manager-3.9.1-py2.py3-none-any.whl", hash = "sha256:1dfc29a786abb97ba28076d4766d931064eeeac71a9685a3e8d46f5d363fcbe3", size = 27247, upload-time = "2023-07-23T15:07:45.501Z" },
 ]
 
 [[package]]
