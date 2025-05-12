@@ -1,6 +1,6 @@
 import { renderWithSWR, mock, usesMoxios, wait } from './test.utils';
 import { DownloadAllComponent } from './DownloadAllComponent';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import React from 'react';
 import { ITorrent } from './OptionsComponent';
 
@@ -9,9 +9,12 @@ usesMoxios();
 test('DownloadAllComponent', async () => {
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/select/1/season/1/download_all']}>
-      <Route path="/select/:tmdb_id/season/:season/download_all">
-        <DownloadAllComponent />
-      </Route>
+      <Routes>
+        <Route
+          path="/select/:tmdb_id/season/:season/download_all"
+          Component={DownloadAllComponent}
+        />
+      </Routes>
     </MemoryRouter>,
   );
 

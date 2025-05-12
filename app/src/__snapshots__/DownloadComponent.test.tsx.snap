@@ -357,4 +357,10 @@ exports[`DownloadComponent success 1`] = `
 </div>
 `;
 
-exports[`DownloadComponent success 2`] = `<div />`;
+exports[`DownloadComponent success 2`] = `
+<div>
+  <div>
+    Home
+  </div>
+</div>
+`;

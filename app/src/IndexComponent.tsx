@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import { TVShows, Movies } from './render';
 import { IndexResponse, Torrents } from './streaming';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
 import useSWR from 'swr';
 import { Alert } from '@mui/material';
@@ -55,11 +55,11 @@ export function DisplayError(props: { error: Error; message?: string }) {
 export function SearchBox() {
   function search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    history.push({ pathname: '/search', search: qs.stringify({ query }) });
+    navigate({ pathname: '/search', search: qs.stringify({ query }) });
   }
 
   const [query, setQuery] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <form onSubmit={search}>

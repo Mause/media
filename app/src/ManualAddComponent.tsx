@@ -1,10 +1,11 @@
-import { useLocation, Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { TextField, Button, Theme } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import createStyles from '@mui/styles/createStyles';
 import { DownloadState } from './DownloadComponent';
 import React, { FormEvent, useState } from 'react';
+import { useLocation } from './utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,7 +42,7 @@ export function ManualAddComponent() {
   const [submitted, setSubmitted] = useState(false);
 
   if (!state) {
-    return <Redirect to="/" />;
+    return <Navigate to="/" />;
   }
   if (submitted) {
     const toState: DownloadState = {
@@ -53,7 +54,7 @@ export function ManualAddComponent() {
         },
       ],
     };
-    return <Redirect to={{ pathname: '/download', state: toState }} />;
+    return <Navigate to="/download" state={toState} />;
   }
 
   return (

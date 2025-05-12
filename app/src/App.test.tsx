@@ -1,7 +1,6 @@
-import React from 'react';
 import App from './App';
 import { appUpdated, CallbackMountPoint } from './serviceWorkerCallback';
-import { act } from 'react-dom/test-utils';
+import { act } from 'react';
 import { usesMoxios, renderWithSWR } from './test.utils';
 
 usesMoxios();

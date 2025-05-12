@@ -40,7 +40,7 @@ jobs:
         run: |
           uv run pytest -vv
         env:
-          CLOUDAMQP_URL: "https://hello"
+          CLOUDAMQP_URL: 'https://hello'
           TMDB_API_KEY: word
           TMDB_READ_ACCESS_TOKEN: word
       - name: Archive test report
