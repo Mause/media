@@ -9,19 +9,15 @@ import { useLocation } from './utils';
 const PREFIX = 'ManualAddComponent';
 
 const classes = {
-  root: `${PREFIX}-root`
+  root: `${PREFIX}-root`,
 };
 
-const Root = styled('form')((
-  {
-    theme: Theme
-  }
-) => ({
+const Root = styled('form')(({ theme: Theme }) => ({
   [`&.${classes.root}`]: {
     '& > *': {
       margin: theme.spacing(1),
     },
-  }
+  },
 }));
 
 export function ManualAddComponent() {
@@ -40,7 +36,6 @@ export function ManualAddComponent() {
     episode: state_s?.episode ? parseInt(state_s.episode) : undefined,
     tmdb_id: state_s.tmdb_id,
   };
-
 
   const { data } = useSWR<{ title: string }>(
     () => (state.season ? 'tv' : 'movie') + `/` + state.tmdb_id,
