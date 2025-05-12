@@ -5,7 +5,7 @@ import {
   BrowserRouter as Router,
   useLocation,
   Route,
-  Routes as Switch,
+  Routes,
 } from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
 import {
@@ -228,7 +228,8 @@ function Routes() {
   }
 
   return (
-    <Switch>
+    <Routes>
+      <RouteWithTitle path="*" element={<div>Page not found<div/>} />
       <Route
         path="/websocket/:tmdbId"
         element={
@@ -359,7 +360,7 @@ function Routes() {
           </RouteTitle>
         }
       />
-    </Switch>
+    </Routes>
   );
 }
 export { ParentComponent };
