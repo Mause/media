@@ -1,0 +1,35 @@
+[
+  {
+    "source": "rarbg",
+    "title": "18",
+    "seeders": 18,
+    "download": "magnet:?xt=urn:btih:00000000000000000",
+    "category": "",
+    "episode_info": {
+      "seasonnum": 1,
+      "epnum": 1
+    }
+  },
+  {
+    "source": "rarbg",
+    "title": "41",
+    "seeders": 41,
+    "download": "magnet:?xt=urn:btih:00000000000000000",
+    "category": "",
+    "episode_info": {
+      "seasonnum": 1,
+      "epnum": 1
+    }
+  },
+  {
+    "source": "rarbg",
+    "title": "49",
+    "seeders": 49,
+    "download": "magnet:?xt=urn:btih:00000000000000000",
+    "category": "",
+    "episode_info": {
+      "seasonnum": 1,
+      "epnum": 1
+    }
+  }
+]

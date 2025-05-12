@@ -492,7 +492,7 @@ async def test_openapi(test_client, snapshot):
 
 
 @mark.asyncio
-async def test_stream(test_client, responses, aioresponses):
+async def test_stream(test_client, responses, aioresponses, snapshot):
     themoviedb(aioresponses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
     root = 'https://torrentapi.org/pubapi_v2.php?mode=search&ranked=0&limit=100&format=json_extended&app_id=Sonarr'
     add_json(responses, 'GET', root + '&get_token=get_token', {'token': 'aaaaaaa'})
@@ -504,7 +504,12 @@ async def test_stream(test_client, responses, aioresponses):
             f'{root}&token=aaaaaaa&search_imdb=tt00000&search_string=S01E01&category={i}',
             {
                 'torrent_results': [
-                    {'seeders': i, 'title': i, 'download': '', 'category': ''}
+                    {
+                        'seeders': i,
+                        'title': i,
+                        'download': 'magnet:?xt=urn:btih:00000000000000000',
+                        'category': '',
+                    }
                 ]
             },
         )
@@ -522,32 +527,10 @@ async def test_stream(test_client, responses, aioresponses):
 
     datum = sorted(datum, key=lambda item: item['seeders'])
 
-    assert datum == [
-        {
-            'source': 'rarbg',
-            'seeders': 18,
-            'title': '18',
-            'download': '',
-            'category': '',
-            'episode_info': {'seasonnum': 1, 'epnum': 1},
-        },
-        {
-            'source': 'rarbg',
-            'seeders': 41,
-            'title': '41',
-            'download': '',
-            'category': '',
-            'episode_info': {'seasonnum': 1, 'epnum': 1},
-        },
-        {
-            'source': 'rarbg',
-            'seeders': 49,
-            'title': '49',
-            'download': '',
-            'category': '',
-            'episode_info': {'seasonnum': 1, 'epnum': 1},
-        },
-    ]
+    snapshot.assert_match(
+        json.dumps(datum, indent=2),
+        'stream.json',
+    )
 
 
 @mark.asyncio

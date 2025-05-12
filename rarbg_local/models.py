@@ -13,6 +13,7 @@ class Orm(BaseModel):
 
 
 T = TypeVar('T')
+MagnetUri = Annotated[str, StringConstraints(pattern=r'^magnet:')]
 
 
 class ProviderSource(Enum):
@@ -33,7 +34,7 @@ class ITorrent(BaseModel):
     source: ProviderSource
     title: str
     seeders: int
-    download: str
+    download: MagnetUri
     category: str
     episode_info: EpisodeInfo | None = None
 
@@ -113,7 +114,7 @@ class MonitorGet(MonitorPost):
 
 class DownloadPost(BaseModel):
     tmdb_id: TmdbId
-    magnet: Annotated[str, StringConstraints(pattern=r'^magnet:')]
+    magnet: MagnetUri
     season: int | None = None
     episode: int | None = None
 
