@@ -180,7 +180,7 @@ function ParentComponentInt() {
           );
         }}
       >
-        <Routes />
+        <AppRoutes />
       </ErrorBoundary>
     </Router>
   );
@@ -219,7 +219,7 @@ export function swrConfig(WrappedComponent: React.ComponentType) {
 }
 const ParentComponent = swrConfig(ParentComponentInt);
 
-function Routes() {
+function AppRoutes() {
   const auth = useAuth0();
   const location = useLocation();
 
