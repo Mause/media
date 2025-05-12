@@ -1919,17 +1919,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@csstools/normalize.css@npm:*":
+"@csstools/normalize.css@npm:*, @csstools/normalize.css@npm:^12.0.0":
   version: 12.1.1
   resolution: "@csstools/normalize.css@npm:12.1.1"
   checksum: 10/aa4d1b9a77c1ecba0a60e11371d944615c64b465abfb6fe7aea237d8bebd34dc47036f2570d7038a8633755ebd3ed09ec02326fbb7570b5bf7b80aa142c0ef4b
-  languageName: node
-  linkType: hard
-
-"@csstools/normalize.css@npm:^11.0.1":
-  version: 11.0.1
-  resolution: "@csstools/normalize.css@npm:11.0.1"
-  checksum: 10/5bbbf9f933d6ec0c3afc5214f7890e543ae26997452638e5cac8d43e545e95f510e8652fb13050d48e15371bcc6407791f2b0b0d64ba39008b81f4057a583fe2
   languageName: node
   linkType: hard
 
@@ -4701,7 +4694,7 @@ __metadata:
   dependencies:
     "@auth0/auth0-react": "npm:^1.2.0"
     "@babel/runtime": "npm:^7.27.0"
-    "@csstools/normalize.css": "npm:^11.0.1"
+    "@csstools/normalize.css": "npm:^12.0.0"
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.0"
     "@fortawesome/fontawesome-svg-core": "npm:^1.2.30"
