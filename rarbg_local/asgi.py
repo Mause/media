@@ -11,7 +11,7 @@ if 'RAILWAY_ENVIRONMENT_NAME' in os.environ:
     logger.info("We're running on Railway!")
     root_logger = logging.getLogger()
     log_handler = logging.StreamHandler()
-    formatter = JsonFormatter()
+    formatter = JsonFormatter("%(message)s%(asctime)s%(exc_info)s%(levelname)s")
     log_handler.setFormatter(formatter)
     root_logger.addHandler(log_handler)
 elif 'HEROKU' in os.environ:
