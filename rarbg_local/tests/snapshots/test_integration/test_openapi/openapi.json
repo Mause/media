@@ -1333,6 +1333,7 @@
           },
           "download": {
             "type": "string",
+            "pattern": "^magnet:",
             "title": "Download"
           },
           "category": {
