@@ -4752,7 +4752,7 @@ __metadata:
     react-router-dom: "npm:^6"
     react-scripts: "npm:^5"
     socket.io-client: "npm:^4.8.1"
-    swr: "npm:^0.4.0"
+    swr: "npm:^0.5.0"
     typescript: "npm:^5"
     typescript-string-operations: "npm:^1.5.1"
   languageName: unknown
@@ -14821,14 +14821,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "swr@npm:0.4.0"
+"swr@npm:^0.5.0":
+  version: 0.5.7
+  resolution: "swr@npm:0.5.7"
   dependencies:
     dequal: "npm:2.0.2"
   peerDependencies:
     react: ^16.11.0 || ^17.0.0
-  checksum: 10/27b45a21770683b9c5e100f8b73525216b9e9cc0505ade6fcc16d25090c4f2bf5c3e96315163a397fc83377a781cb358ff701d1c5942c0258ec9dee24b662265
+  checksum: 10/aeab127a0ba2ad2ef757251708ed0ba311106c489fb49cee4542f4ee6f9fb6b0a303297c17a896e6bd6eff948fe3c9cc94f5684bca90461f141ac4d0ece994ba
   languageName: node
   linkType: hard
 
