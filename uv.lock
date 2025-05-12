@@ -1170,7 +1170,7 @@ dev = [
     { name = "pytest-selenium", specifier = ">=3.0.0" },
     { name = "pytest-snapshot" },
     { name = "pytest-sugar" },
-    { name = "responses", specifier = "==0.12.1" },
+    { name = "responses", specifier = "==0.25.7" },
     { name = "types-cachetools", specifier = ">=5.5.0.20240820" },
     { name = "types-lxml", specifier = ">=2025.3.30" },
     { name = "types-requests", specifier = ">=2.32.0.20250328" },
@@ -1955,16 +1955,16 @@ wheels = [
 
 [[package]]
 name = "responses"
-version = "0.12.1"
+version = "0.25.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "pyyaml" },
     { name = "requests" },
-    { name = "six" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/88/98/bf9e777a482ac076a6d75fad7d62b064f535244bf1771c3b2a7d41fd5920/responses-0.12.1.tar.gz", hash = "sha256:2e5764325c6b624e42b428688f2111fea166af46623cb0127c05f6afb14d3457", size = 27123, upload-time = "2020-11-12T06:51:55.377Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/81/7e/2345ac3299bd62bd7163216702bbc88976c099cfceba5b889f2a457727a1/responses-0.25.7.tar.gz", hash = "sha256:8ebae11405d7a5df79ab6fd54277f6f2bc29b2d002d0dd2d5c632594d1ddcedb", size = 79203, upload-time = "2025-03-11T15:36:16.624Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d5/71/4f04aed03ca35f2d02e1732ca6e996b2d7b40232fb7f1b58ff35f9a89b7b/responses-0.12.1-py2.py3-none-any.whl", hash = "sha256:ef265bd3200bdef5ec17912fc64a23570ba23597fd54ca75c18650fa1699213d", size = 16064, upload-time = "2020-11-12T06:51:53.657Z" },
+    { url = "https://files.pythonhosted.org/packages/e4/fc/1d20b64fa90e81e4fa0a34c9b0240a6cfb1326b7e06d18a5432a9917c316/responses-0.25.7-py3-none-any.whl", hash = "sha256:92ca17416c90fe6b35921f52179bff29332076bb32694c0df02dcac2c6bc043c", size = 34732, upload-time = "2025-03-11T15:36:14.589Z" },
 ]
 
 [[package]]
