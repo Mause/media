@@ -1,10 +1,18 @@
 import logging
 import os
 
+from pythonjsonlogger.json import JsonFormatter
+
 from .new import create_app
 
 logger = logging.getLogger(__name__)
 
+if 'RAILWAY_ENVIRONMENT_NAME' in os.environ:
+    root_logger = logging.getLogger()
+    log_handler = logging.StreamHandler()
+    formatter = JsonFormatter()
+    log_handler.setFormatter(formatter)
+    root_logger.addHandler(log_handler)
 
 if 'SENTRY_DSN' in os.environ:
     import sentry_sdk
