@@ -10,7 +10,6 @@ from .abc import TvProvider, format, tv_convert
 
 
 class NyaaProvider(TvProvider):
-    name = 'nyaa'
     type = ProviderSource.NYAA_SI
 
     async def search_for_tv(

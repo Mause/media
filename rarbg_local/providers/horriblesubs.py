@@ -157,7 +157,6 @@ async def search_for_tv(tmdb_id: TmdbId, season: int, episode: int | None = None
 
 
 class HorriblesubsProvider(TvProvider):
-    name = 'horriblesubs'
     type = ProviderSource.HORRIBLESUBS
 
     async def search_for_tv(

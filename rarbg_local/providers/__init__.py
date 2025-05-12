@@ -70,7 +70,7 @@ async def search_for_tv(
             ):
                 yield result
         except Exception:
-            logger.exception('Unable to load [TV] from %s', provider.name)
+            logger.exception('Unable to load [TV] from %s', provider)
 
 
 async def search_for_movie(imdb_id: ImdbId, tmdb_id: TmdbId):
@@ -83,7 +83,7 @@ async def search_for_movie(imdb_id: ImdbId, tmdb_id: TmdbId):
             async for result in provider.search_for_movie(imdb_id, tmdb_id):
                 yield result
         except Exception:
-            logger.exception('Unable to load [MOVIE] from %s', provider.name)
+            logger.exception('Unable to load [MOVIE] from %s', provider)
 
 
 async def main():

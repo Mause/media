@@ -171,7 +171,7 @@ async def stream(
     episode: int | None = None,
 ):
     provider = next(
-        (provider for provider in get_providers() if provider.name == source.value),
+        (provider for provider in get_providers() if provider.type == source),
         None,
     )
     if not provider:
