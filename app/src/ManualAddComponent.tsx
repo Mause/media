@@ -1,21 +1,28 @@
 import { Navigate } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
 import useSWR from 'swr';
 import { TextField, Button, Theme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import createStyles from '@mui/styles/createStyles';
 import { DownloadState } from './DownloadComponent';
 import React, { FormEvent, useState } from 'react';
 import { useLocation } from './utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-      },
+const PREFIX = 'ManualAddComponent';
+
+const classes = {
+  root: `${PREFIX}-root`
+};
+
+const Root = styled('form')((
+  {
+    theme: Theme
+  }
+) => ({
+  [`&.${classes.root}`]: {
+    '& > *': {
+      margin: theme.spacing(1),
     },
-  }),
-);
+  }
+}));
 
 export function ManualAddComponent() {
   function onSubmit(event: FormEvent) {
@@ -34,7 +41,7 @@ export function ManualAddComponent() {
     tmdb_id: state_s.tmdb_id,
   };
 
-  const classes = useStyles();
+
   const { data } = useSWR<{ title: string }>(
     () => (state.season ? 'tv' : 'movie') + `/` + state.tmdb_id,
   );
@@ -58,7 +65,7 @@ export function ManualAddComponent() {
   }
 
   return (
-    <form className={classes.root} onSubmit={onSubmit}>
+    <Root className={classes.root} onSubmit={onSubmit}>
       <h3>{data?.title}</h3>
       <TextField
         variant="standard"
@@ -71,6 +78,6 @@ export function ManualAddComponent() {
       <Button type="submit" variant="outlined">
         Download
       </Button>
-    </form>
+    </Root>
   );
 }
