@@ -42,30 +42,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@auth0/auth0-react@npm:^1.2.0":
-  version: 1.12.1
-  resolution: "@auth0/auth0-react@npm:1.12.1"
+"@auth0/auth0-react@npm:^2.0.0":
+  version: 2.3.0
+  resolution: "@auth0/auth0-react@npm:2.3.0"
   dependencies:
-    "@auth0/auth0-spa-js": "npm:^1.22.6"
+    "@auth0/auth0-spa-js": "npm:^2.1.3"
   peerDependencies:
-    react: ^16.11.0 || ^17 || ^18
-    react-dom: ^16.11.0 || ^17 || ^18
-  checksum: 10/5e36a213f3b37f623d972696e6ec6dda94e8e54475e7b0dcb600acb5c0025f62c8a8cb72005ec81852a017a8d84dc816b4c1e5ffb6517d8e7fbcdf80fba0396e
+    react: ^16.11.0 || ^17 || ^18 || ^19
+    react-dom: ^16.11.0 || ^17 || ^18 || ^19
+  checksum: 10/06ba76475e09f4d1a5888fed8c04de75a8a4956ccbd54b96a8f77f27455da260edad77b9a9859cb5b7c567d6de6ec62512c315f8c5a412ad33b1427c1b408096
   languageName: node
   linkType: hard
 
-"@auth0/auth0-spa-js@npm:^1.22.6":
-  version: 1.22.6
-  resolution: "@auth0/auth0-spa-js@npm:1.22.6"
-  dependencies:
-    abortcontroller-polyfill: "npm:^1.7.3"
-    browser-tabs-lock: "npm:^1.2.15"
-    core-js: "npm:^3.25.4"
-    es-cookie: "npm:~1.3.2"
-    fast-text-encoding: "npm:^1.0.6"
-    promise-polyfill: "npm:^8.2.3"
-    unfetch: "npm:^4.2.0"
-  checksum: 10/65286b8fa5852aef3e4ee70c74cd1053c15b32a199138a7a961d7f9284d2b4eabc7ae805904ab1fee7957ddc302dff9a5416cc7406fd48ecf0e8bf13d3a44b85
+"@auth0/auth0-spa-js@npm:^2.1.3":
+  version: 2.1.3
+  resolution: "@auth0/auth0-spa-js@npm:2.1.3"
+  checksum: 10/c0585a7f6c8f8929bf6c7402f2d049cda2c64f82c1736e700cc6ca668d3e23c2c0d22722e8f2aa2d24478e5e6676349e3d5f7ec197a44d093c5607ea8a831adc
   languageName: node
   linkType: hard
 
@@ -4371,13 +4363,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"abortcontroller-polyfill@npm:^1.7.3":
-  version: 1.7.8
-  resolution: "abortcontroller-polyfill@npm:1.7.8"
-  checksum: 10/8f3e35bd571fb636abf140660372b3e6e98c5b2ac6b881c5fcabd62b022a70cfb65edcc8102001770b83773d044c250d4ad2b914d70eb06ecfcf96a5c353ddb5
-  languageName: node
-  linkType: hard
-
 "accepts@npm:~1.3.4, accepts@npm:~1.3.5":
   version: 1.3.7
   resolution: "accepts@npm:1.3.7"
@@ -4699,7 +4684,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app@workspace:."
   dependencies:
-    "@auth0/auth0-react": "npm:^1.2.0"
+    "@auth0/auth0-react": "npm:^2.0.0"
     "@babel/runtime": "npm:^7.27.0"
     "@csstools/normalize.css": "npm:^11.0.1"
     "@emotion/react": "npm:^11.14.0"
@@ -5381,15 +5366,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browser-tabs-lock@npm:^1.2.15":
-  version: 1.3.0
-  resolution: "browser-tabs-lock@npm:1.3.0"
-  dependencies:
-    lodash: "npm:>=4.17.21"
-  checksum: 10/2a6eba3d4ed168203b6303b201c5001553d854a33d0ce12dcc289315e5554c7154608d5d80f2e91ab40746c4cd54df58eb92c65a1e54e24823a1ccbfbc5da3c5
-  languageName: node
-  linkType: hard
-
 "browserslist@npm:^4.0.0":
   version: 4.13.0
   resolution: "browserslist@npm:4.13.0"
@@ -5964,13 +5940,6 @@ __metadata:
   version: 3.41.0
   resolution: "core-js@npm:3.41.0"
   checksum: 10/a06ebae2264dd24c8e4b331a68412f7d0730557c41901f80fa910a9398dbef4670482d9ef5a41fef7efd41307c612d3d4051df7640ac4c01ff6feda45f8b92be
-  languageName: node
-  linkType: hard
-
-"core-js@npm:^3.25.4":
-  version: 3.42.0
-  resolution: "core-js@npm:3.42.0"
-  checksum: 10/07e10c475cdb45608559778c4d8d1561204aa57c937a3e77ebc7359a95a350f8acfdbeab59c6a6532eb3b47262be0d05aba150a00b79659a91bedda4f59d9d5f
   languageName: node
   linkType: hard
 
@@ -7101,13 +7070,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"es-cookie@npm:~1.3.2":
-  version: 1.3.2
-  resolution: "es-cookie@npm:1.3.2"
-  checksum: 10/e0a60e5406f6326f1ad9007b1ad2659684e1603d293be4e9eace1be8aae2bcc694ffdf868e777bda947ad7eddf4079b6acd47a236d361fa8a3bc741bff05ba88
-  languageName: node
-  linkType: hard
-
 "es-define-property@npm:^1.0.0, es-define-property@npm:^1.0.1":
   version: 1.0.1
   resolution: "es-define-property@npm:1.0.1"
@@ -7792,13 +7754,6 @@ __metadata:
   version: 2.0.7
   resolution: "fast-safe-stringify@npm:2.0.7"
   checksum: 10/052d1e60420fdd3ef989cf1c407408f13d75751a35dc4c3ee52f594e3ad68206bbcdd403140c4670654882d882a6b4911af56f0b1588b6efc73dade1ab1c369e
-  languageName: node
-  linkType: hard
-
-"fast-text-encoding@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "fast-text-encoding@npm:1.0.6"
-  checksum: 10/f7b9e2e7a21e4ae5f4b8d3729850be83fb45052b28c9c38c09b8366463a291d6dc5448359238bdaf87f6a9e907d5895a94319a2c5e0e9f0786859ad6312d1d06
   languageName: node
   linkType: hard
 
@@ -10756,7 +10711,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:>=4.17.21, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
+"lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 10/c08619c038846ea6ac754abd6dd29d2568aa705feb69339e836dfa8d8b09abbb2f859371e86863eda41848221f9af43714491467b5b0299122431e202bb0c532
@@ -12841,13 +12796,6 @@ __metadata:
   version: 2.0.1
   resolution: "process-nextick-args@npm:2.0.1"
   checksum: 10/1d38588e520dab7cea67cbbe2efdd86a10cc7a074c09657635e34f035277b59fbb57d09d8638346bf7090f8e8ebc070c96fa5fd183b777fff4f5edff5e9466cf
-  languageName: node
-  linkType: hard
-
-"promise-polyfill@npm:^8.2.3":
-  version: 8.3.0
-  resolution: "promise-polyfill@npm:8.3.0"
-  checksum: 10/f735f59e464174f720fec9c41c5029ec1014e62e05d61e39d8d2290a0bc4dd7c36a0782d3202f1775d09d0b33a47fef289db38c437534769b187da22e03bfa23
   languageName: node
   linkType: hard
 
@@ -15302,13 +15250,6 @@ __metadata:
   version: 6.21.0
   resolution: "undici-types@npm:6.21.0"
   checksum: 10/ec8f41aa4359d50f9b59fa61fe3efce3477cc681908c8f84354d8567bb3701fafdddf36ef6bff307024d3feb42c837cf6f670314ba37fc8145e219560e473d14
-  languageName: node
-  linkType: hard
-
-"unfetch@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "unfetch@npm:4.2.0"
-  checksum: 10/d4924178060b6828d858acef3ce2baea69acd3f3f9e2429fd503a0ed0d2b1ed0ee107786aceadfd167ce884fad12d22b5288eb865a3ea036979b8358b8555c9a
   languageName: node
   linkType: hard
 

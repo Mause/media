@@ -7,7 +7,7 @@
     "css-vendor/@babel/runtime": "^7.27.0"
   },
   "dependencies": {
-    "@auth0/auth0-react": "^1.2.0",
+    "@auth0/auth0-react": "^2.0.0",
     "@babel/runtime": "^7.27.0",
     "@csstools/normalize.css": "^11.0.1",
     "@emotion/react": "^11.14.0",
