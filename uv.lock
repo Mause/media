@@ -1165,7 +1165,7 @@ dev = [
     { name = "lxml" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pytest" },
-    { name = "pytest-asyncio", specifier = "==0.14.0" },
+    { name = "pytest-asyncio", specifier = "==0.26.0" },
     { name = "pytest-html", specifier = ">=3.1.1" },
     { name = "pytest-selenium", specifier = ">=3.0.0" },
     { name = "pytest-snapshot" },
@@ -1671,14 +1671,14 @@ wheels = [
 
 [[package]]
 name = "pytest-asyncio"
-version = "0.14.0"
+version = "0.26.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pytest" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/65/09/9472d4db0625cf56d40f4e405f955faf6469be00858a273b71332f3fcd1f/pytest-asyncio-0.14.0.tar.gz", hash = "sha256:9882c0c6b24429449f5f969a5158b528f39bde47dc32e85b9f0403965017e700", size = 13512, upload-time = "2020-06-23T22:10:29.959Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8e/c4/453c52c659521066969523e87d85d54139bbd17b78f09532fb8eb8cdb58e/pytest_asyncio-0.26.0.tar.gz", hash = "sha256:c4df2a697648241ff39e7f0e4a73050b03f123f760673956cf0d72a4990e312f", size = 54156, upload-time = "2025-03-25T06:22:28.883Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0b/82/b62efae871e8a543295c8c280b04a2da2ef3f6dd9bb830f6a1acc7145ad2/pytest_asyncio-0.14.0-py3-none-any.whl", hash = "sha256:2eae1e34f6c68fc0a9dc12d4bea190483843ff4708d24277c41568d6b6044f1d", size = 11934, upload-time = "2020-06-23T22:10:28.089Z" },
+    { url = "https://files.pythonhosted.org/packages/20/7f/338843f449ace853647ace35870874f69a764d251872ed1b4de9f234822c/pytest_asyncio-0.26.0-py3-none-any.whl", hash = "sha256:7b51ed894f4fbea1340262bdae5135797ebbe21d8638978e35d31c6d19f72fb0", size = 19694, upload-time = "2025-03-25T06:22:27.807Z" },
 ]
 
 [[package]]
