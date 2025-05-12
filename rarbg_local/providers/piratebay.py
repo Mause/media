@@ -7,6 +7,11 @@ from ..types import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, format, movie_convert, tv_convert
 
 
+def magnet(info_hash: str) -> str:
+    """Generate a magnet link from an info hash."""
+    return f'magnet:?xt=urn:btih:{info_hash}'
+
+
 class PirateBayProvider(TvProvider, MovieProvider):
     type = ProviderSource.PIRATEBAY
     root = 'https://apibay.org'
@@ -35,7 +40,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
                     source=ProviderSource.PIRATEBAY,
                     title=item['name'],
                     seeders=item['seeders'],
-                    download=item['info_hash'],
+                    download=magnet(item['info_hash']),
                     category=tv_convert(item['category']),
                     episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
                 )
@@ -57,6 +62,6 @@ class PirateBayProvider(TvProvider, MovieProvider):
                     source=ProviderSource.PIRATEBAY,
                     title=item['name'],
                     seeders=item['seeders'],
-                    download=item['info_hash'],
+                    download=magnet(item['info_hash']),
                     category=movie_convert(item['category']),
                 )
