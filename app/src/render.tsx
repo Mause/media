@@ -89,7 +89,7 @@ export function Movies({
         <Collapsible
           trigger={head(faCaretDown)}
           triggerElementProps={{
-            id: `collapsible-trigger-movie-${movie.id}`,
+            id: `collapsible-trigger-complete-movies`,
           }}
           triggerWhenOpen={head(faCaretUp)}
         >
