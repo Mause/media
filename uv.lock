@@ -1146,7 +1146,7 @@ requires-dist = [
     { name = "pytz", specifier = "==2025.2" },
     { name = "sentry-sdk", specifier = "==2.28.0" },
     { name = "sqlalchemy", extras = ["mypy"], specifier = "==2.0.40" },
-    { name = "sqlalchemy-repr", specifier = "==0.0.2" },
+    { name = "sqlalchemy-repr", specifier = "==0.1.0" },
     { name = "typing-inspect", specifier = ">=0.9.0" },
     { name = "uvicorn", extras = ["standard"] },
 ]
@@ -2102,14 +2102,12 @@ mypy = [
 
 [[package]]
 name = "sqlalchemy-repr"
-version = "0.0.2"
+version = "0.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "sqlalchemy" },
 ]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a6/3b/405b6756c4461bc8e2b638fdc2822cdfbe677bcdcb62c8da54120cfc145a/sqlalchemy_repr-0.0.2-py3-none-any.whl", hash = "sha256:060272575376e8a906e964cf10de5b40fd3f814db9c61e1269cb5cc15befffb2", size = 3790, upload-time = "2020-04-12T16:33:37.8Z" },
-]
+sdist = { url = "https://files.pythonhosted.org/packages/b3/af/cb5be4b8a221653eaf385ae0d1634db9774e78413ade5982dd1c0784c2a2/sqlalchemy-repr-0.1.0.tar.gz", hash = "sha256:eaf46d28479bd7416d33a184affa851aba9231e0de38123218fa6dfb59f1f2e8", size = 4805, upload-time = "2022-10-20T18:48:34.389Z" }
 
 [[package]]
 name = "starlette"
