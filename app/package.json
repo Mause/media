@@ -72,7 +72,7 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^14",
+    "@testing-library/react": "^16",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^26.0.13",
     "@types/lodash": "^4.17.16",
