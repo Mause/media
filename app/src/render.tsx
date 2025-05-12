@@ -91,6 +91,7 @@ export function Movies({
           triggerElementProps={{
             id: `collapsible-trigger-complete-movies`,
           }}
+          contentElementId="collapsible-content-complete-movies"
           triggerWhenOpen={head(faCaretUp)}
         >
           <ul>
@@ -296,6 +297,7 @@ function Season({
       triggerElementProps={{
         id: `collapsible-trigger-tv-${tmdb_id}-season-${i}`,
       }}
+      contentElementId={`collapsible-content-tv-${tmdb_id}-season-${i}`}
       triggerWhenOpen={head(faCaretUp)}
       open={!collapse}
     >
