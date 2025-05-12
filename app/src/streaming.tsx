@@ -229,7 +229,14 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <RouteWithTitle path="*" element={<div>Page not found</div>} />
+      <Route
+        path="*"
+        element={
+          <RouteTitle title="Page not Found">
+            <div>Page not found</div>
+          </RouteTitle>
+        }
+      />
       <Route
         path="/websocket/:tmdbId"
         element={
@@ -238,7 +245,6 @@ function AppRoutes() {
           </RouteTitle>
         }
       />
-
       <Route
         path="/select/:tmdb_id/options"
         element={
