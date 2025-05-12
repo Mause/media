@@ -229,7 +229,7 @@ function Routes() {
 
   return (
     <Routes>
-      <RouteWithTitle path="*" element={<div>Page not found<div/>} />
+      <RouteWithTitle path="*" element={<div>Page not found</div>} />
       <Route
         path="/websocket/:tmdbId"
         element={
