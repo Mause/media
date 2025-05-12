@@ -24,7 +24,6 @@ from .tmdb import get_tv_episodes
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import non_null, precondition
 
-logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
