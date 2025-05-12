@@ -3826,17 +3826,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:*":
+"@types/qs@npm:*, @types/qs@npm:^6.9.5":
   version: 6.9.18
   resolution: "@types/qs@npm:6.9.18"
   checksum: 10/152fab96efd819cc82ae67c39f089df415da6deddb48f1680edaaaa4e86a2a597de7b2ff0ad391df66d11a07006a08d52c9405e86b8cb8f3d5ba15881fe56cc7
-  languageName: node
-  linkType: hard
-
-"@types/qs@npm:^6.9.5":
-  version: 6.9.5
-  resolution: "@types/qs@npm:6.9.5"
-  checksum: 10/eeb4597a9c5d3e7b3da3f6395fdfc53e435b79c863fd9d56ff14951e644d51d40870a7d8440c0f132299469941d27817b04ef3c7aa71242115eded0953f4f620
   languageName: node
   linkType: hard
 
@@ -4720,7 +4713,7 @@ __metadata:
     react-router-dom: "npm:^6"
     react-scripts: "npm:^5"
     socket.io-client: "npm:^4.8.1"
-    swr: "npm:^0.4.0"
+    swr: "npm:^0.5.0"
     typescript: "npm:^5"
     typescript-string-operations: "npm:^1.5.1"
   languageName: unknown
@@ -12745,18 +12738,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2":
-  version: 15.7.2
-  resolution: "prop-types@npm:15.7.2"
-  dependencies:
-    loose-envify: "npm:^1.4.0"
-    object-assign: "npm:^4.1.1"
-    react-is: "npm:^16.8.1"
-  checksum: 10/1d2b6462559e78e4ab15775b5f9ca21bbdcf94c0c6597624a407f9f5ce2cac8c02997bc59cc517b54f64aa1e95e5134c86755ee99a24659bc023d7b2b3096e15
-  languageName: node
-  linkType: hard
-
-"prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -12997,7 +12979,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.13.1, react-is@npm:^16.7.0, react-is@npm:^16.8.1":
+"react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: 10/5aa564a1cde7d391ac980bedee21202fc90bdea3b399952117f54fb71a932af1e5902020144fb354b4690b2414a0c7aafe798eb617b76a3d441d956db7726fdf
@@ -14679,14 +14661,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "swr@npm:0.4.0"
+"swr@npm:^0.5.0":
+  version: 0.5.7
+  resolution: "swr@npm:0.5.7"
   dependencies:
     dequal: "npm:2.0.2"
   peerDependencies:
     react: ^16.11.0 || ^17.0.0
-  checksum: 10/27b45a21770683b9c5e100f8b73525216b9e9cc0505ade6fcc16d25090c4f2bf5c3e96315163a397fc83377a781cb358ff701d1c5942c0258ec9dee24b662265
+  checksum: 10/aeab127a0ba2ad2ef757251708ed0ba311106c489fb49cee4542f4ee6f9fb6b0a303297c17a896e6bd6eff948fe3c9cc94f5684bca90461f141ac4d0ece994ba
   languageName: node
   linkType: hard
 

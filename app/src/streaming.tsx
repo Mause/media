@@ -5,7 +5,7 @@ import {
   BrowserRouter as Router,
   useLocation,
   Route,
-  Routes as Switch,
+  Routes,
 } from 'react-router-dom';
 import { IndexComponent } from './IndexComponent';
 import {
@@ -180,7 +180,7 @@ function ParentComponentInt() {
           );
         }}
       >
-        <Routes />
+        <AppRoutes />
       </ErrorBoundary>
     </Router>
   );
@@ -219,7 +219,7 @@ export function swrConfig(WrappedComponent: React.ComponentType) {
 }
 const ParentComponent = swrConfig(ParentComponentInt);
 
-function Routes() {
+function AppRoutes() {
   const auth = useAuth0();
   const location = useLocation();
 
@@ -228,7 +228,15 @@ function Routes() {
   }
 
   return (
-    <Switch>
+    <Routes>
+      <Route
+        path="*"
+        element={
+          <RouteTitle title="Page not Found">
+            <div>Page not found</div>
+          </RouteTitle>
+        }
+      />
       <Route
         path="/websocket/:tmdbId"
         element={
@@ -237,7 +245,6 @@ function Routes() {
           </RouteTitle>
         }
       />
-
       <Route
         path="/select/:tmdb_id/options"
         element={
@@ -359,7 +366,7 @@ function Routes() {
           </RouteTitle>
         }
       />
-    </Switch>
+    </Routes>
   );
 }
 export { ParentComponent };
