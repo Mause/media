@@ -3,7 +3,7 @@ import Axios from 'axios';
 import { useState, useEffect } from 'react';
 import MaterialLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
-import { LocationDescriptor } from 'history';
+import * as RRD from 'react-router-dom';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@mui/material';
 import moxios from 'moxios';
@@ -12,11 +12,12 @@ import { FetchEventTarget } from './fetch_stream';
 
 // axiosRetry(Axios, { retries: 3 });
 
-export function MLink<S>(props: {
-  children: React.ReactNode;
-  to: LocationDescriptor<S>;
-  color?: TypographyTypeMap['props']['color'];
-}): ReactElement {
+export function MLink(
+  props: {
+    children: React.ReactNode;
+    color?: TypographyTypeMap['props']['color'];
+  } & Pick<Parameters<typeof Link>[0], 'to' | 'state'>,
+): ReactElement {
   return <MaterialLink component={Link} {...props} underline="hover" />;
 }
 
@@ -80,16 +81,20 @@ export function usePost<T>(
 
   useEffect(() => {
     auth.getAccessTokenSilently().then((token) => {
+      let abortController = new AbortController();
       Axios.post<T>('/api/' + url, body, {
+        signal: abortController.signal,
         headers: {
           Authorization: 'Bearer ' + token,
         },
-      })
-        .then(
-          (res) => setResult({ done: true, data: res.data }),
-          (error) => setResult({ done: true, error }),
-        )
-        .catch((error) => setResult({ done: true, error }));
+      }).then(
+        (res) => setResult({ done: true, data: res.data }),
+        (error) => setResult({ done: true, error }),
+      );
+
+      return () => {
+        abortController.abort();
+      };
     });
   }, [url, body, auth]);
 
@@ -111,4 +116,9 @@ export function ExtMLink(props: { href: string; children: string }) {
 
 export function expectLastRequestBody() {
   return expect(JSON.parse(moxios.requests.mostRecent().config.data));
+}
+
+export function useLocation<T>() {
+  const location = RRD.useLocation();
+  return { ...location, state: location.state as any as T };
 }

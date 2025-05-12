@@ -72,11 +72,11 @@ export function SimpleDiagnosticDisplay({
             </li>
           ))}
       </ul>
-      {error && (
+      {error ? (
         <pre>
           <code>{JSON.stringify(error, null, 2)}</code>
         </pre>
-      )}
+      ) : undefined}
     </li>
   );
 }

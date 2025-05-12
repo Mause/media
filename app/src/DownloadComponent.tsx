@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
-import { Redirect, useLocation } from 'react-router-dom';
-import { usePost } from './utils';
+import { Navigate } from 'react-router-dom';
+import { usePost, useLocation } from './utils';
 import { DisplayError } from './IndexComponent';
 import { components } from './schema';
 
@@ -25,5 +25,5 @@ export function DownloadComponent() {
     return <DisplayError error={error} />;
   }
 
-  return done ? <Redirect to="/" /> : <ReactLoading color="#000000" />;
+  return done ? <Navigate to="/" /> : <ReactLoading color="#000000" />;
 }
