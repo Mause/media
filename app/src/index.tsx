@@ -36,9 +36,11 @@ root.render(
   <Auth0Provider
     domain="mause.au.auth0.com"
     clientId={clientId!}
-    audience={audience!}
+    authorizationParams={{
+      audience: audience!,
+      redirectUri: window.location.origin,
+    }}
     useRefreshTokens={true}
-    redirectUri={window.location.origin}
     cacheLocation="localstorage"
   >
     <StyledEngineProvider injectFirst>
