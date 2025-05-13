@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 import traceback
@@ -67,7 +68,6 @@ from .models import (
 from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     get_providers,
-    search_for_movie,
     search_for_tv,
 )
 from .providers.abc import (
@@ -86,7 +86,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .types import ImdbId, TmdbId
-from .utils import non_null, precondition
+from .utils import Message, create_monitored_task, non_null, precondition
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -416,6 +416,26 @@ class StreamArgs(BaseModel):
     episode: int | None = None
 
 
+async def search_for_movie(
+    imdb_id: ImdbId, tmdb_id: TmdbId
+) -> tuple[list[asyncio.Future[None]], asyncio.Queue[ITorrent]]:
+    async def worker(provider: MovieProvider):
+        try:
+            async for result in provider.search_for_movie(imdb_id, tmdb_id):
+                output_queue.put_nowait(result)
+        except Exception:
+            logger.exception('Unable to load [MOVIE] from %s', provider)
+
+    tasks = []
+    output_queue = asyncio.Queue[ITorrent]()
+    for provider in get_providers():
+        if not isinstance(provider, MovieProvider):
+            continue
+
+        tasks.append(create_monitored_task(worker(provider), output_queue.put_nowait))
+    return tasks, output_queue
+
+
 async def _stream(
     type: str,
     tmdb_id: TmdbId,
@@ -423,14 +443,19 @@ async def _stream(
     episode: int | None = None,
 ):
     if type == 'series':
-        items = search_for_tv(
+        async for item in search_for_tv(
             await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
-        )
+        ):
+            yield item.model_dump(mode='json')
     else:
-        items = search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
+        tasks, queue = await search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
 
-    async for item in items:
-        yield item.model_dump(mode='json')
+        while not all(task.done() for task in tasks):
+            item = await queue.get()
+            if isinstance(item, Message):
+                pass
+            else:
+                yield item.model_dump(mode='json')
 
 
 root = APIRouter()
