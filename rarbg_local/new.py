@@ -428,8 +428,8 @@ async def _stream(
 root = APIRouter()
 
 
-async def convert_depends(func: Callable[..., ...]):
-    async def wrapper(http_connection: HTTPConnection):
+def convert_depends(func: Callable[..., ...]):
+    async def wrapper(http_connection: Union[WebSocket, Request]):
         return await get(
             http_connection.app,
             func,
