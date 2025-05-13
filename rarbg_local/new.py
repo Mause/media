@@ -425,7 +425,6 @@ async def _stream(
     return (item.dict() for item in items)
 
 
-
 root = APIRouter()
 
 
