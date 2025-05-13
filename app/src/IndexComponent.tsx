@@ -4,7 +4,7 @@ import { IndexResponse, Torrents } from './streaming';
 import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
 import useSWR from 'swr';
-import { Alert } from '@mui/material';
+import { Alert, TextField, Button } from '@mui/material';
 import _ from 'lodash';
 
 const CFG = {
@@ -63,9 +63,9 @@ export function SearchBox() {
 
   return (
     <form onSubmit={search}>
-      <input name="query" onChange={(e) => setQuery(e.target.value)} />
+      <TextField name="query" onChange={(e) => setQuery(e.target.value)} />
       &nbsp;
-      <input type="submit" value="Search" />
+      <Button type="submit" value="Search" />
     </form>
   );
 }
