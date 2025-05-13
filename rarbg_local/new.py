@@ -460,6 +460,8 @@ async def websocket_stream(websocket: WebSocket):
     ):
         await websocket.send_json(item)
 
+    await websocket.close()
+
 
 @singleton
 def get_static_files(settings: Settings = Depends(get_settings)):

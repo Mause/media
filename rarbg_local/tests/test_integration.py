@@ -701,3 +701,8 @@ async def test_websocket(get_movie_imdb_id, test_client, fastapi_app, monkeypatc
         }
     )
     await r.receive_json()
+
+    with raises(Exception) as e:
+        await r.receive_json()
+
+    assert e.value.args[0] == {'type': 'websocket.close', 'code': 1000, 'reason': ''}
