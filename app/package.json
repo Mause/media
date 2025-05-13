@@ -35,7 +35,7 @@
     "react-loading": "^2.0.3",
     "react-router-dom": "^6",
     "react-scripts": "^5",
-    "socket.io-client": "^4.8.1",
+    "react-use-websocket": "^4.13.0",
     "swr": "^0.5.0",
     "typescript": "^5",
     "typescript-string-operations": "^1.5.1"

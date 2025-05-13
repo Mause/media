@@ -1,38 +1,19 @@
-import React, { useState, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { DisplayTorrent, ITorrent } from './OptionsComponent';
 import _ from 'lodash';
 import qs from 'qs';
-import io from 'socket.io-client';
-
-const SocketContext = createContext<{ url: string | undefined }>({
-  url: undefined,
-});
-const SocketIOProvider = SocketContext.Provider;
-
-function useLastMessage(type: string) {
-  const [lastMessage, setLastMessage] = useState<string | null>(null);
-  const { url } = useContext(SocketContext);
-  const socket = io(url);
-
-  useEffect(() => {
-    socket.on(type, (message) => {
-      setLastMessage(message);
-    });
-    return () => {
-      socket.off(type);
-    };
-  }, [type, socket]);
-
-  return { data: lastMessage, socket };
-}
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 function useMessages<T>(initMessage: object) {
-  const { data: lastMessage, socket } = useLastMessage('message');
+  const prefix = process.env.REACT_APP_API_PREFIX;
+  const url = `${prefix ? `https://${prefix}` : 'http://localhost:5000'}/ws`;
+
+  const { sendMessage, lastMessage, readyState } = useWebSocket(url);
 
   useEffect(() => {
-    socket.send(JSON.stringify(initMessage));
-  }, [socket, initMessage]);
+    sendMessage(JSON.stringify(initMessage));
+  }, [sendMessage, initMessage]);
 
   const [messages, setMessages] = useState<T[]>([]);
 
@@ -43,7 +24,7 @@ function useMessages<T>(initMessage: object) {
       );
     }
   }, [lastMessage]);
-  return messages;
+  return { messages, readyState };
 }
 
 function Websocket() {
@@ -60,11 +41,20 @@ function Websocket() {
       }
     : { type: 'movie', tmdb_id: tmdbId };
 
-  const messages = useMessages<ITorrent>(initMessage);
+  const { messages, readyState } = useMessages<ITorrent>(initMessage);
 
   return (
     <div>
       <span>{tmdbId}</span>
+      <span>{String(query?.season)}</span>
+      <span>{String(query?.episode)}</span>
+      <span>
+        {readyState === ReadyState.CONNECTING && 'Connecting...'}
+        {readyState === ReadyState.OPEN && 'Connected'}
+        {readyState === ReadyState.CLOSING && 'Disconnecting...'}
+        {readyState === ReadyState.CLOSED && 'Disconnected'}
+        {readyState === ReadyState.UNINSTANTIATED && 'Uninstantiated'}
+      </span>
       <ul>
         {_.uniqBy(messages, 'download').map((message) => (
           <li key={message.download}>
@@ -76,17 +66,4 @@ function Websocket() {
   );
 }
 
-const IOWebsocket = () => (
-  <SocketIOProvider
-    value={{
-      url:
-        (window.location.hostname.includes('localhost')
-          ? 'http://localhost:5000'
-          : '') + '/ws',
-    }}
-  >
-    <Websocket />
-  </SocketIOProvider>
-);
-
-export { IOWebsocket as Websocket };
+export { Websocket };
