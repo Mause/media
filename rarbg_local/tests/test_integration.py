@@ -674,7 +674,9 @@ async def test_piratebay(aioresponses, snapshot):
 
 @mark.asyncio
 @patch('rarbg_local.new.get_movie_imdb_id')
-async def test_websocket(get_movie_imdb_id, test_client, fastapi_app, monkeypatch):
+async def test_websocket(
+    get_movie_imdb_id, test_client, fastapi_app, monkeypatch, snapshot
+):
     async def search_for_movie(*args, **kwargs):
         yield ITorrent(
             source="piratebay",
@@ -700,7 +702,8 @@ async def test_websocket(get_movie_imdb_id, test_client, fastapi_app, monkeypatc
             'type': 'movie',
         }
     )
-    await r.receive_json()
+
+    snapshot.assert_match(json.dumps(await r.receive_json(), indent=2), 'ws.json')
 
     with raises(Exception) as e:
         await r.receive_json()
