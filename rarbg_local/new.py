@@ -448,9 +448,11 @@ def convert_depends(func: Callable[..., T]):
     "/ws", dependencies=[Security(convert_depends(get_current_user), scopes=["openid"])]
 )
 async def websocket_stream(websocket: WebSocket):
+    logger.info('Got websocket connection')
     await websocket.accept()
 
     request = StreamArgs.model_validate(await websocket.receive_json())
+    logger.info('Got request: %s', request)
 
     async for item in _stream(
         type=request.type,
@@ -460,6 +462,7 @@ async def websocket_stream(websocket: WebSocket):
     ):
         await websocket.send_json(item)
 
+    logger.info('Finished streaming')
     await websocket.close()
 
 
