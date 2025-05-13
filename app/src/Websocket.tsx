@@ -6,10 +6,9 @@ import qs from 'qs';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 function useMessages<T>(initMessage: object) {
-  const url =
-    (window.location.hostname.includes('localhost')
-      ? 'http://localhost:5000'
-      : '') + '/ws';
+  const prefix = process.env.REACT_APP_API_PREFIX;
+  const url = 
+    `${prefix ? `https://${prefix}` : 'http://localhost:5000'}/ws`;
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(url);
 
