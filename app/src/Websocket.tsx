@@ -13,7 +13,7 @@ function useMessages<T>(initMessage: object) {
 
   useEffect(() => {
     sendJsonMessage(initMessage);
-  }, [sendMessage, initMessage]);
+  }, [sendJsonMessage, initMessage]);
 
   const [messages, setMessages] = useState<T[]>([]);
 
