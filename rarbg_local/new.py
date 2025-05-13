@@ -429,14 +429,14 @@ root = APIRouter()
 
 
 def convert_depends(func: Callable[..., ...]):
-    async def wrapper(http_connection: WebSocket | Request):
+    async def wrapper(websocket: WebSocket):
         return await get(
-            http_connection.app,
+            websocket.app,
             func,
             Request(
-                scope=ChainMap({'type': 'http'}, http_connection.scope),
-                receive=http_connection.receive,
-                send=http_connection.send,
+                scope=ChainMap({'type': 'http'}, websocket.scope),
+                receive=websocket.receive,
+                send=websocket.send,
             ),
         )
 
