@@ -669,3 +669,22 @@ async def test_piratebay(aioresponses, snapshot):
         ITorrentList(torrents=res).model_dump_json(indent=2),
         'piratebay.json',
     )
+
+
+@mark.asyncio
+async def test_websocket(test_client, fastapi_app):
+    del fastapi_app.dependency_overrides[get_current_user]
+    r = test_client.websocket_connect(
+        '/ws',
+        headers={
+            'Authorization': 'Bearer token',
+        },
+    )
+    await r.connect()
+    await r.send_json(
+        {
+            'tmdb_id': 1,
+            'type': 'movie',
+        }
+    )
+    await r.receive_json()

@@ -1,6 +1,7 @@
 import logging
 import os
 import traceback
+from collections import ChainMap
 from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
@@ -74,7 +75,7 @@ from .providers.abc import (
     TvProvider,
 )
 from .settings import Settings, get_settings
-from .singleton import singleton
+from .singleton import get, singleton
 from .tmdb import (
     get_json,
     get_movie,
@@ -424,8 +425,22 @@ async def _stream(
     return (item.dict() for item in items)
 
 
-@api.websocket("/ws")
+
+root = APIRouter()
+
+
+@root.websocket("/ws")
 async def websocket_stream(websocket: WebSocket):
+    await get(
+        websocket.app,
+        get_my_jwkaas,
+        Request(
+            scope=ChainMap({'type': 'http'}, websocket.scope),
+            receive=websocket.receive,
+            send=websocket.send,
+        ),
+    )
+
     await websocket.accept()
 
     request = StreamArgs.model_validate(await websocket.receive_json())
@@ -437,9 +452,6 @@ async def websocket_stream(websocket: WebSocket):
         episode=request.episode,
     ):
         await websocket.send_json(item)
-
-
-root = APIRouter()
 
 
 @singleton
