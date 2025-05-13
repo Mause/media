@@ -422,7 +422,8 @@ async def _stream(
     else:
         items = search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
 
-    return (item.dict() for item in items)
+    async for item in items:
+        yield item.model_dump(mode='json')
 
 
 root = APIRouter()
@@ -449,7 +450,7 @@ async def websocket_stream(websocket: WebSocket):
 
     request = StreamArgs.model_validate(await websocket.receive_json())
 
-    for item in await _stream(
+    async for item in _stream(
         type=request.type,
         tmdb_id=request.tmdb_id,
         season=request.season,
