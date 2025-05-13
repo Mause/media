@@ -14,6 +14,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
+from .. import new
 from ..db import MAX_TRIES, Download, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
@@ -672,7 +673,8 @@ async def test_piratebay(aioresponses, snapshot):
 
 
 @mark.asyncio
-async def test_websocket(test_client, fastapi_app, monkeypatch):
+@patch('rarbg_local.new.get_movie_imdb_id')
+async def test_websocket(get_movie_imdb_id, test_client, fastapi_app, monkeypatch):
     async def search_for_movie(*args, **kwargs):
         yield ITorrent(
             source="piratebay",
@@ -682,7 +684,9 @@ async def test_websocket(test_client, fastapi_app, monkeypatch):
             category="205",
         )
 
-    monkeypatch.setattr('rarbg_local.new', 'search_for_movie', search_for_movie)
+    monkeypatch.setattr(new, 'search_for_movie', search_for_movie)
+    get_movie_imdb_id.return_value = 'tt0000000'
+
     r = test_client.websocket_connect(
         '/ws',
         headers={
