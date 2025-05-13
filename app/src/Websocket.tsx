@@ -9,21 +9,22 @@ function useMessages<T>(initMessage: object) {
   const prefix = process.env.REACT_APP_API_PREFIX;
   const url = `${prefix ? `https://${prefix}` : 'http://localhost:5000'}/ws`;
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(url);
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
 
   useEffect(() => {
-    sendMessage(JSON.stringify(initMessage));
+    sendJsonMessage(initMessage);
   }, [sendMessage, initMessage]);
 
   const [messages, setMessages] = useState<T[]>([]);
 
   useEffect(() => {
-    if (lastMessage) {
+    if (lastJsonMessage) {
       setMessages((messages) =>
-        messages.concat([JSON.parse(lastMessage as unknown as string) as T]),
+        messages.concat([lastMessage as T]),
       );
     }
-  }, [lastMessage]);
+  }, [lastJsonMessage]);
+
   return { messages, readyState };
 }
 
