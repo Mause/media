@@ -4,6 +4,7 @@ import traceback
 from collections import ChainMap
 from collections.abc import AsyncGenerator, Callable
 from functools import wraps
+from fastapi.requests import HTTPConnection
 from typing import (
     Annotated,
     Literal,
@@ -428,18 +429,22 @@ async def _stream(
 root = APIRouter()
 
 
-@root.websocket("/ws")
-async def websocket_stream(websocket: WebSocket):
-    await get(
-        websocket.app,
-        get_current_user,
-        Request(
-            scope=ChainMap({'type': 'http'}, websocket.scope),
-            receive=websocket.receive,
-            send=websocket.send,
-        ),
-    )
+async def convert_depends(func: Callable[..., ...]):
+    async def wrapper(http_connection: HTTPConnection):
+        return await get(
+            http_connection.app,
+            func,
+            Request(
+                scope=ChainMap({'type': 'http'}, http_connection.scope),
+                receive=http_connection.receive,
+                send=http_connection.send,
+            ),
+        )
+    return wrapper
 
+
+@root.websocket("/ws", dependencies=[Depends(convert_depends(get_current_user))])
+async def websocket_stream(websocket: WebSocket):
     await websocket.accept()
 
     request = StreamArgs.model_validate(await websocket.receive_json())
