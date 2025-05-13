@@ -14,7 +14,7 @@ function useMessages<T>(initMessage: object) {
   } else if (window.location.host.includes('localhost')) {
     base = 'http://localhost:5000';
   }
-  const url = `${base}/ws`;
+  const url = `${base}/api/ws`;
 
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
 
