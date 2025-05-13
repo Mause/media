@@ -7,23 +7,29 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 function useMessages<T>(initMessage: object) {
   const prefix = process.env.REACT_APP_API_PREFIX;
-  const url = `${prefix ? `https://${prefix}` : 'http://localhost:5000'}/ws`;
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(url);
+  let base = '';
+  if (prefix) {
+    base = `https://${prefix}`;
+  } else if (window.location.host.includes('localhost')) {
+    base = 'http://localhost:5000';
+  }
+  const url = `${base}/ws`;
+
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
 
   useEffect(() => {
-    sendMessage(JSON.stringify(initMessage));
-  }, [sendMessage, initMessage]);
+    sendJsonMessage(initMessage);
+  }, [sendJsonMessage, initMessage]);
 
   const [messages, setMessages] = useState<T[]>([]);
 
   useEffect(() => {
-    if (lastMessage) {
-      setMessages((messages) =>
-        messages.concat([JSON.parse(lastMessage as unknown as string) as T]),
-      );
+    if (lastJsonMessage) {
+      setMessages((messages) => messages.concat([lastJsonMessage as T]));
     }
-  }, [lastMessage]);
+  }, [lastJsonMessage]);
+
   return { messages, readyState };
 }
 
