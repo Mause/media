@@ -453,7 +453,7 @@ async def _stream(
         while not all(task.done() for task in tasks):
             item = await queue.get()
             if isinstance(item, Message):
-                pass
+                logger.info('Message from provider: %s', item)
             else:
                 yield item.model_dump(mode='json')
 
