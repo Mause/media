@@ -14,7 +14,7 @@ from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.requests import HTTPConnection, Request
+from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.security import (
     SecurityScopes,
@@ -429,7 +429,7 @@ root = APIRouter()
 
 
 def convert_depends(func: Callable[..., ...]):
-    async def wrapper(http_connection: Union[WebSocket, Request]):
+    async def wrapper(http_connection: WebSocket | Request):
         return await get(
             http_connection.app,
             func,
