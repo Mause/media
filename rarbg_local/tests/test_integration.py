@@ -672,7 +672,16 @@ async def test_piratebay(aioresponses, snapshot):
 
 
 @mark.asyncio
-async def test_websocket(test_client, fastapi_app):
+async def test_websocket(test_client, fastapi_app, monkeypatch):
+    async def search_for_movie(*args, **kwargs):
+        yield ITorrent(
+            source="piratebay",
+            title="Ancient Aliens 480p x264-mSD",
+            seeders=2,
+            download="magnet:?xt=urn:btih:00000000000000000",
+            category="205"
+        )
+    monkeypatch.setattr('rarbg_local.new', 'search_for_movie', search_for_movie)
     r = test_client.websocket_connect(
         '/ws',
         headers={
