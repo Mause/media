@@ -7,8 +7,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 function useMessages<T>(initMessage: object) {
   const prefix = process.env.REACT_APP_API_PREFIX;
-  const url = 
-    `${prefix ? `https://${prefix}` : 'http://localhost:5000'}/ws`;
+  const url = `${prefix ? `https://${prefix}` : 'http://localhost:5000'}/ws`;
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(url);
 
