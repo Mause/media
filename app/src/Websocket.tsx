@@ -19,9 +19,7 @@ function useMessages<T>(initMessage: object) {
 
   useEffect(() => {
     if (lastJsonMessage) {
-      setMessages((messages) =>
-        messages.concat([lastMessage as T]),
-      );
+      setMessages((messages) => messages.concat([lastMessage as T]));
     }
   }, [lastJsonMessage]);
 
