@@ -4,7 +4,6 @@ import traceback
 from collections import ChainMap
 from collections.abc import AsyncGenerator, Callable
 from functools import wraps
-from fastapi.requests import HTTPConnection
 from typing import (
     Annotated,
     Literal,
@@ -15,7 +14,7 @@ from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.requests import Request
+from fastapi.requests import HTTPConnection, Request
 from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.security import (
     SecurityScopes,
@@ -440,6 +439,7 @@ async def convert_depends(func: Callable[..., ...]):
                 send=http_connection.send,
             ),
         )
+
     return wrapper
 
 
