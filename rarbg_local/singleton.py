@@ -16,6 +16,9 @@ T = TypeVar('T')
 async def get(
     app: FastAPI, func: Callable[..., T], request: Request | None = None
 ) -> T:
+    if func in app.dependency_overrides:
+        func = app.dependency_overrides[func]
+
     dependant = get_dependant(call=func, path='')
     request = request or Request(
         {'type': 'http', 'query_string': '', 'headers': [], 'app': app}
