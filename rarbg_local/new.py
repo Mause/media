@@ -444,7 +444,9 @@ def convert_depends(func: Callable[..., T]):
     return wrapper
 
 
-@root.websocket("/ws", dependencies=[Depends(convert_depends(get_current_user))])
+@root.websocket(
+    "/ws", dependencies=[Security(convert_depends(get_current_user), scopes=["openid"])]
+)
 async def websocket_stream(websocket: WebSocket):
     await websocket.accept()
 
