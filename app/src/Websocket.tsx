@@ -3,13 +3,13 @@ import { useParams, useLocation } from 'react-router-dom';
 import { DisplayTorrent, ITorrent } from './OptionsComponent';
 import _ from 'lodash';
 import qs from 'qs';
-import useWebSocket, {ReadyState} from 'react-use-websocket';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 function useMessages<T>(initMessage: object) {
-	const url =
-        (window.location.hostname.includes('localhost')
-          ? 'http://localhost:5000'
-          : '') + '/ws';
+  const url =
+    (window.location.hostname.includes('localhost')
+      ? 'http://localhost:5000'
+      : '') + '/ws';
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(url);
 
@@ -26,7 +26,7 @@ function useMessages<T>(initMessage: object) {
       );
     }
   }, [lastMessage]);
-  return {messages, readyState};
+  return { messages, readyState };
 }
 
 function Websocket() {
@@ -43,7 +43,7 @@ function Websocket() {
       }
     : { type: 'movie', tmdb_id: tmdbId };
 
-  const {messages, readyState} = useMessages<ITorrent>(initMessage);
+  const { messages, readyState } = useMessages<ITorrent>(initMessage);
 
   return (
     <div>
@@ -51,11 +51,11 @@ function Websocket() {
       <span>{String(query?.season)}</span>
       <span>{String(query?.episode)}</span>
       <span>
-	{readyState === ReadyState.CONNECTING && 'Connecting...'}
-	{readyState === ReadyState.OPEN && 'Connected'}
-	{readyState === ReadyState.CLOSING && 'Disconnecting...'}
-	{readyState === ReadyState.CLOSED && 'Disconnected'}
-	{readyState === ReadyState.UNINSTANTIATED && 'Uninstantiated'}
+        {readyState === ReadyState.CONNECTING && 'Connecting...'}
+        {readyState === ReadyState.OPEN && 'Connected'}
+        {readyState === ReadyState.CLOSING && 'Disconnecting...'}
+        {readyState === ReadyState.CLOSED && 'Disconnected'}
+        {readyState === ReadyState.UNINSTANTIATED && 'Uninstantiated'}
       </span>
       <ul>
         {_.uniqBy(messages, 'download').map((message) => (
