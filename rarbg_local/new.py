@@ -432,7 +432,7 @@ root = APIRouter()
 async def websocket_stream(websocket: WebSocket):
     await get(
         websocket.app,
-        get_my_jwkaas,
+        get_current_user,
         Request(
             scope=ChainMap({'type': 'http'}, websocket.scope),
             receive=websocket.receive,

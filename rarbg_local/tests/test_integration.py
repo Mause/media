@@ -673,7 +673,6 @@ async def test_piratebay(aioresponses, snapshot):
 
 @mark.asyncio
 async def test_websocket(test_client, fastapi_app):
-    del fastapi_app.dependency_overrides[get_current_user]
     r = test_client.websocket_connect(
         '/ws',
         headers={
