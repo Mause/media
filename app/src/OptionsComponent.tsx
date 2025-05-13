@@ -261,9 +261,11 @@ function useSubscribes<T>(url: string): {
   const token = useToken();
 
   const p: ProviderSource[] = [
+    /*
     'rarbg',
     'horriblesubs',
     'kickass',
+    */
     'torrentscsv',
     'nyaasi',
     'piratebay',
@@ -272,9 +274,11 @@ function useSubscribes<T>(url: string): {
     useSubscribe<T>(url, p[0], token),
     useSubscribe<T>(url, p[1], token),
     useSubscribe<T>(url, p[2], token),
+    /*
     useSubscribe<T>(url, p[3], token),
     useSubscribe<T>(url, p[4], token),
     useSubscribe<T>(url, p[5], token),
+    */
   ];
 
   return {
