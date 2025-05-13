@@ -1,6 +1,7 @@
 import logging
 import os
 import traceback
+from collections import ChainMap
 from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
@@ -74,7 +75,7 @@ from .providers.abc import (
     TvProvider,
 )
 from .settings import Settings, get_settings
-from .singleton import singleton
+from .singleton import get, singleton
 from .tmdb import (
     get_json,
     get_movie,
@@ -421,16 +422,37 @@ async def _stream(
     else:
         items = search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
 
-    return (item.dict() for item in items)
+    async for item in items:
+        yield item.model_dump(mode='json')
 
 
-@api.websocket("/ws")
+root = APIRouter()
+
+
+def convert_depends(func: Callable[..., T]):
+    async def wrapper(websocket: WebSocket) -> T:
+        return await get(
+            websocket.app,
+            func,
+            Request(
+                scope=ChainMap({'type': 'http'}, websocket.scope),
+                receive=websocket.receive,
+                send=websocket.send,
+            ),
+        )
+
+    return wrapper
+
+
+@root.websocket(
+    "/ws", dependencies=[Security(convert_depends(get_current_user), scopes=["openid"])]
+)
 async def websocket_stream(websocket: WebSocket):
     await websocket.accept()
 
     request = StreamArgs.model_validate(await websocket.receive_json())
 
-    for item in await _stream(
+    async for item in _stream(
         type=request.type,
         tmdb_id=request.tmdb_id,
         season=request.season,
@@ -438,8 +460,7 @@ async def websocket_stream(websocket: WebSocket):
     ):
         await websocket.send_json(item)
 
-
-root = APIRouter()
+    await websocket.close()
 
 
 @singleton

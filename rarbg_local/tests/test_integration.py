@@ -14,6 +14,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
+from .. import new
 from ..db import MAX_TRIES, Download, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
@@ -669,3 +670,42 @@ async def test_piratebay(aioresponses, snapshot):
         ITorrentList(torrents=res).model_dump_json(indent=2),
         'piratebay.json',
     )
+
+
+@mark.asyncio
+@patch('rarbg_local.new.get_movie_imdb_id')
+async def test_websocket(
+    get_movie_imdb_id, test_client, fastapi_app, monkeypatch, snapshot
+):
+    async def search_for_movie(*args, **kwargs):
+        yield ITorrent(
+            source="piratebay",
+            title="Ancient Aliens 480p x264-mSD",
+            seeders=2,
+            download="magnet:?xt=urn:btih:00000000000000000",
+            category="205",
+        )
+
+    monkeypatch.setattr(new, 'search_for_movie', search_for_movie)
+    get_movie_imdb_id.return_value = 'tt0000000'
+
+    r = test_client.websocket_connect(
+        '/ws',
+        headers={
+            'Authorization': 'Bearer token',
+        },
+    )
+    await r.connect()
+    await r.send_json(
+        {
+            'tmdb_id': 1,
+            'type': 'movie',
+        }
+    )
+
+    snapshot.assert_match(json.dumps(await r.receive_json(), indent=2), 'ws.json')
+
+    with raises(Exception) as e:
+        await r.receive_json()
+
+    assert e.value.args[0] == {'type': 'websocket.close', 'code': 1000, 'reason': ''}
