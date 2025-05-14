@@ -448,7 +448,10 @@ async def websocket_stream(websocket: WebSocket):
                     {
                         'type': 'http',
                         'headers': [
-                            ("Authorization", request.authorization.get_secret_value())
+                            (
+                                b"authorization",
+                                (request.authorization.get_secret_value()).encode(),
+                            ),
                         ],
                     },
                     websocket.scope,

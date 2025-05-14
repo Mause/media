@@ -691,9 +691,6 @@ async def test_websocket(
 
     r = test_client.websocket_connect(
         '/ws',
-        headers={
-            'Authorization': 'Bearer token',
-        },
     )
     await r.connect()
     await r.send_json(
