@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/react';
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import {
   BrowserRouter as Router,
   useLocation,
@@ -64,9 +63,7 @@ function RouteTitle({
 }) {
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
+      <title>{title}</title>
       {children}
     </>
   );
