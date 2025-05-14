@@ -88,6 +88,10 @@ export function Movies({
       {sortedMovies?.true?.length ? (
         <Collapsible
           trigger={head(faCaretDown)}
+          triggerElementProps={{
+            id: `collapsible-trigger-complete-movies`,
+          }}
+          contentElementId="collapsible-content-complete-movies"
           triggerWhenOpen={head(faCaretUp)}
         >
           <ul>
@@ -290,6 +294,10 @@ function Season({
   return (
     <Collapsible
       trigger={head(faCaretDown)}
+      triggerElementProps={{
+        id: `collapsible-trigger-tv-${tmdb_id}-season-${i}`,
+      }}
+      contentElementId={`collapsible-content-tv-${tmdb_id}-season-${i}`}
       triggerWhenOpen={head(faCaretUp)}
       open={!collapse}
     >

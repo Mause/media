@@ -154,7 +154,12 @@ exports[`TVShows 1`] = `
           class="Collapsible"
         >
           <span
+            aria-controls="collapsible-content-tv-1-season-1"
+            aria-disabled="false"
+            aria-expanded="true"
             class="Collapsible__trigger is-open"
+            id="collapsible-trigger-tv-1-season-1"
+            role="button"
           >
             <h4>
               Season 
@@ -210,7 +215,10 @@ exports[`TVShows 1`] = `
             </h4>
           </span>
           <div
+            aria-labelledby="collapsible-trigger-tv-1-season-1"
             class="Collapsible__contentOuter"
+            id="collapsible-content-tv-1-season-1"
+            role="region"
             style="height: auto; transition: none; overflow: hidden;"
           >
             <div
