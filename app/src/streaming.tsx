@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/react';
+import type { ReactNode, ComponentType } from 'react';
 import { ErrorInfo } from 'react';
 import {
   BrowserRouter as Router,
@@ -53,7 +54,7 @@ function RouteTitle({
   children,
 }: {
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <>
@@ -174,7 +175,7 @@ function ParentComponentInt() {
 function SwrConfigWrapper({
   WrappedComponent,
 }: {
-  WrappedComponent: React.ComponentType;
+  WrappedComponent: ComponentType;
 }) {
   const auth = useAuth0();
   return (
@@ -200,7 +201,7 @@ function SwrConfigWrapper({
   );
 }
 
-export function swrConfig(WrappedComponent: React.ComponentType) {
+export function swrConfig(WrappedComponent: ComponentType) {
   return () => <SwrConfigWrapper WrappedComponent={WrappedComponent} />;
 }
 const ParentComponent = swrConfig(ParentComponentInt);
