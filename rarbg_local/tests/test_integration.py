@@ -2,9 +2,12 @@ import json
 import logging
 import sys
 from datetime import datetime
+from typing import Annotated
 from unittest.mock import patch
 
 from async_asgi_testclient import TestClient
+from fastapi import Depends
+from fastapi.security import OpenIdConnect, SecurityScopes
 from lxml.builder import E
 from lxml.etree import tostring
 from psycopg2 import OperationalError
@@ -14,6 +17,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
+from .. import new
 from ..db import MAX_TRIES, Download, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
@@ -669,3 +673,50 @@ async def test_piratebay(aioresponses, snapshot):
         ITorrentList(torrents=res).model_dump_json(indent=2),
         'piratebay.json',
     )
+
+
+@mark.asyncio
+@patch('rarbg_local.new.get_movie_imdb_id')
+async def test_websocket(
+    get_movie_imdb_id, test_client, fastapi_app, monkeypatch, snapshot
+):
+    async def search_for_movie(*args, **kwargs):
+        yield ITorrent(
+            source="piratebay",
+            title="Ancient Aliens 480p x264-mSD",
+            seeders=2,
+            download="magnet:?xt=urn:btih:00000000000000000",
+            category="205",
+        )
+
+    async def gcu(
+        header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
+        scopes: SecurityScopes,
+    ):
+        assert scopes.scopes == ['openid']
+        assert header == 'token'
+        return UserFactory.create()
+
+    fastapi_app.dependency_overrides[get_current_user] = gcu
+
+    monkeypatch.setattr(new, 'search_for_movie', search_for_movie)
+    get_movie_imdb_id.return_value = 'tt0000000'
+
+    r = test_client.websocket_connect(
+        '/ws',
+    )
+    await r.connect()
+    await r.send_json(
+        {
+            'tmdb_id': 1,
+            'type': 'movie',
+            'authorization': 'token',
+        }
+    )
+
+    snapshot.assert_match(json.dumps(await r.receive_json(), indent=2), 'ws.json')
+
+    with raises(Exception) as e:
+        await r.receive_json()
+
+    assert e.value.args[0] == {'type': 'websocket.close', 'code': 1000, 'reason': ''}

@@ -16,6 +16,9 @@ T = TypeVar('T')
 async def get(
     app: FastAPI, func: Callable[..., T], request: Request | None = None
 ) -> T:
+    if func in app.dependency_overrides:
+        func = app.dependency_overrides[func]
+
     dependant = get_dependant(call=func, path='')
     request = request or Request(
         {'type': 'http', 'query_string': '', 'headers': [], 'app': app}
@@ -29,7 +32,7 @@ async def get(
         embed_body_fields=False,
     )
 
-    assert not solved.errors
+    assert not solved.errors, solved.errors
 
     return await run_endpoint_function(
         dependant=dependant,

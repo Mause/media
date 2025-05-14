@@ -3239,13 +3239,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@socket.io/component-emitter@npm:~3.1.0":
-  version: 3.1.2
-  resolution: "@socket.io/component-emitter@npm:3.1.2"
-  checksum: 10/89888f00699eb34e3070624eb7b8161fa29f064aeb1389a48f02195d55dd7c52a504e52160016859f6d6dffddd54324623cdd47fd34b3d46f9ed96c18c456edc
-  languageName: node
-  linkType: hard
-
 "@surma/rollup-plugin-off-main-thread@npm:^2.2.3":
   version: 2.2.3
   resolution: "@surma/rollup-plugin-off-main-thread@npm:2.2.3"
@@ -4752,9 +4745,10 @@ __metadata:
     react-error-boundary: "npm:^3.1.0"
     react-helmet-async: "npm:^2.0.5"
     react-loading: "npm:^2.0.3"
+    react-promise-suspense: "npm:^0.3.4"
     react-router-dom: "npm:^6"
     react-scripts: "npm:^5"
-    socket.io-client: "npm:^4.8.1"
+    react-use-websocket: "npm:^4.13.0"
     swr: "npm:^0.5.0"
     typescript: "npm:^5"
     typescript-string-operations: "npm:^1.5.1"
@@ -6470,18 +6464,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:~4.3.1, debug@npm:~4.3.2":
-  version: 4.3.7
-  resolution: "debug@npm:4.3.7"
-  dependencies:
-    ms: "npm:^2.1.3"
-  peerDependenciesMeta:
-    supports-color:
-      optional: true
-  checksum: 10/71168908b9a78227ab29d5d25fe03c5867750e31ce24bf2c44a86efc5af041758bb56569b0a3d48a9b5344c00a24a777e6f4100ed6dfd9534a42c1dde285125a
-  languageName: node
-  linkType: hard
-
 "decimal.js@npm:^10.2.1":
   version: 10.5.0
   resolution: "decimal.js@npm:10.5.0"
@@ -6948,26 +6930,6 @@ __metadata:
   version: 2.0.0
   resolution: "encodeurl@npm:2.0.0"
   checksum: 10/abf5cd51b78082cf8af7be6785813c33b6df2068ce5191a40ca8b1afe6a86f9230af9a9ce694a5ce4665955e5c1120871826df9c128a642e09c58d592e2807fe
-  languageName: node
-  linkType: hard
-
-"engine.io-client@npm:~6.6.1":
-  version: 6.6.3
-  resolution: "engine.io-client@npm:6.6.3"
-  dependencies:
-    "@socket.io/component-emitter": "npm:~3.1.0"
-    debug: "npm:~4.3.1"
-    engine.io-parser: "npm:~5.2.1"
-    ws: "npm:~8.17.1"
-    xmlhttprequest-ssl: "npm:~2.1.1"
-  checksum: 10/c5b8e7eb0f2637b21a63780214878b842306247f540cccab7a4d15606d142e42878cc79607f8f77fa29f016b6854702b7d5ad275df7ad6150f08954a1e2c332a
-  languageName: node
-  linkType: hard
-
-"engine.io-parser@npm:~5.2.1":
-  version: 5.2.3
-  resolution: "engine.io-parser@npm:5.2.3"
-  checksum: 10/eb0023fff5766e7ae9d59e52d92df53fea06d472cfd7b52e5d2c36b4c1dbf78cab5fde1052bcb3d4bb85bdb5aee10ae85d8a1c6c04676dac0c6cdf16bcba6380
   languageName: node
   linkType: hard
 
@@ -7761,6 +7723,13 @@ __metadata:
   version: 1.4.0
   resolution: "extsprintf@npm:1.4.0"
   checksum: 10/c1e6cc79d7efc23770b3688bac3b8ec1f0200bca18c2a5e4e2697f9b9d4b9b1f2e5439541437fe90923bbd1afbeb9507cd68b10832e14ca475a9354b990872c3
+  languageName: node
+  linkType: hard
+
+"fast-deep-equal@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "fast-deep-equal@npm:2.0.1"
+  checksum: 10/b701835a87985e0ec4925bdf1f0c1e7eb56309b5d12d534d5b4b69d95a54d65bb16861c081781ead55f73f12d6c60ba668713391ee7fbf6b0567026f579b7b0b
   languageName: node
   linkType: hard
 
@@ -13169,6 +13138,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-promise-suspense@npm:^0.3.4":
+  version: 0.3.4
+  resolution: "react-promise-suspense@npm:0.3.4"
+  dependencies:
+    fast-deep-equal: "npm:^2.0.1"
+  checksum: 10/fff75d53b27e2c9e045cc0ead296bb6b93b82a92b0bfb69ed0063e69b0043ce464bb3cdedea2ca0ee507b6bf9efe3ff700ccba7921b07d70831fbda54bef2fb7
+  languageName: node
+  linkType: hard
+
 "react-refresh@npm:^0.11.0":
   version: 0.11.0
   resolution: "react-refresh@npm:0.11.0"
@@ -13279,6 +13257,13 @@ __metadata:
     react: ">=16.6.0"
     react-dom: ">=16.6.0"
   checksum: 10/ca32d3fd2168c976c5d90a317f25d5f5cd723608b415fb3b9006f9d793c8965c619562d0884503a3e44e4b06efbca4fdd1520f30e58ca3e00a0890e637d55419
+  languageName: node
+  linkType: hard
+
+"react-use-websocket@npm:^4.13.0":
+  version: 4.13.0
+  resolution: "react-use-websocket@npm:4.13.0"
+  checksum: 10/bd4d5a6e1ee9f79d9764fcef0c840e8f55e93c12e7a44f8c311aa8e9f654c4a786aaaf3247ffc945010d8e3f286daf667dc4cfe8fd6d4ced0a1520ee64935a9f
   languageName: node
   linkType: hard
 
@@ -14167,28 +14152,6 @@ __metadata:
   version: 4.0.0
   resolution: "slash@npm:4.0.0"
   checksum: 10/da8e4af73712253acd21b7853b7e0dbba776b786e82b010a5bfc8b5051a1db38ed8aba8e1e8f400dd2c9f373be91eb1c42b66e91abb407ff42b10feece5e1d2d
-  languageName: node
-  linkType: hard
-
-"socket.io-client@npm:^4.8.1":
-  version: 4.8.1
-  resolution: "socket.io-client@npm:4.8.1"
-  dependencies:
-    "@socket.io/component-emitter": "npm:~3.1.0"
-    debug: "npm:~4.3.2"
-    engine.io-client: "npm:~6.6.1"
-    socket.io-parser: "npm:~4.2.4"
-  checksum: 10/7480cf1ab30eba371a96dd1ce2ce9018dcbeaf81035a066fb89d99df0d0a6388b05840c92d970317c739956b68b28b0f4833f3b18e460a24eef557b9bca127c1
-  languageName: node
-  linkType: hard
-
-"socket.io-parser@npm:~4.2.4":
-  version: 4.2.4
-  resolution: "socket.io-parser@npm:4.2.4"
-  dependencies:
-    "@socket.io/component-emitter": "npm:~3.1.0"
-    debug: "npm:~4.3.1"
-  checksum: 10/4be500a9ff7e79c50ec25af11048a3ed34b4c003a9500d656786a1e5bceae68421a8394cf3eb0aa9041f85f36c1a9a737617f4aee91a42ab4ce16ffb2aa0c89c
   languageName: node
   linkType: hard
 
@@ -16170,21 +16133,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:~8.17.1":
-  version: 8.17.1
-  resolution: "ws@npm:8.17.1"
-  peerDependencies:
-    bufferutil: ^4.0.1
-    utf-8-validate: ">=5.0.2"
-  peerDependenciesMeta:
-    bufferutil:
-      optional: true
-    utf-8-validate:
-      optional: true
-  checksum: 10/4264ae92c0b3e59c7e309001e93079b26937aab181835fb7af79f906b22cd33b6196d96556dafb4e985742dd401e99139572242e9847661fdbc96556b9e6902d
-  languageName: node
-  linkType: hard
-
 "xml-name-validator@npm:^3.0.0":
   version: 3.0.0
   resolution: "xml-name-validator@npm:3.0.0"
@@ -16203,13 +16151,6 @@ __metadata:
   version: 2.2.0
   resolution: "xmlchars@npm:2.2.0"
   checksum: 10/4ad5924974efd004a47cce6acf5c0269aee0e62f9a805a426db3337af7bcbd331099df174b024ace4fb18971b8a56de386d2e73a1c4b020e3abd63a4a9b917f1
-  languageName: node
-  linkType: hard
-
-"xmlhttprequest-ssl@npm:~2.1.1":
-  version: 2.1.2
-  resolution: "xmlhttprequest-ssl@npm:2.1.2"
-  checksum: 10/708a177fe41c6c8cd4ec7c04d965b4c01801d87f44383ec639be58bdc14418142969841659e0850db44feee8bec0a3d3e7d33fed22519415f3d0daab04d3f160
   languageName: node
   linkType: hard
 

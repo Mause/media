@@ -1,6 +1,7 @@
 import logging
 import os
 import traceback
+from collections import ChainMap
 from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
@@ -19,7 +20,7 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 from requests.exceptions import HTTPError
 from sqlalchemy import func
 from sqlalchemy.orm.session import Session
@@ -74,7 +75,7 @@ from .providers.abc import (
     TvProvider,
 )
 from .settings import Settings, get_settings
-from .singleton import singleton
+from .singleton import get, singleton
 from .tmdb import (
     get_json,
     get_movie,
@@ -89,6 +90,7 @@ from .utils import non_null, precondition
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
+logging.getLogger('backoff').handlers.clear()
 T = TypeVar('T')
 
 
@@ -402,6 +404,8 @@ async def api_tv_season(tmdb_id: TmdbId, season: int):
 
 
 class StreamArgs(BaseModel):
+    authorization: SecretStr
+
     type: StreamType
     tmdb_id: TmdbId
     season: int | None = None
@@ -421,16 +425,54 @@ async def _stream(
     else:
         items = search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
 
-    return (item.dict() for item in items)
+    async for item in items:
+        yield item.model_dump(mode='json')
 
 
-@api.websocket("/ws")
+root = APIRouter()
+
+
+@root.websocket("/ws")
 async def websocket_stream(websocket: WebSocket):
+    def fake(user: Annotated[User, security]):
+        return user
+
+    logger.info('Got websocket connection')
     await websocket.accept()
 
     request = StreamArgs.model_validate(await websocket.receive_json())
+    logger.info('Got request: %s', request)
 
-    for item in await _stream(
+    try:
+        user = await get(
+            websocket.app,
+            fake,
+            Request(
+                scope=ChainMap(
+                    {
+                        'type': 'http',
+                        'headers': [
+                            (
+                                b"authorization",
+                                (request.authorization.get_secret_value()).encode(),
+                            ),
+                        ],
+                    },
+                    websocket.scope,
+                ),
+                receive=websocket.receive,
+                send=websocket.send,
+            ),
+        )
+    except Exception as e:
+        logger.exception('Unable to authenticate websocket request')
+        await websocket.send_json({'error': str(e), 'type': type(e).__name__})
+        await websocket.close()
+        raise
+
+    logger.info('Authed user: %s', user)
+
+    async for item in _stream(
         type=request.type,
         tmdb_id=request.tmdb_id,
         season=request.season,
@@ -438,8 +480,8 @@ async def websocket_stream(websocket: WebSocket):
     ):
         await websocket.send_json(item)
 
-
-root = APIRouter()
+    logger.info('Finished streaming')
+    await websocket.close()
 
 
 @singleton
