@@ -37,6 +37,8 @@ function Websocket() {
   const { tmdbId } = useParams<{ tmdbId: string }>();
   const { search } = useLocation();
   const query = qs.parse(search.slice(1));
+  const auth = useAuth0();
+  const token = use(auth.getAuthTokenSilently());
 
   const initMessage = query.season
     ? {
@@ -44,8 +46,13 @@ function Websocket() {
         tmdb_id: tmdbId,
         season: query.season,
         episode: query.episode,
+        authorization: token,
       }
-    : { type: 'movie', tmdb_id: tmdbId };
+    : {
+      type: 'movie',
+      tmdb_id: tmdbId,
+      authorization: token,
+     };
 
   const { messages, readyState } = useMessages<ITorrent>(initMessage);
 

@@ -20,7 +20,7 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 from requests.exceptions import HTTPError
 from sqlalchemy import func
 from sqlalchemy.orm.session import Session
@@ -403,6 +403,8 @@ async def api_tv_season(tmdb_id: TmdbId, season: int):
 
 
 class StreamArgs(BaseModel):
+    authorization: SecretStr
+
     type: StreamType
     tmdb_id: TmdbId
     season: int | None = None
@@ -429,30 +431,32 @@ async def _stream(
 root = APIRouter()
 
 
-def convert_depends(func: Callable[..., T]):
-    async def wrapper(websocket: WebSocket) -> T:
-        return await get(
-            websocket.app,
-            func,
-            Request(
-                scope=ChainMap({'type': 'http'}, websocket.scope),
-                receive=websocket.receive,
-                send=websocket.send,
-            ),
-        )
-
-    return wrapper
-
-
-@root.websocket(
-    "/ws", dependencies=[Security(convert_depends(get_current_user), scopes=["openid"])]
-)
+@root.websocket("/ws")
 async def websocket_stream(websocket: WebSocket):
     logger.info('Got websocket connection')
     await websocket.accept()
 
     request = StreamArgs.model_validate(await websocket.receive_json())
     logger.info('Got request: %s', request)
+
+    user = await get(
+        websocket.app,
+        get_current_user,  # TODO: replace with `security`
+        Request(
+            scope=ChainMap({
+                'type': 'http',
+                'headers': [
+                    (
+                        "Authorization",
+                        request.authorization.get_secret_value()
+                    )
+                ]
+            }, websocket.scope),
+            receive=websocket.receive,
+            send=websocket.send,
+        ),
+    )
+    logger.info('Authed user: %s', user)
 
     async for item in _stream(
         type=request.type,
