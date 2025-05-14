@@ -32,7 +32,7 @@ async def get(
         embed_body_fields=False,
     )
 
-    assert not solved.errors
+    assert not solved.errors, solved.errors
 
     return await run_endpoint_function(
         dependant=dependant,

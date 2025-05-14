@@ -2,9 +2,12 @@ import json
 import logging
 import sys
 from datetime import datetime
+from typing import Annotated
 from unittest.mock import patch
 
 from async_asgi_testclient import TestClient
+from fastapi import Depends
+from fastapi.security import OpenIdConnect, SecurityScopes
 from lxml.builder import E
 from lxml.etree import tostring
 from psycopg2 import OperationalError
@@ -686,6 +689,15 @@ async def test_websocket(get_providers, get_movie_imdb_id, test_client, snapshot
                 category="205",
             )
 
+    async def gcu(
+        header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
+        scopes: SecurityScopes,
+    ):
+        assert scopes.scopes == ['openid']
+        assert header == 'token'
+        return UserFactory.create()
+
+    fastapi_app.dependency_overrides[get_current_user] = gcu
     get_movie_imdb_id.return_value = 'tt0000000'
     get_providers.return_value = [
         FakeProvider(),
@@ -693,15 +705,13 @@ async def test_websocket(get_providers, get_movie_imdb_id, test_client, snapshot
 
     r = test_client.websocket_connect(
         '/ws',
-        headers={
-            'Authorization': 'Bearer token',
-        },
     )
     await r.connect()
     await r.send_json(
         {
             'tmdb_id': 1,
             'type': 'movie',
+            'authorization': 'token',
         }
     )
 

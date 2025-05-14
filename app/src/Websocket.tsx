@@ -3,6 +3,8 @@ import { useParams, useLocation } from 'react-router-dom';
 import { DisplayTorrent, ITorrent } from './OptionsComponent';
 import _ from 'lodash';
 import qs from 'qs';
+import usePromise from 'react-promise-suspense';
+import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 function useMessages<T>(initMessage: object) {
@@ -37,6 +39,8 @@ function Websocket() {
   const { tmdbId } = useParams<{ tmdbId: string }>();
   const { search } = useLocation();
   const query = qs.parse(search.slice(1));
+  const auth = useAuth0();
+  const token = 'Bearer ' + usePromise(auth.getAccessTokenSilently, [{}]);
 
   const initMessage = query.season
     ? {
@@ -44,25 +48,44 @@ function Websocket() {
         tmdb_id: tmdbId,
         season: query.season,
         episode: query.episode,
+        authorization: token,
       }
-    : { type: 'movie', tmdb_id: tmdbId };
+    : {
+        type: 'movie',
+        tmdb_id: tmdbId,
+        authorization: token,
+      };
 
-  const { messages, readyState } = useMessages<ITorrent>(initMessage);
+  const { messages, readyState } = useMessages<
+    { error: string; type: string } | ITorrent
+  >(initMessage);
+
+  const errors = messages.filter((message) => 'error' in message);
+  const downloads = messages.filter(
+    (message) => !('error' in message),
+  ) as ITorrent[];
 
   return (
     <div>
-      <span>{tmdbId}</span>
-      <span>{String(query?.season)}</span>
-      <span>{String(query?.episode)}</span>
-      <span>
+      <p>{tmdbId}</p>
+      <p>{String(query?.season)}</p>
+      <p>{String(query?.episode)}</p>
+      <p>
         {readyState === ReadyState.CONNECTING && 'Connecting...'}
         {readyState === ReadyState.OPEN && 'Connected'}
         {readyState === ReadyState.CLOSING && 'Disconnecting...'}
         {readyState === ReadyState.CLOSED && 'Disconnected'}
         {readyState === ReadyState.UNINSTANTIATED && 'Uninstantiated'}
-      </span>
+      </p>
       <ul>
-        {_.uniqBy(messages, 'download').map((message) => (
+        <ul>
+          {errors.map((message) => (
+            <li key={message.error}>
+              {message.type}: {message.error}
+            </li>
+          ))}
+        </ul>
+        {_.uniqBy(downloads, 'download').map((message) => (
           <li key={message.download}>
             <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
           </li>
