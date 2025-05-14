@@ -31,7 +31,6 @@ import createStyles from '@mui/styles/createStyles';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import { Websocket } from './Websocket';
-import { Integrations as TracingIntegrations } from '@sentry/tracing';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link as MaterialLink } from '@mui/material';
@@ -44,11 +43,8 @@ if (process.env.NODE_ENV === 'production') {
     dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
     release: process.env.HEROKU_SLUG_COMMIT,
     environment: 'development',
-    integrations: [new TracingIntegrations.BrowserTracing()],
+    integrations: [Sentry.browserTracingIntegration()],
     tracesSampleRate: 0.75, // must be present and non-zero
-  });
-  Sentry.configureScope((scope) => {
-    scope.setUser((window as any).USER);
   });
 }
 
