@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 import type { ReactNode, ComponentType, PropsWithChildren } from 'react';
-import { ErrorInfo } from 'react';
+import React, { ErrorInfo } from 'react';
 import {
   BrowserRouter as Router,
   useLocation,
