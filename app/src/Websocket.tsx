@@ -49,10 +49,10 @@ function Websocket() {
         authorization: token,
       }
     : {
-      type: 'movie',
-      tmdb_id: tmdbId,
-      authorization: token,
-     };
+        type: 'movie',
+        tmdb_id: tmdbId,
+        authorization: token,
+      };
 
   const { messages, readyState } = useMessages<ITorrent>(initMessage);
 

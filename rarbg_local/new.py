@@ -443,15 +443,15 @@ async def websocket_stream(websocket: WebSocket):
         websocket.app,
         get_current_user,  # TODO: replace with `security`
         Request(
-            scope=ChainMap({
-                'type': 'http',
-                'headers': [
-                    (
-                        "Authorization",
-                        request.authorization.get_secret_value()
-                    )
-                ]
-            }, websocket.scope),
+            scope=ChainMap(
+                {
+                    'type': 'http',
+                    'headers': [
+                        ("Authorization", request.authorization.get_secret_value())
+                    ],
+                },
+                websocket.scope,
+            ),
             receive=websocket.receive,
             send=websocket.send,
         ),
