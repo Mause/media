@@ -2,9 +2,12 @@ import json
 import logging
 import sys
 from datetime import datetime
+from typing import Annotated
 from unittest.mock import patch
 
 from async_asgi_testclient import TestClient
+from fastapi import Depends
+from fastapi.security import OpenIdConnect
 from lxml.builder import E
 from lxml.etree import tostring
 from psycopg2 import OperationalError
@@ -685,6 +688,13 @@ async def test_websocket(
             download="magnet:?xt=urn:btih:00000000000000000",
             category="205",
         )
+
+    async def gcu(
+        header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
+    ):
+        return UserFactory.create()
+
+    fastapi_app.dependency_overrides[get_current_user] = gcu
 
     monkeypatch.setattr(new, 'search_for_movie', search_for_movie)
     get_movie_imdb_id.return_value = 'tt0000000'
