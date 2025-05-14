@@ -65,7 +65,7 @@ export function SearchBox() {
     <form onSubmit={search}>
       <TextField name="query" onChange={(e) => setQuery(e.target.value)} />
       &nbsp;
-      <Button type="submit" value="Search" />
+      <Button type="submit">Search</Button>
     </form>
   );
 }
