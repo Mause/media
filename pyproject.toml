@@ -7,7 +7,7 @@ license = "MIT"
 requires-python = ">=3.11.0"
 
 dependencies = [
-    "sqlalchemy[mypy]==2.0.40",
+    "sqlalchemy[mypy]==2.0.41",
     "sqlalchemy-repr==0.1.0",
     "aiohttp==3.11.18",
     "backoff==1.11.1",
