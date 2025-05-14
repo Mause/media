@@ -423,19 +423,18 @@ async def _stream(
     episode: int | None = None,
 ):
     if type == 'series':
-        async for item in search_for_tv(
+        tasks, queue = await search_for_tv(
             await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
-        ):
-            yield item.model_dump(mode='json')
+        )
     else:
         tasks, queue = await search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
 
-        while not all(task.done() for task in tasks):
-            item = await queue.get()
-            if isinstance(item, Message):
-                logger.info('Message from provider: %s', item)
-            else:
-                yield item.model_dump(mode='json')
+    while not all(task.done() for task in tasks):
+        item = await queue.get()
+        if isinstance(item, Message):
+            logger.info('Message from provider: %s', item)
+        else:
+            yield item.model_dump(mode='json')
 
 
 root = APIRouter()
