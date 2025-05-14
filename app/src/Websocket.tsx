@@ -44,19 +44,22 @@ function Websocket() {
 
   const initMessage = query.season
     ? {
-        type: 'series',
-        tmdb_id: tmdbId,
-        season: query.season,
-        episode: query.episode,
-        authorization: token,
-      }
+      type: 'series',
+      tmdb_id: tmdbId,
+      season: query.season,
+      episode: query.episode,
+      authorization: token,
+    }
     : {
-        type: 'movie',
-        tmdb_id: tmdbId,
-        authorization: token,
-      };
+      type: 'movie',
+      tmdb_id: tmdbId,
+      authorization: token,
+    };
 
-  const { messages, readyState } = useMessages<ITorrent>(initMessage);
+  const { messages, readyState } = useMessages<{ error: string } | ITorrent>(initMessage);
+
+  const errors = messages.filter(message => 'error' in message);
+  const downloads = messages.filter(message => !('error' in message)) as ITorrent[];
 
   return (
     <div>
@@ -71,14 +74,13 @@ function Websocket() {
         {readyState === ReadyState.UNINSTANTIATED && 'Uninstantiated'}
       </p>
       <ul>
-        {_.uniqBy(messages, 'download').map((message) => (
-          {
-            message.error ?
-            <div key={message.error}>{message.error}</div> :
-            <li key={message.download}>
-              <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
-            </li>
-          }
+        {errors.map(message =>
+          <div key={message.error}>{message.error}</div>
+        )}
+        {_.uniqBy(downloads, 'download').map((message) => (
+          <li key={message.download}>
+            <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
+          </li>
         ))}
       </ul>
     </div>
