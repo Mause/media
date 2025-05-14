@@ -3,7 +3,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { DisplayTorrent, ITorrent } from './OptionsComponent';
 import _ from 'lodash';
 import qs from 'qs';
-import { use } from 'react';
+import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
@@ -40,7 +40,7 @@ function Websocket() {
   const { search } = useLocation();
   const query = qs.parse(search.slice(1));
   const auth = useAuth0();
-  const token = use(auth.getAuthTokenSilently());
+  const token = usePromise(auth.getAccessTokenSilently, [{}]);
 
   const initMessage = query.season
     ? {
