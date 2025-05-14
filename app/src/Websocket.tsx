@@ -3,7 +3,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { DisplayTorrent, ITorrent } from './OptionsComponent';
 import _ from 'lodash';
 import qs from 'qs';
-import { use } from'react';
+import { use } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
