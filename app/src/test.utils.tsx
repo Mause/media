@@ -8,7 +8,6 @@ import {
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
-import { HelmetProvider } from 'react-helmet-async';
 
 import { SwrConfigWrapper } from './components';
 import { server } from './msw';
@@ -26,9 +25,7 @@ export function renderWithSWR(el: ReactElement) {
     <Auth0Context.Provider value={c}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
-          <HelmetProvider>
-            <SwrConfigWrapper>{el}</SwrConfigWrapper>
-          </HelmetProvider>
+          <SwrConfigWrapper>{el}</SwrConfigWrapper>
         </ThemeProvider>
       </StyledEngineProvider>
     </Auth0Context.Provider>,
