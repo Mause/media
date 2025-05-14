@@ -56,7 +56,7 @@ function Websocket() {
         authorization: token,
       };
 
-  const { messages, readyState } = useMessages<{ error: string } | ITorrent>(
+  const { messages, readyState } = useMessages<{ error: string, type: string } | ITorrent>(
     initMessage,
   );
 
@@ -78,9 +78,11 @@ function Websocket() {
         {readyState === ReadyState.UNINSTANTIATED && 'Uninstantiated'}
       </p>
       <ul>
+        <ul>
         {errors.map((message) => (
-          <div key={message.error}>{message.error}</div>
+          <li key={message.error}>{message.type}: {message.error}</li>
         ))}
+        </ul>
         {_.uniqBy(downloads, 'download').map((message) => (
           <li key={message.download}>
             <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
