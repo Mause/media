@@ -1,3 +1,4 @@
+import logging
 import os
 
 # add your model's MetaData object here
@@ -5,7 +6,6 @@ import os
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 import sys
-import logging
 from logging.config import fileConfig
 from pathlib import Path
 from urllib.parse import urlparse, urlunparse
