@@ -24,7 +24,7 @@ async def seed():
 
     retrying_session_maker = backoff.on_exception(
         session_maker, OperationalError, max_time=60
-    )(connectable.connect)
+    )(session_maker)
 
     with retrying_session_maker() as session:
         user = session.query(User).filter_by(username='Mause').first()
