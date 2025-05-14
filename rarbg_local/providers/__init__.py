@@ -5,8 +5,8 @@ from typing import TypeVar
 
 from ..models import ITorrent
 from ..types import ImdbId, TmdbId
-from ..utils import create_monitored_task
-from .abc import MovieProvider, Provider
+from ..utils import Message, create_monitored_task
+from .abc import MovieProvider, Provider, TvProvider
 
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]
@@ -33,19 +33,24 @@ def get_providers() -> list[Provider]:
 
 async def search_for_tv(
     imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: int | None = None
-):
-    from .abc import TvProvider
-
-    for provider in get_providers():
-        if not isinstance(provider, TvProvider):
-            continue
+) -> tuple[list[asyncio.Future[None]], asyncio.Queue[ITorrent]]:
+    async def worker(provider: TvProvider):
         try:
             async for result in provider.search_for_tv(
                 imdb_id, tmdb_id, season, episode
             ):
-                yield result
+                output_queue.put_nowait(result)
         except Exception:
             logger.exception('Unable to load [TV] from %s', provider)
+
+    tasks = []
+    output_queue = asyncio.Queue[ITorrent]()
+    for provider in get_providers():
+        if not isinstance(provider, TvProvider):
+            continue
+
+        tasks.append(create_monitored_task(worker(provider), output_queue.put_nowait))
+    return tasks, output_queue
 
 
 async def search_for_movie(
@@ -88,9 +93,15 @@ async def main():
 
     imdb_id = ImdbId('tt28454008')
     tmdb_id = await resolve_id(imdb_id, 'tv')
-    async for row in search_for_tv(
+    tasks, queue = await search_for_tv(
         imdb_id=imdb_id, tmdb_id=tmdb_id, season=1, episode=1
-    ):
+    )
+
+    while not all(task.done() for task in tasks):
+        row = await queue.get()
+        if isinstance(row, Message):
+            print(row)
+            continue
         table.add_row(
             row.source.name, row.title, str(row.seeders), str(bool(row.download))
         )
