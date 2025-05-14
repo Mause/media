@@ -677,7 +677,7 @@ async def test_piratebay(aioresponses, snapshot):
 
 @mark.asyncio
 @patch('rarbg_local.new.get_movie_imdb_id')
-@patch('rarbg_local.new.get_providers')
+@patch('rarbg_local.providers.get_providers')
 async def test_websocket(
     get_providers, get_movie_imdb_id, test_client, fastapi_app, snapshot
 ):
