@@ -1,5 +1,3 @@
-from unittest.mock import MagicMock
-
 import pytest
 
 from ..db import normalise_db_url
