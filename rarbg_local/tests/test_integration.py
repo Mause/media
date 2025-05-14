@@ -688,7 +688,9 @@ async def test_websocket_error(test_client, snapshot):
 @mark.asyncio
 @patch('rarbg_local.new.get_movie_imdb_id')
 @patch('rarbg_local.new.get_providers')
-async def test_websocket(get_providers, get_movie_imdb_id, test_client, snapshot):
+async def test_websocket(
+    get_providers, get_movie_imdb_id, test_client, fastapi_app, snapshot
+):
     class FakeProvider(MovieProvider):
         async def search_for_movie(self, *args, **kwargs):
             yield ITorrent(
