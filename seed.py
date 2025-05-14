@@ -1,7 +1,10 @@
 import asyncio
+import logging
 import os
 
+import backoff
 from fastapi import FastAPI
+from sqlalchemy.exc import OperationalError
 
 from rarbg_local.db import (
     Role,
@@ -13,11 +16,17 @@ from rarbg_local.db import (
 )
 from rarbg_local.singleton import get
 
+logging.getLogger('backoff').addHandler(logging.StreamHandler())
+
 
 async def seed():
     session_maker = await get(FastAPI(), get_session_local)
 
-    with session_maker() as session:
+    retrying_session_maker = backoff.on_exception(
+        session_maker, OperationalError, max_time=60
+    )(session_maker)
+
+    with retrying_session_maker() as session:
         user = session.query(User).filter_by(username='Mause').first()
         if not user:
             user = User(
