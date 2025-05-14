@@ -34,8 +34,7 @@ def auth_hook(
 
     if not security_scopes.scopes:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Missing security scopes'
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='Missing security scopes'
         )
 
     logger.info(f"Security scopes: {security_scopes.scopes}")
