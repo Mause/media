@@ -1,9 +1,6 @@
 import asyncio
 import logging
 from collections.abc import Callable, Iterable
-from concurrent.futures import ThreadPoolExecutor
-from queue import Empty, Queue
-from threading import Semaphore, current_thread
 from typing import TypeVar
 
 from ..models import ITorrent
@@ -32,31 +29,6 @@ def get_providers() -> list[Provider]:
         NyaaProvider(),
         PirateBayProvider(),
     ]
-
-
-def threadable(functions: list[ProviderType], args: tuple) -> Iterable[T]:
-    def worker(function: ProviderType) -> None:
-        try:
-            current_thread().name = function.__name__
-
-            for item in function(*args):
-                queue.put(item)
-        finally:
-            s.release()
-
-    s = Semaphore(0)
-    queue: Queue[T] = Queue()
-    executor = ThreadPoolExecutor(len(functions))
-
-    futures = executor.map(worker, functions)
-
-    while getattr(s, '_value') != len(functions) or not queue.empty():
-        try:
-            yield queue.get_nowait()
-        except Empty:
-            pass
-
-    list(futures)  # throw exceptions in this thread
 
 
 async def search_for_tv(
