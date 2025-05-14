@@ -4,7 +4,7 @@ import os
 
 import backoff
 from fastapi import FastAPI
-from sqlalchemy.exceptions import OperationalError
+from sqlalchemy.exc import OperationalError
 
 from rarbg_local.db import (
     Role,
