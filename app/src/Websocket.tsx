@@ -56,9 +56,9 @@ function Websocket() {
         authorization: token,
       };
 
-  const { messages, readyState } = useMessages<{ error: string, type: string } | ITorrent>(
-    initMessage,
-  );
+  const { messages, readyState } = useMessages<
+    { error: string; type: string } | ITorrent
+  >(initMessage);
 
   const errors = messages.filter((message) => 'error' in message);
   const downloads = messages.filter(
@@ -79,9 +79,11 @@ function Websocket() {
       </p>
       <ul>
         <ul>
-        {errors.map((message) => (
-          <li key={message.error}>{message.type}: {message.error}</li>
-        ))}
+          {errors.map((message) => (
+            <li key={message.error}>
+              {message.type}: {message.error}
+            </li>
+          ))}
         </ul>
         {_.uniqBy(downloads, 'download').map((message) => (
           <li key={message.download}>
