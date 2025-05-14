@@ -7,7 +7,6 @@ import {
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
-import { HelmetProvider } from 'react-helmet-async';
 
 import App from './App';
 
@@ -37,9 +36,7 @@ const rootEl = (
   >
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <HelmetProvider>
-          <App />
-        </HelmetProvider>
+        <App />
       </ThemeProvider>
     </StyledEngineProvider>
   </Auth0Provider>

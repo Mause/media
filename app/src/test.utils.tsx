@@ -10,7 +10,6 @@ import {
 } from '@mui/material/styles';
 import { Location, MemoryHistory } from '@remix-run/router';
 import { Listener } from '@remix-run/router/dist/history';
-import { HelmetProvider } from 'react-helmet-async';
 
 import { swrConfig } from './streaming';
 
@@ -38,9 +37,7 @@ export function renderWithSWR(el: ReactElement) {
   return render(
     <Auth0Context.Provider value={c}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <HelmetProvider>{swrConfig(() => el)()}</HelmetProvider>
-        </ThemeProvider>
+        <ThemeProvider theme={theme}>{swrConfig(() => el)()}</ThemeProvider>
       </StyledEngineProvider>
     </Auth0Context.Provider>,
   );
