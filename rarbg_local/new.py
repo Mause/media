@@ -439,23 +439,28 @@ async def websocket_stream(websocket: WebSocket):
     request = StreamArgs.model_validate(await websocket.receive_json())
     logger.info('Got request: %s', request)
 
-    user = await get(
-        websocket.app,
-        get_current_user,  # TODO: replace with `security`
-        Request(
-            scope=ChainMap(
-                {
-                    'type': 'http',
-                    'headers': [
-                        ("Authorization", request.authorization.get_secret_value())
-                    ],
-                },
-                websocket.scope,
+    try:
+        user = await get(
+            websocket.app,
+            get_current_user,  # TODO: replace with `security`
+            Request(
+                scope=ChainMap(
+                    {
+                        'type': 'http',
+                        'headers': [
+                            ("Authorization", request.authorization.get_secret_value())
+                        ],
+                    },
+                    websocket.scope,
+                ),
+                receive=websocket.receive,
+                send=websocket.send,
             ),
-            receive=websocket.receive,
-            send=websocket.send,
-        ),
-    )
+        )
+    except Exception as e:
+        await websocket.send_json({'error': str(e)})
+        await websocket.close()
+
     logger.info('Authed user: %s', user)
 
     async for item in _stream(
