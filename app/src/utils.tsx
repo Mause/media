@@ -18,7 +18,7 @@ export function MLink(
     children: ReactNode;
     color?: TypographyTypeMap['props']['color'];
   } & Pick<Parameters<typeof Link>[0], 'to' | 'state'>,
-): ReactElement {
+): ReactElement<any> {
   return <MaterialLink component={Link} {...props} underline="hover" />;
 }
 

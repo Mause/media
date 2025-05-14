@@ -27,7 +27,7 @@ export async function mock<T>(path: string, response: T) {
   });
 }
 
-export function renderWithSWR(el: ReactElement) {
+export function renderWithSWR(el: ReactElement<any>) {
   const c = {
     isAuthenticated: true,
     getAccessTokenSilently() {
