@@ -72,9 +72,13 @@ function Websocket() {
       </p>
       <ul>
         {_.uniqBy(messages, 'download').map((message) => (
-          <li key={message.download}>
-            <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
-          </li>
+          {
+            message.error ?
+            <div key={message.error}>{message.error}</div> :
+            <li key={message.download}>
+              <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
+            </li>
+          }
         ))}
       </ul>
     </div>
