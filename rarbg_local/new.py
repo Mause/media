@@ -461,6 +461,7 @@ async def websocket_stream(websocket: WebSocket):
         logger.exception('Unable to authenticate websocket request')
         await websocket.send_json({'error': str(e)})
         await websocket.close()
+        raise
 
     logger.info('Authed user: %s', user)
 
