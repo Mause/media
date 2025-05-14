@@ -73,11 +73,7 @@ def run_migrations_offline():
         context.run_migrations()
 
 
-@backoff.on_exception(
-    backoff.expo,
-    dns.resolver.NXDOMAIN,
-    max_time=60
-)
+@backoff.on_exception(backoff.expo, dns.resolver.NXDOMAIN, max_time=60)
 def resolve_db_url():
     parsed = urlparse(url)
     print(parsed)
