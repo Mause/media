@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderWithSWR } from './test.utils';
 import Storybook from './Storybook';
 import { screen } from '@testing-library/react';

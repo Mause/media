@@ -1,6 +1,6 @@
-import React, { ReactElement } from 'react';
+import type { ReactNode } from 'react';
+import { ReactElement, useState, useEffect } from 'react';
 import Axios from 'axios';
-import { useState, useEffect } from 'react';
 import MaterialLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import * as RRD from 'react-router-dom';
@@ -14,7 +14,7 @@ import { FetchEventTarget } from './fetch_stream';
 
 export function MLink(
   props: {
-    children: React.ReactNode;
+    children: ReactNode;
     color?: TypographyTypeMap['props']['color'];
   } & Pick<Parameters<typeof Link>[0], 'to' | 'state'>,
 ): ReactElement {

@@ -4,7 +4,7 @@ import { TextField, Button, Theme } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import createStyles from '@mui/styles/createStyles';
 import { DownloadState } from './DownloadComponent';
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useLocation } from './utils';
 
 const useStyles = makeStyles((theme: Theme) =>

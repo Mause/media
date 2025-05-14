@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css';
 import { ParentComponent } from './streaming';
 import { Alert } from '@mui/material';
