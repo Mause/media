@@ -276,10 +276,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.27.0, @babel/runtime@npm:^7.27.1, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.27.1, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.27.1
   resolution: "@babel/runtime@npm:7.27.1"
   checksum: 10/34cefcbf781ea5a4f1b93f8563327b9ac82694bebdae91e8bd9d7f58d084cbe5b9a6e7f94d77076e15b0bcdaa0040a36cb30737584028df6c4673b4c67b2a31d
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.27.0":
+  version: 7.27.0
+  resolution: "@babel/runtime@npm:7.27.0"
+  dependencies:
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: 10/e6966e03b695feb4c0ac0856a4355231c2580bf9ebd0298f47739f85c0ea658679dd84409daf26378d42c86c1cbe7e33feab709b14e784254b6c441d91606465
   languageName: node
   linkType: hard
 
@@ -2473,17 +2482,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^4.0.0":
-  version: 4.1.2
-  resolution: "chalk@npm:4.1.2"
-  dependencies:
-    ansi-styles: "npm:^4.1.0"
-    supports-color: "npm:^7.1.0"
-  checksum: 10/cb3f3e594913d63b1814d7ca7c9bafbf895f75fbf93b92991980610dfd7b48500af4e3a5d4e3a8f337990a96b168d7eb84ee55efdce965e2ee8efc20f8c8f139
-  languageName: node
-  linkType: hard
-
-"chalk@npm:^4.1.0":
+"chalk@npm:^4.0.0, chalk@npm:^4.1.0":
   version: 4.1.0
   resolution: "chalk@npm:4.1.0"
   dependencies:
@@ -4829,6 +4828,13 @@ __metadata:
     indent-string: "npm:^4.0.0"
     strip-indent: "npm:^3.0.0"
   checksum: 10/fa1ef20404a2d399235e83cc80bd55a956642e37dd197b4b612ba7327bf87fa32745aeb4a1634b2bab25467164ab4ed9c15be2c307923dd08b0fe7c52431ae6b
+  languageName: node
+  linkType: hard
+
+"regenerator-runtime@npm:^0.14.0":
+  version: 0.14.1
+  resolution: "regenerator-runtime@npm:0.14.1"
+  checksum: 10/5db3161abb311eef8c45bcf6565f4f378f785900ed3945acf740a9888c792f75b98ecb77f0775f3bf95502ff423529d23e94f41d80c8256e8fa05ed4b07cf471
   languageName: node
   linkType: hard
 
