@@ -434,6 +434,9 @@ root = APIRouter()
 
 @root.websocket("/ws")
 async def websocket_stream(websocket: WebSocket):
+    def fake(user: Annotated[User, security]):
+        return user
+
     logger.info('Got websocket connection')
     await websocket.accept()
 
@@ -443,7 +446,7 @@ async def websocket_stream(websocket: WebSocket):
     try:
         user = await get(
             websocket.app,
-            get_current_user,  # TODO: replace with `security`
+            fake,
             Request(
                 scope=ChainMap(
                     {
