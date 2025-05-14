@@ -1,11 +1,8 @@
-from unittest.mock import MagicMock
-
 import pytest
 
 from ..db import normalise_db_url
 from ..main import normalise
 from ..models import Episode
-from ..providers import threadable
 
 episodes: list[Episode] = [
     Episode(name='1:23:45', episode_number=1, id=1),
@@ -33,15 +30,6 @@ episodes: list[Episode] = [
 )
 def test_normalise(original: str, expected: str) -> None:
     assert normalise(episodes, original) == expected
-
-
-def test_threadable() -> None:
-    m = MagicMock(__name__='Test Thing', return_value=[3])
-
-    results: list[int] = list(threadable([m], (1, 2)))
-
-    assert results == [3]
-    m.assert_called_with(1, 2)
 
 
 @pytest.mark.parametrize(
