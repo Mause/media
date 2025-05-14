@@ -8,8 +8,8 @@ import sys
 from logging.config import fileConfig
 from pathlib import Path
 from urllib.parse import urlparse, urlunparse
-import backoff
 
+import backoff
 import dns.rdatatype
 import dns.resolver
 from sqlalchemy import engine_from_config, pool
@@ -107,7 +107,9 @@ def run_migrations_online():
         },
     )
 
-    retrying_connect = backoff.on_exception(backoff.expo, OperationalError, max_time=60)(connectable.connect)
+    retrying_connect = backoff.on_exception(
+        backoff.expo, OperationalError, max_time=60
+    )(connectable.connect)
 
     with retrying_connect() as connection:
         context.configure(
