@@ -3105,97 +3105,74 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/browser@npm:5.30.0":
-  version: 5.30.0
-  resolution: "@sentry/browser@npm:5.30.0"
+"@sentry-internal/browser-utils@npm:8.55.0":
+  version: 8.55.0
+  resolution: "@sentry-internal/browser-utils@npm:8.55.0"
   dependencies:
-    "@sentry/core": "npm:5.30.0"
-    "@sentry/types": "npm:5.30.0"
-    "@sentry/utils": "npm:5.30.0"
-    tslib: "npm:^1.9.3"
-  checksum: 10/797430fcad4d6c2f514402522f9932501dd96a9290531d332fb32c46a1cc7c785da8da1e596563cb65f47bec4f9795a52ec29e6757c43fd172e06f4324bfe490
+    "@sentry/core": "npm:8.55.0"
+  checksum: 10/e50dfd408e6e4040f7ce37c1fad9dbe52c4355a067be7543994d45678dcff091f9aa0397e58bc430aebc3bb2fb9037db7d893da64d52dd3b0876e1924dd84d7c
   languageName: node
   linkType: hard
 
-"@sentry/core@npm:5.30.0":
-  version: 5.30.0
-  resolution: "@sentry/core@npm:5.30.0"
+"@sentry-internal/feedback@npm:8.55.0":
+  version: 8.55.0
+  resolution: "@sentry-internal/feedback@npm:8.55.0"
   dependencies:
-    "@sentry/hub": "npm:5.30.0"
-    "@sentry/minimal": "npm:5.30.0"
-    "@sentry/types": "npm:5.30.0"
-    "@sentry/utils": "npm:5.30.0"
-    tslib: "npm:^1.9.3"
-  checksum: 10/fef7808017cc9581e94c51fbce3ffeb6bdb62b30d94920fae143d298aed194176ac7c026923d569a33606b93a3747b877e78215a1668ed8eb44e5941527e17e0
+    "@sentry/core": "npm:8.55.0"
+  checksum: 10/c1a5031b91b2b3bbc515e936b9031d3ec05eb5a4f62b4f1a6342c143abab85a739ad3e90bebc7a6aca56eb8b9c7911b6ba44f601044bfdddaec36c5bb38334be
   languageName: node
   linkType: hard
 
-"@sentry/hub@npm:5.30.0":
-  version: 5.30.0
-  resolution: "@sentry/hub@npm:5.30.0"
+"@sentry-internal/replay-canvas@npm:8.55.0":
+  version: 8.55.0
+  resolution: "@sentry-internal/replay-canvas@npm:8.55.0"
   dependencies:
-    "@sentry/types": "npm:5.30.0"
-    "@sentry/utils": "npm:5.30.0"
-    tslib: "npm:^1.9.3"
-  checksum: 10/b0e21a7acb1c363a3097c7578dd483b2e534bc62541977da7d3c643703767bbcfd65831b70b102fefa715e6b75004ca1dab680d117e1a7455e839042118c1051
+    "@sentry-internal/replay": "npm:8.55.0"
+    "@sentry/core": "npm:8.55.0"
+  checksum: 10/8b8757dd5f44ab4ea109cacb13db8022673afa4966771c36aeba6a9a5ed12898d6bda354250bafd8a08c2babad2b62502e2ba9a116217f060eb037c526363b7c
   languageName: node
   linkType: hard
 
-"@sentry/minimal@npm:5.30.0":
-  version: 5.30.0
-  resolution: "@sentry/minimal@npm:5.30.0"
+"@sentry-internal/replay@npm:8.55.0":
+  version: 8.55.0
+  resolution: "@sentry-internal/replay@npm:8.55.0"
   dependencies:
-    "@sentry/hub": "npm:5.30.0"
-    "@sentry/types": "npm:5.30.0"
-    tslib: "npm:^1.9.3"
-  checksum: 10/e74bf519f5e284decb81eea8fd7c75b02827bde36c8ccef5ad0b941043e62a6d6578d7f1ad9dba33e03d240593140990b1999215a35abb344e2b4f3e09b15c90
+    "@sentry-internal/browser-utils": "npm:8.55.0"
+    "@sentry/core": "npm:8.55.0"
+  checksum: 10/f0d7636474ea6912f1f80255a7fbd86e1733fb10a2854202efceaac05f4faeda3112fc9e96822fcd5a5c759d41cf28708decc45bc33a399c3bbb855fe3330c5c
   languageName: node
   linkType: hard
 
-"@sentry/react@npm:^5.29.2":
-  version: 5.30.0
-  resolution: "@sentry/react@npm:5.30.0"
+"@sentry/browser@npm:8.55.0":
+  version: 8.55.0
+  resolution: "@sentry/browser@npm:8.55.0"
   dependencies:
-    "@sentry/browser": "npm:5.30.0"
-    "@sentry/minimal": "npm:5.30.0"
-    "@sentry/types": "npm:5.30.0"
-    "@sentry/utils": "npm:5.30.0"
+    "@sentry-internal/browser-utils": "npm:8.55.0"
+    "@sentry-internal/feedback": "npm:8.55.0"
+    "@sentry-internal/replay": "npm:8.55.0"
+    "@sentry-internal/replay-canvas": "npm:8.55.0"
+    "@sentry/core": "npm:8.55.0"
+  checksum: 10/9260bd530df1f27b6f6213d0709689d61983951d4d6f25b566b2a93ce9f4def2df2e180b9cb65d845b360ea954b864aeeebe7ad8b94024969e8d45445be4bf44
+  languageName: node
+  linkType: hard
+
+"@sentry/core@npm:8.55.0":
+  version: 8.55.0
+  resolution: "@sentry/core@npm:8.55.0"
+  checksum: 10/918dfb461c35d9b5f6dbd31e7ba9b993029e51afa63205ab0848ed647693055bae4eed800198908e1c6c5b45b680b84c4f3f7f83e92f60e6114cc997c18d82a2
+  languageName: node
+  linkType: hard
+
+"@sentry/react@npm:^8":
+  version: 8.55.0
+  resolution: "@sentry/react@npm:8.55.0"
+  dependencies:
+    "@sentry/browser": "npm:8.55.0"
+    "@sentry/core": "npm:8.55.0"
     hoist-non-react-statics: "npm:^3.3.2"
-    tslib: "npm:^1.9.3"
   peerDependencies:
-    react: 15.x || 16.x || 17.x
-    react-dom: 15.x || 16.x || 17.x
-  checksum: 10/fc3c833bdef0010937d4a8014a2117c4773f2c4c44210d8dab5a479c46cae7bf266748f4379013875ab30b2dddb63c0a5cb81d3ea210c3e73c4e4cee9ff40ae1
-  languageName: node
-  linkType: hard
-
-"@sentry/tracing@npm:^5.29.2":
-  version: 5.30.0
-  resolution: "@sentry/tracing@npm:5.30.0"
-  dependencies:
-    "@sentry/hub": "npm:5.30.0"
-    "@sentry/minimal": "npm:5.30.0"
-    "@sentry/types": "npm:5.30.0"
-    "@sentry/utils": "npm:5.30.0"
-    tslib: "npm:^1.9.3"
-  checksum: 10/7e74a29823b445adb104c323324348882987554d049e83e5d3439149d2677024350974161c28b1a55a2750509b030525f81056a48427be06183f3744220ba4b0
-  languageName: node
-  linkType: hard
-
-"@sentry/types@npm:5.30.0":
-  version: 5.30.0
-  resolution: "@sentry/types@npm:5.30.0"
-  checksum: 10/3ca60689871b298dbab16c1bb6fb4637f72d3c21820017bac9df1765fd560004862cc9e75fb438e5714048b3a9bc641c396cdbb3c3573ac62481d2ea83f1da6d
-  languageName: node
-  linkType: hard
-
-"@sentry/utils@npm:5.30.0":
-  version: 5.30.0
-  resolution: "@sentry/utils@npm:5.30.0"
-  dependencies:
-    "@sentry/types": "npm:5.30.0"
-    tslib: "npm:^1.9.3"
-  checksum: 10/4aa8acf7d0d9688c927a620cbb9fd37d6d2738f701863af772be329baca2cede909dcae6c7b4b449474787245c09212909ee740b4cae143d21ddb1fed910cc3a
+    react: ^16.14.0 || 17.x || 18.x || 19.x
+  checksum: 10/4e340137baa75b05400006d02fae2e5d72cd5ffd84b56c9f8a2f66f04b430d682a24c2142be16fb012d74f5fbe4f821d618ec37af26d6e33948169b576867eee
   languageName: node
   linkType: hard
 
@@ -4698,8 +4675,7 @@ __metadata:
     "@mui/material": "npm:^6"
     "@mui/styles": "npm:^6"
     "@remix-run/router": "npm:^1.23.0"
-    "@sentry/react": "npm:^5.29.2"
-    "@sentry/tracing": "npm:^5.29.2"
+    "@sentry/react": "npm:^8"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/jest-dom": "npm:^5.11.9"
     "@testing-library/react": "npm:^16"
@@ -15029,7 +15005,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.8.1, tslib@npm:^1.9.0, tslib@npm:^1.9.3":
+"tslib@npm:^1.8.1, tslib@npm:^1.9.0":
   version: 1.13.0
   resolution: "tslib@npm:1.13.0"
   checksum: 10/703f52fe8437e3aa3f85f8811dced64c99eb44b6d67cb84acacf64d68fbabedae23b429973af3b4872f497b4b497f5b2019a479666ef1cb8e5b71c8c3862687f
