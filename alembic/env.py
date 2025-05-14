@@ -11,8 +11,6 @@ from pathlib import Path
 from urllib.parse import urlparse, urlunparse
 
 import backoff
-import dns.rdatatype
-import dns.resolver
 from sqlalchemy import engine_from_config, pool
 from sqlalchemy.exc import OperationalError
 
@@ -27,7 +25,7 @@ config = context.config
 config_file_name = config.config_file_name
 assert config_file_name
 fileConfig(config_file_name)
-logging.getLogger('backoff').addHandler(logging.StreamHandler())
+logging.getLogger('backoff').handlers.clear()
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 db = __import__('rarbg_local.db').db
@@ -73,23 +71,6 @@ def run_migrations_offline():
         context.run_migrations()
 
 
-@backoff.on_exception(backoff.expo, dns.resolver.NXDOMAIN, max_time=60)
-def resolve_db_url():
-    parsed = urlparse(url)
-    print(parsed)
-    domain = parsed.hostname
-    results = list(dns.resolver.resolve(domain, dns.rdatatype.RdataType.AAAA))
-    print('AAAA', results)
-    print(results[0].to_text())
-    return urlunparse(
-        parsed._replace(
-            netloc='{}:{}@[{}]:{}'.format(
-                parsed.username, parsed.password, results[0].address, parsed.port
-            )
-        )
-    )
-
-
 def run_migrations_online():
     """Run migrations in 'online' mode.
 
@@ -97,9 +78,6 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
-
-    if 'RAILWAY_ENVIRONMENT_NAME' in os.environ:
-        alembic_config['sqlalchemy.url'] = resolve_db_url()
 
     connectable = engine_from_config(
         alembic_config,
