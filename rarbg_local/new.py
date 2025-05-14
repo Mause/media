@@ -90,6 +90,7 @@ from .utils import non_null, precondition
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
+logging.getLogger('backoff').handlers.clear()
 T = TypeVar('T')
 
 
