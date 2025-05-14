@@ -32,7 +32,11 @@ def auth_hook(
         logger.info("Token info is None")
         return None
 
-    assert security_scopes.scopes
+    if not security_scopes.scopes:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='Missing security scopes'
+        )
+
     logger.info(f"Security scopes: {security_scopes.scopes}")
     for scope in security_scopes.scopes:
         if scope not in token_info.scope.split():

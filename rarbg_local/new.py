@@ -20,7 +20,7 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 from requests.exceptions import HTTPError
 from sqlalchemy import func
 from sqlalchemy.orm.session import Session
@@ -90,6 +90,7 @@ from .utils import non_null, precondition
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
+logging.getLogger('backoff').handlers.clear()
 T = TypeVar('T')
 
 
@@ -403,6 +404,8 @@ async def api_tv_season(tmdb_id: TmdbId, season: int):
 
 
 class StreamArgs(BaseModel):
+    authorization: SecretStr
+
     type: StreamType
     tmdb_id: TmdbId
     season: int | None = None
@@ -429,30 +432,42 @@ async def _stream(
 root = APIRouter()
 
 
-def convert_depends(func: Callable[..., T]):
-    async def wrapper(websocket: WebSocket) -> T:
-        return await get(
-            websocket.app,
-            func,
-            Request(
-                scope=ChainMap({'type': 'http'}, websocket.scope),
-                receive=websocket.receive,
-                send=websocket.send,
-            ),
-        )
-
-    return wrapper
-
-
-@root.websocket(
-    "/ws", dependencies=[Security(convert_depends(get_current_user), scopes=["openid"])]
-)
+@root.websocket("/ws")
 async def websocket_stream(websocket: WebSocket):
     logger.info('Got websocket connection')
     await websocket.accept()
 
     request = StreamArgs.model_validate(await websocket.receive_json())
     logger.info('Got request: %s', request)
+
+    try:
+        user = await get(
+            websocket.app,
+            get_current_user,  # TODO: replace with `security`
+            Request(
+                scope=ChainMap(
+                    {
+                        'type': 'http',
+                        'headers': [
+                            (
+                                b"authorization",
+                                (request.authorization.get_secret_value()).encode(),
+                            ),
+                        ],
+                    },
+                    websocket.scope,
+                ),
+                receive=websocket.receive,
+                send=websocket.send,
+            ),
+        )
+    except Exception as e:
+        logger.exception('Unable to authenticate websocket request')
+        await websocket.send_json({'error': str(e), 'type': type(e).__name__})
+        await websocket.close()
+        raise
+
+    logger.info('Authed user: %s', user)
 
     async for item in _stream(
         type=request.type,
