@@ -106,8 +106,9 @@ exports[`renders learn react link 1`] = `
         class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-1uent87-MuiButtonBase-root-MuiButton-root"
         tabindex="0"
         type="submit"
-        value="Search"
-      />
+      >
+        Search
+      </button>
     </form>
     <div
       class="colA"
