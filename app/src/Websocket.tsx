@@ -60,16 +60,16 @@ function Websocket() {
 
   return (
     <div>
-      <span>{tmdbId}</span>
-      <span>{String(query?.season)}</span>
-      <span>{String(query?.episode)}</span>
-      <span>
+      <p>{tmdbId}</p>
+      <p>{String(query?.season)}</p>
+      <p>{String(query?.episode)}</p>
+      <p>
         {readyState === ReadyState.CONNECTING && 'Connecting...'}
         {readyState === ReadyState.OPEN && 'Connected'}
         {readyState === ReadyState.CLOSING && 'Disconnecting...'}
         {readyState === ReadyState.CLOSED && 'Disconnected'}
         {readyState === ReadyState.UNINSTANTIATED && 'Uninstantiated'}
-      </span>
+      </p>
       <ul>
         {_.uniqBy(messages, 'download').map((message) => (
           <li key={message.download}>
