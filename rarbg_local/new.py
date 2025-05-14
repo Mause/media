@@ -1,4 +1,3 @@
-import asyncio
 import logging
 import os
 import traceback
@@ -68,6 +67,7 @@ from .models import (
 from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     get_providers,
+    search_for_movie,
     search_for_tv,
 )
 from .providers.abc import (
@@ -86,7 +86,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .types import ImdbId, TmdbId
-from .utils import Message, create_monitored_task, non_null, precondition
+from .utils import Message, non_null, precondition
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -414,26 +414,6 @@ class StreamArgs(BaseModel):
     tmdb_id: TmdbId
     season: int | None = None
     episode: int | None = None
-
-
-async def search_for_movie(
-    imdb_id: ImdbId, tmdb_id: TmdbId
-) -> tuple[list[asyncio.Future[None]], asyncio.Queue[ITorrent]]:
-    async def worker(provider: MovieProvider):
-        try:
-            async for result in provider.search_for_movie(imdb_id, tmdb_id):
-                output_queue.put_nowait(result)
-        except Exception:
-            logger.exception('Unable to load [MOVIE] from %s', provider)
-
-    tasks = []
-    output_queue = asyncio.Queue[ITorrent]()
-    for provider in get_providers():
-        if not isinstance(provider, MovieProvider):
-            continue
-
-        tasks.append(create_monitored_task(worker(provider), output_queue.put_nowait))
-    return tasks, output_queue
 
 
 async def _stream(
