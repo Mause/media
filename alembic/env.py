@@ -5,6 +5,7 @@ import os
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 import sys
+import logging
 from logging.config import fileConfig
 from pathlib import Path
 from urllib.parse import urlparse, urlunparse
@@ -26,6 +27,7 @@ config = context.config
 config_file_name = config.config_file_name
 assert config_file_name
 fileConfig(config_file_name)
+logging.getLogger('backoff').addHandler(logging.StreamHandler())
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 db = __import__('rarbg_local.db').db
