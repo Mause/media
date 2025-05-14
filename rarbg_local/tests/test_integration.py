@@ -700,6 +700,7 @@ async def test_websocket(
         {
             'tmdb_id': 1,
             'type': 'movie',
+            'authorization': 'token',
         }
     )
 
