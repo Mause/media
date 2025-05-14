@@ -693,7 +693,7 @@ async def test_websocket(
         header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
         scopes: SecurityScopes,
     ):
-        assert scopes == ['openid']
+        assert scopes.scopes == ['openid']
         assert header == 'token'
         return UserFactory.create()
 
