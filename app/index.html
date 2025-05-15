@@ -30,14 +30,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <script type="module" src="/@vite/client"></script>
-    <script type="module">
-      import RefreshRuntime from '/@react-refresh';
-      RefreshRuntime.injectIntoGlobalHook(window);
-      window.$RefreshReg$ = () => {};
-      window.$RefreshSig$ = () => (type) => type;
-      window.__vite_plugin_react_preamble_installed__ = true;
-    </script>
-    <script type="module" src="src/index.tsx"></script>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
