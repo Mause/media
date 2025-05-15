@@ -44,7 +44,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "vitest",
     "generate": "npx @manifoldco/swagger-to-ts https://media.mause.me/openapi.json -o src/schema.ts",
     "eject": "react-scripts eject"
   },
