@@ -2,9 +2,10 @@ import json
 from asyncio import get_event_loop
 from collections.abc import AsyncGenerator
 from re import Pattern
-from typing import TypeVar
+from typing import Annotated, TypeVar
 
 from async_asgi_testclient import TestClient
+from fastapi import Depends
 from pytest import fixture, hookimpl
 from responses import RequestsMock
 
@@ -32,8 +33,11 @@ def clear_cache():
 
 
 @fixture
-def test_client(fastapi_app, clear_cache, user: User) -> TestClient:
-    fastapi_app.dependency_overrides[get_current_user] = lambda: user
+def test_client(fastapi_app, clear_cache) -> TestClient:
+    def gcu(session: Annotated[User, Depends(get_db)):
+            return session.query(User).first()
+
+    fastapi_app.dependency_overrides[get_current_user] = gcu
     return TestClient(fastapi_app)
 
 
