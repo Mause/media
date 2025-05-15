@@ -71,7 +71,7 @@
     "@testing-library/react": "^16",
     "@testing-library/user-event": "^14.6.1",
     "@types/lodash": "^4.17.16",
-    "@types/moxios": "^0.4.9",
+    "@types/moxios": "^0.4.17",
     "@types/node": "^18",
     "@types/qs": "^6.9.5",
     "@types/react": "^18",
