@@ -84,7 +84,7 @@ class TooManyRequests(Exception):
 
 
 @backoff.on_exception(backoff.expo, (TooManyRequests,))
-def _get(base_url: str, **kwargs: str) -> list[dict]:
+def _get(base_url: str, **kwargs: str) -> list[RarbgTorrent]:
     assert isinstance(session.params, dict)
     if 'token' not in session.params:
         session.params['token'] = get_token(base_url)
@@ -113,8 +113,8 @@ def _get(base_url: str, **kwargs: str) -> list[dict]:
         else:
             raise Exception(res)
 
-    return res.get('torrent_results', [])
-
+    return [RarbgTorrent.model_validate(item for item in res.get('torrent_results', [])
+                                        ]
 
 class RarbgProvider(TvProvider, MovieProvider):
     type = ProviderSource.RARBG
