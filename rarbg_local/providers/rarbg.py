@@ -110,7 +110,7 @@ def _get(base_url: str, **kwargs: str) -> list[RarbgTorrent]:
     if res.error_code == 4:
         logger.info('Token expired, reacquiring')
         session.params['token'] = get_token(base_url)
-        res = _get(**kwargs)
+        return _get(**kwargs)
     elif error:
         if any(message in error for message in NONE):
             pass
