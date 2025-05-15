@@ -3,10 +3,10 @@ import logging
 from collections.abc import AsyncGenerator, Iterator
 from itertools import chain
 from json.decoder import JSONDecodeError
-from typing import TypedDict
 
 import backoff
 import requests
+from pydantic import BaseModel
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
@@ -62,11 +62,17 @@ def load_category_codes() -> dict[str, int]:
         return json.load(fh)
 
 
-class RarbgTorrent(TypedDict):
+class RarbgTorrent(BaseModel):
     category: str
     seeders: int
     title: str
     download: str
+
+
+class RarbgResponse(BaseModel):
+    error: str | None = None
+    error_code: int | None = None
+    torrent_results: list[RarbgTorrent] = []
 
 
 def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[list[RarbgTorrent]]:
@@ -96,12 +102,12 @@ def _get(base_url: str, **kwargs: str) -> list[RarbgTorrent]:
     r.raise_for_status()
 
     try:
-        res = r.json()
+        res = RarbgResponse.model_validate(r.json())
     except JSONDecodeError as e:
         raise Exception(r, r.reason, r.headers, r.request.url, r.text) from e
 
-    error = res.get('error')
-    if res.get('error_code') == 4:
+    error = res.error
+    if res.error_code == 4:
         logger.info('Token expired, reacquiring')
         session.params['token'] = get_token(base_url)
         res = _get(**kwargs)
@@ -113,8 +119,8 @@ def _get(base_url: str, **kwargs: str) -> list[RarbgTorrent]:
         else:
             raise Exception(res)
 
-    return [RarbgTorrent.model_validate(item for item in res.get('torrent_results', [])
-                                        ]
+    return res.torrent_results
+
 
 class RarbgProvider(TvProvider, MovieProvider):
     type = ProviderSource.RARBG
@@ -141,10 +147,10 @@ class RarbgProvider(TvProvider, MovieProvider):
         ):
             yield ITorrent(
                 source=ProviderSource.RARBG,
-                title=item['title'],
-                seeders=item['seeders'],
-                download=item['download'],
-                category=tv_convert(item['category']),
+                title=item.title,
+                seeders=item.seeders,
+                download=item.download,
+                category=tv_convert(item.category),
                 episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
             )
 
@@ -158,8 +164,8 @@ class RarbgProvider(TvProvider, MovieProvider):
         ):
             yield ITorrent(
                 source=ProviderSource.RARBG,
-                title=item['title'],
-                seeders=item['seeders'],
-                download=item['download'],
-                category=movie_convert(item['category']),
+                title=item.title,
+                seeders=item.seeders,
+                download=item.download,
+                category=movie_convert(item.category),
             )
