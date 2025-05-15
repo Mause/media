@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Storybook renders without crashing 1`] = `
+exports[`Storybook > renders without crashing 1`] = `
 <div
   aria-hidden="true"
 >
