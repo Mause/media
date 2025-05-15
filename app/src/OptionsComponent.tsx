@@ -45,14 +45,14 @@ export function DisplayTorrent({
       },
     ],
   };
-  const url = { pathname: '/download', state };
+  const url = { to: '/download', state };
   return (
     <span>
       <strong title={torrent.source}>
         {torrent.source.substring(0, 1).toUpperCase()}
       </strong>
       &nbsp;
-      <MLink to={url}>{torrent.title}</MLink>
+      <MLink {...url}>{torrent.title}</MLink>
       &nbsp;
       <small>{torrent.seeders}</small>
       &nbsp;
