@@ -41,7 +41,7 @@ def clear_cache():
 @fixture
 def test_client(fastapi_app, clear_cache) -> TestClient:
     def gcu(session: Annotated[User, Depends(get_db)]):
-            return session.query(User).first()
+        return session.query(User).first()
 
     fastapi_app.dependency_overrides[get_current_user] = gcu
     return TestClient(fastapi_app)
