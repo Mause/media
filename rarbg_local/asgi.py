@@ -19,7 +19,6 @@ if 'SENTRY_DSN' in os.environ:
             'HEROKU_SLUG_COMMIT', os.environ.get('RAILWAY_GIT_COMMIT_SHA')
         ),
         # Add data like request headers and IP for users, if applicable;
-        # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
         send_default_pii=True,
         # Set traces_sample_rate to 1.0 to capture 100%
         # of transactions for tracing.
