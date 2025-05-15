@@ -2,7 +2,7 @@ import os
 from datetime import date
 from enum import Enum
 from itertools import chain
-from typing import Literal, cast
+from typing import Literal
 
 import aiohttp
 import aiohttp.web_exceptions
@@ -33,7 +33,7 @@ def try_(dic: dict[str, str], *keys: str) -> str | None:
     backoff.fibo,
     aiohttp.web_exceptions.HTTPException,
     max_tries=5,
-    giveup=lambda e: getattr(cast(aiohttp.web_exceptions.HTTPException, e).response, 'status_code', None) != 429,
+    giveup=lambda e: not isinstance(e, aiohttp.web_exceptions.HTTPTooManyRequests)
 )
 async def get_json(path, **kwargs):
     async with aiohttp.ClientSession(
