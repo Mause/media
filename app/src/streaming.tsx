@@ -25,7 +25,6 @@ import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
 import {
   MonitorComponent,
-  MonitorAddComponent,
   MonitorDeleteComponent,
 } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
@@ -332,14 +331,6 @@ function AppRoutes() {
         element={
           <RouteTitle title="Monitor">
             <MonitorDeleteComponent />
-          </RouteTitle>
-        }
-      />
-      <Route
-        path="/monitor/add/:tmdb_id"
-        element={
-          <RouteTitle title="Monitor">
-            <MonitorAddComponent />
           </RouteTitle>
         }
       />
