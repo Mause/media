@@ -18,7 +18,17 @@ if 'SENTRY_DSN' in os.environ:
         release=os.environ.get(
             'HEROKU_SLUG_COMMIT', os.environ.get('RAILWAY_GIT_COMMIT_SHA')
         ),
+        # Add data like request headers and IP for users, if applicable;
+        send_default_pii=True,
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for tracing.
         traces_sample_rate=1,
+        # To collect profiles for all profile sessions,
+        # set `profile_session_sample_rate` to 1.0.
+        profile_session_sample_rate=1.0,
+        # Profiles will be automatically collected while
+        # there is an active span.
+        profile_lifecycle="trace",
     )
 else:
     logger.warning('Not configuring sentry')
