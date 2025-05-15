@@ -138,11 +138,11 @@ wheels = [
 
 [[package]]
 name = "aniso8601"
-version = "8.1.1"
+version = "10.0.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/52/44/9a34480d951dd083a20debdedcc9b0f07fe0f6c4015532558895d41f75cf/aniso8601-8.1.1.tar.gz", hash = "sha256:be08b19c19ca527af722f2d4ba4dc569db292ec96f7de963746df4bb0bff9250", size = 39143, upload-time = "2021-01-29T20:58:51.737Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8b/8d/52179c4e3f1978d3d9a285f98c706642522750ef343e9738286130423730/aniso8601-10.0.1.tar.gz", hash = "sha256:25488f8663dd1528ae1f54f94ac1ea51ae25b4d531539b8bc707fed184d16845", size = 47190, upload-time = "2025-04-18T17:29:42.995Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2c/09/c26ecac7a5e187db69380e66cbad27f8d53ae98b3d5188af08fdd5e34d9f/aniso8601-8.1.1-py2.py3-none-any.whl", hash = "sha256:f59914762c5049ffd956cad037aa82fe0cabf8baf51900e2af24026761090b0b", size = 44854, upload-time = "2021-01-29T20:58:50.644Z" },
+    { url = "https://files.pythonhosted.org/packages/59/75/e0e10dc7ed1408c28e03a6cb2d7a407f99320eb953f229d008a7a6d05546/aniso8601-10.0.1-py2.py3-none-any.whl", hash = "sha256:eb19717fd4e0db6de1aab06f12450ab92144246b257423fe020af5748c0cb89e", size = 52848, upload-time = "2025-04-18T17:29:41.492Z" },
 ]
 
 [[package]]
@@ -1097,7 +1097,7 @@ requires-dist = [
     { name = "aiofiles", specifier = "==0.8.0" },
     { name = "aiohttp", specifier = "==3.11.18" },
     { name = "alembic", specifier = "==1.15.2" },
-    { name = "aniso8601", specifier = "==8.1.1" },
+    { name = "aniso8601", specifier = "==10.0.1" },
     { name = "asyncache", specifier = "==0.3.1" },
     { name = "asyncpg", specifier = ">=0.30.0" },
     { name = "backoff", specifier = "==1.11.1" },

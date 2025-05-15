@@ -23,7 +23,7 @@ dependencies = [
     "mause-rpc==0.0.18",
     "fastapi==0.115.12",
     "python-multipart==0.0.20",
-    "aniso8601==8.1.1",
+    "aniso8601==10.0.1",
     "pytz==2025.2",
     "uvicorn[standard]",
     "aiofiles==0.8.0",
