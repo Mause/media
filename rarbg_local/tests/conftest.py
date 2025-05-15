@@ -9,7 +9,7 @@ from async_asgi_testclient import TestClient
 from fastapi import Depends
 from pytest import fixture, hookimpl
 from responses import RequestsMock
-from sqlalchemy import Session
+from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
 from ..db import Base, Role, User, get_db, get_session_local
