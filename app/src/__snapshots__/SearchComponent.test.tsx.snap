@@ -65,6 +65,7 @@ exports[`SearchComponent 1`] = `
       <li>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
           href="/select/10000/options"
         >
           Hello
