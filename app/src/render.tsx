@@ -8,7 +8,9 @@ import {
 } from './streaming';
 import { String } from 'typescript-string-operations';
 import Moment from 'moment';
-import Collapsible from 'react-collapsible';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import { useNavigate } from 'react-router-dom';
 import { TV } from './SeasonSelectComponent';
 import useSWR from 'swr';
@@ -86,22 +88,20 @@ export function Movies({
         Movies <Loading loading={loading} />
       </h2>
       {sortedMovies?.true?.length ? (
-        <Collapsible
-          trigger={head(faCaretDown)}
-          triggerElementProps={{
-            id: `collapsible-trigger-complete-movies`,
-          }}
-          contentElementId="collapsible-content-complete-movies"
-          triggerWhenOpen={head(faCaretUp)}
-        >
-          <ul>
-            {(sortedMovies.true || []).map((movie) => (
-              <li key={movie.id}>
-                <span>{movie.download.title}</span>
-              </li>
-            ))}
-          </ul>
-        </Collapsible>
+        <Accordion>
+          <AccordionSummary>
+            <span>Finished downloads ({sortedMovies.true.length})</span>
+          </AccordionSummary>
+          <AccordionDetails>
+            <ul>
+              {(sortedMovies.true || []).map((movie) => (
+                <li key={movie.id}>
+                  <span>{movie.download.title}</span>
+                </li>
+              ))}
+            </ul>
+          </AccordionDetails>
+        </Accordion>
       ) : undefined}
       <ul>
         {(sortedMovies.false || []).map((movie) => (
@@ -275,32 +275,18 @@ function Season({
   season: EpisodeResponse[];
   tmdb_id: number;
 }) {
-  const head = (icon: IconDefinition) => (
-    <h4>
-      Season {i} {collapse && '(Complete) '}
-      &nbsp;
-      <MLink to={`/select/${tmdb_id}/season/${i}`}>
-        <FontAwesomeIcon icon={faSearch} />
-      </MLink>
-      &nbsp;
-      <FontAwesomeIcon
-        icon={icon}
-        size="2x"
-        style={{ cursor: 'pointer' }}
-        transform={{ y: 2 }}
-      />
-    </h4>
-  );
   return (
-    <Collapsible
-      trigger={head(faCaretDown)}
-      triggerElementProps={{
-        id: `collapsible-trigger-tv-${tmdb_id}-season-${i}`,
-      }}
-      contentElementId={`collapsible-content-tv-${tmdb_id}-season-${i}`}
-      triggerWhenOpen={head(faCaretUp)}
-      open={!collapse}
-    >
+    <Accordion>
+      <AccordionSummary>
+        <h4>
+          Season {i} {collapse && '(Complete) '}
+          &nbsp;
+          <MLink to={`/select/${tmdb_id}/season/${i}`}>
+            <FontAwesomeIcon icon={faSearch} />
+          </MLink>
+          &nbsp;
+        </h4>
+      </AccordionSummary>
       <ol>
         {season.map((episode) => (
           <li key={episode.id} value={episode.episode}>
@@ -315,7 +301,7 @@ function Season({
           season_episodes={season}
         />
       </ol>
-    </Collapsible>
+    </Accordion>
   );
 }
 
