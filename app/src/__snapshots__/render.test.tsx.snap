@@ -38,7 +38,7 @@ exports[`Movies 1`] = `
 </div>
 `;
 
-exports[`NextEpisodeAirs works 1`] = `
+exports[`NextEpisodeAirs > works 1`] = `
 <div>
   <small>
     Episode 2 "EP2" airs on 24/04/2020
@@ -68,9 +68,9 @@ exports[`NextEpisodeAirs works 1`] = `
 </div>
 `;
 
-exports[`Progress complex 1`] = `<div />`;
+exports[`Progress > complex 1`] = `<div />`;
 
-exports[`Progress complex 2`] = `
+exports[`Progress > complex 2`] = `
 <div>
   <progress
     title="50% (Unknown time remaining)"
@@ -79,7 +79,7 @@ exports[`Progress complex 2`] = `
 </div>
 `;
 
-exports[`Progress complex 3`] = `
+exports[`Progress > complex 3`] = `
 <div>
   <progress
     title="75% (Unknown time remaining)"
@@ -88,9 +88,9 @@ exports[`Progress complex 3`] = `
 </div>
 `;
 
-exports[`Progress simple 1`] = `<div />`;
+exports[`Progress > simple 1`] = `<div />`;
 
-exports[`Progress simple 2`] = `
+exports[`Progress > simple 2`] = `
 <div>
   <svg
     aria-hidden="true"
@@ -110,7 +110,7 @@ exports[`Progress simple 2`] = `
 </div>
 `;
 
-exports[`Progress simple 3`] = `
+exports[`Progress > simple 3`] = `
 <div>
   <progress
     title="50% (6 minutes remaining)"
