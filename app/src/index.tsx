@@ -38,7 +38,7 @@ const rootEl = (
     clientId={clientId!}
     authorizationParams={{
       audience: audience!,
-      redirectUri: window.location.origin,
+      redirect_uri: window.location.origin,
     }}
     useRefreshTokens={true}
     cacheLocation="localstorage"
