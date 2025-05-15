@@ -21,8 +21,8 @@ declare module '@mui/styles/defaultTheme' {
 
 const theme = createTheme();
 
-const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
-const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
+const clientId = import.meta.env.REACT_APP_AUTH0_CLIENT_ID;
+const audience = import.meta.env.REACT_APP_AUTH0_AUDIENCE;
 
 if (!(clientId && audience)) {
   console.error(
