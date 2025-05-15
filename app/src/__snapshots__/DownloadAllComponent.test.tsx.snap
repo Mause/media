@@ -24,6 +24,7 @@ exports[`DownloadAllComponent 1`] = `
               >
                 <a
                   class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+                  data-discover="true"
                   href="/"
                 >
                   Home
@@ -58,6 +59,7 @@ exports[`DownloadAllComponent 1`] = `
         >
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+            data-discover="true"
             href="/select/1/season"
           />
         </li>
@@ -141,6 +143,7 @@ exports[`DownloadAllComponent 2`] = `
               >
                 <a
                   class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+                  data-discover="true"
                   href="/"
                 >
                   Home
@@ -175,6 +178,7 @@ exports[`DownloadAllComponent 2`] = `
         >
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+            data-discover="true"
             href="/select/1/season"
           />
         </li>
@@ -212,6 +216,7 @@ exports[`DownloadAllComponent 2`] = `
              
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+              data-discover="true"
               href="/download"
             >
               Hello World

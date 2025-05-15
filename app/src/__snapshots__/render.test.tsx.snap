@@ -45,6 +45,7 @@ exports[`NextEpisodeAirs > works 1`] = `
      
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+      data-discover="true"
       href="/select/10000/season/1/episode/2/options"
     >
       <svg
@@ -168,6 +169,7 @@ exports[`TVShows 1`] = `
                
               <a
                 class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+                data-discover="true"
                 href="/select/1/season/1"
               >
                 <svg

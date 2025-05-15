@@ -24,6 +24,7 @@ exports[`EpisodeSelectComponent render 1`] = `
               >
                 <a
                   class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+                  data-discover="true"
                   href="/"
                 >
                   Home
@@ -58,6 +59,7 @@ exports[`EpisodeSelectComponent render 1`] = `
         >
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+            data-discover="true"
             href="/select/1/season"
           >
             Hello
@@ -88,6 +90,7 @@ exports[`EpisodeSelectComponent render 1`] = `
       >
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
           href="/select/1/season/1/episode/1/options"
         >
           Episode 1
@@ -96,6 +99,7 @@ exports[`EpisodeSelectComponent render 1`] = `
     </ol>
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+      data-discover="true"
       href="/select/1/season/1/download_all"
     >
       Download season
@@ -129,6 +133,7 @@ exports[`SeasonSelectComponent  render 1`] = `
               >
                 <a
                   class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+                  data-discover="true"
                   href="/"
                 >
                   Home
@@ -174,6 +179,7 @@ exports[`SeasonSelectComponent  render 1`] = `
       <li>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
           href="/select/1/season/1"
         >
           Season 
