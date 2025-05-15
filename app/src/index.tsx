@@ -1,4 +1,4 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -32,7 +32,7 @@ if (!(clientId && audience)) {
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
-root.render(
+const rootEl = (
   <Auth0Provider
     domain="mause.au.auth0.com"
     clientId={clientId!}
@@ -50,8 +50,9 @@ root.render(
         </HelmetProvider>
       </ThemeProvider>
     </StyledEngineProvider>
-  </Auth0Provider>,
+  </Auth0Provider>
 );
+root.render(<StrictMode>{rootEl}</StrictMode>);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
