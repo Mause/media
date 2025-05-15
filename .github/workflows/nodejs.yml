@@ -24,7 +24,7 @@ jobs:
         working-directory: app
         env:
           CI: true
-      - run: yarn test --ci --runInBand
+      - run: yarn test
         working-directory: app
         env:
           CI: true

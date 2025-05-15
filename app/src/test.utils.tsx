@@ -1,4 +1,5 @@
 import moxios from 'moxios';
+import axios from 'axios';
 import { swrConfig } from './streaming';
 import { render } from '@testing-library/react';
 import { act, ReactElement } from 'react';
@@ -46,10 +47,12 @@ export function renderWithSWR(el: ReactElement) {
 
 export function usesMoxios() {
   beforeEach(() => {
-    moxios.install();
+    // @ts-expect-error
+    moxios.install(axios);
   });
   afterEach(() => {
-    moxios.uninstall();
+    // @ts-expect-error
+    moxios.uninstall(axios);
   });
 }
 

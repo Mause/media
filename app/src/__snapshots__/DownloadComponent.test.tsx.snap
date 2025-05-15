@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DownloadComponent success 1`] = `
+exports[`DownloadComponent > success 1`] = `
 <div>
   <div
     style="fill: #000000; height: 64px; width: 64px;"
@@ -107,7 +107,7 @@ exports[`DownloadComponent success 1`] = `
 </div>
 `;
 
-exports[`DownloadComponent success 2`] = `
+exports[`DownloadComponent > success 2`] = `
 <div>
   <div>
     Home
