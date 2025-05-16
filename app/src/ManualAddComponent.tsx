@@ -64,7 +64,9 @@ export function ManualAddComponent() {
         variant="standard"
         placeholder="magnet:..."
         onChange={(e) => setMagnet(e.target.value)}
-        inputProps={{ pattern: '^magnet:.*' }}
+        slotProps={{
+          htmlInput: { pattern: '^magnet:.*' }
+        }}
       />
       <Button type="submit" variant="outlined">
         Download
