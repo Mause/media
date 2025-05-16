@@ -51,4 +51,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@4
+      - uses: actions/setup-python@5
       - uses: pre-commit/action@v3.0.1
