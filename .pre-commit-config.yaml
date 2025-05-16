@@ -27,7 +27,7 @@ repos:
         types:
           - file
         additional_dependencies:
-          - eslint@^8
+          - eslint@^9
           - eslint-plugin-react@*
           - typescript-eslint@*
           - typescript@*
