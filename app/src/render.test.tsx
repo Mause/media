@@ -19,7 +19,9 @@ import {
 import MockDate from 'mockdate';
 
 usesMoxios();
-beforeEach(() => MockDate.reset());
+beforeEach(() => {
+  MockDate.reset();
+});
 
 test('Movies', () => {
   const movies: MovieResponse[] = [

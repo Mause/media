@@ -235,9 +235,13 @@ function useSubscribe<T>(
           loading: true,
         });
       },
-      (error) => setSubscription({ name, error, loading: false, items }),
+      (error) => {
+        setSubscription({ name, error, loading: false, items });
+      },
       authorization,
-      () => setSubscription({ name, loading: false, items }),
+      () => {
+        setSubscription({ name, loading: false, items });
+      },
     );
   }, [url, authorization, name]);
 

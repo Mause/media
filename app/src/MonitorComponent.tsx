@@ -84,9 +84,9 @@ function useDelete(path: string) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    Axios.delete(`/api/${path}`, { withCredentials: true }).then(() =>
-      setDone(true),
-    );
+    Axios.delete(`/api/${path}`, { withCredentials: true }).then(() => {
+      setDone(true);
+    });
   }, [path]);
 
   return done;

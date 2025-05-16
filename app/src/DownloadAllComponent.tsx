@@ -28,7 +28,7 @@ function DownloadAllComponent() {
   return (
     <div>
       {error && <DisplayError error={error} />}
-      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={season!} />
+      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={season} />
       <Loading loading={isValidating} />
       <div>
         <h3>Packs</h3>
@@ -50,14 +50,14 @@ function DownloadAllComponent() {
       <Individual
         label="Complete Sets"
         items={data && data.complete}
-        season={season!}
+        season={season}
         tmdb_id={tmdb_id!}
         torrents={torrents}
       />
       <Individual
         label="Incomplete Sets"
         items={data && data.incomplete}
-        season={season!}
+        season={season}
         tmdb_id={tmdb_id!}
         torrents={torrents}
       />

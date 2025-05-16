@@ -15,7 +15,6 @@ import {
 import { HelmetProvider } from 'react-helmet-async';
 
 declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
 
@@ -35,7 +34,7 @@ const root = createRoot(container!);
 const rootEl = (
   <Auth0Provider
     domain="mause.au.auth0.com"
-    clientId={clientId!}
+    clientId={clientId}
     authorizationParams={{
       audience: audience!,
       redirect_uri: window.location.origin,

@@ -159,9 +159,9 @@ function ParentComponentInt() {
               An error has occured:
               <code>
                 <pre>
-                  {props.error!!.message}
-                  {props
-                    .error!!.stack?.toString()
+                  {props.error.message}
+                  {props.error.stack
+                    ?.toString()
                     .split('\n')
                     .map((line) => (
                       <span key={line}>
