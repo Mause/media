@@ -20,7 +20,9 @@ import {
 } from './streaming';
 
 usesMoxios();
-beforeEach(() => MockDate.reset());
+beforeEach(() => {
+  MockDate.reset();
+});
 
 test('Movies', () => {
   const movies: MovieResponse[] = [

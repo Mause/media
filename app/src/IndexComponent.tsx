@@ -78,7 +78,9 @@ export function SearchBox() {
           id="outlined-adornment-search"
           type="text"
           size="small"
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+          }}
           endAdornment={
             <InputAdornment position="end">
               <IconButton aria-label="search" type="submit" edge="end">
