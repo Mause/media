@@ -38,7 +38,7 @@ import { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
 
-if (process.env.NODE_ENV === 'production') {
+if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
     release: import.meta.env.REACT_APP_HEROKU_SLUG_COMMIT,
