@@ -1,8 +1,22 @@
 import ContextMenu from './ContextMenu';
 import MenuItem from '@mui/material/MenuItem';
+import Accordian from '@mui/material/Accordian';
+import AccordianDetails from '@mui/material/AccordianDetails';
+import AccordianSummary from '@mui/material/AccordianSummary';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 
 export default function Storybook() {
+  const sortedMovies = {
+    true: [
+      {
+        id: 0,
+        download: {
+          title: 'Storybook'
+        }
+      }
+    ]
+  };
+  
   return (
     <div>
       <ContextMenu>
@@ -28,6 +42,20 @@ export default function Storybook() {
         error={undefined}
         isValidating={false}
       />
+      <Accordion>
+        <AccordionSummary>
+          <span>Finished downloads ({sortedMovies.true.length})</span>
+        </AccordionSummary>
+        <AccordionDetails>
+          <ul>
+            {(sortedMovies.true || []).map((movie) => (
+              <li key={movie.id}>
+                <span>{movie.download.title}</span>
+              </li>
+            ))}
+          </ul>
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 }
