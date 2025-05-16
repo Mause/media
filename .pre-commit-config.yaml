@@ -22,6 +22,7 @@ repos:
         args:
           - --ext
           - .js,.jsx,.ts,.tsx
+          - app/
         files: ".*(\\.js|\\.jsx|\\.ts|\\.tsx)$"
         verbose: true
         types:
