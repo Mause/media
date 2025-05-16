@@ -79,6 +79,7 @@
     "eslint-import-resolver-typescript": "^4.3.5",
     "eslint-plugin-deprecation": "^3.0.0",
     "eslint-plugin-import-x": "^4.12.2",
+    "eslint-plugin-react": "^7.37.5",
     "jsdom": "^26.1.0",
     "mockdate": "^3.0.2",
     "moxios": "^0.4.0",
