@@ -1011,16 +1011,16 @@ wheels = [
 
 [[package]]
 name = "mause-rpc"
-version = "0.0.18"
+version = "0.0.21"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dill" },
     { name = "pika" },
     { name = "retry" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f6/12/9b96574414021cc5d532c04834db9b93c4e32c52c9772f574d469c506290/mause_rpc-0.0.18.tar.gz", hash = "sha256:0801b218711f75f73b4ab20eff8b54ad0fe07b0d49ff5d919fb2a66f4e4e57a7", size = 4091, upload-time = "2020-05-09T14:05:52.333Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/71/c3/89f4e008edf4dd535c519729fb56fd17021f7211863b259e6ca0f17a60ab/mause_rpc-0.0.21.tar.gz", hash = "sha256:f99f8843614267326233e1416b39b9d4d0c6c91f0f63114c955471375820a088", size = 4249, upload-time = "2024-02-27T17:11:39.443Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bb/88/75bc9c7f2f555823dddf53c380ac67a422ba4ea112b4cc4c7d498f54320f/mause_rpc-0.0.18-py3-none-any.whl", hash = "sha256:147a447ecaaec0b2032a71dc61f1134561adab14c0981de8746f32d9519fd22c", size = 4524, upload-time = "2020-05-09T14:05:51.055Z" },
+    { url = "https://files.pythonhosted.org/packages/77/38/4592bc863a36255a23abe808c088bb2fb7b56564b3a6d1329bca9d5907b2/mause_rpc-0.0.21-py3-none-any.whl", hash = "sha256:e9de7073ed16553a06ed72ccc0b92db884548e9b0c8b2b577e70d032966bebb5", size = 5237, upload-time = "2024-02-27T17:11:37.943Z" },
 ]
 
 [[package]]
@@ -1113,7 +1113,7 @@ requires-dist = [
     { name = "gunicorn" },
     { name = "lxml" },
     { name = "makefun", specifier = "==1.9.5" },
-    { name = "mause-rpc", specifier = "==0.0.18" },
+    { name = "mause-rpc", specifier = "==0.0.21" },
     { name = "nyaapy" },
     { name = "plexapi", specifier = "==4.17.0" },
     { name = "psycopg2-binary" },
