@@ -11,12 +11,12 @@ export default function Storybook() {
       {
         id: 0,
         download: {
-          title: 'Storybook'
-        }
-      }
-    ]
+          title: 'Storybook',
+        },
+      },
+    ],
   };
-  
+
   return (
     <div>
       <ContextMenu>
