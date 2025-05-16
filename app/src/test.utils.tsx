@@ -16,9 +16,11 @@ import { HelmetProvider } from 'react-helmet-async';
 const theme = createTheme();
 
 export async function wait() {
-  return await act(
-    async () => await new Promise<void>((resolve) => moxios.wait(resolve)),
-  );
+  await act(async () => {
+    await new Promise<void>((resolve) => {
+      moxios.wait(resolve);
+    });
+  });
 }
 
 export async function mock<T>(path: string, response: T) {

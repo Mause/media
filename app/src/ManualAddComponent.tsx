@@ -63,7 +63,9 @@ export function ManualAddComponent() {
       <TextField
         variant="standard"
         placeholder="magnet:..."
-        onChange={(e) => setMagnet(e.target.value)}
+        onChange={(e) => {
+          setMagnet(e.target.value);
+        }}
         slotProps={{
           htmlInput: { pattern: '^magnet:.*' },
         }}
