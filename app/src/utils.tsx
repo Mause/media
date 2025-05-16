@@ -81,15 +81,19 @@ export function usePost<T>(
 
   useEffect(() => {
     auth.getAccessTokenSilently().then((token) => {
-      let abortController = new AbortController();
+      const abortController = new AbortController();
       Axios.post<T>('/api/' + url, body, {
         signal: abortController.signal,
         headers: {
           Authorization: 'Bearer ' + token,
         },
       }).then(
-        (res) => setResult({ done: true, data: res.data }),
-        (error) => setResult({ done: true, error }),
+        (res) => {
+          setResult({ done: true, data: res.data });
+        },
+        (error) => {
+          setResult({ done: true, error });
+        },
       );
 
       return () => {
@@ -120,5 +124,5 @@ export function expectLastRequestBody() {
 
 export function useLocation<T>() {
   const location = RRD.useLocation();
-  return { ...location, state: location.state as any as T };
+  return { ...location, state: location.state as T };
 }

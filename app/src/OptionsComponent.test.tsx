@@ -29,7 +29,7 @@ Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
   it.skip('failure', async () => {
-    let { container } = renderWithSWR(
+    const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
           <OptionsComponent type="movie" />
@@ -61,7 +61,7 @@ describe('OptionsComponent', () => {
     expect(container).toMatchSnapshot();
   });
   it.skip('success', async () => {
-    let { container } = renderWithSWR(
+    const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
           <OptionsComponent type="movie" />
@@ -89,7 +89,7 @@ describe('OptionsComponent', () => {
     const source_names = ['RARBG', 'HORRIBLESUBS', 'KICKASS'];
     await act(async () => {
       for (const source of sources) {
-        source!.ls!({
+        source.ls!({
           data: JSON.stringify({
             ...torrent,
             source: source_names[i],
@@ -103,7 +103,7 @@ describe('OptionsComponent', () => {
 
     await act(async () => {
       for (const source of sources) {
-        source!.ls!({ data: '' });
+        source.ls!({ data: '' });
       }
     });
 
