@@ -50,7 +50,7 @@ dev = [
     "lxml",
     "pytest-html>=3.1.1",
     "pytest-selenium>=3.0.0",
-    "webdriver-manager==3.9.1",
+    "webdriver-manager==4.0.2",
     "pre-commit>=4.2.0",
     "pytest-snapshot",
     "factory-boy==3.3.3",
