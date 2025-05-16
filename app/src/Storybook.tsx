@@ -1,8 +1,8 @@
 import ContextMenu from './ContextMenu';
 import MenuItem from '@mui/material/MenuItem';
-import Accordian from '@mui/material/Accordian';
-import AccordianDetails from '@mui/material/AccordianDetails';
-import AccordianSummary from '@mui/material/AccordianSummary';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 
 export default function Storybook() {
