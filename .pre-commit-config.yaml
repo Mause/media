@@ -2,10 +2,12 @@ exclude: .*\.snap|\.pnp\.js|.*snapshots.*|tsconfig.js|rarbg_local/tests/resource
 ci:
   skip: [eslint]
 repos:
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
+  - repo: local
     hooks:
       - id: prettier
+        name: prettier
+        language: node
+        entry: npx prettier --write --single-quote --trailing-comma all
         types_or:
           - ts
           - tsx
