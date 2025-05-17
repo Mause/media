@@ -6,7 +6,7 @@ repos:
         name: prettier
         language: node
         entry: npx prettier --write --single-quote --trailing-comma all
-        types: [file]
+        types: [ts, tsx, javascript, json, css, scss, html, markdown]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
