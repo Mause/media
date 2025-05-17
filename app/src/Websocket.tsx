@@ -8,7 +8,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 function useMessages<T>(initMessage: object) {
-  const prefix = process.env.REACT_APP_API_PREFIX;
+  const prefix = import.meta.env.REACT_APP_API_PREFIX;
 
   let base = '';
   if (prefix) {

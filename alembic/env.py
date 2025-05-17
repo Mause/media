@@ -24,7 +24,9 @@ config = context.config
 config_file_name = config.config_file_name
 assert config_file_name
 fileConfig(config_file_name)
-logging.getLogger('backoff').handlers.clear()
+bolog = logging.getLogger('backoff')
+bolog.setLevel(logging.INFO)
+bolog.addHandler(logging.StreamHandler())
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 db = __import__('rarbg_local.db').db
@@ -82,6 +84,7 @@ def run_migrations_online():
         alembic_config,
         prefix='sqlalchemy.',
         poolclass=pool.NullPool,
+        pool_pre_ping=True,
         connect_args={
             'connect_timeout': 10000,
         },
