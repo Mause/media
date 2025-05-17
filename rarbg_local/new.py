@@ -577,6 +577,10 @@ def create_app():
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:
         origins.append('https://' + os.environ['FRONTEND_DOMAIN'])
+
+    key = 'RAILWAY_ENVIRONMENT_NAME'
+    if os.environ.get(key) not in { 'production', None}:
+        origins.append('http://localhost:3000')
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
