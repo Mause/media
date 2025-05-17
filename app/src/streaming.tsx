@@ -19,11 +19,7 @@ import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
 import { Grid } from '@mui/material';
 import { SWRConfig } from 'swr';
-import {
-  MonitorComponent,
-  MonitorAddComponent,
-  MonitorDeleteComponent,
-} from './MonitorComponent';
+import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { Theme } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -335,14 +331,6 @@ function AppRoutes() {
         element={
           <RouteTitle title="Monitor">
             <MonitorDeleteComponent />
-          </RouteTitle>
-        }
-      />
-      <Route
-        path="/monitor/add/:tmdb_id"
-        element={
-          <RouteTitle title="Monitor">
-            <MonitorAddComponent />
           </RouteTitle>
         }
       />
