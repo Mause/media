@@ -10,7 +10,6 @@ import { createMemoryHistory } from '@remix-run/router';
 import moxios from 'moxios';
 import { expectLastRequestBody } from './utils';
 import { listenTo } from './test.utils';
-import { act } from 'react';
 
 usesMoxios();
 
@@ -52,32 +51,38 @@ describe('DownloadComponent', () => {
     expect(container).toMatchSnapshot();
     expect(entries.map((e) => e.pathname)).toEqual(['/']);
   });
-  it.skip('failure', async () => {
-    const history = createMemoryHistory();
-    const state: DownloadState = {
-      downloads: [
+  it('failure', async () => {
+    const history = createMemoryHistory({
+      initialEntries: [
         {
-          tmdb_id: 10000,
-          magnet: '...',
+          pathname: '/download',
+          state: {
+            downloads: [
+              {
+                tmdb_id: 10000,
+                magnet: '...',
+              },
+            ],
+          } satisfies DownloadState,
         },
       ],
-    };
-    history.push('/download', state);
+    });
 
-    renderWithSWR(
+    const { container } = renderWithSWR(
       <HistoryRouter history={history}>
-        <Route path="/download">
-          <DownloadComponent />
-        </Route>
+        <Routes>
+          <Route path="/download" Component={DownloadComponent} />
+        </Routes>
       </HistoryRouter>,
     );
 
-    await act(async () => {
-      await moxios.stubFailure('POST', /\/api\/download/, {
-        status: 500,
-        response: { body: {}, message: 'an error has occured' },
-      });
+    await moxios.stubFailure('POST', /\/api\/download/, {
+      status: 500,
+      response: { body: {}, message: 'an error has occured' },
     });
+    await wait();
+
+    expect(container).toMatchSnapshot();
 
     expect(await screen.findByTestId('errorMessage')).toHaveTextContent(
       'an error has occured',
