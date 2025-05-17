@@ -23,7 +23,7 @@ async def seed():
     session_maker = await get(FastAPI(), get_session_local)
 
     retrying_session_maker = backoff.on_exception(
-        session_maker, OperationalError, max_time=60
+        backoff.expo, OperationalError, max_time=60
     )(session_maker)
 
     with retrying_session_maker() as session:
