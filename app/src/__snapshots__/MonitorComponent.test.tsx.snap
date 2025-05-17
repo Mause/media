@@ -10,7 +10,7 @@ exports[`MonitorComponent > view 1`] = `
       <li>
         <svg
           aria-hidden="true"
-          class="svg-inline--fa fa-ticket-alt fa-w-18 "
+          class="svg-inline--fa fa-ticket-alt "
           data-icon="ticket-alt"
           data-prefix="fas"
           focusable="false"
@@ -28,7 +28,7 @@ exports[`MonitorComponent > view 1`] = `
          
         <svg
           aria-hidden="true"
-          class="svg-inline--fa fa-circle fa-w-16 red"
+          class="svg-inline--fa fa-circle red"
           data-icon="circle"
           data-prefix="fas"
           focusable="false"
@@ -44,7 +44,7 @@ exports[`MonitorComponent > view 1`] = `
          
         <svg
           aria-hidden="true"
-          class="svg-inline--fa fa-list fa-w-16 "
+          class="svg-inline--fa fa-list "
           data-icon="list"
           data-prefix="fas"
           data-testid="context-menu-open"

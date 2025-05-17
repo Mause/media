@@ -136,7 +136,7 @@ exports[`renders learn react link 1`] = `
         Movies 
         <svg
           aria-hidden="true"
-          class="svg-inline--fa fa-spinner fa-w-16 fa-spin fa-xs "
+          class="svg-inline--fa fa-spinner fa-spin fa-xs "
           data-icon="spinner"
           data-prefix="fas"
           focusable="false"
@@ -160,7 +160,7 @@ exports[`renders learn react link 1`] = `
           TV Shows 
           <svg
             aria-hidden="true"
-            class="svg-inline--fa fa-spinner fa-w-16 fa-spin fa-xs "
+            class="svg-inline--fa fa-spinner fa-spin fa-xs "
             data-icon="spinner"
             data-prefix="fas"
             focusable="false"

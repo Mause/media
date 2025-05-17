@@ -16,7 +16,7 @@ exports[`Movies 1`] = `
          
         <svg
           aria-hidden="true"
-          class="svg-inline--fa fa-list fa-w-16 "
+          class="svg-inline--fa fa-list "
           data-icon="list"
           data-prefix="fas"
           data-testid="context-menu-open"
@@ -50,7 +50,7 @@ exports[`NextEpisodeAirs > works 1`] = `
     >
       <svg
         aria-hidden="true"
-        class="svg-inline--fa fa-search fa-w-16 "
+        class="svg-inline--fa fa-search "
         data-icon="search"
         data-prefix="fas"
         focusable="false"
@@ -95,7 +95,7 @@ exports[`Progress > simple 2`] = `
 <div>
   <svg
     aria-hidden="true"
-    class="svg-inline--fa fa-check-circle fa-w-16 "
+    class="svg-inline--fa fa-check-circle "
     data-icon="check-circle"
     data-prefix="fas"
     focusable="false"
@@ -135,7 +135,7 @@ exports[`TVShows 1`] = `
            
           <svg
             aria-hidden="true"
-            class="svg-inline--fa fa-list fa-w-16 "
+            class="svg-inline--fa fa-list "
             data-icon="list"
             data-prefix="fas"
             data-testid="context-menu-open"
@@ -174,7 +174,7 @@ exports[`TVShows 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="svg-inline--fa fa-search fa-w-16 "
+                  class="svg-inline--fa fa-search "
                   data-icon="search"
                   data-prefix="fas"
                   focusable="false"
@@ -191,7 +191,7 @@ exports[`TVShows 1`] = `
                
               <svg
                 aria-hidden="true"
-                class="svg-inline--fa fa-caret-up fa-w-10 fa-2x "
+                class="svg-inline--fa fa-caret-up fa-2x "
                 data-icon="caret-up"
                 data-prefix="fas"
                 focusable="false"
