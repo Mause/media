@@ -20,7 +20,7 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
-from pydantic import BaseModel, SecretStr
+from pydantic import BaseModel, SecretStr, ValidationError
 from requests.exceptions import HTTPError
 from sqlalchemy import func
 from sqlalchemy.orm.session import Session
@@ -444,7 +444,14 @@ async def websocket_stream(websocket: WebSocket):
     logger.info('Got websocket connection')
     await websocket.accept()
 
-    request = StreamArgs.model_validate(await websocket.receive_json())
+    try:
+        request = StreamArgs.model_validate(await websocket.receive_json())
+    except ValidationError as e:
+        await websocket.send_json(
+            {'error': str(e), 'type': type(e).__name__, 'errors': e.errors()}
+        )
+        await websocket.close()
+        return
     logger.info('Got request: %s', request)
 
     try:

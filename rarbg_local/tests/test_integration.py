@@ -676,6 +676,16 @@ async def test_piratebay(aioresponses, snapshot):
 
 
 @mark.asyncio
+async def test_websocket_error(test_client, snapshot):
+    r = test_client.websocket_connect(
+        '/ws',
+    )
+    await r.connect()
+    await r.send_json({})
+    snapshot.assert_match(json.dumps(await r.receive_json(), indent=2), 'ws_error.json')
+
+
+@mark.asyncio
 @patch('rarbg_local.new.get_movie_imdb_id')
 async def test_websocket(
     get_movie_imdb_id, test_client, fastapi_app, monkeypatch, snapshot
