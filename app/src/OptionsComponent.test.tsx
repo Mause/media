@@ -1,8 +1,9 @@
 import { act } from 'react';
 import { screen } from '@testing-library/react';
 import { OptionsComponent, ITorrent } from './OptionsComponent';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
+import { RecoilRoot } from 'recoil';
 import _ from 'lodash';
 
 usesMoxios();
@@ -28,12 +29,19 @@ class ES {
 Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
-  it.skip('failure', async () => {
+  it('failure', async () => {
     let { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
-        <Route path="/select/:tmdb_id/options">
-          <OptionsComponent type="movie" />
-        </Route>
+        <Routes>
+          <Route
+            path="/select/:tmdb_id/options"
+            element={
+              <RecoilRoot>
+                <OptionsComponent type="movie" />
+              </RecoilRoot>
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     );
 
@@ -60,12 +68,19 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
   });
-  it.skip('success', async () => {
+  it('success', async () => {
     let { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
-        <Route path="/select/:tmdb_id/options">
-          <OptionsComponent type="movie" />
-        </Route>
+        <Routes>
+          <Route
+            path="/select/:tmdb_id/options"
+            element={
+              <RecoilRoot>
+                <OptionsComponent type="movie" />
+              </RecoilRoot>
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     );
     await act(async () => {
