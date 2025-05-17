@@ -20,7 +20,7 @@ dependencies = [
     "lxml",
     "eventlet==0.40.0",
     "email-validator==2.2.0",
-    "mause-rpc==0.0.18",
+    "mause-rpc==0.0.21",
     "fastapi==0.115.12",
     "python-multipart==0.0.20",
     "aniso8601==10.0.1",
