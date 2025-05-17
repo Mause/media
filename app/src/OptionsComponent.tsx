@@ -196,6 +196,16 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
             Add to monitor
           </MLink>
         </li>
+        <li>
+          <MLink
+            to={{
+              pathname: `/websocket/${tmdb_id}`,
+              search: qs.stringify({ season, episode }),
+            }}
+          >
+            Search with websockets
+          </MLink>
+        </li>
       </ul>
     </div>
   );
