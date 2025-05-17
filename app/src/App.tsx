@@ -1,9 +1,8 @@
 import React from 'react';
 import './App.css';
 import { ParentComponent } from './streaming';
-import { Alert } from '@mui/material';
+import { Alert, Snackbar } from '@mui/material';
 import { useAppUpdated } from './serviceWorkerCallback';
-import { Snackbar } from '@mui/material';
 
 const App = () => {
   const appUpdated = useAppUpdated();

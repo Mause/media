@@ -5,11 +5,10 @@ import {
   Routes,
   unstable_HistoryRouter as HistoryRouter,
 } from 'react-router-dom';
-import { wait, usesMoxios, renderWithSWR } from './test.utils';
+import { wait, usesMoxios, renderWithSWR, listenTo } from './test.utils';
 import { createMemoryHistory } from '@remix-run/router';
 import moxios from 'moxios';
 import { expectLastRequestBody } from './utils';
-import { listenTo } from './test.utils';
 import { act } from 'react';
 
 usesMoxios();
