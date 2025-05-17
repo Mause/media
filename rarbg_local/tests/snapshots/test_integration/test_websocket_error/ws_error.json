@@ -1,0 +1,33 @@
+{
+  "error": "3 validation errors for StreamArgs\nauthorization\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.11/v/missing\ntype\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.11/v/missing\ntmdb_id\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.11/v/missing",
+  "type": "ValidationError",
+  "errors": [
+    {
+      "type": "missing",
+      "loc": [
+        "authorization"
+      ],
+      "msg": "Field required",
+      "input": {},
+      "url": "https://errors.pydantic.dev/2.11/v/missing"
+    },
+    {
+      "type": "missing",
+      "loc": [
+        "type"
+      ],
+      "msg": "Field required",
+      "input": {},
+      "url": "https://errors.pydantic.dev/2.11/v/missing"
+    },
+    {
+      "type": "missing",
+      "loc": [
+        "tmdb_id"
+      ],
+      "msg": "Field required",
+      "input": {},
+      "url": "https://errors.pydantic.dev/2.11/v/missing"
+    }
+  ]
+}
