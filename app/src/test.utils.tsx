@@ -11,7 +11,6 @@ import {
 } from '@mui/material/styles';
 import { Location, MemoryHistory } from '@remix-run/router';
 import { Listener } from '@remix-run/router/dist/history';
-import { HelmetProvider } from 'react-helmet-async';
 
 const theme = createTheme();
 
@@ -27,7 +26,7 @@ export async function mock<T>(path: string, response: T) {
   });
 }
 
-export function renderWithSWR(el: ReactElement) {
+export function renderWithSWR(el: ReactElement<any>) {
   const c = {
     isAuthenticated: true,
     getAccessTokenSilently() {
@@ -37,9 +36,7 @@ export function renderWithSWR(el: ReactElement) {
   return render(
     <Auth0Context.Provider value={c}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <HelmetProvider>{swrConfig(() => el)()}</HelmetProvider>
-        </ThemeProvider>
+        <ThemeProvider theme={theme}>{swrConfig(() => el)()}</ThemeProvider>
       </StyledEngineProvider>
     </Auth0Context.Provider>,
   );

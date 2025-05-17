@@ -12,7 +12,6 @@ import {
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
-import { HelmetProvider } from 'react-helmet-async';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -45,9 +44,7 @@ const rootEl = (
   >
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <HelmetProvider>
-          <App />
-        </HelmetProvider>
+        <App />
       </ThemeProvider>
     </StyledEngineProvider>
   </Auth0Provider>

@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { TVShows, Movies } from './render';
 import { IndexResponse, Torrents } from './streaming';
 import { useNavigate } from 'react-router-dom';
