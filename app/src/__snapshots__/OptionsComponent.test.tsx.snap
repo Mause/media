@@ -1,29 +1,30 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`OptionsComponent failure 1`] = `
+exports[`OptionsComponent > failure 1`] = `
 <div>
   <div>
     <nav
       aria-label="breadcrumb"
-      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-63vwl1-MuiTypography-root-MuiBreadcrumbs-root"
+      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
     >
       <ol
-        class="MuiBreadcrumbs-ol css-4pdmu4-MuiBreadcrumbs-ol"
+        class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
       >
         <li
           class="MuiBreadcrumbs-li"
         >
           <nav
-            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-63vwl1-MuiTypography-root-MuiBreadcrumbs-root"
+            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
           >
             <ol
-              class="MuiBreadcrumbs-ol css-4pdmu4-MuiBreadcrumbs-ol"
+              class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
             >
               <li
                 class="MuiBreadcrumbs-li"
               >
                 <a
-                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-bvyohc-MuiTypography-root-MuiLink-root"
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+                  data-discover="true"
                   href="/"
                 >
                   Home
@@ -31,7 +32,7 @@ exports[`OptionsComponent failure 1`] = `
               </li>
               <li
                 aria-hidden="true"
-                class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+                class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
               >
                 /
               </li>
@@ -39,7 +40,7 @@ exports[`OptionsComponent failure 1`] = `
                 class="MuiBreadcrumbs-li"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 css-rizt0-MuiTypography-root"
                 >
                   Search Results
                 </p>
@@ -49,7 +50,7 @@ exports[`OptionsComponent failure 1`] = `
         </li>
         <li
           aria-hidden="true"
-          class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+          class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
         >
           /
         </li>
@@ -57,7 +58,7 @@ exports[`OptionsComponent failure 1`] = `
           class="MuiBreadcrumbs-li"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 css-1gqyz35-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 css-1bgbmvw-MuiTypography-root"
           >
             Hello World
           </p>
@@ -72,7 +73,8 @@ exports[`OptionsComponent failure 1`] = `
     <ul>
       <li>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
           href="/manual"
         >
           Add manually
@@ -80,10 +82,20 @@ exports[`OptionsComponent failure 1`] = `
       </li>
       <li>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
           href="/monitor/add/1"
         >
           Add to monitor
+        </a>
+      </li>
+      <li>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
+          href="/websocket/1"
+        >
+          Search with websockets
         </a>
       </li>
     </ul>
@@ -91,30 +103,31 @@ exports[`OptionsComponent failure 1`] = `
 </div>
 `;
 
-exports[`OptionsComponent success 1`] = `
+exports[`OptionsComponent > success 1`] = `
 <div>
   <div>
     <nav
       aria-label="breadcrumb"
-      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-63vwl1-MuiTypography-root-MuiBreadcrumbs-root"
+      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
     >
       <ol
-        class="MuiBreadcrumbs-ol css-4pdmu4-MuiBreadcrumbs-ol"
+        class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
       >
         <li
           class="MuiBreadcrumbs-li"
         >
           <nav
-            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-63vwl1-MuiTypography-root-MuiBreadcrumbs-root"
+            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
           >
             <ol
-              class="MuiBreadcrumbs-ol css-4pdmu4-MuiBreadcrumbs-ol"
+              class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
             >
               <li
                 class="MuiBreadcrumbs-li"
               >
                 <a
-                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-bvyohc-MuiTypography-root-MuiLink-root"
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+                  data-discover="true"
                   href="/"
                 >
                   Home
@@ -122,7 +135,7 @@ exports[`OptionsComponent success 1`] = `
               </li>
               <li
                 aria-hidden="true"
-                class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+                class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
               >
                 /
               </li>
@@ -130,7 +143,7 @@ exports[`OptionsComponent success 1`] = `
                 class="MuiBreadcrumbs-li"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 css-rizt0-MuiTypography-root"
                 >
                   Search Results
                 </p>
@@ -140,7 +153,7 @@ exports[`OptionsComponent success 1`] = `
         </li>
         <li
           aria-hidden="true"
-          class="MuiBreadcrumbs-separator css-1wuw8dw-MuiBreadcrumbs-separator"
+          class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
         >
           /
         </li>
@@ -148,7 +161,7 @@ exports[`OptionsComponent success 1`] = `
           class="MuiBreadcrumbs-li"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 css-1gqyz35-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 css-1bgbmvw-MuiTypography-root"
           >
             Hello World
           </p>
@@ -163,7 +176,8 @@ exports[`OptionsComponent success 1`] = `
     <ul>
       <li>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
           href="/manual"
         >
           Add manually
@@ -171,10 +185,20 @@ exports[`OptionsComponent success 1`] = `
       </li>
       <li>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-11iau0r-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
           href="/monitor/add/1"
         >
           Add to monitor
+        </a>
+      </li>
+      <li>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
+          href="/websocket/1"
+        >
+          Search with websockets
         </a>
       </li>
     </ul>
