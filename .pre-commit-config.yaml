@@ -22,6 +22,8 @@ repos:
         args:
           - --ext
           - .js,.jsx,.ts,.tsx
+          - --config
+          - app/eslint.config.mjs
           - app/
         files: ".*(\\.js|\\.jsx|\\.ts|\\.tsx)$"
         verbose: true
