@@ -37,7 +37,7 @@ repos:
           - eslint-plugin-react@*
           - typescript-eslint@*
           - typescript@*
-          - @eslint/js
+          - "@eslint/js"
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.15.0
     hooks:
