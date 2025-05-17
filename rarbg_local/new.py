@@ -578,8 +578,9 @@ def create_app():
     if 'FRONTEND_DOMAIN' in os.environ:
         origins.append('https://' + os.environ['FRONTEND_DOMAIN'])
 
-    key = 'RAILWAY_ENVIRONMENT_NAME'
-    if os.environ.get(key) not in {'production', None}:
+    on_heroku = 'HEROKU' in os.environ
+    production = os.environ.get('RAILWAY_ENVIRONMENT_NAME') == 'production' or on_heroku
+    if not production:
         origins.append('http://localhost:3000')
     app.add_middleware(
         CORSMiddleware,
