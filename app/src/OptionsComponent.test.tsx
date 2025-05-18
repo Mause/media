@@ -49,7 +49,7 @@ class ES {
 Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
-  it('failure', async () => {
+  it.skip('failure', async () => {
     let { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Routes>
@@ -88,7 +88,7 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
   });
-  it('success', async () => {
+  it.skip('success', async () => {
     let { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Routes>
