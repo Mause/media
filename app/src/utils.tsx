@@ -49,20 +49,28 @@ export function subscribe<T>(
   };
 }
 
+export function getPrefix() {
+  const prefix = import.meta.env.REACT_APP_API_PREFIX as string | undefined;
+
+  if (!prefix) {
+    return '';
+  } else if (prefix.includes('localhost')) {
+    return `http://localhost:5000`;
+  } else if (prefix) {
+    return `https://${prefix}`;
+  }
+}
+
 export async function load<T>(
   path: string,
   params?: string,
   headers?: any,
 ): Promise<T> {
-  const prefix = import.meta.env.REACT_APP_API_PREFIX;
-  const t = await Axios.get<T>(
-    `${prefix ? `https://${prefix}` : ''}/api/${path}`,
-    {
-      params,
-      withCredentials: true,
-      headers,
-    },
-  );
+  const t = await Axios.get<T>(`${getPrefix()}/api/${path}`, {
+    params,
+    withCredentials: true,
+    headers,
+  });
   return t && t.data;
 }
 

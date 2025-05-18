@@ -67,9 +67,21 @@ dev = [
     "types-cachetools>=5.5.0.20240820",
 ]
 debug = ["pudb", "pdbpp"]
+cli = [
+    "rich>=14.0.0",
+]
 
 [tool.ruff.format]
 quote-style = "preserve"
 
 [tool.ruff.lint]
 select = ["F", "E", "W", "I"]
+
+[tool.pytest.ini_options]
+addopts = "rarbg_local --driver chrome --html report.html --self-contained-html"
+asyncio_default_fixture_loop_scope = "fixture"
+
+[tool.mypy]
+plugins = "sqlalchemy.ext.mypy.plugin, pydantic.mypy"
+ignore_missing_imports = true
+mypy_path = "stubs"

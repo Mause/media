@@ -20,7 +20,7 @@ import {
   faCaretDown,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { MLink } from './utils';
+import { getPrefix, MLink } from './utils';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import ContextMenu from './ContextMenu';
 
@@ -46,7 +46,7 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
   return (
     <MenuItem
       component="a"
-      href={`/redirect/plex/${download.imdb_id}`}
+      href={`${getPrefix()}/redirect/plex/${download.imdb_id}`}
       target="_blank"
     >
       <span className="unselectable">Open in Plex</span>
@@ -119,7 +119,7 @@ export function Movies({
               </MenuItem>
               {movie.download.added_by ? (
                 <MenuItem>
-                  Added by: {movie.download.added_by.first_name}
+                  Added by: {movie.download.added_by.username}
                 </MenuItem>
               ) : null}
             </ContextMenu>
@@ -303,7 +303,7 @@ function Season({
     >
       <ol>
         {season.map((episode) => (
-          <li key={episode.id} value={episode.episode}>
+          <li key={episode.id} value={episode.episode!}>
             <span>{episode.download.title}</span>
             &nbsp;
             <Progress torrents={torrents} item={episode} />
@@ -322,7 +322,7 @@ function Season({
 export function NextEpisodeAirs(props: {
   tmdb_id: number;
   season: string;
-  season_episodes: { episode?: number }[];
+  season_episodes: { episode: number | null }[];
 }) {
   const { data } = useSWR<{
     episodes: { name: string; air_date: string; episode_number: number }[];

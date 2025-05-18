@@ -30,7 +30,7 @@ export function DisplayTorrent({
   episode,
 }: {
   season?: number;
-  episode?: number;
+  episode?: number | null;
   tmdb_id: string;
   torrent: ITorrent;
   torrents?: Torrents;
@@ -194,6 +194,16 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
             state={{ type: type === 'movie' ? 'MOVIE' : 'TV' }}
           >
             Add to monitor
+          </MLink>
+        </li>
+        <li>
+          <MLink
+            to={{
+              pathname: `/websocket/${tmdb_id}`,
+              search: qs.stringify({ season, episode }),
+            }}
+          >
+            Search with websockets
           </MLink>
         </li>
       </ul>
