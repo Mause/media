@@ -201,13 +201,15 @@ async def stream(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: TmdbId, season: int):
-    results = search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
+    tasks, results = await search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
 
     episodes = (await get_tv_episodes(tmdb_id, season)).episodes
 
-    packs_or_not = groupby(
-        results, lambda result: extract_marker(result.title)[1] is None
-    )
+    packs_or_not: dict[bool, list[ITorrent]] = {True: [], False: []}
+    while not all(task.done() for task in tasks):
+        result = await results.get()
+        packs_or_not[extract_marker(result.title)[1] is None].append(result)
+
     packs = sorted(
         packs_or_not.get(True, []), key=lambda result: result.seeders, reverse=True
     )
