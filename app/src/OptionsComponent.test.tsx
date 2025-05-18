@@ -1,10 +1,29 @@
 import { act } from 'react';
 import { screen } from '@testing-library/react';
-import { OptionsComponent, ITorrent } from './OptionsComponent';
+import {
+  OptionsComponent,
+  ITorrent,
+  TorrentProvider,
+} from './OptionsComponent';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
 import { RecoilRoot } from 'recoil';
 import _ from 'lodash';
+import { vi } from 'vitest';
+
+vi.mock('@auth0/auth0-react', async (importOriginal) => {
+  const original = await importOriginal();
+  const useAuth0 = vi.fn();
+
+  useAuth0.mockReturnValue({
+    getAccessTokenSilently: () => Promise.resolve('token'),
+  });
+
+  return {
+    ...original,
+    useAuth0,
+  };
+});
 
 usesMoxios();
 
@@ -121,6 +140,25 @@ describe('OptionsComponent', () => {
         source!.ls!({ data: '' });
       }
     });
+
+    expect(container).toMatchSnapshot();
+  });
+
+  it('renders a single provider', async () => {
+    let { container } = renderWithSWR(
+      <MemoryRouter initialEntries={['/select/1/options']}>
+        <Routes>
+          <Route
+            path="/select/:tmdb_id/options"
+            element={
+              <RecoilRoot>
+                <TorrentProvider baseUrl="/" name="frogs" />
+              </RecoilRoot>
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
 
     expect(container).toMatchSnapshot();
   });

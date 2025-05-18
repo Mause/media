@@ -103,6 +103,8 @@ exports[`OptionsComponent > failure 1`] = `
 </div>
 `;
 
+exports[`OptionsComponent > renders a single provider 1`] = `<div />`;
+
 exports[`OptionsComponent > success 1`] = `
 <div>
   <div>

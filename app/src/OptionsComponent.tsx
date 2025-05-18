@@ -203,7 +203,13 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   );
 }
 
-function TorrentProvider({ baseUrl, name }: { baseUrl: string; name: string }) {
+export function TorrentProvider({
+  baseUrl,
+  name,
+}: {
+  baseUrl: string;
+  name: string;
+}) {
   const authorization = useToken();
   const url = baseUrl + '&source=' + name;
 
