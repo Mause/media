@@ -49,6 +49,16 @@ class ES {
 
 Object.defineProperty(window, 'EventSource', { value: ES });
 
+function mockAuth0() {
+  let lresolve: (value: unknown) => void;
+  let promise = new Promise((resolve) => (lresolve = resolve));
+  // @ts-expect-error
+  useAuth0.mockReturnValue({
+    getAccessTokenSilently: () => promise,
+  });
+  return lresolve;
+}
+
 describe('OptionsComponent', () => {
   it.skip('failure', async () => {
     let { container } = renderWithSWR(
@@ -147,8 +157,7 @@ describe('OptionsComponent', () => {
   });
 
   it('renders a single provider', async () => {
-    let lresolve: (value: unknown) => void;
-    let promise = new Promise((resolve) => (lresolve = resolve));
+    const lresolve = mockAuth0();
 
     const rs = new ReadableStream({
       start(controller) {
@@ -157,11 +166,6 @@ describe('OptionsComponent', () => {
       },
     });
     vi.spyOn(window, 'fetch').mockResolvedValue(new Response(rs));
-
-    // @ts-expect-error
-    useAuth0.mockReturnValue({
-      getAccessTokenSilently: () => promise,
-    });
 
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
