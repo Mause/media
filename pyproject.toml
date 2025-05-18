@@ -76,6 +76,7 @@ select = ["F", "E", "W", "I"]
 
 [tool.pytest.ini_options]
 addopts = "rarbg_local --driver chrome --html report.html --self-contained-html"
+asyncio_default_fixture_loop_scope = "fixture"
 
 [tool.mypy]
 plugins = "sqlalchemy.ext.mypy.plugin, pydantic.mypy"
