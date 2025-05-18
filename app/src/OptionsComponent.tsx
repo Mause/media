@@ -156,13 +156,12 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     );
   }
 
-  const baseUrl =
-    `/api/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode });
+  const baseUrl = `/api/stream/${type}/${tmdb_id}`;
   return (
     <div>
       {header}
 
-      <Subscribes baseUrl={baseUrl} />
+      <Subscribes baseUrl={baseUrl} params={{ season, episode }} />
 
       {bits.length ? (
         <div>
@@ -205,13 +204,15 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
 
 export function TorrentProvider({
   baseUrl,
+  params,
   name,
 }: {
   baseUrl: string;
+  params: Record<string, string | undefined>;
   name: string;
 }) {
   const authorization = useToken();
-  const url = baseUrl + '&source=' + name;
+  const url = baseUrl + '?' + qs.stringify({ ...params, source: name });
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>(undefined);
@@ -275,7 +276,13 @@ function useToken() {
   return token;
 }
 
-function Subscribes({ baseUrl }: { baseUrl: string }) {
+function Subscribes({
+  baseUrl,
+  params,
+}: {
+  baseUrl: string;
+  params: Record<string, string | undefined>;
+}) {
   const p: ProviderSource[] = [
     /*
     'rarbg',
@@ -290,7 +297,12 @@ function Subscribes({ baseUrl }: { baseUrl: string }) {
   return (
     <>
       {p.map((provider) => (
-        <TorrentProvider key={provider} baseUrl={baseUrl} name={provider} />
+        <TorrentProvider
+          key={provider}
+          params={params}
+          baseUrl={baseUrl}
+          name={provider}
+        />
       ))}
     </>
   );

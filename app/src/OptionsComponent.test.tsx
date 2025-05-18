@@ -182,7 +182,7 @@ describe('OptionsComponent', () => {
             path="/select/:tmdb_id/options"
             element={
               <RecoilRoot>
-                <TorrentProvider baseUrl="/" name="frogs" />
+                <TorrentProvider baseUrl="/" params={{}} name="frogs" />
               </RecoilRoot>
             }
           />
