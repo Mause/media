@@ -31,7 +31,7 @@ async def main():
         header_style="bold magenta",
     )
 
-    query = Prompt.ask('Query?')
+    query = Prompt.ask('Query?', console=console)
     results = (await search_themoviedb(query))[0]
     tmdb_id = results.tmdb_id
     imdb_id = await get_imdb_id(
