@@ -288,7 +288,7 @@ async def test_search(aioresponses, test_client):
     res = await test_client.get('/api/search?query=chernobyl')
     assert res.status_code == 200
     assert res.json() == [
-        {'imdbID': 10000, 'title': 'Chernobyl', 'year': 2019, 'type': 'series'}
+        {'tmdb_id': 10000, 'title': 'Chernobyl', 'year': 2019, 'type': 'series'}
     ]
 
 

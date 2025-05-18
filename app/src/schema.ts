@@ -539,8 +539,8 @@ export interface components {
       type: components['schemas']['MediaType'];
       /** Year */
       year: number | null;
-      /** Imdb Id */
-      imdbID: number;
+      /** Tmdb Id */
+      tmdb_id: number;
     };
     /** SeasonMeta */
     SeasonMeta: {

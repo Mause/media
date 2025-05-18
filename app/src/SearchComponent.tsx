@@ -21,12 +21,12 @@ export function SearchComponent() {
       <ul>
         {results ? (
           results.map((result) => (
-            <li key={result.imdbID}>
+            <li key={result.tmdb_id}>
               <MLink
                 to={
                   result.type === 'movie'
-                    ? `/select/${result.imdbID}/options`
-                    : `/select/${result.imdbID}/season`
+                    ? `/select/${result.tmdb_id}/options`
+                    : `/select/${result.tmdb_id}/season`
                 }
                 state={{ query }}
               >
