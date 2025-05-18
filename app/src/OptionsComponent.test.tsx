@@ -59,6 +59,20 @@ function mockAuth0() {
   return lresolve;
 }
 
+function mockFetchStream(events: T[]) {
+  const rs = new ReadableStream({
+    start(controller) {
+      for (const event of events) {
+        controller.enqueue(
+          Buffer.from('data: ' + JSON.stringify(event) + '\n'),
+        );
+      }
+      controller.close();
+    },
+  });
+  vi.spyOn(window, 'fetch').mockResolvedValue(new Response(rs));
+}
+
 describe('OptionsComponent', () => {
   it.skip('failure', async () => {
     let { container } = renderWithSWR(
@@ -159,13 +173,7 @@ describe('OptionsComponent', () => {
   it('renders a single provider', async () => {
     const lresolve = mockAuth0();
 
-    const rs = new ReadableStream({
-      start(controller) {
-        controller.enqueue(Buffer.from('data: {}\n'));
-        controller.close();
-      },
-    });
-    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(rs));
+    mockFetchStream([{}]);
 
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
