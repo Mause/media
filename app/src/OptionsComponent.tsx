@@ -213,6 +213,7 @@ function TorrentProvider({ baseUrl, name }: { baseUrl: string; name: string }) {
   const setTorrentState = useSetRecoilState(torrentState);
 
   useEffect(() => {
+    console.log({ authorization });
     if (!authorization) return; // don't subscribe until we have auth
 
     return subscribe<ITorrent>(
@@ -249,9 +250,18 @@ function TorrentProvider({ baseUrl, name }: { baseUrl: string; name: string }) {
 
 function useToken() {
   const auth = useAuth0();
+  console.log('auth', auth);
   const [token, setToken] = useState<string>();
   useEffect(() => {
-    auth.getAccessTokenSilently().then(setToken);
+    auth.getAccessTokenSilently().then(
+      (tok) => {
+        console.log('token', tok);
+        setToken(tok);
+      },
+      (err) => {
+        console.error('Error getting token', err);
+      },
+    );
   }, [auth]);
   return token;
 }
