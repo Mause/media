@@ -13,6 +13,7 @@ import { vi } from 'vitest';
 
 vi.mock('@auth0/auth0-react', async (importOriginal) => {
   const original = await importOriginal();
+  console.log('mocking auth0');
   const useAuth0 = vi.fn();
 
   useAuth0.mockReturnValue({
