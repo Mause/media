@@ -10,6 +10,7 @@ import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
 import { RecoilRoot } from 'recoil';
 import _ from 'lodash';
 import { vi } from 'vitest';
+import { useAuth0 } from '@auth0/auth0-react';
 
 vi.mock('@auth0/auth0-react', async (importOriginal) => {
   const original = await importOriginal();
@@ -17,7 +18,7 @@ vi.mock('@auth0/auth0-react', async (importOriginal) => {
   const useAuth0 = vi.fn();
 
   useAuth0.mockReturnValue({
-    getAccessTokenSilently: () => Promise.resolve('token'),
+    getAccessTokenSilently: vi.fn(),
   });
 
   return {
@@ -146,7 +147,19 @@ describe('OptionsComponent', () => {
   });
 
   it('renders a single provider', async () => {
-    let { container } = renderWithSWR(
+    let lresolve: (value: unknown) => void;
+    let promise = new Promise((resolve) => (lresolve = resolve));
+
+    vi.spyOn(window, 'fetch').mockResolvedValue(
+      new Response(new ReadableStream(new Uint8Array())),
+    );
+
+    // @ts-expect-error
+    useAuth0.mockReturnValue({
+      getAccessTokenSilently: () => promise,
+    });
+
+    const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Routes>
           <Route
@@ -160,6 +173,12 @@ describe('OptionsComponent', () => {
         </Routes>
       </MemoryRouter>,
     );
+
+    expect(container).toMatchSnapshot();
+
+    await act(() => {
+      lresolve('token');
+    });
 
     expect(container).toMatchSnapshot();
   });
