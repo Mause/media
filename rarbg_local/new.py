@@ -208,7 +208,10 @@ async def select(tmdb_id: TmdbId, season: int):
     packs_or_not: dict[bool, list[ITorrent]] = {True: [], False: []}
     while not all(task.done() for task in tasks):
         result = await results.get()
-        packs_or_not[extract_marker(result.title)[1] is None].append(result)
+        if isinstance(result, Message):
+            logger.info('Got message %s', result)
+        else:
+            packs_or_not[extract_marker(result.title)[1] is None].append(result)
 
     packs = sorted(
         packs_or_not.get(True, []), key=lambda result: result.seeders, reverse=True
