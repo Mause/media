@@ -3,7 +3,7 @@ from asyncio import Future, Queue
 from collections.abc import Callable, Coroutine, Iterable
 from typing import Any, TypeVar
 
-from ..models import ITorrent
+from ..models import ITorrent, MediaType
 from ..types import ImdbId, TmdbId
 from ..utils import Message, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
@@ -87,11 +87,14 @@ async def spin_up_workers(
 async def main():
     from rich.console import Console
     from rich.logging import RichHandler
+    from rich.prompt import IntPrompt, Prompt
     from rich.table import Table
 
-    from ..tmdb import resolve_id
+    from ..tmdb import get_imdb_id, search_themoviedb
 
     logging.basicConfig(level=logging.DEBUG, handlers=[RichHandler()])
+
+    console = Console()
 
     table = Table(
         'Source',
@@ -102,22 +105,36 @@ async def main():
         header_style="bold magenta",
     )
 
-    imdb_id = ImdbId('tt28454008')
-    tmdb_id = await resolve_id(imdb_id, 'tv')
-    tasks, queue = await search_for_tv(
-        imdb_id=imdb_id, tmdb_id=tmdb_id, season=1, episode=1
+    query = Prompt.ask('Query?')
+    results = (await search_themoviedb(query))[0]
+    tmdb_id = results.tmdb_id
+    imdb_id = await get_imdb_id(
+        'tv' if results.type == MediaType.SERIES else 'movie', tmdb_id
     )
+
+    if results.type == MediaType.MOVIE:
+        tasks, queue = await search_for_movie(imdb_id=imdb_id, tmdb_id=tmdb_id)
+    elif results.type == MediaType.SERIES:
+        tasks, queue = await search_for_tv(
+            imdb_id=imdb_id,
+            tmdb_id=tmdb_id,
+            season=IntPrompt.ask('Season?'),
+            episode=IntPrompt.ask("Episode?"),
+        )
+    else:
+        logger.info('No results')
+        return
 
     while not all(task.done() for task in tasks):
         row = await queue.get()
         if isinstance(row, Message):
-            print(row)
+            logger.info("message: %s", row)
             continue
         table.add_row(
             row.source.name, row.title, str(row.seeders), str(bool(row.download))
         )
 
-    Console().print(table)
+    console.print(table)
 
 
 if __name__ == '__main__':
