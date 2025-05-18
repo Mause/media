@@ -17,8 +17,8 @@ export interface components {
     DownloadPost: {
       tmdb_id: number;
       magnet: string;
-      season?: number;
-      episode?: number;
+      season?: number | null;
+      episode?: number | null;
     };
     DownloadSchema: {
       id: number;
@@ -34,16 +34,19 @@ export interface components {
       name: string;
       id: number;
       episode_number: number;
-      air_date?: string;
+      air_date?: string | null;
     };
     EpisodeDetailsSchema: {
       id: number;
       download: components['schemas']['DownloadSchema'];
       show_title: string;
       season: number;
-      episode?: number;
+      episode: number | null;
     };
-    EpisodeInfo: { seasonnum: number; epnum?: number };
+    EpisodeInfo: {
+      seasonnum: number;
+      epnum?: number | null;
+    };
     HTTPValidationError: {
       detail?: components['schemas']['ValidationError'][];
     };
@@ -52,7 +55,7 @@ export interface components {
       component_type: components['schemas']['ComponentType'];
       status: components['schemas']['HealthcheckStatus'];
       time: string;
-      output?: { [key: string]: any };
+      output: unknown;
     };
     /**
      * Enum used to store the possible service and component health status.
@@ -64,7 +67,7 @@ export interface components {
       seeders: number;
       download: string;
       category: string;
-      episode_info?: components['schemas']['EpisodeInfo'];
+      episode_info?: components['schemas']['EpisodeInfo'] | null;
     };
     IndexResponse: {
       series: components['schemas']['SeriesDetails'][];
@@ -77,7 +80,11 @@ export interface components {
       percentDone: number;
       files: components['schemas']['InnerTorrentFile'][];
     };
-    InnerTorrentFile: { bytesCompleted: number; length: number; name: string };
+    InnerTorrentFile: {
+      bytesCompleted: number;
+      length: number;
+      name: string;
+    };
     /**
      * An enumeration.
      */
@@ -87,8 +94,8 @@ export interface components {
       type: components['schemas']['MonitorMediaType'];
       id: number;
       title: string;
-      added_by: string;
-      status?: boolean;
+      added_by: components['schemas']['UserSchema'];
+      status: boolean;
     };
     /**
      * An enumeration.
@@ -102,7 +109,10 @@ export interface components {
       id: number;
       download: components['schemas']['DownloadSchema'];
     };
-    MovieResponse: { title: string; imdb_id: string };
+    MovieResponse: {
+      title: string;
+      imdb_id: string;
+    };
     /**
      * An enumeration.
      */
@@ -116,10 +126,13 @@ export interface components {
     SearchResponse: {
       title: string;
       type: components['schemas']['MediaType'];
-      year?: number;
+      year: number | null;
       imdbID: number;
     };
-    SeasonMeta: { episode_count: number; season_number: number };
+    SeasonMeta: {
+      episode_count: number;
+      season_number: number;
+    };
     SeriesDetails: {
       title: string;
       imdb_id: string;
@@ -128,16 +141,31 @@ export interface components {
         [key: string]: components['schemas']['EpisodeDetailsSchema'][];
       };
     };
-    Stats: { episode?: number; movie?: number };
-    StatsResponse: { user: string; values: components['schemas']['Stats'] };
+    Stats: {
+      episode: number;
+      movie: number;
+    };
+    StatsResponse: {
+      user: string;
+      values: components['schemas']['Stats'];
+    };
     TvResponse: {
       number_of_seasons: number;
       seasons: components['schemas']['SeasonMeta'][];
-      imdb_id?: string;
+      imdb_id: string | null;
       title: string;
     };
-    TvSeasonResponse: { episodes: components['schemas']['Episode'][] };
-    UserSchema: { username: string; first_name: string };
-    ValidationError: { loc: string[]; msg: string; type: string };
+    TvSeasonResponse: {
+      episodes: components['schemas']['Episode'][];
+    };
+    UserSchema: {
+      username: string;
+      first_name: string;
+    };
+    ValidationError: {
+      loc: (string | number)[];
+      msg: string;
+      type: string;
+    };
   };
 }

@@ -303,7 +303,7 @@ function Season({
     >
       <ol>
         {season.map((episode) => (
-          <li key={episode.id} value={episode.episode}>
+          <li key={episode.id} value={episode.episode!}>
             <span>{episode.download.title}</span>
             &nbsp;
             <Progress torrents={torrents} item={episode} />
@@ -322,7 +322,7 @@ function Season({
 export function NextEpisodeAirs(props: {
   tmdb_id: number;
   season: string;
-  season_episodes: { episode?: number }[];
+  season_episodes: { episode: number | null }[];
 }) {
   const { data } = useSWR<{
     episodes: { name: string; air_date: string; episode_number: number }[];

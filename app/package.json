@@ -45,7 +45,7 @@
     "start": "vite",
     "build": "vite build",
     "test": "vitest",
-    "generate": "npx @manifoldco/swagger-to-ts https://media.mause.me/openapi.json -o src/schema.ts"
+    "generate": "npx openapi-typescript https://media.mause.me/openapi.json -o src/schema.ts"
   },
   "eslintConfig": {
     "extends": [
