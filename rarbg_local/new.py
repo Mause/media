@@ -20,7 +20,7 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_utils.openapi import simplify_operation_ids
-from pydantic import BaseModel, SecretStr
+from pydantic import BaseModel, SecretStr, ValidationError
 from requests.exceptions import HTTPError
 from sqlalchemy import func
 from sqlalchemy.orm.session import Session
@@ -86,7 +86,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .types import ImdbId, TmdbId
-from .utils import non_null, precondition
+from .utils import Message, non_null, precondition
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -423,14 +423,19 @@ async def _stream(
     episode: int | None = None,
 ):
     if type == 'series':
-        items = search_for_tv(
+        async for item in search_for_tv(
             await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
-        )
+        ):
+            yield item.model_dump(mode='json')
     else:
-        items = search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
+        tasks, queue = await search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
 
-    async for item in items:
-        yield item.model_dump(mode='json')
+        while not all(task.done() for task in tasks):
+            item = await queue.get()
+            if isinstance(item, Message):
+                logger.info('Message from provider: %s', item)
+            else:
+                yield item.model_dump(mode='json')
 
 
 root = APIRouter()
@@ -444,7 +449,14 @@ async def websocket_stream(websocket: WebSocket):
     logger.info('Got websocket connection')
     await websocket.accept()
 
-    request = StreamArgs.model_validate(await websocket.receive_json())
+    try:
+        request = StreamArgs.model_validate(await websocket.receive_json())
+    except ValidationError as e:
+        await websocket.send_json(
+            {'error': str(e), 'type': type(e).__name__, 'errors': e.errors()}
+        )
+        await websocket.close()
+        return
     logger.info('Got request: %s', request)
 
     try:

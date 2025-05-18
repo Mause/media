@@ -17,11 +17,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
-from .. import new
 from ..db import MAX_TRIES, Download, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
 from ..new import SearchResponse, Settings, get_current_user, get_settings
+from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
 from .conftest import add_json, themoviedb, tolist
 from .factories import (
@@ -676,18 +676,30 @@ async def test_piratebay(aioresponses, snapshot):
 
 
 @mark.asyncio
+async def test_websocket_error(test_client, snapshot):
+    r = test_client.websocket_connect(
+        '/ws',
+    )
+    await r.connect()
+    await r.send_json({})
+    snapshot.assert_match(json.dumps(await r.receive_json(), indent=2), 'ws_error.json')
+
+
+@mark.asyncio
 @patch('rarbg_local.new.get_movie_imdb_id')
+@patch('rarbg_local.providers.get_providers')
 async def test_websocket(
-    get_movie_imdb_id, test_client, fastapi_app, monkeypatch, snapshot
+    get_providers, get_movie_imdb_id, test_client, fastapi_app, snapshot
 ):
-    async def search_for_movie(*args, **kwargs):
-        yield ITorrent(
-            source="piratebay",
-            title="Ancient Aliens 480p x264-mSD",
-            seeders=2,
-            download="magnet:?xt=urn:btih:00000000000000000",
-            category="205",
-        )
+    class FakeProvider(MovieProvider):
+        async def search_for_movie(self, *args, **kwargs):
+            yield ITorrent(
+                source="piratebay",
+                title="Ancient Aliens 480p x264-mSD",
+                seeders=2,
+                download="magnet:?xt=urn:btih:00000000000000000",
+                category="205",
+            )
 
     async def gcu(
         header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
@@ -698,9 +710,10 @@ async def test_websocket(
         return UserFactory.create()
 
     fastapi_app.dependency_overrides[get_current_user] = gcu
-
-    monkeypatch.setattr(new, 'search_for_movie', search_for_movie)
     get_movie_imdb_id.return_value = 'tt0000000'
+    get_providers.return_value = [
+        FakeProvider(),
+    ]
 
     r = test_client.websocket_connect(
         '/ws',
