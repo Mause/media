@@ -220,7 +220,6 @@ export function TorrentProvider({
   const [torrentStateValue, setTorrentState] = useRecoilState(torrentState);
 
   useEffect(() => {
-    console.log({ authorization });
     if (!authorization) return; // don't subscribe until we have auth
 
     return subscribe<ITorrent>(
@@ -260,12 +259,10 @@ export function TorrentProvider({
 
 function useToken() {
   const auth = useAuth0();
-  console.log('auth', auth);
   const [token, setToken] = useState<string>();
   useEffect(() => {
     auth.getAccessTokenSilently().then(
       (tok) => {
-        console.log('token', tok);
         setToken(tok);
       },
       (err) => {
