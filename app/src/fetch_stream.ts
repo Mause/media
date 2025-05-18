@@ -1,9 +1,3 @@
-import {
-  TransformStream,
-  WritableStream,
-  ReadableStream,
-} from 'web-streams-polyfill';
-
 function makeWriteableEventStream(eventTarget: EventTarget) {
   return new WritableStream({
     start(controller) {

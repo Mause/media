@@ -150,9 +150,13 @@ describe('OptionsComponent', () => {
     let lresolve: (value: unknown) => void;
     let promise = new Promise((resolve) => (lresolve = resolve));
 
-    vi.spyOn(window, 'fetch').mockResolvedValue(
-      new Response(new ReadableStream(new Uint8Array())),
-    );
+    const rs = new ReadableStream({
+      start(controller) {
+        controller.enqueue(Buffer.from('data: {}\n'));
+        controller.close();
+      },
+    });
+    vi.spyOn(window, 'fetch').mockResolvedValue(new Response(rs));
 
     // @ts-expect-error
     useAuth0.mockReturnValue({
