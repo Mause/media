@@ -30,7 +30,7 @@ export function DisplayTorrent({
   episode,
 }: {
   season?: number;
-  episode?: number;
+  episode?: number | null;
   tmdb_id: string;
   torrent: ITorrent;
   torrents?: Torrents;

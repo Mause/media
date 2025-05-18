@@ -35,7 +35,11 @@ describe('MonitorComponent', () => {
         title: 'Hello World',
         tmdb_id: 5,
         type: 'MOVIE',
-        added_by: 'me',
+        status: false,
+        added_by: {
+          first_name: '',
+          username: 'me',
+        },
       },
     ];
     console.log('mocking');
