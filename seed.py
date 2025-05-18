@@ -58,8 +58,8 @@ async def seed():
                 title='Coding (Part 1)',
                 tmdb_id=123456,
                 show_title='Coding',
-                episode='1',
-                season='1',
+                episode=1,
+                season=1,
                 imdb_id='tt0000001',
                 transmission_id='2',
             )

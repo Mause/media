@@ -67,6 +67,9 @@ dev = [
     "types-cachetools>=5.5.0.20240820",
 ]
 debug = ["pudb", "pdbpp"]
+cli = [
+    "rich>=14.0.0",
+]
 
 [tool.ruff.format]
 quote-style = "preserve"

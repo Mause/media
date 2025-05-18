@@ -201,13 +201,18 @@ async def stream(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: TmdbId, season: int):
-    results = search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
+    tasks, results = await search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
 
     episodes = (await get_tv_episodes(tmdb_id, season)).episodes
 
-    packs_or_not = groupby(
-        results, lambda result: extract_marker(result.title)[1] is None
-    )
+    packs_or_not: dict[bool, list[ITorrent]] = {True: [], False: []}
+    while not all(task.done() for task in tasks):
+        result = await results.get()
+        if isinstance(result, Message):
+            logger.info('Got message %s', result)
+        else:
+            packs_or_not[extract_marker(result.title)[1] is None].append(result)
+
     packs = sorted(
         packs_or_not.get(True, []), key=lambda result: result.seeders, reverse=True
     )
@@ -423,19 +428,18 @@ async def _stream(
     episode: int | None = None,
 ):
     if type == 'series':
-        async for item in search_for_tv(
+        tasks, queue = await search_for_tv(
             await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
-        ):
-            yield item.model_dump(mode='json')
+        )
     else:
         tasks, queue = await search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
 
-        while not all(task.done() for task in tasks):
-            item = await queue.get()
-            if isinstance(item, Message):
-                logger.info('Message from provider: %s', item)
-            else:
-                yield item.model_dump(mode='json')
+    while not all(task.done() for task in tasks):
+        item = await queue.get()
+        if isinstance(item, Message):
+            logger.info('Message from provider: %s', item)
+        else:
+            yield item.model_dump(mode='json')
 
 
 root = APIRouter()

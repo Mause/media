@@ -1,12 +1,12 @@
-import asyncio
 import logging
-from collections.abc import Callable, Iterable
-from typing import TypeVar
+from asyncio import Future, Queue
+from collections.abc import Callable, Coroutine, Iterable
+from typing import Any, TypeVar
 
 from ..models import ITorrent
 from ..types import ImdbId, TmdbId
-from ..utils import create_monitored_task
-from .abc import MovieProvider, Provider
+from ..utils import Message, create_monitored_task
+from .abc import MovieProvider, Provider, TvProvider
 
 T = TypeVar('T')
 ProviderType = Callable[..., Iterable[T]]
@@ -33,72 +33,52 @@ def get_providers() -> list[Provider]:
 
 async def search_for_tv(
     imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: int | None = None
-):
-    from .abc import TvProvider
-
-    for provider in get_providers():
-        if not isinstance(provider, TvProvider):
-            continue
+) -> tuple[list[Future[None]], Queue[ITorrent | Message]]:
+    async def worker(output_queue: Queue[ITorrent | Message], provider: TvProvider):
         try:
             async for result in provider.search_for_tv(
                 imdb_id, tmdb_id, season, episode
             ):
-                yield result
+                output_queue.put_nowait(result)
         except Exception:
             logger.exception('Unable to load [TV] from %s', provider)
+
+    return await spin_up_workers(
+        worker,
+        [provider for provider in get_providers() if isinstance(provider, TvProvider)],
+    )
 
 
 async def search_for_movie(
     imdb_id: ImdbId, tmdb_id: TmdbId
-) -> tuple[list[asyncio.Future[None]], asyncio.Queue[ITorrent]]:
-    async def worker(provider: MovieProvider):
+) -> tuple[list[Future[None]], Queue[ITorrent | Message]]:
+    async def worker(output_queue: Queue[ITorrent | Message], provider: MovieProvider):
         try:
             async for result in provider.search_for_movie(imdb_id, tmdb_id):
                 output_queue.put_nowait(result)
         except Exception:
             logger.exception('Unable to load [MOVIE] from %s', provider)
 
-    tasks = []
-    output_queue = asyncio.Queue[ITorrent]()
-    for provider in get_providers():
-        if not isinstance(provider, MovieProvider):
-            continue
-
-        tasks.append(create_monitored_task(worker(provider), output_queue.put_nowait))
-    return tasks, output_queue
-
-
-async def main():
-    from rich.console import Console
-    from rich.logging import RichHandler
-    from rich.table import Table
-
-    from ..tmdb import resolve_id
-
-    logging.basicConfig(level=logging.DEBUG, handlers=[RichHandler()])
-
-    table = Table(
-        'Source',
-        'Title',
-        'Seeders',
-        'Has magnet',
-        show_header=True,
-        header_style="bold magenta",
+    return await spin_up_workers(
+        worker,
+        [
+            provider
+            for provider in get_providers()
+            if isinstance(provider, MovieProvider)
+        ],
     )
 
-    imdb_id = ImdbId('tt28454008')
-    tmdb_id = await resolve_id(imdb_id, 'tv')
-    async for row in search_for_tv(
-        imdb_id=imdb_id, tmdb_id=tmdb_id, season=1, episode=1
-    ):
-        table.add_row(
-            row.source.name, row.title, str(row.seeders), str(bool(row.download))
-        )
 
-    Console().print(table)
+TT = TypeVar('TT', bound=Provider)
 
 
-if __name__ == '__main__':
-    import uvloop
-
-    uvloop.run(main())
+async def spin_up_workers(
+    worker: Callable[[Queue[ITorrent | Message], TT], Coroutine[Any, Any, None]],
+    providers: list[TT],
+) -> tuple[list[Future[None]], Queue[ITorrent | Message]]:
+    output_queue = Queue[ITorrent | Message]()
+    tasks = [
+        create_monitored_task(worker(output_queue, provider), output_queue.put_nowait)
+        for provider in providers
+    ]
+    return tasks, output_queue
