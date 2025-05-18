@@ -6,7 +6,7 @@ exports[`renders learn react link 1`] = `
     Media
   </h1>
   <nav
-    class="makeStyles-root-1"
+    class="ParentComponentInt-root css-1ytq8f1"
   >
     <div
       class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-o1iywg-MuiGrid-root"

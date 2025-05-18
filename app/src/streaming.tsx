@@ -18,6 +18,7 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
 import { Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { SWRConfig } from 'swr';
 import {
   MonitorComponent,
@@ -25,9 +26,6 @@ import {
   MonitorDeleteComponent,
 } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
-import { Theme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import createStyles from '@mui/styles/createStyles';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import { Websocket } from './Websocket';
@@ -80,16 +78,16 @@ function reportError(error: Error, info: { componentStack: string }) {
   });
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-        linkStyle: 'underline',
-      },
-    },
-  }),
-);
+const PREFIX = 'ParentComponentInt';
+const classes = {
+  root: `${PREFIX}-root`,
+};
+const NavRoot = styled('nav')(({ theme }) => ({
+  [`& .${classes.root}`]: {
+    margin: theme.spacing(1),
+    linkStyle: 'underline',
+  },
+}));
 
 const Login = () => {
   const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
@@ -115,7 +113,6 @@ const Login = () => {
 
 function ParentComponentInt() {
   useProfiler('ParentComponentInt');
-  const classes = useStyles();
 
   const auth = useAuth0();
   console.log({ user: auth.user });
@@ -124,7 +121,7 @@ function ParentComponentInt() {
     <Router>
       <h1>Media</h1>
 
-      <nav className={classes.root}>
+      <NavRoot className={classes.root}>
         <Grid container spacing={1}>
           <Grid item xs="auto">
             <MLink to="/">Home</MLink>
@@ -147,7 +144,7 @@ function ParentComponentInt() {
             <Login />
           </Grid>
         </Grid>
-      </nav>
+      </NavRoot>
 
       <br />
 
