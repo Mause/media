@@ -4,6 +4,11 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
+        types:
+          - ts
+          - tsx
+          - javascript
+          - jsx
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -19,13 +24,13 @@ repos:
     rev: v9.27.0
     hooks:
       - id: eslint
-        args:
-          - --ext
-          - .js,.jsx,.ts,.tsx
         files: ".*(\\.js|\\.jsx|\\.ts|\\.tsx)$"
         verbose: true
         types:
-          - file
+          - ts
+          - tsx
+          - javascript
+          - jsx
         additional_dependencies:
           - eslint@7.12.1
           - "eslint-config-react-app@*"
