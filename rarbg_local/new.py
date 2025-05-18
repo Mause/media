@@ -520,7 +520,9 @@ def redirect_to_plex(imdb_id: ImdbId, plex=Depends(get_plex)):
 
 
 @root.get('/redirect/{type_}/{tmdb_id}')
-@root.get('/redirect/{type_}/{tmdb_id}/{season}/{episode}')
+@root.get(
+    '/redirect/{type_}/{tmdb_id}/{season}/{episode}', name='redirect_to_imdb_deep'
+)
 async def redirect_to_imdb(
     type_: MediaType,
     tmdb_id: TmdbId,
