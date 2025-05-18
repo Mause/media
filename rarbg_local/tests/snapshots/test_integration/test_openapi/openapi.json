@@ -853,8 +853,8 @@
     },
     "/redirect/{type_}/{tmdb_id}/{season}/{episode}": {
       "get": {
-        "summary": "Redirect To Imdb",
-        "operationId": "redirect_to_imdb",
+        "summary": "Redirect To Imdb Deep",
+        "operationId": "redirect_to_imdb_deep",
         "parameters": [
           {
             "name": "type_",
