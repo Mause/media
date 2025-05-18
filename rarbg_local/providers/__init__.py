@@ -1,5 +1,5 @@
-import asyncio
 import logging
+from asyncio import Future, Queue
 from collections.abc import Callable, Coroutine, Iterable
 from typing import Any, TypeVar
 
@@ -33,8 +33,8 @@ def get_providers() -> list[Provider]:
 
 async def search_for_tv(
     imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: int | None = None
-) -> tuple[list[asyncio.Future[None]], asyncio.Queue[ITorrent]]:
-    async def worker(output_queue: asyncio.Queue[ITorrent], provider: TvProvider):
+) -> tuple[list[Future[None]], Queue[ITorrent]]:
+    async def worker(output_queue: Queue[ITorrent], provider: TvProvider):
         try:
             async for result in provider.search_for_tv(
                 imdb_id, tmdb_id, season, episode
@@ -51,8 +51,8 @@ async def search_for_tv(
 
 async def search_for_movie(
     imdb_id: ImdbId, tmdb_id: TmdbId
-) -> tuple[list[asyncio.Future[None]], asyncio.Queue[ITorrent]]:
-    async def worker(output_queue: asyncio.Queue[ITorrent], provider: MovieProvider):
+) -> tuple[list[Future[None]], Queue[ITorrent]]:
+    async def worker(output_queue: Queue[ITorrent], provider: MovieProvider):
         try:
             async for result in provider.search_for_movie(imdb_id, tmdb_id):
                 output_queue.put_nowait(result)
@@ -73,10 +73,10 @@ TT = TypeVar('TT', bound=Provider)
 
 
 async def spin_up_workers(
-    worker: Callable[[asyncio.Queue[ITorrent], TT], Coroutine[Any, Any, None]],
+    worker: Callable[[Queue[ITorrent], TT], Coroutine[Any, Any, None]],
     providers: list[TT],
 ):
-    output_queue = asyncio.Queue[ITorrent]()
+    output_queue = Queue[ITorrent]()
     tasks = [
         create_monitored_task(worker(output_queue, provider), output_queue.put_nowait)
         for provider in providers
