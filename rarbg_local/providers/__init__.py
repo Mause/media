@@ -1,7 +1,7 @@
 import asyncio
 import logging
-from collections.abc import Callable, Iterable
-from typing import TypeVar
+from collections.abc import Callable, Coroutine, Iterable
+from typing import Any, TypeVar
 
 from ..models import ITorrent
 from ..types import ImdbId, TmdbId
@@ -34,7 +34,7 @@ def get_providers() -> list[Provider]:
 async def search_for_tv(
     imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: int | None = None
 ) -> tuple[list[asyncio.Future[None]], asyncio.Queue[ITorrent]]:
-    async def worker(provider: TvProvider):
+    async def worker(output_queue: asyncio.Queue[ITorrent], provider: TvProvider):
         try:
             async for result in provider.search_for_tv(
                 imdb_id, tmdb_id, season, episode
@@ -43,33 +43,44 @@ async def search_for_tv(
         except Exception:
             logger.exception('Unable to load [TV] from %s', provider)
 
-    tasks = []
-    output_queue = asyncio.Queue[ITorrent]()
-    for provider in get_providers():
-        if not isinstance(provider, TvProvider):
-            continue
-
-        tasks.append(create_monitored_task(worker(provider), output_queue.put_nowait))
-    return tasks, output_queue
+    return await spin_up_workers(
+        worker,
+        [provider for provider in get_providers() if isinstance(provider, TvProvider)],
+    )
 
 
 async def search_for_movie(
     imdb_id: ImdbId, tmdb_id: TmdbId
 ) -> tuple[list[asyncio.Future[None]], asyncio.Queue[ITorrent]]:
-    async def worker(provider: MovieProvider):
+    async def worker(output_queue: asyncio.Queue[ITorrent], provider: MovieProvider):
         try:
             async for result in provider.search_for_movie(imdb_id, tmdb_id):
                 output_queue.put_nowait(result)
         except Exception:
             logger.exception('Unable to load [MOVIE] from %s', provider)
 
-    tasks = []
-    output_queue = asyncio.Queue[ITorrent]()
-    for provider in get_providers():
-        if not isinstance(provider, MovieProvider):
-            continue
+    return await spin_up_workers(
+        worker,
+        [
+            provider
+            for provider in get_providers()
+            if isinstance(provider, MovieProvider)
+        ],
+    )
 
-        tasks.append(create_monitored_task(worker(provider), output_queue.put_nowait))
+
+TT = TypeVar('TT', bound=Provider)
+
+
+async def spin_up_workers(
+    worker: Callable[[asyncio.Queue[ITorrent], TT], Coroutine[Any, Any, None]],
+    providers: list[TT],
+):
+    output_queue = asyncio.Queue[ITorrent]()
+    tasks = [
+        create_monitored_task(worker(output_queue, provider), output_queue.put_nowait)
+        for provider in providers
+    ]
     return tasks, output_queue
 
 
