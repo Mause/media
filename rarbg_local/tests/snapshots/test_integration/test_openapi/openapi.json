@@ -1580,9 +1580,9 @@
             ],
             "title": "Year"
           },
-          "imdbID": {
+          "tmdb_id": {
             "type": "integer",
-            "title": "Imdbid"
+            "title": "Tmdb Id"
           }
         },
         "type": "object",
@@ -1590,7 +1590,7 @@
           "title",
           "type",
           "year",
-          "imdbID"
+          "tmdb_id"
         ],
         "title": "SearchResponse"
       },

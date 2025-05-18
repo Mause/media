@@ -167,6 +167,7 @@ describe('shouldCollapse', () => {
         season_number: 1,
       },
     ],
+    imdb_id: null,
     title: '',
   };
   const episode: EpisodeResponse = {
