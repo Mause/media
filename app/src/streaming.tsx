@@ -123,24 +123,20 @@ function ParentComponentInt() {
 
       <NavRoot className={classes.root}>
         <Grid container spacing={1}>
-          <Grid item xs="auto">
+          <Grid size={{ xs: 'auto' }}>
             <MLink to="/">Home</MLink>
           </Grid>
-          <Grid item xs="auto">
+          <Grid size={{ xs: 'auto' }}>
             <MLink to="/monitor">Monitors</MLink>
           </Grid>
-          <Grid item xs="auto">
+          <Grid size={{ xs: 'auto' }}>
             <ExtMLink href="http://novell.mause.me:9091">Transmission</ExtMLink>
           </Grid>
-          <Grid item xs="auto">
+          <Grid size={{ xs: 'auto' }}>
             <ExtMLink href="https://app.plex.tv">Plex</ExtMLink>
           </Grid>
-          {auth.user && (
-            <Grid item xs="auto">
-              {auth.user.name}
-            </Grid>
-          )}
-          <Grid item xs="auto">
+          {auth.user && <Grid size={{ xs: 'auto' }}>{auth.user.name}</Grid>}
+          <Grid size={{ xs: 'auto' }}>
             <Login />
           </Grid>
         </Grid>
