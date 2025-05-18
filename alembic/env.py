@@ -87,7 +87,9 @@ def run_migrations_online():
         pool_pre_ping=True,
         connect_args={
             'connect_timeout': 10000,
-        },
+        }
+        if 'postgres' in url
+        else {},
     )
 
     retrying_connect = backoff.on_exception(
