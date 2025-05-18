@@ -13,7 +13,7 @@ import { DisplayError } from './IndexComponent';
 import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
 import { Alert } from '@mui/material';
-import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, useRecoilValue, useRecoilState } from 'recoil';
 
 const torrentState = atom<ITorrent[]>({
   key: 'torrentState',
@@ -216,7 +216,7 @@ export function TorrentProvider({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>(undefined);
 
-  const setTorrentState = useSetRecoilState(torrentState);
+  const [torrentStateValue, setTorrentState] = useRecoilState(torrentState);
 
   useEffect(() => {
     console.log({ authorization });
@@ -244,6 +244,9 @@ export function TorrentProvider({
           <Loading loading={true} large={true} />
         </div>
       )}
+      <div>
+        {name}: {torrentStateValue.length}
+      </div>
       {error && (
         <DisplayError
           message={`Error occured whilst loading options from ${name}`}

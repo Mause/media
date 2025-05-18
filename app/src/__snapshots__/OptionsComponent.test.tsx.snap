@@ -103,9 +103,25 @@ exports[`OptionsComponent > failure 1`] = `
 </div>
 `;
 
-exports[`OptionsComponent > renders a single provider 1`] = `<div />`;
+exports[`OptionsComponent > renders a single provider 1`] = `
+<div>
+  <div>
+    frogs
+    : 
+    0
+  </div>
+</div>
+`;
 
-exports[`OptionsComponent > renders a single provider 2`] = `<div />`;
+exports[`OptionsComponent > renders a single provider 2`] = `
+<div>
+  <div>
+    frogs
+    : 
+    1
+  </div>
+</div>
+`;
 
 exports[`OptionsComponent > success 1`] = `
 <div>
