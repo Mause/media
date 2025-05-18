@@ -119,7 +119,7 @@ export function Movies({
               </MenuItem>
               {movie.download.added_by ? (
                 <MenuItem>
-                  Added by: {movie.download.added_by.first_name}
+                  Added by: {movie.download.added_by.username}
                 </MenuItem>
               ) : null}
             </ContextMenu>
