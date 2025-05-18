@@ -73,3 +73,11 @@ quote-style = "preserve"
 
 [tool.ruff.lint]
 select = ["F", "E", "W", "I"]
+
+[tool.pytest.ini_options]
+addopts = "rarbg_local --driver chrome --html report.html --self-contained-html"
+
+[tool.mypy]
+plugins = "sqlalchemy.ext.mypy.plugin, pydantic.mypy"
+ignore_missing_imports = true
+mypy_path = "stubs"
