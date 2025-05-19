@@ -50,7 +50,7 @@ export function subscribe<T>(
 }
 
 export function getPrefix() {
-  const prefix = import.meta.env.REACT_APP_API_PREFIX as string | undefined;
+  const prefix = import.meta.env.REACT_APP_API_PREFIX;
 
   if (!prefix) {
     return '';
