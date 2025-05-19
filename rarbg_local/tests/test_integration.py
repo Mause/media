@@ -328,11 +328,11 @@ async def test_select_season(aioresponses, test_client: TestClient, snapshot) ->
     themoviedb(
         aioresponses,
         '/tv/100000',
-        TvApiResponseFactory(
+        TvApiResponseFactory.build(
             number_of_seasons=1,
             seasons=[{'episode_count': 1, 'season_number': 1}],
             name='hello',
-        ).dict(),
+        ).model_dump(),
     )
     themoviedb(aioresponses, '/tv/100000/external_ids', {'imdb_id': 'tt1000'})
 

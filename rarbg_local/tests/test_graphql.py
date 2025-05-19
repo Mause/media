@@ -22,17 +22,17 @@ async def test_main(test_client, snapshot, aioresponses, session):
     themoviedb(
         aioresponses,
         '/tv/540',
-        TvApiResponseFactory(
+        TvApiResponseFactory.build(
             id=540,
             name='Kathleen Williamson',
             number_of_seasons=1,
             seasons=[{'episode_count': 1, 'season_number': 1}],
-        ).dict(),
+        ).model_dump(),
     )
     themoviedb(
         aioresponses,
         '/tv/540/season/1',
-        TvSeasonResponseFactory(
+        TvSeasonResponseFactory.build(
             episodes=[
                 {
                     'air_date': '1998-08-18',
@@ -41,13 +41,15 @@ async def test_main(test_client, snapshot, aioresponses, session):
                     'name': 'Angel Robertson',
                 }
             ]
-        ).dict(),
+        ).model_dump(),
     )
     themoviedb(aioresponses, '/tv/540/external_ids', {'imdb_id': imdb_id})
     themoviedb(
         aioresponses,
         '/movie/540',
-        MovieResponseFactory(imdb_id='tt293584', title='Christopher Robinson').dict(),
+        MovieResponseFactory.build(
+            imdb_id='tt293584', title='Christopher Robinson'
+        ).model_dump(),
     )
 
     res = await test_client.post(
