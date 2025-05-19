@@ -10,6 +10,11 @@ jobs:
       matrix:
         node-version: [18.x]
 
+    # set default working directory
+    defaults:
+      run:
+        working-directory: app
+
     steps:
       - run: corepack enable
       - uses: actions/checkout@v4
@@ -19,12 +24,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: yarn
       - run: yarn
-        working-directory: app
       - run: yarn build
-        working-directory: app
-        env:
-          CI: true
+      - run: yarn tsc
       - run: yarn test
-        working-directory: app
-        env:
-          CI: true
