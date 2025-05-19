@@ -9,9 +9,6 @@ module.exports = tseslint.config(
       parserOptions: {
         projectService: true,
         tsconfigRootDir: __dirname,
-        projectService: {
-          allowDefaultProject: ['vitest.config.js', 'vite.config.js'],
-        },
       },
     },
   },
