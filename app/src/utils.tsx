@@ -38,7 +38,7 @@ export function subscribe<T>(
   };
   es.addEventListener('abort', onerror);
   const internal_callback = (event: Event) => {
-    callback((event as MessageEvent).data);
+    callback((event as MessageEvent).data as T);
   };
   es.addEventListener('message', internal_callback);
 
@@ -130,10 +130,10 @@ export function ExtMLink(props: { href: string; children: string }) {
 }
 
 export function expectLastRequestBody() {
-  return expect(JSON.parse(moxios.requests.mostRecent().config.data));
+  return expect(JSON.parse(moxios.requests.mostRecent().config.data as string));
 }
 
 export function useLocation<T>() {
   const location = RRD.useLocation();
-  return { ...location, state: location.state as any as T };
+  return { ...location, state: location.state as T };
 }
