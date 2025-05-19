@@ -1,7 +1,7 @@
 from collections.abc import AsyncGenerator
 
 from fastapi.concurrency import run_in_threadpool
-from NyaaPy import nyaa
+from nyaapy.nyaasi.nyaa import Nyaa
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_tv
@@ -19,7 +19,7 @@ class NyaaProvider(TvProvider):
         season: int,
         episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
-        ny = nyaa.Nyaa()
+        ny = Nyaa()
 
         name = (await get_tv(tmdb_id)).name
         page = 0
