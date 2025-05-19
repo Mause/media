@@ -46,7 +46,7 @@ test('Movies', () => {
   expect(container).toMatchSnapshot();
 });
 
-test('TVShows', async () => {
+test('TVShows', () => {
   const series: SeriesResponse[] = [
     {
       tmdb_id: 1,

@@ -42,7 +42,7 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
 
-    await act(async () => {
+    act(() => {
       for (const source of sources) {
         source.onerror!(new Event('message'));
       }
@@ -68,7 +68,7 @@ describe('OptionsComponent', () => {
         </Route>
       </MemoryRouter>,
     );
-    await act(async () => {
+    act(() => {
       void mock('movie/1', { title: 'Hello World' });
     });
 
@@ -87,7 +87,7 @@ describe('OptionsComponent', () => {
 
     let i = 0;
     const source_names = ['RARBG', 'HORRIBLESUBS', 'KICKASS'];
-    await act(async () => {
+    act(() => {
       for (const source of sources) {
         source!.ls!({
           data: JSON.stringify({
@@ -101,7 +101,7 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
 
-    await act(async () => {
+    act(() => {
       for (const source of sources) {
         source!.ls!({ data: '' });
       }
