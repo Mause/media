@@ -419,6 +419,7 @@ def create_app():
         graphql,
         prefix='/graphql',
         dependencies=[security],
+        tags=['graphql'],
     )
     app.include_router(root, prefix='')
 
