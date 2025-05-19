@@ -10,7 +10,7 @@ from .abc import MovieProvider, TvProvider, format, movie_convert, tv_convert
 
 def magnet(info_hash: str, name: str) -> str:
     """Generate a magnet link from an info hash."""
-    return 'magnet:?' + urlencode({'xt': f'urn:btih:{info_hash}', 'dn': name})
+    return f'magnet:?xt=urn:btih:{info_hash}&' + urlencode({'dn': name})
 
 
 class PirateBayProvider(TvProvider, MovieProvider):
