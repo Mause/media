@@ -53,7 +53,7 @@ async def test_main(test_client, snapshot, aioresponses, session):
     )
 
     res = await test_client.post(
-        '/graphql/',
+        '/graphql',
         json={
             'query': '''
                 query A {
@@ -98,7 +98,7 @@ async def test_main(test_client, snapshot, aioresponses, session):
 @mark.asyncio
 async def test_mutation(test_client, snapshot):
     res = await test_client.post(
-        '/graphql/',
+        '/graphql',
         json={
             'query': '''
                 mutation B {
