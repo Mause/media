@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/react';
-import React from 'react';
-import { Helmet } from 'react-helmet-async';
+import type { ReactNode, ComponentType, PropsWithChildren } from 'react';
 import {
   BrowserRouter as Router,
   useLocation,
@@ -58,13 +57,11 @@ function RouteTitle({
   children,
 }: {
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
+      <title>{title}</title>
       {children}
     </>
   );
@@ -177,7 +174,7 @@ function ParentComponentInt() {
 function SwrConfigWrapper({
   WrappedComponent,
 }: {
-  WrappedComponent: React.ComponentType;
+  WrappedComponent: ComponentType<PropsWithChildren<unknown>>;
 }) {
   const auth = useAuth0();
   return (
@@ -203,7 +200,9 @@ function SwrConfigWrapper({
   );
 }
 
-export function swrConfig(WrappedComponent: React.ComponentType) {
+export function swrConfig(
+  WrappedComponent: ComponentType<PropsWithChildren<unknown>>,
+) {
   return () => <SwrConfigWrapper WrappedComponent={WrappedComponent} />;
 }
 const ParentComponent = swrConfig(ParentComponentInt);
