@@ -72,7 +72,10 @@ function RouteTitle({
 
 function reportError(error: Error, info: ErrorInfo) {
   Sentry.withScope((scope) => {
-    scope.setExtras(info as Record<string, any>);
+    scope.setExtras({
+      componentStack: info.componentStack,
+      digest: info.digest,
+    });
     const eventId = Sentry.captureException(error);
     Sentry.showReportDialog({ eventId });
   });
