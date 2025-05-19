@@ -3,13 +3,13 @@ function makeWriteableEventStream(eventTarget: EventTarget) {
     start() {
       eventTarget.dispatchEvent(new Event('start'));
     },
-    write(message) {
+    write(message: unknown) {
       eventTarget.dispatchEvent(new MessageEvent('message', { data: message }));
     },
     close() {
       eventTarget.dispatchEvent(new CloseEvent('close'));
     },
-    abort(reason) {
+    abort(reason: string) {
       eventTarget.dispatchEvent(new CloseEvent('abort', { reason }));
     },
   });
