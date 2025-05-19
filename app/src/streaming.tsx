@@ -185,7 +185,7 @@ function SwrConfigWrapper({
       value={{
         // five minute refresh
         refreshInterval: 5 * 60 * 1000,
-        fetcher: async (path, params) =>
+        fetcher: async (path: string, params: string) =>
           await load(
             path,
             params,
