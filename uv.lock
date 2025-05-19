@@ -135,15 +135,6 @@ wheels = [
 ]
 
 [[package]]
-name = "aniso8601"
-version = "7.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/7f/39/0da0982a3a42fd896beaa07425692fb3100a9d0e40723783efc20f1dec7c/aniso8601-7.0.0.tar.gz", hash = "sha256:513d2b6637b7853806ae79ffaca6f3e8754bdd547048f5ccc1420aec4b714f1e", size = 36465, upload-time = "2019-06-11T19:24:32.22Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/45/a4/b4fcadbdab46c2ec2d2f6f8b4ab3f64fd0040789ac7f065eba82119cd602/aniso8601-7.0.0-py2.py3-none-any.whl", hash = "sha256:d10a4bf949f619f719b227ef5386e31f49a2b6d453004b21f02661ccc8670c7b", size = 42031, upload-time = "2019-06-11T19:24:30.247Z" },
-]
-
-[[package]]
 name = "annotated-types"
 version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
@@ -624,46 +615,12 @@ speedup = [
 ]
 
 [[package]]
-name = "graphene"
-version = "2.1.8"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "aniso8601" },
-    { name = "graphql-core" },
-    { name = "graphql-relay" },
-    { name = "six" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/53/49/3533ea1317a3d32d6ddf9cfa55df6883394195d40b88eb7589d665df887c/graphene-2.1.8.tar.gz", hash = "sha256:2cbe6d4ef15cfc7b7805e0760a0e5b80747161ce1b0f990dfdc0d2cf497c12f9", size = 42415, upload-time = "2019-08-17T21:00:04.512Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/05/97/45e743b372f65a619f8d1eb2897efb74fb1b0ffddc731ad37e0aa187ec5c/graphene-2.1.8-py2.py3-none-any.whl", hash = "sha256:09165f03e1591b76bf57b133482db9be6dac72c74b0a628d3c93182af9c5a896", size = 107177, upload-time = "2019-08-17T20:59:55.603Z" },
-]
-
-[[package]]
 name = "graphql-core"
-version = "2.3.2"
+version = "3.2.6"
 source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "promise" },
-    { name = "rx" },
-    { name = "six" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/88/a2/dd91d55a6f6dd88c4d3c284d387c94f1f933fedec43a86a4422940b9de18/graphql-core-2.3.2.tar.gz", hash = "sha256:aac46a9ac524c9855910c14c48fc5d60474def7f99fd10245e76608eba7af746", size = 104181, upload-time = "2020-05-12T22:29:20.625Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c4/16/7574029da84834349b60ed71614d66ca3afe46e9bf9c7b9562102acb7d4f/graphql_core-3.2.6.tar.gz", hash = "sha256:c08eec22f9e40f0bd61d805907e3b3b1b9a320bc606e23dc145eebca07c8fbab", size = 505353, upload-time = "2025-01-26T16:36:27.374Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/11/71/d51beba3d8986fa6d8670ec7bcba989ad6e852d5ae99d95633e5dacc53e7/graphql_core-2.3.2-py2.py3-none-any.whl", hash = "sha256:44c9bac4514e5e30c5a595fac8e3c76c1975cae14db215e8174c7fe995825bad", size = 252532, upload-time = "2020-05-12T22:29:19.082Z" },
-]
-
-[[package]]
-name = "graphql-relay"
-version = "2.0.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "graphql-core" },
-    { name = "promise" },
-    { name = "six" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/16/59/afbf1ce02631910ff0be06e5e057cc9e2806192d9b9c8d6671ff39e4abe2/graphql-relay-2.0.1.tar.gz", hash = "sha256:870b6b5304123a38a0b215a79eace021acce5a466bf40cd39fa18cb8528afabb", size = 21052, upload-time = "2019-12-06T22:30:12.974Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/94/48/6022ea2e89cb936c3b933a0409c6e29bf8a68c050fe87d97f98aff6e5e9e/graphql_relay-2.0.1-py3-none-any.whl", hash = "sha256:ac514cb86db9a43014d7e73511d521137ac12cf0101b2eaa5f0a3da2e10d913d", size = 20518, upload-time = "2019-12-06T22:30:11.61Z" },
+    { url = "https://files.pythonhosted.org/packages/ae/4f/7297663840621022bc73c22d7d9d80dbc78b4db6297f764b545cd5dd462d/graphql_core-3.2.6-py3-none-any.whl", hash = "sha256:78b016718c161a6fb20a7d97bbf107f331cd1afe53e45566c59f776ed7f0b45f", size = 203416, upload-time = "2025-01-26T16:36:24.868Z" },
 ]
 
 [[package]]
@@ -1004,8 +961,6 @@ dependencies = [
     { name = "fastapi-oidc" },
     { name = "fastapi-utils" },
     { name = "fuzzywuzzy", extra = ["speedup"] },
-    { name = "graphene" },
-    { name = "graphql-core" },
     { name = "gunicorn" },
     { name = "lxml" },
     { name = "makefun" },
@@ -1022,6 +977,7 @@ dependencies = [
     { name = "sentry-sdk" },
     { name = "sqlalchemy", extra = ["mypy"] },
     { name = "sqlalchemy-repr" },
+    { name = "strawberry-graphql" },
     { name = "typing-inspect" },
     { name = "uvicorn", extra = ["standard"] },
 ]
@@ -1075,8 +1031,6 @@ requires-dist = [
     { name = "fastapi-oidc", specifier = ">=0.0.10" },
     { name = "fastapi-utils", specifier = "==0.8.0" },
     { name = "fuzzywuzzy", extras = ["speedup"], specifier = "==0.18.0" },
-    { name = "graphene", specifier = "==2.1.8" },
-    { name = "graphql-core", specifier = "==2.3.2" },
     { name = "gunicorn" },
     { name = "lxml" },
     { name = "makefun", specifier = "==1.16.0" },
@@ -1093,6 +1047,7 @@ requires-dist = [
     { name = "sentry-sdk", specifier = "==2.29.1" },
     { name = "sqlalchemy", extras = ["mypy"], specifier = "==2.0.41" },
     { name = "sqlalchemy-repr", specifier = "==0.1.0" },
+    { name = "strawberry-graphql", specifier = ">=0.269.0" },
     { name = "typing-inspect", specifier = ">=0.9.0" },
     { name = "uvicorn", extras = ["standard"] },
 ]
@@ -1323,15 +1278,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/08/39/679ca9b26c7bb2999
 wheels = [
     { url = "https://files.pythonhosted.org/packages/88/74/a88bf1b1efeae488a0c0b7bdf71429c313722d1fc0f377537fbe554e6180/pre_commit-4.2.0-py2.py3-none-any.whl", hash = "sha256:a009ca7205f1eb497d10b845e52c838a98b6cdd2102a6c8e4540e94ee75c58bd", size = 220707, upload-time = "2025-03-18T21:35:19.343Z" },
 ]
-
-[[package]]
-name = "promise"
-version = "2.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "six" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/cf/9c/fb5d48abfe5d791cd496e4242ebcf87a4bb2e0c3dcd6e0ae68c11426a528/promise-2.3.tar.gz", hash = "sha256:dfd18337c523ba4b6a58801c164c1904a9d4d1b1747c7d5dbf45b693a49d93d0", size = 19534, upload-time = "2019-12-18T07:31:43.07Z" }
 
 [[package]]
 name = "propcache"
@@ -1717,6 +1663,18 @@ wheels = [
 ]
 
 [[package]]
+name = "python-dateutil"
+version = "2.9.0.post0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/66/c0/0c8b6ad9f17a802ee498c46e004a0eb49bc148f2fd230864601a86dcf6db/python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3", size = 342432, upload-time = "2024-03-01T18:36:20.211Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427", size = 229892, upload-time = "2024-03-01T18:36:18.57Z" },
+]
+
+[[package]]
 name = "python-dotenv"
 version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1916,12 +1874,6 @@ wheels = [
 ]
 
 [[package]]
-name = "rx"
-version = "1.6.3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/3c/51/d37235bad8df7536cc950e0d0a26e94131a6a3f7d5e1bed5f37f0846f2ef/Rx-1.6.3.tar.gz", hash = "sha256:ca71b65d0fc0603a3b5cfaa9e33f5ba81e4aae10a58491133595088d7734b2da", size = 97455, upload-time = "2022-12-17T20:35:52.037Z" }
-
-[[package]]
 name = "selenium"
 version = "4.31.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2040,6 +1992,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ce/20/08dfcd9c983f6a6f4a1000d934b9e6d626cff8d2eeb77a89a68eef20a2b7/starlette-0.46.2.tar.gz", hash = "sha256:7f7361f34eed179294600af672f565727419830b54b7b084efe44bb82d2fccd5", size = 2580846, upload-time = "2025-04-13T13:56:17.942Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8b/0c/9d30a4ebeb6db2b25a841afbb80f6ef9a854fc3b41be131d249a977b4959/starlette-0.46.2-py3-none-any.whl", hash = "sha256:595633ce89f8ffa71a015caed34a5b2dc1c0cdb3f0f1fbd1e69339cf2abeec35", size = 72037, upload-time = "2025-04-13T13:56:16.21Z" },
+]
+
+[[package]]
+name = "strawberry-graphql"
+version = "0.269.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "graphql-core", marker = "python_full_version < '4.0'" },
+    { name = "packaging" },
+    { name = "python-dateutil" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e0/2e/77446a370f3cd8f30f2baeeb4f64464c0fb0285aa94a8773ccf398c8b7c6/strawberry_graphql-0.269.0.tar.gz", hash = "sha256:67d5dd832a056e755fccb3a0d8476a710c9552d6199505d41d5357580bcde2ea", size = 205214, upload-time = "2025-05-17T09:38:26.579Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fd/ec/dea16b8bae63faad7a868701959b6be8b2ddc43149f3193ca2eaa01984c6/strawberry_graphql-0.269.0-py3-none-any.whl", hash = "sha256:e3322da5f6d2d57c7099a120d6002cccd7749ea7737f6bbc245a08a46781e957", size = 299187, upload-time = "2025-05-17T09:38:23.82Z" },
 ]
 
 [[package]]

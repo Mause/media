@@ -1,73 +1,81 @@
-import graphene
+from datetime import date
+
+import strawberry
 from fastapi import APIRouter, Depends
-from graphql.execution.executors.asyncio import AsyncioExecutor
-from starlette.graphql import GraphQLApp
+from strawberry.asgi import GraphQL
 
 from . import tmdb
 from .models import MonitorMediaType
 from .singleton import get
 
 api = APIRouter()
+ID = int
 
 
-class SeasonMeta(graphene.ObjectType):
-    episode_count = graphene.Int()
-    season_number = graphene.Int()
+@strawberry.type
+class SeasonMeta:
+    episode_count: int
+    season_number: int
 
 
-class Episode(graphene.ObjectType):
-    name = graphene.String()
-    id = graphene.ID()
-    episode_number = graphene.Int()
-    air_date = graphene.Date()
+@strawberry.type
+class Episode:
+    name: int
+    id: strawberry.ID
+    episode_number: int
+    air_date: date
 
 
-class Season(graphene.ObjectType):
-    episodes = graphene.List(Episode)
+@strawberry.type
+class Season:
+    episodes: list[Episode]
 
 
-class Tv(graphene.ObjectType):
-    id = graphene.ID()
-    name = graphene.String()
-    number_of_seasons = graphene.Int()
-    seasons = graphene.List(SeasonMeta)
-    imdb_id = graphene.String(
-        resolver=lambda self, context: tmdb.get_tv_imdb_id(self.id)
-    )
-    season = graphene.Field(
-        Season,
-        number=graphene.Int(),
-        resolver=lambda self, context, number: tmdb.get_tv_episodes(self.id, number),
-    )
+@strawberry.type
+class Tv:
+    id: ID
+    name: str
+    number_of_seasons: int
+    seasons: list[SeasonMeta]
+    imdb_id: str = strawberry.field(resolver=lambda self: tmdb.get_tv_imdb_id(self.id))
+
+    @strawberry.field
+    def season(self, number: int) -> Season:
+        return tmdb.get_tv_episodes(self.id, number)
 
 
-class Movie(graphene.ObjectType):
-    title = graphene.String()
-    imdb_id = graphene.String()
+@strawberry.type
+class Movie:
+    title: str
+    imdb_id: str
 
 
-class User(graphene.ObjectType):
-    username = graphene.String()
-    first_name = graphene.String()
+@strawberry.type
+class User:
+    username: str
+    first_name: str
 
 
-class Monitor(graphene.ObjectType):
-    title = graphene.String()
-    id = graphene.ID()
-    type = graphene.Field(graphene.Enum.from_enum(MonitorMediaType))
-    added_by = graphene.Field(User)
+@strawberry.type
+class Monitor:
+    title: str
+    id: ID
+    type: MonitorMediaType
+    added_by: User
 
 
-class Query(graphene.ObjectType):
-    tv = graphene.Field(
-        Tv, id=graphene.ID(), resolver=lambda self, context, id: tmdb.get_tv(id)
-    )
-    movie = graphene.Field(
-        Movie, id=graphene.ID(), resolver=lambda self, context, id: tmdb.get_movie(id),
-    )
-    monitors = graphene.List(Monitor)
+@strawberry.type
+class Query:
+    @strawberry.field
+    def tv(self, id: ID) -> Tv:
+        return tmdb.get_tv(id)
 
-    async def resolve_monitors(self, info):
+    @strawberry.field
+    def movie(self, id: ID) -> Movie:
+        return tmdb.get_movie(id)
+
+    @strawberry.field
+    async def monitors(self, info: strawberry.Info) -> list[Monitor]:
         from .new import Monitor, get_db
 
         async def _resolve_monitors(session=Depends(get_db)):
@@ -77,15 +85,12 @@ class Query(graphene.ObjectType):
         return await get(request.app, _resolve_monitors, request)
 
 
-class Mutation(graphene.ObjectType):
-    add_download = graphene.Field(
-        graphene.String,
-        magnet=graphene.String(required=True),
-        season=graphene.Int(),
-        episode=graphene.Int(),
-    )
-
-    def resolve_add_download(self, info, magnet, season=None, episode=None):
+@strawberry.type
+class Mutation:
+    @strawberry.mutation
+    def add_download(
+        self, magnet: str, season: int | None = None, episode: int | None = None
+    ) -> str:
         t = ''
         if season is not None and episode is not None:
             t = 'specific episode'
@@ -97,9 +102,8 @@ class Mutation(graphene.ObjectType):
         return t + ' ' + magnet
 
 
-g = GraphQLApp(
-    schema=graphene.Schema(query=Query, mutation=Mutation),
-    executor_class=AsyncioExecutor,
+g = GraphQL(
+    schema=strawberry.Schema(query=Query, mutation=Mutation),
 )
 
 api.add_route('/', g, methods=['POST'])

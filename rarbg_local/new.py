@@ -31,8 +31,8 @@ from .db import (
     get_movies,
     safe_delete,
 )
-from .health import router as health
 from .graphql_endpoint import api as graphql
+from .health import router as health
 from .main import (
     add_single,
     extract_marker,
