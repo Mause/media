@@ -1,14 +1,22 @@
 from datetime import date
-from typing import Annotated
+from typing import Annotated, TypeVar
 
 import strawberry
+from dacite import from_dict
 from fastapi import Depends
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from strawberry.fastapi import GraphQLRouter
 
 from . import db, tmdb
 from .models import MonitorMediaType
 from .utils import TmdbId
+
+T = TypeVar('T')
+
+
+def convert(tv: type[T], data: BaseModel) -> T:
+    return from_dict(data_class=tv, data=data.model_dump())
 
 
 @strawberry.type
@@ -40,7 +48,7 @@ class Tv:
 
     @strawberry.field
     async def season(self, number: int) -> Season:
-        return await tmdb.get_tv_episodes(self.id, number)
+        return convert(Season, await tmdb.get_tv_episodes(TmdbId(self.id), number))
 
 
 @strawberry.type
@@ -67,11 +75,11 @@ class Monitor:
 class Query:
     @strawberry.field
     async def tv(self, id: int) -> Tv:
-        return Tv(**(await tmdb.get_tv(TmdbId(id))).model_dump())
+        return convert(Tv, await tmdb.get_tv(TmdbId(id)))
 
     @strawberry.field
     async def movie(self, id: int) -> Movie:
-        return Movie(**(await tmdb.get_movie(TmdbId(id))).model_dump())
+        return convert(Movie, await tmdb.get_movie(TmdbId(id)))
 
     @strawberry.field
     async def monitors(self, info: strawberry.Info) -> list[Monitor]:
