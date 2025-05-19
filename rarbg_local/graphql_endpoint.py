@@ -1,12 +1,13 @@
 from datetime import date
+from typing import Annotated
 
 import strawberry
 from fastapi import Depends
+from sqlalchemy.orm import Session
 from strawberry.fastapi import GraphQLRouter
 
-from . import tmdb
+from . import db, tmdb
 from .models import MonitorMediaType
-from .singleton import get
 
 ID = int
 
@@ -75,13 +76,7 @@ class Query:
 
     @strawberry.field
     async def monitors(self, info: strawberry.Info) -> list[Monitor]:
-        from .new import Monitor, get_db
-
-        async def _resolve_monitors(session=Depends(get_db)):
-            return session.query(Monitor).all()
-
-        request = info.context['request']
-        return await get(request.app, _resolve_monitors, request)
+        return info.context['session'].query(db.Monitor).all()
 
 
 @strawberry.type
@@ -101,6 +96,11 @@ class Mutation:
         return t + ' ' + magnet
 
 
+async def context_getter(session: Annotated[Session, Depends(db.get_db)]):
+    yield {'session': session}
+
+
 api = GraphQLRouter(
     schema=strawberry.Schema(query=Query, mutation=Mutation),
+    context_getter=context_getter,
 )
