@@ -1147,7 +1147,7 @@ requires-dist = [
     { name = "python-healthchecklib", specifier = ">=0.1.1" },
     { name = "python-multipart", specifier = "==0.0.20" },
     { name = "pytz", specifier = "==2025.2" },
-    { name = "sentry-sdk", specifier = "==2.28.0" },
+    { name = "sentry-sdk", specifier = "==2.29.0" },
     { name = "sqlalchemy", extras = ["mypy"], specifier = "==2.0.41" },
     { name = "sqlalchemy-repr", specifier = "==0.1.0" },
     { name = "typing-inspect", specifier = ">=0.9.0" },
@@ -2031,15 +2031,15 @@ wheels = [
 
 [[package]]
 name = "sentry-sdk"
-version = "2.28.0"
+version = "2.29.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "certifi" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/bb/6a41b2e0e9121bed4d2ec68d50568ab95c49f4744156a9bbb789c866c66d/sentry_sdk-2.28.0.tar.gz", hash = "sha256:14d2b73bc93afaf2a9412490329099e6217761cbab13b6ee8bc0e82927e1504e", size = 325052, upload-time = "2025-05-12T07:53:12.785Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/35/ec/9a313e221bb24c162f176cd7e04634f5980ce00a431befc2b2e0f78669d2/sentry_sdk-2.29.0.tar.gz", hash = "sha256:a7c6c77c46c12492c41dd70b29d481daa67cc173618c8fa60792737dbefc516b", size = 325543, upload-time = "2025-05-19T13:46:07.31Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9b/4e/b1575833094c088dfdef63fbca794518860fcbc8002aadf51ebe8b6a387f/sentry_sdk-2.28.0-py2.py3-none-any.whl", hash = "sha256:51496e6cb3cb625b99c8e08907c67a9112360259b0ef08470e532c3ab184a232", size = 341693, upload-time = "2025-05-12T07:53:10.882Z" },
+    { url = "https://files.pythonhosted.org/packages/9d/cf/fa451f0518f76b21f209a71684738a3c9aa0e36ead786a5f806c3092e647/sentry_sdk-2.29.0-py2.py3-none-any.whl", hash = "sha256:5234404e2208acbce051e374f0cfc4727d69b33c5aafa5109056949b5b847c92", size = 341552, upload-time = "2025-05-19T13:46:05.067Z" },
 ]
 
 [[package]]
