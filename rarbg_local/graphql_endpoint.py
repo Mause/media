@@ -82,7 +82,7 @@ class Query:
         return convert(Movie, await tmdb.get_movie(TmdbId(id)))
 
     @strawberry.field
-    async def monitors(self, info: strawberry.Info) -> list[Monitor]:
+    def monitors(self, info: strawberry.Info) -> list[Monitor]:
         return info.context['session'].query(db.Monitor).all()
 
 
