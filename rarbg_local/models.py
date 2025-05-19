@@ -5,7 +5,7 @@ from typing import Annotated, TypeVar
 from pydantic import BaseModel, StringConstraints
 
 from .db import MonitorMediaType
-from .types import TmdbId
+from .utils import TmdbId
 
 
 class Orm(BaseModel):

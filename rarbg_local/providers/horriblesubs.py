@@ -11,8 +11,7 @@ from lxml.html import fromstring
 from ..jikan import closeness, get_names
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_tv
-from ..types import ImdbId, TmdbId
-from ..utils import cached
+from ..utils import ImdbId, TmdbId, cached
 from .abc import TvProvider, tv_convert
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')

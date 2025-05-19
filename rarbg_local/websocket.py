@@ -19,8 +19,7 @@ from .tmdb import (
     get_movie_imdb_id,
     get_tv_imdb_id,
 )
-from .types import TmdbId
-from .utils import Message, non_null
+from .utils import Message, non_null, TmdbId
 
 logger = logging.getLogger(__name__)
 

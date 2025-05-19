@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
 
 from ..models import ITorrent, ProviderSource
-from ..types import ImdbId, TmdbId
+from ..utils import ImdbId, TmdbId
 
 
 class Provider(ABC):

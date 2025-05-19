@@ -31,8 +31,7 @@ from sqlalchemy_repr import RepresentableBase
 
 from .settings import Settings, get_settings
 from .singleton import singleton
-from .types import TmdbId
-from .utils import precondition
+from .utils import precondition, TmdbId
 
 Base = declarative_base(cls=RepresentableBase)
 logger = logging.getLogger(__name__)

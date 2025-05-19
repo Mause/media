@@ -16,8 +16,7 @@ from .models import (
     TvApiResponse,
     TvSeasonResponse,
 )
-from .types import ImdbId, TmdbId
-from .utils import cached, precondition
+from .utils import ImdbId, TmdbId, cached, precondition
 
 base = 'https://api.themoviedb.org/3/'
 

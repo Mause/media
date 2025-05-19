@@ -23,8 +23,7 @@ from .models import (
     MonitorPost,
 )
 from .tmdb import get_movie, get_tv
-from .types import TmdbId
-from .utils import non_null
+from .utils import non_null, TmdbId
 from .websocket import _stream
 
 logger = logging.getLogger(__name__)
