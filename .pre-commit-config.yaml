@@ -26,6 +26,9 @@ repos:
     hooks:
       - id: eslint
         files: ".*(\\.js|\\.jsx|\\.ts|\\.tsx)$"
+        args:
+         - --config
+         - app/eslint.config.cjs
         verbose: true
         types_or:
           - ts
