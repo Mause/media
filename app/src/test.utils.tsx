@@ -47,11 +47,9 @@ export function renderWithSWR(el: ReactElement) {
 
 export function usesMoxios() {
   beforeEach(() => {
-    // @ts-expect-error
     moxios.install(axios);
   });
   afterEach(() => {
-    // @ts-expect-error
     moxios.uninstall(axios);
   });
 }
