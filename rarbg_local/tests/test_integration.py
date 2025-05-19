@@ -659,7 +659,7 @@ async def test_piratebay(aioresponses, snapshot):
                     "username": "jajaja",
                     "added": "1688804411",
                     "status": "vip",
-                    "category": "205",
+                    "category": 205,
                     "imdb": "",
                 }
             ]
@@ -698,7 +698,7 @@ async def test_websocket(
                 title="Ancient Aliens 480p x264-mSD",
                 seeders=2,
                 download="magnet:?xt=urn:btih:00000000000000000",
-                category="205",
+                category="video - tv shows",
             )
 
     async def gcu(

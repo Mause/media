@@ -1138,7 +1138,7 @@ requires-dist = [
     { name = "lxml" },
     { name = "makefun", specifier = "==1.9.5" },
     { name = "mause-rpc", specifier = "==0.0.18" },
-    { name = "nyaapy" },
+    { name = "nyaapy", specifier = ">=0.7" },
     { name = "plexapi", specifier = "==4.17.0" },
     { name = "psycopg2-binary" },
     { name = "pydantic", specifier = ">=2.11.4" },
@@ -1240,13 +1240,16 @@ wheels = [
 
 [[package]]
 name = "nyaapy"
-version = "0.6.3"
+version = "0.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "beautifulsoup4" },
+    { name = "lxml" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c5/b5/97f314dd8116ad84d21459eee71f0c86adcae9f0b62d1f732ffe351b4c1e/nyaapy-0.6.3.tar.gz", hash = "sha256:d84e5299744c8f93b9c5b52a7a16d79b9f84e88981c10f902dac5ae0d5df5931", size = 5516, upload-time = "2022-04-23T08:46:35.833Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/38/f6/0d9d5e1814ff9c8d884a71f44121232b9dc99703abe6095c86aed1058ea3/nyaapy-0.7.tar.gz", hash = "sha256:be8e643bafccdd54999cd9b8804981b916bb8edbec6d26e53b7746bfb3c65364", size = 6296, upload-time = "2024-07-18T10:32:58.724Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/23/08/9aecef743358b6cf31398e8260f91b7417cbca9c7afb1eb66c2ddf5be0d2/nyaapy-0.7-py3-none-any.whl", hash = "sha256:88c7d79e9f517772f40028a5929cf2b81a51e03a3f1fec3d2711abe3316b9c5e", size = 7806, upload-time = "2024-07-18T10:32:57.396Z" },
+]
 
 [[package]]
 name = "outcome"

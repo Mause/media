@@ -88,22 +88,29 @@ export function usePost<T>(
   const auth = useAuth0();
 
   useEffect(() => {
-    auth.getAccessTokenSilently().then((token) => {
-      let abortController = new AbortController();
-      Axios.post<T>('/api/' + url, body, {
-        signal: abortController.signal,
-        headers: {
-          Authorization: 'Bearer ' + token,
+    const abortController = new AbortController();
+    auth
+      .getAccessTokenSilently()
+      .then((token) =>
+        Axios.post<T>('/api/' + url, body, {
+          signal: abortController.signal,
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        }),
+      )
+      .then(
+        (res) => {
+          setResult({ done: true, data: res.data });
         },
-      }).then(
-        (res) => setResult({ done: true, data: res.data }),
-        (error) => setResult({ done: true, error }),
+        (error: unknown) => {
+          setResult({ done: true, error: error as Error });
+        },
       );
 
-      return () => {
-        abortController.abort();
-      };
-    });
+    return () => {
+      abortController.abort();
+    };
   }, [url, body, auth]);
 
   return result;
