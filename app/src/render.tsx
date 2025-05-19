@@ -163,7 +163,10 @@ export function Progress({
   }
 }
 
-export function getMarker(episode: { season?: number; episode?: number }) {
+export function getMarker(episode: {
+  season?: number;
+  episode?: number | null;
+}) {
   return String.Format('S{0:00}E{1:00}', episode.season, episode.episode);
 }
 
