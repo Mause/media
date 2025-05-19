@@ -1,9 +1,9 @@
 function makeWriteableEventStream(eventTarget: EventTarget) {
   return new WritableStream({
-    start(controller) {
+    start() {
       eventTarget.dispatchEvent(new Event('start'));
     },
-    write(message, controller) {
+    write(message) {
       eventTarget.dispatchEvent(new MessageEvent('message', { data: message }));
     },
     close() {
@@ -19,7 +19,7 @@ function makeJsonDecoder() {
   let buf = '',
     pos = 0;
   return new TransformStream({
-    start(controller) {
+    start() {
       buf = '';
       pos = 0;
     },

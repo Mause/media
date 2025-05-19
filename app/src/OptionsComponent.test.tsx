@@ -19,7 +19,7 @@ class ES {
   addEventListener(name: string, ls: CB) {
     this.ls = ls;
   }
-  removeEventListener(name: string, ls: CB) {}
+  removeEventListener() {}
   close() {
     _.remove(sources, this);
   }
