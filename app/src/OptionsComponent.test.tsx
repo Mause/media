@@ -60,7 +60,7 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
   });
-  it.skip('success', async () => {
+  it.skip('success', () => {
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">

@@ -22,7 +22,7 @@ afterEach(() => {
 function Fake() {
   const [fire, setFire] = useState(false);
   useEffect(() => {
-    if (fire) axios.get('/');
+    if (fire) void axios.get('/');
     else setFire(true);
   }, [fire]);
   return <div>Thing</div>;
