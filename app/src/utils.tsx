@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import Axios from 'axios';
+import Axios, { RawAxiosRequestHeaders } from 'axios';
 import { useState, useEffect } from 'react';
 import MaterialLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
@@ -64,7 +64,7 @@ export function getPrefix() {
 export async function load<T>(
   path: string,
   params?: string,
-  headers?: any,
+  headers?: RawAxiosRequestHeaders,
 ): Promise<T> {
   const t = await Axios.get<T>(`${getPrefix()}/api/${path}`, {
     params,
