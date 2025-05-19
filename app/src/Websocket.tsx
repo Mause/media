@@ -34,7 +34,7 @@ function Websocket() {
   const { search } = useLocation();
   const query = qs.parse(search.slice(1));
   const auth = useAuth0();
-  const token = 'Bearer ' + usePromise(auth.getAccessTokenSilently, [{}]);
+  const token = 'Bearer ' + usePromise(() => auth.getAccessTokenSilently(), []);
 
   const initMessage = query.season
     ? {
