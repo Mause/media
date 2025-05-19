@@ -6,6 +6,7 @@ const {
   createTypeScriptImportResolver,
 } = require('eslint-import-resolver-typescript');
 const pluginDeprecation = require('eslint-plugin-deprecation');
+const reactPlugin = require('eslint-plugin-react')
 
 module.exports = tseslint.config(
   eslint.configs.recommended,
