@@ -8,6 +8,7 @@ from strawberry.fastapi import GraphQLRouter
 
 from . import db, tmdb
 from .models import MonitorMediaType
+from .utils import TmdbId
 
 ID = int
 
@@ -40,8 +41,8 @@ class Tv:
     imdb_id: str = strawberry.field(resolver=lambda self: tmdb.get_tv_imdb_id(self.id))
 
     @strawberry.field
-    def season(self, number: int) -> Season:
-        return tmdb.get_tv_episodes(self.id, number)
+    async def season(self, number: int) -> Season:
+        return await tmdb.get_tv_episodes(self.id, number)
 
 
 @strawberry.type
@@ -67,12 +68,12 @@ class Monitor:
 @strawberry.type
 class Query:
     @strawberry.field
-    def tv(self, id: ID) -> Tv:
-        return tmdb.get_tv(id)
+    async def tv(self, id: int) -> Tv:
+        return Tv(**(await tmdb.get_tv(TmdbId(id))).model_dump())
 
     @strawberry.field
-    def movie(self, id: ID) -> Movie:
-        return tmdb.get_movie(id)
+    async def movie(self, id: int) -> Movie:
+        return Movie(**(await tmdb.get_movie(TmdbId(id))).model_dump())
 
     @strawberry.field
     async def monitors(self, info: strawberry.Info) -> list[Monitor]:
