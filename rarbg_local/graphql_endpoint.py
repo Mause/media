@@ -10,8 +10,6 @@ from . import db, tmdb
 from .models import MonitorMediaType
 from .utils import TmdbId
 
-ID = int
-
 
 @strawberry.type
 class SeasonMeta:
@@ -22,7 +20,7 @@ class SeasonMeta:
 @strawberry.type
 class Episode:
     name: str
-    id: strawberry.ID
+    id: int
     episode_number: int
     air_date: date
 
@@ -34,7 +32,7 @@ class Season:
 
 @strawberry.type
 class Tv:
-    id: ID
+    id: int
     name: str
     number_of_seasons: int
     seasons: list[SeasonMeta]
@@ -60,7 +58,7 @@ class User:
 @strawberry.type
 class Monitor:
     title: str
-    id: ID
+    id: int
     type: MonitorMediaType
     added_by: User
 
