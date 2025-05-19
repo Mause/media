@@ -19,16 +19,19 @@ function DownloadAllComponent() {
   const season = parseInt(season_s!);
 
   const { data: torrents } = useSWR<Torrents>('torrents');
-  const { data, isValidating, error } = useSWR<{
-    packs: ITorrent[];
-    complete: MapType;
-    incomplete: MapType;
-  }>(`select/${tmdb_id}/season/${season}/download_all`);
+  const { data, isValidating, error } = useSWR<
+    {
+      packs: ITorrent[];
+      complete: MapType;
+      incomplete: MapType;
+    },
+    Error
+  >(`select/${tmdb_id}/season/${season}/download_all`);
 
   return (
     <div>
       {error && <DisplayError error={error} />}
-      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={season!} />
+      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={season} />
       <Loading loading={isValidating} />
       <div>
         <h3>Packs</h3>
@@ -50,14 +53,14 @@ function DownloadAllComponent() {
       <Individual
         label="Complete Sets"
         items={data && data.complete}
-        season={season!}
+        season={season}
         tmdb_id={tmdb_id!}
         torrents={torrents}
       />
       <Individual
         label="Incomplete Sets"
         items={data && data.incomplete}
-        season={season!}
+        season={season}
         tmdb_id={tmdb_id!}
         torrents={torrents}
       />

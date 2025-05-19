@@ -72,7 +72,10 @@ function RouteTitle({
 
 function reportError(error: Error, info: ErrorInfo) {
   Sentry.withScope((scope) => {
-    scope.setExtras(info as Record<string, any>);
+    scope.setExtras({
+      componentStack: info.componentStack,
+      digest: info.digest,
+    });
     const eventId = Sentry.captureException(error);
     Sentry.showReportDialog({ eventId });
   });
@@ -94,7 +97,7 @@ const Login = () => {
 
   if (isAuthenticated) {
     return (
-      <MaterialLink href="#" onClick={() => logout({})} underline="hover">
+      <MaterialLink href="#" onClick={() => void logout({})} underline="hover">
         Logout
       </MaterialLink>
     );
@@ -102,7 +105,7 @@ const Login = () => {
     return (
       <MaterialLink
         href="#"
-        onClick={() => loginWithRedirect({})}
+        onClick={() => void loginWithRedirect({})}
         underline="hover"
       >
         Login
@@ -147,14 +150,15 @@ function ParentComponentInt() {
       <ErrorBoundary
         onError={reportError}
         FallbackComponent={(props: FallbackProps) => {
+          const error = props.error as Error;
           return (
             <div>
               An error has occured:
               <code>
                 <pre>
-                  {props.error!!.message}
-                  {props
-                    .error!!.stack?.toString()
+                  {error.message}
+                  {error.stack
+                    ?.toString()
                     .split('\n')
                     .map((line: string) => (
                       <span key={line}>
@@ -185,7 +189,7 @@ function SwrConfigWrapper({
       value={{
         // five minute refresh
         refreshInterval: 5 * 60 * 1000,
-        fetcher: async (path, params) =>
+        fetcher: async (path: string, params: string) =>
           await load(
             path,
             params,

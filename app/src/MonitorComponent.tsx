@@ -40,7 +40,7 @@ export function MonitorComponent() {
                 <ContextMenu>
                   <MenuItem
                     onClick={() =>
-                      navigate(
+                      void navigate(
                         m.type === 'MOVIE'
                           ? `/select/${m.tmdb_id}/options`
                           : `/select/${m.tmdb_id}/season`,
@@ -49,7 +49,9 @@ export function MonitorComponent() {
                   >
                     Search
                   </MenuItem>
-                  <MenuItem onClick={() => navigate(`/monitor/delete/${m.id}`)}>
+                  <MenuItem
+                    onClick={() => void navigate(`/monitor/delete/${m.id}`)}
+                  >
                     Delete
                   </MenuItem>
                 </ContextMenu>
@@ -84,9 +86,14 @@ function useDelete(path: string) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    Axios.delete(`/api/${path}`, { withCredentials: true }).then(() =>
-      setDone(true),
-    );
+    const controller = new AbortController();
+    void Axios.delete(`/api/${path}`, {
+      withCredentials: true,
+      signal: controller.signal,
+    }).then(() => setDone(true));
+    return () => {
+      controller.abort();
+    };
   }, [path]);
 
   return done;

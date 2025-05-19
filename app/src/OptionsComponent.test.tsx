@@ -19,7 +19,7 @@ class ES {
   addEventListener(name: string, ls: CB) {
     this.ls = ls;
   }
-  removeEventListener(name: string, ls: CB) {}
+  removeEventListener() {}
   close() {
     _.remove(sources, this);
   }
@@ -29,7 +29,7 @@ Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
   it.skip('failure', async () => {
-    let { container } = renderWithSWR(
+    const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
           <OptionsComponent type="movie" />
@@ -42,7 +42,7 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
 
-    await act(async () => {
+    act(() => {
       for (const source of sources) {
         source.onerror!(new Event('message'));
       }
@@ -60,16 +60,16 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
   });
-  it.skip('success', async () => {
-    let { container } = renderWithSWR(
+  it.skip('success', () => {
+    const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
           <OptionsComponent type="movie" />
         </Route>
       </MemoryRouter>,
     );
-    await act(async () => {
-      mock('movie/1', { title: 'Hello World' });
+    act(() => {
+      void mock('movie/1', { title: 'Hello World' });
     });
 
     expect(container).toMatchSnapshot();
@@ -87,9 +87,9 @@ describe('OptionsComponent', () => {
 
     let i = 0;
     const source_names = ['RARBG', 'HORRIBLESUBS', 'KICKASS'];
-    await act(async () => {
+    act(() => {
       for (const source of sources) {
-        source!.ls!({
+        source.ls!({
           data: JSON.stringify({
             ...torrent,
             source: source_names[i],
@@ -101,9 +101,9 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
 
-    await act(async () => {
+    act(() => {
       for (const source of sources) {
-        source!.ls!({ data: '' });
+        source.ls!({ data: '' });
       }
     });
 

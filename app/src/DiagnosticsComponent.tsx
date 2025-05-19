@@ -20,7 +20,7 @@ function getColour(status?: HealthcheckResponse['status']) {
 }
 
 function SingleDiagnostic({ component }: { component: string }) {
-  const { error, data, isValidating } = useSWR<HealthcheckResponse[]>(
+  const { error, data, isValidating } = useSWR<HealthcheckResponse[], Error>(
     `diagnostics/${component}`,
   );
 
@@ -82,7 +82,7 @@ export function SimpleDiagnosticDisplay({
 }
 
 export function DiagnosticsComponent() {
-  const { error, data, isValidating } = useSWR<string[]>('diagnostics');
+  const { error, data, isValidating } = useSWR<string[], Error>('diagnostics');
 
   return (
     <div>

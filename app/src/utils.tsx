@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import Axios from 'axios';
+import Axios, { RawAxiosRequestHeaders } from 'axios';
 import { useState, useEffect } from 'react';
 import MaterialLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
@@ -38,7 +38,7 @@ export function subscribe<T>(
   };
   es.addEventListener('abort', onerror);
   const internal_callback = (event: Event) => {
-    callback((event as MessageEvent).data);
+    callback((event as MessageEvent).data as T);
   };
   es.addEventListener('message', internal_callback);
 
@@ -50,7 +50,7 @@ export function subscribe<T>(
 }
 
 export function getPrefix() {
-  const prefix = import.meta.env.REACT_APP_API_PREFIX as string | undefined;
+  const prefix = import.meta.env.REACT_APP_API_PREFIX;
 
   if (!prefix) {
     return '';
@@ -64,7 +64,7 @@ export function getPrefix() {
 export async function load<T>(
   path: string,
   params?: string,
-  headers?: any,
+  headers?: RawAxiosRequestHeaders,
 ): Promise<T> {
   const t = await Axios.get<T>(`${getPrefix()}/api/${path}`, {
     params,
@@ -130,10 +130,10 @@ export function ExtMLink(props: { href: string; children: string }) {
 }
 
 export function expectLastRequestBody() {
-  return expect(JSON.parse(moxios.requests.mostRecent().config.data));
+  return expect(JSON.parse(moxios.requests.mostRecent().config.data as string));
 }
 
 export function useLocation<T>() {
   const location = RRD.useLocation();
-  return { ...location, state: location.state as any as T };
+  return { ...location, state: location.state as T };
 }

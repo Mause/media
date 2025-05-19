@@ -258,7 +258,7 @@ function useToken() {
   const auth = useAuth0();
   const [token, setToken] = useState<string>();
   useEffect(() => {
-    auth.getAccessTokenSilently().then(setToken);
+    void auth.getAccessTokenSilently().then(setToken);
   }, [auth]);
   return token;
 }

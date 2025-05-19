@@ -163,7 +163,10 @@ export function Progress({
   }
 }
 
-export function getMarker(episode: { season?: any; episode?: any }) {
+export function getMarker(episode: {
+  season?: number;
+  episode?: number | null;
+}) {
   return String.Format('S{0:00}E{1:00}', episode.season, episode.episode);
 }
 
@@ -241,7 +244,9 @@ function Series({
             </MenuItem>
           )}
           <OpenPlex download={serie} />
-          <MenuItem onClick={() => navigate(`/select/${serie.tmdb_id}/season`)}>
+          <MenuItem
+            onClick={() => void navigate(`/select/${serie.tmdb_id}/season`)}
+          >
             Search
           </MenuItem>
         </ContextMenu>
