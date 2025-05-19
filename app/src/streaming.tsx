@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react';
-import React from 'react';
+import { ErrorInfo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
   BrowserRouter as Router,
@@ -70,9 +70,9 @@ function RouteTitle({
   );
 }
 
-function reportError(error: Error, info: { componentStack: string }) {
+function reportError(error: Error, info: ErrorInfo) {
   Sentry.withScope((scope) => {
-    scope.setExtras(info);
+    scope.setExtras(info as Record<string, any>);
     const eventId = Sentry.captureException(error);
     Sentry.showReportDialog({ eventId });
   });
@@ -156,7 +156,7 @@ function ParentComponentInt() {
                   {props
                     .error!!.stack?.toString()
                     .split('\n')
-                    .map((line) => (
+                    .map((line: string) => (
                       <span key={line}>
                         {line}
                         <br />
