@@ -46,12 +46,12 @@ export function FetchEventTarget(url: string, init: RequestInit) {
   const jsonDecoder = makeJsonDecoder();
   const eventStream = makeWriteableEventStream(eventTarget);
   fetch(url, init)
-    .then((response) => {
+    .then((response) =>
       response
         .body!.pipeThrough(new TextDecoderStream())
         .pipeThrough(jsonDecoder)
-        .pipeTo(eventStream);
-    })
+        .pipeTo(eventStream),
+    )
     .catch((error) => {
       eventTarget.dispatchEvent(new CustomEvent('error', { detail: error }));
     });
