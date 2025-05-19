@@ -36,6 +36,7 @@
     "react-promise-suspense": "^0.3.4",
     "react-router-dom": "^7.0.0",
     "react-use-websocket": "^4.13.0",
+    "recoil": "^0.7.7",
     "swr": "^2.0.0",
     "typescript": "^5",
     "typescript-string-operations": "^1.5.1"

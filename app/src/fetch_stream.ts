@@ -47,7 +47,7 @@ export function FetchEventTarget(url: string, init: RequestInit) {
   const eventStream = makeWriteableEventStream(eventTarget);
   fetch(url, init)
     .then((response) => {
-      response
+      return response
         .body!.pipeThrough(new TextDecoderStream())
         .pipeThrough(jsonDecoder)
         .pipeTo(eventStream);

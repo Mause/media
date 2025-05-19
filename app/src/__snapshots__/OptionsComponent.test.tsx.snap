@@ -1,0 +1,227 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`OptionsComponent > failure 1`] = `
+<div>
+  <div>
+    <nav
+      aria-label="breadcrumb"
+      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
+    >
+      <ol
+        class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
+      >
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <nav
+            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
+          >
+            <ol
+              class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
+            >
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+                  data-discover="true"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-hidden="true"
+                class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
+              >
+                /
+              </li>
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-rizt0-MuiTypography-root"
+                >
+                  Search Results
+                </p>
+              </li>
+            </ol>
+          </nav>
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-1bgbmvw-MuiTypography-root"
+          >
+            Hello World
+          </p>
+        </li>
+      </ol>
+    </nav>
+    <div>
+      <p>
+        No results
+      </p>
+    </div>
+    <ul>
+      <li>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
+          href="/manual"
+        >
+          Add manually
+        </a>
+      </li>
+      <li>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
+          href="/monitor/add/1"
+        >
+          Add to monitor
+        </a>
+      </li>
+      <li>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
+          href="/websocket/1"
+        >
+          Search with websockets
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`OptionsComponent > renders a single provider 1`] = `
+<div>
+  <div>
+    frogs
+    : 
+    0
+  </div>
+</div>
+`;
+
+exports[`OptionsComponent > renders a single provider 2`] = `
+<div>
+  <div>
+    frogs
+    : 
+    1
+  </div>
+</div>
+`;
+
+exports[`OptionsComponent > success 1`] = `
+<div>
+  <div>
+    <nav
+      aria-label="breadcrumb"
+      class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
+    >
+      <ol
+        class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
+      >
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <nav
+            class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
+          >
+            <ol
+              class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
+            >
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+                  data-discover="true"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-hidden="true"
+                class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
+              >
+                /
+              </li>
+              <li
+                class="MuiBreadcrumbs-li"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-rizt0-MuiTypography-root"
+                >
+                  Search Results
+                </p>
+              </li>
+            </ol>
+          </nav>
+        </li>
+        <li
+          aria-hidden="true"
+          class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
+        >
+          /
+        </li>
+        <li
+          class="MuiBreadcrumbs-li"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-1bgbmvw-MuiTypography-root"
+          >
+            Hello World
+          </p>
+        </li>
+      </ol>
+    </nav>
+    <div>
+      <p>
+        No results
+      </p>
+    </div>
+    <ul>
+      <li>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
+          href="/manual"
+        >
+          Add manually
+        </a>
+      </li>
+      <li>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
+          href="/monitor/add/1"
+        >
+          Add to monitor
+        </a>
+      </li>
+      <li>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
+          href="/websocket/1"
+        >
+          Search with websockets
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;

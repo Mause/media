@@ -13,6 +13,12 @@ import { DisplayError } from './IndexComponent';
 import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
 import { Alert } from '@mui/material';
+import { atom, useRecoilValue, useRecoilState } from 'recoil';
+
+const torrentState = atom<ITorrent[]>({
+  key: 'torrentState',
+  default: [],
+});
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
@@ -97,13 +103,9 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     (season ? 'tv' : 'movie') + '/' + tmdb_id,
   );
   const { data: torrents } = useSWR<Torrents>('torrents');
-  const {
-    items: results,
-    loading,
-    errors,
-  } = useSubscribes<ITorrent>(
-    `/api/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
-  );
+
+  const results = useRecoilValue(torrentState);
+
   const dt = (result: ITorrent) => (
     <DisplayTorrent
       tmdb_id={tmdb_id!}
@@ -154,25 +156,14 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     );
   }
 
+  const baseUrl = `/api/stream/${type}/${tmdb_id}`;
   return (
     <div>
       {header}
-      <div style={{ textAlign: 'center' }}>
-        <Loading loading={loading.length !== 0} large={true} />
-      </div>
-      {Object.entries(errors).map(([key, error]) => (
-        <DisplayError
-          key={key}
-          message={`Error occured whilst loading options from ${key}`}
-          error={error}
-        />
-      ))}
-      {loading.map((source) => (
-        <Alert key={source} color="info">
-          Loading options from {source}
-        </Alert>
-      ))}
-      {bits.length || loading.length !== 0 ? (
+
+      <Subscribes baseUrl={baseUrl} params={{ season, episode }} />
+
+      {bits.length ? (
         <div>
           <p>Auto selection: {auto ? dt(auto) : 'None'}</p>
           <ul>{bits}</ul>
@@ -211,65 +202,84 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   );
 }
 
-interface SubscriptionShape<T> {
-  items: T[];
+export function TorrentProvider({
+  baseUrl,
+  params,
+  name,
+}: {
+  baseUrl: string;
+  params: Record<string, string | undefined>;
   name: string;
-  loading: boolean;
-  error?: Error;
-}
+}) {
+  const authorization = useToken();
+  const url = baseUrl + '?' + qs.stringify({ ...params, source: name });
 
-function useSubscribe<T>(
-  baseUrl: string,
-  name: string,
-  authorization?: string,
-): SubscriptionShape<T> {
-  const url = baseUrl + '&source=' + name;
-  const [subscription, setSubscription] = useState<SubscriptionShape<T>>({
-    items: [],
-    loading: true,
-    name,
-    error: undefined,
-  });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | undefined>(undefined);
+
+  const [torrentStateValue, setTorrentState] = useRecoilState(torrentState);
 
   useEffect(() => {
     if (!authorization) return; // don't subscribe until we have auth
 
-    const items: T[] = [];
-    return subscribe<T>(
+    return subscribe<ITorrent>(
       url,
       (data) => {
-        items.push(data);
-        setSubscription({
-          items,
-          name,
-          loading: true,
-        });
+        setTorrentState((oldTorrents) => [...oldTorrents, data]);
       },
-      (error) => setSubscription({ name, error, loading: false, items }),
+      (error) => {
+        setLoading(false);
+        setError(error);
+      },
       authorization,
-      () => setSubscription({ name, loading: false, items }),
+      () => setLoading(false),
     );
   }, [url, authorization, name]);
 
-  return subscription;
+  return (
+    <>
+      {loading && (
+        <div style={{ textAlign: 'center' }}>
+          <Alert color="info">Loading options from {name}</Alert>
+          <Loading loading={true} large={true} />
+        </div>
+      )}
+      <div>
+        {name}: {torrentStateValue.length}
+      </div>
+      {error && (
+        <DisplayError
+          message={`Error occured whilst loading options from ${name}`}
+          error={error}
+        />
+      )}
+    </>
+  );
 }
 
 function useToken() {
   const auth = useAuth0();
   const [token, setToken] = useState<string>();
   useEffect(() => {
-    auth.getAccessTokenSilently().then(setToken);
+    auth.getAccessTokenSilently().then(
+      (tok) => {
+        setToken(tok);
+      },
+      (err) => {
+        console.error('Error getting token', err);
+      },
+    );
   }, [auth]);
   return token;
 }
 
-function useSubscribes<T>(url: string): {
-  items: T[];
-  loading: string[];
-  errors: { [key: string]: Error };
-} {
-  const token = useToken();
-
+function Subscribes({
+  baseUrl,
+  params,
+}: {
+  baseUrl: string;
+  params: Record<string, string | undefined>;
+}) {
   const p: ProviderSource[] = [
     /*
     'rarbg',
@@ -280,26 +290,19 @@ function useSubscribes<T>(url: string): {
     'nyaasi',
     'piratebay',
   ];
-  const providers = [
-    useSubscribe<T>(url, p[0], token),
-    useSubscribe<T>(url, p[1], token),
-    useSubscribe<T>(url, p[2], token),
-    /*
-    useSubscribe<T>(url, p[3], token),
-    useSubscribe<T>(url, p[4], token),
-    useSubscribe<T>(url, p[5], token),
-    */
-  ];
 
-  return {
-    items: providers
-      .map((t) => t.items || [])
-      .reduce((a, b) => a.concat(b), []),
-    loading: providers.filter((t) => t.loading).map((t) => t.name),
-    errors: _.fromPairs(
-      providers.filter((t) => t.error).map((t, i) => [p[i], t.error]),
-    ) as { [key: string]: Error },
-  };
+  return (
+    <>
+      {p.map((provider) => (
+        <TorrentProvider
+          key={provider}
+          params={params}
+          baseUrl={baseUrl}
+          name={provider}
+        />
+      ))}
+    </>
+  );
 }
 
 export { OptionsComponent };

@@ -1,9 +1,30 @@
 import { act } from 'react';
 import { screen } from '@testing-library/react';
-import { OptionsComponent, ITorrent } from './OptionsComponent';
-import { MemoryRouter, Route } from 'react-router-dom';
+import {
+  OptionsComponent,
+  ITorrent,
+  TorrentProvider,
+} from './OptionsComponent';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
+import { RecoilRoot } from 'recoil';
 import _ from 'lodash';
+import { vi } from 'vitest';
+import { useAuth0 } from '@auth0/auth0-react';
+
+vi.mock('@auth0/auth0-react', async (importOriginal) => {
+  const original = await importOriginal();
+  const useAuth0 = vi.fn();
+
+  useAuth0.mockReturnValue({
+    getAccessTokenSilently: vi.fn(),
+  });
+
+  return {
+    ...original,
+    useAuth0,
+  };
+});
 
 usesMoxios();
 
@@ -27,13 +48,44 @@ class ES {
 
 Object.defineProperty(window, 'EventSource', { value: ES });
 
+function mockAuth0() {
+  let lresolve: (value: unknown) => void;
+  let promise = new Promise((resolve) => (lresolve = resolve));
+  // @ts-expect-error
+  useAuth0.mockReturnValue({
+    getAccessTokenSilently: () => promise,
+  });
+  return lresolve;
+}
+
+function mockFetchStream(events: T[]) {
+  const rs = new ReadableStream({
+    start(controller) {
+      for (const event of events) {
+        controller.enqueue(
+          Buffer.from('data: ' + JSON.stringify(event) + '\n'),
+        );
+      }
+      controller.close();
+    },
+  });
+  vi.spyOn(window, 'fetch').mockResolvedValue(new Response(rs));
+}
+
 describe('OptionsComponent', () => {
   it.skip('failure', async () => {
     let { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
-        <Route path="/select/:tmdb_id/options">
-          <OptionsComponent type="movie" />
-        </Route>
+        <Routes>
+          <Route
+            path="/select/:tmdb_id/options"
+            element={
+              <RecoilRoot>
+                <OptionsComponent type="movie" />
+              </RecoilRoot>
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     );
 
@@ -63,9 +115,16 @@ describe('OptionsComponent', () => {
   it.skip('success', async () => {
     let { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
-        <Route path="/select/:tmdb_id/options">
-          <OptionsComponent type="movie" />
-        </Route>
+        <Routes>
+          <Route
+            path="/select/:tmdb_id/options"
+            element={
+              <RecoilRoot>
+                <OptionsComponent type="movie" />
+              </RecoilRoot>
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     );
     await act(async () => {
@@ -74,30 +133,16 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
 
-    const torrent: ITorrent = {
-      source: 'rarbg',
-      title: 'title',
-      seeders: 5,
-      download: 'magnet:...',
-      category: 'x264/1080',
-      episode_info: { seasonnum: 1, epnum: 1 },
-    };
-
-    expect(sources).toHaveLength(3);
-
-    let i = 0;
-    const source_names = ['RARBG', 'HORRIBLESUBS', 'KICKASS'];
-    await act(async () => {
-      for (const source of sources) {
-        source!.ls!({
-          data: JSON.stringify({
-            ...torrent,
-            source: source_names[i],
-            title: 'title ' + i++,
-          }),
-        });
-      }
-    });
+    mockFetchStream([
+      {
+        source: 'rarbg',
+        title: 'title',
+        seeders: 5,
+        download: 'magnet:...',
+        category: 'x264/1080',
+        episode_info: { seasonnum: 1, epnum: 1 },
+      },
+    ]);
 
     expect(container).toMatchSnapshot();
 
@@ -105,6 +150,35 @@ describe('OptionsComponent', () => {
       for (const source of sources) {
         source!.ls!({ data: '' });
       }
+    });
+
+    expect(container).toMatchSnapshot();
+  });
+
+  it('renders a single provider', async () => {
+    const lresolve = mockAuth0();
+
+    mockFetchStream([{}]);
+
+    const { container } = renderWithSWR(
+      <MemoryRouter initialEntries={['/select/1/options']}>
+        <Routes>
+          <Route
+            path="/select/:tmdb_id/options"
+            element={
+              <RecoilRoot>
+                <TorrentProvider baseUrl="/" params={{}} name="frogs" />
+              </RecoilRoot>
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(container).toMatchSnapshot();
+
+    await act(() => {
+      lresolve('token');
     });
 
     expect(container).toMatchSnapshot();
