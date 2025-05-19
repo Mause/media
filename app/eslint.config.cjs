@@ -10,6 +10,7 @@ const pluginDeprecation = require('eslint-plugin-deprecation');
 module.exports = tseslint.config(
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
+  tseslint.configs.strictTypeChecked,
   {
     languageOptions: {
       parserOptions: {
@@ -38,4 +39,13 @@ module.exports = tseslint.config(
   eslintImport.flatConfigs.recommended,
   eslintImport.flatConfigs.typescript,
   eslintImport.flatConfigs.react,
+  {
+    settings: {
+      react: {
+        version: '18',
+      },
+    },
+  },
+  reactPlugin.configs.flat.recommended, // This is not a plugin object, but a shareable config object
+  reactPlugin.configs.flat['jsx-runtime'], // Add this if you are using React 17+
 );
