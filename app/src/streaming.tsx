@@ -14,7 +14,7 @@ import {
 } from './SeasonSelectComponent';
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
+import { ErrorBoundary, FallbackProps, ErrorInfo } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
 import { Grid } from '@mui/material';
@@ -70,7 +70,7 @@ function RouteTitle({
   );
 }
 
-function reportError(error: Error, info: { componentStack: string }) {
+function reportError(error: Error, info: ErrorInfo) {
   Sentry.withScope((scope) => {
     scope.setExtras(info);
     const eventId = Sentry.captureException(error);
