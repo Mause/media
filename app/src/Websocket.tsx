@@ -9,7 +9,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { getPrefix } from './utils';
 
 function useMessages<T>(initMessage: object) {
-  let base = getPrefix();
+  const base = getPrefix();
   const url = `${base}/ws`;
 
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);

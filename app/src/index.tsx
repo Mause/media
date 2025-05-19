@@ -27,7 +27,7 @@ const root = createRoot(container!);
 const rootEl = (
   <Auth0Provider
     domain="mause.au.auth0.com"
-    clientId={clientId!}
+    clientId={clientId}
     authorizationParams={{
       audience: audience!,
       redirect_uri: window.location.origin,
