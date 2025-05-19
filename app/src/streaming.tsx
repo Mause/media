@@ -150,14 +150,15 @@ function ParentComponentInt() {
       <ErrorBoundary
         onError={reportError}
         FallbackComponent={(props: FallbackProps) => {
+          const error = props.error as Error;
           return (
             <div>
               An error has occured:
               <code>
                 <pre>
-                  {props.error!.message}
-                  {props
-                    .error!.stack?.toString()
+                  {error.message}
+                  {error.stack
+                    ?.toString()
                     .split('\n')
                     .map((line: string) => (
                       <span key={line}>
