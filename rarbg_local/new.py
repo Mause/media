@@ -416,7 +416,11 @@ def create_app():
         prefix='/api',
         dependencies=[security],
     )
-    app.include_router(graphql, prefix='/graphql')
+    app.include_router(
+        graphql,
+        prefix='/graphql',
+        dependencies=[security],
+    )
     app.include_router(root, prefix='')
 
     origins = []
