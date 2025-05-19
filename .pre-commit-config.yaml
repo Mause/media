@@ -33,8 +33,6 @@ repos:
         types_or:
           - ts
           - tsx
-          - javascript
-          - jsx
         additional_dependencies:
           - eslint@^9
           - "@eslint/js@9.26.0"
