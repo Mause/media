@@ -19,7 +19,7 @@ class SeasonMeta:
 
 @strawberry.type
 class Episode:
-    name: int
+    name: str
     id: strawberry.ID
     episode_number: int
     air_date: date
