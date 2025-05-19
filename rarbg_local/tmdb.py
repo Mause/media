@@ -2,7 +2,7 @@ import os
 from datetime import date
 from enum import Enum
 from itertools import chain
-from typing import Literal
+from typing import Any, Literal
 
 import aiohttp
 import aiohttp.web_exceptions
@@ -33,7 +33,7 @@ def try_(dic: dict[str, str], *keys: str) -> str | None:
     max_tries=5,
     giveup=lambda e: not isinstance(e, aiohttp.web_exceptions.HTTPTooManyRequests),
 )
-async def get_json(path, **kwargs):
+async def get_json(path: str, **kwargs: Any) -> Any:
     access_token = (
         'fake'
         if 'PYTEST_CURRENT_TEST' in os.environ
