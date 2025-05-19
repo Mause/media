@@ -27,7 +27,7 @@ function IndexComponent() {
     data: torrents,
     isValidating: loadingTorrents,
     error,
-  } = useSWR<Torrents>('torrents', CFG);
+  } = useSWR<Torrents, Error>('torrents', CFG);
 
   const loading = loadingState || loadingTorrents;
 

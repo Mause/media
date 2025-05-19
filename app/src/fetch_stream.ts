@@ -52,8 +52,10 @@ export function FetchEventTarget(url: string, init: RequestInit) {
         .pipeThrough(jsonDecoder)
         .pipeTo(eventStream),
     )
-    .catch((error) => {
-      eventTarget.dispatchEvent(new CustomEvent('error', { detail: error }));
+    .catch((error: unknown) => {
+      eventTarget.dispatchEvent(
+        new CustomEvent('error', { detail: error as Error }),
+      );
     });
   return eventTarget;
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export default function AxiosErrorCatcher(props: { children: any }) {
-  const [error, setError] = useState();
+  const [error, setError] = useState<Error>();
 
   useEffect(() => {
     const reqId = axios.interceptors.request.use((req) => {

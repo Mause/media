@@ -19,11 +19,14 @@ function DownloadAllComponent() {
   const season = parseInt(season_s!);
 
   const { data: torrents } = useSWR<Torrents>('torrents');
-  const { data, isValidating, error } = useSWR<{
-    packs: ITorrent[];
-    complete: MapType;
-    incomplete: MapType;
-  }>(`select/${tmdb_id}/season/${season}/download_all`);
+  const { data, isValidating, error } = useSWR<
+    {
+      packs: ITorrent[];
+      complete: MapType;
+      incomplete: MapType;
+    },
+    Error
+  >(`select/${tmdb_id}/season/${season}/download_all`);
 
   return (
     <div>
