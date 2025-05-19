@@ -1,14 +1,13 @@
 from datetime import date
 
 import strawberry
-from fastapi import APIRouter, Depends
-from strawberry.asgi import GraphQL
+from fastapi import Depends
+from strawberry.fastapi import GraphQLRouter
 
 from . import tmdb
 from .models import MonitorMediaType
 from .singleton import get
 
-api = APIRouter()
 ID = int
 
 
@@ -102,8 +101,6 @@ class Mutation:
         return t + ' ' + magnet
 
 
-g = GraphQL(
+api = GraphQLRouter(
     schema=strawberry.Schema(query=Query, mutation=Mutation),
 )
-
-api.add_route('/', g, methods=['POST'])
