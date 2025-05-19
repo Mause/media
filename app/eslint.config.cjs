@@ -6,7 +6,7 @@ const {
   createTypeScriptImportResolver,
 } = require('eslint-import-resolver-typescript');
 const pluginDeprecation = require('eslint-plugin-deprecation');
-const reactPlugin = require('eslint-plugin-react')
+const reactPlugin = require('eslint-plugin-react');
 
 module.exports = tseslint.config(
   eslint.configs.recommended,
@@ -35,18 +35,14 @@ module.exports = tseslint.config(
     },
     settings: {
       'import-x/resolver-next': [createTypeScriptImportResolver({})],
-    },
-  },
-  eslintImport.flatConfigs.recommended,
-  eslintImport.flatConfigs.typescript,
-  eslintImport.flatConfigs.react,
-  {
-    settings: {
       react: {
         version: '18',
       },
     },
   },
+  eslintImport.flatConfigs.recommended,
+  eslintImport.flatConfigs.typescript,
+  eslintImport.flatConfigs.react,
   reactPlugin.configs.flat.recommended, // This is not a plugin object, but a shareable config object
   reactPlugin.configs.flat['jsx-runtime'], // Add this if you are using React 17+
 );
