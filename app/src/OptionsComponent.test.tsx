@@ -69,7 +69,7 @@ describe('OptionsComponent', () => {
       </MemoryRouter>,
     );
     await act(async () => {
-      mock('movie/1', { title: 'Hello World' });
+      void mock('movie/1', { title: 'Hello World' });
     });
 
     expect(container).toMatchSnapshot();

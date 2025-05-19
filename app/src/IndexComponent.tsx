@@ -63,7 +63,7 @@ export function DisplayError(props: { error: Error; message?: string }) {
 export function SearchBox() {
   function search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    navigate({ pathname: '/search', search: qs.stringify({ query }) });
+    void navigate({ pathname: '/search', search: qs.stringify({ query }) });
   }
 
   const [query, setQuery] = useState('');

@@ -94,7 +94,7 @@ const Login = () => {
 
   if (isAuthenticated) {
     return (
-      <MaterialLink href="#" onClick={() => logout({})} underline="hover">
+      <MaterialLink href="#" onClick={() => void logout({})} underline="hover">
         Logout
       </MaterialLink>
     );
@@ -102,7 +102,7 @@ const Login = () => {
     return (
       <MaterialLink
         href="#"
-        onClick={() => loginWithRedirect({})}
+        onClick={() => void loginWithRedirect({})}
         underline="hover"
       >
         Login

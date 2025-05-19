@@ -241,7 +241,9 @@ function Series({
             </MenuItem>
           )}
           <OpenPlex download={serie} />
-          <MenuItem onClick={() => navigate(`/select/${serie.tmdb_id}/season`)}>
+          <MenuItem
+            onClick={() => void navigate(`/select/${serie.tmdb_id}/season`)}
+          >
             Search
           </MenuItem>
         </ContextMenu>
