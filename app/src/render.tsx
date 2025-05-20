@@ -67,12 +67,13 @@ export function Movies({
 }) {
   const sortedMovies = _.groupBy(
     movies,
-    (movie) => !!(torrents && getProgress(movie, torrents)?.percentDone === 1),
-  );
+    (movie) =>
+      torrents !== undefined && getProgress(movie, torrents)?.percentDone === 1,
+  ) as { true?: MovieResponse[]; false?: MovieResponse[] };
 
   const head = (icon: IconDefinition) => (
     <h4>
-      Finished downloads ({sortedMovies.true.length}){' '}
+      Finished downloads ({sortedMovies.true?.length || 0}){' '}
       <FontAwesomeIcon
         icon={icon}
         size="2x"
@@ -87,7 +88,7 @@ export function Movies({
       <h2>
         Movies <Loading loading={loading} />
       </h2>
-      {sortedMovies?.true?.length ? (
+      {sortedMovies.true?.length ? (
         <Collapsible
           trigger={head(faCaretDown)}
           triggerElementProps={{
@@ -97,7 +98,7 @@ export function Movies({
           triggerWhenOpen={head(faCaretUp)}
         >
           <ul>
-            {(sortedMovies.true || []).map((movie) => (
+            {sortedMovies.true.map((movie) => (
               <li key={movie.id}>
                 <span>{movie.download.title}</span>
               </li>
@@ -119,11 +120,11 @@ export function Movies({
               >
                 Open in IMDB
               </MenuItem>
-              {movie.download.added_by ? (
+              {
                 <MenuItem>
                   Added by: {movie.download.added_by.username}
                 </MenuItem>
-              ) : null}
+              }
             </ContextMenu>
             &nbsp;
             <Progress torrents={torrents} item={movie} />
@@ -182,8 +183,8 @@ function getProgress(
   if (tid.includes('.')) {
     tid = tid.split('.')[0];
     const marker = getMarker(item as EpisodeResponse);
+    if (!(tid in torrents)) return null;
     const torrent = torrents[tid];
-    if (!torrent) return null;
     eta = torrent.eta;
     const tf = torrent.files.find((file) => file.name.includes(marker));
     if (tf) {
@@ -402,7 +403,7 @@ export function shouldCollapse(
     const i_i = +i;
     const seasonMeta = data.seasons.find((s) => s.season_number === i_i);
     if (seasonMeta) {
-      const hasNext = true; // !!data.seasons[i_i + 1];
+      const hasNext = i_i + 1 > data.seasons.length;
 
       const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
       const hasNumbers = _.map(episodes, 'episode');
