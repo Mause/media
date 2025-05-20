@@ -1,8 +1,8 @@
 import ReactLoading from 'react-loading';
 import useSWR from 'swr';
-import { components } from './schema';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { components } from './schema';
 
 type HealthcheckResponse = components['schemas']['HealthcheckResponse'];
 

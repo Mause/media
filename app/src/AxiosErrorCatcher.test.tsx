@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 import React, { useEffect, useState } from 'react';
-import AxiosErrorCatcher from './AxiosErrorCatcher';
-import { wait, usesMoxios } from './test.utils';
 import moxios from 'moxios';
 import axios from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
+import { wait, usesMoxios } from './test.utils';
+import AxiosErrorCatcher from './AxiosErrorCatcher';
 
 usesMoxios();
 

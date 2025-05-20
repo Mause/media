@@ -1,16 +1,16 @@
 import _ from 'lodash';
 import qs from 'qs';
 import React, { useState, useEffect } from 'react';
-import { subscribe, MLink } from './utils';
-import { Torrents } from './streaming';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { Loading } from './render';
 import { Breadcrumbs, Typography, Alert } from '@mui/material';
+import { useAuth0 } from '@auth0/auth0-react';
+import { subscribe, MLink } from './utils';
+import { Torrents } from './streaming';
+import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
 import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
-import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
 
 export type ITorrent = components['schemas']['ITorrent'];

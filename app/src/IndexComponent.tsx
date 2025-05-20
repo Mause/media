@@ -1,6 +1,4 @@
 import React, { FormEvent, useState } from 'react';
-import { TVShows, Movies } from './render';
-import { IndexResponse, Torrents } from './streaming';
 import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
 import useSWR from 'swr';
@@ -14,6 +12,8 @@ import {
 } from '@mui/material';
 import _ from 'lodash';
 import Search from '@mui/icons-material/Search';
+import { IndexResponse, Torrents } from './streaming';
+import { TVShows, Movies } from './render';
 
 const CFG = {
   refreshInterval: 10000,

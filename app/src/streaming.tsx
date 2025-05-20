@@ -7,6 +7,12 @@ import {
   Route,
   Routes,
 } from 'react-router-dom';
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
+import { Grid, Link as MaterialLink } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { SWRConfig } from 'swr';
+import { useProfiler } from '@sentry/react';
+import { useAuth0 } from '@auth0/auth0-react';
 import { IndexComponent } from './IndexComponent';
 import {
   EpisodeSelectComponent,
@@ -14,12 +20,8 @@ import {
 } from './SeasonSelectComponent';
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
-import { Grid, Link as MaterialLink } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { SWRConfig } from 'swr';
 import {
   MonitorComponent,
   MonitorAddComponent,
@@ -29,8 +31,6 @@ import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import { Websocket } from './Websocket';
-import { useProfiler } from '@sentry/react';
-import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
