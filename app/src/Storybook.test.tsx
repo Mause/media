@@ -5,7 +5,6 @@ import userEvent from '@testing-library/user-event';
 import { renderWithSWR } from './test.utils';
 import Storybook from './Storybook';
 
-
 describe('Storybook', () => {
   it('renders without crashing', async () => {
     const user = userEvent.setup();

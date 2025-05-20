@@ -7,8 +7,8 @@ import { createTheme } from '@mui/material';
 /**
  * @type {import('@pigment-css/vite-plugin').PigmentOptions}
  */
- const pigmentConfig = {
-   transformLibraries: ['@mui/material'],
+const pigmentConfig = {
+  transformLibraries: ['@mui/material'],
   theme: createTheme({
     cssVariables: true,
     /* other parameters, if any */
@@ -16,9 +16,7 @@ import { createTheme } from '@mui/material';
 };
 
 export default defineConfig({
-  plugins: [
-    pigment(pigmentConfig),
-  react()],
+  plugins: [pigment(pigmentConfig), react()],
   envPrefix: 'REACT_APP_',
   build: {
     // to output your build into build dir the same as Webpack
