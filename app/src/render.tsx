@@ -156,7 +156,7 @@ export function Progress({
   } else {
     const etaDescr =
       eta > 0 ? Moment().add(eta, 'seconds').fromNow(true) : 'Unknown time';
-    const title = String.Format(
+    const title = String.format(
       '{0:00}% ({1} remaining)',
       percentDone * 100,
       etaDescr,
@@ -169,7 +169,7 @@ export function getMarker(episode: {
   season?: number;
   episode?: number | null;
 }) {
-  return String.Format('S{0:00}E{1:00}', episode.season, episode.episode);
+  return String.format('S{0:00}E{1:00}', episode.season, episode.episode);
 }
 
 function getProgress(
