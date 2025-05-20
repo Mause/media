@@ -3,6 +3,7 @@ import ReactLoading from 'react-loading';
 import qs from 'qs';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
+
 import { SearchBox } from './IndexComponent';
 import { MLink } from './utils';
 import { components } from './schema';

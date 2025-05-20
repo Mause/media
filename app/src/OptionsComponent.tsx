@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { Breadcrumbs, Typography, Alert } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
+
 import { subscribe, MLink } from './utils';
 import { Torrents } from './streaming';
 import { Loading } from './render';

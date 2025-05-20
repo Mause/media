@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import React from 'react';
+
 import { ITorrent, DisplayTorrent } from './OptionsComponent';
 import { Loading } from './render';
 import { EpisodeSelectBreadcrumbs } from './SeasonSelectComponent';

@@ -15,6 +15,7 @@ import {
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+
 import { getPrefix, MLink } from './utils';
 import { TV } from './SeasonSelectComponent';
 import {

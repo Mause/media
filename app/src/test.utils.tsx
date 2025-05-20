@@ -11,6 +11,7 @@ import {
 import { Location, MemoryHistory } from '@remix-run/router';
 import { Listener } from '@remix-run/router/dist/history';
 import { HelmetProvider } from 'react-helmet-async';
+
 import { swrConfig } from './streaming';
 
 const theme = createTheme();

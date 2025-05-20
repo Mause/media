@@ -17,7 +17,13 @@ module.exports = tseslint.config(
     },
     rules: {
       'import-x/no-named-as-default-member': 'off',
-      'import-x/order': 'error',
+      'import-x/order': [
+        'error',
+
+        {
+          'newlines-between': 'always',
+        },
+      ],
     },
     settings: {
       'import-x/resolver-next': [createTypeScriptImportResolver({})],

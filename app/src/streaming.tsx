@@ -13,6 +13,7 @@ import { styled } from '@mui/material/styles';
 import { SWRConfig } from 'swr';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
+
 import { IndexComponent } from './IndexComponent';
 import {
   EpisodeSelectComponent,

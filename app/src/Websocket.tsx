@@ -5,6 +5,7 @@ import qs from 'qs';
 import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+
 import { DisplayTorrent, ITorrent } from './OptionsComponent';
 import { getPrefix } from './utils';
 import { getMarker } from './render';
