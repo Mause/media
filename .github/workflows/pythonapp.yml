@@ -34,6 +34,11 @@ jobs:
           linters: mypy
           run: uv run mypy --show-column-numbers rarbg_local
       - run: uv run alembic upgrade head --sql
+      - run: corepack enable
+      - uses: nickcharlton/diff-check@main
+        with:
+          command: npm openapi-typescript rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o app/src/schema.ts
+        working-directory: app
       - name: Test with pytest
         run: |
           uv run pytest -vv
