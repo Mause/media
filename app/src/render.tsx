@@ -1,16 +1,10 @@
 import MenuItem from '@mui/material/MenuItem';
 import _ from 'lodash';
-import {
-  MovieResponse,
-  SeriesResponse,
-  Torrents,
-  EpisodeResponse,
-} from './streaming';
 import { String } from 'typescript-string-operations';
+// eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
 import { useNavigate } from 'react-router-dom';
-import { TV } from './SeasonSelectComponent';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -20,8 +14,16 @@ import {
   faCaretDown,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { getPrefix, MLink } from './utils';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+
+import { getPrefix, MLink } from './utils';
+import { TV } from './SeasonSelectComponent';
+import {
+  MovieResponse,
+  SeriesResponse,
+  Torrents,
+  EpisodeResponse,
+} from './streaming';
 import ContextMenu from './ContextMenu';
 
 export function Loading({
@@ -154,7 +156,7 @@ export function Progress({
   } else {
     const etaDescr =
       eta > 0 ? Moment().add(eta, 'seconds').fromNow(true) : 'Unknown time';
-    const title = String.Format(
+    const title = String.format(
       '{0:00}% ({1} remaining)',
       percentDone * 100,
       etaDescr,
@@ -167,7 +169,7 @@ export function getMarker(episode: {
   season?: number;
   episode?: number | null;
 }) {
-  return String.Format('S{0:00}E{1:00}', episode.season, episode.episode);
+  return String.format('S{0:00}E{1:00}', episode.season, episode.episode);
 }
 
 function getProgress(

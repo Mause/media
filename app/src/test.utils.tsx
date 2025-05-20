@@ -1,6 +1,5 @@
 import moxios from 'moxios';
 import axios from 'axios';
-import { swrConfig } from './streaming';
 import { render } from '@testing-library/react';
 import { act, ReactElement } from 'react';
 import { Auth0Context, Auth0ContextInterface } from '@auth0/auth0-react';
@@ -12,6 +11,8 @@ import {
 import { Location, MemoryHistory } from '@remix-run/router';
 import { Listener } from '@remix-run/router/dist/history';
 import { HelmetProvider } from 'react-helmet-async';
+
+import { swrConfig } from './streaming';
 
 const theme = createTheme();
 

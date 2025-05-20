@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { StatsComponent, StatsResponse } from './StatsComponent';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
 
