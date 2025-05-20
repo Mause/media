@@ -1,12 +1,14 @@
 import { StrictMode } from 'react';
-import './index.css';
-import { createRoot } from 'react-dom/client';
+import '@mui/material-pigment-css/styles.css';
 import { Auth0Provider } from '@auth0/auth0-react';
 import {
   ThemeProvider,
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
+import { createRoot } from 'react-dom/client';
+
+import './index.css';
 
 import App from './App';
 
