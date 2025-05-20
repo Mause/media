@@ -1,5 +1,9 @@
 const eslint = require('@eslint/js');
 const tseslint = require('typescript-eslint');
+const eslintImport = require('eslint-plugin-import-x');
+const {
+  createTypeScriptImportResolver,
+} = require('eslint-import-resolver-typescript');
 
 module.exports = tseslint.config(
   eslint.configs.recommended,
@@ -11,5 +15,10 @@ module.exports = tseslint.config(
         tsconfigRootDir: __dirname,
       },
     },
+    settings: {
+      'import-x/resolver-next': [createTypeScriptImportResolver({})],
+    },
   },
+  eslintImport.flatConfigs.recommended,
+  eslintImport.flatConfigs.react,
 );
