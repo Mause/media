@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
-import { useEffect, useState } from 'react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { wait, usesMoxios } from './test.utils';
 import moxios from 'moxios';
