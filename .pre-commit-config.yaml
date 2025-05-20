@@ -28,6 +28,7 @@ repos:
         args:
          - --config
          - app/eslint.config.cjs
+         - --fix
         verbose: true
         types: [text]
         types_or:
