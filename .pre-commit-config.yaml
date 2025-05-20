@@ -43,6 +43,7 @@ repos:
           - typescript@5.8.3
           - "eslint-import-resolver-typescript@^4.3.5"
           - "eslint-plugin-import-x@^4.12.2"
+          - "@eslint/compat@1.2.9"
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.15.0
     hooks:
