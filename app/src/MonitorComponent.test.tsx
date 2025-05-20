@@ -11,7 +11,7 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { expectLastRequestBody } from './utils';
 import { createMemoryHistory } from '@remix-run/router';
 import { act } from 'react';

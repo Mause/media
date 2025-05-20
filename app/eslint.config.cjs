@@ -15,10 +15,14 @@ module.exports = tseslint.config(
         tsconfigRootDir: __dirname,
       },
     },
+    rules: {
+      'import-x/no-named-as-default-member': 'off',
+    },
     settings: {
       'import-x/resolver-next': [createTypeScriptImportResolver({})],
     },
   },
   eslintImport.flatConfigs.recommended,
+  eslintImport.flatConfigs.typescript,
   eslintImport.flatConfigs.react,
 );
