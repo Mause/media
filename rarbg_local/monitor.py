@@ -3,7 +3,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.concurrency import run_in_threadpool
-from python_ntfy import Ntfy
+from python_ntfy import NtfyClient
 from requests.exceptions import HTTPError
 from sqlalchemy.orm.session import Session
 
@@ -26,7 +26,7 @@ monitor_ns = APIRouter(tags=['monitor'])
 
 
 def get_ntfy():
-    ntfy = Ntfy()
+    ntfy = NtfyClient()
     ntfy._auth = None
     return ntfy
 
@@ -81,7 +81,7 @@ async def monitor_post(
 @monitor_ns.post('/cron', status_code=201)
 async def monitor_cron(
     session: Annotated[Session, Depends(get_db)],
-    ntfy: Annotated[Ntfy, Depends(get_ntfy)],
+    ntfy: Annotated[NtfyClient, Depends(get_ntfy)],
 ):
     monitors = session.query(Monitor).all()
 
@@ -93,7 +93,7 @@ async def monitor_cron(
 async def check_monitor(
     monitor: Monitor,
     session: Session,
-    ntfy: Ntfy,
+    ntfy: NtfyClient,
 ):
     from .new import _stream
 
