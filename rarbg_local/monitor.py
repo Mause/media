@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from requests.exceptions import HTTPError
 from sqlalchemy.orm.session import Session
 
