@@ -5,10 +5,9 @@ from fastapi import APIRouter
 from jose import constants, jwk
 from pytest import mark
 
-from ..auth import AUTH0_DOMAIN
+from ..auth import AUTH0_DOMAIN, get_current_user, security
 from ..db import User
 from ..models import UserSchema
-from ..new import get_current_user, security
 from .conftest import add_json
 
 

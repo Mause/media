@@ -17,10 +17,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
+from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
-from ..new import SearchResponse, Settings, get_current_user, get_settings
+from ..new import SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
 from .conftest import add_json, themoviedb, tolist

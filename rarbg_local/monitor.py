@@ -1,10 +1,14 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
+from requests.exceptions import HTTPError
 
 from .auth import security
 from .db import (
     Monitor,
     MonitorMediaType,
+    User,
     get_db,
     safe_delete,
 )
@@ -13,7 +17,7 @@ from .models import (
     MonitorPost,
 )
 from .tmdb import get_movie, get_tv
-from .utils import TmdbId
+from .types import ImdbId, TmdbId
 
 monitor_ns = APIRouter(tags=['monitor'])
 

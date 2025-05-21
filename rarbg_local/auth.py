@@ -1,7 +1,7 @@
 import logging
 
 from cachetools import TTLCache
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import SecurityScopes
 from fastapi_oidc import get_auth
 from sqlalchemy.orm.session import Session
