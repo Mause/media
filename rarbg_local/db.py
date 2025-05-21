@@ -31,6 +31,7 @@ from sqlalchemy_repr import RepresentableBase
 
 from .settings import Settings, get_settings
 from .singleton import singleton
+from .types import TmdbId
 from .utils import precondition
 
 Base = declarative_base(cls=RepresentableBase)
@@ -160,7 +161,7 @@ class Monitor(Base):
     __tablename__ = 'monitor'
 
     id = Column(Integer(), primary_key=True)
-    tmdb_id = Column(Integer)
+    tmdb_id: TmdbId = Column(Integer)
 
     added_by_id = Column(Integer, ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship('User')
@@ -171,6 +172,11 @@ class Monitor(Base):
         default=MonitorMediaType.MOVIE.name,
         nullable=False,
         server_default=MonitorMediaType.MOVIE.name,
+    )
+
+    status = Column(
+        Boolean,
+        default=False,
     )
 
 

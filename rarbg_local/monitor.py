@@ -1,6 +1,9 @@
+from asyncio import create_task
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.concurrency import run_in_threadpool
+from python_ntfy import Ntfy
 from requests.exceptions import HTTPError
 from sqlalchemy.orm.session import Session
 
@@ -20,6 +23,12 @@ from .tmdb import get_movie, get_tv
 from .types import TmdbId
 
 monitor_ns = APIRouter(tags=['monitor'])
+
+
+def get_ntfy():
+    ntfy = Ntfy()
+    ntfy._auth = None
+    return ntfy
 
 
 @monitor_ns.get('', response_model=list[MonitorGet])
@@ -67,3 +76,41 @@ async def monitor_post(
         session.add(c)
         session.commit()
     return c
+
+
+@monitor_ns.post('/cron', status_code=201)
+async def monitor_cron(
+    session: Annotated[Session, Depends(get_db)],
+    ntfy: Annotated[Ntfy, Depends(get_ntfy)],
+):
+    monitors = session.query(Monitor).all()
+
+    tasks = [create_task(check_monitor(monitor, session, ntfy)) for monitor in monitors]
+
+    return tasks
+
+
+async def check_monitor(
+    monitor: Monitor,
+    session: Session,
+    ntfy: Ntfy,
+):
+    from .new import _stream
+
+    typ = monitor.type
+    if not typ:
+        raise HTTPException(422, f'Invalid type: {monitor.type}')
+
+    has_results = False
+    async for _ in _stream(
+        tmdb_id=monitor.tmdb_id,
+        type=typ.name,
+    ):
+        has_results = True
+
+    monitor.status = has_results
+
+    await run_in_threadpool(
+        lambda: ntfy.send(topic="ellianas_notifications", markdown=True)
+    )
+    session.commit()
