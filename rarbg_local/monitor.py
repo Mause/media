@@ -1,8 +1,8 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm.session import Session
 from requests.exceptions import HTTPError
+from sqlalchemy.orm.session import Session
 
 from .auth import security
 from .db import (
@@ -17,7 +17,7 @@ from .models import (
     MonitorPost,
 )
 from .tmdb import get_movie, get_tv
-from .types import ImdbId, TmdbId
+from .types import TmdbId
 
 monitor_ns = APIRouter(tags=['monitor'])
 
