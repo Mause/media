@@ -1,3 +1,4 @@
+import logging
 from asyncio import create_task
 from typing import Annotated
 
@@ -22,6 +23,7 @@ from .models import (
 from .tmdb import get_movie, get_tv
 from .types import TmdbId
 
+logger = logging.getLogger(__name__)
 monitor_ns = APIRouter(tags=['monitor'])
 
 
@@ -109,9 +111,14 @@ async def check_monitor(
         has_results = result
         break
     if not has_results:
+        logger.info(f'No results for {monitor.title}')
         return
 
     monitor.status = bool(has_results)
+    message = f'''
+{monitor.type} {monitor.title} is now available on {has_results.source}!
+'''
+    logger.info(message)
     await run_in_threadpool(
         lambda: ntfy.send(topic="ellianas_notifications", markdown=True)
     )
