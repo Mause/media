@@ -36,6 +36,7 @@ from .db import (
     User,
     get_db,
     get_movies,
+    safe_delete,
 )
 from .health import router as health
 from .main import (
@@ -122,13 +123,6 @@ security = Security(
 @api.get('/user/unauthorized')
 def user():
     pass
-
-
-def safe_delete(session: Session, entity: type[T], id: int):
-    query = session.query(entity).filter_by(id=id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    session.commit()
 
 
 @api.get('/delete/{type}/{id}')
