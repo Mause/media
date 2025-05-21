@@ -12,30 +12,25 @@ from typing import (
 )
 from urllib.parse import urlencode
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
-from fastapi.security import (
-    SecurityScopes,
-)
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel, SecretStr, ValidationError
-from requests.exceptions import HTTPError
 from sqlalchemy import func
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
 
-from .auth import auth_hook, get_my_jwkaas
+from .auth import security
 from .db import (
     Download,
     EpisodeDetails,
-    Monitor,
-    MonitorMediaType,
     MovieDetails,
     User,
     get_db,
     get_movies,
+    safe_delete,
 )
 from .health import router as health
 from .main import (
@@ -54,8 +49,6 @@ from .models import (
     InnerTorrent,
     ITorrent,
     MediaType,
-    MonitorGet,
-    MonitorPost,
     MovieDetailsSchema,
     MovieResponse,
     ProviderSource,
@@ -64,6 +57,7 @@ from .models import (
     TvResponse,
     TvSeasonResponse,
 )
+from .monitor import monitor_ns
 from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     get_providers,
@@ -86,7 +80,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .types import ImdbId, TmdbId
-from .utils import Message, non_null, precondition
+from .utils import Message, non_null
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -99,36 +93,9 @@ def generate_plain_text(exc):
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
-async def get_current_user(
-    security_scopes: SecurityScopes,
-    session=Depends(get_db),
-    token_info=Depends(get_my_jwkaas),
-):
-    user = auth_hook(
-        session=session, security_scopes=security_scopes, token_info=token_info
-    )
-    if user:
-        return user
-    else:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-
-security = Security(
-    get_current_user,
-    scopes=['openid'],
-)
-
-
 @api.get('/user/unauthorized')
 def user():
     pass
-
-
-def safe_delete(session: Session, entity: type[T], id: int):
-    query = session.query(entity).filter_by(id=id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    session.commit()
 
 
 @api.get('/delete/{type}/{id}')
@@ -342,58 +309,6 @@ async def torrents():
 @api.get('/search', response_model=list[SearchResponse])
 async def search(query: str):
     return await search_themoviedb(query)
-
-
-monitor_ns = APIRouter(tags=['monitor'])
-
-
-@monitor_ns.get('', response_model=list[MonitorGet])
-async def monitor_get(
-    user: Annotated[User, security], session: Session = Depends(get_db)
-):
-    return session.query(Monitor).all()
-
-
-@monitor_ns.delete('/{monitor_id}')
-async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
-    safe_delete(session, Monitor, monitor_id)
-
-    return {}
-
-
-async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
-    try:
-        return (
-            (await get_movie(tmdb_id)).title
-            if type == MonitorMediaType.MOVIE
-            else (await get_tv(tmdb_id)).name
-        )
-    except HTTPError as e:
-        if e.response.status_code == 404:
-            raise HTTPException(422, f'{type.name} not found: {tmdb_id}')
-        else:
-            raise
-
-
-@monitor_ns.post('', response_model=MonitorGet, status_code=201)
-async def monitor_post(
-    monitor: MonitorPost,
-    user: Annotated[User, security],
-    session: Session = Depends(get_db),
-):
-    media = await validate_id(monitor.type, monitor.tmdb_id)
-    c = (
-        session.query(Monitor)
-        .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
-        .one_or_none()
-    )
-    if not c:
-        c = Monitor(
-            tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
-        )
-        session.add(c)
-        session.commit()
-    return c
 
 
 tv_ns = APIRouter(tags=['tv'])
