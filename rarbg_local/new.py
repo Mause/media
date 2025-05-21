@@ -22,6 +22,7 @@ from sqlalchemy import func
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
 
+from .auth import security
 from .db import (
     Download,
     EpisodeDetails,
