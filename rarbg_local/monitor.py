@@ -28,7 +28,7 @@ monitor_ns = APIRouter(tags=['monitor'])
 
 
 def get_ntfy():
-    ntfy = NtfyClient()
+    ntfy = NtfyClient(topic="ellianas_notifications")
     ntfy._auth = None
     return ntfy
 
@@ -120,6 +120,9 @@ async def check_monitor(
 '''
     logger.info(message)
     await run_in_threadpool(
-        lambda: ntfy.send(topic="ellianas_notifications", markdown=True)
+        lambda: ntfy.send(
+            message,
+            format_as_markdown=True,
+        )
     )
     session.commit()
