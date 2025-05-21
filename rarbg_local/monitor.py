@@ -101,15 +101,17 @@ async def check_monitor(
     if not typ:
         raise HTTPException(422, f'Invalid type: {monitor.type}')
 
-    has_results = False
-    async for _ in _stream(
+    has_results = None
+    async for result in _stream(
         tmdb_id=monitor.tmdb_id,
         type=typ.name,
     ):
-        has_results = True
+        has_results = result
+        break
+    if not has_results:
+        return
 
-    monitor.status = has_results
-
+    monitor.status = bool(has_results)
     await run_in_threadpool(
         lambda: ntfy.send(topic="ellianas_notifications", markdown=True)
     )
