@@ -16,9 +16,6 @@ from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSoc
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
-from fastapi.security import (
-    SecurityScopes,
-)
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel, SecretStr, ValidationError
 from requests.exceptions import HTTPError
@@ -95,26 +92,6 @@ T = TypeVar('T')
 def generate_plain_text(exc):
     logger.exception('Error occured', exc_info=exc)
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
-
-
-async def get_current_user(
-    security_scopes: SecurityScopes,
-    session=Depends(get_db),
-    token_info=Depends(get_my_jwkaas),
-):
-    user = auth_hook(
-        session=session, security_scopes=security_scopes, token_info=token_info
-    )
-    if user:
-        return user
-    else:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-
-security = Security(
-    get_current_user,
-    scopes=['openid'],
-)
 
 
 @api.get('/user/unauthorized')

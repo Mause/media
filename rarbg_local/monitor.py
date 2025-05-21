@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 
+from .auth import security
 from .db import (
     Monitor,
     MonitorMediaType,

@@ -5,8 +5,11 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import SecurityScopes
 from fastapi_oidc import get_auth
 from sqlalchemy.orm.session import Session
+from fastapi.security import (
+    SecurityScopes,
+)
 
-from .db import User
+from .db import User, get_db
 
 logger = logging.getLogger(__name__)
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
@@ -60,3 +63,23 @@ def auth_hook(
     else:
         logger.info(f"User found: {user}")
         return user
+
+
+async def get_current_user(
+    security_scopes: SecurityScopes,
+    session=Depends(get_db),
+    token_info=Depends(get_my_jwkaas),
+):
+    user = auth_hook(
+        session=session, security_scopes=security_scopes, token_info=token_info
+    )
+    if user:
+        return user
+    else:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+security = Security(
+    get_current_user,
+    scopes=['openid'],
+)
