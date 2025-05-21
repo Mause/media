@@ -12,18 +12,16 @@ from typing import (
 )
 from urllib.parse import urlencode
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel, SecretStr, ValidationError
-from requests.exceptions import HTTPError
 from sqlalchemy import func
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
 
-from .auth import auth_hook, get_my_jwkaas
 from .db import (
     Download,
     EpisodeDetails,
@@ -81,7 +79,7 @@ from .tmdb import (
     search_themoviedb,
 )
 from .types import ImdbId, TmdbId
-from .utils import Message, non_null, precondition
+from .utils import Message, non_null
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -310,7 +308,6 @@ async def torrents():
 @api.get('/search', response_model=list[SearchResponse])
 async def search(query: str):
     return await search_themoviedb(query)
-
 
 
 tv_ns = APIRouter(tags=['tv'])

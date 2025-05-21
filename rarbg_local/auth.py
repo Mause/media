@@ -5,9 +5,6 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import SecurityScopes
 from fastapi_oidc import get_auth
 from sqlalchemy.orm.session import Session
-from fastapi.security import (
-    SecurityScopes,
-)
 
 from .db import User, get_db
 

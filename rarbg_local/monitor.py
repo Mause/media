@@ -12,8 +12,8 @@ from .models import (
     MonitorGet,
     MonitorPost,
 )
-from .utils import TmdbId
 from .tmdb import get_movie, get_tv
+from .utils import TmdbId
 
 monitor_ns = APIRouter(tags=['monitor'])
 
