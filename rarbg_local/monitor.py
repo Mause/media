@@ -22,9 +22,9 @@ from .models import (
     MonitorGet,
     MonitorPost,
 )
-from .websocket import _stream
 from .tmdb import get_movie, get_tv
 from .types import TmdbId
+from .websocket import _stream
 
 logger = logging.getLogger(__name__)
 monitor_ns = APIRouter(tags=['monitor'])
