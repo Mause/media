@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.concurrency import run_in_threadpool
 from python_ntfy import NtfyClient
 from requests.exceptions import HTTPError
+from sentry_sdk.crons import monitor
 from sqlalchemy.orm.session import Session
 
 from .auth import security
@@ -81,6 +82,7 @@ async def monitor_post(
 
 
 @monitor_ns.post('/cron', status_code=201)
+@monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
     session: Annotated[Session, Depends(get_db)],
     ntfy: Annotated[NtfyClient, Depends(get_ntfy)],
