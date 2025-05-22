@@ -87,7 +87,7 @@ async def monitor_cron(
     session: Annotated[Session, Depends(get_db)],
     ntfy: Annotated[NtfyClient, Depends(get_ntfy)],
 ):
-    monitors = session.query(Monitor).all()
+    monitors = session.query(Monitor).filter(Monitor.status == False).all()
 
     tasks = [create_task(check_monitor(monitor, session, ntfy)) for monitor in monitors]
 
