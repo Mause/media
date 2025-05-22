@@ -7,6 +7,7 @@ from fastapi.concurrency import run_in_threadpool
 from python_ntfy import NtfyClient
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
+from sqlalchemy import not_
 from sqlalchemy.orm.session import Session
 
 from .auth import security
@@ -87,7 +88,7 @@ async def monitor_cron(
     session: Annotated[Session, Depends(get_db)],
     ntfy: Annotated[NtfyClient, Depends(get_ntfy)],
 ):
-    monitors = session.query(Monitor).filter(Monitor.status == False).all()
+    monitors = session.query(Monitor).filter(not_(Monitor.status)).all()
 
     tasks = [create_task(check_monitor(monitor, session, ntfy)) for monitor in monitors]
 
