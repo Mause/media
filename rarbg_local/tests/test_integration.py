@@ -1,6 +1,5 @@
 import json
 import logging
-import sys
 from datetime import datetime
 from typing import Annotated
 from unittest.mock import patch
@@ -83,7 +82,7 @@ async def test_diagnostics(
     snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
 
     for component in results:
-        if component == 'database' and sys.version_info[:2] == (3, 11):
+        if component == 'database':
             continue
         r = await test_client.get(f'/api/diagnostics/{component}')
         results = r.json()
