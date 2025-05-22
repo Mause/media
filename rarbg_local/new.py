@@ -69,6 +69,7 @@ from .providers.abc import (
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import (
+    ThingType,
     get_json,
     get_movie,
     get_movie_imdb_id,

@@ -410,6 +410,23 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
 
 @mark.asyncio
+@patch('rarbg_local.monitor._stream')
+async def test_update_monitor(stream, aioresponses, test_client, session):
+    themoviedb(
+        aioresponses,
+        '/movie/5',
+        MovieResponseFactory.build(title='Hello World').model_dump(),
+    )
+    r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
+    assert r.status_code == 201
+
+    r = await test_client.post(
+        '/api/monitor/cron',
+    )
+    r.raise_for_status()
+
+
+@mark.asyncio
 async def test_stats(test_client, session):
     user1 = UserFactory.create(username='user1')
     user2 = UserFactory.create(username='user2')

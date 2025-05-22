@@ -22,6 +22,7 @@ from .models import (
     MonitorGet,
     MonitorPost,
 )
+from .websocket import _stream
 from .tmdb import get_movie, get_tv
 from .types import TmdbId
 
@@ -100,17 +101,20 @@ async def check_monitor(
     session: Session,
     ntfy: NtfyClient,
 ):
-    from .new import _stream
+    def convert_type(type: MonitorMediaType):
+        if type == MonitorMediaType.MOVIE:
+            return 'movie'
+        elif type == MonitorMediaType.TV:
+            return 'tv'
+        else:
+            raise HTTPException(422, f'Invalid type: {type}')
 
     typ = monitor.type
     if not typ:
         raise HTTPException(422, f'Invalid type: {monitor.type}')
 
     has_results = None
-    async for result in _stream(
-        tmdb_id=monitor.tmdb_id,
-        type=typ.name,
-    ):
+    async for result in _stream(tmdb_id=monitor.tmdb_id, type=convert_type(typ)):
         has_results = result
         break
     if not has_results:
