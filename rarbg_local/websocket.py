@@ -74,7 +74,7 @@ async def websocket_stream(websocket: WebSocket):
         await websocket.send_json(
             {'error': str(e), 'type': type(e).__name__, 'errors': e.errors()}
         )
-        await websocket.close()
+        await websocket.close(reason=type(e).__name__)
         return
     logger.info('Got request: %s', request)
 
@@ -102,7 +102,7 @@ async def websocket_stream(websocket: WebSocket):
     except Exception as e:
         logger.exception('Unable to authenticate websocket request')
         await websocket.send_json({'error': str(e), 'type': type(e).__name__})
-        await websocket.close()
+        await websocket.close(reason=type(e).__name__)
         raise
 
     logger.info('Authed user: %s', user)
@@ -116,4 +116,4 @@ async def websocket_stream(websocket: WebSocket):
         await websocket.send_json(item)
 
     logger.info('Finished streaming')
-    await websocket.close()
+    await websocket.close(reason='Finished streaming')

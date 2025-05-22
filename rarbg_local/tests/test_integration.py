@@ -732,4 +732,8 @@ async def test_websocket(
     with raises(Exception) as e:
         await r.receive_json()
 
-    assert e.value.args[0] == {'type': 'websocket.close', 'code': 1000, 'reason': ''}
+    assert e.value.args[0] == {
+        'type': 'websocket.close',
+        'code': 1000,
+        'reason': 'Finished streaming',
+    }
