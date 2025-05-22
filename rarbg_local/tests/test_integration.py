@@ -686,7 +686,7 @@ async def test_websocket_error(test_client, snapshot):
 
 
 @mark.asyncio
-@patch('rarbg_local.new.get_movie_imdb_id')
+@patch('rarbg_local.websocket.get_movie_imdb_id')
 @patch('rarbg_local.providers.get_providers')
 async def test_websocket(
     get_providers, get_movie_imdb_id, test_client, fastapi_app, snapshot
@@ -732,4 +732,8 @@ async def test_websocket(
     with raises(Exception) as e:
         await r.receive_json()
 
-    assert e.value.args[0] == {'type': 'websocket.close', 'code': 1000, 'reason': ''}
+    assert e.value.args[0] == {
+        'type': 'websocket.close',
+        'code': 1000,
+        'reason': 'Finished streaming',
+    }

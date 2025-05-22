@@ -1,7 +1,6 @@
 import logging
 import os
 import traceback
-from collections import ChainMap
 from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
@@ -12,12 +11,12 @@ from typing import (
 )
 from urllib.parse import urlencode
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, WebSocket
+from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
-from pydantic import BaseModel, SecretStr, ValidationError
+from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm.session import Session
 from starlette.staticfiles import StaticFiles
@@ -61,7 +60,6 @@ from .monitor import monitor_ns
 from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     get_providers,
-    search_for_movie,
     search_for_tv,
 )
 from .providers.abc import (
@@ -69,7 +67,7 @@ from .providers.abc import (
     TvProvider,
 )
 from .settings import Settings, get_settings
-from .singleton import get, singleton
+from .singleton import singleton
 from .tmdb import (
     get_json,
     get_movie,
@@ -81,6 +79,7 @@ from .tmdb import (
 )
 from .types import ImdbId, TmdbId
 from .utils import Message, non_null
+from .websocket import websocket_ns
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -327,96 +326,7 @@ async def api_tv_season(tmdb_id: TmdbId, season: int):
     return await get_tv_episodes(tmdb_id, season)
 
 
-class StreamArgs(BaseModel):
-    authorization: SecretStr
-
-    type: StreamType
-    tmdb_id: TmdbId
-    season: int | None = None
-    episode: int | None = None
-
-
-async def _stream(
-    type: str,
-    tmdb_id: TmdbId,
-    season: int | None = None,
-    episode: int | None = None,
-):
-    if type == 'series':
-        tasks, queue = await search_for_tv(
-            await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
-        )
-    else:
-        tasks, queue = await search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
-
-    while not all(task.done() for task in tasks):
-        item = await queue.get()
-        if isinstance(item, Message):
-            logger.info('Message from provider: %s', item)
-        else:
-            yield item.model_dump(mode='json')
-
-
 root = APIRouter()
-
-
-@root.websocket("/ws")
-async def websocket_stream(websocket: WebSocket):
-    def fake(user: Annotated[User, security]):
-        return user
-
-    logger.info('Got websocket connection')
-    await websocket.accept()
-
-    try:
-        request = StreamArgs.model_validate(await websocket.receive_json())
-    except ValidationError as e:
-        await websocket.send_json(
-            {'error': str(e), 'type': type(e).__name__, 'errors': e.errors()}
-        )
-        await websocket.close()
-        return
-    logger.info('Got request: %s', request)
-
-    try:
-        user = await get(
-            websocket.app,
-            fake,
-            Request(
-                scope=ChainMap(
-                    {
-                        'type': 'http',
-                        'headers': [
-                            (
-                                b"authorization",
-                                (request.authorization.get_secret_value()).encode(),
-                            ),
-                        ],
-                    },
-                    websocket.scope,
-                ),
-                receive=websocket.receive,
-                send=websocket.send,
-            ),
-        )
-    except Exception as e:
-        logger.exception('Unable to authenticate websocket request')
-        await websocket.send_json({'error': str(e), 'type': type(e).__name__})
-        await websocket.close()
-        raise
-
-    logger.info('Authed user: %s', user)
-
-    async for item in _stream(
-        type=request.type,
-        tmdb_id=request.tmdb_id,
-        season=request.season,
-        episode=request.episode,
-    ):
-        await websocket.send_json(item)
-
-    logger.info('Finished streaming')
-    await websocket.close()
 
 
 @singleton
@@ -474,6 +384,7 @@ async def static(
     return await static_files.get_response(filename, request.scope)
 
 
+root.include_router(websocket_ns)
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
