@@ -1,5 +1,5 @@
 import logging
-from asyncio import create_task
+from asyncio import create_task, gather
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -92,7 +92,7 @@ async def monitor_cron(
 
     tasks = [create_task(check_monitor(monitor, session, ntfy)) for monitor in monitors]
 
-    return tasks
+    return await gather(*tasks, return_exceptions=True)
 
 
 async def check_monitor(
