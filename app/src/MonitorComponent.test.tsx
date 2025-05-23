@@ -8,6 +8,8 @@ import {
 import _ from 'lodash';
 import { createMemoryHistory } from '@remix-run/router';
 import { act } from 'react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { expectLastRequestBody } from './utils';
 import {
@@ -53,12 +55,7 @@ describe('MonitorComponent', () => {
 
   it('add', async () => {
     const hist = createMemoryHistory({
-      initialEntries: [
-        {
-          pathname: '/monitor/add/5',
-          state: { type: 'MOVIE' },
-        },
-      ],
+      initialEntries: ['/fake'],
       v5Compat: true,
     });
     const entries = listenTo(hist);
@@ -66,12 +63,21 @@ describe('MonitorComponent', () => {
     renderWithSWR(
       <HistoryRouter history={hist}>
         <Routes>
-          <Route path="/monitor/add/:tmdb_id" Component={MonitorAddComponent} />
+          <Route
+            path="/fake"
+            element={<MonitorAddComponent tmdb_id={5} type={'MOVIE'} />}
+          />
           <Route path="/monitor" element={<div>Monitor</div>} />
           <Route path="/" element={<div>Home</div>} />
         </Routes>
       </HistoryRouter>,
     );
+
+    const events = userEvent.setup();
+
+    await act(async () => {
+      await events.click(await screen.findByText('Add to monitor'));
+    });
 
     await wait();
     await act(async () => {
