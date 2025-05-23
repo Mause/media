@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 monitor_ns = APIRouter(tags=['monitor'])
 
 
-def get_ntfy():
+async def get_ntfy():
     async with ClientSession() as session:
         yield Ntfy("https://ntfy.sh", session)
 
@@ -135,7 +135,7 @@ async def check_monitor(
         Message(
             topic="ellianas_notifications",
             title="Hello",
-            message="World",
+            message=message,
         )
     )
     session.commit()

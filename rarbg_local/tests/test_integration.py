@@ -20,7 +20,7 @@ from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, Monitor, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
-from ..new import SearchResponse, Settings, get_settings
+from ..new import ProviderSource, SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
 from .conftest import add_json, themoviedb, tolist
@@ -412,7 +412,7 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
 @mark.asyncio
 @patch('rarbg_local.monitor._stream')
-@patch('python_ntfy.NtfyClient.send')
+@patch('aiontfy.Ntfy.publish')
 async def test_update_monitor(
     send, stream, aioresponses, test_client, session, snapshot
 ):
@@ -425,7 +425,9 @@ async def test_update_monitor(
     ident = r.json()['id']
     assert r.status_code == 201
 
-    stream.return_value.__aiter__.return_value = iter([ITorrentFactory.build()])
+    stream.return_value.__aiter__.return_value = iter(
+        [ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)]
+    )
 
     r = await test_client.post(
         '/api/monitor/cron',
@@ -434,8 +436,9 @@ async def test_update_monitor(
 
     assert session.get(Monitor, ident).status
     send.assert_called_once()
+    message = send.call_args.args[0]
     snapshot.assert_match(
-        send.call_args.args[0],
+        message.message,
         'message.txt',
     )
 
