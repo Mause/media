@@ -2,9 +2,9 @@ import logging
 from asyncio import gather
 from typing import Annotated
 
+from aiohttp import ClientSession
+from aiontfy import Message, Ntfy
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.concurrency import run_in_threadpool
-from python_ntfy import NtfyClient
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
@@ -31,9 +31,8 @@ monitor_ns = APIRouter(tags=['monitor'])
 
 
 def get_ntfy():
-    ntfy = NtfyClient(topic="ellianas_notifications")
-    ntfy._auth = None
-    return ntfy
+    async with ClientSession() as session:
+        yield Ntfy("https://ntfy.sh", session)
 
 
 @monitor_ns.get('', response_model=list[MonitorGet])
@@ -87,7 +86,7 @@ async def monitor_post(
 @monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
     session: Annotated[Session, Depends(get_db)],
-    ntfy: Annotated[NtfyClient, Depends(get_ntfy)],
+    ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ):
     monitors = session.query(Monitor).filter(not_(Monitor.status)).all()
 
@@ -99,7 +98,7 @@ async def monitor_cron(
 async def check_monitor(
     monitor: Monitor,
     session: Session,
-    ntfy: NtfyClient,
+    ntfy: Ntfy,
 ):
     def convert_type(type: MonitorMediaType):
         if type == MonitorMediaType.MOVIE:
@@ -131,10 +130,12 @@ async def check_monitor(
 '''.strip()
 
     logger.info(message)
-    await run_in_threadpool(
-        lambda: ntfy.send(
-            message,
-            format_as_markdown=True,
+
+    await ntfy.publish(
+        Message(
+            topic="ellianas_notifications",
+            title="Hello",
+            message="World",
         )
     )
     session.commit()
