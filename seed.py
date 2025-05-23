@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import sys
 
 import backoff
 from fastapi import FastAPI
@@ -67,10 +68,15 @@ async def seed():
         session.commit()
 
 
-if 'IS_REVIEW_APP' in os.environ or (
-    'RAILWAY_ENVIRONMENT_NAME' in os.environ
-    and os.environ['RAILWAY_ENVIRONMENT_NAME'].startswith('media-pr-')
-):
+do_seed = (
+    'IS_REVIEW_APP' in os.environ
+    or (
+        'RAILWAY_ENVIRONMENT_NAME' in os.environ
+        and os.environ['RAILWAY_ENVIRONMENT_NAME'].startswith('media-pr-')
+    )
+    or '--force' in sys.argv
+)
+if do_seed:
     print('seeding db')
     asyncio.run(seed())
 else:

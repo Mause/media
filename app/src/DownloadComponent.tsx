@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
 import { Navigate } from 'react-router-dom';
+
 import { usePost, useLocation } from './utils';
 import { DisplayError } from './IndexComponent';
 import { components } from './schema';

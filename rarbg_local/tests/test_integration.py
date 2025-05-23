@@ -1,6 +1,5 @@
 import json
 import logging
-import sys
 from datetime import datetime
 from typing import Annotated
 from unittest.mock import patch
@@ -17,10 +16,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
+from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
-from ..new import SearchResponse, Settings, get_current_user, get_settings
+from ..new import SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
 from .conftest import add_json, themoviedb, tolist
@@ -82,7 +82,7 @@ async def test_diagnostics(
     snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
 
     for component in results:
-        if component == 'database' and sys.version_info[:2] == (3, 11):
+        if component == 'database':
             continue
         r = await test_client.get(f'/api/diagnostics/{component}')
         results = r.json()
@@ -659,7 +659,7 @@ async def test_piratebay(aioresponses, snapshot):
                     "username": "jajaja",
                     "added": "1688804411",
                     "status": "vip",
-                    "category": "205",
+                    "category": 205,
                     "imdb": "",
                 }
             ]
@@ -686,7 +686,7 @@ async def test_websocket_error(test_client, snapshot):
 
 
 @mark.asyncio
-@patch('rarbg_local.new.get_movie_imdb_id')
+@patch('rarbg_local.websocket.get_movie_imdb_id')
 @patch('rarbg_local.providers.get_providers')
 async def test_websocket(
     get_providers, get_movie_imdb_id, test_client, fastapi_app, snapshot
@@ -698,7 +698,7 @@ async def test_websocket(
                 title="Ancient Aliens 480p x264-mSD",
                 seeders=2,
                 download="magnet:?xt=urn:btih:00000000000000000",
-                category="205",
+                category="video - tv shows",
             )
 
     async def gcu(
@@ -732,4 +732,8 @@ async def test_websocket(
     with raises(Exception) as e:
         await r.receive_json()
 
-    assert e.value.args[0] == {'type': 'websocket.close', 'code': 1000, 'reason': ''}
+    assert e.value.args[0] == {
+        'type': 'websocket.close',
+        'code': 1000,
+        'reason': 'Finished streaming',
+    }

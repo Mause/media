@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
-import ContextMenu from './ContextMenu';
-import { usePost, useLocation } from './utils';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
+
+import { usePost, useLocation } from './utils';
+import ContextMenu from './ContextMenu';
 import { DisplayError } from './IndexComponent';
 import { components } from './schema';
 
@@ -40,7 +41,7 @@ export function MonitorComponent() {
                 <ContextMenu>
                   <MenuItem
                     onClick={() =>
-                      navigate(
+                      void navigate(
                         m.type === 'MOVIE'
                           ? `/select/${m.tmdb_id}/options`
                           : `/select/${m.tmdb_id}/season`,
@@ -49,7 +50,9 @@ export function MonitorComponent() {
                   >
                     Search
                   </MenuItem>
-                  <MenuItem onClick={() => navigate(`/monitor/delete/${m.id}`)}>
+                  <MenuItem
+                    onClick={() => void navigate(`/monitor/delete/${m.id}`)}
+                  >
                     Delete
                   </MenuItem>
                 </ContextMenu>
@@ -84,9 +87,14 @@ function useDelete(path: string) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    Axios.delete(`/api/${path}`, { withCredentials: true }).then(() =>
-      setDone(true),
-    );
+    const controller = new AbortController();
+    void Axios.delete(`/api/${path}`, {
+      withCredentials: true,
+      signal: controller.signal,
+    }).then(() => setDone(true));
+    return () => {
+      controller.abort();
+    };
   }, [path]);
 
   return done;

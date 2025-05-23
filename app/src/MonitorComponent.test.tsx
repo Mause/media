@@ -1,20 +1,21 @@
-import { usesMoxios, renderWithSWR, mock, wait, listenTo } from './test.utils';
 import moxios from 'moxios';
-import {
-  MonitorComponent,
-  Monitor,
-  MonitorAddComponent,
-} from './MonitorComponent';
 import {
   unstable_HistoryRouter as HistoryRouter,
   MemoryRouter,
   Routes,
   Route,
 } from 'react-router-dom';
-import * as _ from 'lodash';
-import { expectLastRequestBody } from './utils';
+import _ from 'lodash';
 import { createMemoryHistory } from '@remix-run/router';
 import { act } from 'react';
+
+import { expectLastRequestBody } from './utils';
+import {
+  MonitorComponent,
+  Monitor,
+  MonitorAddComponent,
+} from './MonitorComponent';
+import { usesMoxios, renderWithSWR, mock, wait, listenTo } from './test.utils';
 
 usesMoxios();
 
