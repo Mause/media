@@ -729,6 +729,32 @@
         }
       }
     },
+    "/api/monitor/cron": {
+      "post": {
+        "tags": [
+          "monitor"
+        ],
+        "summary": "Monitor Cron",
+        "operationId": "monitor_cron",
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
     "/api/diagnostics": {
       "get": {
         "tags": [
