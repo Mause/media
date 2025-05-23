@@ -1,2 +1,1 @@
-
-MonitorMediaType.MOVIE Hello World is now available on ProviderSource.TORRENTS_CSV!
+MonitorMediaType.MOVIE Hello World is now available on ProviderSource.NYAA_SI!

@@ -124,7 +124,8 @@ async def check_monitor(
     monitor.status = bool(has_results)
     message = f'''
 {monitor.type} {monitor.title} is now available on {has_results.source}!
-'''
+'''.strip()
+
     logger.info(message)
     await run_in_threadpool(
         lambda: ntfy.send(
