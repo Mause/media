@@ -78,10 +78,12 @@ export function MonitorAddComponent({
   type: MediaType;
 }) {
   const auth = useAuth0();
-  const { data, error, trigger, isMutating } = useSWRMutation(
-    '/api/monitor',
-    mutationFetcher<MonitorPost, Monitor>(auth),
-  );
+  const { data, error, trigger, isMutating } = useSWRMutation<
+    Monitor,
+    Error,
+    string,
+    MonitorPost
+  >('/api/monitor', mutationFetcher<MonitorPost, Monitor>(auth));
 
   if (error) {
     return <DisplayError error={error} />;
@@ -91,7 +93,7 @@ export function MonitorAddComponent({
     return <Navigate to="/monitor" />;
   } else {
     return (
-      <MaterialLink onClick={() => trigger({ tmdb_id, type })}>
+      <MaterialLink onClick={() => void trigger({ tmdb_id, type })}>
         Add to monitor
       </MaterialLink>
     );
