@@ -13,6 +13,7 @@ import useSWRMutation from 'swr/mutation';
 import ContextMenu from './ContextMenu';
 import { DisplayError } from './IndexComponent';
 import { components } from './schema';
+import { getPrefix } from './utils';
 
 type Monitor = components['schemas']['MonitorGet'];
 type MonitorPost = components['schemas']['MonitorPost'];
@@ -109,7 +110,7 @@ function mutationFetcher<T, R>(
   }>,
 ) => Promise<R> {
   return async function fetching(key: string, options: { arg: T }) {
-    const res = await Axios.post(key, options.arg, {
+    const res = await Axios.post(getPrefix() + key, options.arg, {
       headers: {
         Authorization: 'Bearer ' + (await auth.getAccessTokenSilently()),
       },
