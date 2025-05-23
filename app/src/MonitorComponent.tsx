@@ -14,7 +14,6 @@ import ContextMenu from './ContextMenu';
 import { DisplayError } from './IndexComponent';
 import { components } from './schema';
 
-
 type Monitor = components['schemas']['MonitorGet'];
 type MonitorPost = components['schemas']['MonitorPost'];
 type MediaType = components['schemas']['MonitorMediaType'];
