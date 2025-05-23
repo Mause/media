@@ -94,7 +94,7 @@ export function MonitorAddComponent({
     return <Navigate to="/monitor" />;
   } else {
     return (
-      <MaterialLink onClick={() => void trigger({ tmdb_id, type })}>
+      <MaterialLink href="#" onClick={() => void trigger({ tmdb_id, type })}>
         Add to monitor
       </MaterialLink>
     );
