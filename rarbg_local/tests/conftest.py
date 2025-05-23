@@ -4,20 +4,26 @@ from collections.abc import AsyncGenerator
 from re import Pattern
 from typing import TypeVar
 
+import uvloop
 from async_asgi_testclient import TestClient
 from pytest import fixture, hookimpl
 from responses import RequestsMock
 
+from ..auth import get_current_user
 from ..db import Base, Role, User, get_db, get_session_local
 from ..new import (
     Settings,
     create_app,
-    get_current_user,
     get_settings,
 )
 from ..singleton import get
 from ..utils import cache_clear
 from .factories import session_var
+
+
+@fixture(scope="session")
+def event_loop_policy():
+    return uvloop.EventLoopPolicy()
 
 
 @fixture

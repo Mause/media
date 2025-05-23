@@ -158,7 +158,7 @@ class SearchResponse(BaseModel):
     title: str
     type: MediaType
     year: int | None
-    imdbID: int
+    tmdb_id: TmdbId
 
 
 class DownloadResponse(Orm):

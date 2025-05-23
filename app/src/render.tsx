@@ -1,16 +1,10 @@
 import MenuItem from '@mui/material/MenuItem';
 import _ from 'lodash';
-import {
-  MovieResponse,
-  SeriesResponse,
-  Torrents,
-  EpisodeResponse,
-} from './streaming';
 import { String } from 'typescript-string-operations';
+// eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
 import { useNavigate } from 'react-router-dom';
-import { TV } from './SeasonSelectComponent';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -20,8 +14,16 @@ import {
   faCaretDown,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { MLink } from './utils';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+
+import { getPrefix, MLink } from './utils';
+import { TV } from './SeasonSelectComponent';
+import {
+  MovieResponse,
+  SeriesResponse,
+  Torrents,
+  EpisodeResponse,
+} from './streaming';
 import ContextMenu from './ContextMenu';
 
 export function Loading({
@@ -46,7 +48,7 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
   return (
     <MenuItem
       component="a"
-      href={`/redirect/plex/${download.imdb_id}`}
+      href={`${getPrefix()}/redirect/plex/${download.imdb_id}`}
       target="_blank"
     >
       <span className="unselectable">Open in Plex</span>
@@ -119,7 +121,7 @@ export function Movies({
               </MenuItem>
               {movie.download.added_by ? (
                 <MenuItem>
-                  Added by: {movie.download.added_by.first_name}
+                  Added by: {movie.download.added_by.username}
                 </MenuItem>
               ) : null}
             </ContextMenu>
@@ -154,7 +156,7 @@ export function Progress({
   } else {
     const etaDescr =
       eta > 0 ? Moment().add(eta, 'seconds').fromNow(true) : 'Unknown time';
-    const title = String.Format(
+    const title = String.format(
       '{0:00}% ({1} remaining)',
       percentDone * 100,
       etaDescr,
@@ -163,8 +165,11 @@ export function Progress({
   }
 }
 
-export function getMarker(episode: { season?: any; episode?: any }) {
-  return String.Format('S{0:00}E{1:00}', episode.season, episode.episode);
+export function getMarker(episode: {
+  season?: number;
+  episode?: number | null;
+}) {
+  return String.format('S{0:00}E{1:00}', episode.season, episode.episode);
 }
 
 function getProgress(
@@ -241,7 +246,9 @@ function Series({
             </MenuItem>
           )}
           <OpenPlex download={serie} />
-          <MenuItem onClick={() => navigate(`/select/${serie.tmdb_id}/season`)}>
+          <MenuItem
+            onClick={() => void navigate(`/select/${serie.tmdb_id}/season`)}
+          >
             Search
           </MenuItem>
         </ContextMenu>
@@ -303,7 +310,7 @@ function Season({
     >
       <ol>
         {season.map((episode) => (
-          <li key={episode.id} value={episode.episode}>
+          <li key={episode.id} value={episode.episode!}>
             <span>{episode.download.title}</span>
             &nbsp;
             <Progress torrents={torrents} item={episode} />
@@ -322,7 +329,7 @@ function Season({
 export function NextEpisodeAirs(props: {
   tmdb_id: number;
   season: string;
-  season_episodes: { episode?: number }[];
+  season_episodes: { episode: number | null }[];
 }) {
   const { data } = useSWR<{
     episodes: { name: string; air_date: string; episode_number: number }[];

@@ -66,7 +66,7 @@ async def search_themoviedb(s: str) -> list[SearchResponse]:
             type=MAP[result['media_type']],
             title=try_(result, 'title', 'name'),
             year=get_year(result),
-            imdbID=result['id'],
+            tmdb_id=result['id'],
         )
         for result in r.get('results', [])
         if result['media_type'] in MAP

@@ -1,15 +1,15 @@
 function makeWriteableEventStream(eventTarget: EventTarget) {
   return new WritableStream({
-    start(controller) {
+    start() {
       eventTarget.dispatchEvent(new Event('start'));
     },
-    write(message, controller) {
+    write(message: unknown) {
       eventTarget.dispatchEvent(new MessageEvent('message', { data: message }));
     },
     close() {
       eventTarget.dispatchEvent(new CloseEvent('close'));
     },
-    abort(reason) {
+    abort(reason: string) {
       eventTarget.dispatchEvent(new CloseEvent('abort', { reason }));
     },
   });
@@ -19,7 +19,7 @@ function makeJsonDecoder() {
   let buf = '',
     pos = 0;
   return new TransformStream({
-    start(controller) {
+    start() {
       buf = '';
       pos = 0;
     },
@@ -46,14 +46,16 @@ export function FetchEventTarget(url: string, init: RequestInit) {
   const jsonDecoder = makeJsonDecoder();
   const eventStream = makeWriteableEventStream(eventTarget);
   fetch(url, init)
-    .then((response) => {
+    .then((response) =>
       response
         .body!.pipeThrough(new TextDecoderStream())
         .pipeThrough(jsonDecoder)
-        .pipeTo(eventStream);
-    })
-    .catch((error) => {
-      eventTarget.dispatchEvent(new CustomEvent('error', { detail: error }));
+        .pipeTo(eventStream),
+    )
+    .catch((error: unknown) => {
+      eventTarget.dispatchEvent(
+        new CustomEvent('error', { detail: error as Error }),
+      );
     });
   return eventTarget;
 }

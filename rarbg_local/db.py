@@ -330,3 +330,10 @@ def get_db(session_local=Depends(get_session_local)):
         yield sl
     finally:
         sl.close()
+
+
+def safe_delete(session: Session, entity: type[T], id: int):
+    query = session.query(entity).filter_by(id=id)
+    precondition(query.count() > 0, 'Nothing to delete')
+    query.delete()
+    session.commit()
