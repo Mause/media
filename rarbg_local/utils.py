@@ -1,12 +1,9 @@
-from collections.abc import Callable
-from functools import lru_cache as _lru_cache
-from typing import TypeVar
 import asyncio
 from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
 from functools import lru_cache as _lru_cache
 from functools import partial
-from typing import Protocol, TypeVar
+from typing import TypeVar
 
 from asyncache import cached as _cached
 from cachetools.func import ttl_cache as _ttl_cache
