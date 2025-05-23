@@ -122,8 +122,12 @@ async def check_monitor(
         return
 
     monitor.status = bool(has_results)
+
+    def name(x):
+        return x.name.title()
+
     message = f'''
-{monitor.type} {monitor.title} is now available on {has_results.source}!
+{name(monitor.type)} {monitor.title} is now available on {name(has_results.source)}!
 '''.strip()
 
     logger.info(message)
