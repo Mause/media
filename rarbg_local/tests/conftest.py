@@ -7,6 +7,7 @@ from typing import Annotated, TypeVar
 import uvloop
 from async_asgi_testclient import TestClient
 from fastapi import Depends
+from fastapi.security import SecurityScopes
 from pytest import fixture, hookimpl
 from responses import RequestsMock
 from sqlalchemy.engine.url import URL
@@ -42,8 +43,10 @@ def clear_cache():
 
 @fixture
 def test_client(fastapi_app, clear_cache, user) -> TestClient:
-    def gcu(session: Annotated[Session, Depends(get_db)]):
-        return session.query(User).first()
+    async def gcu(scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]):
+        res = session.query(User).first()
+        assert res
+        return res
 
     fastapi_app.dependency_overrides[get_current_user] = gcu
     return TestClient(fastapi_app)
@@ -77,7 +80,6 @@ def session(fastapi_app, tmp_path):
     Base.metadata.create_all(engine)
 
     with Session() as session:
-        fastapi_app.dependency_overrides[get_db] = lambda: session
         session_var.set(session)
         yield session
 
