@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import requests
-
 from follower import follow
 
 token = open('token.txt').read().strip()
