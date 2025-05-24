@@ -24,6 +24,7 @@ from .models import (
 )
 from .tmdb import get_movie, get_tv
 from .types import TmdbId
+from .utils import non_null
 from .websocket import _stream
 
 logger = logging.getLogger(__name__)
@@ -65,8 +66,9 @@ async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
 async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
-    session: Session = Depends(get_db),
+    session: Annotated[Session, Depends(get_db)],
 ):
+    session = non_null(session.object_session(user))  # resolve to db session session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         session.query(Monitor)
