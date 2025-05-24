@@ -40,3 +40,6 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
                 download=item['infohash'],
                 category=item['category'],
             )
+
+    async def health(self):
+        return self.check_http('https://torrents-csv.com')

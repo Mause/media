@@ -179,6 +179,9 @@ class HorriblesubsProvider(TvProvider):
                 episode_info=EpisodeInfo(seasonnum=season, epnum=item['episode']),
             )
 
+    async def health(self):
+        return await self.check_http('https://horriblesubs.info')
+
 
 async def main():
     print(list(await search_for_tv('95550', 1, 1)))

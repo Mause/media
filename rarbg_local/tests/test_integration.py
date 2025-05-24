@@ -735,6 +735,9 @@ async def test_websocket(
                 category="video - tv shows",
             )
 
+        async def health(self):
+            return None
+
     async def gcu(
         header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
         scopes: SecurityScopes,

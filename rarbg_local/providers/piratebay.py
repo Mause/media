@@ -95,3 +95,6 @@ class PirateBayProvider(TvProvider, MovieProvider):
                     download=magnet(item['info_hash'], item['name']),
                     category=convert_category(item['category']),
                 )
+
+    async def health(self):
+        return self.check_http('https://apibay.org')

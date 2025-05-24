@@ -169,3 +169,6 @@ class RarbgProvider(TvProvider, MovieProvider):
                 download=item.download,
                 category=movie_convert(item.category),
             )
+
+    async def health(self):
+        return self.check_http('https://torrentapi.org')

@@ -123,3 +123,6 @@ class KickassProvider(TvProvider, MovieProvider):
                 download=item['magnet'],
                 category=movie_convert(item['resolution']),
             )
+
+    async def health(self):
+        return await self.check_http('https://katcr.co')
