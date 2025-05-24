@@ -41,7 +41,7 @@ def clear_cache():
 
 
 @fixture
-def test_client(fastapi_app, clear_cache) -> TestClient:
+def test_client(fastapi_app, clear_cache, user) -> TestClient:
     def gcu(session: Annotated[Session, Depends(get_db)]):
         return session.query(User).first()
 
