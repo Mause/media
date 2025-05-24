@@ -37,8 +37,7 @@ jobs:
       - run: corepack enable
       - uses: nickcharlton/diff-check@main
         with:
-          command: npm openapi-typescript rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o app/src/schema.ts
-        working-directory: app
+          command: cd app && npm openapi-typescript rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o app/src/schema.ts
       - name: Test with pytest
         run: |
           uv run pytest -vv
