@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
-from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.session import Session, object_session
 
 from .auth import security
 from .db import (
@@ -66,9 +66,8 @@ async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
 async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
-    session: Annotated[Session, Depends(get_db)],
 ):
-    session = non_null(session.object_session(user))  # resolve to db session session
+    session = non_null(object_session(user))  # resolve to db session session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         session.query(Monitor)
