@@ -1,6 +1,6 @@
 [
   {
-    "component_name": "nyaa.si",
+    "component_name": "nyaasi",
     "component_type": "http",
     "status": "pass",
     "output": "<ClientResponse(https://nyaa.si) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"

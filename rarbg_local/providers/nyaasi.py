@@ -45,3 +45,6 @@ class NyaaProvider(TvProvider):
                     category=tv_convert(item.category),
                     episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
                 )
+
+    async def health(self):
+        return await self.check_http('https://nyaa.si')

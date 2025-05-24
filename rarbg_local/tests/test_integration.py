@@ -71,6 +71,7 @@ async def test_diagnostics(
     aioresponses.add('https://nyaa.si', 'HEAD')
     aioresponses.add('https://torrents-csv.com', 'HEAD')
     aioresponses.add('https://api.jikan.moe/v4', 'GET', body='{}')
+    aioresponses.add('https://apibay.org', 'HEAD')
 
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
@@ -734,6 +735,9 @@ async def test_websocket(
                 download="magnet:?xt=urn:btih:00000000000000000",
                 category="video - tv shows",
             )
+
+        async def health(self):
+            return None
 
     async def gcu(
         header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
