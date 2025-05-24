@@ -9,6 +9,7 @@ from async_asgi_testclient import TestClient
 from fastapi import Depends
 from pytest import fixture, hookimpl
 from responses import RequestsMock
+from sqlalchemy.engine.url import URL
 from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
@@ -58,9 +59,14 @@ def user(session):
 
 
 @fixture
-def session(fastapi_app):
+def session(fastapi_app, tmp_path):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
-        database_url='sqlite:///:memory:',
+        database_url=str(
+            URL.create(
+                'sqlite',
+                database=str(tmp_path / 'test.db'),
+            )
+        ),
         plex_token='plex_token',
     )
 
