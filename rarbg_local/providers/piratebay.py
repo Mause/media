@@ -97,4 +97,4 @@ class PirateBayProvider(TvProvider, MovieProvider):
                 )
 
     async def health(self):
-        return self.check_http('https://apibay.org')
+        return await self.check_http(self.root)

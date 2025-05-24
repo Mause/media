@@ -47,4 +47,4 @@ class NyaaProvider(TvProvider):
                 )
 
     async def health(self):
-        return self.check_http('https://nyaa.si')
+        return await self.check_http('https://nyaa.si')
