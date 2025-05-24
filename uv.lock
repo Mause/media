@@ -836,11 +836,11 @@ wheels = [
 
 [[package]]
 name = "makefun"
-version = "1.9.5"
+version = "1.16.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/8e/ed/0b064e400abf5d1da15e74f0c447b33125ba42092f2beaf5ef0ecd92e179/makefun-1.9.5.tar.gz", hash = "sha256:f0791b40036f396e6c361b0ad670cfc654291db8323c28cb3f0585b1b39cec6c", size = 59314, upload-time = "2020-12-02T16:03:54.136Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7b/cf/6780ab8bc3b84a1cce3e4400aed3d64b6db7d5e227a2f75b6ded5674701a/makefun-1.16.0.tar.gz", hash = "sha256:e14601831570bff1f6d7e68828bcd30d2f5856f24bad5de0ccb22921ceebc947", size = 73565, upload-time = "2025-05-09T15:00:42.313Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ad/3d/fd1af12ce7c4e360ac38f01f7872fbbd6b4efb088fb9f39afc8beb447701/makefun-1.9.5-py2.py3-none-any.whl", hash = "sha256:973e322aa41975dc0a1e2bc714e1fa174d4092bebc59a83502af2ce9000708b6", size = 17750, upload-time = "2020-12-02T16:03:52.917Z" },
+    { url = "https://files.pythonhosted.org/packages/b7/c0/4bc973defd1270b89ccaae04cef0d5fa3ea85b59b108ad2c08aeea9afb76/makefun-1.16.0-py2.py3-none-any.whl", hash = "sha256:43baa4c3e7ae2b17de9ceac20b669e9a67ceeadff31581007cca20a07bbe42c4", size = 22923, upload-time = "2025-05-09T15:00:41.042Z" },
 ]
 
 [[package]]
@@ -1034,7 +1034,7 @@ requires-dist = [
     { name = "fuzzywuzzy", extras = ["speedup"], specifier = "==0.18.0" },
     { name = "gunicorn" },
     { name = "lxml" },
-    { name = "makefun", specifier = "==1.9.5" },
+    { name = "makefun", specifier = "==1.16.0" },
     { name = "mause-rpc", specifier = "==0.0.18" },
     { name = "nyaapy", specifier = ">=0.7" },
     { name = "plexapi", specifier = "==4.17.0" },
