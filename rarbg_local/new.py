@@ -78,7 +78,7 @@ from .tmdb import (
     get_tv_imdb_id,
     search_themoviedb,
 )
-from .utils import Message, non_null, ImdbId, TmdbId
+from .utils import ImdbId, Message, TmdbId, non_null
 from .websocket import websocket_ns
 
 api = APIRouter()
