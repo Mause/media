@@ -27,7 +27,7 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: 'uv.lock'
-      - if: ${{ matrix.python-version == "3.14.0-beta.1" }}
+      - if: matrix.python-version == '3.14.0-beta.1'
         run: sudo apt install libxml2
       - name: Install dependencies
         run: |
