@@ -18,7 +18,7 @@ from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel
 from sqlalchemy import func
-from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.session import Session, object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -203,13 +203,12 @@ async def select(tmdb_id: TmdbId, season: int):
 async def download_post(
     things: list[DownloadPost],
     added_by: Annotated[User, security],
-    session: Session = Depends(get_db),
 ) -> list[MovieDetails | EpisodeDetails]:
     results: list[MovieDetails | EpisodeDetails] = []
 
     # work around a fastapi bug
     # see for more details https://github.com/fastapi/fastapi/discussions/6024
-    # session = non_null(session.object_session(added_by))
+    session = non_null(object_session(added_by))
 
     for thing in things:
         is_tv = thing.season is not None
