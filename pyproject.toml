@@ -29,7 +29,7 @@ dependencies = [
     "aiofiles==24.1.0",
     "fastapi-utils==0.8.0",
     "asyncache==0.3.1",
-    "makefun==1.9.5",
+    "makefun==1.16.0",
     "gunicorn",
     "nyaapy>=0.7",
     "python-healthchecklib>=0.1.1",
