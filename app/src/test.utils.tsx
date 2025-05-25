@@ -38,9 +38,7 @@ export function renderWithSWR(el: ReactElement<any>) {
     <Auth0Context.Provider value={c}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
-          <HelmetProvider>
-            <SwrConfigWrapper>{el}</SwrConfigWrapper>
-          </HelmetProvider>
+         <SwrConfigWrapper>{el}</SwrConfigWrapper>
         </ThemeProvider>
       </StyledEngineProvider>
     </Auth0Context.Provider>,
