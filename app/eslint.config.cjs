@@ -23,6 +23,10 @@ module.exports = tseslint.config(
       deprecation: fixupPluginRules(pluginDeprecation),
     },
     rules: {
+      '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
+
       'deprecation/deprecation': 'error',
       'import-x/no-named-as-default-member': 'off',
       'import-x/order': [
