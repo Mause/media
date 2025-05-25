@@ -88,6 +88,10 @@ def run_migrations_online():
         pool_pre_ping=True,
         connect_args={
             'connect_timeout': 10000,
+            "keepalives": 1,
+            "keepalives_idle": 30,
+            "keepalives_interval": 5,
+            "keepalives_count": 5,
         }
         if 'postgres' in url
         else {},

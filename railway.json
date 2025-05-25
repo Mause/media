@@ -2,7 +2,7 @@
   "$schema": "https://railway.com/railway.schema.json",
   "deploy": {
     "healthcheckPath": "/openapi.json",
-    "preDeployCommand": ["alembic upgrade head && python seed.py"],
+    "preDeployCommand": ["alembic upgrade head && python scripts/seed.py"],
     "startCommand": "gunicorn rarbg_local.asgi:app -k uvicorn.workers.UvicornWorker --timeout 90 --keep-alive 5 --log-level debug"
   }
 }
