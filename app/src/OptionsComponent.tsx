@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import qs from 'qs';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { Breadcrumbs, Typography, Alert } from '@mui/material';
