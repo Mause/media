@@ -1,8 +1,10 @@
 import logging
+from inspect import signature
+from typing import Annotated, cast
 
 from cachetools import TTLCache
-from fastapi import Depends, HTTPException, Security, status
-from fastapi.security import SecurityScopes
+from fastapi import Depends, HTTPException, Request, Security, status
+from fastapi.security import HTTPBasic, HTTPBasicCredentials, SecurityScopes
 from fastapi_oidc import get_auth
 from sqlalchemy.orm.session import Session
 
@@ -20,17 +22,20 @@ get_my_jwkaas = get_auth(
     issuer=AUTH0_DOMAIN,
     signature_cache_ttl=3600,
 )
+anno = cast(Depends, signature(get_my_jwkaas).parameters['auth_header'].default)
+anno.dependency.auto_error = False
 
 
-def auth_hook(
-    *,
-    session: Session,
+async def get_current_user(
+    session: Annotated[Session, Depends(get_db)],
     security_scopes: SecurityScopes,
-    token_info=Depends(get_my_jwkaas),
+    header: Annotated[str, anno],
 ) -> User | None:
-    if token_info is None:
+    if header is None or not header.lower().startswith('bearer '):
         logger.info("Token info is None")
         return None
+
+    token_info = get_my_jwkaas(auth_header=header)
 
     if not security_scopes.scopes:
         raise HTTPException(
@@ -62,21 +67,21 @@ def auth_hook(
         return user
 
 
-async def get_current_user(
-    security_scopes: SecurityScopes,
-    session=Depends(get_db),
-    token_info=Depends(get_my_jwkaas),
+@Depends
+def security(
+    request: Request,
+    auth0: Annotated[
+        User,
+        Security(
+            get_current_user,
+            scopes=['openid'],
+        ),
+    ],
+    basic_auth: Annotated[HTTPBasicCredentials, Security(HTTPBasic(auto_error=False))],
 ):
-    user = auth_hook(
-        session=session, security_scopes=security_scopes, token_info=token_info
-    )
-    if user:
-        return user
+    if basic_auth and request.url.path == '/api/monitor/cron':
+        return basic_auth
+    elif auth0:
+        return auth0
     else:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-
-security = Security(
-    get_current_user,
-    scopes=['openid'],
-)
+        raise HTTPException(status_code=403)

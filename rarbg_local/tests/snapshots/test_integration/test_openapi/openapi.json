@@ -47,6 +47,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -60,6 +63,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -112,6 +118,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -212,6 +221,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -314,6 +326,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -339,6 +354,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -368,6 +386,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -381,6 +402,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -443,6 +467,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -456,6 +483,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -509,6 +539,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -558,6 +591,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -632,6 +668,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       },
@@ -678,6 +717,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -694,6 +736,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -751,6 +796,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -783,6 +831,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -799,6 +850,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -1815,6 +1869,10 @@
       "OpenIdConnect": {
         "type": "openIdConnect",
         "openIdConnectUrl": "https://mause.au.auth0.com//.well-known/openid-configuration"
+      },
+      "HTTPBasic": {
+        "type": "http",
+        "scheme": "basic"
       }
     }
   }
