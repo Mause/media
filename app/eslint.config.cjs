@@ -27,11 +27,13 @@ module.exports = tseslint.config(
       'import-x/no-named-as-default-member': 'off',
       'import-x/order': [
         'error',
-
         {
           'newlines-between': 'always',
         },
       ],
+      '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
     },
     settings: {
       'import-x/resolver-next': [createTypeScriptImportResolver({})],
