@@ -182,13 +182,3 @@ class HorriblesubsProvider(TvProvider):
 
     async def health(self):
         return await self.check_http(ROOT)
-
-
-async def main():
-    print(list(await search_for_tv('95550', 1, 1)))
-
-
-if __name__ == '__main__':
-    import uvloop
-
-    uvloop.run(main())

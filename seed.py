@@ -17,6 +17,7 @@ from rarbg_local.db import (
 )
 from rarbg_local.singleton import get
 
+logger = logging.getLogger(__name__)
 logging.getLogger('backoff').addHandler(logging.StreamHandler())
 
 
@@ -77,7 +78,7 @@ do_seed = (
     or '--force' in sys.argv
 )
 if do_seed:
-    print('seeding db')
+    logger.info('seeding db')
     asyncio.run(seed())
 else:
-    print('not seeding db')
+    logger.info('not seeding db')
