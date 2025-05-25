@@ -174,7 +174,7 @@ function ParentComponentInt() {
     </Router>
   );
 }
-function SwrConfigWrapper({ children }: { children: React.ReactNode }) {
+export function SwrConfigWrapper({ children }: { children: React.ReactNode }) {
   const auth = useAuth0();
   return (
     <SWRConfig
