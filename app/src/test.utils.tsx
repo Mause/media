@@ -11,7 +11,7 @@ import {
 import { Location, MemoryHistory } from '@remix-run/router';
 import { Listener } from '@remix-run/router/dist/history';
 
-import { swrConfig } from './streaming';
+import { SwrConfigWrapper } from './streaming';
 
 const theme = createTheme();
 
@@ -37,7 +37,11 @@ export function renderWithSWR(el: ReactElement<any>) {
   return render(
     <Auth0Context.Provider value={c}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>{swrConfig(() => el)()}</ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <HelmetProvider>
+            <SwrConfigWrapper>{el}</SwrConfigWrapper>
+          </HelmetProvider>
+        </ThemeProvider>
       </StyledEngineProvider>
     </Auth0Context.Provider>,
   );
