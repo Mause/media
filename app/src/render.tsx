@@ -87,7 +87,7 @@ export function Movies({
       <h2>
         Movies <Loading loading={loading} />
       </h2>
-      {sortedMovies?.true?.length ? (
+      {sortedMovies.true?.length ? (
         <Collapsible
           trigger={head(faCaretDown)}
           triggerElementProps={{
@@ -97,7 +97,7 @@ export function Movies({
           triggerWhenOpen={head(faCaretUp)}
         >
           <ul>
-            {(sortedMovies.true || []).map((movie) => (
+            {sortedMovies.true.map((movie) => (
               <li key={movie.id}>
                 <span>{movie.download.title}</span>
               </li>
@@ -119,11 +119,9 @@ export function Movies({
               >
                 Open in IMDB
               </MenuItem>
-              {movie.download.added_by ? (
                 <MenuItem>
                   Added by: {movie.download.added_by.username}
                 </MenuItem>
-              ) : null}
             </ContextMenu>
             &nbsp;
             <Progress torrents={torrents} item={movie} />
@@ -182,8 +180,8 @@ function getProgress(
   if (tid.includes('.')) {
     tid = tid.split('.')[0];
     const marker = getMarker(item as EpisodeResponse);
+    if (!(tid in torrents)) return null;
     const torrent = torrents[tid];
-    if (!torrent) return null;
     eta = torrent.eta;
     const tf = torrent.files.find((file) => file.name.includes(marker));
     if (tf) {
