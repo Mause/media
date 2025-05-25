@@ -71,7 +71,7 @@ def normalise(episodes: list[Episode], title: str) -> str | None:
 
     to_replace = punctuation_re.sub(' ', episode.name)
     to_replace = '.'.join(to_replace.split())
-    title = re.sub(to_replace, 'TITLE', title, re.I)
+    title = re.sub(to_replace, 'TITLE', title, flags=re.I)
 
     title = title.replace(full, 'S00E00')
 
