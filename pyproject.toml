@@ -66,6 +66,7 @@ dev = [
     "types-lxml>=2025.3.30",
     "types-selenium>=3.141.9",
     "types-cachetools>=5.5.0.20240820",
+    "libcst>=1.7.0",
 ]
 debug = ["pudb", "pdbpp"]
 cli = [
