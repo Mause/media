@@ -23,11 +23,7 @@ import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
-import {
-  MonitorComponent,
-  MonitorAddComponent,
-  MonitorDeleteComponent,
-} from './MonitorComponent';
+import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
@@ -178,11 +174,7 @@ function ParentComponentInt() {
     </Router>
   );
 }
-function SwrConfigWrapper({
-  WrappedComponent,
-}: {
-  WrappedComponent: React.ComponentType;
-}) {
+export function SwrConfigWrapper({ children }: { children: React.ReactNode }) {
   const auth = useAuth0();
   return (
     <SWRConfig
@@ -202,15 +194,18 @@ function SwrConfigWrapper({
           ),
       }}
     >
-      <WrappedComponent />
+      {children}
     </SWRConfig>
   );
 }
 
-export function swrConfig(WrappedComponent: React.ComponentType) {
-  return () => <SwrConfigWrapper WrappedComponent={WrappedComponent} />;
+export function ParentComponent() {
+  return (
+    <SwrConfigWrapper>
+      <ParentComponentInt />
+    </SwrConfigWrapper>
+  );
 }
-const ParentComponent = swrConfig(ParentComponentInt);
 
 function AppRoutes() {
   const auth = useAuth0();
@@ -336,14 +331,6 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/monitor/add/:tmdb_id"
-        element={
-          <RouteTitle title="Monitor">
-            <MonitorAddComponent />
-          </RouteTitle>
-        }
-      />
-      <Route
         path="/monitor"
         element={
           <RouteTitle title="Monitor">
@@ -362,4 +349,3 @@ function AppRoutes() {
     </Routes>
   );
 }
-export { ParentComponent };

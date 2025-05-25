@@ -1,6 +1,6 @@
 [
   {
-    "component_name": "torrentapi.org",
+    "component_name": "rarbg",
     "component_type": "http",
     "status": "pass",
     "output": "<ClientResponse(https://torrentapi.org) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"

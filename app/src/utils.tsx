@@ -130,7 +130,9 @@ export function ExtMLink(props: { href: string; children: string }) {
 }
 
 export function expectLastRequestBody() {
-  return expect(JSON.parse(moxios.requests.mostRecent().config.data as string));
+  const mr = moxios.requests.mostRecent();
+  expect(mr).toBeTruthy();
+  return expect(JSON.parse(mr.config.data as string));
 }
 
 export function useLocation<T>() {

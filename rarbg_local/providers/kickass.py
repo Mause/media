@@ -13,6 +13,7 @@ from ..types import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)
+ROOT = 'https://katcr.co'
 
 
 def is_node(node):
@@ -20,7 +21,7 @@ def is_node(node):
 
 
 async def fetch(url: str) -> AsyncGenerator[dict[str, Any], None]:
-    async with ClientSession(base_url='https://katcr.co') as session:
+    async with ClientSession(base_url=ROOT) as session:
         try:
             r = await session.get(url)
         except ConnectionError:
@@ -123,3 +124,6 @@ class KickassProvider(TvProvider, MovieProvider):
                 download=item['magnet'],
                 category=movie_convert(item['resolution']),
             )
+
+    async def health(self):
+        return await self.check_http(ROOT)

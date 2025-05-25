@@ -9,12 +9,11 @@ from .abc import MovieProvider, TvProvider, format
 
 class TorrentsCsvProvider(MovieProvider, TvProvider):
     type = ProviderSource.TORRENTS_CSV
+    root = 'https://torrents-csv.com'
 
     async def query(self, q: str):
         async with aiohttp.ClientSession() as session:
-            res = await session.get(
-                "https://torrents-csv.com/service/search", params={"q": q}
-            )
+            res = await session.get(self.root + "/service/search", params={"q": q})
             return (await res.json())['torrents']
 
     async def search_for_movie(
@@ -40,3 +39,6 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
                 download=item['infohash'],
                 category=item['category'],
             )
+
+    async def health(self):
+        return await self.check_http(self.root)

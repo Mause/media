@@ -2,18 +2,22 @@ import json
 from asyncio import get_event_loop
 from collections.abc import AsyncGenerator
 from re import Pattern
-from typing import TypeVar
+from typing import Annotated, TypeVar
 
 import uvloop
 from async_asgi_testclient import TestClient
+from fastapi import Depends
+from fastapi.security import SecurityScopes
 from pytest import fixture, hookimpl
 from responses import RequestsMock
+from sqlalchemy.engine.url import URL
+from sqlalchemy.orm.session import Session
 
+from ..auth import get_current_user
 from ..db import Base, Role, User, get_db, get_session_local
 from ..new import (
     Settings,
     create_app,
-    get_current_user,
     get_settings,
 )
 from ..singleton import get
@@ -38,8 +42,13 @@ def clear_cache():
 
 
 @fixture
-def test_client(fastapi_app, clear_cache, user: User) -> TestClient:
-    fastapi_app.dependency_overrides[get_current_user] = lambda: user
+def test_client(fastapi_app, clear_cache, user) -> TestClient:
+    async def gcu(scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]):
+        res = session.query(User).first()
+        assert res
+        return res
+
+    fastapi_app.dependency_overrides[get_current_user] = gcu
     return TestClient(fastapi_app)
 
 
@@ -53,9 +62,14 @@ def user(session):
 
 
 @fixture
-def session(fastapi_app):
+def session(fastapi_app, tmp_path):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
-        database_url='sqlite:///:memory:',
+        database_url=str(
+            URL.create(
+                'sqlite',
+                database=str(tmp_path / 'test.db'),
+            )
+        ),
         plex_token='plex_token',
     )
 
@@ -66,7 +80,6 @@ def session(fastapi_app):
     Base.metadata.create_all(engine)
 
     with Session() as session:
-        fastapi_app.dependency_overrides[get_db] = lambda: session
         session_var.set(session)
         yield session
 

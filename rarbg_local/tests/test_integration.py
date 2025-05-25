@@ -1,6 +1,5 @@
 import json
 import logging
-import sys
 from datetime import datetime
 from typing import Annotated
 from unittest.mock import patch
@@ -17,15 +16,17 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
-from ..db import MAX_TRIES, Download, create_episode, create_movie
+from ..auth import get_current_user
+from ..db import MAX_TRIES, Download, Monitor, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
-from ..new import SearchResponse, Settings, get_current_user, get_settings
+from ..new import ProviderSource, SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
 from .conftest import add_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
+    ITorrentFactory,
     MovieDetailsFactory,
     MovieResponseFactory,
     TvApiResponseFactory,
@@ -70,6 +71,7 @@ async def test_diagnostics(
     aioresponses.add('https://nyaa.si', 'HEAD')
     aioresponses.add('https://torrents-csv.com', 'HEAD')
     aioresponses.add('https://api.jikan.moe/v4', 'GET', body='{}')
+    aioresponses.add('https://apibay.org', 'HEAD')
 
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
@@ -82,7 +84,7 @@ async def test_diagnostics(
     snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
 
     for component in results:
-        if component == 'database' and sys.version_info[:2] == (3, 11):
+        if component == 'database':
             continue
         r = await test_client.get(f'/api/diagnostics/{component}')
         results = r.json()
@@ -410,6 +412,39 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
 
 @mark.asyncio
+@patch('rarbg_local.monitor._stream')
+@patch('aiontfy.Ntfy.publish')
+async def test_update_monitor(
+    send, stream, aioresponses, test_client, session, snapshot
+):
+    themoviedb(
+        aioresponses,
+        '/movie/5',
+        MovieResponseFactory.build(title='Hello World').model_dump(),
+    )
+    r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
+    ident = r.json()['id']
+    assert r.status_code == 201
+
+    stream.return_value.__aiter__.return_value = iter(
+        [ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)]
+    )
+
+    r = await test_client.post(
+        '/api/monitor/cron',
+    )
+    r.raise_for_status()
+
+    assert session.get(Monitor, ident).status
+    send.assert_called_once()
+    message = send.call_args.args[0]
+    snapshot.assert_match(
+        message.message,
+        'message.txt',
+    )
+
+
+@mark.asyncio
 async def test_stats(test_client, session):
     user1 = UserFactory.create(username='user1')
     user2 = UserFactory.create(username='user2')
@@ -686,7 +721,7 @@ async def test_websocket_error(test_client, snapshot):
 
 
 @mark.asyncio
-@patch('rarbg_local.new.get_movie_imdb_id')
+@patch('rarbg_local.websocket.get_movie_imdb_id')
 @patch('rarbg_local.providers.get_providers')
 async def test_websocket(
     get_providers, get_movie_imdb_id, test_client, fastapi_app, snapshot
@@ -700,6 +735,9 @@ async def test_websocket(
                 download="magnet:?xt=urn:btih:00000000000000000",
                 category="video - tv shows",
             )
+
+        async def health(self):
+            return None
 
     async def gcu(
         header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
@@ -732,4 +770,8 @@ async def test_websocket(
     with raises(Exception) as e:
         await r.receive_json()
 
-    assert e.value.args[0] == {'type': 'websocket.close', 'code': 1000, 'reason': ''}
+    assert e.value.args[0] == {
+        'type': 'websocket.close',
+        'code': 1000,
+        'reason': 'Finished streaming',
+    }

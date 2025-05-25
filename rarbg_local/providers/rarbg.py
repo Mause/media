@@ -124,6 +124,7 @@ def _get(base_url: str, **kwargs: str) -> list[RarbgTorrent]:
 
 class RarbgProvider(TvProvider, MovieProvider):
     type = ProviderSource.RARBG
+    root = 'https://torrentapi.org'
 
     async def search_for_tv(
         self,
@@ -139,7 +140,7 @@ class RarbgProvider(TvProvider, MovieProvider):
 
         for item in chain.from_iterable(
             get_rarbg_iter(
-                'https://torrentapi.org/pubapi_v2.php',
+                self.root + '/pubapi_v2.php',
                 'series',
                 search_imdb=imdb_id,
                 search_string=search_string,
@@ -158,9 +159,7 @@ class RarbgProvider(TvProvider, MovieProvider):
         self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
         for item in chain.from_iterable(
-            get_rarbg_iter(
-                'https://torrentapi.org/pubapi_v2.php', 'movie', search_imdb=imdb_id
-            )
+            get_rarbg_iter(self.root + '/pubapi_v2.php', 'movie', search_imdb=imdb_id)
         ):
             yield ITorrent(
                 source=ProviderSource.RARBG,
@@ -169,3 +168,6 @@ class RarbgProvider(TvProvider, MovieProvider):
                 download=item.download,
                 category=movie_convert(item.category),
             )
+
+    async def health(self):
+        return await self.check_http(self.root)

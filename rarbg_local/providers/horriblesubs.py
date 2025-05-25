@@ -16,10 +16,11 @@ from ..utils import cached
 from .abc import TvProvider, tv_convert
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
+ROOT = 'https://horriblesubs.info/'
 
 
 def make_session():
-    return ClientSession(base_url='https://horriblesubs.info/')
+    return ClientSession(base_url=ROOT)
 
 
 class HorriblesubsDownloadType(Enum):
@@ -178,6 +179,9 @@ class HorriblesubsProvider(TvProvider):
                 category=tv_convert(item['resolution']),
                 episode_info=EpisodeInfo(seasonnum=season, epnum=item['episode']),
             )
+
+    async def health(self):
+        return await self.check_http(ROOT)
 
 
 async def main():
