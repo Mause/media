@@ -25,18 +25,42 @@ def should_transform(node):
 
 
 class FixPandasVisitor(VisitorBasedCodemodCommand):
+    def is_transformable(self, node: cst.Call) -> bool:
+        if not isinstance(node.func, cst.Attribute):
+            return False
+        if not isinstance(node.func.attr, cst.Name):
+            return False
+        if node.func.attr.value not in {'all', 'first'}:
+            return False
+
+        stack = [node.func.value]
+        while isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute):
+            last = node
+            node = node.func.value
+            stack.append(node)
+
+        if (
+            isinstance(last.func, cst.Attribute)
+            and isinstance(last.func.value, cst.Name)
+            and last.func.value.value == 'session'
+            and last.func.attr.value == 'query'
+        ):
+            return last
+
     def leave_Call(
         self, old_node: cst.Call, node: cst.Call
     ) -> cst.CSTNode | FlattenSentinel:
-        if (
-            isinstance(node.func, cst.Attribute)
-            and node.func.value.value == 'session'
-            and node.func.attr.value == 'query'
-        ):
-            # Replace pd with importorskip
+        if query_call := self.is_transformable(node):
             new_call = cst.Call(
-                func=cst.Name('importorskip'),
-                args=[cst.Arg(cst.SimpleString("'pandas'"))],
+                func=cst.Attribute(cst.Name('session'), cst.Name('execute')),
+                args=[
+                    cst.Arg(
+                        cst.Call(
+                            func=cst.Name('select'),
+                            args=query_call.args,
+                        )
+                    ),
+                ],
             )
             return new_call
         return node
