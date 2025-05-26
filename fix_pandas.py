@@ -35,12 +35,14 @@ class FixPandasVisitor(VisitorBasedCodemodCommand):
             and last.func.value.value == 'session'
             and last.func.attr.value == 'query'
         ):
-            return last
+            return last, stack
 
     def leave_Call(
         self, old_node: cst.Call, node: cst.Call
     ) -> cst.CSTNode | FlattenSentinel:
-        if query_call := self.is_transformable(node):
+        if a := self.is_transformable(node):
+            (query_call, stack) = a
+
             new_call = cst.Call(
                 func=cst.Attribute(cst.Name('session'), cst.Name('execute')),
                 args=[
