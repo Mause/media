@@ -4,7 +4,12 @@ from typing import Annotated, cast
 
 from cachetools import TTLCache
 from fastapi import Depends, HTTPException, Request, Security, params, status
-from fastapi.security import HTTPBasic, HTTPBasicCredentials, SecurityScopes, OpenIdConnect
+from fastapi.security import (
+    HTTPBasic,
+    HTTPBasicCredentials,
+    OpenIdConnect,
+    SecurityScopes,
+)
 from fastapi_oidc import get_auth
 from sqlalchemy.orm.session import Session
 
