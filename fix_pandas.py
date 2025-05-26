@@ -3,6 +3,7 @@ import os
 import libcst as cst
 from libcst import FlattenSentinel
 from libcst.codemod import CodemodTest, VisitorBasedCodemodCommand
+from libcst.metadata import ParentNodeProvider
 
 os.environ['LIBCST_PARSER_TYPE'] = 'pure'
 
@@ -25,6 +26,8 @@ def should_transform(node):
 
 
 class FixPandasVisitor(VisitorBasedCodemodCommand):
+    METADATA_DEPENDENCIES = (ParentNodeProvider,)
+
     def is_transformable(self, node: cst.Call) -> bool:
         if not isinstance(node.func, cst.Attribute):
             return False
