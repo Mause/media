@@ -3,7 +3,7 @@ from inspect import signature
 from typing import Annotated, cast
 
 from cachetools import TTLCache
-from fastapi import Depends, HTTPException, Request, Security, status
+from fastapi import Depends, HTTPException, Request, Security, status, params
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, SecurityScopes
 from fastapi_oidc import get_auth
 from sqlalchemy.orm.session import Session
@@ -22,7 +22,7 @@ get_my_jwkaas = get_auth(
     issuer=AUTH0_DOMAIN,
     signature_cache_ttl=3600,
 )
-anno = cast(Depends, signature(get_my_jwkaas).parameters['auth_header'].default)
+anno = cast(params.Depends, signature(get_my_jwkaas).parameters['auth_header'].default)
 anno.dependency.auto_error = False
 
 
