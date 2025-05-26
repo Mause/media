@@ -3032,9 +3032,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-import-context@npm:^0.1.4":
-  version: 0.1.4
-  resolution: "eslint-import-context@npm:0.1.4"
+"eslint-import-context@npm:^0.1.5":
+  version: 0.1.5
+  resolution: "eslint-import-context@npm:0.1.5"
   dependencies:
     get-tsconfig: "npm:^4.10.1"
     stable-hash: "npm:^0.0.5"
@@ -3043,7 +3043,7 @@ __metadata:
   peerDependenciesMeta:
     unrs-resolver:
       optional: true
-  checksum: 10/d026da9261c19ac67b6300ec7c83fa2645f116413e0e9e7bfa666e5b03c12556be9a82ccf3ca095aca041e6f9b34505d634108eeabedcb5631170159ee05564d
+  checksum: 10/e8afc531978d5e9e4a75e631f6c7ee706e67fe471fbe38289d1ac797ff7908406f590de5e853fb1ee68c66065a743701a766a19cc8baa2f3359550625f66508b
   languageName: node
   linkType: hard
 
@@ -3097,13 +3097,13 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-import-x@npm:^4.12.2":
-  version: 4.13.1
-  resolution: "eslint-plugin-import-x@npm:4.13.1"
+  version: 4.13.3
+  resolution: "eslint-plugin-import-x@npm:4.13.3"
   dependencies:
     "@typescript-eslint/utils": "npm:^8.32.1"
     comment-parser: "npm:^1.4.1"
     debug: "npm:^4.4.1"
-    eslint-import-context: "npm:^0.1.4"
+    eslint-import-context: "npm:^0.1.5"
     eslint-import-resolver-node: "npm:^0.3.9"
     is-glob: "npm:^4.0.3"
     minimatch: "npm:^9.0.3 || ^10.0.1"
@@ -3113,7 +3113,7 @@ __metadata:
     unrs-resolver: "npm:^1.7.2"
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0
-  checksum: 10/77c376706e648f6275f86173675f593b57db82a5fba6d273f7efc1f8ffbbc58ecc8ab4c54223cb545e0ac6d9f311d75db1ba81a7c61aceaea820d5b5890a9802
+  checksum: 10/5fc8f7328e7ec6f4e0018d8ca2ad5fd6ba5f11a9a116ffefaf4721fdaa27ae3347a54ff330eb24f4e79ace2279f841de643d2bcdf4710908ece98336311e1534
   languageName: node
   linkType: hard
 
