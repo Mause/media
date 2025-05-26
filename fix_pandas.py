@@ -43,15 +43,18 @@ class FixPandasVisitor(VisitorBasedCodemodCommand):
         if a := self.is_transformable(node):
             (query_call, stack) = a
 
+            select = cst.Call(
+                func=cst.Name('select'),
+                args=query_call.args,
+            )
+
+            self.get_metadata(ParentNodeProvider, query_call)
+            stack[0].with_deep_changes(query_call, value=select)
+
             new_call = cst.Call(
                 func=cst.Attribute(cst.Name('session'), cst.Name('execute')),
                 args=[
-                    cst.Arg(
-                        cst.Call(
-                            func=cst.Name('select'),
-                            args=query_call.args,
-                        )
-                    ),
+                    cst.Arg(select),
                 ],
             )
             return new_call
