@@ -103,4 +103,4 @@ async def test_no_auth(fastapi_app, test_client):
     r = await test_client.get('/api/diagnostics')
 
     assert r.status_code == 403
-    assert r.json() == {'detail': 'Not authenticated'}
+    assert r.json() == {'detail': 'Forbidden'}

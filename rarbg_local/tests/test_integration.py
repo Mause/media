@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 from datetime import datetime
@@ -415,7 +416,7 @@ async def test_delete_monitor(aioresponses, test_client, session):
 @patch('rarbg_local.monitor._stream')
 @patch('aiontfy.Ntfy.publish')
 async def test_update_monitor(
-    send, stream, aioresponses, test_client, session, snapshot
+    send, stream, aioresponses, test_client, session, snapshot, fastapi_app
 ):
     themoviedb(
         aioresponses,
@@ -423,6 +424,7 @@ async def test_update_monitor(
         MovieResponseFactory.build(title='Hello World').model_dump(),
     )
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
+    r.raise_for_status()
     ident = r.json()['id']
     assert r.status_code == 201
 
@@ -430,8 +432,10 @@ async def test_update_monitor(
         [ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)]
     )
 
+    del fastapi_app.dependency_overrides[get_current_user]
     r = await test_client.post(
         '/api/monitor/cron',
+        headers={'Authorization': 'Basic ' + base64.b64encode(b'hello:world').decode()},
     )
     r.raise_for_status()
 
