@@ -3,7 +3,7 @@ from inspect import signature
 from typing import Annotated, cast
 
 from cachetools import TTLCache
-from fastapi import Depends, HTTPException, Request, Security, status, params
+from fastapi import Depends, HTTPException, Request, Security, params, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, SecurityScopes
 from fastapi_oidc import get_auth
 from sqlalchemy.orm.session import Session
