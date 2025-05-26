@@ -7,7 +7,7 @@ import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 import MaterialLink from '@mui/material/Link';
-import { Auth0ContextInterface, useAuth0, User } from '@auth0/auth0-react';
+import { Auth0ContextInterface, useAuth0 } from '@auth0/auth0-react';
 import useSWRMutation from 'swr/mutation';
 
 import ContextMenu from './ContextMenu';

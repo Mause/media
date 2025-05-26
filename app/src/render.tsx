@@ -120,11 +120,9 @@ export function Movies({
               >
                 Open in IMDB
               </MenuItem>
-              {
-                <MenuItem>
-                  Added by: {movie.download.added_by.username}
-                </MenuItem>
-              }
+              <MenuItem>
+                Added by: {movie.download.added_by.username}
+              </MenuItem>
             </ContextMenu>
             &nbsp;
             <Progress torrents={torrents} item={movie} />
