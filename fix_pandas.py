@@ -3,6 +3,13 @@ import os
 import libcst as cst
 from libcst import FlattenSentinel
 from libcst.codemod import CodemodTest, VisitorBasedCodemodCommand
+from libcst.matchers import (
+    Attribute,
+    Call,
+    Name,
+    OneOf,
+    matches,
+)
 from libcst.metadata import ParentNodeProvider
 
 os.environ['LIBCST_PARSER_TYPE'] = 'pure'
@@ -15,13 +22,19 @@ import_from = cst.ImportFrom(
 class FixPandasVisitor(VisitorBasedCodemodCommand):
     METADATA_DEPENDENCIES = (ParentNodeProvider,)
 
-    def is_transformable(self, node: cst.Call) -> bool:
-        if not isinstance(node.func, cst.Attribute):
-            return False
-        if not isinstance(node.func.attr, cst.Name):
-            return False
-        if node.func.attr.value not in {'all', 'first'}:
-            return False
+    def is_transformable(
+        self, node: cst.Call
+    ) -> tuple[cst.Call, list[cst.CSTNode]] | None:
+        if not matches(
+            node,
+            Call(
+                func=Attribute(
+                    attr=OneOf(Name('all'), Name('first')),
+                ),
+            ),
+            metadata_resolver=self,
+        ):
+            return None
 
         stack = [node.func.value]
         while isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute):
@@ -29,13 +42,19 @@ class FixPandasVisitor(VisitorBasedCodemodCommand):
             node = node.func.value
             stack.append(node)
 
-        if (
-            isinstance(last.func, cst.Attribute)
-            and isinstance(last.func.value, cst.Name)
-            and last.func.value.value == 'session'
-            and last.func.attr.value == 'query'
+        if matches(
+            last,
+            Call(
+                func=Attribute(
+                    value=Name('session'),
+                    attr=Name('query'),
+                ),
+            ),
+            metadata_resolver=self,
         ):
             return last, stack
+
+        return None
 
     def leave_Call(
         self, old_node: cst.Call, node: cst.Call
