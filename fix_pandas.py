@@ -12,19 +12,6 @@ import_from = cst.ImportFrom(
 )
 
 
-def should_transform(node):
-    alias = node.names[0]
-    if not isinstance(alias, cst.ImportAlias):
-        return False
-
-    name = alias.name.value
-
-    if not isinstance(name, cst.Name):
-        return False
-
-    return name.value == 'pandas'
-
-
 class FixPandasVisitor(VisitorBasedCodemodCommand):
     METADATA_DEPENDENCIES = (ParentNodeProvider,)
 
