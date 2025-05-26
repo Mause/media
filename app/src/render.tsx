@@ -403,7 +403,7 @@ export function shouldCollapse(
     const i_i = +i;
     const seasonMeta = data.seasons.find((s) => s.season_number === i_i);
     if (seasonMeta) {
-      const hasNext = i_i + 1 > data.seasons.length;
+      const hasNext = true; // data.seasons[i_i + 1];
 
       const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
       const hasNumbers = _.map(episodes, 'episode');
