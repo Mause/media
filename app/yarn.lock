@@ -1571,12 +1571,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18":
-  version: 18.19.103
-  resolution: "@types/node@npm:18.19.103"
+"@types/node@npm:^22":
+  version: 22.15.23
+  resolution: "@types/node@npm:22.15.23"
   dependencies:
-    undici-types: "npm:~5.26.4"
-  checksum: 10/12c9abc9c467fd59771d7f9297797b8361aeb364653cde575e5bfba57d8a42dcbcab1b520807ab774f36d6adc2e90774cf533e1376a749e9e4155855e4df7e48
+    undici-types: "npm:~6.21.0"
+  checksum: 10/1e121e0232cb61fdf34a86589aa4d43248dafd293be4858ab37acc2fa62cfbb7462bc0c3c8104515ec25ae4d6bf8b7e4a5217f05574ac53fd41e2a19bdca09f6
   languageName: node
   linkType: hard
 
@@ -2189,7 +2189,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.1"
     "@types/lodash": "npm:^4.17.17"
     "@types/moxios": "npm:^0.4.17"
-    "@types/node": "npm:^18"
+    "@types/node": "npm:^22"
     "@types/qs": "npm:^6.9.5"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
@@ -5640,10 +5640,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~5.26.4":
-  version: 5.26.5
-  resolution: "undici-types@npm:5.26.5"
-  checksum: 10/0097779d94bc0fd26f0418b3a05472410408877279141ded2bd449167be1aed7ea5b76f756562cb3586a07f251b90799bab22d9019ceba49c037c76445f7cddd
+"undici-types@npm:~6.21.0":
+  version: 6.21.0
+  resolution: "undici-types@npm:6.21.0"
+  checksum: 10/ec8f41aa4359d50f9b59fa61fe3efce3477cc681908c8f84354d8567bb3701fafdddf36ef6bff307024d3feb42c837cf6f670314ba37fc8145e219560e473d14
   languageName: node
   linkType: hard
 
