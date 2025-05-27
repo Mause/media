@@ -1,7 +1,7 @@
 import enum
 import logging
 from datetime import datetime
-from typing import TypeVar, cast
+from typing import Annotated, TypeVar, cast
 
 import backoff
 import psycopg2
@@ -16,7 +16,7 @@ from sqlalchemy import (
     create_engine,
     event,
 )
-from sqlalchemy.engine import URL, make_url
+from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.orm import (
     Mapped,
     Session,
@@ -285,7 +285,7 @@ def get_or_create(session: Session, model: type[T], defaults=None, **kwargs) -> 
 
 def normalise_db_url(database_url: str) -> URL:
     parsed = make_url(database_url)
-    if parsed.drivername == 'postgres':
+    if parsed.get_backend_name() == 'postgres':
         parsed = parsed.set(drivername='postgresql')
     return parsed
 
@@ -294,12 +294,12 @@ MAX_TRIES = 5
 
 
 @singleton
-def get_session_local(settings: Settings = Depends(get_settings)):
+def get_engine(settings: Annotated[Settings, Depends(get_settings)]) -> Engine:
     db_url = normalise_db_url(settings.database_url)
 
     logger.info('db_url: %s', db_url)
 
-    sqlite = db_url.drivername == 'sqlite'
+    sqlite = db_url.get_backend_name() == 'sqlite'
     if sqlite:
         engine = create_engine(
             db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
@@ -327,6 +327,11 @@ def get_session_local(settings: Settings = Depends(get_settings)):
         def receive_do_connect(dialect, conn_rec, cargs, cparams):
             return psycopg2.connect(*cargs, **cparams)
 
+    return engine
+
+
+@singleton
+def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> sessionmaker:
     return sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
