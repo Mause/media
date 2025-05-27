@@ -14,6 +14,7 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
     async def query(self, q: str):
         async with aiohttp.ClientSession() as session:
             res = await session.get(self.root + "/service/search", params={"q": q})
+            res.raise_for_status()
             return (await res.json())['torrents']
 
     async def search_for_movie(

@@ -60,6 +60,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
                 params={'q': imdb_id + ' ' + format(season, episode)},
             ) as resp,
         ):
+            resp.raise_for_status()
             data = await resp.json()
 
             if len(data) == 1 and data[0]['name'] == 'No results returned':
@@ -82,6 +83,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
             aiohttp.ClientSession() as session,
             await session.get(self.root + '/q.php', params={'q': imdb_id}) as resp,
         ):
+            resp.raise_for_status()
             data = await resp.json()
 
             if len(data) == 1 and data[0]['name'] == 'No results returned':
