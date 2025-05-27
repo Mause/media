@@ -93,7 +93,10 @@ async def monitor_cron(
 
     tasks = [check_monitor(monitor, session, ntfy) for monitor in monitors]
 
-    return await gather(*tasks, return_exceptions=True)
+    return [
+        repr(e) if isinstance(e, Exception) else e
+        for e in await gather(*tasks, return_exceptions=True)
+    ]
 
 
 async def check_monitor(
