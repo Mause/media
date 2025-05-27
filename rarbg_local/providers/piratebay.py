@@ -36,6 +36,8 @@ def convert_category(category: int):
             if category == cat:
                 return f'{broad} - {subcat}'.replace('_', ' ').title()
 
+    return f'unrecognised category: {category}'
+
 
 def magnet(info_hash: str, name: str) -> str:
     """Generate a magnet link from an info hash."""
