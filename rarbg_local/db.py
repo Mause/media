@@ -285,7 +285,7 @@ def get_or_create(session: Session, model: type[T], defaults=None, **kwargs) -> 
 
 def normalise_db_url(database_url: str) -> URL:
     parsed = make_url(database_url)
-    if parsed.drivername == 'postgres':
+    if parsed.get_backend_name() == 'postgres':
         parsed = parsed.set(drivername='postgresql')
     return parsed
 
@@ -299,7 +299,7 @@ def get_session_local(settings: Settings = Depends(get_settings)):
 
     logger.info('db_url: %s', db_url)
 
-    sqlite = db_url.drivername == 'sqlite'
+    sqlite = db_url.get_backend_name() == 'sqlite'
     if sqlite:
         engine = create_engine(
             db_url, connect_args={"check_same_thread": False}, echo_pool='debug'

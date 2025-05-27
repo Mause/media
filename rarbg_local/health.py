@@ -94,7 +94,7 @@ async def check_database():
     settings = await get(get_settings)
 
     url = make_url(settings.database_url)
-    is_sqlite = url.drivername == 'sqlite'
+    is_sqlite = url.get_backend_name() == 'sqlite'
     if is_sqlite:
         url = url.set(drivername='sqlite+aiosqlite')
     else:
