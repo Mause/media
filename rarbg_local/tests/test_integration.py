@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 from datetime import datetime
@@ -17,15 +18,16 @@ from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
-from ..db import MAX_TRIES, Download, create_episode, create_movie
+from ..db import MAX_TRIES, Download, Monitor, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
-from ..new import SearchResponse, Settings, get_settings
+from ..new import ProviderSource, SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
 from .conftest import add_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
+    ITorrentFactory,
     MovieDetailsFactory,
     MovieResponseFactory,
     TvApiResponseFactory,
@@ -70,6 +72,7 @@ async def test_diagnostics(
     aioresponses.add('https://nyaa.si', 'HEAD')
     aioresponses.add('https://torrents-csv.com', 'HEAD')
     aioresponses.add('https://api.jikan.moe/v4', 'GET', body='{}')
+    aioresponses.add('https://apibay.org', 'HEAD')
 
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
@@ -410,6 +413,42 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
 
 @mark.asyncio
+@patch('rarbg_local.monitor._stream')
+@patch('aiontfy.Ntfy.publish')
+async def test_update_monitor(
+    send, stream, aioresponses, test_client, session, snapshot, fastapi_app
+):
+    themoviedb(
+        aioresponses,
+        '/movie/5',
+        MovieResponseFactory.build(title='Hello World').model_dump(),
+    )
+    r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
+    r.raise_for_status()
+    ident = r.json()['id']
+    assert r.status_code == 201
+
+    stream.return_value.__aiter__.return_value = iter(
+        [ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)]
+    )
+
+    del fastapi_app.dependency_overrides[get_current_user]
+    r = await test_client.post(
+        '/api/monitor/cron',
+        headers={'Authorization': 'Basic ' + base64.b64encode(b'hello:world').decode()},
+    )
+    r.raise_for_status()
+
+    assert session.get(Monitor, ident).status
+    send.assert_called_once()
+    message = send.call_args.args[0]
+    snapshot.assert_match(
+        message.message,
+        'message.txt',
+    )
+
+
+@mark.asyncio
 async def test_stats(test_client, session):
     user1 = UserFactory.create(username='user1')
     user2 = UserFactory.create(username='user2')
@@ -700,6 +739,9 @@ async def test_websocket(
                 download="magnet:?xt=urn:btih:00000000000000000",
                 category="video - tv shows",
             )
+
+        async def health(self):
+            return None
 
     async def gcu(
         header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],

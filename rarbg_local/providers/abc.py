@@ -1,12 +1,37 @@
 from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
 
+import aiohttp
+from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
+
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
 
 
+async def check_http(url: str, method: str = 'HEAD') -> HealthcheckCallbackResponse:
+    async with aiohttp.ClientSession() as session:
+        async with session.request(method, url) as response:
+            if response.status == 200:
+                return HealthcheckCallbackResponse(
+                    HealthcheckStatus.PASS, repr(response)
+                )
+            else:
+                return HealthcheckCallbackResponse(
+                    HealthcheckStatus.FAIL, f'Failed to reach {url}: {response.status}'
+                )
+
+
 class Provider(ABC):
     type: ProviderSource
+
+    @abstractmethod
+    def health(self) -> HealthcheckCallbackResponse:
+        raise NotImplementedError()
+
+    async def check_http(
+        self, url: str, method: str = 'HEAD'
+    ) -> HealthcheckCallbackResponse:
+        return await check_http(url, method)
 
 
 class TvProvider(Provider):

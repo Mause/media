@@ -1,6 +1,6 @@
 [
   {
-    "component_name": "torrents-csv.com",
+    "component_name": "torrentscsv",
     "component_type": "http",
     "status": "pass",
     "output": "<ClientResponse(https://torrents-csv.com) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"
