@@ -1,16 +1,15 @@
 import json
-from typing import AsyncGenerator, List, Pattern, TypeVar, Union
-from asyncio import get_event_loop
 from collections.abc import AsyncGenerator
 from re import Pattern
 from typing import Annotated, TypeVar
+from collections.abc import AsyncGenerator
+from re import Pattern
 
 import uvloop
 from async_asgi_testclient import TestClient
-from pytest import fixture, hookimpl, mark
 from fastapi import Depends
 from fastapi.security import SecurityScopes
-from pytest import fixture, hookimpl
+from pytest import fixture, hookimpl, mark
 from responses import RequestsMock
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm.session import Session

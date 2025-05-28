@@ -3,11 +3,6 @@ from inspect import signature
 from typing import Annotated, cast
 
 from cachetools import TTLCache
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, SecurityScopes
-from jwkaas import JWKaas
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
 from fastapi import Depends, HTTPException, Request, Security, params, status
 from fastapi.security import (
     HTTPBasic,
@@ -16,6 +11,7 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_oidc import get_auth
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session
 
 from .db import User, get_db
@@ -34,7 +30,6 @@ get_my_jwkaas = get_auth(
 )
 anno = cast(params.Depends, signature(get_my_jwkaas).parameters['auth_header'].default)
 cast(OpenIdConnect, anno.dependency).auto_error = False
-
 
 
 async def get_current_user(

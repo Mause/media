@@ -4,19 +4,14 @@ import traceback
 from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
-    Any,
-    AsyncGenerator,
-    Callable,
-    Dict,
     List,
     Literal,
     Optional,
     Type,
-    Annotated,
-    Literal,
     TypeVar,
     Union,
 )
+from collections.abc import AsyncGenerator, Callable
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
@@ -25,13 +20,10 @@ from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel
-from requests.exceptions import HTTPError
-from sqlalchemy import delete, func
+from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm import joinedload
-from sqlalchemy import func
-from sqlalchemy.orm.session import Session, object_session
+from sqlalchemy.orm.session import object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -216,11 +208,11 @@ async def api_select(tmdb_id: TmdbId, season: int):
     '/download', response_model=list[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
 )
 async def download_post(
-    things: List[DownloadPost],
+    things: list[DownloadPost],
     added_by: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_db),
-) -> List[Union[MovieDetails, EpisodeDetails]]:
-    results: List[Union[MovieDetails, EpisodeDetails]] = []
+) -> list[MovieDetails | EpisodeDetails]:
+    results: list[MovieDetails | EpisodeDetails] = []
 
     # work around a fastapi bug
     # see for more details https://github.com/fastapi/fastapi/discussions/6024
@@ -293,13 +285,13 @@ async def index(session: AsyncSession = Depends(get_db)):
     )
 
 
-async def get_one(session: AsyncSession, entity: Type[T], id: int) -> Optional[T]:
+async def get_one(session: AsyncSession, entity: type[T], id: int) -> T | None:
     query = select(entity).filter_by(id=id)
     res = await session.execute(query)
     return res.scalar_one()
 
 
-@api.get('/stats', response_model=List[StatsResponse])
+@api.get('/stats', response_model=list[StatsResponse])
 async def stats(session: AsyncSession = Depends(get_db)):
     async def process(added_by_id: int, values):
         user = await get_one(session, User, added_by_id)

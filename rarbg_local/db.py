@@ -15,16 +15,14 @@ from sqlalchemy import (
     String,
     event,
 )
-from sqlalchemy.engine import URL, make_url
+from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
     AsyncSession,
-    async_sessionmaker,
     create_async_engine,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import select
-from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.orm import (
     Mapped,
     declarative_base,
@@ -351,7 +349,9 @@ def get_engine(settings: Annotated[Settings, Depends(get_settings)]) -> AsyncEng
 
 
 @singleton
-def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> asyncsessionmaker:
+def get_session_local(
+    engine: Annotated[Engine, Depends(get_engine)],
+) -> asyncsessionmaker:
     return asyncsessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
