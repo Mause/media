@@ -19,8 +19,8 @@ from sqlalchemy import (
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
-    AsyncSession,
     AsyncEngine,
+    AsyncSession,
     create_async_engine,
 )
 from sqlalchemy.ext.declarative import declarative_base

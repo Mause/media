@@ -4,14 +4,10 @@ import traceback
 from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
-    List,
     Literal,
-    Optional,
-    Type,
     TypeVar,
     Union,
 )
-from collections.abc import AsyncGenerator, Callable
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException

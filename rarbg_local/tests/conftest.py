@@ -2,8 +2,6 @@ import json
 from collections.abc import AsyncGenerator
 from re import Pattern
 from typing import Annotated, TypeVar
-from collections.abc import AsyncGenerator
-from re import Pattern
 
 import uvloop
 from async_asgi_testclient import TestClient
