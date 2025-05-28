@@ -7,27 +7,26 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         python-version:
-          - 3.11
           - 3.12
+          - 3.13
+
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Cache uv virtualenv
-        id: cache-uv
-        uses: actions/cache@v4
-        with:
-          path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-uv-${{ matrix.python-version }}-${{ hashFiles('**/uv.lock') }}-2
       - name: Install uv
-        run: |
-          python -m pip install --upgrade uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: 'uv.lock'
       - name: Install dependencies
-        if: steps.cache-uv.outputs.cache-hit != 'true'
         run: |
           uv sync --dev --locked
       - name: Run mypy
@@ -36,13 +35,20 @@ jobs:
           linters: mypy
           run: uv run mypy --show-column-numbers rarbg_local
       - run: uv run alembic upgrade head --sql
+      - run: corepack enable
+      - uses: nickcharlton/diff-check@main
+        with:
+          command: |
+            npx openapi-typescript rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o app/src/schema.ts
+            cd app && yarn && yarn prettier --write src/schema.ts
       - name: Test with pytest
         run: |
           uv run pytest -vv
         env:
-          CLOUDAMQP_URL: "https://hello"
+          CLOUDAMQP_URL: 'https://hello'
           TMDB_API_KEY: word
           TMDB_READ_ACCESS_TOKEN: word
+          PYTEST_ADDOPTS: '--color=yes'
       - name: Archive test report
         uses: actions/upload-artifact@v4
         if: always()
@@ -54,5 +60,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+      - run: yarn
+        working-directory: app/
+      - uses: actions/setup-python@v5
       - uses: pre-commit/action@v3.0.1

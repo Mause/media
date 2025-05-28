@@ -4,68 +4,85 @@ version = "0.1.0"
 description = ""
 authors = [{ name = "Elliana May", email = "me@mause.me" }]
 license = "MIT"
-requires-python = ">=3.11.0"
+requires-python = ">=3.12.0"
 
 dependencies = [
-    "sqlalchemy[mypy]==2.0.40",
-    "sqlalchemy-repr==0.0.2",
-    "aiohttp==3.11.18",
-    "backoff==1.11.1",
+    "sqlalchemy[mypy]==2.0.41",
+    "sqlalchemy-repr==0.1.0",
+    "aiohttp==3.12.2",
+    "backoff==2.2.1",
     "psycopg2-binary",
-    "sentry-sdk==2.8.0",
-    "alembic==1.15.2",
-    "plexapi==4.3.1",
+    "sentry-sdk==2.29.1",
+    "alembic==1.16.1",
+    "plexapi==4.17.0",
     "fuzzywuzzy[speedup]==0.18.0",
     "cachetools==5.5.2",
     "lxml",
-    "eventlet==0.39.1",
+    "eventlet==0.40.0",
     "email-validator==2.2.0",
     "mause-rpc==0.0.18",
-    "cffi==1.17.1",
     "fastapi==0.115.12",
     "python-multipart==0.0.20",
-    "jwkaas==0.7",
-    "aniso8601==8.1.1",
-    "pytz==2021.1",
+    "aniso8601==10.0.1",
+    "pytz==2025.2",
     "uvicorn[standard]",
-    "aiofiles==0.8.0",
+    "aiofiles==24.1.0",
     "fastapi-utils==0.8.0",
-    "asyncache==0.1.1",
-    "makefun==1.9.5",
+    "asyncache==0.3.1",
+    "makefun==1.16.0",
     "gunicorn",
-    "nyaapy",
+    "nyaapy>=0.7",
     "python-healthchecklib>=0.1.1",
     "beautifulsoup4>=4.13.4",
     "asyncpg>=0.30.0",
     "dnspython>=2.7.0",
+    "pydantic-settings>=2.9.1",
+    "pydantic>=2.11.4",
+    "typing-inspect>=0.9.0",
+    "fastapi-oidc>=0.0.10",
+    "pyjwt>=2.10.1",
+    "aiontfy>=0.5.3"
 ]
 
 [dependency-groups]
 dev = [
     "pytest",
-    "responses==0.12.1",
+    "responses==0.25.7",
     "lxml",
     "pytest-html>=3.1.1",
     "pytest-selenium>=3.0.0",
-    "webdriver-manager==3.2.2",
+    "webdriver-manager==4.0.2",
     "pre-commit>=4.2.0",
     "pytest-snapshot",
-    "factory-boy==3.2.0",
-    "isort==5.7.0",
-    "pytest-asyncio==0.14.0",
+    "factory-boy==3.3.3",
+    "pytest-asyncio==0.26.0",
     "async-asgi-testclient==1.4.11",
     "aioresponses==0.7.8",
     "pytest-sugar",
     "aiosqlite>=0.21.0",
+    "cryptography>=3.2",
     "types-tabulate>=0.9.0.20241207",
     "types-requests>=2.32.0.20250328",
     "types-lxml>=2025.3.30",
     "types-selenium>=3.141.9",
+    "types-cachetools>=5.5.0.20240820",
 ]
 debug = ["pudb", "pdbpp"]
+cli = [
+    "rich>=14.0.0",
+]
 
 [tool.ruff.format]
 quote-style = "preserve"
 
 [tool.ruff.lint]
-select = ["F", "E", "W", "I"]
+select = ["F", "E", "W", "I", "T"]
+
+[tool.pytest.ini_options]
+addopts = "rarbg_local --driver chrome --html report.html --self-contained-html"
+asyncio_default_fixture_loop_scope = "fixture"
+
+[tool.mypy]
+plugins = "sqlalchemy.ext.mypy.plugin, pydantic.mypy"
+ignore_missing_imports = true
+mypy_path = "stubs"

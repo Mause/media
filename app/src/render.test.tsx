@@ -1,5 +1,7 @@
 import { render } from '@testing-library/react';
-import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import MockDate from 'mockdate';
+
 import {
   Movies,
   TVShows,
@@ -7,7 +9,6 @@ import {
   shouldCollapse,
   NextEpisodeAirs,
 } from './render';
-import { MemoryRouter } from 'react-router-dom';
 import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
 import {
   MovieResponse,
@@ -16,7 +17,6 @@ import {
   SeriesResponse,
   EpisodeResponse,
 } from './streaming';
-import MockDate from 'mockdate';
 
 usesMoxios();
 beforeEach(() => MockDate.reset());
@@ -46,7 +46,7 @@ test('Movies', () => {
   expect(container).toMatchSnapshot();
 });
 
-test('TVShows', async () => {
+test('TVShows', () => {
   const series: SeriesResponse[] = [
     {
       tmdb_id: 1,
@@ -167,6 +167,7 @@ describe('shouldCollapse', () => {
         season_number: 1,
       },
     ],
+    imdb_id: null,
     title: '',
   };
   const episode: EpisodeResponse = {

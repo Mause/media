@@ -1,24 +1,34 @@
-import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
 import moxios from 'moxios';
+import {
+  unstable_HistoryRouter as HistoryRouter,
+  MemoryRouter,
+  Routes,
+  Route,
+} from 'react-router-dom';
+import _ from 'lodash';
+import { createMemoryHistory } from '@remix-run/router';
+import { act } from 'react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { expectLastRequestBody } from './utils';
 import {
   MonitorComponent,
   Monitor,
   MonitorAddComponent,
 } from './MonitorComponent';
-import React from 'react';
-import { MemoryRouter, Route, Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import * as _ from 'lodash';
-import { expectLastRequestBody } from './utils';
-import { act } from '@testing-library/react';
+import { usesMoxios, renderWithSWR, mock, wait, listenTo } from './test.utils';
 
 usesMoxios();
 
 describe('MonitorComponent', () => {
   it('view', async () => {
     const { container } = renderWithSWR(
-      <MemoryRouter>
-        <MonitorComponent />
+      <MemoryRouter initialEntries={['/monitor']}>
+        <Routes>
+          <Route path="/" index element={<div>Home</div>} />
+          <Route path="/monitor" Component={MonitorComponent} />
+        </Routes>
       </MemoryRouter>,
     );
 
@@ -28,29 +38,46 @@ describe('MonitorComponent', () => {
         title: 'Hello World',
         tmdb_id: 5,
         type: 'MOVIE',
-        added_by: 'me',
+        status: false,
+        added_by: {
+          first_name: '',
+          username: 'me',
+        },
       },
     ];
+    console.log('mocking');
     await mock('monitor', res);
+    console.log('mocked');
     await wait();
 
     expect(container).toMatchSnapshot();
   });
 
   it('add', async () => {
-    const hist = createMemoryHistory();
-    hist.push({
-      pathname: '/monitor/add/5',
-      state: { type: 'MOVIE' },
+    const hist = createMemoryHistory({
+      initialEntries: ['/fake'],
+      v5Compat: true,
     });
+    const entries = listenTo(hist);
 
     renderWithSWR(
-      <Router history={hist}>
-        <Route path="/monitor/add/:tmdb_id">
-          <MonitorAddComponent />
-        </Route>
-      </Router>,
+      <HistoryRouter history={hist}>
+        <Routes>
+          <Route
+            path="/fake"
+            element={<MonitorAddComponent tmdb_id={5} type={'MOVIE'} />}
+          />
+          <Route path="/monitor" element={<div>Monitor</div>} />
+          <Route path="/" element={<div>Home</div>} />
+        </Routes>
+      </HistoryRouter>,
     );
+
+    const events = userEvent.setup();
+
+    await act(async () => {
+      await events.click(await screen.findByText('Add to monitor'));
+    });
 
     await wait();
     await act(async () => {
@@ -64,6 +91,6 @@ describe('MonitorComponent', () => {
     });
     await wait();
 
-    expect(_.map(hist.entries, 'pathname')).toEqual(['/', '/monitor']);
+    expect(_.map(entries, 'pathname')).toEqual(['/monitor']);
   });
 });

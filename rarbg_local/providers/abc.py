@@ -1,13 +1,37 @@
 from abc import ABC, abstractmethod
-from typing import AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
+
+import aiohttp
+from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
 
 
+async def check_http(url: str, method: str = 'HEAD') -> HealthcheckCallbackResponse:
+    async with aiohttp.ClientSession() as session:
+        async with session.request(method, url) as response:
+            if response.status == 200:
+                return HealthcheckCallbackResponse(
+                    HealthcheckStatus.PASS, repr(response)
+                )
+            else:
+                return HealthcheckCallbackResponse(
+                    HealthcheckStatus.FAIL, f'Failed to reach {url}: {response.status}'
+                )
+
+
 class Provider(ABC):
-    name: str
     type: ProviderSource
+
+    @abstractmethod
+    def health(self) -> HealthcheckCallbackResponse:
+        raise NotImplementedError()
+
+    async def check_http(
+        self, url: str, method: str = 'HEAD'
+    ) -> HealthcheckCallbackResponse:
+        return await check_http(url, method)
 
 
 class TvProvider(Provider):
@@ -17,7 +41,7 @@ class TvProvider(Provider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
         season: int,
-        episode: Optional[int] = None,
+        episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
         raise NotImplementedError()
 
@@ -60,5 +84,5 @@ def movie_convert(key):
     }.get(key, key)
 
 
-def format(season: int, episode: Optional[int]) -> str:
+def format(season: int, episode: int | None) -> str:
     return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'

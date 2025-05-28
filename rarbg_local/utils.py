@@ -1,11 +1,21 @@
+import asyncio
+from collections.abc import Callable, Coroutine
+from dataclasses import dataclass
 from functools import lru_cache as _lru_cache
-from typing import Optional, Set, TypeVar
+from functools import partial
+from typing import Protocol, TypeVar
 
 from asyncache import cached as _cached
 from cachetools.func import ttl_cache as _ttl_cache
 
+
+class LRUCache(Protocol):
+    def cache_clear(self):
+        pass
+
+
 T = TypeVar('T')
-_caches: Set[_lru_cache] = set()  # type: ignore
+_caches: set[LRUCache] = set()
 
 
 def lru_cache(*args, **kwargs):
@@ -37,20 +47,47 @@ def cached(cache):
 
 def cache_clear():
     for c in _caches:
-        c.cache_clear()  # type: ignore
+        c.cache_clear()
 
 
 class NullPointerException(Exception):
     pass
 
 
-def non_null(thing: Optional[T]) -> T:
+def non_null(thing: T | None) -> T:
     if not thing:
         raise NullPointerException()
     return thing
 
 
-def precondition(res: Optional[T], message: str) -> T:
+def precondition(res: T | None, message: str) -> T:
     if not res:
         raise AssertionError(message)
     return res
+
+
+@dataclass
+class Message:
+    event: str
+    reason: str
+    task: asyncio.Task
+
+
+def _callback(send, fut):
+    try:
+        fut.result()
+    except asyncio.CancelledError:
+        send(Message("exit", "killed", fut))
+        raise
+    except Exception as e:
+        send(Message("err", e, fut))
+    else:
+        send(Message("exit", "normal", fut))
+
+
+def create_monitored_task(
+    coro: Coroutine[None, None, T], send: Callable
+) -> asyncio.Future[T]:
+    future = asyncio.ensure_future(coro)
+    future.add_done_callback(partial(_callback, send))
+    return future

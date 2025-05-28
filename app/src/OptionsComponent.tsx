@@ -1,18 +1,19 @@
 import _ from 'lodash';
 import qs from 'qs';
-import React, { useState, useEffect } from 'react';
-import { subscribe, MLink } from './utils';
-import { Torrents } from './streaming';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
+import { Breadcrumbs, Typography, Alert } from '@mui/material';
+import { useAuth0 } from '@auth0/auth0-react';
+
+import { subscribe, MLink } from './utils';
+import { Torrents } from './streaming';
 import { Loading } from './render';
-import { Breadcrumbs, Typography } from '@mui/material';
 import { Shared } from './SeasonSelectComponent';
 import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
-import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
-import { Alert } from '@mui/material';
+import { MonitorAddComponent } from './MonitorComponent';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
@@ -30,7 +31,7 @@ export function DisplayTorrent({
   episode,
 }: {
   season?: number;
-  episode?: number;
+  episode?: number | null;
   tmdb_id: string;
   torrent: ITorrent;
   torrents?: Torrents;
@@ -45,14 +46,14 @@ export function DisplayTorrent({
       },
     ],
   };
-  const url = { pathname: '/download', state };
+  const url = { to: '/download', state };
   return (
     <span>
       <strong title={torrent.source}>
         {torrent.source.substring(0, 1).toUpperCase()}
       </strong>
       &nbsp;
-      <MLink to={url}>{torrent.title}</MLink>
+      <MLink {...url}>{torrent.title}</MLink>
       &nbsp;
       <small>{torrent.seeders}</small>
       &nbsp;
@@ -91,11 +92,7 @@ function remove(bit: string): string {
 }
 
 function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
-  const { season, episode, tmdb_id } = useParams<{
-    tmdb_id: string;
-    season?: string;
-    episode?: string;
-  }>();
+  const { season, episode, tmdb_id } = useParams();
 
   const { data: meta } = useSWR<{ title: string }>(
     (season ? 'tv' : 'movie') + '/' + tmdb_id,
@@ -110,7 +107,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   );
   const dt = (result: ITorrent) => (
     <DisplayTorrent
-      tmdb_id={tmdb_id}
+      tmdb_id={tmdb_id!}
       season={parseInt(season!)}
       episode={parseInt(episode!)}
       torrents={torrents}
@@ -188,23 +185,24 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       )}
       <ul>
         <li>
-          <MLink
-            to={{
-              pathname: '/manual',
-              state: { tmdb_id, season, episode },
-            }}
-          >
+          <MLink to="/manual" state={{ tmdb_id, season, episode }}>
             Add manually
           </MLink>
         </li>
         <li>
+          <MonitorAddComponent
+            tmdb_id={parseInt(tmdb_id!)}
+            type={type === 'movie' ? 'MOVIE' : 'TV'}
+          />
+        </li>
+        <li>
           <MLink
             to={{
-              pathname: `/monitor/add/${tmdb_id}`,
-              state: { type: type === 'movie' ? 'MOVIE' : 'TV' },
+              pathname: `/websocket/${tmdb_id}`,
+              search: qs.stringify({ season, episode }),
             }}
           >
-            Add to monitor
+            Search with websockets
           </MLink>
         </li>
       </ul>
@@ -259,7 +257,7 @@ function useToken() {
   const auth = useAuth0();
   const [token, setToken] = useState<string>();
   useEffect(() => {
-    auth.getAccessTokenSilently().then(setToken);
+    void auth.getAccessTokenSilently().then(setToken);
   }, [auth]);
   return token;
 }
@@ -272,9 +270,11 @@ function useSubscribes<T>(url: string): {
   const token = useToken();
 
   const p: ProviderSource[] = [
+    /*
     'rarbg',
     'horriblesubs',
     'kickass',
+    */
     'torrentscsv',
     'nyaasi',
     'piratebay',
@@ -283,9 +283,11 @@ function useSubscribes<T>(url: string): {
     useSubscribe<T>(url, p[0], token),
     useSubscribe<T>(url, p[1], token),
     useSubscribe<T>(url, p[2], token),
+    /*
     useSubscribe<T>(url, p[3], token),
     useSubscribe<T>(url, p[4], token),
     useSubscribe<T>(url, p[5], token),
+    */
   ];
 
   return {

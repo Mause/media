@@ -1,4 +1,4 @@
-from typing import Dict, Optional, TypedDict
+from typing import TypedDict
 
 import requests
 
@@ -7,10 +7,10 @@ from .utils import lru_cache
 config = {'TRANSMISSION_URL': 'http://novell.local:9091/transmission/rpc'}
 
 
-def get_torrent(*ids: str) -> Dict:
+def get_torrent(*ids: str) -> dict:
     call = get_session(config['TRANSMISSION_URL'])
 
-    arguments: Dict = {
+    arguments: dict = {
         "fields": [
             "id",
             # "error",
@@ -47,7 +47,10 @@ def get_torrent(*ids: str) -> Dict:
     return call("torrent-get", arguments)
 
 
-TorrentAddTorrent = TypedDict('TorrentAddTorrent', {'hashString': str})
+class TorrentAddTorrent(TypedDict):
+    hashString: str
+
+
 TorrentAddArguments = TypedDict(
     'TorrentAddArguments',
     {'torrent-added': TorrentAddTorrent, 'torrent-duplicate': TorrentAddTorrent},
@@ -56,7 +59,7 @@ TorrentAddArguments = TypedDict(
 
 class TorrentAdd(TypedDict):
     arguments: TorrentAddArguments
-    result: Optional[str]
+    result: str | None
 
 
 def torrent_add(magnet: str, subpath: str) -> TorrentAdd:

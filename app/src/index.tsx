@@ -1,45 +1,47 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { StrictMode } from 'react';
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-// import { appUpdated } from './serviceWorkerCallback';
+import { createRoot } from 'react-dom/client';
 import { Auth0Provider } from '@auth0/auth0-react';
-
 import {
   ThemeProvider,
-  Theme,
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
+import { HelmetProvider } from 'react-helmet-async';
 
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
+import App from './App';
 
 const theme = createTheme();
 
-ReactDOM.render(
+const clientId = import.meta.env.REACT_APP_AUTH0_CLIENT_ID;
+const audience = import.meta.env.REACT_APP_AUTH0_AUDIENCE;
+
+if (!(clientId && audience)) {
+  console.error(
+    'Missing Auth0 client ID or audience. Please check your environment variables.',
+  );
+}
+
+const container = document.getElementById('root');
+const root = createRoot(container!);
+const rootEl = (
   <Auth0Provider
     domain="mause.au.auth0.com"
-    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID!}
-    audience={process.env.REACT_APP_AUTH0_AUDIENCE!}
+    clientId={clientId!}
+    authorizationParams={{
+      audience: audience!,
+      redirect_uri: window.location.origin,
+    }}
     useRefreshTokens={true}
-    redirectUri={window.location.origin}
     cacheLocation="localstorage"
   >
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <App />
+        <HelmetProvider>
+          <App />
+        </HelmetProvider>
       </ThemeProvider>
     </StyledEngineProvider>
-  </Auth0Provider>,
-  document.getElementById('root'),
+  </Auth0Provider>
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
-// serviceWorker.register({ onUpdate: appUpdated });
+root.render(<StrictMode>{rootEl}</StrictMode>);

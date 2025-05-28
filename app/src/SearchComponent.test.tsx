@@ -1,6 +1,6 @@
-import React from 'react';
+import { Route, MemoryRouter, Routes } from 'react-router-dom';
+
 import { SearchComponent, SearchResult } from './SearchComponent';
-import { Route, MemoryRouter } from 'react-router-dom';
 import { mock, wait, usesMoxios, renderWithSWR } from './test.utils';
 
 usesMoxios();
@@ -8,16 +8,16 @@ usesMoxios();
 test('SearchComponent', async () => {
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/search?query=world']}>
-      <Route path="/search">
-        <SearchComponent />
-      </Route>
+      <Routes>
+        <Route path="/search" Component={SearchComponent} />
+      </Routes>
     </MemoryRouter>,
   );
 
   const results: SearchResult[] = [
     {
       type: 'movie',
-      imdbID: 10000,
+      tmdb_id: 10000,
       year: 2019,
       title: 'Hello',
     },

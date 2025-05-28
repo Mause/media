@@ -1,9 +1,13 @@
+import logging
 from itertools import count
-from typing import Any, Dict, Optional, Set
+from typing import Any
 from urllib.parse import parse_qsl, urlparse
 from uuid import uuid4
 
 from flask import Flask, jsonify, request
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 id_iter = iter(count())
 app = Flask(__name__)
@@ -13,9 +17,7 @@ def get_session():
     return '', 409, {'x-transmission-session-id': uuid4().hex}
 
 
-def torrent_get(
-    fields: Optional[Dict[str, Any]] = None, ids: Optional[Set[str]] = None
-):
+def torrent_get(fields: dict[str, Any] | None = None, ids: set[str] | None = None):
     return jsonify({'arguments': {'torrents': []}})
 
 
@@ -37,7 +39,7 @@ def rpc():
     method = js['method']
     arguments = js.get('arguments', {})
 
-    print(method, arguments)
+    logger.info('Received method: %s %s', method, arguments)
 
     return globals()[method.replace('-', '_')](**arguments)
 

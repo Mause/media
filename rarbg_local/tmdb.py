@@ -2,7 +2,7 @@ import os
 from datetime import date
 from enum import Enum
 from itertools import chain
-from typing import Dict, List, Literal, Optional
+from typing import Literal
 
 import aiohttp
 import aiohttp.web_exceptions
@@ -25,7 +25,7 @@ access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
 ThingType = Literal['movie', 'tv']
 
 
-def try_(dic: Dict[str, str], *keys: str) -> Optional[str]:
+def try_(dic: dict[str, str], *keys: str) -> str | None:
     return next((dic[key] for key in keys if key in dic), None)
 
 
@@ -33,7 +33,7 @@ def try_(dic: Dict[str, str], *keys: str) -> Optional[str]:
     backoff.fibo,
     aiohttp.web_exceptions.HTTPException,
     max_tries=5,
-    giveup=lambda e: getattr(e.response, 'status_code', None) != 429,
+    giveup=lambda e: not isinstance(e, aiohttp.web_exceptions.HTTPTooManyRequests),
 )
 async def get_json(path, **kwargs):
     async with aiohttp.ClientSession(
@@ -48,17 +48,17 @@ async def get_json(path, **kwargs):
 
 
 @cached(LRUCache(360))
-async def get_configuration() -> Dict:
+async def get_configuration() -> dict:
     return await get_json('configuration')
 
 
-def get_year(result: Dict[str, str]) -> Optional[int]:
+def get_year(result: dict[str, str]) -> int | None:
     data = try_(result, 'first_air_date', 'release_date')
     return date.fromisoformat(data).year if data else None
 
 
 @cached(TTLCache(1024, 360))
-async def search_themoviedb(s: str) -> List[SearchResponse]:
+async def search_themoviedb(s: str) -> list[SearchResponse]:
     MAP = {'tv': MediaType.SERIES, 'movie': MediaType.MOVIE}
     r = await get_json('search/multi', params={'query': s})
     return [
@@ -66,7 +66,7 @@ async def search_themoviedb(s: str) -> List[SearchResponse]:
             type=MAP[result['media_type']],
             title=try_(result, 'title', 'name'),
             year=get_year(result),
-            imdbID=result['id'],
+            tmdb_id=result['id'],
         )
         for result in r.get('results', [])
         if result['media_type'] in MAP
@@ -74,13 +74,13 @@ async def search_themoviedb(s: str) -> List[SearchResponse]:
 
 
 @cached(TTLCache(1024, 360))
-async def find_themoviedb(imdb_id: ImdbId) -> Dict[str, str]:
+async def find_themoviedb(imdb_id: ImdbId) -> dict[str, str]:
     precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
     results = await get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
 
     result = next(item for item in chain.from_iterable(results.values()))
 
-    return dict(result, title=result['original_name'])
+    return {**result, 'title': result['original_name']}
 
 
 @cached(LRUCache(1024))
@@ -96,12 +96,12 @@ async def resolve_id(imdb_id: ImdbId, type: ThingType) -> TmdbId:
 
 @cached(LRUCache(256))
 async def get_movie(id: TmdbId) -> MovieResponse:
-    return MovieResponse(**(await get_json(f'movie/{id}')))
+    return MovieResponse.model_validate(await get_json(f'movie/{id}'))
 
 
 @cached(TTLCache(256, 360))
 async def get_tv(id: TmdbId) -> TvApiResponse:
-    return TvApiResponse(**await get_json(f'tv/{id}'))
+    return TvApiResponse.model_validate(await get_json(f'tv/{id}'))
 
 
 async def get_movie_imdb_id(movie_id: TmdbId) -> ImdbId:
@@ -119,7 +119,7 @@ async def get_imdb_id(type: ThingType, id: TmdbId) -> ImdbId:
 
 @cached(TTLCache(256, 360))
 async def get_tv_episodes(id: TmdbId, season: int) -> TvSeasonResponse:
-    return TvSeasonResponse(**await get_json(f'tv/{id}/season/{season}'))
+    return TvSeasonResponse.model_validate(await get_json(f'tv/{id}/season/{season}'))
 
 
 class ReleaseType(Enum):

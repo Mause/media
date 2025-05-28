@@ -1,7 +1,8 @@
 import logging
 import re
 import string
-from typing import Any, AsyncGenerator, Dict, Optional
+from collections.abc import AsyncGenerator
+from typing import Any
 
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
@@ -12,14 +13,15 @@ from ..types import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)
+ROOT = 'https://katcr.co'
 
 
 def is_node(node):
     return node
 
 
-async def fetch(url: str) -> AsyncGenerator[Dict[str, Any], None]:
-    async with ClientSession(base_url='https://katcr.co') as session:
+async def fetch(url: str) -> AsyncGenerator[dict[str, Any], None]:
+    async with ClientSession(base_url=ROOT) as session:
         try:
             r = await session.get(url)
         except ConnectionError:
@@ -61,8 +63,8 @@ def tokenise(name: str) -> str:
 
 
 async def search_for_tv(
-    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: Optional[int] = None
-) -> AsyncGenerator[Dict, None]:
+    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: int | None = None
+) -> AsyncGenerator[dict, None]:
     name = (await get_tv(tmdb_id)).name
 
     if episode is None:
@@ -89,7 +91,6 @@ async def search_for_movie(imdb_id: ImdbId, tmdb_id: TmdbId):
 
 
 class KickassProvider(TvProvider, MovieProvider):
-    name = 'kickass'
     type = ProviderSource.KICKASS
 
     async def search_for_tv(
@@ -97,7 +98,7 @@ class KickassProvider(TvProvider, MovieProvider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
         season: int,
-        episode: Optional[int] = None,
+        episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
         if not imdb_id:
             return
@@ -123,3 +124,6 @@ class KickassProvider(TvProvider, MovieProvider):
                 download=item['magnet'],
                 category=movie_convert(item['resolution']),
             )
+
+    async def health(self):
+        return await self.check_http(ROOT)

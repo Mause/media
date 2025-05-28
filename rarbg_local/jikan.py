@@ -1,5 +1,3 @@
-from typing import Set
-
 from aiohttp import ClientSession
 from cachetools import TTLCache
 from fuzzywuzzy import fuzz
@@ -13,7 +11,7 @@ def make_jikan():
 
 
 @cached(TTLCache(256, 360))
-async def get_names(tmdb_id: int) -> Set[str]:
+async def get_names(tmdb_id: int) -> set[str]:
     tv = await get_tv(tmdb_id)
     async with make_jikan() as jikan:
         res = await jikan.get('anime', params={'q': tv.name, 'limit': 1})

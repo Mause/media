@@ -1,41 +1,19 @@
 from datetime import date, datetime
 from enum import Enum
-from functools import reduce
-from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar
+from typing import Annotated, TypeVar
 
-from pydantic import BaseModel, constr
-from pydantic.main import _missing
-from pydantic.utils import GetterDict
+from pydantic import BaseModel, StringConstraints
 
 from .db import MonitorMediaType
 from .types import TmdbId
 
 
 class Orm(BaseModel):
-    class Config:
-        orm_mode = True
+    model_config = {'from_attributes': True}
 
 
 T = TypeVar('T')
-
-
-def map_to(config: Dict[str, str]) -> Type:
-    class Config:
-        class getter_dict(GetterDict):
-            def get(self, name: Any, default: Optional[Any] = None) -> Any:
-                if name in config:
-                    first, *parts = config[name].split('.')
-                    v = super().get(first, default)
-                    if v is _missing:
-                        return v
-                    return reduce(getattr, parts, v)
-                else:
-                    v = super().get(name, default)
-                return v
-
-        orm_mode = True
-
-    return Config
+MagnetUri = Annotated[str, StringConstraints(pattern=r'^magnet:')]
 
 
 class ProviderSource(Enum):
@@ -49,16 +27,16 @@ class ProviderSource(Enum):
 
 class EpisodeInfo(BaseModel):
     seasonnum: int
-    epnum: Optional[int]
+    epnum: int | None = None
 
 
 class ITorrent(BaseModel):
     source: ProviderSource
     title: str
     seeders: int
-    download: str
+    download: MagnetUri
     category: str
-    episode_info: Optional[EpisodeInfo] = None
+    episode_info: EpisodeInfo | None = None
 
 
 class UserSchema(Orm):
@@ -82,14 +60,14 @@ class EpisodeDetailsSchema(Orm):
     download: DownloadSchema
     show_title: str
     season: int
-    episode: Optional[int]
+    episode: int | None
 
 
 class SeriesDetails(Orm):
     title: str
     imdb_id: str
     tmdb_id: int
-    seasons: Dict[str, List[EpisodeDetailsSchema]]
+    seasons: dict[str, list[EpisodeDetailsSchema]]
 
 
 class MovieDetailsSchema(Orm):
@@ -98,14 +76,14 @@ class MovieDetailsSchema(Orm):
 
 
 class IndexResponse(Orm):
-    series: List[SeriesDetails]
-    movies: List[MovieDetailsSchema]
+    series: list[SeriesDetails]
+    movies: list[MovieDetailsSchema]
 
 
 class DownloadAllResponse(BaseModel):
-    packs: List[ITorrent]
-    complete: List[Tuple[str, List[ITorrent]]]
-    incomplete: List[Tuple[str, List[ITorrent]]]
+    packs: list[ITorrent]
+    complete: list[tuple[str, list[ITorrent]]]
+    incomplete: list[tuple[str, list[ITorrent]]]
 
 
 class Stats(BaseModel):
@@ -130,28 +108,26 @@ class UserShim(Orm):
 class MonitorGet(MonitorPost):
     id: int
     title: str
-    added_by: str
+    added_by: UserSchema
     status: bool = False
-
-    Config = map_to({'added_by': 'added_by.username'})
 
 
 class DownloadPost(BaseModel):
     tmdb_id: TmdbId
-    magnet: constr(regex=r'^magnet:')  # type: ignore
-    season: Optional[int] = None
-    episode: Optional[int] = None
+    magnet: MagnetUri
+    season: int | None = None
+    episode: int | None = None
 
 
 class Episode(BaseModel):
     name: str
     id: int
     episode_number: int
-    air_date: Optional[date]
+    air_date: date | None = None
 
 
 class TvSeasonResponse(BaseModel):
-    episodes: List[Episode]
+    episodes: list[Episode]
 
 
 class SeasonMeta(BaseModel):
@@ -161,11 +137,11 @@ class SeasonMeta(BaseModel):
 
 class TvBaseResponse(BaseModel):
     number_of_seasons: int
-    seasons: List[SeasonMeta]
+    seasons: list[SeasonMeta]
 
 
 class TvResponse(TvBaseResponse):
-    imdb_id: Optional[str]
+    imdb_id: str | None
     title: str
 
 
@@ -181,8 +157,8 @@ class MediaType(Enum):
 class SearchResponse(BaseModel):
     title: str
     type: MediaType
-    year: Optional[int]
-    imdbID: int
+    year: int | None
+    tmdb_id: TmdbId
 
 
 class DownloadResponse(Orm):
@@ -204,4 +180,4 @@ class InnerTorrent(BaseModel):
     hashString: str
     id: int
     percentDone: float
-    files: List[InnerTorrentFile]
+    files: list[InnerTorrentFile]

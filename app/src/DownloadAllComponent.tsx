@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
+
 import { ITorrent, DisplayTorrent } from './OptionsComponent';
-import React from 'react';
 import { Loading } from './render';
 import { EpisodeSelectBreadcrumbs } from './SeasonSelectComponent';
 import { MLink } from './utils';
@@ -16,19 +16,22 @@ function DownloadAllComponent() {
     tmdb_id: string;
     season: string;
   }>();
-  const season = parseInt(season_s);
+  const season = parseInt(season_s!);
 
   const { data: torrents } = useSWR<Torrents>('torrents');
-  const { data, isValidating, error } = useSWR<{
-    packs: ITorrent[];
-    complete: MapType;
-    incomplete: MapType;
-  }>(`select/${tmdb_id}/season/${season}/download_all`);
+  const { data, isValidating, error } = useSWR<
+    {
+      packs: ITorrent[];
+      complete: MapType;
+      incomplete: MapType;
+    },
+    Error
+  >(`select/${tmdb_id}/season/${season}/download_all`);
 
   return (
     <div>
       {error && <DisplayError error={error} />}
-      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id} season={season} />
+      <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={season} />
       <Loading loading={isValidating} />
       <div>
         <h3>Packs</h3>
@@ -40,7 +43,7 @@ function DownloadAllComponent() {
                 <DisplayTorrent
                   torrents={torrents}
                   torrent={t}
-                  tmdb_id={tmdb_id}
+                  tmdb_id={tmdb_id!}
                   season={season}
                 />
               </li>
@@ -51,14 +54,14 @@ function DownloadAllComponent() {
         label="Complete Sets"
         items={data && data.complete}
         season={season}
-        tmdb_id={tmdb_id}
+        tmdb_id={tmdb_id!}
         torrents={torrents}
       />
       <Individual
         label="Incomplete Sets"
         items={data && data.incomplete}
         season={season}
-        tmdb_id={tmdb_id}
+        tmdb_id={tmdb_id!}
         torrents={torrents}
       />
     </div>
@@ -73,7 +76,7 @@ function download_all(tmdb_id: number, torrents: ITorrent[]) {
     episode: t.episode_info?.epnum,
   }));
 
-  return { pathname: '/download', state: { downloads } };
+  return { to: '/download', state: { downloads } };
 }
 
 function Individual(props: {
@@ -91,7 +94,7 @@ function Individual(props: {
           props.items.map(([name, torrents]) => (
             <div key={name}>
               <h4>
-                <MLink to={download_all(parseInt(props.tmdb_id), torrents)}>
+                <MLink {...download_all(parseInt(props.tmdb_id), torrents)}>
                   {name}
                 </MLink>
               </h4>

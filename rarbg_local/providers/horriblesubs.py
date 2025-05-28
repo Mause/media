@@ -1,8 +1,8 @@
 import re
+from collections.abc import AsyncGenerator
 from enum import Enum
 from functools import lru_cache
 from itertools import chain
-from typing import AsyncGenerator, Dict, Optional, Tuple
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
@@ -16,10 +16,11 @@ from ..utils import cached
 from .abc import TvProvider, tv_convert
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
+ROOT = 'https://horriblesubs.info/'
 
 
 def make_session():
-    return ClientSession(base_url='https://horriblesubs.info/')
+    return ClientSession(base_url=ROOT)
 
 
 class HorriblesubsDownloadType(Enum):
@@ -28,7 +29,7 @@ class HorriblesubsDownloadType(Enum):
 
 
 @cached(TTLCache(128, 600))
-async def get_all_shows() -> Dict[str, str]:
+async def get_all_shows() -> dict[str, str]:
     async with make_session() as session:
         res = await session.get('/shows/')
         res.raise_for_status()
@@ -39,8 +40,8 @@ async def get_all_shows() -> Dict[str, str]:
         return {show.attrib['title']: show.attrib['href'] for show in shows}
 
 
-@lru_cache()
-async def get_show_id(path: str) -> Optional[int]:
+@lru_cache
+async def get_show_id(path: str) -> int | None:
     async with make_session() as session:
         res = await session.get(path)
         res.raise_for_status()
@@ -49,8 +50,8 @@ async def get_show_id(path: str) -> Optional[int]:
         return int(m.group(1)) if m else None
 
 
-def parse(html) -> Dict[str, str]:
-    def process(li) -> Tuple[str, str]:
+def parse(html) -> dict[str, str]:
+    def process(li) -> tuple[str, str]:
         line = ' '.join(line.strip('- \n') for line in li.xpath('./a/text()')).strip()
         return (
             ' '.join(map(str.strip, line.splitlines())),
@@ -135,7 +136,7 @@ async def search(showid: int, search_term: str):
         )
 
 
-async def search_for_tv(tmdb_id: TmdbId, season: int, episode: Optional[int] = None):
+async def search_for_tv(tmdb_id: TmdbId, season: int, episode: int | None = None):
     if season != 1:
         return
 
@@ -157,7 +158,6 @@ async def search_for_tv(tmdb_id: TmdbId, season: int, episode: Optional[int] = N
 
 
 class HorriblesubsProvider(TvProvider):
-    name = 'horriblesubs'
     type = ProviderSource.HORRIBLESUBS
 
     async def search_for_tv(
@@ -165,7 +165,7 @@ class HorriblesubsProvider(TvProvider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
         season: int,
-        episode: Optional[int] = None,
+        episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
         name = (await get_tv(tmdb_id)).name
         template = f'HorribleSubs {name} S{season:02d}'
@@ -180,12 +180,5 @@ class HorriblesubsProvider(TvProvider):
                 episode_info=EpisodeInfo(seasonnum=season, epnum=item['episode']),
             )
 
-
-async def main():
-    print(list(await search_for_tv('95550', 1, 1)))
-
-
-if __name__ == '__main__':
-    import uvloop
-
-    uvloop.run(main())
+    async def health(self):
+        return await self.check_http(ROOT)

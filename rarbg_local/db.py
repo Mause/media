@@ -1,8 +1,7 @@
 import enum
 import logging
 from datetime import datetime
-from functools import lru_cache
-from typing import List, Optional, Type, TypeVar, cast
+from typing import Annotated, TypeVar, cast
 
 import backoff
 import psycopg2
@@ -25,6 +24,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import select
+from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.orm import (
     Mapped,
     declarative_base,
@@ -36,6 +36,7 @@ from sqlalchemy.types import Enum
 
 from .settings import Settings, get_settings
 from .singleton import singleton
+from .types import TmdbId
 from .utils import precondition
 
 Base = declarative_base(cls=AsyncAttrs)
@@ -43,7 +44,7 @@ logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
 
-class Download(Base):  # type: ignore
+class Download(Base):
     __tablename__ = 'download'
     _json_exclude = {'movie', 'episode'}
     _json_include = {'added_by'}
@@ -71,7 +72,7 @@ class Download(Base):  # type: ignore
         return get_keyed_torrents()[self.transmission_id]['percentDone'] * 100
 
 
-class EpisodeDetails(Base):  # type: ignore
+class EpisodeDetails(Base):
     __tablename__ = 'episode_details'
     id = Column(Integer, primary_key=True)
     download: Mapped['Download'] = relationship(
@@ -95,7 +96,7 @@ class EpisodeDetails(Base):  # type: ignore
         )
 
 
-class MovieDetails(Base):  # type: ignore
+class MovieDetails(Base):
     __tablename__ = 'movie_details'
     id = Column(Integer, primary_key=True)
     download: Mapped['Download'] = relationship(
@@ -103,7 +104,7 @@ class MovieDetails(Base):  # type: ignore
     )
 
 
-class User(Base):  # type: ignore
+class User(Base):
     __tablename__ = 'users'
     _json_exclude = {'roles', 'password', 'downloads'}
     id = Column(Integer, primary_key=True)
@@ -125,11 +126,11 @@ class User(Base):  # type: ignore
     )
 
     # Define the relationship to Role via UserRoles
-    roles: Mapped[List['Role']] = relationship(
+    roles: Mapped[list['Role']] = relationship(
         'Role', secondary='user_roles', uselist=True
     )
 
-    downloads: Mapped[List[Download]] = relationship('Download')
+    downloads: Mapped[list[Download]] = relationship('Download')
 
     def __repr__(self):
         return self.username
@@ -139,7 +140,7 @@ class User(Base):  # type: ignore
 
 
 # Define the Role data-model
-class Role(Base):  # type: ignore
+class Role(Base):
     __tablename__ = 'roles'
     id = Column(Integer(), primary_key=True)
     name = Column(String(50), unique=True)
@@ -148,20 +149,8 @@ class Role(Base):  # type: ignore
         return self.name
 
 
-class _Roles:
-    Admin: Role
-    Member: Role
-
-    @lru_cache()
-    def __getattr__(self, name):
-        return get_or_create(Role, name=name)
-
-
-Roles = _Roles()
-
-
 # Define the UserRoles association table
-class UserRoles(Base):  # type: ignore
+class UserRoles(Base):
     __tablename__ = 'user_roles'
     id = Column(Integer(), primary_key=True)
     user_id = Column(Integer(), ForeignKey('users.id', ondelete='CASCADE'))
@@ -173,11 +162,11 @@ class MonitorMediaType(enum.Enum):
     TV = 'TV'
 
 
-class Monitor(Base):  # type: ignore
+class Monitor(Base):
     __tablename__ = 'monitor'
 
     id = Column(Integer(), primary_key=True)
-    tmdb_id = Column(Integer)
+    tmdb_id: TmdbId = Column(Integer)
 
     added_by_id = Column(Integer, ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship('User')
@@ -190,6 +179,11 @@ class Monitor(Base):  # type: ignore
         server_default=MonitorMediaType.MOVIE.name,
     )
 
+    status: bool = Column(
+        Boolean,
+        default=False,
+    )
+
 
 def create_download(
     *,
@@ -198,9 +192,9 @@ def create_download(
     title: str,
     type: str,
     tmdb_id: int,
-    id: Optional[int] = None,
+    id: int | None = None,
     added_by: User,
-    timestamp: Optional[datetime] = None,
+    timestamp: datetime | None = None,
 ) -> Download:
     precondition(not imdb_id or imdb_id.startswith('tt'), f'Invalid imdb_id: {imdb_id}')
     return Download(
@@ -222,7 +216,7 @@ def create_movie(
     title: str,
     tmdb_id: int,
     added_by: User,
-    timestamp: Optional[datetime] = None,
+    timestamp: datetime | None = None,
 ) -> MovieDetails:
     md = MovieDetails()
     md.download = create_download(
@@ -242,14 +236,14 @@ def create_episode(
     transmission_id: str,
     imdb_id: str,
     season: int,
-    episode: Optional[int],
+    episode: int | None,
     title: str,
     tmdb_id: int,
-    id: Optional[int] = None,
+    id: int | None = None,
     show_title: str,
     added_by: User,
-    download_id: Optional[int] = None,
-    timestamp: Optional[datetime] = None,
+    download_id: int | None = None,
+    timestamp: datetime | None = None,
 ) -> EpisodeDetails:
     ed = EpisodeDetails(id=id, season=season, episode=episode, show_title=show_title)
     ed.download = create_download(
@@ -265,7 +259,7 @@ def create_episode(
     return ed
 
 
-async def get_all(session: AsyncSession, model: Type[T]) -> List[T]:
+async def get_all(session: AsyncSession, model: Type[T]) -> list[T]:
     if model == MovieDetails:
         joint = MovieDetails.download
     elif model == EpisodeDetails:
@@ -283,11 +277,11 @@ async def get_all(session: AsyncSession, model: Type[T]) -> List[T]:
     )
 
 
-async def get_episodes(session: AsyncSession) -> List[EpisodeDetails]:
+async def get_episodes(session: AsyncSession) -> list[EpisodeDetails]:
     return await get_all(session, EpisodeDetails)
 
 
-async def get_movies(session: AsyncSession) -> List[MovieDetails]:
+async def get_movies(session: AsyncSession) -> list[MovieDetails]:
     return await get_all(session, MovieDetails)
 
 
@@ -319,7 +313,7 @@ MAX_TRIES = 5
 
 
 @singleton
-async def get_session_local(settings: Settings = Depends(get_settings)):
+def get_engine(settings: Annotated[Settings, Depends(get_settings)]) -> AsyncEngine:
     db_url = normalise_db_url(settings.database_url)
 
     logger.info('db_url: %s', db_url)
@@ -353,7 +347,12 @@ async def get_session_local(settings: Settings = Depends(get_settings)):
         def receive_do_connect(dialect, conn_rec, cargs, cparams):
             return psycopg2.connect(*cargs, **cparams)
 
-    return async_sessionmaker(autocommit=False, autoflush=True, bind=engine)
+    return engine
+
+
+@singleton
+def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> asyncsessionmaker:
+    return asyncsessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
 async def get_db(session_local=Depends(get_session_local)):
@@ -362,3 +361,10 @@ async def get_db(session_local=Depends(get_session_local)):
         yield sl
     finally:
         await sl.close()
+
+
+async def safe_delete(session: AsyncSession, entity: type[T], id: int):
+    query = await session.execute(select(entity).filter_by(id=id))
+    precondition(query.count() > 0, 'Nothing to delete')
+    await query.delete()
+    await session.commit()

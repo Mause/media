@@ -1,5 +1,6 @@
-import ContextMenu from './ContextMenu';
 import MenuItem from '@mui/material/MenuItem';
+
+import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 
 export default function Storybook() {

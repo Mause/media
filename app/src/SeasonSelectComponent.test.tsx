@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
-import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
 import {
   EpisodeSelectComponent,
   Season,
@@ -14,15 +14,19 @@ usesMoxios();
 test('SeasonSelectComponent  render', async () => {
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/select/1/season']}>
-      <Route path="/select/:tmdb_id/season">
-        <SeasonSelectComponent />
-      </Route>
+      <Routes>
+        <Route
+          path="/select/:tmdb_id/season"
+          Component={SeasonSelectComponent}
+        />
+      </Routes>
     </MemoryRouter>,
   );
 
   await mock<TV>('/api/tv/1', {
     title: 'Hello',
     number_of_seasons: 1,
+    imdb_id: null,
     seasons: [
       {
         season_number: 1,
@@ -39,9 +43,12 @@ test('SeasonSelectComponent  render', async () => {
 test('EpisodeSelectComponent render', async () => {
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/select/1/season/1']}>
-      <Route path="/select/:tmdb_id/season/:season">
-        <EpisodeSelectComponent />
-      </Route>
+      <Routes>
+        <Route
+          path="/select/:tmdb_id/season/:season"
+          Component={EpisodeSelectComponent}
+        />
+      </Routes>
     </MemoryRouter>,
   );
 

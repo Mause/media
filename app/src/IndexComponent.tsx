@@ -1,11 +1,20 @@
-import React, { FormEvent, useState } from 'react';
-import { TVShows, Movies } from './render';
-import { IndexResponse, Torrents } from './streaming';
-import { useHistory } from 'react-router-dom';
+import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
 import useSWR from 'swr';
-import { Alert } from '@mui/material';
+import {
+  Alert,
+  FormControl,
+  OutlinedInput,
+  IconButton,
+  InputLabel,
+  InputAdornment,
+} from '@mui/material';
 import _ from 'lodash';
+import Search from '@mui/icons-material/Search';
+
+import { IndexResponse, Torrents } from './streaming';
+import { TVShows, Movies } from './render';
 
 const CFG = {
   refreshInterval: 10000,
@@ -19,7 +28,7 @@ function IndexComponent() {
     data: torrents,
     isValidating: loadingTorrents,
     error,
-  } = useSWR<Torrents>('torrents', CFG);
+  } = useSWR<Torrents, Error>('torrents', CFG);
 
   const loading = loadingState || loadingTorrents;
 
@@ -55,17 +64,31 @@ export function DisplayError(props: { error: Error; message?: string }) {
 export function SearchBox() {
   function search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    history.push({ pathname: '/search', search: qs.stringify({ query }) });
+    void navigate({ pathname: '/search', search: qs.stringify({ query }) });
   }
 
   const [query, setQuery] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <form onSubmit={search}>
-      <input name="query" onChange={(e) => setQuery(e.target.value)} />
-      &nbsp;
-      <input type="submit" value="Search" />
+      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+        <InputLabel htmlFor="outlined-adornment-search">Search</InputLabel>
+        <OutlinedInput
+          id="outlined-adornment-search"
+          type="text"
+          size="small"
+          onChange={(e) => setQuery(e.target.value)}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton aria-label="search" type="submit" edge="end">
+                <Search />
+              </IconButton>
+            </InputAdornment>
+          }
+          label="Search"
+        />
+      </FormControl>
     </form>
   );
 }

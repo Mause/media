@@ -1,67 +1,102 @@
-from typing import Any, Dict, Optional
+import logging
+from inspect import signature
+from typing import Annotated, cast
 
-import requests
 from cachetools import TTLCache
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, SecurityScopes
 from jwkaas import JWKaas
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from fastapi import Depends, HTTPException, Request, Security, params, status
+from fastapi.security import (
+    HTTPBasic,
+    HTTPBasicCredentials,
+    OpenIdConnect,
+    SecurityScopes,
+)
+from fastapi_oidc import get_auth
+from sqlalchemy.orm.session import Session
 
-from .db import User
-from .singleton import singleton
+from .db import User, get_db
 
+logger = logging.getLogger(__name__)
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
 
-t = TTLCache(maxsize=10, ttl=3600)
+t = TTLCache[str, dict](maxsize=10, ttl=3600)
+
+get_my_jwkaas = get_auth(
+    client_id="",
+    audience=AUTH0_DOMAIN + 'userinfo',
+    base_authorization_server_uri=AUTH0_DOMAIN,
+    issuer=AUTH0_DOMAIN,
+    signature_cache_ttl=3600,
+)
+anno = cast(params.Depends, signature(get_my_jwkaas).parameters['auth_header'].default)
+cast(OpenIdConnect, anno.dependency).auto_error = False
 
 
-@singleton
-def get_my_jwkaas():
-    return JWKaas(
-        ['https://localhost:3000/api/v2', f'{AUTH0_DOMAIN}userinfo'],
-        AUTH0_DOMAIN,
-        jwks_url=f'{AUTH0_DOMAIN}.well-known/jwks.json',
-    )
 
-
-def get_user_info(
-    token_info: Dict[str, Any], rest: HTTPAuthorizationCredentials
-) -> Dict:
-    key = token_info['sub']
-    if key in t:
-        return t[key]
-    else:
-        t[key] = requests.get(
-            f'{AUTH0_DOMAIN}userinfo',
-            headers={'Authorization': rest.scheme.title() + ' ' + rest.credentials},
-        ).json()
-    return get_user_info(token_info, rest)
-
-
-async def auth_hook(
-    *,
-    session: AsyncSession,
-    header: HTTPAuthorizationCredentials,
+async def get_current_user(
+    session: Annotated[Session, Depends(get_db)],
     security_scopes: SecurityScopes,
-    jwkaas=Depends(get_my_jwkaas),
-) -> Optional[User]:
-    token_info = jwkaas.get_token_info(header.credentials)
-    if token_info is None:
+    header: Annotated[str, anno],
+) -> User | None:
+    if header is None or not header.lower().startswith('bearer '):
+        logger.info("Token info is None")
         return None
 
-    assert security_scopes.scopes
+    token_info = get_my_jwkaas(auth_header=header)
+
+    if not security_scopes.scopes:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail='Missing security scopes'
+        )
+
+    logger.info(f"Security scopes: {security_scopes.scopes}")
     for scope in security_scopes.scopes:
-        if scope not in token_info['scope'].split():
+        if scope not in token_info.scope.split():
+            logger.info(f"Scope {scope} not in token info")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Not enough permissions",
             )
+    logger.info("Has required scopes")
 
-    us = get_user_info(token_info, header)
+    email = getattr(token_info, 'https://media.mause.me/email')
 
-    return (
-        (await session.execute(select(User).filter_by(email=us['email'])))
+    user = (
+        (await session.execute(select(User).filter_by(email=email)))
         .scalars()
         .one_or_none()
     )
+
+    if user is None:
+        logger.info("User not found")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+        )
+    else:
+        logger.info(f"User found: {user}")
+        return user
+
+
+@Depends
+def security(
+    request: Request,
+    auth0: Annotated[
+        User,
+        Security(
+            get_current_user,
+            scopes=['openid'],
+        ),
+    ],
+    basic_auth: Annotated[HTTPBasicCredentials, Security(HTTPBasic(auto_error=False))],
+):
+    if basic_auth and request.url.path == '/api/monitor/cron':
+        return basic_auth
+    elif auth0:
+        return auth0
+    else:
+        raise HTTPException(status_code=403)

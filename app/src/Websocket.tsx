@@ -1,33 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { DisplayTorrent, ITorrent } from './OptionsComponent';
 import _ from 'lodash';
 import qs from 'qs';
-import { useLastMessage, SocketIOProvider } from 'use-socketio';
+import usePromise from 'react-promise-suspense';
+import { useAuth0 } from '@auth0/auth0-react';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
+
+import { DisplayTorrent, ITorrent } from './OptionsComponent';
+import { getPrefix } from './utils';
+import { getMarker } from './render';
 
 function useMessages<T>(initMessage: object) {
-  const { data: lastMessage, socket } = useLastMessage('message');
+  const base = getPrefix();
+  const url = `${base}/ws`;
+
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
 
   useEffect(() => {
-    socket.send(JSON.stringify(initMessage));
-  }, [socket, initMessage]);
+    sendJsonMessage(initMessage);
+  }, [sendJsonMessage, initMessage]);
 
   const [messages, setMessages] = useState<T[]>([]);
 
   useEffect(() => {
-    if (lastMessage) {
-      setMessages((messages) =>
-        messages.concat([JSON.parse(lastMessage as unknown as string) as T]),
-      );
+    if (lastJsonMessage) {
+      setMessages((messages) => messages.concat([lastJsonMessage as T]));
     }
-  }, [lastMessage]);
-  return messages;
+  }, [lastJsonMessage]);
+
+  return { messages, readyState };
 }
 
 function Websocket() {
   const { tmdbId } = useParams<{ tmdbId: string }>();
   const { search } = useLocation();
   const query = qs.parse(search.slice(1));
+  const auth = useAuth0();
+  const token = 'Bearer ' + usePromise(() => auth.getAccessTokenSilently(), []);
 
   const initMessage = query.season
     ? {
@@ -35,16 +44,43 @@ function Websocket() {
         tmdb_id: tmdbId,
         season: query.season,
         episode: query.episode,
+        authorization: token,
       }
-    : { type: 'movie', tmdb_id: tmdbId };
+    : {
+        type: 'movie',
+        tmdb_id: tmdbId,
+        authorization: token,
+      };
 
-  const messages = useMessages<ITorrent>(initMessage);
+  const { messages, readyState } = useMessages<
+    { error: string; type: string } | ITorrent
+  >(initMessage);
+
+  const errors = messages.filter((message) => 'error' in message);
+  const downloads = messages.filter(
+    (message) => !('error' in message),
+  ) as ITorrent[];
 
   return (
     <div>
-      <span>{tmdbId}</span>
+      <p>{tmdbId}</p>
+      <p>{getMarker(query)}</p>
+      <p>
+        {readyState === ReadyState.CONNECTING && 'Connecting...'}
+        {readyState === ReadyState.OPEN && 'Connected'}
+        {readyState === ReadyState.CLOSING && 'Disconnecting...'}
+        {readyState === ReadyState.CLOSED && 'Disconnected'}
+        {readyState === ReadyState.UNINSTANTIATED && 'Uninstantiated'}
+      </p>
       <ul>
-        {_.uniqBy(messages, 'download').map((message) => (
+        <ul>
+          {errors.map((message) => (
+            <li key={message.error}>
+              {message.type}: {message.error}
+            </li>
+          ))}
+        </ul>
+        {_.uniqBy(downloads, 'download').map((message) => (
           <li key={message.download}>
             <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
           </li>
@@ -54,16 +90,4 @@ function Websocket() {
   );
 }
 
-const IOWebsocket = () => (
-  <SocketIOProvider
-    url={
-      window.location.hostname.includes('localhost')
-        ? 'http://localhost:5000'
-        : '/'
-    }
-  >
-    <Websocket />
-  </SocketIOProvider>
-);
-
-export { IOWebsocket as Websocket };
+export { Websocket };

@@ -1,20 +1,25 @@
-import { useLocation, Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
 import useSWR from 'swr';
-import { TextField, Button, Theme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import createStyles from '@mui/styles/createStyles';
-import { DownloadState } from './DownloadComponent';
-import React, { FormEvent, useState } from 'react';
+import { TextField, Button } from '@mui/material';
+import { FormEvent, useState } from 'react';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-      },
+import { DownloadState } from './DownloadComponent';
+import { useLocation } from './utils';
+
+const PREFIX = 'ManualAddComponent';
+
+const classes = {
+  root: `${PREFIX}-root`,
+};
+
+const Root = styled('form')(({ theme }) => ({
+  [`&.${classes.root}`]: {
+    '& > *': {
+      margin: theme.spacing(1),
     },
-  }),
-);
+  },
+}));
 
 export function ManualAddComponent() {
   function onSubmit(event: FormEvent) {
@@ -33,7 +38,6 @@ export function ManualAddComponent() {
     tmdb_id: state_s.tmdb_id,
   };
 
-  const classes = useStyles();
   const { data } = useSWR<{ title: string }>(
     () => (state.season ? 'tv' : 'movie') + `/` + state.tmdb_id,
   );
@@ -41,7 +45,7 @@ export function ManualAddComponent() {
   const [submitted, setSubmitted] = useState(false);
 
   if (!state) {
-    return <Redirect to="/" />;
+    return <Navigate to="/" />;
   }
   if (submitted) {
     const toState: DownloadState = {
@@ -53,21 +57,23 @@ export function ManualAddComponent() {
         },
       ],
     };
-    return <Redirect to={{ pathname: '/download', state: toState }} />;
+    return <Navigate to="/download" state={toState} />;
   }
 
   return (
-    <form className={classes.root} onSubmit={onSubmit}>
+    <Root className={classes.root} onSubmit={onSubmit}>
       <h3>{data?.title}</h3>
       <TextField
         variant="standard"
         placeholder="magnet:..."
         onChange={(e) => setMagnet(e.target.value)}
-        inputProps={{ pattern: '^magnet:.*' }}
+        slotProps={{
+          htmlInput: { pattern: '^magnet:.*' },
+        }}
       />
       <Button type="submit" variant="outlined">
         Download
       </Button>
-    </form>
+    </Root>
   );
 }

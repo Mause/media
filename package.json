@@ -20,5 +20,9 @@
   "engines": {
     "node": "^18"
   },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
   "packageManager": "yarn@4.9.1"
 }
