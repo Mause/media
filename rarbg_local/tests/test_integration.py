@@ -85,12 +85,14 @@ async def test_diagnostics(
     snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
 
     for component in results:
-        if component == 'database':
-            continue
         r = await test_client.get(f'/api/diagnostics/{component}')
+        r.raise_for_status()
         results = r.json()
         for check in results:
             check.pop('time')
+
+        if component == 'database':
+            continue
 
         snapshot.assert_match(json.dumps(results, indent=2), f'{component}.json')
 
