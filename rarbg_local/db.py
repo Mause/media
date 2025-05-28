@@ -113,7 +113,7 @@ class User(Base):
     __tablename__ = 'users'
     _json_exclude = {'roles', 'password', 'downloads'}
     id = Column(Integer, primary_key=True)
-    active = Column('is_active', Boolean(), nullable=False, server_default='1')
+    active = Column[bool]('is_active', Boolean(), nullable=False, server_default='1')
 
     # User authentication information. The collation='en_AU' is required
     # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
@@ -171,13 +171,13 @@ class Monitor(Base):
     __tablename__ = 'monitor'
 
     id = Column(Integer(), primary_key=True)
-    tmdb_id: TmdbId = Column(Integer)
+    tmdb_id = Column[TmdbId](Integer)
 
     added_by_id = Column(Integer, ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship('User')
 
     title = Column(String, nullable=False)
-    type = Column(
+    type = Column[MonitorMediaType](
         Enum(MonitorMediaType),
         default=MonitorMediaType.MOVIE.name,
         nullable=False,
