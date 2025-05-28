@@ -359,7 +359,7 @@ async def get_async_engine(
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> AsyncEngine:
     return build_engine(
-        normalise_db_url_async(settigs.database_url), create_async_engine
+        normalise_db_url_async(settings.database_url), create_async_engine
     )
 
 
