@@ -1,3 +1,4 @@
+import logging
 from collections.abc import AsyncGenerator
 from urllib.parse import urlencode
 
@@ -6,6 +7,8 @@ import aiohttp
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, format
+
+logger = logging.getLogger(__name__)
 
 categories = {
     'audio': {
@@ -35,6 +38,10 @@ def convert_category(category: int):
         for subcat, cat in subcats.items():
             if category == cat:
                 return f'{broad} - {subcat}'.replace('_', ' ').title()
+
+    message = f'unrecognised category: {category}'
+    logger.warn(message)
+    return message
 
 
 def magnet(info_hash: str, name: str) -> str:
