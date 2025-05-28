@@ -92,7 +92,7 @@ async def check_database():
 
     async with engine.connect() as conn:
         res = await conn.execute(
-            text('SELECT SQLITE_VERSION()' if is_sqlite else 'SELECT version()')
+            text('SELECT SQLITE_VERSION()' if engine.name == 'sqlite' else 'SELECT version()')
         )
 
         return HealthcheckCallbackResponse(
