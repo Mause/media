@@ -9,7 +9,6 @@ import psycopg2
 from fastapi import Depends
 from sqlalchemy import (
     Boolean,
-    Column,
     DateTime,
     ForeignKey,
     Integer,
@@ -29,6 +28,7 @@ from sqlalchemy.orm import (
     Mapped,
     Session,
     joinedload,
+    mapped_column,
     relationship,
     sessionmaker,
 )
@@ -38,7 +38,6 @@ from sqlalchemy_repr import RepresentableBase
 
 from .settings import Settings, get_settings
 from .singleton import singleton
-from .types import TmdbId
 from .utils import precondition
 
 logger = logging.getLogger(__name__)
@@ -53,22 +52,28 @@ class Download(Base):
     __tablename__ = 'download'
     _json_exclude = {'movie', 'episode'}
     _json_include = {'added_by'}
-    id = Column(Integer, primary_key=True)
-    tmdb_id = Column(Integer, default=None)
-    transmission_id = Column(String, nullable=False)
-    imdb_id = Column(String, nullable=False)
-    type = Column(String)
+    id = mapped_column(Integer, primary_key=True)
+    tmdb_id = mapped_column(Integer, default=None)
+    transmission_id = mapped_column(String, nullable=False)
+    imdb_id = mapped_column(String, nullable=False)
+    type = mapped_column(String)
     movie: Mapped['MovieDetails'] = relationship(
         'MovieDetails', uselist=False, cascade='all,delete'
     )
-    movie_id = Column(Integer, ForeignKey('movie_details.id', ondelete='CASCADE'))
+    movie_id = mapped_column(
+        Integer, ForeignKey('movie_details.id', ondelete='CASCADE')
+    )
     episode: Mapped['EpisodeDetails'] = relationship(
         'EpisodeDetails', uselist=False, cascade='all,delete'
     )
-    episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
-    title = Column(String)
-    timestamp = Column(DateTime(timezone=True), nullable=False, default=func.now())
-    added_by_id = Column(Integer, ForeignKey('users.id'))
+    episode_id = mapped_column(
+        Integer, ForeignKey('episode_details.id', ondelete='CASCADE')
+    )
+    title = mapped_column(String)
+    timestamp = mapped_column(
+        DateTime(timezone=True), nullable=False, default=func.now()
+    )
+    added_by_id = mapped_column(Integer, ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship('User', back_populates='downloads')
 
     def progress(self):
@@ -79,13 +84,13 @@ class Download(Base):
 
 class EpisodeDetails(Base):
     __tablename__ = 'episode_details'
-    id = Column(Integer, primary_key=True)
+    id = mapped_column(Integer, primary_key=True)
     download: Mapped['Download'] = relationship(
         'Download', back_populates='episode', passive_deletes=True, uselist=False
     )
-    show_title = Column(String, nullable=False)
-    season = Column(Integer, nullable=False)
-    episode = Column(Integer)
+    show_title = mapped_column(String, nullable=False)
+    season = mapped_column(Integer, nullable=False)
+    episode = mapped_column(Integer)
 
     def is_season_pack(self):
         return self.episode is None
@@ -103,7 +108,7 @@ class EpisodeDetails(Base):
 
 class MovieDetails(Base):
     __tablename__ = 'movie_details'
-    id = Column(Integer, primary_key=True)
+    id = mapped_column(Integer, primary_key=True)
     download: Mapped['Download'] = relationship(
         'Download', back_populates='movie', passive_deletes=True, uselist=False
     )
@@ -112,21 +117,23 @@ class MovieDetails(Base):
 class User(Base):
     __tablename__ = 'users'
     _json_exclude = {'roles', 'password', 'downloads'}
-    id = Column(Integer, primary_key=True)
-    active = Column[bool]('is_active', Boolean(), nullable=False, server_default='1')
+    id = mapped_column(Integer, primary_key=True)
+    active = mapped_column('is_active', Boolean(), nullable=False, server_default='1')
 
     # User authentication information. The collation='en_AU' is required
     # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
-    username = Column(String(255, collation='en_AU'), nullable=False, unique=True)
-    password = Column(String(255), nullable=False, server_default='')
+    username = mapped_column(
+        String(255, collation='en_AU'), nullable=False, unique=True
+    )
+    password = mapped_column(String(255), nullable=False, server_default='')
 
-    email = Column(String(255, collation='en_AU'), nullable=True, unique=True)
+    email = mapped_column(String(255, collation='en_AU'), nullable=True, unique=True)
 
     # User information
-    first_name = Column(
+    first_name = mapped_column(
         String(100, collation='en_AU'), nullable=False, server_default=''
     )
-    last_name = Column(
+    last_name = mapped_column(
         String(100, collation='en_AU'), nullable=False, server_default=''
     )
 
@@ -147,8 +154,8 @@ class User(Base):
 # Define the Role data-model
 class Role(Base):
     __tablename__ = 'roles'
-    id = Column(Integer(), primary_key=True)
-    name = Column(String(50), unique=True)
+    id = mapped_column(Integer(), primary_key=True)
+    name = mapped_column(String(50), unique=True)
 
     def __repr__(self):
         return self.name
@@ -157,9 +164,9 @@ class Role(Base):
 # Define the UserRoles association table
 class UserRoles(Base):
     __tablename__ = 'user_roles'
-    id = Column(Integer(), primary_key=True)
-    user_id = Column(Integer(), ForeignKey('users.id', ondelete='CASCADE'))
-    role_id = Column(Integer(), ForeignKey('roles.id', ondelete='CASCADE'))
+    id = mapped_column(Integer(), primary_key=True)
+    user_id = mapped_column(Integer(), ForeignKey('users.id', ondelete='CASCADE'))
+    role_id = mapped_column(Integer(), ForeignKey('roles.id', ondelete='CASCADE'))
 
 
 class MonitorMediaType(enum.Enum):
@@ -170,22 +177,22 @@ class MonitorMediaType(enum.Enum):
 class Monitor(Base):
     __tablename__ = 'monitor'
 
-    id = Column(Integer(), primary_key=True)
-    tmdb_id = Column[TmdbId](Integer)
+    id = mapped_column(Integer(), primary_key=True)
+    tmdb_id = mapped_column(Integer())
 
-    added_by_id = Column(Integer, ForeignKey('users.id'))
+    added_by_id = mapped_column(Integer(), ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship('User')
 
-    title = Column(String, nullable=False)
-    type = Column[MonitorMediaType](
+    title = mapped_column(String(), nullable=False)
+    type = mapped_column(
         Enum(MonitorMediaType),
         default=MonitorMediaType.MOVIE.name,
         nullable=False,
         server_default=MonitorMediaType.MOVIE.name,
     )
 
-    status = Column[bool](
-        Boolean,
+    status = mapped_column(
+        Boolean(),
         default=False,
     )
 
