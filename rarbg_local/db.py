@@ -1,5 +1,6 @@
 import enum
 import logging
+from collections.abc import Callable
 from datetime import datetime
 from typing import Annotated, TypeVar, cast
 
@@ -17,6 +18,10 @@ from sqlalchemy import (
     event,
 )
 from sqlalchemy.engine import URL, Engine, make_url
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    create_async_engine,
+)
 from sqlalchemy.orm import (
     Mapped,
     Session,
@@ -290,34 +295,56 @@ def normalise_db_url(database_url: str) -> URL:
     return parsed
 
 
+def normalise_db_url_async(database_url: str) -> URL:
+    url = make_url(database_url)
+    return url.set(
+        drivername=(
+            'sqlite+aiosqlite'
+            if url.get_backend_name() == 'sqlite'
+            else 'postgresql+asyncpg'
+        )
+    )
+
+
 MAX_TRIES = 5
 
 
 @singleton
 def get_engine(settings: Annotated[Settings, Depends(get_settings)]) -> Engine:
-    db_url = normalise_db_url(settings.database_url)
+    return build_engine(normalise_db_url(settings.database_url), create_engine)
 
+
+def listens_for(engine: Engine | AsyncEngine, event_name: str):
+    if isinstance(engine, AsyncEngine):
+        return event.listens_for(engine.sync_engine, event_name)
+    else:
+        return event.listens_for(engine, event_name)
+
+
+def build_engine(db_url: URL, cr: Callable):
     logger.info('db_url: %s', db_url)
 
     sqlite = db_url.get_backend_name() == 'sqlite'
     if sqlite:
-        engine = create_engine(
+        engine = cr(
             db_url, connect_args={"check_same_thread": False}, echo_pool='debug'
         )
 
-        @event.listens_for(engine, 'connect')
+        @listens_for(engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
+            if not hasattr(dbapi_con, 'create_collation'):  # async
+                dbapi_con = dbapi_con.driver_connection._connection
             dbapi_con.create_collation(
                 "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
             )
             dbapi_con.execute('pragma foreign_keys=ON')
 
     else:
-        engine = create_engine(
+        engine = cr(
             db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
         )
 
-        @event.listens_for(engine, "do_connect")
+        @listens_for(engine, "do_connect")
         @backoff.on_exception(
             backoff.fibo,
             psycopg2.OperationalError,
@@ -328,6 +355,14 @@ def get_engine(settings: Annotated[Settings, Depends(get_settings)]) -> Engine:
             return psycopg2.connect(*cargs, **cparams)
 
     return engine
+
+
+async def get_async_engine(
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> AsyncEngine:
+    return build_engine(
+        normalise_db_url_async(settings.database_url), create_async_engine
+    )
 
 
 @singleton
