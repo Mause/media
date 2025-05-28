@@ -17,12 +17,9 @@ from healthcheck import (
 )
 from healthcheck.models import ComponentType
 from pydantic import BaseModel
-from sqlalchemy.engine import make_url
-from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.sql import text
 
-from .db import get_session_local
-from .settings import get_settings
+from .db import get_async_engine, get_session_local
 from .singleton import get as _get
 from .transmission_proxy import transmission
 
@@ -91,15 +88,7 @@ async def component_diagnostics(request: Request, component_name: str):
 
 
 async def check_database():
-    settings = await get(get_settings)
-
-    url = make_url(settings.database_url)
-    is_sqlite = url.get_backend_name() == 'sqlite'
-    if is_sqlite:
-        url = url.set(drivername='sqlite+aiosqlite')
-    else:
-        url = url.set(drivername='postgresql+asyncpg')
-    engine = create_async_engine(url)
+    engine = await get(get_async_engine)
 
     async with engine.connect() as conn:
         res = await conn.execute(
