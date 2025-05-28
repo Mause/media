@@ -9,6 +9,7 @@ from typing import (
     Literal,
     TypeVar,
     Union,
+    cast,
 )
 from urllib.parse import urlencode
 
@@ -215,7 +216,7 @@ async def download_post(
 
     # work around a fastapi bug
     # see for more details https://github.com/fastapi/fastapi/discussions/6024
-    session = non_null(object_session(added_by))
+    session = cast(AsyncSession, non_null(object_session(added_by)))
 
     for thing in things:
         is_tv = thing.season is not None

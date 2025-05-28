@@ -18,6 +18,8 @@ async def test_auth(responses, session, user, fastapi_app, test_client):
     from cryptography.hazmat.primitives.asymmetric import rsa
     from jwt.api_jwt import PyJWT
 
+    await session.refresh(user)
+    # Arrange
     del fastapi_app.dependency_overrides[get_current_user]
 
     jwks_uri = 'https://mause.au.auth0.com/.well-known/jwks.json'
