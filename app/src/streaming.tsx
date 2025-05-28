@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
-import { ErrorInfo } from 'react';
-import { Helmet } from 'react-helmet-async';
+import type { ReactNode, ComponentType, PropsWithChildren } from 'react';
+import React, { ErrorInfo } from 'react';
 import {
   BrowserRouter as Router,
   useLocation,
@@ -54,13 +54,11 @@ function RouteTitle({
   children,
 }: {
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
+      <title>{title}</title>
       {children}
     </>
   );

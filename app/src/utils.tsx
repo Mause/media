@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import React, { ReactElement, useState, useEffect } from 'react';
 import Axios, { RawAxiosRequestHeaders } from 'axios';
 import MaterialLink from '@mui/material/Link';
@@ -14,10 +15,10 @@ import { FetchEventTarget } from './fetch_stream';
 
 export function MLink(
   props: {
-    children: React.ReactNode;
+    children: ReactNode;
     color?: TypographyTypeMap['props']['color'];
   } & Pick<Parameters<typeof Link>[0], 'to' | 'state'>,
-): ReactElement {
+): ReactElement<any> {
   return <MaterialLink component={Link} {...props} underline="hover" />;
 }
 

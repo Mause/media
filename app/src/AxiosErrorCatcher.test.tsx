@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import moxios from 'moxios';
 import axios from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';

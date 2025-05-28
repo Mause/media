@@ -1,13 +1,14 @@
 import { StrictMode } from 'react';
-import './index.css';
-import { createRoot } from 'react-dom/client';
+import '@mui/material-pigment-css/styles.css';
 import { Auth0Provider } from '@auth0/auth0-react';
 import {
   ThemeProvider,
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
-import { HelmetProvider } from 'react-helmet-async';
+import { createRoot } from 'react-dom/client';
+
+import './index.css';
 
 import App from './App';
 
@@ -37,9 +38,7 @@ const rootEl = (
   >
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <HelmetProvider>
-          <App />
-        </HelmetProvider>
+        <App />
       </ThemeProvider>
     </StyledEngineProvider>
   </Auth0Provider>
