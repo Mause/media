@@ -7,7 +7,7 @@ from urllib.parse import urlencode, urlparse
 
 from pytest import fixture, mark
 from selenium.webdriver import Chrome
-from selenium.webdriver.remote.webelement import WebElemente
+from selenium.webdriver.remote.webelement import WebElement
 
 # from ..main import create_app
 
