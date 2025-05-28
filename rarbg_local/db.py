@@ -25,9 +25,9 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.future import select
 from sqlalchemy.orm import (
+    DeclarativeBase,
     Mapped,
     Session,
-    declarative_base,
     joinedload,
     relationship,
     sessionmaker,
@@ -41,9 +41,12 @@ from .singleton import singleton
 from .types import TmdbId
 from .utils import precondition
 
-Base = declarative_base(cls=RepresentableBase)
 logger = logging.getLogger(__name__)
 T = TypeVar('T')
+
+
+class Base(RepresentableBase, DeclarativeBase):
+    pass
 
 
 class Download(Base):
