@@ -108,7 +108,7 @@ async def check_database():
 
 
 async def pool():
-    def pget(field):
+    def pget(field: str) -> int:
         value = getattr(pool, field, None)
 
         return value() if callable(value) else value
