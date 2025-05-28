@@ -332,6 +332,8 @@ def build_engine(db_url: URL, cr: Callable):
 
         @listens_for(engine, 'connect')
         def _fk_pragma_on_connect(dbapi_con, con_record):
+            if not hasattr(dbapi_con, 'create_collation'):  # async
+                dbapi_con = dbapi_con.driver_connection._connection
             dbapi_con.create_collation(
                 "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
             )
