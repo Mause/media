@@ -184,7 +184,7 @@ class Monitor(Base):
         server_default=MonitorMediaType.MOVIE.name,
     )
 
-    status: bool = Column(
+    status = Column[bool](
         Boolean,
         default=False,
     )
