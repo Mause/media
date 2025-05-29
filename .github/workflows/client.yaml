@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [18.x]
 
     steps:
     - run: corepack enable
@@ -17,12 +17,8 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - uses: actions/setup-java@v4
+    - uses: nickcharlton/diff-check@main
       with:
-        java-version: 17
-        distribution: temurin
-    - run: npx @openapitools/openapi-generator-cli generate -i https://media.mause.me/openapi.json -g python -o client --skip-validate-spec
-    - uses: actions/upload-artifact@v4
-      with:
-        name: client
-        path: client
+        command: |
+          npx openapi-typescript rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o app/src/schema.ts
+          cd app && yarn && yarn prettier --write src/schema.ts
