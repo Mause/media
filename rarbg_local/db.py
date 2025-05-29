@@ -327,8 +327,10 @@ def build_engine(db_url: URL, cr: Callable):
     sqlite = db_url.get_backend_name() == 'sqlite'
     if sqlite:
         engine = cr(
-            db_url, connect_args={"check_same_thread": False}, echo_pool='debug',
-            future=True
+            db_url,
+            connect_args={"check_same_thread": False},
+            echo_pool='debug',
+            future=True,
         )
 
         @listens_for(engine, 'connect')
@@ -342,8 +344,12 @@ def build_engine(db_url: URL, cr: Callable):
 
     else:
         engine = cr(
-            db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug',
-            future=True
+            db_url,
+            max_overflow=10,
+            pool_size=5,
+            pool_recycle=300,
+            echo_pool='debug',
+            future=True,
         )
 
         @listens_for(engine, "do_connect")
