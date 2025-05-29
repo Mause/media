@@ -4,7 +4,7 @@ on: push
 
 jobs:
   generate_client:
-    name: Generate client
+    name: Check client
     runs-on: ubuntu-latest
 
     strategy:
@@ -12,6 +12,7 @@ jobs:
         node-version: [18.x]
 
     steps:
+    - uses: actions/checkout@v4
     - run: corepack enable
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
