@@ -2,7 +2,7 @@ import enum
 import logging
 from collections.abc import Callable, Sequence
 from datetime import datetime
-from typing import Annotated, TypeVar, cast
+from typing import Annotated, Optional, TypeVar, cast
 
 import backoff
 import psycopg2
@@ -52,11 +52,11 @@ class Download(Base):
     __tablename__ = 'download'
     _json_exclude = {'movie', 'episode'}
     _json_include = {'added_by'}
-    id = mapped_column(Integer, primary_key=True)
-    tmdb_id = mapped_column(Integer, default=None)
-    transmission_id = mapped_column(String, nullable=False)
-    imdb_id = mapped_column(String, nullable=False)
-    type = mapped_column(String)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    tmdb_id: Mapped[Optional[int]]
+    transmission_id: Mapped[str]
+    imdb_id: Mapped[str]
+    type: Mapped[str]
     movie: Mapped['MovieDetails'] = relationship(
         'MovieDetails', uselist=False, cascade='all,delete'
     )
@@ -69,11 +69,11 @@ class Download(Base):
     episode_id = mapped_column(
         Integer, ForeignKey('episode_details.id', ondelete='CASCADE')
     )
-    title = mapped_column(String)
+    title: Mapped[str]
     timestamp = mapped_column(
         DateTime(timezone=True), nullable=False, default=func.now()
     )
-    added_by_id = mapped_column(Integer, ForeignKey('users.id'))
+    added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship('User', back_populates='downloads')
 
     def progress(self):
