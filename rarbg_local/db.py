@@ -53,7 +53,7 @@ class Download(Base):
     _json_exclude = {'movie', 'episode'}
     _json_include = {'added_by'}
     id: Mapped[int] = mapped_column(primary_key=True)
-    tmdb_id: Mapped[Optional[int]]
+    tmdb_id: Mapped[int | None]
     transmission_id: Mapped[str]
     imdb_id: Mapped[str]
     type: Mapped[str]
