@@ -2,7 +2,7 @@ import enum
 import logging
 from collections.abc import Callable, Sequence
 from datetime import datetime
-from typing import Annotated, Optional, TypeVar, cast
+from typing import Annotated, TypeVar, cast
 
 import backoff
 import psycopg2
