@@ -1,5 +1,3 @@
-import logging
-
 import libcst as cst
 from libcst import FlattenSentinel
 from libcst.codemod import CodemodTest, VisitorBasedCodemodCommand
@@ -22,7 +20,6 @@ from libcst.metadata import ParentNodeProvider
 import_from = cst.ImportFrom(
     cst.Name('pytest'), names=[cst.ImportAlias(cst.Name('importorskip'))]
 )
-logger = logging.getLogger(__name__)
 
 
 class AddImports(VisitorBasedCodemodCommand):
@@ -91,7 +88,7 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
                 None,
             )
             if parent is None:
-                logger.warning('Unable to rewrite')
+                self.warn(f'Unable to rewrite: {self.context.filename}')
                 return node
             select = stack[0].with_deep_changes(parent.func, value=select)
 
