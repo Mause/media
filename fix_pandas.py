@@ -134,13 +134,23 @@ class ColumnVisitor(AddImports, VisitorBasedCodemodCommand):
                 args=original_node.value.args,
             )
         )
+        anno = cst.Annotation(
+            annotation=cst.Subscript(
+                value=cst.Name('Mapped'),
+                slice=[
+                    cst.SubscriptElement(
+                        slice=cst.Index(value=map_annotation(original_node.value))
+                    )
+                ],
+            )
+        )
 
         self.ani("sqlalchemy.orm", "Mapped", 'mapped_column')
 
         return cst.AnnAssign(
             target=updated_node.targets[0].target,
             value=updated_node.value,
-            annotation=cst.Annotation(annotation=map_annotation(original_node.value)),
+            annotation=anno,
         )
 
 
@@ -244,9 +254,9 @@ class TestColumnVisitor(CodemodTest):
         from sqlalchemy.orm import Mapped, mapped_column
 
         class T:
-            name: str = mapped_column(String)
-            last_name: str = mapped_column(String())
-            active: bool = mapped_column('is_active', Boolean())
+            name: Mapped[str] = mapped_column(String)
+            last_name: Mapped[str] = mapped_column(String())
+            active: Mapped[bool] = mapped_column('is_active', Boolean())
         '''
 
         self.assertCodemod(before, after)
