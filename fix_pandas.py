@@ -86,7 +86,7 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
                 (
                     item
                     for item in stack
-                    if isinstance(item, Call) and query_call in item.func.children
+                    if isinstance(item, cst.Call) and query_call in item.func.children
                 ),
                 None,
             )
