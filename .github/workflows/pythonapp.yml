@@ -71,7 +71,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - run: uv sync --all-groups
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: 'uv.lock'
+      - run: uv sync --all-groups --dev --locked
       - uses: nickcharlton/diff-check@main
         with:
           command: |
