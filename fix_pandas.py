@@ -73,8 +73,8 @@ class FixPandasVisitor(VisitorBasedCodemodCommand):
                 args=query_call.args,
             )
 
-            if parent := self.get_metadata(ParentNodeProvider, query_call, None):
-                select = stack[0].with_deep_changes(parent, value=select)
+            parent = next(item for item in stack if query_call in item.func.children)
+            select = stack[0].with_deep_changes(parent.func, value=select)
 
             new_call = cst.Call(
                 func=cst.Attribute(cst.Name('session'), cst.Name('execute')),
