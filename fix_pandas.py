@@ -97,11 +97,16 @@ class ColumnVisitor(VisitorBasedCodemodCommand):
         ):
             return updated_node
 
-        return updated_node.with_changes(
+        updated_node = updated_node.with_changes(
             value=cst.Call(
                 func=cst.Name('mapped_column'),
                 args=original_node.value.args,
             )
+        )
+        return cst.AnnAssign(
+            target=updated_node.targets[0].target,
+            value=updated_node.value,
+            annotation=cst.Annotation(annotation=original_node.value.args[0].value),
         )
 
 
@@ -129,7 +134,7 @@ class TestColumnVisitor(CodemodTest):
         '''
         after = '''
         class T:
-            name = mapped_column(String)
+            name: String = mapped_column(String)
         '''
 
         self.assertCodemod(before, after)
