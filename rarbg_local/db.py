@@ -14,32 +14,32 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
-    create_engine,
     event,
 )
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
+    AsyncAttrs,
     AsyncEngine,
+    AsyncSession,
     create_async_engine,
 )
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.future import select
 from sqlalchemy.orm import (
     Mapped,
-    Session,
     declarative_base,
     joinedload,
     relationship,
-    sessionmaker,
 )
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
-from sqlalchemy_repr import RepresentableBase
 
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .types import TmdbId
 from .utils import precondition
 
-Base = declarative_base(cls=RepresentableBase)
+Base = declarative_base(cls=AsyncAttrs)
 logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
@@ -259,26 +259,38 @@ def create_episode(
     return ed
 
 
-def get_all(session: Session, model: type[T]) -> list[T]:
+async def get_all(session: AsyncSession, model: Type[T]) -> list[T]:
     if model == MovieDetails:
         joint = MovieDetails.download
     elif model == EpisodeDetails:
         joint = EpisodeDetails.download
     else:
         raise ValueError(f'Unknown model: {model}')
-    return session.query(model).options(joinedload(joint)).all()
+    return (
+        (
+            await session.execute(
+                select(model).options(joinedload(joint), joinedload(joint.added_by))
+            )
+        )
+        .scalars()
+        .all()
+    )
 
 
-def get_episodes(session: Session) -> list[EpisodeDetails]:
-    return get_all(session, EpisodeDetails)
+async def get_episodes(session: AsyncSession) -> list[EpisodeDetails]:
+    return await get_all(session, EpisodeDetails)
 
 
-def get_movies(session: Session) -> list[MovieDetails]:
-    return get_all(session, MovieDetails)
+async def get_movies(session: AsyncSession) -> list[MovieDetails]:
+    return await get_all(session, MovieDetails)
 
 
-def get_or_create(session: Session, model: type[T], defaults=None, **kwargs) -> T:
-    instance = session.query(model).filter_by(**kwargs).first()
+async def get_or_create(
+    session: AsyncSession, model: Type[T], defaults=None, **kwargs
+) -> T:
+    instance = (
+        (await session.execute(select(model).filter_by(**kwargs))).scalars().first()
+    )
     if instance:
         return instance
     params = {k: v for k, v in kwargs.items() if not isinstance(v, ClauseElement)}
@@ -291,7 +303,9 @@ def get_or_create(session: Session, model: type[T], defaults=None, **kwargs) -> 
 def normalise_db_url(database_url: str) -> URL:
     parsed = make_url(database_url)
     if parsed.get_backend_name() == 'postgres':
-        parsed = parsed.set(drivername='postgresql')
+        parsed = parsed.set(drivername='postgresql+asyncpg')
+    else:
+        parsed = parsed.set(drivername='sqlite+aiosqlite')
     return parsed
 
 
@@ -337,7 +351,7 @@ def build_engine(db_url: URL, cr: Callable):
             dbapi_con.create_collation(
                 "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
             )
-            dbapi_con.execute('pragma foreign_keys=ON')
+            connection.execute('pragma foreign_keys=ON')
 
     else:
         engine = cr(
@@ -366,20 +380,22 @@ async def get_async_engine(
 
 
 @singleton
-def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> sessionmaker:
-    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+def get_session_local(
+    engine: Annotated[AsyncEngine, Depends(get_async_engine)],
+) -> asyncsessionmaker:
+    return asyncsessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
-def get_db(session_local=Depends(get_session_local)):
+async def get_db(session_local=Depends(get_session_local)):
     sl = session_local()
     try:
         yield sl
     finally:
-        sl.close()
+        await sl.close()
 
 
-def safe_delete(session: Session, entity: type[T], id: int):
-    query = session.query(entity).filter_by(id=id)
+async def safe_delete(session: AsyncSession, entity: type[T], id: int):
+    query = await session.execute(select(entity).filter_by(id=id))
     precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    session.commit()
+    await query.delete()
+    await session.commit()

@@ -4,7 +4,6 @@ import traceback
 from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
-    Annotated,
     Literal,
     TypeVar,
     Union,
@@ -18,7 +17,9 @@ from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel
 from sqlalchemy import func
-from sqlalchemy.orm.session import Session, object_session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.orm.session import object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -81,6 +82,8 @@ from .types import ImdbId, TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
 
+T = TypeVar('T')
+
 api = APIRouter()
 logger = logging.getLogger(__name__)
 logging.getLogger('backoff').handlers.clear()
@@ -98,8 +101,8 @@ def user():
 
 
 @api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
-    safe_delete(
+async def api_delete(type: MediaType, id: int, session: AsyncSession = Depends(get_db)):
+    await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
 
@@ -166,7 +169,7 @@ async def stream(
 @api.get(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
-async def select(tmdb_id: TmdbId, season: int):
+async def api_select(tmdb_id: TmdbId, season: int):
     tasks, results = await search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
 
     episodes = (await get_tv_episodes(tmdb_id, season)).episodes
@@ -202,7 +205,8 @@ async def select(tmdb_id: TmdbId, season: int):
 )
 async def download_post(
     things: list[DownloadPost],
-    added_by: Annotated[User, security],
+    added_by: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_db),
 ) -> list[MovieDetails | EpisodeDetails]:
     results: list[MovieDetails | EpisodeDetails] = []
 
@@ -240,7 +244,7 @@ async def download_post(
             subpath = 'movies'
 
         results.append(
-            add_single(
+            await add_single(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
@@ -261,22 +265,32 @@ async def download_post(
         )
 
     session.add_all(results)
-    session.commit()
+    await session.commit()
+
+    for res in results:
+        await session.refresh(res)
+        await session.run_sync(lambda session: res.download.added_by)
 
     return results
 
 
 @api.get('/index', response_model=IndexResponse)
-async def index(session: Session = Depends(get_db)):
+async def index(session: AsyncSession = Depends(get_db)):
     return IndexResponse(
-        series=await resolve_series(session), movies=get_movies(session)
+        series=await resolve_series(session), movies=await get_movies(session)
     )
 
 
+async def get_one(session: AsyncSession, entity: type[T], id: int) -> T | None:
+    query = select(entity).filter_by(id=id)
+    res = await session.execute(query)
+    return res.scalar_one()
+
+
 @api.get('/stats', response_model=list[StatsResponse])
-async def stats(session: Session = Depends(get_db)):
-    def process(added_by_id: int, values):
-        user = session.get(User, added_by_id)
+async def stats(session: AsyncSession = Depends(get_db)):
+    async def process(added_by_id: int, values):
+        user = await get_one(session, User, added_by_id)
         if not user:
             return None
 
@@ -286,11 +300,15 @@ async def stats(session: Session = Depends(get_db)):
         }
 
     keys = Download.added_by_id, Download.type
-    query = session.query(*keys, func.count(name='count')).group_by(*keys)
+    query = await session.execute(
+        select(*keys, func.count(name='count')).group_by(*keys)
+    )
 
     return [
-        process(added_by_id, values)
-        for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
+        await process(added_by_id, values)
+        for added_by_id, values in groupby(
+            query.all(), lambda row: row.added_by_id
+        ).items()
     ]
 
 

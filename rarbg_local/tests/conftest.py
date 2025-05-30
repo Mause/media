@@ -1,5 +1,4 @@
 import json
-from asyncio import get_event_loop
 from collections.abc import AsyncGenerator
 from re import Pattern
 from typing import Annotated, TypeVar
@@ -8,7 +7,7 @@ import uvloop
 from async_asgi_testclient import TestClient
 from fastapi import Depends
 from fastapi.security import SecurityScopes
-from pytest import fixture, hookimpl
+from pytest import fixture, hookimpl, mark
 from responses import RequestsMock
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm.session import Session
@@ -53,33 +52,36 @@ def test_client(fastapi_app, clear_cache, user) -> TestClient:
 
 
 @fixture
-def user(session):
+@mark.asyncio
+async def user(session):
     u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
     session.add(u)
-    session.commit()
+    await session.commit()
     return u
 
 
 @fixture
-def session(fastapi_app, tmp_path):
+async def session(fastapi_app, tmp_path):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
         database_url=str(
             URL.create(
-                'sqlite',
+                'sqlite+aiosqlite',
                 database=str(tmp_path / 'test.db'),
             )
         ),
         plex_token='plex_token',
     )
 
-    Session = get_event_loop().run_until_complete(get(fastapi_app, get_session_local))
+    Session = await get(fastapi_app, get_session_local)
     assert hasattr(Session, 'kw'), Session
     engine = Session.kw['bind']
-    assert 'sqlite' in repr(engine), repr(engine)
-    Base.metadata.create_all(engine)
+    assert 'sqlite' in repr(engine.sync_engine), repr(engine.sync_engine)
 
-    with Session() as session:
+    async with engine.connect() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    async with Session() as session:
         session_var.set(session)
         yield session
 
