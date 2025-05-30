@@ -2,6 +2,7 @@ import libcst as cst
 from libcst import FlattenSentinel
 from libcst.codemod import CodemodTest, VisitorBasedCodemodCommand
 from libcst.codemod.visitors import AddImportsVisitor
+from libcst.display import dump
 from libcst.matchers import (
     Arg,
     Assign,
@@ -214,6 +215,7 @@ def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
             if matches(arg, Arg(value=Name()))
         }
     else:
+        logger.warn('Unable to handle annotation: %s', dump(annotation))
         return annotation
 
     res = map_name(name)
