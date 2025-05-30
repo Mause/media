@@ -158,9 +158,11 @@ def column(*args: Arg):
         ),
         args=[
             *args,
-            ZeroOrMore(
-                Arg(
-                    keyword=Name(),
+            SaveMatchedNode(
+                matcher=ZeroOrMore(
+                    Arg(
+                        keyword=Name(),
+                    ),
                 ),
             ),
         ],
@@ -201,9 +203,22 @@ def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
         matcher,
     ):
         name = res['name'].value
+        kwargs = {arg.keyword.value: arg.value.value for arg in res['kwargs']}
     else:
         return annotation
 
+    res = map_name(name)
+
+    if kwargs.get('nullable') == 'True':
+        res = cst.Subscript(
+            value=cst.Name('Optional'),
+            slice=[cst.SubscriptElement(slice=cst.Index(value=res))],
+        )
+
+    return res
+
+
+def map_name(name: str) -> cst.Name:
     match name:
         case 'String':
             return cst.Name('str')
@@ -214,7 +229,7 @@ def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
         case 'DateTime':
             return cst.Name('datetime')
         case 'Enum':
-            return annotation
+            return cst.Name('Never')
         case _:
             raise ValueError(f'Unknown annotation: {name}')
 
@@ -245,6 +260,7 @@ class TestColumnVisitor(CodemodTest):
             name = Column(String)
             last_name = Column(String())
             active = Column('is_active', Boolean())
+            phone = Column(String, nullable=True)
         '''
         after = '''
         from sqlalchemy.future import select
@@ -254,6 +270,7 @@ class TestColumnVisitor(CodemodTest):
             name: Mapped[str] = mapped_column(String)
             last_name: Mapped[str] = mapped_column(String())
             active: Mapped[bool] = mapped_column('is_active', Boolean())
+            phone: Mapped[Optional[str]] = mapped_column(String, nullable=True)
         '''
 
         self.assertCodemod(before, after)
