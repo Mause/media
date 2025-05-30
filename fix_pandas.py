@@ -76,42 +76,42 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
     def leave_Call(
         self, old_node: cst.Call, node: cst.Call
     ) -> cst.CSTNode | FlattenSentinel:
-        if a := self.is_transformable(node):
-            (query_call, stack) = a
+        if not (a := self.is_transformable(node)):
+            return node
+        (query_call, stack) = a
 
-            select = cst.Call(
-                func=cst.Name('select'),
-                args=query_call.args,
+        select = cst.Call(
+            func=cst.Name('select'),
+            args=query_call.args,
+        )
+
+        parent = next(
+            (
+                item
+                for item in stack
+                if isinstance(item, cst.Call) and query_call in item.func.children
+            ),
+            None,
+        )
+        if parent is None:
+            pos = self.get_metadata(PositionProvider, old_node)
+            self.warn(
+                f'Unable to rewrite: {self.context.filename}:{pos.start.line}:{pos.start.column}'
             )
+            return node
+        select = stack[0].with_deep_changes(parent.func, value=select)
 
-            parent = next(
-                (
-                    item
-                    for item in stack
-                    if isinstance(item, cst.Call) and query_call in item.func.children
-                ),
-                None,
-            )
-            if parent is None:
-                pos = self.get_metadata(PositionProvider, old_node)
-                self.warn(
-                    f'Unable to rewrite: {self.context.filename}:{pos.start.line}:{pos.start.column}'
-                )
-                return node
-            select = stack[0].with_deep_changes(parent.func, value=select)
+        execute = cst.Call(
+            func=cst.Attribute(cst.Name('session'), cst.Name('execute')),
+            args=[
+                cst.Arg(select),
+            ],
+        )
+        new_call = node.with_deep_changes(node.func, value=execute)
 
-            execute = cst.Call(
-                func=cst.Attribute(cst.Name('session'), cst.Name('execute')),
-                args=[
-                    cst.Arg(select),
-                ],
-            )
-            new_call = node.with_deep_changes(node.func, value=execute)
+        self.ani("sqlalchemy.future", "select")
 
-            self.ani("sqlalchemy.future", "select")
-
-            return new_call
-        return node
+        return new_call
 
 
 class ColumnVisitor(AddImports, VisitorBasedCodemodCommand):
