@@ -114,24 +114,158 @@ class ColumnVisitor(VisitorBasedCodemodCommand):
         )
 
 
-def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
-    arg = Arg(
-        value=OneOf(
-            SaveMatchedNode(matcher=Name(), name='name'),
-            Call(func=SaveMatchedNode(matcher=Name(), name='name')),
-        )
+def column(*args: Arg):
+    return Call(
+        func=Name(
+            value='Column',
+        ),
+        args=args,
     )
 
-    single_matcher = Call(args=[arg])
-    with_name = Call(
-        args=[
-            Arg(
-                value=SimpleString(),
-            ),
-            arg,
-        ]
+
+arg = Arg(
+    value=OneOf(
+        SaveMatchedNode(matcher=Name(), name='name'),
+        Call(func=SaveMatchedNode(matcher=Name(), name='name')),
     )
-    matcher = OneOf(single_matcher, with_name)
+)
+
+matcher = OneOf(
+    column(arg),
+    column(
+        Arg(
+            value=SimpleString(),
+        ),
+        arg,
+    ),
+    column(
+        arg,
+        Arg(
+            value=Name(),
+            keyword=Name(),
+        ),
+    ),
+    column(
+        arg,
+        Arg(
+            value=Call(
+                func=Name(
+                    value='ForeignKey',
+                ),
+            ),
+        ),
+    ),
+    column(
+        arg,
+        Arg(
+            value=Name(
+                value='False',
+            ),
+            keyword=Name(
+                value='nullable',
+            ),
+        ),
+        Arg(
+            value=Call(
+                func=Attribute(
+                    value=Name(
+                        value='func',
+                    ),
+                    attr=Name(
+                        value='now',
+                    ),
+                ),
+            ),
+            keyword=Name(
+                value='default',
+            ),
+        ),
+    ),
+    column(
+        Arg(
+            value=SimpleString(
+                value="'is_active'",
+            ),
+        ),
+        arg,
+        Arg(
+            value=Name(
+                value='False',
+            ),
+            keyword=Name(
+                value='nullable',
+            ),
+        ),
+        Arg(
+            value=SimpleString(
+                value="'1'",
+            ),
+            keyword=Name(
+                value='server_default',
+            ),
+        ),
+    ),
+    column(
+        arg,
+        Arg(
+            value=Name(
+                value='False',
+            ),
+            keyword=Name(
+                value='nullable',
+            ),
+        ),
+        Arg(
+            value=Name(
+                value='True',
+            ),
+            keyword=Name(
+                value='unique',
+            ),
+        ),
+    ),
+    column(
+        arg,
+        Arg(
+            value=Name(
+                value='False',
+            ),
+            keyword=Name(
+                value='nullable',
+            ),
+        ),
+        Arg(
+            value=SimpleString(
+                value="''",
+            ),
+            keyword=Name(
+                value='server_default',
+            ),
+        ),
+    ),
+    column(
+        arg,
+        Arg(
+            value=Name(
+                value='True',
+            ),
+            keyword=Name(
+                value='nullable',
+            ),
+        ),
+        Arg(
+            value=Name(
+                value='True',
+            ),
+            keyword=Name(
+                value='unique',
+            ),
+        ),
+    ),
+)
+
+
+def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
     if res := extract(
         annotation,
         matcher,
