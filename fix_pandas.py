@@ -5,6 +5,7 @@ from libcst import FlattenSentinel
 from libcst.codemod import CodemodTest, VisitorBasedCodemodCommand
 from libcst.matchers import (
     Attribute,
+    Assign,
     Call,
     Name,
     OneOf,
@@ -80,6 +81,30 @@ class FixPandasVisitor(VisitorBasedCodemodCommand):
         return node
 
 
+class ColumnVisitor(VisitorBasedCodemodCommand):
+    METADATA_DEPENDENCIES = (ParentNodeProvider,)
+
+    def leave_Assign(
+        self, original_node: cst.Assign, updated_node: cst.Assign
+    ) -> cst.CSTNode:
+        if not matches(
+            original_node,
+            Assign(
+                value=Call(
+                    func=Name('Column'),
+                )
+            ),
+        ):
+            return updated_node
+
+        return updated_node.with_changes(
+            value=cst.Call(
+                func=cst.Name('mapped_column'),
+                args=original_node.value.args,
+            )
+        )
+
+
 class Testy(CodemodTest):
     TRANSFORM = FixPandasVisitor
 
@@ -89,6 +114,22 @@ class Testy(CodemodTest):
         '''
         after = '''
         session.execute(select(Model).where(Model.id == 1)).all()
+        '''
+
+        self.assertCodemod(before, after)
+
+
+class TestColumnVisitor(CodemodTest):
+    TRANSFORM = ColumnVisitor
+
+    def test_replace(self):
+        before = '''
+        class T:
+            name = Column(String)
+        '''
+        after = '''
+        class T:
+            name = mapped_column(String)
         '''
 
         self.assertCodemod(before, after)
