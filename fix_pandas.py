@@ -4,8 +4,8 @@ import libcst as cst
 from libcst import FlattenSentinel
 from libcst.codemod import CodemodTest, VisitorBasedCodemodCommand
 from libcst.matchers import (
-    Attribute,
     Assign,
+    Attribute,
     Call,
     Name,
     OneOf,
@@ -106,8 +106,16 @@ class ColumnVisitor(VisitorBasedCodemodCommand):
         return cst.AnnAssign(
             target=updated_node.targets[0].target,
             value=updated_node.value,
-            annotation=cst.Annotation(annotation=original_node.value.args[0].value),
+            annotation=cst.Annotation(annotation=map_annotation(original_node.value.args[0].value))
         )
+
+
+def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
+    match annotation.value:
+        case 'String':
+            return cst.Name('str')
+        case _:
+            raise ValueError(f'Unknown annotation: {annotation.value}')
 
 
 class Testy(CodemodTest):
@@ -134,7 +142,7 @@ class TestColumnVisitor(CodemodTest):
         '''
         after = '''
         class T:
-            name: String = mapped_column(String)
+            name: str = mapped_column(String)
         '''
 
         self.assertCodemod(before, after)
