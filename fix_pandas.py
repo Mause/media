@@ -4,11 +4,15 @@ import libcst as cst
 from libcst import FlattenSentinel
 from libcst.codemod import CodemodTest, VisitorBasedCodemodCommand
 from libcst.matchers import (
+    Arg,
     Assign,
     Attribute,
     Call,
     Name,
     OneOf,
+    SaveMatchedNode,
+    SimpleString,
+    extract,
     matches,
 )
 from libcst.metadata import ParentNodeProvider
@@ -106,21 +110,47 @@ class ColumnVisitor(VisitorBasedCodemodCommand):
         return cst.AnnAssign(
             target=updated_node.targets[0].target,
             value=updated_node.value,
-            annotation=cst.Annotation(
-                annotation=map_annotation(original_node.value.args[0].value)
-            ),
+            annotation=cst.Annotation(annotation=map_annotation(original_node.value)),
         )
 
 
 def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
-    if isinstance(annotation, cst.Call):
-        return map_annotation(annotation.func)
+    arg = Arg(
+        value=OneOf(
+            SaveMatchedNode(matcher=Name(), name='name'),
+            Call(func=SaveMatchedNode(matcher=Name(), name='name')),
+        )
+    )
 
-    match annotation.value:
+    single_matcher = Call(args=[arg])
+    with_name = Call(
+        args=[
+            Arg(
+                value=SimpleString(),
+            ),
+            arg,
+        ]
+    )
+    matcher = OneOf(single_matcher, with_name)
+    if res := extract(
+        annotation,
+        matcher,
+    ):
+        annotation = res['name'].value
+    else:
+        return annotation
+
+    match annotation:
         case 'String':
             return cst.Name('str')
+        case 'Integer':
+            return cst.Name('int')
+        case 'Boolean':
+            return cst.Name('bool')
+        case 'DateTime':
+            return cst.Name('datetime')
         case _:
-            raise ValueError(f'Unknown annotation: {annotation.value}')
+            raise ValueError(f'Unknown annotation: {annotation}')
 
 
 class Testy(CodemodTest):
@@ -145,11 +175,13 @@ class TestColumnVisitor(CodemodTest):
         class T:
             name = Column(String)
             last_name = Column(String())
+            active = Column('is_active', Boolean())
         '''
         after = '''
         class T:
             name: str = mapped_column(String)
             last_name: str = mapped_column(String())
+            active: bool = mapped_column('is_active', Boolean())
         '''
 
         self.assertCodemod(before, after)
