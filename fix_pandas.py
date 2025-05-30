@@ -3,6 +3,7 @@ import os
 import libcst as cst
 from libcst import FlattenSentinel
 from libcst.codemod import CodemodTest, VisitorBasedCodemodCommand
+from libcst.codemod.visitors import AddImportsVisitor
 from libcst.matchers import (
     Arg,
     Assign,
@@ -25,7 +26,16 @@ import_from = cst.ImportFrom(
 )
 
 
-class FixPandasVisitor(VisitorBasedCodemodCommand):
+class AddImports(VisitorBasedCodemodCommand):
+    def leave_Module(self, old_node, node):
+        return node.visit(AddImportsVisitor(self.context))
+
+    def ani(self, mod: str, *names: str):
+        for name in names:
+            AddImportsVisitor.add_needed_import(self.context, mod, name)
+
+
+class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
     METADATA_DEPENDENCIES = (ParentNodeProvider,)
 
     def is_transformable(
@@ -83,11 +93,14 @@ class FixPandasVisitor(VisitorBasedCodemodCommand):
                 ],
             )
             new_call = node.with_deep_changes(node.func, value=execute)
+
+            self.ani("sqlalchemy.future", "select")
+
             return new_call
         return node
 
 
-class ColumnVisitor(VisitorBasedCodemodCommand):
+class ColumnVisitor(AddImports, VisitorBasedCodemodCommand):
     METADATA_DEPENDENCIES = (ParentNodeProvider,)
 
     def leave_Assign(
@@ -109,6 +122,9 @@ class ColumnVisitor(VisitorBasedCodemodCommand):
                 args=original_node.value.args,
             )
         )
+
+        self.ani("sqlalchemy.orm", "Mapped", 'mapped_column')
+
         return cst.AnnAssign(
             target=updated_node.targets[0].target,
             value=updated_node.value,
@@ -192,6 +208,9 @@ class Testy(CodemodTest):
         session.query(Model).filter(Model.id == 1).all()
         '''
         after = '''
+        from sqlalchemy.future import select
+        from sqlalchemy.orm import Mapped, mapped_column
+
         session.execute(select(Model).where(Model.id == 1)).all()
         '''
 
@@ -209,6 +228,9 @@ class TestColumnVisitor(CodemodTest):
             active = Column('is_active', Boolean())
         '''
         after = '''
+        from sqlalchemy.future import select
+        from sqlalchemy.orm import Mapped, mapped_column
+
         class T:
             name: str = mapped_column(String)
             last_name: str = mapped_column(String())
