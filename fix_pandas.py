@@ -76,12 +76,13 @@ class FixPandasVisitor(VisitorBasedCodemodCommand):
             parent = next(item for item in stack if query_call in item.func.children)
             select = stack[0].with_deep_changes(parent.func, value=select)
 
-            new_call = cst.Call(
+            execute = cst.Call(
                 func=cst.Attribute(cst.Name('session'), cst.Name('execute')),
                 args=[
                     cst.Arg(select),
                 ],
             )
+            new_call = node.with_deep_changes(node.func, value=execute)
             return new_call
         return node
 
