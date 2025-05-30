@@ -58,11 +58,15 @@ class Download(Base):
     movie: Mapped['MovieDetails'] = relationship(
         'MovieDetails', uselist=False, cascade='all,delete'
     )
-    movie_id = Column(Integer, ForeignKey('movie_details.id', ondelete='CASCADE'))
+    movie_id = Column(
+        Integer, ForeignKey('movie_details.id', ondelete='CASCADE'), nullable=True
+    )
     episode: Mapped['EpisodeDetails'] = relationship(
         'EpisodeDetails', uselist=False, cascade='all,delete'
     )
-    episode_id = Column(Integer, ForeignKey('episode_details.id', ondelete='CASCADE'))
+    episode_id = Column(
+        Integer, ForeignKey('episode_details.id', ondelete='CASCADE'), nullable=True
+    )
     title = Column(String)
     timestamp = Column(DateTime(timezone=True), nullable=False, default=func.now())
     added_by_id = Column(Integer, ForeignKey('users.id'))
@@ -82,7 +86,7 @@ class EpisodeDetails(Base):
     )
     show_title = Column(String, nullable=False)
     season = Column(Integer, nullable=False)
-    episode = Column(Integer)
+    episode = Column(Integer, nullable=True)
 
     def is_season_pack(self):
         return self.episode is None
