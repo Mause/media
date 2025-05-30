@@ -264,7 +264,6 @@ class TestColumnVisitor(CodemodTest):
             phone = Column(String, nullable=True)
         '''
         after = '''
-        from sqlalchemy.future import select
         from sqlalchemy.orm import Mapped, mapped_column
 
         class T:
