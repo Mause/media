@@ -15,7 +15,7 @@ from libcst.matchers import (
     extract,
     matches,
 )
-from libcst.metadata import ParentNodeProvider
+from libcst.metadata import ParentNodeProvider, PositionProvider
 
 import_from = cst.ImportFrom(
     cst.Name('pytest'), names=[cst.ImportAlias(cst.Name('importorskip'))]
@@ -23,6 +23,8 @@ import_from = cst.ImportFrom(
 
 
 class AddImports(VisitorBasedCodemodCommand):
+    METADATA_DEPENDENCIES = (PositionProvider,)
+
     def leave_Module(self, old_node, node):
         return node.visit(AddImportsVisitor(self.context))
 
@@ -87,8 +89,13 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
                 ),
                 None,
             )
+            pos = next(
+                v
+                for k, v in self.metadata[PositionProvider].items()
+                if k.deep_equals(node)
+            )
             if parent is None:
-                self.warn(f'Unable to rewrite: {self.context.filename}')
+                self.warn(f'Unable to rewrite: {self.context.filename}:{pos.start.line}:{pos.start.column}')
                 return node
             select = stack[0].with_deep_changes(parent.func, value=select)
 
