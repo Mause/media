@@ -141,7 +141,7 @@ class ColumnVisitor(AddImports, VisitorBasedCodemodCommand):
                 value=cst.Name('Mapped'),
                 slice=[
                     cst.SubscriptElement(
-                        slice=cst.Index(value=map_annotation(original_node.value))
+                        slice=cst.Index(value=self.map_annotation(original_node.value))
                     )
                 ],
             )
@@ -154,6 +154,32 @@ class ColumnVisitor(AddImports, VisitorBasedCodemodCommand):
             value=updated_node.value,
             annotation=anno,
         )
+
+    def map_annotation(self, annotation: cst.CSTNode) -> cst.CSTNode:
+        if res := extract(
+            annotation,
+            matcher,
+        ):
+            name = res['name'].value
+            kwargs = {
+                arg.keyword.value: arg.value.value
+                for arg in res['kwargs']
+                if matches(arg, Arg(value=Name()))
+            }
+        else:
+            logger.warn('Unable to handle annotation: %s', dump(annotation))
+            return annotation
+
+        res = map_name(name)
+
+        if kwargs.get('nullable') == 'True':
+            self.ani('typing', 'Optional')
+            res = cst.Subscript(
+                value=cst.Name('Optional'),
+                slice=[cst.SubscriptElement(slice=cst.Index(value=res))],
+            )
+
+        return res
 
 
 def column(*args: Arg):
@@ -201,32 +227,6 @@ matcher = OneOf(
         ),
     ),
 )
-
-
-def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
-    if res := extract(
-        annotation,
-        matcher,
-    ):
-        name = res['name'].value
-        kwargs = {
-            arg.keyword.value: arg.value.value
-            for arg in res['kwargs']
-            if matches(arg, Arg(value=Name()))
-        }
-    else:
-        logger.warn('Unable to handle annotation: %s', dump(annotation))
-        return annotation
-
-    res = map_name(name)
-
-    if kwargs.get('nullable') == 'True':
-        res = cst.Subscript(
-            value=cst.Name('Optional'),
-            slice=[cst.SubscriptElement(slice=cst.Index(value=res))],
-        )
-
-    return res
 
 
 def map_name(name: str) -> cst.Name:
