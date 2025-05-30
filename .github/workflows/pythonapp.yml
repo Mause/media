@@ -64,3 +64,15 @@ jobs:
         working-directory: app/
       - uses: actions/setup-python@v5
       - uses: pre-commit/action@v3.0.1
+
+  libcst:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - run: uv sync --all-groups
+      - uses: nickcharlton/diff-check@main
+        with:
+          command: |
+            uv run python3 fix_pandas.py
