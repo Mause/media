@@ -164,6 +164,7 @@ def column(*args: Arg):
                         keyword=Name(),
                     ),
                 ),
+                name='kwargs',
             ),
         ],
     )
