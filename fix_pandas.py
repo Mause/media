@@ -106,11 +106,16 @@ class ColumnVisitor(VisitorBasedCodemodCommand):
         return cst.AnnAssign(
             target=updated_node.targets[0].target,
             value=updated_node.value,
-            annotation=cst.Annotation(annotation=map_annotation(original_node.value.args[0].value))
+            annotation=cst.Annotation(
+                annotation=map_annotation(original_node.value.args[0].value)
+            ),
         )
 
 
 def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
+    if isinstance(annotation, cst.Call):
+        return map_annotation(annotation.func)
+
     match annotation.value:
         case 'String':
             return cst.Name('str')
@@ -139,10 +144,12 @@ class TestColumnVisitor(CodemodTest):
         before = '''
         class T:
             name = Column(String)
+            last_name = Column(String())
         '''
         after = '''
         class T:
             name: str = mapped_column(String)
+            last_name: str = mapped_column(String())
         '''
 
         self.assertCodemod(before, after)
