@@ -1,3 +1,4 @@
+import logging
 import os
 
 import libcst as cst
@@ -24,6 +25,7 @@ os.environ['LIBCST_PARSER_TYPE'] = 'pure'
 import_from = cst.ImportFrom(
     cst.Name('pytest'), names=[cst.ImportAlias(cst.Name('importorskip'))]
 )
+logger = logging.getLogger(__name__)
 
 
 class AddImports(VisitorBasedCodemodCommand):
@@ -83,7 +85,17 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
                 args=query_call.args,
             )
 
-            parent = next(item for item in stack if query_call in item.func.children)
+            parent = next(
+                (
+                    item
+                    for item in stack
+                    if isinstance(item, Call) and query_call in item.func.children
+                ),
+                None,
+            )
+            if parent is None:
+                logger.warning('Unable to rewrite')
+                return node
             select = stack[0].with_deep_changes(parent.func, value=select)
 
             execute = cst.Call(
