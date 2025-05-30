@@ -104,7 +104,5 @@ if __name__ == '__main__':
             '-x',
             'fix_pandas.FixPandasVisitor',
             'rarbg_local',
-            '--formatter',
-            'ruff format',
         ],
     )
