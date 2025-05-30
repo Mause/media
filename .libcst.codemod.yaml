@@ -1,1 +1,1 @@
-formatter: ruff
+formatter: ['uv', 'run', 'ruff', 'format', '-']
