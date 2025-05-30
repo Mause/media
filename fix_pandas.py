@@ -95,10 +95,6 @@ class Testy(CodemodTest):
 
 
 if __name__ == '__main__':
-    import unittest
-
-    unittest.main()
-
     import libcst.tool
 
     libcst.tool.main(
