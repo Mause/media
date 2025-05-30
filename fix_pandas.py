@@ -12,6 +12,7 @@ from libcst.matchers import (
     OneOf,
     SaveMatchedNode,
     SimpleString,
+    ZeroOrMore,
     extract,
     matches,
 )
@@ -119,7 +120,14 @@ def column(*args: Arg):
         func=Name(
             value='Column',
         ),
-        args=args,
+        args=[
+            *args,
+            ZeroOrMore(
+                Arg(
+                    keyword=Name(),
+                ),
+            ),
+        ],
     )
 
 
@@ -141,124 +149,10 @@ matcher = OneOf(
     column(
         arg,
         Arg(
-            value=Name(),
-            keyword=Name(),
-        ),
-    ),
-    column(
-        arg,
-        Arg(
             value=Call(
                 func=Name(
                     value='ForeignKey',
                 ),
-            ),
-        ),
-    ),
-    column(
-        arg,
-        Arg(
-            value=Name(
-                value='False',
-            ),
-            keyword=Name(
-                value='nullable',
-            ),
-        ),
-        Arg(
-            value=Call(
-                func=Attribute(
-                    value=Name(
-                        value='func',
-                    ),
-                    attr=Name(
-                        value='now',
-                    ),
-                ),
-            ),
-            keyword=Name(
-                value='default',
-            ),
-        ),
-    ),
-    column(
-        Arg(
-            value=SimpleString(
-                value="'is_active'",
-            ),
-        ),
-        arg,
-        Arg(
-            value=Name(
-                value='False',
-            ),
-            keyword=Name(
-                value='nullable',
-            ),
-        ),
-        Arg(
-            value=SimpleString(
-                value="'1'",
-            ),
-            keyword=Name(
-                value='server_default',
-            ),
-        ),
-    ),
-    column(
-        arg,
-        Arg(
-            value=Name(
-                value='False',
-            ),
-            keyword=Name(
-                value='nullable',
-            ),
-        ),
-        Arg(
-            value=Name(
-                value='True',
-            ),
-            keyword=Name(
-                value='unique',
-            ),
-        ),
-    ),
-    column(
-        arg,
-        Arg(
-            value=Name(
-                value='False',
-            ),
-            keyword=Name(
-                value='nullable',
-            ),
-        ),
-        Arg(
-            value=SimpleString(
-                value="''",
-            ),
-            keyword=Name(
-                value='server_default',
-            ),
-        ),
-    ),
-    column(
-        arg,
-        Arg(
-            value=Name(
-                value='True',
-            ),
-            keyword=Name(
-                value='nullable',
-            ),
-        ),
-        Arg(
-            value=Name(
-                value='True',
-            ),
-            keyword=Name(
-                value='unique',
             ),
         ),
     ),
@@ -270,11 +164,11 @@ def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
         annotation,
         matcher,
     ):
-        annotation = res['name'].value
+        name = res['name'].value
     else:
         return annotation
 
-    match annotation:
+    match name:
         case 'String':
             return cst.Name('str')
         case 'Integer':
@@ -283,8 +177,10 @@ def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
             return cst.Name('bool')
         case 'DateTime':
             return cst.Name('datetime')
+        case 'Enum':
+            return annotation
         case _:
-            raise ValueError(f'Unknown annotation: {annotation}')
+            raise ValueError(f'Unknown annotation: {name}')
 
 
 class Testy(CodemodTest):
