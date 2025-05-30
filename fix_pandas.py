@@ -1,5 +1,4 @@
 import logging
-import os
 
 import libcst as cst
 from libcst import FlattenSentinel
@@ -19,8 +18,6 @@ from libcst.matchers import (
     matches,
 )
 from libcst.metadata import ParentNodeProvider
-
-os.environ['LIBCST_PARSER_TYPE'] = 'pure'
 
 import_from = cst.ImportFrom(
     cst.Name('pytest'), names=[cst.ImportAlias(cst.Name('importorskip'))]
