@@ -25,8 +25,10 @@ import_from = cst.ImportFrom(
 class AddImports(VisitorBasedCodemodCommand):
     METADATA_DEPENDENCIES = (PositionProvider,)
 
-    def leave_Module(self, old_node, node):
-        return node.visit(AddImportsVisitor(self.context))
+    def leave_Module(self, old_node: cst.CSTNode, node: cst.CSTNode) -> cst.CSTNode:
+        return (
+            super().leave_Module(old_node, node).visit(AddImportsVisitor(self.context))
+        )
 
     def ani(self, mod: str, *names: str):
         for name in names:
