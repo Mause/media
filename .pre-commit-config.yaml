@@ -46,7 +46,7 @@ repos:
           - "@eslint/compat@1.2.9"
           - "eslint-plugin-deprecation@^3.0.0"
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.15.0
+    rev: v1.16.0
     hooks:
      - id: mypy
        additional_dependencies:
