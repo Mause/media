@@ -2,8 +2,8 @@ import ReactLoading from 'react-loading';
 import { Navigate } from 'react-router-dom';
 
 import { usePost, useLocation } from './utils';
-import { DisplayError } from './IndexComponent';
 import type { components } from './schema';
+import { DisplayError } from './DisplayError';
 
 export type DownloadCall = components['schemas']['DownloadPost'];
 export interface DownloadState {

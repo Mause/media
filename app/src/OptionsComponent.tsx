@@ -11,8 +11,8 @@ import type { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
 import type { DownloadState } from './DownloadComponent';
-import { DisplayError } from './IndexComponent';
 import type { components } from './schema';
+import { DisplayError } from './DisplayError';
 import { MonitorAddComponent } from './MonitorComponent';
 import { MLink } from './MLink';
 
