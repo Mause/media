@@ -18,10 +18,6 @@ from libcst.matchers import (
 )
 from libcst.metadata import ParentNodeProvider, PositionProvider
 
-import_from = cst.ImportFrom(
-    cst.Name('pytest'), names=[cst.ImportAlias(cst.Name('importorskip'))]
-)
-
 
 class AddImports(VisitorBasedCodemodCommand):
     METADATA_DEPENDENCIES = (PositionProvider,)
