@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { renderWithSWR } from './test.utils';
-import Storybook from './Storybook';
+import { Storybook } from './Storybook';
 
 describe('Storybook', () => {
   it('renders without crashing', async () => {
