@@ -35,7 +35,10 @@ def try_(dic: dict[str, str], *keys: str) -> str | None:
     giveup=lambda e: not isinstance(e, aiohttp.web_exceptions.HTTPTooManyRequests),
 )
 async def get_json(path, **kwargs):
-    access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
+    if 'PYTEST_CURRENT_TEST' in os.environ:
+        access_token = ''
+    else:
+        access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
     async with aiohttp.ClientSession(
         base_url=base,
         headers={
