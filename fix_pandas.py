@@ -35,6 +35,10 @@ class AddImports(VisitorBasedCodemodCommand):
         for name in names:
             AddImportsVisitor.add_needed_import(self.context, mod, name)
 
+    def get_position(self, node: cst.CSTNode) -> str:
+        pos = self.get_metadata(PositionProvider, node)
+        return f'{self.context.filename}:{pos.start.line}:{pos.start.column}'
+
 
 class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
     METADATA_DEPENDENCIES = (ParentNodeProvider,)
@@ -94,10 +98,7 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
             None,
         )
         if parent is None:
-            pos = self.get_metadata(PositionProvider, old_node)
-            self.warn(
-                f'Unable to rewrite: {self.context.filename}:{pos.start.line}:{pos.start.column}'
-            )
+            self.warn(f'Unable to rewrite: {self.get_position(old_node)}')
             return node
         select = stack[0].with_deep_changes(parent.func, value=select)
 
@@ -167,7 +168,10 @@ class ColumnVisitor(AddImports, VisitorBasedCodemodCommand):
                 if matches(arg, Arg(value=Name()))
             }
         else:
-            logger.warn('Unable to handle annotation: %s', dump(annotation))
+            self.warn(
+                f'Unable to handle annotation: {self.get_position(annotation)}'
+                f' {dump(annotation)}',
+            )
             return annotation
 
         res = map_name(name)
