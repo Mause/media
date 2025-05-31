@@ -3,7 +3,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 
-export default function Storybook() {
+export function Storybook() {
   return (
     <div>
       <ContextMenu>
