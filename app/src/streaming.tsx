@@ -24,7 +24,6 @@ import {
 } from './SeasonSelectComponent';
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
-import { OptionsComponent } from './OptionsComponent';
 import { load, MLink, ExtMLink } from './utils';
 import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
@@ -246,20 +245,29 @@ function getRoutes() {
         },
         {
           path: '/select/:tmdb_id/options',
-          element: (
-            <RouteTitle title="Movie Options">
-              <OptionsComponent type="movie" />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { OptionsComponent } = await import('./OptionsComponent');
+            return {
+              element: (
+                <RouteTitle title="Movie Options">
+                  <OptionsComponent type="movie" />
+                </RouteTitle>
+              ),
+            };
+          },
         },
-
         {
           path: '/select/:tmdb_id/season/:season/episode/:episode/options',
-          element: (
-            <RouteTitle title="TV Options">
-              <OptionsComponent type="series" />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { OptionsComponent } = await import('./OptionsComponent');
+            return {
+              element: (
+                <RouteTitle title="TV Options">
+                  <OptionsComponent type="series" />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/select/:tmdb_id/season/:season/download_all',
