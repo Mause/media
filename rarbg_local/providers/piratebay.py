@@ -1,5 +1,6 @@
 import logging
 from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 from urllib.parse import urlencode
 
 import aiohttp
@@ -53,19 +54,11 @@ class PirateBayProvider(TvProvider, MovieProvider):
     type = ProviderSource.PIRATEBAY
     root = 'https://apibay.org'
 
-    async def search_for_tv(
-        self,
-        imdb_id: ImdbId,
-        tmdb_id: TmdbId,
-        season: int,
-        episode: int | None = None,
-    ) -> AsyncGenerator[ITorrent, None]:
+    @asynccontextmanager
+    async def search(self, q: str):
         async with (
             aiohttp.ClientSession() as session,
-            await session.get(
-                self.root + '/q.php',
-                params={'q': imdb_id + ' ' + format(season, episode)},
-            ) as resp,
+            await session.get(self.root + '/q.php', params={'q': q}) as resp,
         ):
             resp.raise_for_status()
             data = await resp.json()
@@ -73,6 +66,16 @@ class PirateBayProvider(TvProvider, MovieProvider):
             if len(data) == 1 and data[0]['name'] == 'No results returned':
                 return
 
+            yield data
+
+    async def search_for_tv(
+        self,
+        imdb_id: ImdbId,
+        tmdb_id: TmdbId,
+        season: int,
+        episode: int | None = None,
+    ) -> AsyncGenerator[ITorrent, None]:
+        async with self.search(imdb_id + ' ' + format(season, episode)) as data:
             for item in data:
                 yield ITorrent(
                     source=ProviderSource.PIRATEBAY,
@@ -86,16 +89,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
     async def search_for_movie(
         self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
-        async with (
-            aiohttp.ClientSession() as session,
-            await session.get(self.root + '/q.php', params={'q': imdb_id}) as resp,
-        ):
-            resp.raise_for_status()
-            data = await resp.json()
-
-            if len(data) == 1 and data[0]['name'] == 'No results returned':
-                return
-
+        async with self.search(imdb_id) as data:
             for item in data:
                 yield ITorrent(
                     source=ProviderSource.PIRATEBAY,
