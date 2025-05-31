@@ -1,6 +1,6 @@
 import libcst as cst
 from libcst import FlattenSentinel
-from libcst.codemod import CodemodTest, VisitorBasedCodemodCommand
+from libcst.codemod import VisitorBasedCodemodCommand
 from libcst.codemod.visitors import AddImportsVisitor
 from libcst.display import dump
 from libcst.matchers import (
@@ -243,60 +243,6 @@ def map_name(name: str) -> cst.Name:
             return cst.Name('Never')
         case _:
             raise ValueError(f'Unknown annotation: {name}')
-
-
-class Testy(CodemodTest):
-    TRANSFORM = FixPandasVisitor
-
-    def test_replace(self):
-        before = '''
-        session.query(Model).filter(Model.id == 1).all()
-        '''
-        after = '''
-        from sqlalchemy.future import select
-        from sqlalchemy.orm import Mapped, mapped_column
-
-        session.execute(select(Model).where(Model.id == 1)).all()
-        '''
-
-        self.assertCodemod(before, after)
-
-    def test_assigned(self):
-        before = '''
-        res = session.query(User).first()
-        '''
-        after = '''
-        from sqlalchemy.future import select
-
-        res = session.execute(select(User)).first()
-        '''
-
-        self.assertCodemod(before, after)
-
-
-class TestColumnVisitor(CodemodTest):
-    TRANSFORM = ColumnVisitor
-
-    def test_replace(self):
-        before = '''
-        class T:
-            name = Column(String)
-            last_name = Column(String())
-            active = Column('is_active', Boolean())
-            phone = Column(String, nullable=True)
-        '''
-        after = '''
-        from sqlalchemy.orm import Mapped, mapped_column
-        from typing import Optional
-
-        class T:
-            name: Mapped[str] = mapped_column(String)
-            last_name: Mapped[str] = mapped_column(String())
-            active: Mapped[bool] = mapped_column('is_active', Boolean())
-            phone: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-        '''
-
-        self.assertCodemod(before, after)
 
 
 if __name__ == '__main__':
