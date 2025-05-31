@@ -206,18 +206,20 @@ export function SwrConfigWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export function ParentComponent() {
-  return (
-    <SwrConfigWrapper>
-      <ParentComponentInt />
-    </SwrConfigWrapper>
-  );
+  const router = createBrowserRouter(getRoutes());
+
+  return <RouterProvider router={router} />;
 }
 
-function AppRoutes() {
+function getRoutes() {
   const routes = [
     {
       path: '/',
-      Component: ParentComponent,
+      element: (
+        <SwrConfigWrapper>
+          <ParentComponentInt />
+        </SwrConfigWrapper>
+      ),
       children: [
         {
           path: '*',
@@ -351,7 +353,5 @@ function AppRoutes() {
       ],
     },
   ] satisfies RouteObject[];
-  const router = createBrowserRouter(routes);
-
-  return <RouterProvider router={router} />;
+  return routes;
 }
