@@ -2,7 +2,7 @@ import ReactLoading from 'react-loading';
 import { Navigate } from 'react-router-dom';
 
 import { usePost, useLocation } from './utils';
-import { DisplayError } from './IndexComponent';
+import { DisplayError } from './DisplayError';
 import { components } from './schema';
 
 export type DownloadCall = components['schemas']['DownloadPost'];

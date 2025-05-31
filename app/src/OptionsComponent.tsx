@@ -10,7 +10,7 @@ import { MLink, subscribe } from './utils';
 import { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
-import { DisplayError } from './IndexComponent';
+import { DisplayError } from './DisplayError';
 import { components } from './schema';
 import { MonitorAddComponent } from './MonitorComponent';
 import { DisplayTorrent } from './DisplayTorrent';

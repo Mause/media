@@ -11,7 +11,7 @@ import { Auth0ContextInterface, useAuth0, User } from '@auth0/auth0-react';
 import useSWRMutation from 'swr/mutation';
 
 import ContextMenu from './ContextMenu';
-import { DisplayError } from './IndexComponent';
+import { DisplayError } from './DisplayError';
 import { components } from './schema';
 import { getPrefix } from './utils';
 
