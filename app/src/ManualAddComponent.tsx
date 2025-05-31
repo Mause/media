@@ -1,7 +1,8 @@
 import { Navigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import useSWR from 'swr';
-import { TextField, Button } from '@mui/material';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import { FormEvent, useState } from 'react';
 
 import { DownloadState } from './DownloadComponent';

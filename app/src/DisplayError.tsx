@@ -1,5 +1,5 @@
+import Alert from '@mui/material/Alert';
 import get from 'lodash/get';
-import { Alert } from '@mui/material';
 
 export function DisplayError(props: { error: Error; message?: string }) {
   const message =

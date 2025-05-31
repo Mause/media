@@ -3,8 +3,10 @@ import qs from 'qs';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { Alert, Breadcrumbs, Typography } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
 
 import { MLink, subscribe } from './utils';
 import { Torrents } from './streaming';

@@ -10,7 +10,8 @@ import {
   useMatches,
 } from 'react-router-dom';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-import { Grid, Link as MaterialLink } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import MaterialLink from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 import { SWRConfig } from 'swr';
 import { useProfiler } from '@sentry/react';
