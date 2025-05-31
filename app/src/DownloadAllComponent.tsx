@@ -1,13 +1,14 @@
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import { ITorrent, DisplayTorrent } from './OptionsComponent';
+import { ITorrent } from './OptionsComponent';
 import { Loading } from './render';
 import { EpisodeSelectBreadcrumbs } from './SeasonSelectComponent';
 import { MLink } from './utils';
 import { DownloadCall } from './DownloadComponent';
 import { Torrents } from './streaming';
 import { DisplayError } from './IndexComponent';
+import { DisplayTorrent } from './DisplayTorrent';
 
 type MapType = [string, ITorrent[]][];
 
