@@ -1,6 +1,6 @@
 from libcst.codemod import CodemodTest
 
-from fix_pandas import ColumnVisitor, FixPandasVisitor
+from fixes import ColumnVisitor, FixPandasVisitor
 
 
 class Testy(CodemodTest):
