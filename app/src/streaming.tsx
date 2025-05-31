@@ -22,7 +22,6 @@ import {
   EpisodeSelectComponent,
   SeasonSelectComponent,
 } from './SeasonSelectComponent';
-import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import { load, MLink, ExtMLink, getToken } from './utils';
 import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
@@ -326,11 +325,16 @@ function getRoutes() {
         },
         {
           path: '/stats',
-          element: (
-            <RouteTitle title="Stats">
-              <StatsComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { StatsComponent } = await import('./StatsComponent');
+            return {
+              element: (
+                <RouteTitle title="Stats">
+                  <StatsComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/diagnostics',
