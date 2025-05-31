@@ -19,15 +19,7 @@ import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 
-import {
-  EpisodeSelectComponent,
-  SeasonSelectComponent,
-} from './SeasonSelectComponent';
-import { SearchComponent } from './SearchComponent';
 import { load, getToken } from './utils';
-import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
-import { ManualAddComponent } from './ManualAddComponent';
-import { DownloadComponent } from './DownloadComponent';
 import type { components } from './schema';
 import { ExtMLink, MLink } from './MLink';
 import { Loading } from './render';
@@ -299,43 +291,72 @@ function getRoutes() {
         },
         {
           path: '/select/:tmdb_id/season/:season',
-          element: (
-            <RouteTitle title="Select Episode">
-              <EpisodeSelectComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { EpisodeSelectComponent } = await import(
+              './SeasonSelectComponent'
+            );
+            return {
+              element: (
+                <RouteTitle title="Select Episode">
+                  <EpisodeSelectComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/select/:tmdb_id/season',
-          element: (
-            <RouteTitle title="Select Season">
-              <SeasonSelectComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { SeasonSelectComponent } = await import(
+              './SeasonSelectComponent'
+            );
+            return {
+              element: (
+                <RouteTitle title="Select Season">
+                  <SeasonSelectComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/search',
-          element: (
-            <RouteTitle title="Search">
-              <SearchComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { SearchComponent } = await import('./SearchComponent');
+            return {
+              element: (
+                <RouteTitle title="Search">
+                  <SearchComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/download',
-          element: (
-            <RouteTitle title="Download">
-              <DownloadComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { DownloadComponent } = await import('./DownloadComponent');
+            return {
+              element: (
+                <RouteTitle title="Download">
+                  <DownloadComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/manual',
-          element: (
-            <RouteTitle title="Manual">
-              <ManualAddComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { ManualAddComponent } = await import('./ManualAddComponent');
+            return {
+              element: (
+                <RouteTitle title="Manual">
+                  <ManualAddComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/stats',
@@ -380,19 +401,31 @@ function getRoutes() {
         },
         {
           path: '/monitor/delete/:id',
-          element: (
-            <RouteTitle title="Monitor">
-              <MonitorDeleteComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { MonitorDeleteComponent } = await import(
+              './MonitorComponent'
+            );
+            return {
+              element: (
+                <RouteTitle title="Monitor">
+                  <MonitorDeleteComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/monitor',
-          element: (
-            <RouteTitle title="Monitor">
-              <MonitorComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { MonitorComponent } = await import('./MonitorComponent');
+            return {
+              element: (
+                <RouteTitle title="Monitor">
+                  <MonitorComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/sitemap',
