@@ -27,7 +27,6 @@ import { load, MLink, ExtMLink } from './utils';
 import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
-import { DownloadAllComponent } from './DownloadAllComponent';
 import { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
@@ -274,11 +273,18 @@ function getRoutes() {
         },
         {
           path: '/select/:tmdb_id/season/:season/download_all',
-          element: (
-            <RouteTitle title="Download Season">
-              <DownloadAllComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { DownloadAllComponent } = await import(
+              './DownloadAllComponent'
+            );
+            return {
+              element: (
+                <RouteTitle title="Download Season">
+                  <DownloadAllComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/select/:tmdb_id/season/:season',
