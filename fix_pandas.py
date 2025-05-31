@@ -291,6 +291,7 @@ class TestColumnVisitor(CodemodTest):
         '''
         after = '''
         from sqlalchemy.orm import Mapped, mapped_column
+        from typing import Optional
 
         class T:
             name: Mapped[str] = mapped_column(String)
