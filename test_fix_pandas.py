@@ -13,7 +13,7 @@ class Testy(CodemodTest):
         after = '''
         from sqlalchemy.future import select
 
-        session.execute(select(Model).filter(Model.id == 1)).all()
+        session.execute(select(Model).filter(Model.id == 1)).scalars().all()
         '''
 
         self.assertCodemod(before, after)
@@ -25,7 +25,7 @@ class Testy(CodemodTest):
         after = '''
         from sqlalchemy.future import select
 
-        res = session.execute(select(User)).first()
+        res = session.execute(select(User)).scalars().first()
         '''
 
         self.assertCodemod(before, after)
