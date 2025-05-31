@@ -18,14 +18,14 @@ class Testy(CodemodTest):
 
         self.assertCodemod(before, after)
 
-    def test_assigned(self):
+    def test_no_chain(self):
         before = '''
-        res = session.query(User).first()
+        session.query(User).first()
         '''
         after = '''
         from sqlalchemy.future import select
 
-        res = session.execute(select(User)).scalars().first()
+        session.execute(select(User)).scalars().first()
         '''
 
         self.assertCodemod(before, after)
