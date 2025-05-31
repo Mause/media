@@ -31,7 +31,6 @@ import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
-import { Websocket } from './Websocket';
 import type { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
@@ -251,11 +250,16 @@ function getRoutes() {
         },
         {
           path: '/websocket/:tmdbId',
-          element: (
-            <RouteTitle title="Websocket">
-              <Websocket />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { Websocket } = await import('./Websocket');
+            return {
+              element: (
+                <RouteTitle title="Websocket">
+                  <Websocket />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/select/:tmdb_id/options',
