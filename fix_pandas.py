@@ -89,13 +89,11 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
                 ),
                 None,
             )
-            pos = next(
-                v
-                for k, v in self.metadata[PositionProvider].items()
-                if k.deep_equals(node)
-            )
             if parent is None:
-                self.warn(f'Unable to rewrite: {self.context.filename}:{pos.start.line}:{pos.start.column}')
+                pos = self.get_metadata(PositionProvider, old_node)
+                self.warn(
+                    f'Unable to rewrite: {self.context.filename}:{pos.start.line}:{pos.start.column}'
+                )
                 return node
             select = stack[0].with_deep_changes(parent.func, value=select)
 
