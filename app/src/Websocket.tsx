@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import _ from 'lodash';
+import uniqBy from 'lodash/uniqBy';
 import qs from 'qs';
 import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -81,7 +81,7 @@ function Websocket() {
             </li>
           ))}
         </ul>
-        {_.uniqBy(downloads, 'download').map((message) => (
+        {uniqBy(downloads, 'download').map((message) => (
           <li key={message.download}>
             <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
           </li>

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import qs from 'qs';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -7,6 +6,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
+import sortBy from 'lodash/sortBy';
+import maxBy from 'lodash/maxBy';
+import groupBy from 'lodash/groupBy';
 
 import { MLink, subscribe } from './utils';
 import { Torrents } from './streaming';
@@ -70,18 +72,18 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       torrent={result}
     />
   );
-  const grouped = _.groupBy(results, 'category');
-  const auto = _.maxBy(
+  const grouped = groupBy(results, 'category');
+  const auto = maxBy(
     grouped['x264/1080'] || grouped['TV HD Episodes'] || [],
     'seeders',
   );
-  const bits = _.sortBy(
-    _.toPairs(grouped),
+  const bits = sortBy(
+    Object.entries(grouped),
     ([category]) => -ranking.indexOf(category),
   ).map(([category, results]) => (
     <div key={category}>
       <h3>{remove(category)}</h3>
-      {_.sortBy(results, (i) => -i.seeders).map((result) => (
+      {sortBy(results, (i) => -i.seeders).map((result) => (
         <li key={result.title}>{dt(result)}</li>
       ))}
     </div>
@@ -251,7 +253,7 @@ function useSubscribes<T>(url: string): {
       .map((t) => t.items || [])
       .reduce((a, b) => a.concat(b), []),
     loading: providers.filter((t) => t.loading).map((t) => t.name),
-    errors: _.fromPairs(
+    errors: Object.fromEntries(
       providers.filter((t) => t.error).map((t, i) => [p[i], t.error]),
     ) as { [key: string]: Error },
   };

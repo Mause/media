@@ -5,11 +5,11 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
-import _ from 'lodash';
 import { createMemoryHistory } from '@remix-run/router';
 import { act } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import map from 'lodash/map';
 
 import { expectLastRequestBody } from './utils';
 import {
@@ -91,6 +91,6 @@ describe('MonitorComponent', () => {
     });
     await wait();
 
-    expect(_.map(entries, 'pathname')).toEqual(['/monitor']);
+    expect(map(entries, 'pathname')).toEqual(['/monitor']);
   });
 });

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import _ from 'lodash';
+import range from 'lodash/range';
 import ReactLoading from 'react-loading';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
@@ -53,7 +53,7 @@ function SeasonSelectComponent() {
         <ReactLoading type="balls" color="#000000" />
       ) : (
         <ul>
-          {_.range(1, tv.number_of_seasons + 1).map((i) => (
+          {range(1, tv.number_of_seasons + 1).map((i) => (
             <li key={i}>
               <MLink to={`/select/${tmdb_id}/season/${i}`}>Season {i}</MLink>
             </li>
