@@ -28,9 +28,7 @@ import { load, MLink, ExtMLink, getToken } from './utils';
 import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
-import { DownloadAllComponent } from './DownloadAllComponent';
 import type { components } from './schema';
-import { DiagnosticsComponent } from './DiagnosticsComponent';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -336,11 +334,18 @@ function getRoutes() {
         },
         {
           path: '/diagnostics',
-          element: (
-            <RouteTitle title="Diagnostics">
-              <DiagnosticsComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { DiagnosticsComponent } = await import(
+              './DiagnosticsComponent'
+            );
+            return {
+              element: (
+                <RouteTitle title="Diagnostics">
+                  <DiagnosticsComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/storybook',
