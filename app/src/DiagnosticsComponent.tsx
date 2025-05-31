@@ -1,7 +1,7 @@
 import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
 
 import { components } from './schema';
 

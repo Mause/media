@@ -1,6 +1,6 @@
 import Menu from '@mui/material/Menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faList } from '@fortawesome/free-solid-svg-icons';
+import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 import { useState, ReactNode } from 'react';
 
 export default function ContextMenu({ children }: { children: ReactNode }) {

@@ -6,14 +6,12 @@ import Collapsible from 'react-collapsible';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSearch,
-  faSpinner,
-  faCaretUp,
-  faCaretDown,
-  faCheckCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown';
+import { faCaretUp } from '@fortawesome/free-solid-svg-icons/faCaretUp';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons/faCheckCircle';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import groupBy from 'lodash/groupBy';
 import sortBy from 'lodash/sortBy';
 import last from 'lodash/last';
