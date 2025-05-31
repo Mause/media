@@ -52,13 +52,13 @@ def magnet(info_hash: str, name: str) -> str:
 
 class PirateBayProvider(TvProvider, MovieProvider):
     type = ProviderSource.PIRATEBAY
-    root = 'https://apibay.org'
+    root = 'https://apibay.org/q.php'
 
     @asynccontextmanager
     async def search(self, q: str):
         async with (
             aiohttp.ClientSession() as session,
-            await session.get(self.root + '/q.php', params={'q': q}) as resp,
+            await session.get(self.root, params={'q': q}) as resp,
         ):
             resp.raise_for_status()
             data = await resp.json()
