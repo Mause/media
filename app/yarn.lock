@@ -2346,6 +2346,7 @@ __metadata:
     eslint-import-resolver-typescript: "npm:^4.4.1"
     eslint-plugin-deprecation: "npm:^3.0.0"
     eslint-plugin-import-x: "npm:^4.12.2"
+    jiti: "npm:^2.4.2"
     jsdom: "npm:^26.1.0"
     lodash: "npm:^4.17.20"
     mockdate: "npm:^3.0.2"
@@ -4062,6 +4063,15 @@ __metadata:
   version: 0.1.2
   resolution: "isstream@npm:0.1.2"
   checksum: 10/22d9c181015226d4534a227539256897bbbcb7edd1066ca4fc4d3a06dbd976325dfdd16b3983c7d236a89f256805c1a685a772e0364e98873d3819b064ad35a1
+  languageName: node
+  linkType: hard
+
+"jiti@npm:^2.4.2":
+  version: 2.4.2
+  resolution: "jiti@npm:2.4.2"
+  bin:
+    jiti: lib/jiti-cli.mjs
+  checksum: 10/e2b07eb2e3fbb245e29ad288dddecab31804967fc84d5e01d39858997d2743b5e248946defcecf99272275a00284ecaf7ec88b8c841331324f0c946d8274414b
   languageName: node
   linkType: hard
 
