@@ -1,11 +1,11 @@
-const { fixupPluginRules } = require('@eslint/compat');
-const eslint = require('@eslint/js');
-const tseslint = require('typescript-eslint');
-const eslintImport = require('eslint-plugin-import-x');
-const {
-  createTypeScriptImportResolver,
-} = require('eslint-import-resolver-typescript');
-const pluginDeprecation = require('eslint-plugin-deprecation');
+import { fixupPluginRules } from '@eslint/compat';
+import eslint from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import eslintImport from 'eslint-plugin-import-x';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
+import pluginDeprecation from 'eslint-plugin-deprecation';
+
+const DefaultOptions = eslintImport.rules.order.defaultOptions[0];
 
 module.exports = tseslint.config(
   eslint.configs.recommended,
@@ -18,6 +18,7 @@ module.exports = tseslint.config(
       },
     },
     plugins: {
+      // @ts-expect-error
       deprecation: fixupPluginRules(pluginDeprecation),
     },
     rules: {
@@ -25,10 +26,9 @@ module.exports = tseslint.config(
       'import-x/no-named-as-default-member': 'off',
       'import-x/order': [
         'error',
-
         {
           'newlines-between': 'always',
-        },
+        } satisfies typeof DefaultOptions,
       ],
     },
     settings: {
