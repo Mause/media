@@ -96,7 +96,8 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
         if parent is None:
             self.warn(f'Unable to rewrite: {self.get_position(old_node)}')
             return node
-        select = old_node.func.value.with_deep_changes(parent.func, value=select)
+        if old_node.func.value is not query_call:
+            select = old_node.func.value.with_deep_changes(parent.func, value=select)
 
         execute = cst.Call(
             func=cst.Attribute(cst.Name('session'), cst.Name('execute')),
