@@ -10,7 +10,7 @@ import {
   NextEpisodeAirs,
 } from './render';
 import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
-import {
+import type {
   MovieResponse,
   Torrents,
   TorrentFile,

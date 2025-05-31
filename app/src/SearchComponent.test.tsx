@@ -1,6 +1,7 @@
 import { Route, MemoryRouter, Routes } from 'react-router-dom';
 
-import { SearchComponent, SearchResult } from './SearchComponent';
+import type { SearchResult } from './SearchComponent';
+import { SearchComponent } from './SearchComponent';
 import { mock, wait, usesMoxios, renderWithSWR } from './test.utils';
 
 usesMoxios();

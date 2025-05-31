@@ -12,11 +12,8 @@ import userEvent from '@testing-library/user-event';
 import map from 'lodash/map';
 
 import { expectLastRequestBody } from './utils';
-import {
-  MonitorComponent,
-  Monitor,
-  MonitorAddComponent,
-} from './MonitorComponent';
+import type { Monitor } from './MonitorComponent';
+import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
 import { usesMoxios, renderWithSWR, mock, wait, listenTo } from './test.utils';
 
 usesMoxios();

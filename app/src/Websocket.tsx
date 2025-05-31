@@ -6,7 +6,7 @@ import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
-import { ITorrent } from './OptionsComponent';
+import type { ITorrent } from './OptionsComponent';
 import { getPrefix } from './utils';
 import { getMarker } from './render';
 import { DisplayTorrent } from './DisplayTorrent';

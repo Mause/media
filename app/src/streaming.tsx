@@ -1,15 +1,16 @@
 import * as Sentry from '@sentry/react';
-import { ErrorInfo, ReactNode } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
+import type { RouteObject } from 'react-router-dom';
 import {
   RouterProvider,
   createBrowserRouter,
   Outlet,
-  RouteObject,
   useLocation,
   useMatches,
 } from 'react-router-dom';
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
+import type { FallbackProps } from 'react-error-boundary';
+import { ErrorBoundary } from 'react-error-boundary';
 import Grid from '@mui/material/Grid';
 import MaterialLink from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
@@ -19,7 +20,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import last from 'lodash/last';
 
 import { load, MLink, ExtMLink } from './utils';
-import { components } from './schema';
+import type { components } from './schema';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({

@@ -20,13 +20,13 @@ import difference from 'lodash/difference';
 import map from 'lodash/map';
 
 import ContextMenu from './ContextMenu';
-import {
+import type {
   MovieResponse,
   SeriesResponse,
   Torrents,
   EpisodeResponse,
 } from './streaming';
-import { TV } from './SeasonSelectComponent';
+import type { TV } from './SeasonSelectComponent';
 import { getPrefix, MLink } from './utils';
 
 export function Loading({

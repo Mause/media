@@ -9,12 +9,13 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
 import { faTv } from '@fortawesome/free-solid-svg-icons/faTv';
 import { faTicketAlt } from '@fortawesome/free-solid-svg-icons/faTicketAlt';
 import MaterialLink from '@mui/material/Link';
-import { Auth0ContextInterface, useAuth0, User } from '@auth0/auth0-react';
+import type { Auth0ContextInterface, User } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 import useSWRMutation from 'swr/mutation';
 
 import ContextMenu from './ContextMenu';
 import { DisplayError } from './DisplayError';
-import { components } from './schema';
+import type { components } from './schema';
 import { getPrefix } from './utils';
 
 type Monitor = components['schemas']['MonitorGet'];

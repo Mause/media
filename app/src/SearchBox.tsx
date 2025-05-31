@@ -1,4 +1,5 @@
-import { FormEvent, useState } from 'react';
+import type { FormEvent } from 'react';
+import { useState } from 'react';
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
 import Search from '@mui/icons-material/Search';

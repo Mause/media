@@ -10,7 +10,8 @@ import { act } from 'react';
 
 import { expectLastRequestBody } from './utils';
 import { wait, usesMoxios, renderWithSWR, listenTo } from './test.utils';
-import { DownloadComponent, DownloadState } from './DownloadComponent';
+import type { DownloadState } from './DownloadComponent';
+import { DownloadComponent } from './DownloadComponent';
 
 usesMoxios();
 

@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-import { IndexResponse, Torrents } from './streaming';
+import type { IndexResponse, Torrents } from './streaming';
 import { TVShows, Movies } from './render';
 import { DisplayError } from './DisplayError';
 import { SearchBox } from './SearchBox';

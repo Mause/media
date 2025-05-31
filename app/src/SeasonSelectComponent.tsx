@@ -6,7 +6,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import useSWR from 'swr';
 import qs from 'qs';
 
-import { components } from './schema';
+import type { components } from './schema';
 import { MLink, useLocation } from './utils';
 
 export type Season = components['schemas']['TvSeasonResponse'];
