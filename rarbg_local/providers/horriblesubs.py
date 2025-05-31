@@ -10,7 +10,6 @@ from lxml.html import fromstring
 
 from ..jikan import closeness, get_names
 from ..models import EpisodeInfo, ITorrent, ProviderSource
-from ..tmdb import get_tv
 from ..types import ImdbId, TmdbId
 from ..utils import cached
 from .abc import TvProvider, tv_convert
@@ -167,7 +166,7 @@ class HorriblesubsProvider(TvProvider):
         season: int,
         episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
-        name = (await get_tv(tmdb_id)).name
+        name = (await self.tmdb.get_tv(tmdb_id)).name
         template = f'HorribleSubs {name} S{season:02d}'
 
         async for item in search_for_tv(tmdb_id, season, episode):

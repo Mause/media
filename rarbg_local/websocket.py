@@ -2,7 +2,7 @@ import logging
 from collections import ChainMap
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, WebSocket
+from fastapi import APIRouter, Depends, WebSocket
 from fastapi.requests import Request
 from pydantic import BaseModel, SecretStr, ValidationError
 
@@ -15,10 +15,7 @@ from .providers import (
     search_for_tv,
 )
 from .singleton import get
-from .tmdb import (
-    get_movie_imdb_id,
-    get_tv_imdb_id,
-)
+from .tmdb import TmdbAPI
 from .types import TmdbId
 from .utils import Message, non_null
 
@@ -40,6 +37,7 @@ class StreamArgs(BaseModel):
 
 
 async def _stream(
+    tmdb: TmdbAPI,
     type: str,
     tmdb_id: TmdbId,
     season: int | None = None,
@@ -47,10 +45,12 @@ async def _stream(
 ):
     if type == 'series':
         tasks, queue = await search_for_tv(
-            await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
+            tmdb, await tmdb.get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
         )
     else:
-        tasks, queue = await search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
+        tasks, queue = await search_for_movie(
+            tmdb, await tmdb.get_movie_imdb_id(tmdb_id), tmdb_id
+        )
 
     while not all(task.done() for task in tasks):
         item = await queue.get()
@@ -61,7 +61,9 @@ async def _stream(
 
 
 @websocket_ns.websocket("/ws")
-async def websocket_stream(websocket: WebSocket):
+async def websocket_stream(
+    tmdb: Annotated[TmdbAPI, Depends(TmdbAPI)], websocket: WebSocket
+):
     def fake(user: Annotated[User, security]):
         return user
 
@@ -108,6 +110,7 @@ async def websocket_stream(websocket: WebSocket):
     logger.info('Authed user: %s', user)
 
     async for item in _stream(
+        tmdb,
         type=request.type,
         tmdb_id=request.tmdb_id,
         season=request.season,

@@ -20,7 +20,7 @@ from .db import (
     get_episodes,
 )
 from .models import Episode, SeriesDetails
-from .tmdb import get_tv_episodes
+from .tmdb import TmdbAPI
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import non_null, precondition
 
@@ -151,7 +151,7 @@ def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> dict[K, list[V]]:
     return dict(dd)
 
 
-async def resolve_season(episodes) -> list[EpisodeDetails]:
+async def resolve_season(tmdb: TmdbAPI, episodes) -> list[EpisodeDetails]:
     if not (len(episodes) == 1 and episodes[0].is_season_pack()):
         return episodes
 
@@ -183,40 +183,44 @@ async def resolve_season(episodes) -> list[EpisodeDetails]:
             show_title=pack.show_title,
         )
         for episode in (
-            await get_tv_episodes(pack.download.tmdb_id, pack.season)
+            await tmdb.get_tv_episodes(pack.download.tmdb_id, pack.season)
         ).episodes
     ]
 
 
-async def resolve_show(show: list[EpisodeDetails]) -> dict[str, list[EpisodeDetails]]:
+async def resolve_show(
+    tmdb: TmdbAPI, show: list[EpisodeDetails]
+) -> dict[str, list[EpisodeDetails]]:
     seasons = groupby(show, lambda episode: episode.season)
     return {
         str(number): await resolve_season(
-            sorted(season, key=lambda episode: episode.episode or -1)
+            tmdb, sorted(season, key=lambda episode: episode.episode or -1)
         )
         for number, season in seasons.items()
     }
 
 
-async def make_series_details(imdb_id, show: list[EpisodeDetails]) -> SeriesDetails:
+async def make_series_details(
+    tmdb: TmdbAPI, show: list[EpisodeDetails]
+) -> SeriesDetails:
     ep = show[0]
     d = ep.download
 
     return SeriesDetails(
         title=ep.show_title,
-        seasons=await resolve_show(show),
+        seasons=await resolve_show(tmdb, show),
         imdb_id=d.imdb_id,
         tmdb_id=d.tmdb_id,
     )
 
 
-async def resolve_series(session: Session) -> list[SeriesDetails]:
+async def resolve_series(tmdb: TmdbAPI, session: Session) -> list[SeriesDetails]:
     episodes = get_episodes(session)
 
     return [
-        await make_series_details(imdb_id, show)
+        await make_series_details(tmdb, show)
         for imdb_id, show in groupby(
-            episodes, lambda episode: episode.download.tmdb_id
+            episodes, lambda episode: cast(TmdbAPI, episode.download.tmdb_id)
         ).items()
     ]
 
