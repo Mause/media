@@ -21,7 +21,6 @@ from .utils import cached, precondition
 
 base = 'https://api.themoviedb.org/3/'
 
-access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
 ThingType = Literal['movie', 'tv']
 
 
@@ -36,6 +35,7 @@ def try_(dic: dict[str, str], *keys: str) -> str | None:
     giveup=lambda e: not isinstance(e, aiohttp.web_exceptions.HTTPTooManyRequests),
 )
 async def get_json(path, **kwargs):
+    access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
     async with aiohttp.ClientSession(
         base_url=base,
         headers={
