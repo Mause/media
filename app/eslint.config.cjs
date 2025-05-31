@@ -30,6 +30,7 @@ module.exports = tseslint.config(
           'newlines-between': 'always',
         },
       ],
+      '@typescript-eslint/consistent-type-imports': 'error',
     },
     settings: {
       'import-x/resolver-next': [createTypeScriptImportResolver({})],

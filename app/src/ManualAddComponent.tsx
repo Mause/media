@@ -1,10 +1,12 @@
 import { Navigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import useSWR from 'swr';
-import { TextField, Button } from '@mui/material';
-import { FormEvent, useState } from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import type { FormEvent } from 'react';
+import { useState } from 'react';
 
-import { DownloadState } from './DownloadComponent';
+import type { DownloadState } from './DownloadComponent';
 import { useLocation } from './utils';
 
 const PREFIX = 'ManualAddComponent';

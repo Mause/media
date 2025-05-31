@@ -1,11 +1,10 @@
 import { screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
+import type { Season, TV } from './SeasonSelectComponent';
 import {
   EpisodeSelectComponent,
-  Season,
   SeasonSelectComponent,
-  TV,
 } from './SeasonSelectComponent';
 import { mock, usesMoxios, wait, renderWithSWR } from './test.utils';
 

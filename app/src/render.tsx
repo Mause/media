@@ -1,5 +1,4 @@
 import MenuItem from '@mui/material/MenuItem';
-import _ from 'lodash';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
@@ -7,24 +6,28 @@ import Collapsible from 'react-collapsible';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSearch,
-  faSpinner,
-  faCaretUp,
-  faCaretDown,
-  faCheckCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown';
+import { faCaretUp } from '@fortawesome/free-solid-svg-icons/faCaretUp';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons/faCheckCircle';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import groupBy from 'lodash/groupBy';
+import sortBy from 'lodash/sortBy';
+import last from 'lodash/last';
+import range from 'lodash/range';
+import difference from 'lodash/difference';
+import map from 'lodash/map';
 
-import { getPrefix, MLink } from './utils';
-import { TV } from './SeasonSelectComponent';
-import {
+import ContextMenu from './ContextMenu';
+import type {
   MovieResponse,
   SeriesResponse,
   Torrents,
   EpisodeResponse,
 } from './streaming';
-import ContextMenu from './ContextMenu';
+import type { TV } from './SeasonSelectComponent';
+import { getPrefix, MLink } from './utils';
 
 export function Loading({
   loading,
@@ -65,9 +68,10 @@ export function Movies({
   torrents?: Torrents;
   loading: boolean;
 }) {
-  const sortedMovies = _.groupBy(
+  const sortedMovies = groupBy(
     movies,
-    (movie) => !!(torrents && getProgress(movie, torrents)?.percentDone === 1),
+    (movie) =>
+      torrents !== undefined && getProgress(movie, torrents)?.percentDone === 1,
   );
 
   const head = (icon: IconDefinition) => (
@@ -253,7 +257,7 @@ function Series({
           </MenuItem>
         </ContextMenu>
       </h3>
-      {_.sortBy(_.toPairs(serie.seasons), ([key]) => parseInt(key)).map(
+      {sortBy(Object.entries(serie.seasons), ([key]) => parseInt(key)).map(
         ([i, season]) => (
           <Season
             key={i}
@@ -339,7 +343,7 @@ export function NextEpisodeAirs(props: {
     return <></>;
   }
 
-  const lastEpisode = _.last(props.season_episodes)!.episode!;
+  const lastEpisode = last(props.season_episodes)!.episode!;
 
   const nextEpisode = data.episodes.find(
     (episode) => episode.episode_number === lastEpisode + 1,
@@ -404,10 +408,10 @@ export function shouldCollapse(
     if (seasonMeta) {
       const hasNext = true; // !!data.seasons[i_i + 1];
 
-      const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
-      const hasNumbers = _.map(episodes, 'episode');
+      const episodeNumbers = range(1, seasonMeta.episode_count + 1);
+      const hasNumbers = map(episodes, 'episode');
       const hasAllEpisodes =
-        _.difference(episodeNumbers, hasNumbers).length === 0;
+        difference(episodeNumbers, hasNumbers).length === 0;
       collapse = hasNext && hasAllEpisodes;
     }
   }

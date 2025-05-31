@@ -5,18 +5,15 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
-import _ from 'lodash';
 import { createMemoryHistory } from '@remix-run/router';
 import { act } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import map from 'lodash/map';
 
 import { expectLastRequestBody } from './utils';
-import {
-  MonitorComponent,
-  Monitor,
-  MonitorAddComponent,
-} from './MonitorComponent';
+import type { Monitor } from './MonitorComponent';
+import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
 import { usesMoxios, renderWithSWR, mock, wait, listenTo } from './test.utils';
 
 usesMoxios();
@@ -91,6 +88,6 @@ describe('MonitorComponent', () => {
     });
     await wait();
 
-    expect(_.map(entries, 'pathname')).toEqual(['/monitor']);
+    expect(map(entries, 'pathname')).toEqual(['/monitor']);
   });
 });

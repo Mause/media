@@ -1,68 +1,26 @@
-import _ from 'lodash';
 import qs from 'qs';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { Breadcrumbs, Typography, Alert } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
+import sortBy from 'lodash/sortBy';
+import maxBy from 'lodash/maxBy';
+import groupBy from 'lodash/groupBy';
 
-import { subscribe, MLink } from './utils';
-import { Torrents } from './streaming';
+import { MLink, subscribe } from './utils';
+import type { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
-import { DownloadState } from './DownloadComponent';
-import { DisplayError } from './IndexComponent';
-import { components } from './schema';
+import { DisplayError } from './DisplayError';
+import type { components } from './schema';
 import { MonitorAddComponent } from './MonitorComponent';
+import { DisplayTorrent } from './DisplayTorrent';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
-
-function getHash(magnet: string) {
-  const u = new URL(magnet);
-  return _.last(u.searchParams.get('xt')!.split(':'));
-}
-
-export function DisplayTorrent({
-  torrent,
-  torrents,
-  tmdb_id,
-  season,
-  episode,
-}: {
-  season?: number;
-  episode?: number | null;
-  tmdb_id: string;
-  torrent: ITorrent;
-  torrents?: Torrents;
-}) {
-  const state: DownloadState = {
-    downloads: [
-      {
-        tmdb_id: parseInt(tmdb_id),
-        magnet: torrent.download,
-        season: season,
-        episode: episode,
-      },
-    ],
-  };
-  const url = { to: '/download', state };
-  return (
-    <span>
-      <strong title={torrent.source}>
-        {torrent.source.substring(0, 1).toUpperCase()}
-      </strong>
-      &nbsp;
-      <MLink {...url}>{torrent.title}</MLink>
-      &nbsp;
-      <small>{torrent.seeders}</small>
-      &nbsp;
-      {torrents && getHash(torrent.download)! in torrents && (
-        <small>downloaded</small>
-      )}
-    </span>
-  );
-}
 
 const ranking = [
   'Movies/XVID',
@@ -114,18 +72,18 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       torrent={result}
     />
   );
-  const grouped = _.groupBy(results, 'category');
-  const auto = _.maxBy(
+  const grouped = groupBy(results, 'category');
+  const auto = maxBy(
     grouped['x264/1080'] || grouped['TV HD Episodes'] || [],
     'seeders',
   );
-  const bits = _.sortBy(
-    _.toPairs(grouped),
+  const bits = sortBy(
+    Object.entries(grouped),
     ([category]) => -ranking.indexOf(category),
   ).map(([category, results]) => (
     <div key={category}>
       <h3>{remove(category)}</h3>
-      {_.sortBy(results, (i) => -i.seeders).map((result) => (
+      {sortBy(results, (i) => -i.seeders).map((result) => (
         <li key={result.title}>{dt(result)}</li>
       ))}
     </div>
@@ -295,7 +253,7 @@ function useSubscribes<T>(url: string): {
       .map((t) => t.items || [])
       .reduce((a, b) => a.concat(b), []),
     loading: providers.filter((t) => t.loading).map((t) => t.name),
-    errors: _.fromPairs(
+    errors: Object.fromEntries(
       providers.filter((t) => t.error).map((t, i) => [p[i], t.error]),
     ) as { [key: string]: Error },
   };

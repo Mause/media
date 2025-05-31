@@ -5,14 +5,17 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCircle } from '@fortawesome/free-solid-svg-icons/faCircle';
+import { faTv } from '@fortawesome/free-solid-svg-icons/faTv';
+import { faTicketAlt } from '@fortawesome/free-solid-svg-icons/faTicketAlt';
 import MaterialLink from '@mui/material/Link';
-import { Auth0ContextInterface, useAuth0, User } from '@auth0/auth0-react';
+import type { Auth0ContextInterface, User } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 import useSWRMutation from 'swr/mutation';
 
 import ContextMenu from './ContextMenu';
-import { DisplayError } from './IndexComponent';
-import { components } from './schema';
+import { DisplayError } from './DisplayError';
+import type { components } from './schema';
 import { getPrefix } from './utils';
 
 type Monitor = components['schemas']['MonitorGet'];
