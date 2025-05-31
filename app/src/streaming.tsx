@@ -17,7 +17,6 @@ import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import last from 'lodash/last';
 
-import { IndexComponent } from './IndexComponent';
 import {
   EpisodeSelectComponent,
   SeasonSelectComponent,
@@ -371,11 +370,16 @@ function getRoutes() {
         },
         {
           path: '/',
-          element: (
-            <RouteTitle title="Media">
-              <IndexComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { IndexComponent } = await import('./IndexComponent');
+            return {
+              element: (
+                <RouteTitle title="Media">
+                  <IndexComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
       ],
     },
