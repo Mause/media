@@ -171,7 +171,9 @@ function ParentComponentInt() {
           );
         }}
       >
-        {auth.isAuthenticated || location.pathname === '/storybook' ? (
+        {auth.isAuthenticated ||
+        location.pathname === '/storybook' ||
+        location.pathname == '/sitemap' ? (
           <Outlet />
         ) : (
           <div>Please login</div>
@@ -212,7 +214,7 @@ export function ParentComponent() {
 }
 
 function getRoutes() {
-  const routes = [
+  return [
     {
       path: '/',
       element: (
@@ -343,6 +345,14 @@ function getRoutes() {
           ),
         },
         {
+          path: '/sitemap',
+          element: (
+            <RouteTitle title="Sitemap">
+              <SitemapRoot />
+            </RouteTitle>
+          ),
+        },
+        {
           path: '/',
           element: (
             <RouteTitle title="Media">
@@ -353,5 +363,20 @@ function getRoutes() {
       ],
     },
   ] satisfies RouteObject[];
-  return routes;
+}
+
+function SitemapRoot() {
+  return <Sitemap routes={getRoutes()} />;
+}
+function Sitemap({ routes }: { routes: RouteObject[] }) {
+  return (
+    <ul>
+      {routes.map((route) => (
+        <li key={route.path}>
+          <MLink to={route.path!}>{route.path}</MLink>
+          {route.children ? <Sitemap routes={route.children} /> : undefined}
+        </li>
+      ))}
+    </ul>
+  );
 }
