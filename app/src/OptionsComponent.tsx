@@ -10,8 +10,8 @@ import { subscribe, MLink, getToken } from './utils';
 import type { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
-import { DisplayError } from './IndexComponent';
 import type { components } from './schema';
+import { DisplayError } from './DisplayError';
 import { MonitorAddComponent } from './MonitorComponent';
 import { DisplayTorrent } from './DisplayTorrent';
 

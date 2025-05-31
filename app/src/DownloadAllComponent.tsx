@@ -7,7 +7,7 @@ import { EpisodeSelectBreadcrumbs } from './SeasonSelectComponent';
 import { MLink } from './utils';
 import type { DownloadCall } from './DownloadComponent';
 import type { Torrents } from './streaming';
-import { DisplayError } from './IndexComponent';
+import { DisplayError } from './DisplayError';
 import { DisplayTorrent } from './DisplayTorrent';
 
 type MapType = [string, ITorrent[]][];
