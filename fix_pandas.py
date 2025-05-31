@@ -257,6 +257,18 @@ class Testy(CodemodTest):
 
         self.assertCodemod(before, after)
 
+    def test_assigned(self):
+        before = '''
+        res = session.query(User).first()
+        '''
+        after = '''
+        from sqlalchemy.future import select
+
+        res = session.execute(select(User)).first()
+        '''
+
+        self.assertCodemod(before, after)
+
 
 class TestColumnVisitor(CodemodTest):
     TRANSFORM = ColumnVisitor
