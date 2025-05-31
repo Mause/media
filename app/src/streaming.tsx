@@ -288,11 +288,18 @@ function getRoutes() {
         },
         {
           path: '/select/:tmdb_id/season/:season/download_all',
-          element: (
-            <RouteTitle title="Download Season">
-              <DownloadAllComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { DownloadAllComponent } = await import(
+              './DownloadAllComponent'
+            );
+            return {
+              element: (
+                <RouteTitle title="Download Season">
+                  <DownloadAllComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/select/:tmdb_id/season/:season',
