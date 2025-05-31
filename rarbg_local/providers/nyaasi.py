@@ -5,7 +5,6 @@ from nyaapy.nyaasi.nyaa import Nyaa
 from sentry_sdk import trace
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
-from ..tmdb import get_tv
 from ..types import ImdbId, TmdbId
 from .abc import TvProvider, format, tv_convert
 
@@ -22,7 +21,7 @@ class NyaaProvider(TvProvider):
     ) -> AsyncGenerator[ITorrent, None]:
         ny = Nyaa()
 
-        name = (await get_tv(tmdb_id)).name
+        name = (await self.tmdb.get_tv(tmdb_id)).name
         page = 0
         template = f'{name} ' + format(season, episode)
 

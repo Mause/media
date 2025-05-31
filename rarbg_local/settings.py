@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     database_url: str = f"sqlite:///{root}/db.db"
     static_resources_path: Path = root / 'app/build'
     plex_token: SecretStr
+    tmdb_read_access_token: SecretStr
 
 
 @singleton

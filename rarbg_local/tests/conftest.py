@@ -70,6 +70,7 @@ def session(fastapi_app, tmp_path, event_loop):
             )
         ),
         plex_token='plex_token',
+        tmdb_read_access_token='tmdb_read_access_token',
     )
 
     Session = event_loop.run_until_complete(get(fastapi_app, get_session_local))

@@ -68,15 +68,7 @@ from .providers.abc import (
 )
 from .settings import Settings, get_settings
 from .singleton import singleton
-from .tmdb import (
-    get_json,
-    get_movie,
-    get_movie_imdb_id,
-    get_tv,
-    get_tv_episodes,
-    get_tv_imdb_id,
-    search_themoviedb,
-)
+from .tmdb import TmdbAPI
 from .types import ImdbId, TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
@@ -132,6 +124,7 @@ StreamType = Literal['series', 'movie']
 )
 @eventstream
 async def stream(
+    tmdb: Annotated[TmdbAPI, Depends(TmdbAPI)],
     type: StreamType,
     tmdb_id: TmdbId,
     source: ProviderSource,
@@ -139,7 +132,7 @@ async def stream(
     episode: int | None = None,
 ):
     provider = next(
-        (provider for provider in get_providers() if provider.type == source),
+        (provider for provider in get_providers(tmdb) if provider.type == source),
         None,
     )
     if not provider:
@@ -150,7 +143,7 @@ async def stream(
             return
 
         async for item in provider.search_for_tv(
-            await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
+            await tmdb.get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
         ):
             yield item
     else:
@@ -158,7 +151,7 @@ async def stream(
             return
 
         async for item in provider.search_for_movie(
-            await get_movie_imdb_id(tmdb_id), tmdb_id
+            await tmdb.get_movie_imdb_id(tmdb_id), tmdb_id
         ):
             yield item
 
@@ -166,10 +159,14 @@ async def stream(
 @api.get(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
-async def select(tmdb_id: TmdbId, season: int):
-    tasks, results = await search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
+async def select(
+    tmdb: Annotated[TmdbAPI, Depends(TmdbAPI)], tmdb_id: TmdbId, season: int
+):
+    tasks, results = await search_for_tv(
+        tmdb, await tmdb.get_tv_imdb_id(tmdb_id), tmdb_id, season
+    )
 
-    episodes = (await get_tv_episodes(tmdb_id, season)).episodes
+    episodes = (await tmdb.get_tv_episodes(tmdb_id, season)).episodes
 
     packs_or_not: dict[bool, list[ITorrent]] = {True: [], False: []}
     while not all(task.done() for task in tasks):
@@ -201,6 +198,7 @@ async def select(tmdb_id: TmdbId, season: int):
     '/download', response_model=list[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
 )
 async def download_post(
+    tmdb: Annotated[TmdbAPI, Depends(TmdbAPI)],
     things: list[DownloadPost],
     added_by: Annotated[User, security],
 ) -> list[MovieDetails | EpisodeDetails]:
@@ -215,11 +213,13 @@ async def download_post(
 
         show_title: str | None
         if is_tv:
-            item = await get_tv(thing.tmdb_id)
+            item = await tmdb.get_tv(thing.tmdb_id)
             if thing.episode is None:
                 title = f'Season {thing.season}'
             else:
-                episodes = (await get_tv_episodes(thing.tmdb_id, thing.season)).episodes
+                episodes = (
+                    await tmdb.get_tv_episodes(thing.tmdb_id, thing.season)
+                ).episodes
                 episode = next(
                     (
                         episode
@@ -236,7 +236,7 @@ async def download_post(
             subpath = f'tv_shows/{item.name}/Season {thing.season}'
         else:
             show_title = None
-            title = (await get_movie(thing.tmdb_id)).title
+            title = (await tmdb.get_movie(thing.tmdb_id)).title
             subpath = 'movies'
 
         results.append(
@@ -244,9 +244,9 @@ async def download_post(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
-                    await get_tv_imdb_id(thing.tmdb_id)
+                    await tmdb.get_tv_imdb_id(thing.tmdb_id)
                     if is_tv
-                    else await get_movie_imdb_id(thing.tmdb_id)
+                    else await tmdb.get_movie_imdb_id(thing.tmdb_id)
                 )
                 or '',
                 subpath=subpath,
@@ -267,9 +267,11 @@ async def download_post(
 
 
 @api.get('/index', response_model=IndexResponse)
-async def index(session: Session = Depends(get_db)):
+async def index(
+    tmdb: Annotated[TmdbAPI, Depends(TmdbAPI)], session: Session = Depends(get_db)
+):
     return IndexResponse(
-        series=await resolve_series(session), movies=get_movies(session)
+        series=await resolve_series(tmdb, session), movies=get_movies(session)
     )
 
 
@@ -295,8 +297,8 @@ async def stats(session: Session = Depends(get_db)):
 
 
 @api.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
-async def movie(tmdb_id: TmdbId):
-    return await get_movie(tmdb_id)
+async def movie(tmdb: Annotated[TmdbAPI, Depends(TmdbId)], tmdb_id: TmdbId):
+    return await tmdb.get_movie(tmdb_id)
 
 
 @api.get('/torrents', response_model=dict[str, InnerTorrent])
@@ -305,24 +307,28 @@ async def torrents():
 
 
 @api.get('/search', response_model=list[SearchResponse])
-async def search(query: str):
-    return await search_themoviedb(query)
+async def search(tmdb: Annotated[TmdbAPI, Depends(TmdbAPI)], query: str):
+    return await tmdb.search_themoviedb(query)
 
 
 tv_ns = APIRouter(tags=['tv'])
 
 
 @tv_ns.get('/{tmdb_id}', response_model=TvResponse)
-async def api_tv(tmdb_id: TmdbId):
-    tv = await get_tv(tmdb_id)
+async def api_tv(tmdb_id: TmdbId, tmdb: Annotated[TmdbAPI, Depends(TmdbId)]):
+    tv = await tmdb.get_tv(tmdb_id)
     return TvResponse(
-        **tv.model_dump(), imdb_id=await get_tv_imdb_id(tmdb_id), title=tv.name
+        **tv.model_dump(),
+        imdb_id=await tmdb.get_tv_imdb_id(tmdb_id),
+        title=tv.name,
     )
 
 
 @tv_ns.get('/{tmdb_id}/season/{season}', response_model=TvSeasonResponse)
-async def api_tv_season(tmdb_id: TmdbId, season: int):
-    return await get_tv_episodes(tmdb_id, season)
+async def api_tv_season(
+    tmdb: Annotated[TmdbAPI, Depends(TmdbAPI)], tmdb_id: TmdbId, season: int
+):
+    return await tmdb.get_tv_episodes(tmdb_id, season)
 
 
 root = APIRouter()
@@ -352,21 +358,22 @@ def redirect_to_plex(imdb_id: ImdbId, plex=Depends(get_plex)):
     '/redirect/{type_}/{tmdb_id}/{season}/{episode}', name='redirect_to_imdb_deep'
 )
 async def redirect_to_imdb(
+    tmdb: Annotated[TmdbAPI, Depends(TmdbAPI)],
     type_: MediaType,
     tmdb_id: TmdbId,
     season: int | None = None,
     episode: int | None = None,
 ):
     if type_ == 'movie':
-        imdb_id = await get_movie_imdb_id(tmdb_id)
+        imdb_id = await tmdb.get_movie_imdb_id(tmdb_id)
     elif season:
         imdb_id = (
-            await get_json(
+            await tmdb.get_json(
                 f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
             )
         )['imdb_id']
     else:
-        imdb_id = await get_tv_imdb_id(tmdb_id)
+        imdb_id = await tmdb.get_tv_imdb_id(tmdb_id)
 
     return RedirectResponse(f'https://www.imdb.com/title/{imdb_id}')
 

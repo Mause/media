@@ -4,6 +4,7 @@ from collections.abc import Callable, Coroutine, Iterable
 from typing import Any, TypeVar
 
 from ..models import ITorrent
+from ..tmdb import TmdbAPI
 from ..types import ImdbId, TmdbId
 from ..utils import Message, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
@@ -13,7 +14,7 @@ ProviderType = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
 
 
-def get_providers() -> list[Provider]:
+def get_providers(tmdb: TmdbAPI) -> list[Provider]:
     from .horriblesubs import HorriblesubsProvider
     from .kickass import KickassProvider
     from .nyaasi import NyaaProvider
@@ -22,17 +23,21 @@ def get_providers() -> list[Provider]:
     from .torrents_csv import TorrentsCsvProvider
 
     return [
-        HorriblesubsProvider(),
-        RarbgProvider(),
-        KickassProvider(),
-        TorrentsCsvProvider(),
-        NyaaProvider(),
-        PirateBayProvider(),
+        HorriblesubsProvider(tmdb),
+        RarbgProvider(tmdb),
+        KickassProvider(tmdb),
+        TorrentsCsvProvider(tmdb),
+        NyaaProvider(tmdb),
+        PirateBayProvider(tmdb),
     ]
 
 
 async def search_for_tv(
-    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: int | None = None
+    tmdb: TmdbAPI,
+    imdb_id: ImdbId,
+    tmdb_id: TmdbId,
+    season: int,
+    episode: int | None = None,
 ) -> tuple[list[Future[None]], Queue[ITorrent | Message]]:
     async def worker(output_queue: Queue[ITorrent | Message], provider: TvProvider):
         try:
@@ -45,12 +50,16 @@ async def search_for_tv(
 
     return await spin_up_workers(
         worker,
-        [provider for provider in get_providers() if isinstance(provider, TvProvider)],
+        [
+            provider
+            for provider in get_providers(tmdb)
+            if isinstance(provider, TvProvider)
+        ],
     )
 
 
 async def search_for_movie(
-    imdb_id: ImdbId, tmdb_id: TmdbId
+    tmdb: TmdbAPI, imdb_id: ImdbId, tmdb_id: TmdbId
 ) -> tuple[list[Future[None]], Queue[ITorrent | Message]]:
     async def worker(output_queue: Queue[ITorrent | Message], provider: MovieProvider):
         try:
@@ -63,7 +72,7 @@ async def search_for_movie(
         worker,
         [
             provider
-            for provider in get_providers()
+            for provider in get_providers(tmdb)
             if isinstance(provider, MovieProvider)
         ],
     )

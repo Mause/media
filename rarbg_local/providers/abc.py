@@ -5,6 +5,7 @@ import aiohttp
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 
 from ..models import ITorrent, ProviderSource
+from ..tmdb import TmdbAPI
 from ..types import ImdbId, TmdbId
 
 
@@ -23,6 +24,10 @@ async def check_http(url: str, method: str = 'HEAD') -> HealthcheckCallbackRespo
 
 class Provider(ABC):
     type: ProviderSource
+    tmdb: TmdbAPI
+
+    def __init__(self, tmdb: TmdbAPI):
+        self.tmdb = tmdb
 
     @abstractmethod
     def health(self) -> HealthcheckCallbackResponse:

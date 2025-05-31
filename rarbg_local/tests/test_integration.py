@@ -666,7 +666,9 @@ async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
         {
             get_current_user: cu,
             get_settings: lambda: Settings(
-                database_url='postgresql:///:memory:', plex_token='plex_token'
+                database_url='postgresql:///:memory:',
+                plex_token='plex_token',
+                tmdb_read_access_token='tmdb_read_access_token',
             ),
         }
     )

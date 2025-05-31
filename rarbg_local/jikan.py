@@ -2,7 +2,7 @@ from aiohttp import ClientSession
 from cachetools import TTLCache
 from fuzzywuzzy import fuzz
 
-from .tmdb import get_tv
+from .tmdb import TmdbAPI
 from .utils import cached
 
 
@@ -11,8 +11,8 @@ def make_jikan():
 
 
 @cached(TTLCache(256, 360))
-async def get_names(tmdb_id: int) -> set[str]:
-    tv = await get_tv(tmdb_id)
+async def get_names(tmdb: TmdbAPI, tmdb_id: int) -> set[str]:
+    tv = await tmdb.get_tv(tmdb_id)
     async with make_jikan() as jikan:
         res = await jikan.get('anime', params={'q': tv.name, 'limit': 1})
         results = (await res.json())['data']

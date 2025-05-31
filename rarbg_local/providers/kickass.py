@@ -8,7 +8,7 @@ from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
-from ..tmdb import get_movie, get_tv
+from ..tmdb import TmdbAPI
 from ..types import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
 
@@ -63,9 +63,13 @@ def tokenise(name: str) -> str:
 
 
 async def search_for_tv(
-    imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: int | None = None
+    tmdb: TmdbAPI,
+    imdb_id: ImdbId,
+    tmdb_id: TmdbId,
+    season: int,
+    episode: int | None = None,
 ) -> AsyncGenerator[dict, None]:
-    name = (await get_tv(tmdb_id)).name
+    name = (await tmdb.get_tv(tmdb_id)).name
 
     if episode is None:
         key = f'S{season:02d}'
@@ -83,8 +87,8 @@ def base(name: str, imdb_id: ImdbId):
     return fetch(f'/name/{tokenise(name)}/i{imdb_id.lstrip("t")}')
 
 
-async def search_for_movie(imdb_id: ImdbId, tmdb_id: TmdbId):
-    name = (await get_movie(tmdb_id)).title
+async def search_for_movie(tmdb: TmdbAPI, imdb_id: ImdbId, tmdb_id: TmdbId):
+    name = (await tmdb.get_movie(tmdb_id)).title
 
     async for item in base(name, imdb_id):
         yield item
@@ -103,7 +107,7 @@ class KickassProvider(TvProvider, MovieProvider):
         if not imdb_id:
             return
 
-        async for item in search_for_tv(imdb_id, tmdb_id, season, episode):
+        async for item in search_for_tv(self.tmdb, imdb_id, tmdb_id, season, episode):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],
@@ -116,7 +120,7 @@ class KickassProvider(TvProvider, MovieProvider):
     async def search_for_movie(
         self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
-        async for item in search_for_movie(imdb_id, tmdb_id):
+        async for item in search_for_movie(self.tmdb, imdb_id, tmdb_id):
             yield ITorrent(
                 source=ProviderSource.KICKASS,
                 title=item['title'],

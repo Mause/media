@@ -22,7 +22,7 @@ from .models import (
     MonitorGet,
     MonitorPost,
 )
-from .tmdb import get_movie, get_tv
+from .tmdb import TmdbAPI
 from .types import TmdbId
 from .utils import non_null
 from .websocket import _stream
@@ -48,12 +48,12 @@ async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
     return {}
 
 
-async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
+async def validate_id(tmdb: TmdbAPI, type: MonitorMediaType, tmdb_id: TmdbId) -> str:
     try:
         return (
-            (await get_movie(tmdb_id)).title
+            (await tmdb.get_movie(tmdb_id)).title
             if type == MonitorMediaType.MOVIE
-            else (await get_tv(tmdb_id)).name
+            else (await tmdb.get_tv(tmdb_id)).name
         )
     except HTTPError as e:
         if e.response.status_code == 404:
@@ -64,11 +64,12 @@ async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
 
 @monitor_ns.post('', response_model=MonitorGet, status_code=201)
 async def monitor_post(
+    tmdb: Annotated[TmdbAPI, Depends(TmdbAPI)],
     monitor: MonitorPost,
     user: Annotated[User, security],
 ):
     session = non_null(object_session(user))  # resolve to db session session
-    media = await validate_id(monitor.type, monitor.tmdb_id)
+    media = await validate_id(tmdb, monitor.type, monitor.tmdb_id)
     c = (
         session.query(Monitor)
         .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
@@ -86,12 +87,13 @@ async def monitor_post(
 @monitor_ns.post('/cron', status_code=201)
 @monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
+    tmdb: Annotated[TmdbAPI, Depends(TmdbAPI)],
     session: Annotated[Session, Depends(get_db)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ):
     monitors = session.query(Monitor).filter(not_(Monitor.status)).all()
 
-    tasks = [check_monitor(monitor, session, ntfy) for monitor in monitors]
+    tasks = [check_monitor(tmdb, monitor, session, ntfy) for monitor in monitors]
 
     return [
         repr(e) if isinstance(e, Exception) else e
@@ -100,6 +102,7 @@ async def monitor_cron(
 
 
 async def check_monitor(
+    tmdb: TmdbAPI,
     monitor: Monitor,
     session: Session,
     ntfy: Ntfy,
@@ -117,7 +120,7 @@ async def check_monitor(
         raise HTTPException(422, f'Invalid type: {monitor.type}')
 
     has_results = None
-    async for result in _stream(tmdb_id=monitor.tmdb_id, type=convert_type(typ)):
+    async for result in _stream(tmdb, tmdb_id=monitor.tmdb_id, type=convert_type(typ)):
         has_results = result
         break
     if not has_results:
