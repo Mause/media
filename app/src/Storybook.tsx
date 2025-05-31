@@ -5,7 +5,7 @@ import { Progress } from './render';
 import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 
-export default function Storybook() {
+export function Storybook() {
   const [percentDone, setPercentDone] = useState(0.5);
   useEffect(() => {
     const interval = setInterval(() => {

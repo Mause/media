@@ -31,7 +31,6 @@ import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import type { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
-import Storybook from './Storybook';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -345,11 +344,16 @@ function getRoutes() {
         },
         {
           path: '/storybook',
-          element: (
-            <RouteTitle title="Storybook">
-              <Storybook />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { Storybook } = await import('./Storybook');
+            return {
+              element: (
+                <RouteTitle title="Storybook">
+                  <Storybook />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/monitor/delete/:id',
