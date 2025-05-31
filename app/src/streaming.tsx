@@ -7,6 +7,7 @@ import {
   Outlet,
   RouteObject,
   useLocation,
+  useMatches,
 } from 'react-router-dom';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Grid, Link as MaterialLink } from '@mui/material';
@@ -116,6 +117,7 @@ function ParentComponentInt() {
 
   const auth = useAuth0();
   const location = useLocation();
+  const match = _.last(useMatches());
   console.log({ user: auth.user });
 
   return (
@@ -173,7 +175,8 @@ function ParentComponentInt() {
       >
         {auth.isAuthenticated ||
         location.pathname === '/storybook' ||
-        location.pathname == '/sitemap' ? (
+        location.pathname == '/sitemap' ||
+        match?.id === 'notFound' ? (
           <Outlet />
         ) : (
           <div>Please login</div>
@@ -224,6 +227,7 @@ function getRoutes() {
       ),
       children: [
         {
+          id: 'notFound',
           path: '*',
           element: (
             <RouteTitle title="Page not Found">
