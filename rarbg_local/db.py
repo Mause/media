@@ -344,15 +344,17 @@ def build_engine(db_url: URL, cr: Callable):
             db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
         )
 
-        @listens_for(engine, "do_connect")
-        @backoff.on_exception(
-            backoff.fibo,
-            psycopg2.OperationalError,
-            max_tries=MAX_TRIES,
-            giveup=lambda e: "too many connections for role" not in e.args[0],
-        )
-        def receive_do_connect(dialect, conn_rec, cargs, cparams):
-            return psycopg2.connect(*cargs, **cparams)
+        if db_url.get_driver_name() == 'psycopg2':
+
+            @listens_for(engine, "do_connect")
+            @backoff.on_exception(
+                backoff.fibo,
+                psycopg2.OperationalError,
+                max_tries=MAX_TRIES,
+                giveup=lambda e: "too many connections for role" not in e.args[0],
+            )
+            def receive_do_connect(dialect, conn_rec, cargs, cparams):
+                return psycopg2.connect(*cargs, **cparams)
 
     return engine
 
