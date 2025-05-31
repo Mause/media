@@ -106,6 +106,15 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
             ],
         )
         new_call = node.with_deep_changes(node.func, value=execute)
+        new_call = new_call.with_deep_changes(
+            new_call.func,
+            value=cst.Call(
+                func=cst.Attribute(
+                    value=new_call.func.value,
+                    attr=cst.Name('scalars'),
+                )
+            ),
+        )
 
         self.ani("sqlalchemy.future", "select")
 
