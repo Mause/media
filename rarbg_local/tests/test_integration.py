@@ -537,6 +537,49 @@ async def test_openapi(test_client, snapshot):
 
 
 @mark.asyncio
+@mark.skip
+async def test_stream_rarbg(test_client, responses, aioresponses, snapshot):
+    themoviedb(aioresponses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
+    root = 'https://torrentapi.org/pubapi_v2.php?mode=search&ranked=0&limit=100&format=json_extended&app_id=Sonarr'
+    add_json(responses, 'GET', root + '&get_token=get_token', {'token': 'aaaaaaa'})
+
+    for i in ['41', '49', '18']:
+        add_json(
+            responses,
+            'GET',
+            f'{root}&token=aaaaaaa&search_imdb=tt00000&search_string=S01E01&category={i}',
+            {
+                'torrent_results': [
+                    {
+                        'seeders': i,
+                        'title': i,
+                        'download': 'magnet:?xt=urn:btih:00000000000000000',
+                        'category': '',
+                    }
+                ]
+            },
+        )
+
+    r = await test_client.get('/api/stream/series/1?season=1&episode=1&source=rarbg')
+
+    assert r.status_code == 200, r.json()
+
+    data = r.text.split('\n\n')
+    assert data
+    assert data.pop(-1) == ''
+    assert data.pop(-1) == 'data:'
+
+    datum = [json.loads(line[len('data: ') :]) for line in data]
+
+    datum = sorted(datum, key=lambda item: item['seeders'])
+
+    snapshot.assert_match(
+        json.dumps(datum, indent=2),
+        'stream.json',
+    )
+
+
+@mark.asyncio
 async def test_stream(test_client, responses, aioresponses, snapshot):
     themoviedb(aioresponses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
     root = 'https://torrentapi.org/pubapi_v2.php?mode=search&ranked=0&limit=100&format=json_extended&app_id=Sonarr'
