@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react';
-import { ErrorInfo } from 'react';
+import { ErrorInfo, ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
   RouterProvider,
@@ -7,6 +7,7 @@ import {
   Outlet,
   RouteObject,
   useLocation,
+  useMatches,
 } from 'react-router-dom';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Grid, Link as MaterialLink } from '@mui/material';
@@ -14,6 +15,7 @@ import { styled } from '@mui/material/styles';
 import { SWRConfig } from 'swr';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
+import last from 'lodash/last';
 
 import { IndexComponent } from './IndexComponent';
 import {
@@ -55,7 +57,7 @@ function RouteTitle({
   children,
 }: {
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <>
@@ -116,6 +118,7 @@ function ParentComponentInt() {
 
   const auth = useAuth0();
   const location = useLocation();
+  const match = last(useMatches());
   console.log({ user: auth.user });
 
   return (
@@ -171,7 +174,10 @@ function ParentComponentInt() {
           );
         }}
       >
-        {auth.isAuthenticated || location.pathname === '/storybook' ? (
+        {auth.isAuthenticated ||
+        location.pathname === '/storybook' ||
+        location.pathname == '/sitemap' ||
+        match?.id === 'notFound' ? (
           <Outlet />
         ) : (
           <div>Please login</div>
@@ -180,7 +186,7 @@ function ParentComponentInt() {
     </>
   );
 }
-export function SwrConfigWrapper({ children }: { children: React.ReactNode }) {
+export function SwrConfigWrapper({ children }: { children: ReactNode }) {
   const auth = useAuth0();
   return (
     <SWRConfig
@@ -212,7 +218,7 @@ export function ParentComponent() {
 }
 
 function getRoutes() {
-  const routes = [
+  return [
     {
       path: '/',
       element: (
@@ -222,6 +228,7 @@ function getRoutes() {
       ),
       children: [
         {
+          id: 'notFound',
           path: '*',
           element: (
             <RouteTitle title="Page not Found">
@@ -343,6 +350,14 @@ function getRoutes() {
           ),
         },
         {
+          path: '/sitemap',
+          element: (
+            <RouteTitle title="Sitemap">
+              <SitemapRoot />
+            </RouteTitle>
+          ),
+        },
+        {
           path: '/',
           element: (
             <RouteTitle title="Media">
@@ -353,5 +368,20 @@ function getRoutes() {
       ],
     },
   ] satisfies RouteObject[];
-  return routes;
+}
+
+function SitemapRoot() {
+  return <Sitemap routes={getRoutes()} />;
+}
+function Sitemap({ routes }: { routes: RouteObject[] }) {
+  return (
+    <ul>
+      {routes.map((route) => (
+        <li key={route.path}>
+          <MLink to={route.path!}>{route.path}</MLink>
+          {route.children ? <Sitemap routes={route.children} /> : undefined}
+        </li>
+      ))}
+    </ul>
+  );
 }
