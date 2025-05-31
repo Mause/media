@@ -86,3 +86,4 @@ asyncio_default_fixture_loop_scope = "fixture"
 plugins = "sqlalchemy.ext.mypy.plugin, pydantic.mypy"
 ignore_missing_imports = true
 mypy_path = "stubs"
+disallow_untyped_defs = true

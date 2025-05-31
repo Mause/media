@@ -13,6 +13,7 @@ from lxml.etree import tostring
 from psycopg2 import OperationalError
 from pydantic import BaseModel
 from pytest import fixture, mark, raises
+from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.orm.session import Session
@@ -24,6 +25,7 @@ from ..models import ITorrent
 from ..new import ProviderSource, SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
+from ..types import ImdbId, TmdbId
 from .conftest import add_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
@@ -354,9 +356,10 @@ async def test_select_season(aioresponses, test_client: TestClient, snapshot) ->
 @mark.asyncio
 async def test_foreign_key_integrity(session: Session):
     # invalid fkey_id
-    ins = Download.__table__.insert().values(id=1, movie_id=99)
     with raises(IntegrityError):
-        session.execute(ins)
+        ins = Download(id=1, movie_id=99)
+        session.add(ins)
+        session.commit()
 
 
 @mark.asyncio
@@ -593,7 +596,9 @@ async def test_static(uri, test_client):
     assert r.status_code == 200
 
 
-def add_xml(responses, method, url, body):
+def add_xml(
+    responses: RequestsMock, method: str, url: str, body: E.ElementBase
+) -> None:
     responses.add(
         method,
         url,
@@ -707,7 +712,9 @@ async def test_piratebay(aioresponses, snapshot):
         ),
     )
     res = await tolist(
-        PirateBayProvider().search_for_movie(imdb_id='tt0000000', tmdb_id=1)
+        PirateBayProvider().search_for_movie(
+            imdb_id=ImdbId('tt0000000'), tmdb_id=TmdbId(1)
+        )
     )
 
     snapshot.assert_match(
