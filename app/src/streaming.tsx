@@ -386,7 +386,7 @@ function Sitemap({ routes }: { routes: RouteObject[] }) {
     <ul>
       {routes.map((route) => (
         <li key={route.path}>
-          <MLink to={route.path!}>{route.path}</MLink>
+          <MLink to={route.path}>{route.path}</MLink>
           {route.children ? <Sitemap routes={route.children} /> : undefined}
         </li>
       ))}
