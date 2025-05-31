@@ -39,9 +39,7 @@ class AddImports(VisitorBasedCodemodCommand):
 class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
     METADATA_DEPENDENCIES = (ParentNodeProvider,)
 
-    def is_transformable(
-        self, node: cst.Call
-    ) -> tuple[cst.Call, list[cst.CSTNode]] | None:
+    def is_transformable(self, node: cst.Call) -> cst.Call | None:
         if not matches(
             node,
             Call(
@@ -53,11 +51,9 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
         ):
             return None
 
-        stack = [node.func.value]
         while isinstance(node, cst.Call) and isinstance(node.func, cst.Attribute):
             last = node
             node = node.func.value
-            stack.append(node)
 
         if matches(
             last,
@@ -69,7 +65,7 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
             ),
             metadata_resolver=self,
         ):
-            return last, stack
+            return last
 
         return None
 
@@ -87,9 +83,8 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
     def leave_Call(
         self, old_node: cst.Call, node: cst.Call
     ) -> cst.CSTNode | FlattenSentinel:
-        if not (a := self.is_transformable(old_node)):
+        if not (query_call := self.is_transformable(old_node)):
             return node
-        (query_call, stack) = a
 
         select = cst.Call(
             func=cst.Name('select'),
@@ -101,7 +96,7 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
         if parent is None:
             self.warn(f'Unable to rewrite: {self.get_position(old_node)}')
             return node
-        select = stack[0].with_deep_changes(parent.func, value=select)
+        select = old_node.func.value.with_deep_changes(parent.func, value=select)
 
         execute = cst.Call(
             func=cst.Attribute(cst.Name('session'), cst.Name('execute')),
