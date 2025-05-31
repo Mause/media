@@ -2,16 +2,8 @@ import ReactLoading from 'react-loading';
 import { Navigate } from 'react-router-dom';
 
 import { usePost, useLocation } from './utils';
-<<<<<<< HEAD
-import { DisplayError } from './IndexComponent';
-import type { components } from './schema';
-||||||| parent of 5fc97714 (extract DisplayError)
-import { DisplayError } from './IndexComponent';
-import { components } from './schema';
-=======
 import { DisplayError } from './DisplayError';
 import { components } from './schema';
->>>>>>> 5fc97714 (extract DisplayError)
 
 export type DownloadCall = components['schemas']['DownloadPost'];
 export interface DownloadState {

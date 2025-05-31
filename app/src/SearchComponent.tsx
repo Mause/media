@@ -3,7 +3,7 @@ import qs from 'qs';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import { SearchBox } from './IndexComponent';
+import { SearchBox } from './SearchBox';
 import { MLink } from './utils';
 import type { components } from './schema';
 export type SearchResult = components['schemas']['SearchResponse'];
