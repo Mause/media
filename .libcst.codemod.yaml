@@ -1,0 +1,1 @@
+formatter: ['uv', 'run', 'ruff', 'format', '-']
