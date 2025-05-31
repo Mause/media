@@ -12,7 +12,6 @@ class Testy(CodemodTest):
         '''
         after = '''
         from sqlalchemy.future import select
-        from sqlalchemy.orm import Mapped, mapped_column
 
         session.execute(select(Model).filter(Model.id == 1)).all()
         '''
