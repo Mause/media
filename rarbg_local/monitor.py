@@ -124,7 +124,7 @@ async def check_monitor(
         logger.info(f'No results for {monitor.title}')
         return
 
-    monitor.status = bool(has_results)
+    monitor.status = 'bool(has_results)'
 
     def name(x):
         return x.name.title()
