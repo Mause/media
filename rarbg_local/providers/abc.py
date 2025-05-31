@@ -5,7 +5,7 @@ import aiohttp
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 
 from ..models import ITorrent, ProviderSource
-from ..types import ImdbId, TmdbId
+from ..utils import ImdbId, TmdbId
 
 
 async def check_http(url: str, method: str = 'HEAD') -> HealthcheckCallbackResponse:

@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_movie, get_tv
-from ..types import ImdbId, TmdbId
+from ..utils import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)

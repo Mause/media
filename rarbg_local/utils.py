@@ -3,7 +3,7 @@ from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
 from functools import lru_cache as _lru_cache
 from functools import partial
-from typing import Protocol, TypeVar
+from typing import NewType, Protocol, TypeVar
 
 from asyncache import cached as _cached
 from cachetools.func import ttl_cache as _ttl_cache
@@ -91,3 +91,14 @@ def create_monitored_task(
     future = asyncio.ensure_future(coro)
     future.add_done_callback(partial(_callback, send))
     return future
+
+
+"""
+The Movie DB ID
+"""
+TmdbId = NewType('TmdbId', int)
+
+"""
+Internet Movie Database ID
+"""
+ImdbId = NewType('ImdbId', str)

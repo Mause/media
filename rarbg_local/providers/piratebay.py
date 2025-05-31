@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 import aiohttp
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
-from ..types import ImdbId, TmdbId
+from ..utils import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, format
 
 logger = logging.getLogger(__name__)

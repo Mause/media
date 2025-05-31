@@ -3,7 +3,7 @@ from collections.abc import AsyncGenerator
 import aiohttp
 
 from ..models import ITorrent, ProviderSource
-from ..types import ImdbId, TmdbId
+from ..utils import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, format
 
 

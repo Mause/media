@@ -6,7 +6,7 @@ from sentry_sdk import trace
 
 from .settings import get_settings
 from .singleton import singleton
-from .types import ImdbId
+from .utils import ImdbId
 
 
 @singleton

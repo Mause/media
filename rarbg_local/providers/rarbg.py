@@ -9,7 +9,7 @@ import requests
 from pydantic import BaseModel
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
-from ..types import ImdbId, TmdbId
+from ..utils import ImdbId, TmdbId
 from .abc import MovieProvider, TvProvider, format, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)
