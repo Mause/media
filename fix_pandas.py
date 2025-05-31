@@ -208,7 +208,11 @@ def map_annotation(annotation: cst.CSTNode) -> cst.CSTNode:
         matcher,
     ):
         name = res['name'].value
-        kwargs = {arg.keyword.value: arg.value.value for arg in res['kwargs']}
+        kwargs = {
+            arg.keyword.value: arg.value.value
+            for arg in res['kwargs']
+            if matches(arg, Arg(value=Name()))
+        }
     else:
         return annotation
 
