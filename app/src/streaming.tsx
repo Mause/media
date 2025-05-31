@@ -30,7 +30,6 @@ import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
 import type { components } from './schema';
-import { DiagnosticsComponent } from './DiagnosticsComponent';
 import { ExtMLink, MLink } from './MLink';
 import { Loading } from './render';
 
@@ -349,11 +348,18 @@ function getRoutes() {
         },
         {
           path: '/diagnostics',
-          element: (
-            <RouteTitle title="Diagnostics">
-              <DiagnosticsComponent />
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { DiagnosticsComponent } = await import(
+              './DiagnosticsComponent'
+            );
+            return {
+              element: (
+                <RouteTitle title="Diagnostics">
+                  <DiagnosticsComponent />
+                </RouteTitle>
+              ),
+            };
+          },
         },
         {
           path: '/storybook',
