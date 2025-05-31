@@ -333,14 +333,6 @@ function AppRoutes() {
           ),
         },
         {
-          path: '/monitor/add/:tmdb_id',
-          element: (
-            <RouteTitle title="Monitor">
-              <MonitorAddComponent />
-            </RouteTitle>
-          ),
-        },
-        {
           path: '/monitor',
           element: (
             <RouteTitle title="Monitor">
