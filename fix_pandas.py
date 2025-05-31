@@ -73,10 +73,21 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
 
         return None
 
+    def get_parent_call(self, node: cst.CSTNode):
+        while node:
+            node = self.get_metadata(
+                ParentNodeProvider,
+                node,
+                None,
+            )
+            if isinstance(node, cst.Call):
+                return node
+        return None
+
     def leave_Call(
         self, old_node: cst.Call, node: cst.Call
     ) -> cst.CSTNode | FlattenSentinel:
-        if not (a := self.is_transformable(node)):
+        if not (a := self.is_transformable(old_node)):
             return node
         (query_call, stack) = a
 
@@ -85,14 +96,8 @@ class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
             args=query_call.args,
         )
 
-        parent = next(
-            (
-                item
-                for item in stack
-                if isinstance(item, cst.Call) and query_call in item.func.children
-            ),
-            None,
-        )
+        # we need to replace the innermost call of the chain
+        parent = self.get_parent_call(query_call)
         if parent is None:
             self.warn(f'Unable to rewrite: {self.get_position(old_node)}')
             return node
