@@ -66,9 +66,9 @@ async def test_diagnostics(
 ):
     monkeypatch.setattr('rarbg_local.health.getpid', lambda: 1)
 
-    aioresponses.add('https://horriblesubs.info', 'HEAD')
-    aioresponses.add('https://torrentapi.org', 'HEAD')
-    aioresponses.add('https://katcr.co', 'HEAD')
+    # aioresponses.add('https://horriblesubs.info', 'HEAD')
+    # aioresponses.add('https://torrentapi.org', 'HEAD')
+    # aioresponses.add('https://katcr.co', 'HEAD')
     aioresponses.add('https://nyaa.si', 'HEAD')
     aioresponses.add('https://torrents-csv.com', 'HEAD')
     aioresponses.add('https://api.jikan.moe/v4', 'GET', body='{}')
