@@ -363,4 +363,3 @@ function AppRoutes() {
 
   return <RouterProvider router={router} />;
 }
-export { AppRoutes as ParentComponent };
