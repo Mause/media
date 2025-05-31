@@ -10,6 +10,7 @@ const pluginDeprecation = require('eslint-plugin-deprecation');
 module.exports = tseslint.config(
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
+  tseslint.configs.strictTypeChecked,
   {
     languageOptions: {
       parserOptions: {
@@ -21,6 +22,10 @@ module.exports = tseslint.config(
       deprecation: fixupPluginRules(pluginDeprecation),
     },
     rules: {
+      '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
+
       'deprecation/deprecation': 'error',
       'import-x/no-named-as-default-member': 'off',
       'import-x/order': [

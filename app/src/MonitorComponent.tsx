@@ -102,7 +102,7 @@ export function MonitorAddComponent({
 }
 
 function mutationFetcher<T, R>(
-  auth: Auth0ContextInterface<User>,
+  auth: Auth0ContextInterface,
 ): (
   key: string,
   options: Readonly<{
@@ -127,7 +127,9 @@ function useDelete(path: string) {
     void Axios.delete(`/api/${path}`, {
       withCredentials: true,
       signal: controller.signal,
-    }).then(() => setDone(true));
+    }).then(() => {
+      setDone(true);
+    });
     return () => {
       controller.abort();
     };
