@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react';
-import { ErrorInfo } from 'react';
+import { ErrorInfo, ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
   RouterProvider,
@@ -56,7 +56,7 @@ function RouteTitle({
   children,
 }: {
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <>
@@ -185,7 +185,7 @@ function ParentComponentInt() {
     </>
   );
 }
-export function SwrConfigWrapper({ children }: { children: React.ReactNode }) {
+export function SwrConfigWrapper({ children }: { children: ReactNode }) {
   const auth = useAuth0();
   return (
     <SWRConfig
