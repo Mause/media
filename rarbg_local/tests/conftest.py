@@ -72,7 +72,9 @@ def session(fastapi_app, tmp_path, _function_event_loop):
         plex_token='plex_token',
     )
 
-    Session = _function_event_loop.run_until_complete(get(fastapi_app, get_session_local))
+    Session = _function_event_loop.run_until_complete(
+        get(fastapi_app, get_session_local)
+    )
     assert hasattr(Session, 'kw'), Session
     engine = Session.kw['bind']
     assert 'sqlite' in repr(engine), repr(engine)
