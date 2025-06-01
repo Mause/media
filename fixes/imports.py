@@ -1,10 +1,12 @@
+from abc import ABC
+
 import libcst as cst
 from libcst.codemod import VisitorBasedCodemodCommand
 from libcst.codemod.visitors import AddImportsVisitor
 from libcst.metadata import PositionProvider
 
 
-class AddImports(VisitorBasedCodemodCommand):
+class AddImports(VisitorBasedCodemodCommand, ABC):
     METADATA_DEPENDENCIES = (PositionProvider,)
 
     def leave_Module(self, old_node: cst.CSTNode, node: cst.CSTNode) -> cst.CSTNode:
