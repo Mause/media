@@ -1,5 +1,4 @@
 import json
-from asyncio import get_event_loop
 from collections.abc import AsyncGenerator
 from re import Pattern
 from typing import Annotated, TypeVar
@@ -62,7 +61,7 @@ def user(session):
 
 
 @fixture
-def session(fastapi_app, tmp_path):
+def session(fastapi_app, tmp_path, event_loop):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
         database_url=str(
             URL.create(
@@ -73,7 +72,7 @@ def session(fastapi_app, tmp_path):
         plex_token='plex_token',
     )
 
-    Session = get_event_loop().run_until_complete(get(fastapi_app, get_session_local))
+    Session = event_loop.run_until_complete(get(fastapi_app, get_session_local))
     assert hasattr(Session, 'kw'), Session
     engine = Session.kw['bind']
     assert 'sqlite' in repr(engine), repr(engine)
