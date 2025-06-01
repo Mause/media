@@ -2,7 +2,7 @@ import asyncio
 from collections.abc import Callable, Coroutine, MutableMapping
 from dataclasses import dataclass
 from functools import partial
-from typing import Any, ParamSpec, TypeVar
+from typing import Any, ParamSpec, TypeVar, cast
 
 from asyncache import IdentityFunction
 from asyncache import cached as _cached
@@ -32,11 +32,11 @@ def ttl_cache(maxsize: int | None = None) -> IdentityFunction:
     return wrapper
 
 
-def cached(cache: MutableMapping) -> IdentityFunction:
+def cached(cache: MutableMapping[Any, Any]) -> IdentityFunction:
     def wrapper(func: Callable[P, T]) -> Callable[P, T]:
         c = _cached(cache)(func)
         _caches.add(c)
-        return c
+        return cast(Callable[P, T], c)
 
     return wrapper
 
@@ -66,10 +66,10 @@ def precondition(res: T | None, message: str) -> T:
 class Message:
     event: str
     reason: str | Exception
-    task: asyncio.Task
+    task: asyncio.Task[Any]
 
 
-def _callback(send: Callable[[Message], None], fut: asyncio.Task) -> None:
+def _callback(send: Callable[[Message], None], fut: asyncio.Task[Any]) -> None:
     try:
         fut.result()
     except asyncio.CancelledError:
@@ -82,7 +82,7 @@ def _callback(send: Callable[[Message], None], fut: asyncio.Task) -> None:
 
 
 def create_monitored_task(
-    coro: Coroutine[None, None, T], send: Callable
+    coro: Coroutine[None, None, T], send: Callable[[Message], None]
 ) -> asyncio.Future[T]:
     future = asyncio.ensure_future(coro)
     future.add_done_callback(partial(_callback, send))
