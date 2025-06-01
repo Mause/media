@@ -5,8 +5,7 @@ if __name__ == '__main__':
         '',
         [
             'codemod',
-            '-x',
-            'fix_pandas.ColumnVisitor',
+            'column.ColumnVisitor',
             'rarbg_local',
         ],
     )
@@ -15,8 +14,7 @@ if __name__ == '__main__':
         '',
         [
             'codemod',
-            '-x',
-            'fix_pandas.FixPandasVisitor',
+            'query.FixPandasVisitor',
             'rarbg_local',
         ],
     )
