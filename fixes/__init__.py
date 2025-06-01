@@ -1,4 +1,4 @@
 from .column import ColumnVisitor
-from .query import FixPandasVisitor
+from .query import QueryVisitor
 
-__all__ = ['ColumnVisitor', 'FixPandasVisitor']
+__all__ = ['ColumnVisitor', 'QueryVisitor']

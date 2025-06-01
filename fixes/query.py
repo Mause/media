@@ -13,7 +13,7 @@ from libcst.metadata import ParentNodeProvider
 from .imports import AddImports
 
 
-class FixPandasVisitor(AddImports, VisitorBasedCodemodCommand):
+class QueryVisitor(AddImports, VisitorBasedCodemodCommand):
     METADATA_DEPENDENCIES = (ParentNodeProvider,)
 
     def is_transformable(self, node: cst.Call) -> cst.Call | None:

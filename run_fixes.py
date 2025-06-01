@@ -14,7 +14,7 @@ if __name__ == '__main__':
         '',
         [
             'codemod',
-            'query.FixPandasVisitor',
+            'query.QueryVisitor',
             'rarbg_local',
         ],
     )

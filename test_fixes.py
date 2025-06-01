@@ -1,10 +1,10 @@
 from libcst.codemod import CodemodTest
 
-from fixes import ColumnVisitor, FixPandasVisitor
+from fixes import ColumnVisitor, QueryVisitor
 
 
 class Testy(CodemodTest):
-    TRANSFORM = FixPandasVisitor
+    TRANSFORM = QueryVisitor
 
     def test_replace(self):
         before = '''
