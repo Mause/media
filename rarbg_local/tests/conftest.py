@@ -10,6 +10,7 @@ from fastapi.security import SecurityScopes
 from pytest import fixture, hookimpl
 from responses import RequestsMock
 from sqlalchemy.engine.url import URL
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
@@ -43,7 +44,7 @@ def clear_cache():
 @fixture
 def test_client(fastapi_app, clear_cache, user) -> TestClient:
     async def gcu(scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]):
-        res = session.query(User).first()
+        res = session.execute(select(User)).scalars().first()
         assert res
         return res
 

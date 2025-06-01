@@ -15,6 +15,7 @@ from pydantic import BaseModel
 from pytest import fixture, mark, raises
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
@@ -117,7 +118,7 @@ async def test_download_movie(
 
     add_torrent.assert_called_with(magnet, 'movies')
 
-    download = session.query(Download).first()
+    download = session.execute(select(Download)).scalars().first()
     assert download.title == 'Bit'
 
 
@@ -158,7 +159,7 @@ async def test_download(test_client, aioresponses, responses, add_torrent, sessi
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
 
-    download = session.query(Download).first()
+    download = session.execute(select(Download)).scalars().first()
     assert download
     assert download.title == 'Satoshi, Go, and Lugia Go!'
     assert download.episode
@@ -195,7 +196,7 @@ async def test_download_season_pack(
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Watchmen/Season 1')
 
-    download = session.query(Download).first()
+    download = session.execute(select(Download)).scalars().first()
     assert download
     assert download.title == 'Season 1'
     assert download.episode
@@ -304,7 +305,7 @@ async def test_delete_cascade(test_client: TestClient, session):
     session.commit()
 
     assert len(get_episodes(session)) == 1
-    assert len(session.query(Download).all()) == 1
+    assert len(session.execute(select(Download)).scalars().all()) == 1
 
     res = await test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
@@ -313,7 +314,7 @@ async def test_delete_cascade(test_client: TestClient, session):
     session.commit()
 
     assert len(get_episodes(session)) == 0
-    assert len(session.query(Download).all()) == 0
+    assert len(session.execute(select(Download)).scalars().all()) == 0
 
 
 @mark.asyncio
