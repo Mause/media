@@ -2,22 +2,33 @@ import asyncio
 from collections.abc import Callable, Coroutine, MutableMapping
 from dataclasses import dataclass
 from functools import partial
-from typing import Any, ParamSpec, TypeVar, cast
+from typing import Any, ParamSpec, Protocol, TypeVar, cast, runtime_checkable
 
 from asyncache import IdentityFunction
 from asyncache import cached as _cached
 from cachetools.func import lru_cache as _lru_cache
 from cachetools.func import ttl_cache as _ttl_cache
 
+
+@runtime_checkable
+class Cache(Protocol):
+    def clear(self) -> None: ...
+
+
 T = TypeVar('T')
 P = ParamSpec('P')
-_caches: set[Callable[..., Any]] = set()
+_caches: list[Cache] = []
+
+
+def _append(t: object) -> None:
+    assert isinstance(t, Cache)
+    _caches.append(t)
 
 
 def lru_cache(maxsize: int | None = None) -> IdentityFunction:
     def wrapper(func: Callable[P, T]) -> Callable[P, T]:
         cache = _lru_cache(maxsize)(func)
-        _caches.add(cache)
+        _append(cache)
         return cache
 
     return wrapper
@@ -26,7 +37,7 @@ def lru_cache(maxsize: int | None = None) -> IdentityFunction:
 def ttl_cache(maxsize: int | None = None) -> IdentityFunction:
     def wrapper(func: Callable[P, T]) -> Callable[P, T]:
         cache = _ttl_cache(maxsize)(func)
-        _caches.add(cache)
+        _append(cache)
         return cache
 
     return wrapper
@@ -35,7 +46,7 @@ def ttl_cache(maxsize: int | None = None) -> IdentityFunction:
 def cached(cache: MutableMapping[Any, Any]) -> IdentityFunction:
     def wrapper(func: Callable[P, T]) -> Callable[P, T]:
         c = _cached(cache)(func)
-        _caches.add(c)
+        _append(cache)
         return cast(Callable[P, T], c)
 
     return wrapper
@@ -43,7 +54,7 @@ def cached(cache: MutableMapping[Any, Any]) -> IdentityFunction:
 
 def cache_clear() -> None:
     for c in _caches:
-        c()
+        c.clear()
 
 
 class NullPointerException(Exception):
