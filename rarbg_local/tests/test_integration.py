@@ -16,6 +16,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session
+from sqlalchemy.orm import joinedload
 
 from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, Monitor, create_episode, create_movie
@@ -156,7 +157,11 @@ async def test_download(test_client, aioresponses, responses, add_torrent, sessi
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
 
-    download = (await session.execute(select(Download))).scalars().first()
+    download = (
+        (await session.execute(select(Download).options(joinedload(Download.episode))))
+        .scalars()
+        .first()
+    )
     assert download
     assert download.title == 'Satoshi, Go, and Lugia Go!'
     assert download.episode
@@ -193,7 +198,11 @@ async def test_download_season_pack(
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Watchmen/Season 1')
 
-    download = (await session.execute(select(Download))).scalars().first()
+    download = (
+        (await session.execute(select(Download).options(joinedload(Download.episode))))
+        .scalars()
+        .first()
+    )
     assert download
     assert download.title == 'Season 1'
     assert download.episode
