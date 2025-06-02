@@ -18,6 +18,7 @@ from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel
 from sqlalchemy import func
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, object_session
 from starlette.staticfiles import StaticFiles
 
@@ -164,9 +165,11 @@ async def stream(
 
 
 @api.get(
-    '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
+    '/select/{tmdb_id}/season/{season}/download_all',
+    response_model=DownloadAllResponse,
+    name='select',
 )
-async def select(tmdb_id: TmdbId, season: int):
+async def api_select(tmdb_id: TmdbId, season: int):
     tasks, results = await search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
 
     episodes = (await get_tv_episodes(tmdb_id, season)).episodes
@@ -286,7 +289,7 @@ async def stats(session: Session = Depends(get_db)):
         }
 
     keys = Download.added_by_id, Download.type
-    query = session.query(*keys, func.count(name='count')).group_by(*keys)
+    query = session.execute(select(*keys, func.count(name='count')).group_by(*keys))
 
     return [
         process(added_by_id, values)

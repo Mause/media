@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, object_session
 
 from .auth import security
@@ -38,7 +39,7 @@ async def get_ntfy():
 
 @monitor_ns.get('', response_model=list[MonitorGet])
 async def monitor_get(session: Session = Depends(get_db)):
-    return session.query(Monitor).all()
+    return session.execute(select(Monitor)).scalars().all()
 
 
 @monitor_ns.delete('/{monitor_id}')
@@ -70,8 +71,10 @@ async def monitor_post(
     session = non_null(object_session(user))  # resolve to db session session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
-        session.query(Monitor)
-        .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+        session.execute(
+            select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+        )
+        .scalars()
         .one_or_none()
     )
     if not c:
@@ -89,7 +92,9 @@ async def monitor_cron(
     session: Annotated[Session, Depends(get_db)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ):
-    monitors = session.query(Monitor).filter(not_(Monitor.status)).all()
+    monitors = (
+        session.execute(select(Monitor).filter(not_(Monitor.status))).scalars().all()
+    )
 
     tasks = [check_monitor(monitor, session, ntfy) for monitor in monitors]
 

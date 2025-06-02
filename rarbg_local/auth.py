@@ -11,6 +11,7 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_oidc import get_auth
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session
 
 from .db import User, get_db
@@ -59,7 +60,7 @@ async def get_current_user(
 
     email = getattr(token_info, 'https://media.mause.me/email')
 
-    user = session.query(User).filter_by(email=email).one_or_none()
+    user = session.execute(select(User).filter_by(email=email)).scalars().one_or_none()
 
     if user is None:
         logger.info("User not found")

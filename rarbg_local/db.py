@@ -1,6 +1,6 @@
 import enum
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from datetime import datetime
 from typing import Annotated, TypeVar, cast
 
@@ -15,6 +15,7 @@ from sqlalchemy import (
     Integer,
     String,
     create_engine,
+    delete,
     event,
 )
 from sqlalchemy.engine import URL, Engine, make_url
@@ -22,6 +23,7 @@ from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     create_async_engine,
 )
+from sqlalchemy.future import select
 from sqlalchemy.orm import (
     Mapped,
     Session,
@@ -259,26 +261,26 @@ def create_episode(
     return ed
 
 
-def get_all(session: Session, model: type[T]) -> list[T]:
+def get_all(session: Session, model: type[T]) -> Sequence[T]:
     if model == MovieDetails:
         joint = MovieDetails.download
     elif model == EpisodeDetails:
         joint = EpisodeDetails.download
     else:
         raise ValueError(f'Unknown model: {model}')
-    return session.query(model).options(joinedload(joint)).all()
+    return session.execute(select(model).options(joinedload(joint))).scalars().all()
 
 
-def get_episodes(session: Session) -> list[EpisodeDetails]:
+def get_episodes(session: Session) -> Sequence[EpisodeDetails]:
     return get_all(session, EpisodeDetails)
 
 
-def get_movies(session: Session) -> list[MovieDetails]:
+def get_movies(session: Session) -> Sequence[MovieDetails]:
     return get_all(session, MovieDetails)
 
 
 def get_or_create(session: Session, model: type[T], defaults=None, **kwargs) -> T:
-    instance = session.query(model).filter_by(**kwargs).first()
+    instance = session.execute(select(model).filter_by(**kwargs)).scalars().first()
     if instance:
         return instance
     params = {k: v for k, v in kwargs.items() if not isinstance(v, ClauseElement)}
@@ -381,7 +383,6 @@ def get_db(session_local=Depends(get_session_local)):
 
 
 def safe_delete(session: Session, entity: type[T], id: int):
-    query = session.query(entity).filter_by(id=id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
+    query = session.execute(delete(entity).filter_by(id=id))
+    precondition(query.rowcount > 0, 'Nothing to delete')
     session.commit()
