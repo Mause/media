@@ -47,6 +47,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -60,6 +63,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -112,6 +118,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -212,6 +221,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -314,6 +326,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -339,6 +354,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -368,6 +386,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -381,6 +402,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -443,6 +467,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -456,6 +483,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -509,6 +539,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -558,6 +591,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -632,6 +668,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       },
@@ -678,6 +717,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -694,6 +736,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -729,6 +774,35 @@
         }
       }
     },
+    "/api/monitor/cron": {
+      "post": {
+        "tags": [
+          "monitor"
+        ],
+        "summary": "Monitor Cron",
+        "operationId": "monitor_cron",
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ]
+      }
+    },
     "/api/diagnostics": {
       "get": {
         "tags": [
@@ -757,6 +831,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ]
       }
@@ -773,6 +850,9 @@
             "OpenIdConnect": [
               "openid"
             ]
+          },
+          {
+            "HTTPBasic": []
           }
         ],
         "parameters": [
@@ -853,8 +933,8 @@
     },
     "/redirect/{type_}/{tmdb_id}/{season}/{episode}": {
       "get": {
-        "summary": "Redirect To Imdb",
-        "operationId": "redirect_to_imdb",
+        "summary": "Redirect To Imdb Deep",
+        "operationId": "redirect_to_imdb_deep",
         "parameters": [
           {
             "name": "type_",
@@ -1580,9 +1660,9 @@
             ],
             "title": "Year"
           },
-          "imdbID": {
+          "tmdb_id": {
             "type": "integer",
-            "title": "Imdbid"
+            "title": "Tmdb Id"
           }
         },
         "type": "object",
@@ -1590,7 +1670,7 @@
           "title",
           "type",
           "year",
-          "imdbID"
+          "tmdb_id"
         ],
         "title": "SearchResponse"
       },
@@ -1789,6 +1869,10 @@
       "OpenIdConnect": {
         "type": "openIdConnect",
         "openIdConnectUrl": "https://mause.au.auth0.com//.well-known/openid-configuration"
+      },
+      "HTTPBasic": {
+        "type": "http",
+        "scheme": "basic"
       }
     }
   }

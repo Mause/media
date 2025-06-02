@@ -1,6 +1,5 @@
 import moxios from 'moxios';
 import axios from 'axios';
-import { swrConfig } from './streaming';
 import { render } from '@testing-library/react';
 import { act, ReactElement } from 'react';
 import { Auth0Context, Auth0ContextInterface } from '@auth0/auth0-react';
@@ -12,6 +11,8 @@ import {
 import { Location, MemoryHistory } from '@remix-run/router';
 import { Listener } from '@remix-run/router/dist/history';
 import { HelmetProvider } from 'react-helmet-async';
+
+import { SwrConfigWrapper } from './streaming';
 
 const theme = createTheme();
 
@@ -38,7 +39,9 @@ export function renderWithSWR(el: ReactElement) {
     <Auth0Context.Provider value={c}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
-          <HelmetProvider>{swrConfig(() => el)()}</HelmetProvider>
+          <HelmetProvider>
+            <SwrConfigWrapper>{el}</SwrConfigWrapper>
+          </HelmetProvider>
         </ThemeProvider>
       </StyledEngineProvider>
     </Auth0Context.Provider>,
@@ -47,11 +50,9 @@ export function renderWithSWR(el: ReactElement) {
 
 export function usesMoxios() {
   beforeEach(() => {
-    // @ts-expect-error
     moxios.install(axios);
   });
   afterEach(() => {
-    // @ts-expect-error
     moxios.uninstall(axios);
   });
 }

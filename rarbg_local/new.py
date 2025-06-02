@@ -1,7 +1,6 @@
 import logging
 import os
 import traceback
-from collections import ChainMap
 from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
@@ -12,30 +11,25 @@ from typing import (
 )
 from urllib.parse import urlencode
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Security, WebSocket
+from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, StreamingResponse
-from fastapi.security import (
-    SecurityScopes,
-)
 from fastapi_utils.openapi import simplify_operation_ids
-from pydantic import BaseModel, SecretStr
-from requests.exceptions import HTTPError
+from pydantic import BaseModel
 from sqlalchemy import func
-from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.session import Session, object_session
 from starlette.staticfiles import StaticFiles
 
-from .auth import auth_hook, get_my_jwkaas
+from .auth import security
 from .db import (
     Download,
     EpisodeDetails,
-    Monitor,
-    MonitorMediaType,
     MovieDetails,
     User,
     get_db,
     get_movies,
+    safe_delete,
 )
 from .health import router as health
 from .main import (
@@ -54,8 +48,6 @@ from .models import (
     InnerTorrent,
     ITorrent,
     MediaType,
-    MonitorGet,
-    MonitorPost,
     MovieDetailsSchema,
     MovieResponse,
     ProviderSource,
@@ -64,10 +56,10 @@ from .models import (
     TvResponse,
     TvSeasonResponse,
 )
+from .monitor import monitor_ns
 from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     get_providers,
-    search_for_movie,
     search_for_tv,
 )
 from .providers.abc import (
@@ -75,7 +67,7 @@ from .providers.abc import (
     TvProvider,
 )
 from .settings import Settings, get_settings
-from .singleton import get, singleton
+from .singleton import singleton
 from .tmdb import (
     get_json,
     get_movie,
@@ -86,7 +78,8 @@ from .tmdb import (
     search_themoviedb,
 )
 from .types import ImdbId, TmdbId
-from .utils import non_null, precondition
+from .utils import Message, non_null
+from .websocket import websocket_ns
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -99,36 +92,9 @@ def generate_plain_text(exc):
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
-async def get_current_user(
-    security_scopes: SecurityScopes,
-    session=Depends(get_db),
-    token_info=Depends(get_my_jwkaas),
-):
-    user = auth_hook(
-        session=session, security_scopes=security_scopes, token_info=token_info
-    )
-    if user:
-        return user
-    else:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-
-security = Security(
-    get_current_user,
-    scopes=['openid'],
-)
-
-
 @api.get('/user/unauthorized')
 def user():
     pass
-
-
-def safe_delete(session: Session, entity: type[T], id: int):
-    query = session.query(entity).filter_by(id=id)
-    precondition(query.count() > 0, 'Nothing to delete')
-    query.delete()
-    session.commit()
 
 
 @api.get('/delete/{type}/{id}')
@@ -201,13 +167,18 @@ async def stream(
     '/select/{tmdb_id}/season/{season}/download_all', response_model=DownloadAllResponse
 )
 async def select(tmdb_id: TmdbId, season: int):
-    results = search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
+    tasks, results = await search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
 
     episodes = (await get_tv_episodes(tmdb_id, season)).episodes
 
-    packs_or_not = groupby(
-        results, lambda result: extract_marker(result.title)[1] is None
-    )
+    packs_or_not: dict[bool, list[ITorrent]] = {True: [], False: []}
+    while not all(task.done() for task in tasks):
+        result = await results.get()
+        if isinstance(result, Message):
+            logger.info('Got message %s', result)
+        else:
+            packs_or_not[extract_marker(result.title)[1] is None].append(result)
+
     packs = sorted(
         packs_or_not.get(True, []), key=lambda result: result.seeders, reverse=True
     )
@@ -232,13 +203,12 @@ async def select(tmdb_id: TmdbId, season: int):
 async def download_post(
     things: list[DownloadPost],
     added_by: Annotated[User, security],
-    session: Session = Depends(get_db),
 ) -> list[MovieDetails | EpisodeDetails]:
     results: list[MovieDetails | EpisodeDetails] = []
 
     # work around a fastapi bug
     # see for more details https://github.com/fastapi/fastapi/discussions/6024
-    session = non_null(session.object_session(added_by))
+    session = non_null(object_session(added_by))
 
     for thing in things:
         is_tv = thing.season is not None
@@ -339,58 +309,6 @@ async def search(query: str):
     return await search_themoviedb(query)
 
 
-monitor_ns = APIRouter(tags=['monitor'])
-
-
-@monitor_ns.get('', response_model=list[MonitorGet])
-async def monitor_get(
-    user: Annotated[User, security], session: Session = Depends(get_db)
-):
-    return session.query(Monitor).all()
-
-
-@monitor_ns.delete('/{monitor_id}')
-async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
-    safe_delete(session, Monitor, monitor_id)
-
-    return {}
-
-
-async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
-    try:
-        return (
-            (await get_movie(tmdb_id)).title
-            if type == MonitorMediaType.MOVIE
-            else (await get_tv(tmdb_id)).name
-        )
-    except HTTPError as e:
-        if e.response.status_code == 404:
-            raise HTTPException(422, f'{type.name} not found: {tmdb_id}')
-        else:
-            raise
-
-
-@monitor_ns.post('', response_model=MonitorGet, status_code=201)
-async def monitor_post(
-    monitor: MonitorPost,
-    user: Annotated[User, security],
-    session: Session = Depends(get_db),
-):
-    media = await validate_id(monitor.type, monitor.tmdb_id)
-    c = (
-        session.query(Monitor)
-        .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
-        .one_or_none()
-    )
-    if not c:
-        c = Monitor(
-            tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
-        )
-        session.add(c)
-        session.commit()
-    return c
-
-
 tv_ns = APIRouter(tags=['tv'])
 
 
@@ -407,85 +325,7 @@ async def api_tv_season(tmdb_id: TmdbId, season: int):
     return await get_tv_episodes(tmdb_id, season)
 
 
-class StreamArgs(BaseModel):
-    authorization: SecretStr
-
-    type: StreamType
-    tmdb_id: TmdbId
-    season: int | None = None
-    episode: int | None = None
-
-
-async def _stream(
-    type: str,
-    tmdb_id: TmdbId,
-    season: int | None = None,
-    episode: int | None = None,
-):
-    if type == 'series':
-        items = search_for_tv(
-            await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
-        )
-    else:
-        items = search_for_movie(await get_movie_imdb_id(tmdb_id), tmdb_id)
-
-    async for item in items:
-        yield item.model_dump(mode='json')
-
-
 root = APIRouter()
-
-
-@root.websocket("/ws")
-async def websocket_stream(websocket: WebSocket):
-    def fake(user: Annotated[User, security]):
-        return user
-
-    logger.info('Got websocket connection')
-    await websocket.accept()
-
-    request = StreamArgs.model_validate(await websocket.receive_json())
-    logger.info('Got request: %s', request)
-
-    try:
-        user = await get(
-            websocket.app,
-            fake,
-            Request(
-                scope=ChainMap(
-                    {
-                        'type': 'http',
-                        'headers': [
-                            (
-                                b"authorization",
-                                (request.authorization.get_secret_value()).encode(),
-                            ),
-                        ],
-                    },
-                    websocket.scope,
-                ),
-                receive=websocket.receive,
-                send=websocket.send,
-            ),
-        )
-    except Exception as e:
-        logger.exception('Unable to authenticate websocket request')
-        await websocket.send_json({'error': str(e), 'type': type(e).__name__})
-        await websocket.close()
-        raise
-
-    logger.info('Authed user: %s', user)
-
-    async for item in _stream(
-        type=request.type,
-        tmdb_id=request.tmdb_id,
-        season=request.season,
-        episode=request.episode,
-    ):
-        await websocket.send_json(item)
-
-    logger.info('Finished streaming')
-    await websocket.close()
 
 
 @singleton
@@ -508,7 +348,9 @@ def redirect_to_plex(imdb_id: ImdbId, plex=Depends(get_plex)):
 
 
 @root.get('/redirect/{type_}/{tmdb_id}')
-@root.get('/redirect/{type_}/{tmdb_id}/{season}/{episode}')
+@root.get(
+    '/redirect/{type_}/{tmdb_id}/{season}/{episode}', name='redirect_to_imdb_deep'
+)
 async def redirect_to_imdb(
     type_: MediaType,
     tmdb_id: TmdbId,
@@ -541,6 +383,7 @@ async def static(
     return await static_files.get_response(filename, request.scope)
 
 
+root.include_router(websocket_ns)
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
@@ -577,6 +420,11 @@ def create_app():
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:
         origins.append('https://' + os.environ['FRONTEND_DOMAIN'])
+
+    on_heroku = 'HEROKU' in os.environ
+    production = os.environ.get('RAILWAY_ENVIRONMENT_NAME') == 'production' or on_heroku
+    if not production:
+        origins.append('http://localhost:3000')
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,

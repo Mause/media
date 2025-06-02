@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import sys
 
 import backoff
 from fastapi import FastAPI
@@ -16,18 +17,22 @@ from rarbg_local.db import (
 )
 from rarbg_local.singleton import get
 
+logger = logging.getLogger(__name__)
 logging.getLogger('backoff').addHandler(logging.StreamHandler())
 
 
 async def seed():
     session_maker = await get(FastAPI(), get_session_local)
 
-    retrying_session_maker = backoff.on_exception(
-        session_maker, OperationalError, max_time=60
-    )(session_maker)
+    with session_maker() as session:
+        first = session.query(User).filter_by(username='Mause').first
 
-    with retrying_session_maker() as session:
-        user = session.query(User).filter_by(username='Mause').first()
+        user = backoff.on_exception(
+            backoff.expo,
+            OperationalError,
+            max_time=60,
+        )(first)()
+
         if not user:
             user = User(
                 username='Mause',
@@ -54,8 +59,8 @@ async def seed():
                 title='Coding (Part 1)',
                 tmdb_id=123456,
                 show_title='Coding',
-                episode='1',
-                season='1',
+                episode=1,
+                season=1,
                 imdb_id='tt0000001',
                 transmission_id='2',
             )
@@ -64,11 +69,16 @@ async def seed():
         session.commit()
 
 
-if 'IS_REVIEW_APP' in os.environ or (
-    'RAILWAY_ENVIRONMENT_NAME' in os.environ
-    and os.environ['RAILWAY_ENVIRONMENT_NAME'].startswith('media-pr-')
-):
-    print('seeding db')
+do_seed = (
+    'IS_REVIEW_APP' in os.environ
+    or (
+        'RAILWAY_ENVIRONMENT_NAME' in os.environ
+        and os.environ['RAILWAY_ENVIRONMENT_NAME'].startswith('media-pr-')
+    )
+    or '--force' in sys.argv
+)
+if do_seed:
+    logger.info('seeding db')
     asyncio.run(seed())
 else:
-    print('not seeding db')
+    logger.info('not seeding db')

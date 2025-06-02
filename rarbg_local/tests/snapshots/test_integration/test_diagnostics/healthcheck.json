@@ -2,10 +2,8 @@
   "database",
   "pool",
   "transmission",
-  "api.jikan.moe",
-  "katcr.co",
-  "torrentapi.org",
-  "horriblesubs.info",
-  "nyaa.si",
-  "torrents-csv.com"
+  "torrentscsv",
+  "nyaasi",
+  "piratebay",
+  "jikan"
 ]

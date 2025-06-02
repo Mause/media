@@ -1,6 +1,6 @@
-import React from 'react';
-import { SearchComponent, SearchResult } from './SearchComponent';
 import { Route, MemoryRouter, Routes } from 'react-router-dom';
+
+import { SearchComponent, SearchResult } from './SearchComponent';
 import { mock, wait, usesMoxios, renderWithSWR } from './test.utils';
 
 usesMoxios();
@@ -17,7 +17,7 @@ test('SearchComponent', async () => {
   const results: SearchResult[] = [
     {
       type: 'movie',
-      imdbID: 10000,
+      tmdb_id: 10000,
       year: 2019,
       title: 'Hello',
     },

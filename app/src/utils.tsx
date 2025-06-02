@@ -1,6 +1,5 @@
-import React, { ReactElement } from 'react';
-import Axios from 'axios';
-import { useState, useEffect } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
+import Axios, { RawAxiosRequestHeaders } from 'axios';
 import MaterialLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import * as RRD from 'react-router-dom';
@@ -8,6 +7,7 @@ import * as RRD from 'react-router-dom';
 import { TypographyTypeMap } from '@mui/material';
 import moxios from 'moxios';
 import { useAuth0 } from '@auth0/auth0-react';
+
 import { FetchEventTarget } from './fetch_stream';
 
 // axiosRetry(Axios, { retries: 3 });
@@ -38,7 +38,7 @@ export function subscribe<T>(
   };
   es.addEventListener('abort', onerror);
   const internal_callback = (event: Event) => {
-    callback((event as MessageEvent).data);
+    callback((event as MessageEvent).data as T);
   };
   es.addEventListener('message', internal_callback);
 
@@ -49,20 +49,28 @@ export function subscribe<T>(
   };
 }
 
+export function getPrefix() {
+  const prefix = import.meta.env.REACT_APP_API_PREFIX;
+
+  if (!prefix) {
+    return '';
+  } else if (prefix.includes('localhost')) {
+    return `http://localhost:5000`;
+  } else if (prefix) {
+    return `https://${prefix}`;
+  }
+}
+
 export async function load<T>(
   path: string,
   params?: string,
-  headers?: any,
+  headers?: RawAxiosRequestHeaders,
 ): Promise<T> {
-  const prefix = import.meta.env.REACT_APP_API_PREFIX;
-  const t = await Axios.get<T>(
-    `${prefix ? `https://${prefix}` : ''}/api/${path}`,
-    {
-      params,
-      withCredentials: true,
-      headers,
-    },
-  );
+  const t = await Axios.get<T>(`${getPrefix()}/api/${path}`, {
+    params,
+    withCredentials: true,
+    headers,
+  });
   return t && t.data;
 }
 
@@ -80,22 +88,29 @@ export function usePost<T>(
   const auth = useAuth0();
 
   useEffect(() => {
-    auth.getAccessTokenSilently().then((token) => {
-      let abortController = new AbortController();
-      Axios.post<T>('/api/' + url, body, {
-        signal: abortController.signal,
-        headers: {
-          Authorization: 'Bearer ' + token,
+    const abortController = new AbortController();
+    auth
+      .getAccessTokenSilently()
+      .then((token) =>
+        Axios.post<T>('/api/' + url, body, {
+          signal: abortController.signal,
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        }),
+      )
+      .then(
+        (res) => {
+          setResult({ done: true, data: res.data });
         },
-      }).then(
-        (res) => setResult({ done: true, data: res.data }),
-        (error) => setResult({ done: true, error }),
+        (error: unknown) => {
+          setResult({ done: true, error: error as Error });
+        },
       );
 
-      return () => {
-        abortController.abort();
-      };
-    });
+    return () => {
+      abortController.abort();
+    };
   }, [url, body, auth]);
 
   return result;
@@ -115,10 +130,12 @@ export function ExtMLink(props: { href: string; children: string }) {
 }
 
 export function expectLastRequestBody() {
-  return expect(JSON.parse(moxios.requests.mostRecent().config.data));
+  const mr = moxios.requests.mostRecent();
+  expect(mr).toBeTruthy();
+  return expect(JSON.parse(mr.config.data as string));
 }
 
 export function useLocation<T>() {
   const location = RRD.useLocation();
-  return { ...location, state: location.state as any as T };
+  return { ...location, state: location.state as T };
 }

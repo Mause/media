@@ -1,8 +1,9 @@
 import ReactLoading from 'react-loading';
 import useSWR from 'swr';
-import { components } from './schema';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
+
+import { components } from './schema';
 
 type HealthcheckResponse = components['schemas']['HealthcheckResponse'];
 
@@ -20,7 +21,7 @@ function getColour(status?: HealthcheckResponse['status']) {
 }
 
 function SingleDiagnostic({ component }: { component: string }) {
-  const { error, data, isValidating } = useSWR<HealthcheckResponse[]>(
+  const { error, data, isValidating } = useSWR<HealthcheckResponse[], Error>(
     `diagnostics/${component}`,
   );
 
@@ -82,7 +83,7 @@ export function SimpleDiagnosticDisplay({
 }
 
 export function DiagnosticsComponent() {
-  const { error, data, isValidating } = useSWR<string[]>('diagnostics');
+  const { error, data, isValidating } = useSWR<string[], Error>('diagnostics');
 
   return (
     <div>
