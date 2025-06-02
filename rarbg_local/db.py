@@ -38,6 +38,7 @@ from sqlalchemy_repr import RepresentableBase
 
 from .settings import Settings, get_settings
 from .singleton import singleton
+from .types import TmdbId
 from .utils import precondition
 
 logger = logging.getLogger(__name__)
@@ -60,17 +61,17 @@ class Download(Base):
     movie: Mapped['MovieDetails'] = relationship(
         'MovieDetails', uselist=False, cascade='all,delete'
     )
-    movie_id = mapped_column(
+    movie_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey('movie_details.id', ondelete='CASCADE')
     )
     episode: Mapped['EpisodeDetails'] = relationship(
         'EpisodeDetails', uselist=False, cascade='all,delete'
     )
-    episode_id = mapped_column(
+    episode_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey('episode_details.id', ondelete='CASCADE')
     )
     title: Mapped[str]
-    timestamp = mapped_column(
+    timestamp: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=func.now()
     )
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
@@ -84,13 +85,13 @@ class Download(Base):
 
 class EpisodeDetails(Base):
     __tablename__ = 'episode_details'
-    id = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     download: Mapped['Download'] = relationship(
         'Download', back_populates='episode', passive_deletes=True, uselist=False
     )
-    show_title = mapped_column(String, nullable=False)
-    season = mapped_column(Integer, nullable=False)
-    episode = mapped_column(Integer)
+    show_title: Mapped[str] = mapped_column(String, nullable=False)
+    season: Mapped[int] = mapped_column(Integer, nullable=False)
+    episode: Mapped[int | None] = mapped_column(Integer)
 
     def is_season_pack(self):
         return self.episode is None
@@ -108,7 +109,7 @@ class EpisodeDetails(Base):
 
 class MovieDetails(Base):
     __tablename__ = 'movie_details'
-    id = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     download: Mapped['Download'] = relationship(
         'Download', back_populates='movie', passive_deletes=True, uselist=False
     )
@@ -117,23 +118,29 @@ class MovieDetails(Base):
 class User(Base):
     __tablename__ = 'users'
     _json_exclude = {'roles', 'password', 'downloads'}
-    id = mapped_column(Integer, primary_key=True)
-    active = mapped_column('is_active', Boolean(), nullable=False, server_default='1')
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    active: Mapped[bool] = mapped_column(
+        'is_active', Boolean(), nullable=False, server_default='1'
+    )
 
     # User authentication information. The collation='en_AU' is required
     # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
-    username = mapped_column(
+    username: Mapped[str] = mapped_column(
         String(255, collation='en_AU'), nullable=False, unique=True
     )
-    password = mapped_column(String(255), nullable=False, server_default='')
+    password: Mapped[str] = mapped_column(
+        String(255), nullable=False, server_default=''
+    )
 
-    email = mapped_column(String(255, collation='en_AU'), nullable=True, unique=True)
+    email: Mapped[str | None] = mapped_column(
+        String(255, collation='en_AU'), nullable=True, unique=True
+    )
 
     # User information
-    first_name = mapped_column(
+    first_name: Mapped[str] = mapped_column(
         String(100, collation='en_AU'), nullable=False, server_default=''
     )
-    last_name = mapped_column(
+    last_name: Mapped[str] = mapped_column(
         String(100, collation='en_AU'), nullable=False, server_default=''
     )
 
@@ -154,8 +161,8 @@ class User(Base):
 # Define the Role data-model
 class Role(Base):
     __tablename__ = 'roles'
-    id = mapped_column(Integer(), primary_key=True)
-    name = mapped_column(String(50), unique=True)
+    id: Mapped[int] = mapped_column(Integer(), primary_key=True)
+    name: Mapped[str] = mapped_column(String(50), unique=True)
 
     def __repr__(self):
         return self.name
@@ -164,9 +171,13 @@ class Role(Base):
 # Define the UserRoles association table
 class UserRoles(Base):
     __tablename__ = 'user_roles'
-    id = mapped_column(Integer(), primary_key=True)
-    user_id = mapped_column(Integer(), ForeignKey('users.id', ondelete='CASCADE'))
-    role_id = mapped_column(Integer(), ForeignKey('roles.id', ondelete='CASCADE'))
+    id: Mapped[int] = mapped_column(Integer(), primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        Integer(), ForeignKey('users.id', ondelete='CASCADE')
+    )
+    role_id: Mapped[int] = mapped_column(
+        Integer(), ForeignKey('roles.id', ondelete='CASCADE')
+    )
 
 
 class MonitorMediaType(enum.Enum):
@@ -177,21 +188,21 @@ class MonitorMediaType(enum.Enum):
 class Monitor(Base):
     __tablename__ = 'monitor'
 
-    id = mapped_column(Integer(), primary_key=True)
-    tmdb_id = mapped_column(Integer())
+    id: Mapped[int] = mapped_column(Integer(), primary_key=True)
+    tmdb_id: Mapped[TmdbId] = mapped_column(Integer())
 
-    added_by_id = mapped_column(Integer(), ForeignKey('users.id'))
+    added_by_id: Mapped[int] = mapped_column(Integer(), ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship('User')
 
-    title = mapped_column(String(), nullable=False)
-    type = mapped_column(
+    title: Mapped[str] = mapped_column(String(), nullable=False)
+    type: Mapped[MonitorMediaType] = mapped_column(
         Enum(MonitorMediaType),
         default=MonitorMediaType.MOVIE.name,
         nullable=False,
         server_default=MonitorMediaType.MOVIE.name,
     )
 
-    status = mapped_column(
+    status: Mapped[bool] = mapped_column(
         Boolean(),
         default=False,
     )
