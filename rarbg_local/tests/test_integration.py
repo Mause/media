@@ -490,7 +490,7 @@ async def test_update_monitor(
     )
     r.raise_for_status()
 
-    assert session.get(Monitor, ident).status
+    assert (await session.get(Monitor, ident)).status
     send.assert_called_once()
     message = send.call_args.args[0]
     snapshot.assert_match(
