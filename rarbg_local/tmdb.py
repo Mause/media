@@ -8,6 +8,7 @@ import aiohttp.web_exceptions
 import backoff
 from cachetools import LRUCache, TTLCache
 from pydantic import BaseModel, Field
+from pydantic.validators import class_validator
 
 from .models import (
     MediaType,
@@ -48,18 +49,27 @@ async def get_json(path: str, hydrate: type[TBaseModel], **kwargs: Any) -> TBase
         return hydrate.model_validate(await r.json())
 
 
+class EmptyStringAsNoneModel(PydanticBaseModel):
+    @model_validator(mode="before")
+    @classmethod
+    def empty_str_to_none(cls, data):
+        if isinstance(data, dict):
+            return {k: (None if v == '' else v for k, v in values.items()}
+        return data
+
+
 class SearchBaseResponse(BaseModel):
-    class TvSearch(BaseModel):
+    class TvSearch(EmptyStringAsNoneModel):
         media_type: Literal['tv']
         id: TmdbId
         name: str
         first_air_date: datetime
 
-    class MovieSearch(BaseModel):
+    class MovieSearch(EmptyStringAsNoneModel):
         media_type: Literal['movie']
         id: TmdbId
         title: str
-        release_date: datetime
+        release_date: datetime | None = None
 
     class PersonSearch(BaseModel):
         media_type: Literal['person']
