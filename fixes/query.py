@@ -21,7 +21,13 @@ class QueryVisitor(AddImports, VisitorBasedCodemodCommand):
             node,
             Call(
                 func=Attribute(
-                    attr=OneOf(Name('all'), Name('first'), Name('one_or_none'))
+                    attr=OneOf(
+                        Name('all'),
+                        Name('first'),
+                        Name('one_or_none'),
+                        Name('filter_by'),
+                        Name('group_by'),
+                    ),
                 ),
             ),
             metadata_resolver=self,
