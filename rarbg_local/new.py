@@ -8,7 +8,6 @@ from typing import (
     Literal,
     TypeVar,
     Union,
-    cast,
 )
 from urllib.parse import urlencode
 
@@ -19,9 +18,8 @@ from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel
 from sqlalchemy import func
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -215,7 +213,7 @@ async def download_post(
 
     # work around a fastapi bug
     # see for more details https://github.com/fastapi/fastapi/discussions/6024
-    session = cast(AsyncSession, non_null(object_session(added_by)))
+    session = non_null(async_object_session(added_by))
 
     for thing in things:
         is_tv = thing.season is not None

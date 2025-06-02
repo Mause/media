@@ -1,6 +1,6 @@
 import logging
 from asyncio import gather
-from typing import Annotated, cast
+from typing import Annotated
 
 from aiohttp import ClientSession
 from aiontfy import Message, Ntfy
@@ -8,9 +8,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
-from sqlalchemy.orm import object_session
 
 from .auth import security
 from .db import (
@@ -71,9 +70,7 @@ async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
 ):
-    session = cast(
-        AsyncSession, non_null(object_session(user))
-    )  # resolve to db session
+    session = non_null(async_object_session(user))  # resolve to db session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         (
