@@ -764,7 +764,7 @@ async def test_piratebay(aioresponses, snapshot):
                     "username": "jajaja",
                     "added": "1688804411",
                     "status": "vip",
-                    "category": 205,
+                    "category": "205",
                     "imdb": "",
                 }
             ]
