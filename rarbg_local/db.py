@@ -8,10 +8,8 @@ import backoff
 import psycopg2
 from fastapi import Depends
 from sqlalchemy import (
-    Boolean,
     DateTime,
     ForeignKey,
-    Integer,
     String,
     create_engine,
     delete,
@@ -58,24 +56,22 @@ class Download(Base):
     transmission_id: Mapped[str]
     imdb_id: Mapped[str]
     type: Mapped[str]
-    movie: Mapped['MovieDetails'] = relationship(
-        'MovieDetails', uselist=False, cascade='all,delete'
-    )
+    movie: Mapped['MovieDetails'] = relationship(uselist=False, cascade='all,delete')
     movie_id: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey('movie_details.id', ondelete='CASCADE')
+        ForeignKey('movie_details.id', ondelete='CASCADE')
     )
     episode: Mapped['EpisodeDetails'] = relationship(
-        'EpisodeDetails', uselist=False, cascade='all,delete'
+        uselist=False, cascade='all,delete'
     )
     episode_id: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey('episode_details.id', ondelete='CASCADE')
+        ForeignKey('episode_details.id', ondelete='CASCADE')
     )
     title: Mapped[str]
     timestamp: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=func.now()
     )
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    added_by: Mapped['User'] = relationship('User', back_populates='downloads')
+    added_by: Mapped['User'] = relationship(back_populates='downloads')
 
     def progress(self):
         from .main import get_keyed_torrents
@@ -85,13 +81,13 @@ class Download(Base):
 
 class EpisodeDetails(Base):
     __tablename__ = 'episode_details'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     download: Mapped['Download'] = relationship(
-        'Download', back_populates='episode', passive_deletes=True, uselist=False
+        back_populates='episode', passive_deletes=True, uselist=False
     )
-    show_title: Mapped[str] = mapped_column(String, nullable=False)
-    season: Mapped[int] = mapped_column(Integer, nullable=False)
-    episode: Mapped[int | None] = mapped_column(Integer)
+    show_title: Mapped[str] = mapped_column(nullable=False)
+    season: Mapped[int] = mapped_column(nullable=False)
+    episode: Mapped[int | None] = mapped_column()
 
     def is_season_pack(self):
         return self.episode is None
@@ -109,18 +105,18 @@ class EpisodeDetails(Base):
 
 class MovieDetails(Base):
     __tablename__ = 'movie_details'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     download: Mapped['Download'] = relationship(
-        'Download', back_populates='movie', passive_deletes=True, uselist=False
+        back_populates='movie', passive_deletes=True, uselist=False
     )
 
 
 class User(Base):
     __tablename__ = 'users'
     _json_exclude = {'roles', 'password', 'downloads'}
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     active: Mapped[bool] = mapped_column(
-        'is_active', Boolean(), nullable=False, server_default='1'
+        'is_active', nullable=False, server_default='1'
     )
 
     # User authentication information. The collation='en_AU' is required
@@ -145,11 +141,9 @@ class User(Base):
     )
 
     # Define the relationship to Role via UserRoles
-    roles: Mapped[list['Role']] = relationship(
-        'Role', secondary='user_roles', uselist=True
-    )
+    roles: Mapped[list['Role']] = relationship(secondary='user_roles', uselist=True)
 
-    downloads: Mapped[list[Download]] = relationship('Download')
+    downloads: Mapped[list[Download]] = relationship()
 
     def __repr__(self):
         return self.username
@@ -161,7 +155,7 @@ class User(Base):
 # Define the Role data-model
 class Role(Base):
     __tablename__ = 'roles'
-    id: Mapped[int] = mapped_column(Integer(), primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50), unique=True)
 
     def __repr__(self):
@@ -171,13 +165,9 @@ class Role(Base):
 # Define the UserRoles association table
 class UserRoles(Base):
     __tablename__ = 'user_roles'
-    id: Mapped[int] = mapped_column(Integer(), primary_key=True)
-    user_id: Mapped[int] = mapped_column(
-        Integer(), ForeignKey('users.id', ondelete='CASCADE')
-    )
-    role_id: Mapped[int] = mapped_column(
-        Integer(), ForeignKey('roles.id', ondelete='CASCADE')
-    )
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
+    role_id: Mapped[int] = mapped_column(ForeignKey('roles.id', ondelete='CASCADE'))
 
 
 class MonitorMediaType(enum.Enum):
@@ -188,10 +178,10 @@ class MonitorMediaType(enum.Enum):
 class Monitor(Base):
     __tablename__ = 'monitor'
 
-    id: Mapped[int] = mapped_column(Integer(), primary_key=True)
-    tmdb_id: Mapped[TmdbId] = mapped_column(Integer())
+    id: Mapped[int] = mapped_column(primary_key=True)
+    tmdb_id: Mapped[TmdbId] = mapped_column()
 
-    added_by_id: Mapped[int] = mapped_column(Integer(), ForeignKey('users.id'))
+    added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship('User')
 
     title: Mapped[str] = mapped_column(String(), nullable=False)
@@ -203,7 +193,6 @@ class Monitor(Base):
     )
 
     status: Mapped[bool] = mapped_column(
-        Boolean(),
         default=False,
     )
 
