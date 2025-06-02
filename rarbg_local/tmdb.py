@@ -54,7 +54,7 @@ class EmptyStringAsNoneModel(PydanticBaseModel):
     @classmethod
     def empty_str_to_none(cls, data):
         if isinstance(data, dict):
-            return {k: (None if v == '' else v for k, v in values.items()}
+            return {k: (None if v == '' else v) for k, v in data.items()}
         return data
 
 
