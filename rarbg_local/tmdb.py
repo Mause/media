@@ -21,6 +21,7 @@ from .utils import cached
 
 base = 'https://api.themoviedb.org/3/'
 
+T = TypeVar('T')
 TBaseModel = TypeVar('TBaseModel', bound=BaseModel)
 ThingType = Literal['movie', 'tv']
 
@@ -48,10 +49,10 @@ async def get_json(path: str, hydrate: type[TBaseModel], **kwargs: Any) -> TBase
         return hydrate.model_validate(await r.json())
 
 
-class EmptyStringAsNoneModel(PydanticBaseModel):
+class EmptyStringAsNoneModel(BaseModel):
     @model_validator(mode="before")
     @classmethod
-    def empty_str_to_none(cls, data):
+    def empty_str_to_none(cls, data: T) -> nT:
         if isinstance(data, dict):
             return {k: (None if v == '' else v) for k, v in data.items()}
         return data
