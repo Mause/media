@@ -68,7 +68,7 @@ class Download(Base):
     )
     title: Mapped[str]
     timestamp: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=func.now()
+        DateTime(timezone=True), default=func.now()
     )
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship(back_populates='downloads')
@@ -85,8 +85,8 @@ class EpisodeDetails(Base):
     download: Mapped['Download'] = relationship(
         back_populates='episode', passive_deletes=True, uselist=False
     )
-    show_title: Mapped[str] = mapped_column(nullable=False)
-    season: Mapped[int] = mapped_column(nullable=False)
+    show_title: Mapped[str] = mapped_column()
+    season: Mapped[int] = mapped_column()
     episode: Mapped[int | None] = mapped_column()
 
     def is_season_pack(self):
@@ -115,18 +115,12 @@ class User(Base):
     __tablename__ = 'users'
     _json_exclude = {'roles', 'password', 'downloads'}
     id: Mapped[int] = mapped_column(primary_key=True)
-    active: Mapped[bool] = mapped_column(
-        'is_active', nullable=False, server_default='1'
-    )
+    active: Mapped[bool] = mapped_column('is_active', server_default='1')
 
     # User authentication information. The collation='en_AU' is required
     # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
-    username: Mapped[str] = mapped_column(
-        String(255, collation='en_AU'), nullable=False, unique=True
-    )
-    password: Mapped[str] = mapped_column(
-        String(255), nullable=False, server_default=''
-    )
+    username: Mapped[str] = mapped_column(String(255, collation='en_AU'), unique=True)
+    password: Mapped[str] = mapped_column(String(255), server_default='')
 
     email: Mapped[str | None] = mapped_column(
         String(255, collation='en_AU'), nullable=True, unique=True
@@ -134,10 +128,10 @@ class User(Base):
 
     # User information
     first_name: Mapped[str] = mapped_column(
-        String(100, collation='en_AU'), nullable=False, server_default=''
+        String(100, collation='en_AU'), server_default=''
     )
     last_name: Mapped[str] = mapped_column(
-        String(100, collation='en_AU'), nullable=False, server_default=''
+        String(100, collation='en_AU'), server_default=''
     )
 
     # Define the relationship to Role via UserRoles
@@ -184,11 +178,10 @@ class Monitor(Base):
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship('User')
 
-    title: Mapped[str] = mapped_column(String(), nullable=False)
+    title: Mapped[str] = mapped_column(String())
     type: Mapped[MonitorMediaType] = mapped_column(
         Enum(MonitorMediaType),
         default=MonitorMediaType.MOVIE.name,
-        nullable=False,
         server_default=MonitorMediaType.MOVIE.name,
     )
 
