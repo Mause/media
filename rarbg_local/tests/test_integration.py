@@ -1,6 +1,5 @@
 import base64
 import json
-import logging
 from datetime import datetime
 from typing import Annotated
 from unittest.mock import patch
@@ -36,8 +35,6 @@ from .factories import (
 )
 
 HASH_STRING = '00000000000000000'
-
-logging.getLogger('faker.factory').disabled = True
 
 
 @fixture
@@ -274,18 +271,46 @@ async def test_index(
 
 
 @mark.asyncio
-async def test_search(aioresponses, test_client):
+async def test_search(aioresponses, test_client, snapshot):
     themoviedb(
         aioresponses,
         '/search/multi',
         {
             'results': [
                 {
-                    'id': '10000',
+                    'id': 10000,
                     'media_type': 'tv',
                     'name': 'Chernobyl',
                     'first_air_date': '2019-01-01',
-                }
+                },
+                {
+                    "backdrop_path": "/puScb607D1bMqZFL6un10sFyxX2.jpg",
+                    "id": 525928,
+                    "title": "Chernobyl.3828",
+                    "original_title": "Чорнобиль.3828",
+                    "overview": "Military people call such places \"FRONTLINE\"",
+                    "poster_path": "/gYJKdUHxr3qNb6Vu2lyUfz8LESF.jpg",
+                    "media_type": "movie",
+                    "adult": False,
+                    "original_language": "ru",
+                    "genre_ids": [99, 36],
+                    "popularity": 0.1543,
+                    "release_date": "2011-12-14",
+                    "video": False,
+                    "vote_average": 0.0,
+                    "vote_count": 0,
+                },
+                {
+                    "id": 98628,
+                    "name": "Kim Fields",
+                    "original_name": "Kim Fields",
+                    "media_type": "person",
+                    "adult": False,
+                    "popularity": 2.4103,
+                    "gender": 1,
+                    "known_for_department": "Acting",
+                    "profile_path": "/nfotrIITrn6kP1GodAFPKg64kMD.jpg",
+                },
             ]
         },
         query='&query=chernobyl',
@@ -293,9 +318,7 @@ async def test_search(aioresponses, test_client):
 
     res = await test_client.get('/api/search?query=chernobyl')
     assert res.status_code == 200
-    assert res.json() == [
-        {'tmdb_id': 10000, 'title': 'Chernobyl', 'year': 2019, 'type': 'series'}
-    ]
+    assert_match_json(snapshot, res, 'search.json')
 
 
 @mark.asyncio
