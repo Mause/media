@@ -1,6 +1,7 @@
 import logging
 import os
 import traceback
+from collections.abc import AsyncGenerator, Callable
 from functools import wraps
 from typing import (
     Annotated,
@@ -9,7 +10,6 @@ from typing import (
     Union,
     cast,
 )
-from collections.abc import AsyncGenerator, Callable
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
@@ -303,9 +303,7 @@ async def stats(session: Annotated[AsyncSession, Depends(get_db)]):
 
     return [
         await process(added_by_id, values)
-        for added_by_id, values in groupby(
-            query.scalars(), lambda row: row.added_by_id
-        ).items()
+        for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
     ]
 
 
