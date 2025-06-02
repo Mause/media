@@ -70,10 +70,10 @@ from .providers.abc import (
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import (
-    get_json,
     get_movie,
     get_movie_imdb_id,
     get_tv,
+    get_tv_episode_imdb_id,
     get_tv_episodes,
     get_tv_imdb_id,
     search_themoviedb,
@@ -363,11 +363,7 @@ async def redirect_to_imdb(
     if type_ == 'movie':
         imdb_id = await get_movie_imdb_id(tmdb_id)
     elif season:
-        imdb_id = (
-            await get_json(
-                f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids'
-            )
-        )['imdb_id']
+        imdb_id = await get_tv_episode_imdb_id(tmdb_id, season, episode)
     else:
         imdb_id = await get_tv_imdb_id(tmdb_id)
 

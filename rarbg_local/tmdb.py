@@ -130,6 +130,16 @@ class ExternalIds(BaseModel):
 
 
 @cached(LRUCache(360))
+async def get_tv_episode_imdb_id(tmdb_id: TmdbId, season: int, episode: int) -> ImdbId:
+    return (
+        await get_json(
+            f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids',
+            ExternalIds,
+        )
+    ).imdb_id
+
+
+@cached(LRUCache(360))
 async def get_imdb_id(type: ThingType, id: TmdbId) -> ImdbId:
     return (await get_json(f'{type}/{id}/external_ids', ExternalIds)).imdb_id
 
