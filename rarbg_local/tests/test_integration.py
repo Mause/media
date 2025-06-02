@@ -281,11 +281,28 @@ async def test_search(aioresponses, test_client, snapshot):
         {
             'results': [
                 {
-                    'id': '10000',
+                    'id': 10000,
                     'media_type': 'tv',
                     'name': 'Chernobyl',
                     'first_air_date': '2019-01-01',
-                }
+                },
+                {
+                    "backdrop_path": "/puScb607D1bMqZFL6un10sFyxX2.jpg",
+                    "id": 525928,
+                    "title": "Chernobyl.3828",
+                    "original_title": "Чорнобиль.3828",
+                    "overview": "Military people call such places \"FRONTLINE\"",
+                    "poster_path": "/gYJKdUHxr3qNb6Vu2lyUfz8LESF.jpg",
+                    "media_type": "movie",
+                    "adult": False,
+                    "original_language": "ru",
+                    "genre_ids": [99, 36],
+                    "popularity": 0.1543,
+                    "release_date": "2011-12-14",
+                    "video": False,
+                    "vote_average": 0.0,
+                    "vote_count": 0,
+                },
             ]
         },
         query='&query=chernobyl',
