@@ -1,7 +1,6 @@
 import os
 from datetime import date, datetime
 from enum import Enum
-from itertools import chain
 from typing import Annotated, Literal
 
 import aiohttp
@@ -18,7 +17,7 @@ from .models import (
     TvSeasonResponse,
 )
 from .types import ImdbId, TmdbId
-from .utils import cached, precondition
+from .utils import cached
 
 base = 'https://api.themoviedb.org/3/'
 
@@ -42,11 +41,6 @@ async def get_json(path, **kwargs):
         r = await tmdb.get(path, **kwargs)
         r.raise_for_status()
         return await r.json()
-
-
-@cached(LRUCache(360))
-async def get_configuration() -> dict:
-    return await get_json('configuration')
 
 
 class SearchBaseResponse(BaseModel):
@@ -108,27 +102,6 @@ async def search_themoviedb(s: str) -> list[SearchResponse]:
             result, (SearchBaseResponse.TvSearch, SearchBaseResponse.MovieSearch)
         )
     ]
-
-
-@cached(TTLCache(1024, 360))
-async def find_themoviedb(imdb_id: ImdbId) -> dict[str, str]:
-    precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
-    results = await get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
-
-    result = next(item for item in chain.from_iterable(results.values()))
-
-    return {**result, 'title': result['original_name']}
-
-
-@cached(LRUCache(1024))
-async def resolve_id(imdb_id: ImdbId, type: ThingType) -> TmdbId:
-    precondition(imdb_id.startswith('tt'), 'Invalid imdb_id')
-    results = await get_json(f'find/{imdb_id}', params={'external_source': 'imdb_id'})
-
-    res = results[f'{type}_results']
-    precondition(res, f'No results for {imdb_id} as a {type}')
-
-    return res[0]['id']
 
 
 @cached(LRUCache(256))
