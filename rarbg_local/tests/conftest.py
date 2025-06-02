@@ -1,13 +1,14 @@
 import json
-from typing import Annotated, TypeVar
 from collections.abc import AsyncGenerator
 from re import Pattern
+from typing import Annotated, TypeVar
 
+import pytest_asyncio
 import uvloop
 from async_asgi_testclient import TestClient
 from fastapi import Depends
 from fastapi.security import SecurityScopes
-from pytest import fixture, hookimpl, mark
+from pytest import fixture, hookimpl
 from responses import RequestsMock
 from sqlalchemy.engine.url import URL
 from sqlalchemy.future import select
@@ -52,8 +53,7 @@ def test_client(fastapi_app, clear_cache, user) -> TestClient:
     return TestClient(fastapi_app)
 
 
-@fixture
-@mark.asyncio
+@pytest_asyncio.fixture
 async def user(session):
     u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
@@ -63,7 +63,12 @@ async def user(session):
 
 
 @fixture
-async def session(fastapi_app, tmp_path, _function_event_loop):
+def _fixture_event_loop():
+    return uvloop.new_event_loop()
+
+
+@pytest_asyncio.fixture
+async def session(fastapi_app, tmp_path):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
         database_url=str(
             URL.create(
