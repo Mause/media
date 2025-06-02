@@ -86,7 +86,9 @@ export async function getToken(auth0: Auth0ContextInterface): Promise<string> {
   } catch (e) {
     if ('error' in (e as any) && (e as any).error === 'missing_refresh_token') {
       await auth0.loginWithRedirect({
-        redirectUri: window.location,
+        authorizationParams: {
+          redirect_uri: window.location,
+        },
       });
       return '';
     } else {
