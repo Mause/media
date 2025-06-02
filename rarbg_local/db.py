@@ -123,7 +123,7 @@ class User(Base):
     password: Mapped[str] = mapped_column(String(255), server_default='')
 
     email: Mapped[str | None] = mapped_column(
-        String(255, collation='en_AU'), nullable=True, unique=True
+        String(255, collation='en_AU'), unique=True
     )
 
     # User information
