@@ -1,13 +1,14 @@
 import os
-from datetime import date
+from datetime import date, datetime
 from enum import Enum
 from itertools import chain
-from typing import Literal
+from typing import Annotated, Literal
 
 import aiohttp
 import aiohttp.web_exceptions
 import backoff
 from cachetools import LRUCache, TTLCache
+from pydantic import BaseModel, Field
 
 from .models import (
     MediaType,
@@ -23,10 +24,6 @@ base = 'https://api.themoviedb.org/3/'
 
 access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
 ThingType = Literal['movie', 'tv']
-
-
-def try_(dic: dict[str, str], *keys: str) -> str | None:
-    return next((dic[key] for key in keys if key in dic), None)
 
 
 @backoff.on_exception(
@@ -52,24 +49,56 @@ async def get_configuration() -> dict:
     return await get_json('configuration')
 
 
-def get_year(result: dict[str, str]) -> int | None:
-    data = try_(result, 'first_air_date', 'release_date')
-    return date.fromisoformat(data).year if data else None
+class SearchBaseResponse(BaseModel):
+    class TvSearch(BaseModel):
+        media_type: Literal['tv']
+        id: TmdbId
+        name: str
+        first_air_date: datetime
+
+    class MovieSearch(BaseModel):
+        media_type: Literal['movie']
+        id: TmdbId
+        title: str
+        release_date: datetime
+
+    results: Annotated[list[TvSearch | MovieSearch], Field(default_factory=list)]
+
+
+SearchItem = SearchBaseResponse.TvSearch | SearchBaseResponse.MovieSearch
+
+
+def get_year(result: SearchItem) -> int | None:
+    dt = None
+    if isinstance(result, SearchBaseResponse.TvSearch):
+        dt = result.first_air_date
+    elif isinstance(result, SearchBaseResponse.MovieSearch):
+        dt = result.release_date
+
+    return dt.year if dt else None
+
+
+def get_title(result: SearchItem) -> str:
+    return (
+        result.name if isinstance(result, SearchBaseResponse.TvSearch) else result.title
+    )
 
 
 @cached(TTLCache(1024, 360))
 async def search_themoviedb(s: str) -> list[SearchResponse]:
     MAP = {'tv': MediaType.SERIES, 'movie': MediaType.MOVIE}
-    r = await get_json('search/multi', params={'query': s})
+    r = SearchBaseResponse.model_validate(
+        await get_json('search/multi', params={'query': s})
+    )
     return [
         SearchResponse(
-            type=MAP[result['media_type']],
-            title=try_(result, 'title', 'name'),
+            type=MAP[result.media_type],
+            title=get_title(result),
             year=get_year(result),
-            tmdb_id=result['id'],
+            tmdb_id=result.id,
         )
-        for result in r.get('results', [])
-        if result['media_type'] in MAP
+        for result in r.results
+        if result.media_type in MAP
     ]
 
 
