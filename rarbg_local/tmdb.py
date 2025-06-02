@@ -53,7 +53,7 @@ async def get_json(path: str, hydrate: type[TBaseModel], **kwargs: Any) -> TBase
 class EmptyStringAsNoneModel(BaseModel):
     @model_validator(mode="before")
     @classmethod
-    def empty_str_to_none(cls, data: T) -> T:
+    def empty_str_to_none(cls, data: T) -> T | dict:
         if isinstance(data, dict):
             return {k: (None if v == '' else v) for k, v in data.items()}
         return data
