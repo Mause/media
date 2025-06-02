@@ -86,12 +86,11 @@ export async function getToken(auth0: Auth0Interface) {
   } catch (e) {
     if ('error' in e && e.error === 'missing_refresh_token') {
       await auth.loginWithRedirect({
-        redirectUri: window.location
+        redirectUri: window.location,
       });
     }
   }
 }
-    
 
 export function usePost<T>(
   url: string,
