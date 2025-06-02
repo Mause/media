@@ -82,10 +82,10 @@ interface Res<T> {
 
 export async function getToken(auth0: Auth0Interface) {
   try {
-    return await auth.getAccessTokenSilently();
+    return await auth0.getAccessTokenSilently();
   } catch (e) {
-    if ('error' in e && e.error === 'missing_refresh_token') {
-      await auth.loginWithRedirect({
+    if ('error' in (e as any) && (e as any).error === 'missing_refresh_token') {
+      await auth0.loginWithRedirect({
         redirectUri: window.location,
       });
     }
