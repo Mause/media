@@ -22,7 +22,6 @@ from .utils import cached
 base = 'https://api.themoviedb.org/3/'
 
 TBaseModel = TypeVar('TBaseModel', bound=BaseModel)
-access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
 ThingType = Literal['movie', 'tv']
 
 
@@ -33,6 +32,11 @@ ThingType = Literal['movie', 'tv']
     giveup=lambda e: not isinstance(e, aiohttp.web_exceptions.HTTPTooManyRequests),
 )
 async def get_json(path: str, hydrate: type[TBaseModel], **kwargs: Any) -> TBaseModel:
+    access_token = (
+        'access_token'
+        if 'PYTEST_CURRENT_TEST' in os.environ
+        else os.environ['TMDB_READ_ACCESS_TOKEN']
+    )
     async with aiohttp.ClientSession(
         base_url=base,
         headers={
