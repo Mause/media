@@ -8,6 +8,7 @@ import aiohttp.web_exceptions
 import backoff
 from cachetools import LRUCache, TTLCache
 from pydantic import BaseModel, Field
+from pydantic.validators import model_validator
 
 from .models import (
     MediaType,
@@ -52,7 +53,7 @@ async def get_json(path: str, hydrate: type[TBaseModel], **kwargs: Any) -> TBase
 class EmptyStringAsNoneModel(BaseModel):
     @model_validator(mode="before")
     @classmethod
-    def empty_str_to_none(cls, data: T) -> nT:
+    def empty_str_to_none(cls, data: T) -> T:
         if isinstance(data, dict):
             return {k: (None if v == '' else v) for k, v in data.items()}
         return data
