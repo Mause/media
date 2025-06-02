@@ -55,7 +55,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
     root = 'https://apibay.org/q.php'
 
     @asynccontextmanager
-    async def search(self, q: str):
+    async def search(self, q: str) -> AsyncGenerator[list[dict[str, str]]]:
         async with (
             aiohttp.ClientSession() as session,
             await session.get(self.root, params={'q': q}) as resp,
@@ -80,9 +80,9 @@ class PirateBayProvider(TvProvider, MovieProvider):
                 yield ITorrent(
                     source=ProviderSource.PIRATEBAY,
                     title=item['name'],
-                    seeders=item['seeders'],
+                    seeders=int(item['seeders']),
                     download=magnet(item['info_hash'], item['name']),
-                    category=convert_category(item['category']),
+                    category=convert_category(int(item['category'])),
                     episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
                 )
 
@@ -94,9 +94,9 @@ class PirateBayProvider(TvProvider, MovieProvider):
                 yield ITorrent(
                     source=ProviderSource.PIRATEBAY,
                     title=item['name'],
-                    seeders=item['seeders'],
+                    seeders=int(item['seeders']),
                     download=magnet(item['info_hash'], item['name']),
-                    category=convert_category(item['category']),
+                    category=convert_category(int(item['category'])),
                 )
 
     async def health(self):
