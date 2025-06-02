@@ -80,7 +80,7 @@ interface Res<T> {
   error?: Error;
 }
 
-export async function getToken(auth0: Auth0ContextInterface): string {
+export async function getToken(auth0: Auth0ContextInterface): Promise<string> {
   try {
     return await auth0.getAccessTokenSilently();
   } catch (e) {
