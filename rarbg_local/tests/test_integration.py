@@ -1,6 +1,5 @@
 import base64
 import json
-import logging
 from datetime import datetime
 from typing import Annotated
 from unittest.mock import patch
@@ -36,8 +35,6 @@ from .factories import (
 )
 
 HASH_STRING = '00000000000000000'
-
-logging.getLogger('faker.factory').disabled = True
 
 
 @fixture
