@@ -1,7 +1,7 @@
 import os
 from datetime import date, datetime
 from enum import Enum
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal, TypeVar
 
 import aiohttp
 import aiohttp.web_exceptions
@@ -21,6 +21,7 @@ from .utils import cached
 
 base = 'https://api.themoviedb.org/3/'
 
+TBaseModel = TypeVar('TBaseModel', bound=BaseModel)
 access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
 ThingType = Literal['movie', 'tv']
 
@@ -31,7 +32,7 @@ ThingType = Literal['movie', 'tv']
     max_tries=5,
     giveup=lambda e: not isinstance(e, aiohttp.web_exceptions.HTTPTooManyRequests),
 )
-async def get_json(path, **kwargs):
+async def get_json(path: str, hydrate: type[TBaseModel], **kwargs: Any) -> TBaseModel:
     async with aiohttp.ClientSession(
         base_url=base,
         headers={
@@ -40,7 +41,7 @@ async def get_json(path, **kwargs):
     ) as tmdb:
         r = await tmdb.get(path, **kwargs)
         r.raise_for_status()
-        return await r.json()
+        return hydrate.model_validate(await r.json())
 
 
 class SearchBaseResponse(BaseModel):
@@ -87,9 +88,7 @@ def get_title(result: SearchItem) -> str:
 @cached(TTLCache(1024, 360))
 async def search_themoviedb(s: str) -> list[SearchResponse]:
     MAP = {'tv': MediaType.SERIES, 'movie': MediaType.MOVIE}
-    r = SearchBaseResponse.model_validate(
-        await get_json('search/multi', params={'query': s})
-    )
+    r = await get_json('search/multi', SearchBaseResponse, params={'query': s})
     return [
         SearchResponse(
             type=MAP[result.media_type],
@@ -106,12 +105,12 @@ async def search_themoviedb(s: str) -> list[SearchResponse]:
 
 @cached(LRUCache(256))
 async def get_movie(id: TmdbId) -> MovieResponse:
-    return MovieResponse.model_validate(await get_json(f'movie/{id}'))
+    return await get_json(f'movie/{id}', MovieResponse)
 
 
 @cached(TTLCache(256, 360))
 async def get_tv(id: TmdbId) -> TvApiResponse:
-    return TvApiResponse.model_validate(await get_json(f'tv/{id}'))
+    return await get_json(f'tv/{id}', TvApiResponse)
 
 
 async def get_movie_imdb_id(movie_id: TmdbId) -> ImdbId:
@@ -122,14 +121,18 @@ async def get_tv_imdb_id(tv_id: TmdbId) -> ImdbId:
     return await get_imdb_id('tv', tv_id)
 
 
+class ExternalIds(BaseModel):
+    imdb_id: ImdbId
+
+
 @cached(LRUCache(360))
 async def get_imdb_id(type: ThingType, id: TmdbId) -> ImdbId:
-    return (await get_json(f'{type}/{id}/external_ids'))['imdb_id']
+    return (await get_json(f'{type}/{id}/external_ids', ExternalIds)).imdb_id
 
 
 @cached(TTLCache(256, 360))
 async def get_tv_episodes(id: TmdbId, season: int) -> TvSeasonResponse:
-    return TvSeasonResponse.model_validate(await get_json(f'tv/{id}/season/{season}'))
+    return await get_json(f'tv/{id}/season/{season}', TvSeasonResponse)
 
 
 class ReleaseType(Enum):
@@ -141,9 +144,16 @@ class ReleaseType(Enum):
     TV = 6
 
 
-async def discover(types=(ReleaseType.PHYSICAL, ReleaseType.DIGITAL)):
+class Discover(BaseModel):
+    pass
+
+
+async def discover(
+    types: tuple[ReleaseType, ...] = (ReleaseType.PHYSICAL, ReleaseType.DIGITAL),
+) -> Discover:
     return await get_json(
         'discover/movie',
+        Discover,
         params={
             'sort_by': ','.join(('popularity.desc', 'primary_release_date.desc')),
             'primary_release_date.lte': date.today().isoformat(),
