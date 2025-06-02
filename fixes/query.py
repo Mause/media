@@ -21,7 +21,7 @@ class QueryVisitor(AddImports, VisitorBasedCodemodCommand):
             node,
             Call(
                 func=Attribute(
-                    attr=OneOf(Name('all'), Name('first')),
+                    attr=OneOf(Name('all'), Name('first'), Name('one_or_none'))
                 ),
             ),
             metadata_resolver=self,
