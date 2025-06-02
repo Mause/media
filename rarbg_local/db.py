@@ -271,7 +271,7 @@ async def get_all(session: AsyncSession, model: type[T]) -> Sequence[T]:
     return (
         (
             await session.execute(
-                select(model).options(joinedload(joint), joinedload(joint.added_by))
+                select(model).options(joinedload(joint).joinedload(Download.added_by))
             )
         )
         .scalars()
