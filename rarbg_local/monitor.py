@@ -71,8 +71,10 @@ async def monitor_post(
     session = non_null(object_session(user))  # resolve to db session session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
-        session.query(Monitor)
-        .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+        session.execute(
+            select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+        )
+        .scalars()
         .one_or_none()
     )
     if not c:

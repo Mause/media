@@ -8,6 +8,7 @@ from typing import TypeVar, cast
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, make_transient
 
 from .db import (
@@ -115,7 +116,9 @@ def add_single(
     )['hashString']
 
     already = (
-        session.query(Download).filter_by(transmission_id=transmission_id).one_or_none()
+        session.execute(select(Download).filter_by(transmission_id=transmission_id))
+        .scalars()
+        .one_or_none()
     )
 
     logger.info('does it already exist? %s', already)
