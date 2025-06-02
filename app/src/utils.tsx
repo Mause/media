@@ -6,7 +6,7 @@ import * as RRD from 'react-router-dom';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@mui/material';
 import moxios from 'moxios';
-import { useAuth0 } from '@auth0/auth0-react';
+import { Auth0ContextInterface, useAuth0 } from '@auth0/auth0-react';
 
 import { FetchEventTarget } from './fetch_stream';
 
@@ -80,7 +80,7 @@ interface Res<T> {
   error?: Error;
 }
 
-export async function getToken(auth0: Auth0Interface) {
+export async function getToken(auth0: Auth0ContextInterface): string {
   try {
     return await auth0.getAccessTokenSilently();
   } catch (e) {
@@ -88,7 +88,9 @@ export async function getToken(auth0: Auth0Interface) {
       await auth0.loginWithRedirect({
         redirectUri: window.location,
       });
-    }
+      return '';
+    } else {
+      throw e;      
   }
 }
 
