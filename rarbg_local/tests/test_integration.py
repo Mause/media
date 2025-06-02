@@ -274,7 +274,7 @@ async def test_index(
 
 
 @mark.asyncio
-async def test_search(aioresponses, test_client):
+async def test_search(aioresponses, test_client, snapshot):
     themoviedb(
         aioresponses,
         '/search/multi',
@@ -293,9 +293,7 @@ async def test_search(aioresponses, test_client):
 
     res = await test_client.get('/api/search?query=chernobyl')
     assert res.status_code == 200
-    assert res.json() == [
-        {'tmdb_id': 10000, 'title': 'Chernobyl', 'year': 2019, 'type': 'series'}
-    ]
+    assert_match_json(snapshot, res, 'search.json')
 
 
 @mark.asyncio
