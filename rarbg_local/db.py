@@ -400,5 +400,5 @@ async def get_db(session_local=Depends(get_session_local)):
 
 async def safe_delete(session: AsyncSession, entity: type[T], id: int):
     query = await session.execute(delete(entity).filter_by(id=id))
-    precondition(query.rowcount() > 0, 'Nothing to delete')
+    precondition(query.rowcount > 0, 'Nothing to delete')
     await session.commit()
