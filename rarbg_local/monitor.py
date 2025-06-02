@@ -1,6 +1,6 @@
 import logging
 from asyncio import gather
-from typing import Annotated
+from typing import Annotated, cast
 
 from aiohttp import ClientSession
 from aiontfy import Message, Ntfy
@@ -8,8 +8,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session, object_session
+from sqlalchemy.orm import object_session
 
 from .auth import security
 from .db import (
@@ -38,13 +39,15 @@ async def get_ntfy():
 
 
 @monitor_ns.get('', response_model=list[MonitorGet])
-async def monitor_get(session: Session = Depends(get_db)):
-    return session.execute(select(Monitor)).scalars().all()
+async def monitor_get(session: Annotated[AsyncSession, Depends(get_db)]):
+    return (await session.execute(select(Monitor))).scalars().all()
 
 
 @monitor_ns.delete('/{monitor_id}')
-async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
-    safe_delete(session, Monitor, monitor_id)
+async def monitor_delete(
+    monitor_id: int, session: Annotated[AsyncSession, Depends(get_db)]
+):
+    await safe_delete(session, Monitor, monitor_id)
 
     return {}
 
@@ -68,11 +71,15 @@ async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
 ):
-    session = non_null(object_session(user))  # resolve to db session session
+    session = cast(
+        AsyncSession, non_null(object_session(user))
+    )  # resolve to db session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
-        session.execute(
-            select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+        (
+            await session.execute(
+                select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            )
         )
         .scalars()
         .one_or_none()
@@ -82,18 +89,20 @@ async def monitor_post(
             tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
         )
         session.add(c)
-        session.commit()
+        await session.commit()
     return c
 
 
 @monitor_ns.post('/cron', status_code=201)
 @monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
-    session: Annotated[Session, Depends(get_db)],
+    session: Annotated[AsyncSession, Depends(get_db)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ):
     monitors = (
-        session.execute(select(Monitor).filter(not_(Monitor.status))).scalars().all()
+        (await session.execute(select(Monitor).filter(not_(Monitor.status))))
+        .scalars()
+        .all()
     )
 
     tasks = [check_monitor(monitor, session, ntfy) for monitor in monitors]
@@ -106,7 +115,7 @@ async def monitor_cron(
 
 async def check_monitor(
     monitor: Monitor,
-    session: Session,
+    session: AsyncSession,
     ntfy: Ntfy,
 ):
     def convert_type(type: MonitorMediaType):
@@ -147,4 +156,4 @@ async def check_monitor(
             message=message,
         )
     )
-    session.commit()
+    await session.commit()
