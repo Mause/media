@@ -300,6 +300,17 @@ async def test_search(aioresponses, test_client, snapshot):
                     "vote_average": 0.0,
                     "vote_count": 0,
                 },
+                {
+                    "id": 98628,
+                    "name": "Kim Fields",
+                    "original_name": "Kim Fields",
+                    "media_type": "person",
+                    "adult": False,
+                    "popularity": 2.4103,
+                    "gender": 1,
+                    "known_for_department": "Acting",
+                    "profile_path": "/nfotrIITrn6kP1GodAFPKg64kMD.jpg",
+                },
             ]
         },
         query='&query=chernobyl',

@@ -62,7 +62,13 @@ class SearchBaseResponse(BaseModel):
         title: str
         release_date: datetime
 
-    results: Annotated[list[TvSearch | MovieSearch], Field(default_factory=list)]
+    class PersonSearch(BaseModel):
+        media_type: Literal['person']
+        id: TmdbId
+
+    results: Annotated[
+        list[TvSearch | MovieSearch | PersonSearch], Field(default_factory=list)
+    ]
 
 
 SearchItem = SearchBaseResponse.TvSearch | SearchBaseResponse.MovieSearch
@@ -98,7 +104,9 @@ async def search_themoviedb(s: str) -> list[SearchResponse]:
             tmdb_id=result.id,
         )
         for result in r.results
-        if result.media_type in MAP
+        if isinstance(
+            result, (SearchBaseResponse.TvSearch, SearchBaseResponse.MovieSearch)
+        )
     ]
 
 
