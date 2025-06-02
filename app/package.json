@@ -87,7 +87,7 @@
     "moxios": "^0.4.0",
     "prettier": "3.5.3",
     "typescript-eslint": "^8.33.1",
-    "vite": "^6.3.5",
+    "vite": "npm:rolldown-vite@latest",
     "vitest": "^3.2.1"
   },
   "prettier": {
