@@ -301,6 +301,12 @@ async def test_search(aioresponses, test_client, snapshot):
                     "vote_count": 0,
                 },
                 {
+                    "id": 11111,
+                    "title": "Unknown",
+                    "media_type": "movie",
+                    "release_date": "",
+                },
+                {
                     "id": 98628,
                     "name": "Kim Fields",
                     "original_name": "Kim Fields",
