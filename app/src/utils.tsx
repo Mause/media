@@ -80,14 +80,18 @@ interface Res<T> {
   error?: Error;
 }
 
+function isMissingToken(e): e is {error: string} {
+  return 'error' in e;
+}
+
 export async function getToken(auth0: Auth0ContextInterface): Promise<string> {
   try {
     return await auth0.getAccessTokenSilently();
   } catch (e) {
-    if ('error' in (e as any) && (e as any).error === 'missing_refresh_token') {
+    if (isMissingToken(e) && e.error === 'missing_refresh_token') {
       await auth0.loginWithRedirect({
         authorizationParams: {
-          redirect_uri: window.location,
+          redirect_uri: window.location.toString(),
         },
       });
       return '';
