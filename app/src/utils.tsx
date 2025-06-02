@@ -80,7 +80,7 @@ interface Res<T> {
   error?: Error;
 }
 
-function isMissingToken(e): e is {error: string} {
+function isMissingToken(e): e is { error: string } {
   return 'error' in e;
 }
 
