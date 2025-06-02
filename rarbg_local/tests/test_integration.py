@@ -14,8 +14,8 @@ from pydantic import BaseModel
 from pytest import fixture, mark, raises
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session
 from sqlalchemy.orm import joinedload
 
 from ..auth import get_current_user
@@ -337,7 +337,7 @@ async def test_search(aioresponses, test_client, snapshot):
 
 
 @mark.asyncio
-async def test_delete_cascade(test_client: TestClient, session):
+async def test_delete_cascade(test_client: TestClient, session: AsyncSession):
     async def check():
         return (
             len(await get_episodes(session)),
@@ -349,8 +349,8 @@ async def test_delete_cascade(test_client: TestClient, session):
     await session.commit()
 
     assert await check() == (1, 1)
-    assert len(get_episodes(session)) == 1
-    assert len(session.execute(select(Download)).scalars().all()) == 1
+    assert len(await get_episodes(session)) == 1
+    assert len((await session.execute(select(Download))).scalars().all()) == 1
 
     res = await test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
@@ -397,7 +397,7 @@ async def test_select_season(aioresponses, test_client: TestClient, snapshot) ->
 
 
 @mark.asyncio
-async def test_foreign_key_integrity(session: Session):
+async def test_foreign_key_integrity(session: AsyncSession):
     # invalid fkey_id
     ins = Download.__table__.insert().values(id=1, movie_id=99)
     with raises(IntegrityError):
