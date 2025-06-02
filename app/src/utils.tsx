@@ -80,6 +80,19 @@ interface Res<T> {
   error?: Error;
 }
 
+export async function getToken(auth0: Auth0Interface) {
+  try {
+    return await auth.getAccessTokenSilently();
+  } catch (e) {
+    if ('error' in e && e.error === 'missing_refresh_token') {
+      await auth.loginWithRedirect({
+        redirectUri: window.location
+      });
+    }
+  }
+}
+    
+
 export function usePost<T>(
   url: string,
   body: object,
@@ -89,8 +102,7 @@ export function usePost<T>(
 
   useEffect(() => {
     const abortController = new AbortController();
-    auth
-      .getAccessTokenSilently()
+    getToken(auth)
       .then((token) =>
         Axios.post<T>('/api/' + url, body, {
           signal: abortController.signal,
