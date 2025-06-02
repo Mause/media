@@ -10,6 +10,7 @@ from sentry_sdk.crons import monitor
 from sqlalchemy import not_
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 
 from .auth import security
 from .db import (
@@ -39,7 +40,11 @@ async def get_ntfy():
 
 @monitor_ns.get('', response_model=list[MonitorGet])
 async def monitor_get(session: Annotated[AsyncSession, Depends(get_db)]):
-    return (await session.execute(select(Monitor))).scalars().all()
+    return (
+        (await session.execute(select(Monitor).options(joinedload(Monitor.added_by))))
+        .scalars()
+        .all()
+    )
 
 
 @monitor_ns.delete('/{monitor_id}')
@@ -75,7 +80,9 @@ async def monitor_post(
     c = (
         (
             await session.execute(
-                select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+                select(Monitor)
+                .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+                .options(joinedload(Monitor.added_by))
             )
         )
         .scalars()
@@ -87,6 +94,7 @@ async def monitor_post(
         )
         session.add(c)
         await session.commit()
+        await session.refresh(c, attribute_names=['added_by'])
     return c
 
 
