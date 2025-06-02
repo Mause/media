@@ -10,7 +10,7 @@ from ..providers.horriblesubs import (
     get_downloads,
     get_latest,
 )
-from ..types import ImdbId, TmdbId
+from ..utils import ImdbId, TmdbId
 from .conftest import add_json, themoviedb, tolist
 from .factories import TvApiResponseFactory
 

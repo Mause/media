@@ -894,6 +894,59 @@
         }
       }
     },
+    "/graphql": {
+      "get": {
+        "tags": [
+          "graphql"
+        ],
+        "summary": "Handle Http Get",
+        "operationId": "handle_http_get",
+        "responses": {
+          "200": {
+            "description": "The GraphiQL integrated development environment.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found if GraphiQL or query via GET are not enabled."
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "graphql"
+        ],
+        "summary": "Handle Http Post",
+        "operationId": "handle_http_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          }
+        ]
+      }
+    },
     "/redirect/plex/{imdb_id}": {
       "get": {
         "summary": "Redirect To Plex",

@@ -32,6 +32,7 @@ from .db import (
     get_movies,
     safe_delete,
 )
+from .graphql_endpoint import api as graphql
 from .health import router as health
 from .main import (
     add_single,
@@ -78,8 +79,7 @@ from .tmdb import (
     get_tv_imdb_id,
     search_themoviedb,
 )
-from .types import ImdbId, TmdbId
-from .utils import Message, non_null
+from .utils import ImdbId, Message, TmdbId, non_null
 from .websocket import websocket_ns
 
 api = APIRouter()
@@ -417,6 +417,12 @@ def create_app():
         api,
         prefix='/api',
         dependencies=[security],
+    )
+    app.include_router(
+        graphql,
+        prefix='/graphql',
+        dependencies=[security],
+        tags=['graphql'],
     )
     app.include_router(root, prefix='')
 

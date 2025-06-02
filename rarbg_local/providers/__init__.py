@@ -4,8 +4,7 @@ from collections.abc import Callable, Coroutine, Iterable
 from typing import Any, TypeVar
 
 from ..models import ITorrent
-from ..types import ImdbId, TmdbId
-from ..utils import Message, create_monitored_task
+from ..utils import ImdbId, Message, TmdbId, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
 
 T = TypeVar('T')

@@ -96,7 +96,11 @@ def themoviedb(responses, path, response, query=''):
 
 
 def add_json(responses, method: str, url: str | Pattern, json_body) -> None:
-    responses.add(method=method, url=url, body=json.dumps(json_body))
+    responses.add(
+        method=method,
+        url=url,
+        body=json.dumps(json_body, default=lambda a: a.isoformat()),
+    )
 
 
 @fixture
@@ -150,3 +154,7 @@ async def tolist(a: AsyncGenerator[T, None]) -> list[T]:
     async for t in a:
         lst.append(t)
     return lst
+
+
+def assert_match_json(snapshot, res, name):
+    snapshot.assert_match(json.dumps(res.json(), indent=2), name)

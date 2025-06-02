@@ -6,7 +6,7 @@ from sentry_sdk import trace
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_tv
-from ..types import ImdbId, TmdbId
+from ..utils import ImdbId, TmdbId
 from .abc import TvProvider, format, tv_convert
 
 

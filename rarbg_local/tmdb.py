@@ -2,7 +2,7 @@ import os
 from datetime import date
 from enum import Enum
 from itertools import chain
-from typing import Literal
+from typing import Any, Literal
 
 import aiohttp
 import aiohttp.web_exceptions
@@ -16,12 +16,10 @@ from .models import (
     TvApiResponse,
     TvSeasonResponse,
 )
-from .types import ImdbId, TmdbId
-from .utils import cached, precondition
+from .utils import ImdbId, TmdbId, cached, precondition
 
 base = 'https://api.themoviedb.org/3/'
 
-access_token = os.environ['TMDB_READ_ACCESS_TOKEN']
 ThingType = Literal['movie', 'tv']
 
 
@@ -35,7 +33,12 @@ def try_(dic: dict[str, str], *keys: str) -> str | None:
     max_tries=5,
     giveup=lambda e: not isinstance(e, aiohttp.web_exceptions.HTTPTooManyRequests),
 )
-async def get_json(path, **kwargs):
+async def get_json(path: str, **kwargs: Any) -> Any:
+    access_token = (
+        'fake'
+        if 'PYTEST_CURRENT_TEST' in os.environ
+        else os.environ['TMDB_READ_ACCESS_TOKEN']
+    )
     async with aiohttp.ClientSession(
         base_url=base,
         headers={
