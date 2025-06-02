@@ -90,7 +90,7 @@ export async function getToken(auth0: Auth0ContextInterface): string {
       });
       return '';
     } else {
-      throw e;      
+      throw e;
   }
 }
 
