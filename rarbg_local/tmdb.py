@@ -8,7 +8,6 @@ import aiohttp.web_exceptions
 import backoff
 from cachetools import LRUCache, TTLCache
 from pydantic import BaseModel, Field
-from pydantic.validators import class_validator
 
 from .models import (
     MediaType,
