@@ -6,7 +6,7 @@ import * as RRD from 'react-router-dom';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@mui/material';
 import moxios from 'moxios';
-import { Auth0ContextInterface, useAuth0 } from '@auth0/auth0-react';
+import { Auth0ContextInterface, AuthenticationError, useAuth0 } from '@auth0/auth0-react';
 
 import { FetchEventTarget } from './fetch_stream';
 
@@ -80,15 +80,15 @@ interface Res<T> {
   error?: Error;
 }
 
-function isMissingToken(e): e is { error: string } {
-  return 'error' in e;
+function isAuthenticationError(e: unknown): e is AuthenticationError {
+  return typeof e === 'object' && e != null && 'error' in e;
 }
 
 export async function getToken(auth0: Auth0ContextInterface): Promise<string> {
   try {
     return await auth0.getAccessTokenSilently();
   } catch (e) {
-    if (isMissingToken(e) && e.error === 'missing_refresh_token') {
+    if (isAuthenticationError(e) && e.error === 'missing_refresh_token') {
       await auth0.loginWithRedirect({
         authorizationParams: {
           redirect_uri: window.location.toString(),
