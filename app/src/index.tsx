@@ -32,6 +32,7 @@ const rootEl = (
       audience: audience!,
       redirect_uri: window.location.origin,
     }}
+    useRefreshTokensFallback={true}
     useRefreshTokens={true}
     cacheLocation="localstorage"
   >

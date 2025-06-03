@@ -25,7 +25,7 @@ import {
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import { OptionsComponent } from './OptionsComponent';
-import { load, MLink, ExtMLink } from './utils';
+import { load, MLink, ExtMLink, getToken } from './utils';
 import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
@@ -199,8 +199,7 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
             params,
             auth.isAuthenticated
               ? {
-                  Authorization:
-                    'Bearer ' + (await auth.getAccessTokenSilently()),
+                  Authorization: 'Bearer ' + (await getToken(auth)),
                 }
               : {},
           ),
