@@ -13,7 +13,7 @@ import useSWRMutation from 'swr/mutation';
 
 import ContextMenu from './ContextMenu';
 import { DisplayError } from './IndexComponent';
-import { components } from './schema';
+import { components, paths } from './schema';
 import { getPrefix, getToken } from './utils';
 
 type Monitor = components['schemas']['MonitorGet'];
@@ -24,9 +24,15 @@ export function MonitorComponent() {
   const auth = useAuth0();
   const { data } = useSWR<Monitor[]>('monitor');
   const navigate = useNavigate();
+
+  const path = '/api/monitor/cron' as const;
+  type MonitorCron = paths[typeof path]['post'];
   const { trigger: recheck, isMutating } = useSWRMutation(
-    '/api/monitor/cron',
-    mutationFetcher<never, (Monitor | string)[]>(auth),
+    path,
+    mutationFetcher<
+      MonitorCron['requestBody'],
+      MonitorCron['responses'][201]['content']['application/json']
+    >(auth),
   );
 
   return (
