@@ -26,7 +26,7 @@ from .models import (
 from .tmdb import get_movie, get_tv
 from .types import TmdbId
 from .utils import non_null
-from .websocket import _stream
+from .websocket import _stream, StreamType
 
 logger = logging.getLogger(__name__)
 monitor_ns = APIRouter(tags=['monitor'])
@@ -109,11 +109,11 @@ async def check_monitor(
     session: Session,
     ntfy: Ntfy,
 ):
-    def convert_type(type: MonitorMediaType):
+    def convert_type(type: MonitorMediaType) -> StreamType:
         if type == MonitorMediaType.MOVIE:
             return 'movie'
         elif type == MonitorMediaType.TV:
-            return 'tv'
+            return 'series'
         else:
             raise HTTPException(422, f'Invalid type: {type}')
 
