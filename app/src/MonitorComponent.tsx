@@ -20,6 +20,7 @@ type MonitorPost = components['schemas']['MonitorPost'];
 type MediaType = components['schemas']['MonitorMediaType'];
 
 export function MonitorComponent() {
+  const auth = useAuth0();
   const { data } = useSWR<Monitor[]>('monitor');
   const navigate = useNavigate();
   const { trigger: recheck, isMutating } = useSWRMutation(
