@@ -32,7 +32,12 @@ export function MonitorComponent() {
   return (
     <div>
       <h3>Monitored Media</h3>
-      <Button loading={isMutating} onClick={recheck}>
+      <Button
+        loading={isMutating}
+        onClick={() => {
+          void recheck();
+        }}
+      >
         Recheck
       </Button>
       {data ? (
