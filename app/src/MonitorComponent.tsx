@@ -22,10 +22,15 @@ type MediaType = components['schemas']['MonitorMediaType'];
 export function MonitorComponent() {
   const { data } = useSWR<Monitor[]>('monitor');
   const navigate = useNavigate();
+  const { trigger: recheck, isMutating } = useSWRMutation(
+    '/api/monitor/cron',
+    mutationFetcher<{}, (Monitor | string)[]>(auth)
+  );
 
   return (
     <div>
       <h3>Monitored Media</h3>
+      <Button loading={isMutating} onClick={recheck}>Recheck</Button>
       {data ? (
         <ul>
           {data.map((m) => {
