@@ -7,7 +7,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 import { DisplayTorrent, ITorrent } from './OptionsComponent';
-import { getPrefix } from './utils';
+import { getPrefix, getToken } from './utils';
 import { getMarker } from './render';
 
 function useMessages<T>(initMessage: object) {
@@ -36,7 +36,7 @@ function Websocket() {
   const { search } = useLocation();
   const query = qs.parse(search.slice(1));
   const auth = useAuth0();
-  const token = 'Bearer ' + usePromise(() => auth.getAccessTokenSilently(), []);
+  const token = 'Bearer ' + usePromise(() => getToken(auth), []);
 
   const initMessage = query.season
     ? {

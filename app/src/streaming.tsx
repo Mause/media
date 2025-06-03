@@ -34,6 +34,7 @@ import { Websocket } from './Websocket';
 import { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
+import { getToken } from './utils';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -200,7 +201,7 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
             auth.isAuthenticated
               ? {
                   Authorization:
-                    'Bearer ' + (await auth.getAccessTokenSilently()),
+                    'Bearer ' + (await getToken(auth)),
                 }
               : {},
           ),

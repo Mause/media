@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import { Breadcrumbs, Typography, Alert } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 
-import { subscribe, MLink } from './utils';
+import { subscribe, MLink, getToken } from './utils';
 import { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
@@ -257,7 +257,7 @@ function useToken() {
   const auth = useAuth0();
   const [token, setToken] = useState<string>();
   useEffect(() => {
-    void auth.getAccessTokenSilently().then(setToken);
+    void getToken(auth).then(setToken);
   }, [auth]);
   return token;
 }
