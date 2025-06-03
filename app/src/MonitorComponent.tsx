@@ -24,13 +24,15 @@ export function MonitorComponent() {
   const navigate = useNavigate();
   const { trigger: recheck, isMutating } = useSWRMutation(
     '/api/monitor/cron',
-    mutationFetcher<{}, (Monitor | string)[]>(auth)
+    mutationFetcher<{}, (Monitor | string)[]>(auth),
   );
 
   return (
     <div>
       <h3>Monitored Media</h3>
-      <Button loading={isMutating} onClick={recheck}>Recheck</Button>
+      <Button loading={isMutating} onClick={recheck}>
+        Recheck
+      </Button>
       {data ? (
         <ul>
           {data.map((m) => {
