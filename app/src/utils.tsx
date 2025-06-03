@@ -6,7 +6,11 @@ import * as RRD from 'react-router-dom';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@mui/material';
 import moxios from 'moxios';
-import { Auth0ContextInterface, AuthenticationError, useAuth0 } from '@auth0/auth0-react';
+import {
+  Auth0ContextInterface,
+  AuthenticationError,
+  useAuth0,
+} from '@auth0/auth0-react';
 
 import { FetchEventTarget } from './fetch_stream';
 
