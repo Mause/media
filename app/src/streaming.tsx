@@ -25,7 +25,7 @@ import {
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import { OptionsComponent } from './OptionsComponent';
-import { load, MLink, ExtMLink } from './utils';
+import { load, MLink, ExtMLink, getToken } from './utils';
 import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
@@ -34,7 +34,6 @@ import { Websocket } from './Websocket';
 import { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
-import { getToken } from './utils';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
