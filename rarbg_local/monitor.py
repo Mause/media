@@ -26,7 +26,7 @@ from .models import (
 from .tmdb import get_movie, get_tv
 from .types import TmdbId
 from .utils import non_null
-from .websocket import _stream, StreamType
+from .websocket import StreamType, _stream
 
 logger = logging.getLogger(__name__)
 monitor_ns = APIRouter(tags=['monitor'])
@@ -98,10 +98,14 @@ async def monitor_cron(
 
     tasks = [check_monitor(monitor, session, ntfy) for monitor in monitors]
 
-    return [
-        repr(e) if isinstance(e, Exception) else e
-        for e in await gather(*tasks, return_exceptions=True)
-    ]
+    results = []
+    for result in await gather(*tasks, return_exceptions=True):
+        if isinstance(result, Exception):
+            logger.error(f'Error checking monitor: {result}')
+            results.append(repr(result))
+        else:
+            results.append(result)
+    return results
 
 
 async def check_monitor(
