@@ -7,6 +7,7 @@ import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 import MaterialLink from '@mui/material/Link';
+import Button from '@mui/material/Button';
 import { Auth0ContextInterface, useAuth0, User } from '@auth0/auth0-react';
 import useSWRMutation from 'swr/mutation';
 
@@ -20,12 +21,25 @@ type MonitorPost = components['schemas']['MonitorPost'];
 type MediaType = components['schemas']['MonitorMediaType'];
 
 export function MonitorComponent() {
+  const auth = useAuth0();
   const { data } = useSWR<Monitor[]>('monitor');
   const navigate = useNavigate();
+  const { trigger: recheck, isMutating } = useSWRMutation(
+    '/api/monitor/cron',
+    mutationFetcher<never, (Monitor | string)[]>(auth),
+  );
 
   return (
     <div>
       <h3>Monitored Media</h3>
+      <Button
+        loading={isMutating}
+        onClick={() => {
+          void recheck();
+        }}
+      >
+        Recheck
+      </Button>
       {data ? (
         <ul>
           {data.map((m) => {
