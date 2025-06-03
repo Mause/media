@@ -26,7 +26,7 @@ export function MonitorComponent() {
   const navigate = useNavigate();
   const { trigger: recheck, isMutating } = useSWRMutation(
     '/api/monitor/cron',
-    mutationFetcher<{}, (Monitor | string)[]>(auth),
+    mutationFetcher<never, (Monitor | string)[]>(auth),
   );
 
   return (
