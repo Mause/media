@@ -1,6 +1,6 @@
 import logging
 from asyncio import gather
-from typing import Annotated
+from typing import Annotated, Generic, TypeVar
 
 from aiohttp import ClientSession
 from aiontfy import Message, Ntfy
@@ -31,6 +31,7 @@ from .websocket import StreamType, _stream
 
 logger = logging.getLogger(__name__)
 monitor_ns = APIRouter(tags=['monitor'])
+T = TypeVar('T')
 
 
 async def get_ntfy():
@@ -87,10 +88,10 @@ async def monitor_post(
     return c
 
 
-class CronResponse(BaseModel):
+class CronResponse(BaseModel, Generic[T]):
     success: bool
     message: str
-    monitor: MonitorGet | None = None
+    subject: T | None = None
 
 
 @monitor_ns.post('/cron', status_code=201)
@@ -98,7 +99,7 @@ class CronResponse(BaseModel):
 async def monitor_cron(
     session: Annotated[Session, Depends(get_db)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
-) -> list[CronResponse]:
+) -> list[CronResponse[MonitorGet]]:
     monitors = (
         session.execute(select(Monitor).filter(not_(Monitor.status))).scalars().all()
     )
