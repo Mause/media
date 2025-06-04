@@ -5,6 +5,7 @@ from typing import Annotated
 from aiohttp import ClientSession
 from aiontfy import Message, Ntfy
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
@@ -86,23 +87,29 @@ async def monitor_post(
     return c
 
 
+class CronResponse(BaseModel):
+    success: bool
+    message: str
+    monitor: MonitorGet | None = None
+
+
 @monitor_ns.post('/cron', status_code=201)
 @monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
     session: Annotated[Session, Depends(get_db)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
-):
+) -> list[CronResponse]:
     monitors = (
         session.execute(select(Monitor).filter(not_(Monitor.status))).scalars().all()
     )
 
     tasks = [check_monitor(monitor, session, ntfy) for monitor in monitors]
 
-    results = []
+    results: list[CronResponse] = []
     for result in await gather(*tasks, return_exceptions=True):
-        if isinstance(result, Exception):
-            logger.error(f'Error checking monitor: {result}')
-            results.append(repr(result))
+        if isinstance(result, BaseException):
+            logger.exception(f'Error checking monitor: {result}', result)
+            results.append(CronResponse(success=False, message=repr(result)))
         else:
             results.append(result)
     return results
@@ -112,7 +119,7 @@ async def check_monitor(
     monitor: Monitor,
     session: Session,
     ntfy: Ntfy,
-):
+) -> CronResponse:
     def convert_type(type: MonitorMediaType) -> StreamType:
         if type == MonitorMediaType.MOVIE:
             return 'movie'
@@ -130,8 +137,9 @@ async def check_monitor(
         has_results = result
         break
     if not has_results:
-        logger.info(f'No results for {monitor.title}')
-        return
+        message = f'No results for {monitor.title}'
+        logger.info(message)
+        return CronResponse(success=True, message=message, monitor=monitor)
 
     monitor.status = bool(has_results)
 
@@ -152,3 +160,5 @@ async def check_monitor(
         )
     )
     session.commit()
+
+    return CronResponse(success=True, message=message, monitor=monitor)
