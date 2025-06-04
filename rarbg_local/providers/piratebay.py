@@ -64,9 +64,9 @@ class PirateBayProvider(TvProvider, MovieProvider):
             data = await resp.json()
 
             if len(data) == 1 and data[0]['name'] == 'No results returned':
-                return
-
-            yield data
+                yield []
+            else:
+                yield data
 
     async def search_for_tv(
         self,
