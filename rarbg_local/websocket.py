@@ -40,7 +40,7 @@ class StreamArgs(BaseModel):
 
 
 async def _stream(
-    type: str,
+    type: StreamType,
     tmdb_id: TmdbId,
     season: int | None = None,
     episode: int | None = None,

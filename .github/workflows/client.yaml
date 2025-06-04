@@ -21,5 +21,4 @@ jobs:
     - uses: nickcharlton/diff-check@main
       with:
         command: |
-          npx openapi-typescript rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o app/src/schema.ts
-          cd app && yarn && yarn prettier --write src/schema.ts
+          cd app && yarn && yarn generate:static
