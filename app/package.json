@@ -44,8 +44,10 @@
     "start": "vite",
     "build": "vite build",
     "test": "vitest",
-    "generate:local": "npx openapi-typescript http://localhost:5000/openapi.json -o src/schema.ts",
-    "generate": "npx openapi-typescript https://media.mause.me/openapi.json -o src/schema.ts"
+    "format": "yarn prettier -w src",
+    "generate:static": "npx openapi-typescript ../rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o src/schema.ts && yarn format",
+    "generate:local": "npx openapi-typescript http://localhost:5000/openapi.json -o src/schema.ts && yarn format",
+    "generate": "npx openapi-typescript https://media.mause.me/openapi.json -o src/schema.ts && yarn format"
   },
   "browserslist": {
     "production": [
