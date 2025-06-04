@@ -355,13 +355,13 @@ export interface components {
      * @enum {string}
      */
     ComponentType: 'datastore' | 'internal' | 'http' | 'generic';
-    /** CronResponse */
-    CronResponse: {
+    /** CronResponse[MonitorGet] */
+    CronResponse_MonitorGet_: {
       /** Success */
       success: boolean;
       /** Message */
       message: string;
-      monitor?: components['schemas']['MonitorGet'] | null;
+      subject?: components['schemas']['MonitorGet'] | null;
     };
     /** DownloadAllResponse */
     DownloadAllResponse: {
@@ -1090,7 +1090,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['CronResponse'][];
+          'application/json': components['schemas']['CronResponse_MonitorGet_'][];
         };
       };
     };
