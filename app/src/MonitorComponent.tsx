@@ -40,6 +40,7 @@ export function MonitorComponent() {
       <h3>Monitored Media</h3>
       <Button
         loading={isMutating}
+        variant="outlined"
         onClick={() => {
           void recheck();
         }}
