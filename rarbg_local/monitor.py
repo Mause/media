@@ -140,7 +140,7 @@ async def check_monitor(
     if not has_results:
         message = f'No results for {monitor.title}'
         logger.info(message)
-        return CronResponse(success=True, message=message, monitor=monitor)
+        return CronResponse(success=True, message=message, subject=monitor)
 
     monitor.status = bool(has_results)
 
@@ -162,4 +162,4 @@ async def check_monitor(
     )
     session.commit()
 
-    return CronResponse(success=True, message=message, monitor=monitor)
+    return CronResponse(success=True, message=message, subject=monitor)
