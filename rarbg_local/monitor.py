@@ -153,6 +153,7 @@ async def check_monitor(
 
     logger.info(message)
 
+    breakpoint()
     await ntfy.publish(
         Message(
             topic="ellianas_notifications",
