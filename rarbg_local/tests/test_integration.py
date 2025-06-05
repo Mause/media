@@ -455,14 +455,27 @@ async def test_update_monitor(
         '/movie/5',
         MovieResponseFactory.build(title='Hello World').model_dump(),
     )
+    themoviedb(
+        aioresponses,
+        '/tv/6',
+        TvApiResponseFactory.build(title='Hello World').model_dump(),
+    )
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     r.raise_for_status()
     ident = r.json()['id']
     assert r.status_code == 201
 
-    stream.return_value.__aiter__.return_value = iter(
-        [ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)]
-    )
+    (
+        await test_client.post('/api/monitor', json={'tmdb_id': 6, 'type': 'TV'})
+    ).raise_for_status()
+
+    async def impl(tmdb_id, type):
+        if tmdb_id == 5:
+            yield ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)
+        else:
+            raise Exception('Something went wrong')
+
+    stream.side_effect = impl
 
     del fastapi_app.dependency_overrides[get_current_user]
     r = await test_client.post(
@@ -470,6 +483,7 @@ async def test_update_monitor(
         headers={'Authorization': 'Basic ' + base64.b64encode(b'hello:world').decode()},
     )
     r.raise_for_status()
+    assert_match_json(snapshot, r, 'cron.json')
 
     assert session.get(Monitor, ident).status
     send.assert_called_once()
