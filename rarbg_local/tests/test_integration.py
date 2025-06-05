@@ -16,6 +16,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session
+from yarl import URL
 
 from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, Monitor, create_episode, create_movie
@@ -446,9 +447,8 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
 @mark.asyncio
 @patch('rarbg_local.monitor._stream')
-@patch('aiontfy.Ntfy.publish')
 async def test_update_monitor(
-    send, stream, aioresponses, test_client, session, snapshot, fastapi_app
+    stream, aioresponses, test_client, session, snapshot, fastapi_app
 ):
     themoviedb(
         aioresponses,
@@ -460,6 +460,18 @@ async def test_update_monitor(
         '/tv/6',
         TvApiResponseFactory.build(title='Hello World').model_dump(),
     )
+    add_json(
+        aioresponses,
+        'POST',
+        'https://ntfy.sh',
+        {
+            'id': '000000-0000-0000-000000000000',
+            'time': 1700000000,
+            'event': 'message',
+            'topic': 'ellianas_notifications',
+        },
+    )
+
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     r.raise_for_status()
     ident = r.json()['id']
@@ -486,11 +498,14 @@ async def test_update_monitor(
     assert_match_json(snapshot, r, 'cron.json')
 
     assert session.get(Monitor, ident).status
-    send.assert_called_once()
-    message = send.call_args.args[0]
+
+    message = aioresponses.requests['POST', URL('https://ntfy.sh')][0]
     snapshot.assert_match(
-        message.message,
-        'message.txt',
+        json.dumps(
+            message.kwargs['json'],
+            indent=2,
+        ),
+        'message.json',
     )
 
 
