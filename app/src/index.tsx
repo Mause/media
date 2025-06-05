@@ -8,17 +8,16 @@ import {
   createTheme,
 } from '@mui/material/styles';
 import { HelmetProvider } from 'react-helmet-async';
+import { useSentryToolbar } from '@sentry/toolbar';
 
 import App from './App';
 
-import { useSentryToolbar } from '@sentry/toolbar';
 
 useSentryToolbar({
   // Remember to conditionally enable the Toolbar.
   // This will reduce network traffic for users
   // who do not have credentials to login to Sentry.
   enabled: true,
-
   initProps: {
     organizationSlug: 'acme',
     projectIdOrSlug: 'website',
