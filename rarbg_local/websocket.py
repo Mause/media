@@ -1,7 +1,7 @@
 import logging
 from collections import ChainMap
-from typing import Annotated, Literal
 from collections.abc import AsyncGenerator
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, WebSocket
 from fastapi.requests import Request
