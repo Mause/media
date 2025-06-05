@@ -1557,6 +1557,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/toolbar@npm:1.0.0-beta.11":
+  version: 1.0.0-beta.11
+  resolution: "@sentry/toolbar@npm:1.0.0-beta.11"
+  peerDependencies:
+    react: ">=18"
+  checksum: 10/d13c3a3bad77991dcccfb881db0b45893dd7c3935536a5ab1763fec99a62e1201cf9649229ddacfcb7d98c20543989eb8ee3476e65b24d347fcbb6b23e4a2265
+  languageName: node
+  linkType: hard
+
 "@testing-library/dom@npm:^10.4.0":
   version: 10.4.0
   resolution: "@testing-library/dom@npm:10.4.0"
@@ -2492,6 +2501,7 @@ __metadata:
     "@mui/material": "npm:^7"
     "@remix-run/router": "npm:^1.23.0"
     "@sentry/react": "npm:^9.23.0"
+    "@sentry/toolbar": "npm:1.0.0-beta.11"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/jest-dom": "npm:^6.6.3"
     "@testing-library/react": "npm:^16"
