@@ -12,7 +12,6 @@ import { useSentryToolbar } from '@sentry/toolbar';
 
 import App from './App';
 
-
 useSentryToolbar({
   // Remember to conditionally enable the Toolbar.
   // This will reduce network traffic for users
