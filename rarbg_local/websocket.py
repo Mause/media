@@ -143,7 +143,7 @@ def get_asyncapi():
                 'messages': [
                     {'$ref': '#/channels/root/messages/get_messages'},
                     {'$ref': '#/channels/root/messages/results'},
-                ]
+                ],
             },
         },
         'channels': {
@@ -153,18 +153,9 @@ def get_asyncapi():
                     'get_results': {
                         'payload': {'$ref': '#/components/schemas/StreamArgs'}
                     },
-                    'results': {
-                        'payload': {'$ref': '#/components/schemas/ITorrent'}
-                    }
+                    'results': {'payload': {'$ref': '#/components/schemas/ITorrent'}},
                 },
-                'bindings': {
-                    'ws': {
-                        'query': {
-                            'type': 'object',
-                            'properties': {}
-                        }
-                    }
-                }
+                'bindings': {'ws': {'query': {'type': 'object', 'properties': {}}}},
             }
         },
         'components': {
@@ -172,8 +163,8 @@ def get_asyncapi():
             'schemas': {
                 'StreamArgs': StreamArgs.model_schema(),
                 'ITorrent': ITorrent.model_schema(),
-            }
-        }
+            },
+        },
     }
 
 
