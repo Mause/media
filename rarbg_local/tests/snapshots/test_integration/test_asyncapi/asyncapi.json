@@ -19,7 +19,7 @@
       },
       "messages": [
         {
-          "$ref": "#/channels/root/messages/get_messages"
+          "$ref": "#/channels/root/messages/get_results"
         },
         {
           "$ref": "#/channels/root/messages/results"

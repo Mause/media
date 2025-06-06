@@ -141,7 +141,7 @@ def get_asyncapi():
                 'action': 'receive',
                 'channel': {'$ref': '#/channels/root'},
                 'messages': [
-                    {'$ref': '#/channels/root/messages/get_messages'},
+                    {'$ref': '#/channels/root/messages/get_results'},
                     {'$ref': '#/channels/root/messages/results'},
                 ],
             },
