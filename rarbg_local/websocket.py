@@ -177,6 +177,6 @@ def get_asyncapi():
     }
 
 
-@root.get('/asyncapi.json')
+@websocket_ns.get('/asyncapi.json')
 async def asyncapi_json():
     return JSONResponse(get_asyncapi())
