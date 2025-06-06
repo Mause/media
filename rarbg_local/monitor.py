@@ -133,8 +133,10 @@ async def check_monitor(
     if not typ:
         raise HTTPException(422, f'Invalid type: {monitor.type}')
 
+    season = 1 if typ == MonitorMediaType.TV else None        
+
     has_results = None
-    async for result in _stream(tmdb_id=monitor.tmdb_id, type=convert_type(typ)):
+    async for result in _stream(tmdb_id=monitor.tmdb_id, type=convert_type(typ), season=season):
         has_results = result
         break
     if not has_results:
