@@ -360,6 +360,7 @@ function getRoutes() {
         },
         {
           path: '/asyncapi',
+          HydrateFallback: () => <div>Loading element...</div>,
           lazy: async () => {
             const { default: AsyncApiComponent } = await import(
               '@asyncapi/react-component'
