@@ -882,6 +882,7 @@ async def test_websocket(
     }
 
 
+@mark.asyncio
 async def test_asyncapi(test_client, snapshot):
     r = await test_client.get('/asyncapi.json')
 
