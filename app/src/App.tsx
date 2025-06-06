@@ -10,8 +10,8 @@ const App = () => {
     // who do not have credentials to login to Sentry.
     enabled: true,
     initProps: {
-      organizationSlug: 'acme',
-      projectIdOrSlug: 'website',
+      organizationSlug: 'elliana-may',
+      projectIdOrSlug: '1869914',
     },
   });
   return <ParentComponent />;
