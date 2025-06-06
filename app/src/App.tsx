@@ -11,7 +11,7 @@ const App = () => {
     enabled: true,
     initProps: {
       organizationSlug: 'elliana-may',
-      projectIdOrSlug: '1869914',
+      projectIdOrSlug: 'media',
     },
   });
   return <ParentComponent />;
