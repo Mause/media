@@ -481,7 +481,7 @@ async def test_update_monitor(
         await test_client.post('/api/monitor', json={'tmdb_id': 6, 'type': 'TV'})
     ).raise_for_status()
 
-    async def impl(tmdb_id, type):
+    async def impl(tmdb_id, *args, **kwargs):
         if tmdb_id == 5:
             yield ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)
         else:
