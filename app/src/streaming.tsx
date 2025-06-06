@@ -178,6 +178,7 @@ function ParentComponentInt() {
         {auth.isAuthenticated ||
         location.pathname === '/storybook' ||
         location.pathname == '/sitemap' ||
+        location.pathname === '/asyncapi' ||
         match?.id === 'notFound' ? (
           <Outlet />
         ) : (
