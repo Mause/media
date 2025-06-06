@@ -26,7 +26,7 @@ import {
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import { OptionsComponent } from './OptionsComponent';
-import { load, MLink, ExtMLink, getToken } from './utils';
+import { load, MLink, ExtMLink, getToken, getPrefix } from './utils';
 import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
@@ -365,7 +365,6 @@ function getRoutes() {
             const { default: AsyncApiComponent } = await import(
               '@asyncapi/react-component'
             );
-            const { getPrefix } = await import('./utils');
             return {
               element: (
                 <RouteTitle title="AsyncAPI">
