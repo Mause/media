@@ -364,13 +364,14 @@ function getRoutes() {
             const { default: AsyncApiComponent } = await import(
               '@asyncapi/react-component'
             );
+            const { getPrefix } = await import('./utils');
             return {
               element: (
                 <RouteTitle title="AsyncAPI">
                   <AsyncApiComponent
                     schema={
                       {
-                        url: '/asyncapi.json',
+                        url: `${getPrefix()}/asyncapi.json`,
                       } satisfies FetchingSchemaInterface
                     }
                   />
