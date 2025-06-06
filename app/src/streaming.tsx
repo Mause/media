@@ -360,7 +360,9 @@ function getRoutes() {
         {
           path: '/asyncapi',
           lazy: async () => {
-            const AsyncApiComponent = await import('@asyncapi/react-component');
+            const { default: AsyncApiComponent } = await import(
+              '@asyncapi/react-component'
+            );
             return {
               element: (
                 <RouteTitle title="AsyncAPI">
