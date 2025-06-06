@@ -29,6 +29,9 @@ categories = {
         'hd_movies': 207,
         'hd_tv_shows': 208,
         '3d': 209,
+        'cam_ts_movies': 210,  # CAM/TS - Movies
+        'ultra_hd_movies': 211,  # UHD/4k - Movies
+        'ultra_hd_tv_shows': 212,  # UHD/4k - TV shows
         'other': 299,
     },
 }
@@ -64,9 +67,9 @@ class PirateBayProvider(TvProvider, MovieProvider):
             data = await resp.json()
 
             if len(data) == 1 and data[0]['name'] == 'No results returned':
-                return
-
-            yield data
+                yield []
+            else:
+                yield data
 
     async def search_for_tv(
         self,

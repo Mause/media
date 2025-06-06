@@ -17,6 +17,7 @@ from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
+from yarl import URL
 
 from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, Monitor, create_episode, create_movie
@@ -465,23 +466,47 @@ async def test_delete_monitor(aioresponses, test_client, session):
 
 @mark.asyncio
 @patch('rarbg_local.monitor._stream')
-@patch('aiontfy.Ntfy.publish')
 async def test_update_monitor(
-    send, stream, aioresponses, test_client, session, snapshot, fastapi_app
+    stream, aioresponses, test_client, session, snapshot, fastapi_app
 ):
     themoviedb(
         aioresponses,
         '/movie/5',
         MovieResponseFactory.build(title='Hello World').model_dump(),
     )
+    themoviedb(
+        aioresponses,
+        '/tv/6',
+        TvApiResponseFactory.build(title='Hello World').model_dump(),
+    )
+    add_json(
+        aioresponses,
+        'POST',
+        'https://ntfy.sh',
+        {
+            'id': '000000-0000-0000-000000000000',
+            'time': 1700000000,
+            'event': 'message',
+            'topic': 'ellianas_notifications',
+        },
+    )
+
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     r.raise_for_status()
     ident = r.json()['id']
     assert r.status_code == 201
 
-    stream.return_value.__aiter__.return_value = iter(
-        [ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)]
-    )
+    (
+        await test_client.post('/api/monitor', json={'tmdb_id': 6, 'type': 'TV'})
+    ).raise_for_status()
+
+    async def impl(tmdb_id, *args, **kwargs):
+        if tmdb_id == 5:
+            yield ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)
+        else:
+            raise Exception('Something went wrong')
+
+    stream.side_effect = impl
 
     del fastapi_app.dependency_overrides[get_current_user]
     r = await test_client.post(
@@ -489,13 +514,17 @@ async def test_update_monitor(
         headers={'Authorization': 'Basic ' + base64.b64encode(b'hello:world').decode()},
     )
     r.raise_for_status()
+    assert_match_json(snapshot, r, 'cron.json')
 
     assert (await session.get(Monitor, ident)).status
-    send.assert_called_once()
-    message = send.call_args.args[0]
+
+    message = aioresponses.requests['POST', URL('https://ntfy.sh')][0]
     snapshot.assert_match(
-        message.message,
-        'message.txt',
+        json.dumps(
+            message.kwargs['json'],
+            indent=2,
+        ),
+        'message.json',
     )
 
 

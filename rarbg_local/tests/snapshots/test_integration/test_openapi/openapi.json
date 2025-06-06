@@ -786,7 +786,13 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CronResponse_MonitorGet_"
+                  },
+                  "type": "array",
+                  "title": "Response Monitor Cron Api Monitor Cron Post"
+                }
               }
             }
           }
@@ -1098,6 +1104,34 @@
         ],
         "title": "ComponentType",
         "description": "Enum used to store the component types."
+      },
+      "CronResponse_MonitorGet_": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MonitorGet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "message"
+        ],
+        "title": "CronResponse[MonitorGet]"
       },
       "DownloadAllResponse": {
         "properties": {

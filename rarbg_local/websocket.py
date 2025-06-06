@@ -1,5 +1,6 @@
 import logging
 from collections import ChainMap
+from collections.abc import AsyncGenerator
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, WebSocket
@@ -10,6 +11,7 @@ from .auth import security
 from .db import (
     User,
 )
+from .models import ITorrent
 from .providers import (
     search_for_movie,
     search_for_tv,
@@ -40,11 +42,11 @@ class StreamArgs(BaseModel):
 
 
 async def _stream(
-    type: str,
+    type: StreamType,
     tmdb_id: TmdbId,
     season: int | None = None,
     episode: int | None = None,
-):
+) -> AsyncGenerator[ITorrent]:
     if type == 'series':
         tasks, queue = await search_for_tv(
             await get_tv_imdb_id(tmdb_id), tmdb_id, non_null(season), episode
@@ -57,7 +59,7 @@ async def _stream(
         if isinstance(item, Message):
             logger.info('Message from provider: %s', item)
         else:
-            yield item.model_dump(mode='json')
+            yield item
 
 
 @websocket_ns.websocket("/ws")
@@ -113,7 +115,7 @@ async def websocket_stream(websocket: WebSocket):
         season=request.season,
         episode=request.episode,
     ):
-        await websocket.send_json(item)
+        await websocket.send_json(item.model_dump(mode='json'))
 
     logger.info('Finished streaming')
     await websocket.close(reason='Finished streaming')

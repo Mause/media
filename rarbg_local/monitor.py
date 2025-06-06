@@ -1,10 +1,11 @@
 import logging
 from asyncio import gather
-from typing import Annotated
+from typing import Annotated, Generic, TypeVar
 
 from aiohttp import ClientSession
 from aiontfy import Message, Ntfy
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
@@ -27,10 +28,11 @@ from .models import (
 from .tmdb import get_movie, get_tv
 from .types import TmdbId
 from .utils import non_null
-from .websocket import _stream
+from .websocket import StreamType, _stream
 
 logger = logging.getLogger(__name__)
 monitor_ns = APIRouter(tags=['monitor'])
+T = TypeVar('T')
 
 
 async def get_ntfy():
@@ -98,12 +100,18 @@ async def monitor_post(
     return c
 
 
+class CronResponse(BaseModel, Generic[T]):
+    success: bool
+    message: str
+    subject: T | None = None
+
+
 @monitor_ns.post('/cron', status_code=201)
 @monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
     session: Annotated[AsyncSession, Depends(get_db)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
-):
+) -> list[CronResponse[MonitorGet]]:
     monitors = (
         (await session.execute(select(Monitor).filter(not_(Monitor.status))))
         .scalars()
@@ -112,22 +120,26 @@ async def monitor_cron(
 
     tasks = [check_monitor(monitor, session, ntfy) for monitor in monitors]
 
-    return [
-        repr(e) if isinstance(e, Exception) else e
-        for e in await gather(*tasks, return_exceptions=True)
-    ]
+    results: list[CronResponse] = []
+    for result in await gather(*tasks, return_exceptions=True):
+        if isinstance(result, BaseException):
+            logger.exception('Error checking monitor', exc_info=result)
+            results.append(CronResponse(success=False, message=repr(result)))
+        else:
+            results.append(result)
+    return results
 
 
 async def check_monitor(
     monitor: Monitor,
     session: AsyncSession,
     ntfy: Ntfy,
-):
-    def convert_type(type: MonitorMediaType):
+) -> CronResponse:
+    def convert_type(type: MonitorMediaType) -> StreamType:
         if type == MonitorMediaType.MOVIE:
             return 'movie'
         elif type == MonitorMediaType.TV:
-            return 'tv'
+            return 'series'
         else:
             raise HTTPException(422, f'Invalid type: {type}')
 
@@ -135,13 +147,18 @@ async def check_monitor(
     if not typ:
         raise HTTPException(422, f'Invalid type: {monitor.type}')
 
+    season = 1 if typ == MonitorMediaType.TV else None
+
     has_results = None
-    async for result in _stream(tmdb_id=monitor.tmdb_id, type=convert_type(typ)):
+    async for result in _stream(
+        tmdb_id=monitor.tmdb_id, type=convert_type(typ), season=season
+    ):
         has_results = result
         break
     if not has_results:
-        logger.info(f'No results for {monitor.title}')
-        return
+        message = f'No results for {monitor.title}'
+        logger.info(message)
+        return CronResponse(success=True, message=message, subject=monitor)
 
     monitor.status = bool(has_results)
 
@@ -162,3 +179,5 @@ async def check_monitor(
         )
     )
     await session.commit()
+
+    return CronResponse(success=True, message=message, subject=monitor)

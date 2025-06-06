@@ -34,7 +34,7 @@
     "react-helmet-async": "^2.0.5",
     "react-loading": "^2.0.3",
     "react-promise-suspense": "^0.3.4",
-    "react-router-dom": "^7.0.0",
+    "react-router-dom": "^7.6.2",
     "react-use-websocket": "^4.13.0",
     "swr": "^2.0.0",
     "typescript": "^5",
@@ -44,8 +44,10 @@
     "start": "vite",
     "build": "vite build",
     "test": "vitest",
-    "generate:local": "npx openapi-typescript http://localhost:5000/openapi.json -o src/schema.ts",
-    "generate": "npx openapi-typescript https://media.mause.me/openapi.json -o src/schema.ts"
+    "format": "yarn prettier -w src",
+    "generate:static": "npx openapi-typescript ../rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o src/schema.ts && yarn format",
+    "generate:local": "npx openapi-typescript http://localhost:5000/openapi.json -o src/schema.ts && yarn format",
+    "generate": "npx openapi-typescript https://media.mause.me/openapi.json -o src/schema.ts && yarn format"
   },
   "browserslist": {
     "production": [
@@ -73,7 +75,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@vitejs/plugin-react": "^4.4.1",
-    "@vitest/ui": "^3.1.3",
+    "@vitest/ui": "^3.2.1",
     "colors.css": "^3.0.0",
     "eslint": "^9",
     "eslint-import-resolver-typescript": "^4.4.1",
@@ -86,7 +88,7 @@
     "prettier": "3.5.3",
     "typescript-eslint": "^8.33.1",
     "vite": "^6.3.5",
-    "vitest": "^3.1.4"
+    "vitest": "^3.2.1"
   },
   "prettier": {
     "singleQuote": true,
@@ -95,5 +97,5 @@
   "workspaces": [
     "client"
   ],
-  "packageManager": "yarn@4.9.1"
+  "packageManager": "yarn@4.9.2"
 }

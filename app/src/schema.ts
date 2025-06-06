@@ -355,6 +355,14 @@ export interface components {
      * @enum {string}
      */
     ComponentType: 'datastore' | 'internal' | 'http' | 'generic';
+    /** CronResponse[MonitorGet] */
+    CronResponse_MonitorGet_: {
+      /** Success */
+      success: boolean;
+      /** Message */
+      message: string;
+      subject?: components['schemas']['MonitorGet'] | null;
+    };
     /** DownloadAllResponse */
     DownloadAllResponse: {
       /** Packs */
@@ -1082,7 +1090,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': unknown;
+          'application/json': components['schemas']['CronResponse_MonitorGet_'][];
         };
       };
     };
