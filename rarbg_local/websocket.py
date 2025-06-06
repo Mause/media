@@ -161,8 +161,8 @@ def get_asyncapi():
         'components': {
             'messages': {},
             'schemas': {
-                'StreamArgs': StreamArgs.model_schema(),
-                'ITorrent': ITorrent.model_schema(),
+                'StreamArgs': StreamArgs.model_json_schema(),
+                'ITorrent': ITorrent.model_json_schema(),
             },
         },
     }
