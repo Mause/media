@@ -123,7 +123,7 @@ async def websocket_stream(websocket: WebSocket):
 
 
 def get_asyncapi():
-    return {
+    base = {
         "asyncapi": '3.0.0',
         'info': {
             'title': 'Create an AsyncAPI document for an API with WebSocket',
@@ -160,12 +160,18 @@ def get_asyncapi():
         },
         'components': {
             'messages': {},
-            'schemas': {
-                'StreamArgs': StreamArgs.model_json_schema(),
-                'ITorrent': ITorrent.model_json_schema(),
-            },
+            'schemas': {},
         },
     }
+
+    for model in (StreamArgs, ITorrent):
+        res = model.model_json_schema(
+            ref_template='#/components/schemas/{model}',
+        )
+        base['components']['schemas'].update(res.pop('$defs', {}))
+        base['components']['schemas'][model.__name__] = res
+
+    return base
 
 
 @websocket_ns.get('/asyncapi.json')

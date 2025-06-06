@@ -108,49 +108,47 @@
         "title": "StreamArgs",
         "type": "object"
       },
-      "ITorrent": {
-        "$defs": {
-          "EpisodeInfo": {
-            "properties": {
-              "seasonnum": {
-                "title": "Seasonnum",
+      "EpisodeInfo": {
+        "properties": {
+          "seasonnum": {
+            "title": "Seasonnum",
+            "type": "integer"
+          },
+          "epnum": {
+            "anyOf": [
+              {
                 "type": "integer"
               },
-              "epnum": {
-                "anyOf": [
-                  {
-                    "type": "integer"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "default": null,
-                "title": "Epnum"
+              {
+                "type": "null"
               }
-            },
-            "required": [
-              "seasonnum"
             ],
-            "title": "EpisodeInfo",
-            "type": "object"
-          },
-          "ProviderSource": {
-            "enum": [
-              "kickass",
-              "horriblesubs",
-              "rarbg",
-              "torrentscsv",
-              "nyaasi",
-              "piratebay"
-            ],
-            "title": "ProviderSource",
-            "type": "string"
+            "default": null,
+            "title": "Epnum"
           }
         },
+        "required": [
+          "seasonnum"
+        ],
+        "title": "EpisodeInfo",
+        "type": "object"
+      },
+      "ProviderSource": {
+        "enum": [
+          "kickass",
+          "horriblesubs",
+          "rarbg",
+          "torrentscsv",
+          "nyaasi",
+          "piratebay"
+        ],
+        "title": "ProviderSource",
+        "type": "string"
+      },
+      "ITorrent": {
         "properties": {
           "source": {
-            "$ref": "#/$defs/ProviderSource"
+            "$ref": "#/components/schemas/ProviderSource"
           },
           "title": {
             "title": "Title",
@@ -172,7 +170,7 @@
           "episode_info": {
             "anyOf": [
               {
-                "$ref": "#/$defs/EpisodeInfo"
+                "$ref": "#/components/schemas/EpisodeInfo"
               },
               {
                 "type": "null"
