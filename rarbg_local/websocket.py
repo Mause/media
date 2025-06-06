@@ -3,9 +3,10 @@ from collections import ChainMap
 from collections.abc import AsyncGenerator
 from typing import Annotated, Literal
 
+import yaml
 from fastapi import APIRouter, WebSocket
 from fastapi.requests import Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import Response
 from pydantic import BaseModel, SecretStr, ValidationError
 
 from .auth import security
@@ -174,6 +175,6 @@ def get_asyncapi():
     return base
 
 
-@websocket_ns.get('/asyncapi.json')
+@websocket_ns.get('/asyncapi.yaml')
 async def asyncapi_json():
-    return JSONResponse(get_asyncapi())
+    return Response(yaml.dump(get_asyncapi()), media_type='application/x-yaml')

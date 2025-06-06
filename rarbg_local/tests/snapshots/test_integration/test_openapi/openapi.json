@@ -1091,7 +1091,7 @@
         }
       }
     },
-    "/asyncapi.json": {
+    "/asyncapi.yaml": {
       "get": {
         "summary": "Asyncapi Json",
         "operationId": "asyncapi_json",

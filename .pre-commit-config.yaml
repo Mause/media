@@ -57,6 +57,7 @@ repos:
           - types-lxml
           - types-selenium
           - types-cachetools
+          - types-pyyaml
           - alembic
           - pydantic==2.11.4
           - lxml
