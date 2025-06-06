@@ -8,6 +8,7 @@ export default defineConfig({
     // to output your build into build dir the same as Webpack
     outDir: 'build',
     sourcemap: true,
+    rollupOptions: { external: ['util', 'fs'] },
   },
   server: {
     open: true,
