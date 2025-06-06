@@ -370,6 +370,9 @@ async def redirect_to_imdb(
     return RedirectResponse(f'https://www.imdb.com/title/{imdb_id}')
 
 
+root.include_router(websocket_ns)
+
+
 @root.api_route('/{resource:path}', methods=['GET', 'HEAD'], include_in_schema=False)
 @root.api_route('/', methods=['GET', 'HEAD'], include_in_schema=False)
 async def static(
@@ -382,7 +385,6 @@ async def static(
     return await static_files.get_response(filename, request.scope)
 
 
-root.include_router(websocket_ns)
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')

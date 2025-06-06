@@ -16,6 +16,7 @@ import { SWRConfig } from 'swr';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import last from 'lodash/last';
+import AsyncApiComponent, { FetchingSchemaInterface } from '@asyncapi/react-component';
 
 import { IndexComponent } from './IndexComponent';
 import {
@@ -356,6 +357,18 @@ function getRoutes() {
             </RouteTitle>
           ),
         },
+	{
+	  path: '/asyncapi',
+	  element: (
+	    <RouteTitle title="AsyncAPI">
+	      <AsyncApiComponent
+	      schema={
+		      {} satisfies FetchingSchemaInterface
+	      }
+	/>
+	    </RouteTitle>
+	  ),
+	},
         {
           path: '/',
           element: (
