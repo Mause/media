@@ -1090,6 +1090,22 @@
           }
         }
       }
+    },
+    "/asyncapi.json": {
+      "get": {
+        "summary": "Asyncapi Json",
+        "operationId": "asyncapi_json",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
