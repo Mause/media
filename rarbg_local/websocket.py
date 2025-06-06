@@ -5,6 +5,7 @@ from typing import Annotated, Literal
 
 from fastapi import APIRouter, WebSocket
 from fastapi.requests import Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, SecretStr, ValidationError
 
 from .auth import security
@@ -119,3 +120,63 @@ async def websocket_stream(websocket: WebSocket):
 
     logger.info('Finished streaming')
     await websocket.close(reason='Finished streaming')
+
+
+def get_asyncapi():
+    return {
+        "asyncapi": '3.0.0',
+        'info': {
+            'title': 'Create an AsyncAPI document for an API with WebSocket',
+            'version': '1.0.0',
+        },
+        'servers': {
+            'production': {
+                'host': "media.mause.me",
+                'pathname': "/ws",
+                'protocol': "wss",
+            }
+        },
+        'operations': {
+            'helloListener': {
+                'action': 'receive',
+                'channel': {'$ref': '#/channels/root'},
+                'messages': [
+                    {'$ref': '#/channels/root/messages/get_messages'},
+                    {'$ref': '#/channels/root/messages/results'},
+                ]
+            },
+        },
+        'channels': {
+            'root': {
+                'address': '/',
+                'messages': {
+                    'get_results': {
+                        'payload': {'$ref': '#/components/schemas/StreamArgs'}
+                    },
+                    'results': {
+                        'payload': {'$ref': '#/components/schemas/ITorrent'}
+                    }
+                },
+                'bindings': {
+                    'ws': {
+                        'query': {
+                            'type': 'object',
+                            'properties': {}
+                        }
+                    }
+                }
+            }
+        },
+        'components': {
+            'messages': {},
+            'schemas': {
+                'StreamArgs': StreamArgs.model_schema(),
+                'ITorrent': ITorrent.model_schema(),
+            }
+        }
+    }
+
+
+@root.get('/asyncapi.json')
+async def asyncapi_json():
+    return JSONResponse(get_asyncapi())

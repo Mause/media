@@ -880,3 +880,9 @@ async def test_websocket(
         'code': 1000,
         'reason': 'Finished streaming',
     }
+
+
+async def test_asyncapi(test_client, snapshot):
+    r = await test_client.get('/asyncapi.json')
+
+    assert_match_json(snapshot, r, 'asyncapi.json')
