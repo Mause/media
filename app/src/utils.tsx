@@ -59,7 +59,7 @@ export function getPrefix() {
   if (!prefix) {
     return '';
   } else if (prefix.includes('localhost')) {
-    return `http://localhost:5000`;
+    return '';
   } else if (prefix) {
     return `https://${prefix}`;
   }
