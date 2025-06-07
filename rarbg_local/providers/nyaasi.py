@@ -1,7 +1,9 @@
 from collections.abc import AsyncGenerator
 
 from fastapi.concurrency import run_in_threadpool
+from healthcheck import HealthcheckCallbackResponse
 from nyaapy.nyaasi.nyaa import Nyaa
+from nyaapy.torrent import Torrent
 from sentry_sdk import trace
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
@@ -26,7 +28,7 @@ class NyaaProvider(TvProvider):
         page = 0
         template = f'{name} ' + format(season, episode)
 
-        def search():
+        def search() -> list[Torrent]:
             return trace(ny.search)(keyword=template, page=page)
 
         while True:
@@ -46,5 +48,5 @@ class NyaaProvider(TvProvider):
                     episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
                 )
 
-    async def health(self):
+    async def health(self) -> HealthcheckCallbackResponse:
         return await self.check_http('https://nyaa.si')
