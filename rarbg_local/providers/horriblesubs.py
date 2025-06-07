@@ -60,8 +60,8 @@ async def get_show_id(path: str) -> int | None:
         return int(m.group(1)) if m else None
 
 
-def parse(html: ElementBase) -> dict[str, str]:
-    def process(li: ElementBase) -> tuple[str, str]:
+def parse(html: 'ElementBase') -> dict[str, str]:
+    def process(li: 'ElementBase') -> tuple[str, str]:
         line = ' '.join(line.strip('- \n') for line in li.xpath('./a/text()')).strip()
         return (
             ' '.join(map(str.strip, line.splitlines())),
@@ -95,7 +95,7 @@ async def get_downloads(
 async def _get_downloads(
     showid: int, type: HorriblesubsDownloadType, page: int
 ) -> Iterable[Result]:
-    def process(div: ElementBase) -> list[Result]:
+    def process(div: 'ElementBase') -> list[Result]:
         def fn(res: str) -> str | None:
             t = div.xpath(
                 f'.//div[contains(@class, "link-{res}")]/span/a[@title="Magnet'
