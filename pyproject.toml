@@ -97,6 +97,7 @@ module = [
     "rarbg_local.providers.torrents_csv",
     "rarbg_local.providers.horriblesubs",
     "rarbg_local.providers.nyaasi",
+    "rarbg_local.providers.piratebay",
     "rarbg_local.jikan",
 ]
 disallow_untyped_defs = true
