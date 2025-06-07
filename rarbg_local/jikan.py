@@ -6,7 +6,7 @@ from .tmdb import get_tv
 from .utils import cached
 
 
-def make_jikan():
+def make_jikan() -> ClientSession:
     return ClientSession(base_url='https://api.jikan.moe/v4/')
 
 
@@ -26,5 +26,5 @@ async def get_names(tmdb_id: int) -> set[str]:
         return set([tv.name, result['title']] + result['title_synonyms'])
 
 
-def closeness(key, names):
+def closeness(key: str, names: list[str]) -> int:
     return max(fuzz.ratio(key.lower(), name.lower()) for name in names)
