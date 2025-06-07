@@ -16,7 +16,6 @@ import { SWRConfig } from 'swr';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import last from 'lodash/last';
-import type { FetchingSchemaInterface } from '@asyncapi/react-component';
 
 import { IndexComponent } from './IndexComponent';
 import {
@@ -26,7 +25,7 @@ import {
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import { OptionsComponent } from './OptionsComponent';
-import { load, MLink, ExtMLink, getToken, getPrefix } from './utils';
+import { load, MLink, ExtMLink, getToken } from './utils';
 import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
@@ -357,28 +356,6 @@ function getRoutes() {
               <SitemapRoot />
             </RouteTitle>
           ),
-        },
-        {
-          path: '/asyncapi',
-          HydrateFallback: () => <div>Loading element...</div>,
-          lazy: async () => {
-            const { default: AsyncApiComponent } = await import(
-              '@asyncapi/react-component'
-            );
-            return {
-              element: (
-                <RouteTitle title="AsyncAPI">
-                  <AsyncApiComponent
-                    schema={
-                      {
-                        url: `${getPrefix()}/asyncapi.json`,
-                      } satisfies FetchingSchemaInterface
-                    }
-                  />
-                </RouteTitle>
-              ),
-            };
-          },
         },
         {
           path: '/',
