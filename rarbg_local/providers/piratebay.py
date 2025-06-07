@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from urllib.parse import urlencode
 
 import aiohttp
+from healthcheck import HealthcheckCallbackResponse
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
@@ -37,7 +38,7 @@ categories = {
 }
 
 
-def convert_category(category: int):
+def convert_category(category: int) -> str:
     for broad, subcats in categories.items():
         for subcat, cat in subcats.items():
             if category == cat:
@@ -102,5 +103,5 @@ class PirateBayProvider(TvProvider, MovieProvider):
                     category=convert_category(int(item['category'])),
                 )
 
-    async def health(self):
+    async def health(self) -> HealthcheckCallbackResponse:
         return await self.check_http(self.root)
