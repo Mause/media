@@ -95,5 +95,6 @@ module = [
     "rarbg_local.providers",
     "rarbg_local.providers.abc",
     "rarbg_local.providers.torrents_csv",
+    "rarbg_local.providers.horriblesubs",
 ]
 disallow_untyped_defs = true
