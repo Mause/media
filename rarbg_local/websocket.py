@@ -177,4 +177,4 @@ def get_asyncapi():
 
 @websocket_ns.get('/asyncapi.yaml')
 async def asyncapi_json():
-    return Response(yaml.dump(get_asyncapi()), media_type='application/x-yaml')
+    return Response(yaml.dump(get_asyncapi()), media_type='text/yaml')
