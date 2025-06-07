@@ -74,6 +74,7 @@
     "@types/qs": "^6.9.5",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@vitejs/plugin-basic-ssl": "^2.0.0",
     "@vitejs/plugin-react": "^4.4.1",
     "@vitest/ui": "^3.2.1",
     "colors.css": "^3.0.0",
@@ -88,7 +89,6 @@
     "prettier": "3.5.3",
     "typescript-eslint": "^8.33.1",
     "vite": "^6.3.5",
-    "vite-plugin-mkcert": "^1.17.8",
     "vitest": "^3.2.1"
   },
   "prettier": {
