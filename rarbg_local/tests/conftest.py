@@ -88,7 +88,7 @@ def session(fastapi_app, tmp_path, _function_event_loop):
 
 
 def themoviedb(
-    responses: Aioresponses, path: str, response: str, query: str = ''
+    responses: Aioresponses, path: str, response: list | dict, query: str = ''
 ) -> None:
     add_json(
         responses,
