@@ -1,7 +1,7 @@
 import base64
 import json
 from datetime import datetime
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 from unittest.mock import patch
 
 from async_asgi_testclient import TestClient
@@ -12,6 +12,7 @@ from lxml.etree import tostring
 from psycopg2 import OperationalError
 from pydantic import BaseModel
 from pytest import fixture, mark, raises
+from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.future import select
@@ -25,6 +26,7 @@ from ..models import ITorrent
 from ..new import ProviderSource, SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
+from ..types import ImdbId, TmdbId
 from .conftest import add_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
@@ -34,6 +36,10 @@ from .factories import (
     TvApiResponseFactory,
     UserFactory,
 )
+
+if TYPE_CHECKING:
+    from lxml.etree import ElementBase
+
 
 HASH_STRING = '00000000000000000'
 
@@ -693,7 +699,9 @@ async def test_static(uri, test_client):
     assert r.status_code == 200
 
 
-def add_xml(responses, method, url, body):
+def add_xml(
+    responses: RequestsMock, method: str, url: str, body: 'ElementBase'
+) -> None:
     responses.add(
         method,
         url,
@@ -807,7 +815,9 @@ async def test_piratebay(aioresponses, snapshot):
         ),
     )
     res = await tolist(
-        PirateBayProvider().search_for_movie(imdb_id='tt0000000', tmdb_id=1)
+        PirateBayProvider().search_for_movie(
+            imdb_id=ImdbId('tt0000000'), tmdb_id=TmdbId(1)
+        )
     )
 
     snapshot.assert_match(

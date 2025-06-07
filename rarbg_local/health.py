@@ -2,7 +2,7 @@ import contextvars
 from collections.abc import Callable
 from datetime import datetime
 from os import getpid
-from typing import Any, TypeVar
+from typing import Any, TypeVar, cast
 
 from fastapi import APIRouter
 from fastapi.requests import Request
@@ -108,10 +108,10 @@ async def check_database():
 
 
 async def pool():
-    def pget(field):
+    def pget(field: str) -> int:
         value = getattr(pool, field, None)
 
-        return value() if callable(value) else value
+        return cast(int, value() if callable(value) else value)
 
     sessionlocal = await get(get_session_local)
 
