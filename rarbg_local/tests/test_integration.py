@@ -1,7 +1,7 @@
 import base64
 import json
 from datetime import datetime
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 from unittest.mock import patch
 
 from async_asgi_testclient import TestClient
@@ -36,6 +36,10 @@ from .factories import (
     TvApiResponseFactory,
     UserFactory,
 )
+
+if TYPE_CHECKING:
+    from lxml.etree import ElementBase
+
 
 HASH_STRING = '00000000000000000'
 
@@ -696,7 +700,7 @@ async def test_static(uri, test_client):
 
 
 def add_xml(
-    responses: RequestsMock, method: str, url: str, body: E.ElementBase
+    responses: RequestsMock, method: str, url: str, body: 'ElementBase'
 ) -> None:
     responses.add(
         method,
