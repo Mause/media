@@ -10,6 +10,7 @@ from fastapi import Depends
 from sqlalchemy import (
     DateTime,
     ForeignKey,
+    Integer,
     String,
     create_engine,
     delete,
@@ -44,7 +45,10 @@ T = TypeVar('T')
 
 
 class Base(RepresentableBase, DeclarativeBase):
-    pass
+    type_annotation_map = {
+        TmdbId: Integer,
+        ImdbId: String,
+    }
 
 
 class Download(Base):
