@@ -1,7 +1,5 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
-import inject from '@rollup/plugin-inject';
-
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default defineConfig({
@@ -9,11 +7,8 @@ export default defineConfig({
     react(),
     nodePolyfills({
       overrides: {
-        fs: 'browserfs/dist/shims/fs',
+        fs: 'memfs',
       },
-    }),
-    inject({
-      BrowserFS: '/src/bfs.js',
     }),
   ],
   envPrefix: 'REACT_APP_',
