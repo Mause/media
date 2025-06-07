@@ -36,7 +36,7 @@ from sqlalchemy_repr import RepresentableBase
 
 from .settings import Settings, get_settings
 from .singleton import singleton
-from .types import TmdbId
+from .types import ImdbId, TmdbId
 from .utils import precondition
 
 logger = logging.getLogger(__name__)
@@ -52,9 +52,9 @@ class Download(Base):
     _json_exclude = {'movie', 'episode'}
     _json_include = {'added_by'}
     id: Mapped[int] = mapped_column(primary_key=True)
-    tmdb_id: Mapped[int | None]
+    tmdb_id: Mapped[TmdbId | None]
     transmission_id: Mapped[str]
-    imdb_id: Mapped[str]
+    imdb_id: Mapped[ImdbId]
     type: Mapped[str]
     movie: Mapped['MovieDetails'] = relationship(uselist=False, cascade='all,delete')
     movie_id: Mapped[int | None] = mapped_column(
