@@ -3,6 +3,7 @@ from collections.abc import AsyncGenerator
 from re import Pattern
 from typing import Annotated, TypeVar
 
+import pytest_asyncio
 import uvloop
 from async_asgi_testclient import TestClient
 from fastapi import Depends
@@ -10,8 +11,8 @@ from fastapi.security import SecurityScopes
 from pytest import fixture, hookimpl
 from responses import RequestsMock
 from sqlalchemy.engine.url import URL
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
 from ..db import Base, Role, User, get_db, get_session_local
@@ -43,8 +44,10 @@ def clear_cache():
 
 @fixture
 def test_client(fastapi_app, clear_cache, user) -> TestClient:
-    async def gcu(scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]):
-        res = session.execute(select(User)).scalars().first()
+    async def gcu(
+        scopes: SecurityScopes, session: Annotated[AsyncSession, Depends(get_db)]
+    ):
+        res = (await session.execute(select(User))).scalars().first()
         assert res
         return res
 
@@ -52,36 +55,41 @@ def test_client(fastapi_app, clear_cache, user) -> TestClient:
     return TestClient(fastapi_app)
 
 
-@fixture
-def user(session):
+@pytest_asyncio.fixture
+async def user(session):
     u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
     session.add(u)
-    session.commit()
+    await session.commit()
     return u
 
 
 @fixture
-def session(fastapi_app, tmp_path, _function_event_loop):
+def _fixture_event_loop():
+    return uvloop.new_event_loop()
+
+
+@pytest_asyncio.fixture
+async def session(fastapi_app, tmp_path):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
         database_url=str(
             URL.create(
-                'sqlite',
+                'sqlite+aiosqlite',
                 database=str(tmp_path / 'test.db'),
             )
         ),
         plex_token='plex_token',
     )
 
-    Session = _function_event_loop.run_until_complete(
-        get(fastapi_app, get_session_local)
-    )
+    Session = await get(fastapi_app, get_session_local)
     assert hasattr(Session, 'kw'), Session
     engine = Session.kw['bind']
-    assert 'sqlite' in repr(engine), repr(engine)
-    Base.metadata.create_all(engine)
+    assert 'sqlite' in repr(engine.sync_engine), repr(engine.sync_engine)
 
-    with Session() as session:
+    async with engine.connect() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    async with Session() as session:
         session_var.set(session)
         yield session
 

@@ -14,8 +14,9 @@ from pydantic import BaseModel
 from pytest import fixture, mark, raises
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session
+from sqlalchemy.orm import joinedload
 from yarl import URL
 
 from ..auth import get_current_user
@@ -116,7 +117,7 @@ async def test_download_movie(
 
     add_torrent.assert_called_with(magnet, 'movies')
 
-    download = session.execute(select(Download)).scalars().first()
+    download = (await session.execute(select(Download))).scalars().first()
     assert download.title == 'Bit'
 
 
@@ -157,7 +158,11 @@ async def test_download(test_client, aioresponses, responses, add_torrent, sessi
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
 
-    download = session.execute(select(Download)).scalars().first()
+    download = (
+        (await session.execute(select(Download).options(joinedload(Download.episode))))
+        .scalars()
+        .first()
+    )
     assert download
     assert download.title == 'Satoshi, Go, and Lugia Go!'
     assert download.episode
@@ -194,7 +199,11 @@ async def test_download_season_pack(
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Watchmen/Season 1')
 
-    download = session.execute(select(Download)).scalars().first()
+    download = (
+        (await session.execute(select(Download).options(joinedload(Download.episode))))
+        .scalars()
+        .first()
+    )
     assert download
     assert download.title == 'Season 1'
     assert download.episode
@@ -249,7 +258,7 @@ async def test_index(
             ),
         ]
     )
-    session.commit()
+    await session.commit()
 
     aioresponses.add(
         'https://api.themoviedb.org/3/tv/3/season/1',
@@ -329,22 +338,28 @@ async def test_search(aioresponses, test_client, snapshot):
 
 
 @mark.asyncio
-async def test_delete_cascade(test_client: TestClient, session):
+async def test_delete_cascade(test_client: TestClient, session: AsyncSession):
+    async def check():
+        return (
+            len(await get_episodes(session)),
+            len((await session.execute(select(Download))).all()),
+        )
+
     e = EpisodeDetailsFactory.create()
     session.add(e)
-    session.commit()
+    await session.commit()
 
-    assert len(get_episodes(session)) == 1
-    assert len(session.execute(select(Download)).scalars().all()) == 1
+    assert await check() == (1, 1)
+    assert len(await get_episodes(session)) == 1
+    assert len((await session.execute(select(Download))).scalars().all()) == 1
 
     res = await test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
     assert res.json() == {}
 
-    session.commit()
+    await session.commit()
 
-    assert len(get_episodes(session)) == 0
-    assert len(session.execute(select(Download)).scalars().all()) == 0
+    assert await check() == (0, 0)
 
 
 @mark.asyncio
@@ -383,11 +398,11 @@ async def test_select_season(aioresponses, test_client: TestClient, snapshot) ->
 
 
 @mark.asyncio
-async def test_foreign_key_integrity(session: Session):
+async def test_foreign_key_integrity(session: AsyncSession):
     # invalid fkey_id
     ins = Download.__table__.insert().values(id=1, movie_id=99)
     with raises(IntegrityError):
-        session.execute(ins)
+        await session.execute(ins)
 
 
 @mark.asyncio
@@ -397,6 +412,8 @@ async def test_delete_monitor(aioresponses, test_client, session):
         '/movie/5',
         MovieResponseFactory.build(title='Hello World').model_dump(),
     )
+    ls = await test_client.get('/api/monitor')
+    ls = ls.json()
     themoviedb(
         aioresponses,
         '/tv/5',
@@ -408,6 +425,8 @@ async def test_delete_monitor(aioresponses, test_client, session):
     r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
     assert r.status_code == 201
 
+    ls = await test_client.get('/api/monitor')
+    ls = ls.json()
     (
         await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'TV'})
     ).raise_for_status()
@@ -441,8 +460,8 @@ async def test_delete_monitor(aioresponses, test_client, session):
         r = await test_client.delete(f'/api/monitor/{item["id"]}')
         assert r.status_code == 200
 
-    ls = (await test_client.get('/api/monitor')).json()
-    assert ls == []
+    ls = await test_client.get('/api/monitor')
+    assert ls.json() == []
 
 
 @mark.asyncio
@@ -497,7 +516,7 @@ async def test_update_monitor(
     r.raise_for_status()
     assert_match_json(snapshot, r, 'cron.json')
 
-    assert session.get(Monitor, ident).status
+    assert (await session.get(Monitor, ident)).status
 
     message = aioresponses.requests['POST', URL('https://ntfy.sh')][0]
     snapshot.assert_match(
@@ -521,9 +540,10 @@ async def test_stats(test_client, session):
             MovieDetailsFactory.create(download__added_by=user1),
         ]
     )
-    session.commit()
+    await session.commit()
 
-    assert (await test_client.get('/api/stats')).json() == [
+    res = await test_client.get('/api/stats')
+    assert res.json() == [
         {'user': 'user1', 'values': {'episode': 1, 'movie': 1}},
         {'user': 'user2', 'values': {'episode': 1, 'movie': 0}},
     ]
