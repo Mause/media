@@ -180,9 +180,9 @@ class Monitor(Base):
     tmdb_id: Mapped[TmdbId] = mapped_column()
 
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    added_by: Mapped['User'] = relationship('User')
+    added_by: Mapped['User'] = relationship()
 
-    title: Mapped[str] = mapped_column(String())
+    title: Mapped[str] = mapped_column()
     type: Mapped[MonitorMediaType] = mapped_column(
         Enum(MonitorMediaType),
         default=MonitorMediaType.MOVIE.name,
