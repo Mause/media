@@ -385,9 +385,10 @@ async def test_select_season(aioresponses, test_client: TestClient, snapshot) ->
 @mark.asyncio
 async def test_foreign_key_integrity(session: Session):
     # invalid fkey_id
-    ins = Download.__table__.insert().values(id=1, movie_id=99)
     with raises(IntegrityError):
-        session.execute(ins)
+        ins = Download(id=1, movie_id=99)
+        session.add(ins)
+        session.commit()
 
 
 @mark.asyncio
