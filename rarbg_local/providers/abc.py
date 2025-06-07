@@ -25,7 +25,7 @@ class Provider(ABC):
     type: ProviderSource
 
     @abstractmethod
-    def health(self) -> HealthcheckCallbackResponse:
+    async def health(self) -> HealthcheckCallbackResponse:
         raise NotImplementedError()
 
     async def check_http(

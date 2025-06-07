@@ -94,5 +94,6 @@ module = [
     "rarbg_local.tmdb",
     "rarbg_local.providers",
     "rarbg_local.providers.abc",
+    "rarbg_local.providers.torrents_csv",
 ]
 disallow_untyped_defs = true
