@@ -89,5 +89,5 @@ mypy_path = "stubs"
 disallow_untyped_defs = false
 
 [[tool.mypy.overrides]]
-module = ["rarbg_local.utils", "rarbg_local.tmdb"]
+module = ["rarbg_local.utils", "rarbg_local.tmdb", "rarbg_local.providers"]
 disallow_untyped_defs = true
