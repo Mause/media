@@ -3,8 +3,10 @@ from collections import ChainMap
 from collections.abc import AsyncGenerator
 from typing import Annotated, Literal
 
+import yaml
 from fastapi import APIRouter, WebSocket
 from fastapi.requests import Request
+from fastapi.responses import Response
 from pydantic import BaseModel, SecretStr, ValidationError
 
 from .auth import security
@@ -119,3 +121,60 @@ async def websocket_stream(websocket: WebSocket):
 
     logger.info('Finished streaming')
     await websocket.close(reason='Finished streaming')
+
+
+def get_asyncapi():
+    base = {
+        "asyncapi": '3.0.0',
+        'info': {
+            'title': 'Create an AsyncAPI document for an API with WebSocket',
+            'version': '1.0.0',
+        },
+        'servers': {
+            'production': {
+                'host': "media.mause.me",
+                'pathname': "/ws",
+                'protocol': "wss",
+            }
+        },
+        'operations': {
+            'helloListener': {
+                'action': 'receive',
+                'channel': {'$ref': '#/channels/root'},
+                'messages': [
+                    {'$ref': '#/channels/root/messages/get_results'},
+                    {'$ref': '#/channels/root/messages/results'},
+                ],
+            },
+        },
+        'channels': {
+            'root': {
+                'address': '/',
+                'messages': {
+                    'get_results': {
+                        'payload': {'$ref': '#/components/schemas/StreamArgs'}
+                    },
+                    'results': {'payload': {'$ref': '#/components/schemas/ITorrent'}},
+                },
+                'bindings': {'ws': {'query': {'type': 'object', 'properties': {}}}},
+            }
+        },
+        'components': {
+            'messages': {},
+            'schemas': {},
+        },
+    }
+
+    for model in (StreamArgs, ITorrent):
+        res = model.model_json_schema(
+            ref_template='#/components/schemas/{model}',
+        )
+        base['components']['schemas'].update(res.pop('$defs', {}))
+        base['components']['schemas'][model.__name__] = res
+
+    return base
+
+
+@websocket_ns.get('/asyncapi.yaml')
+async def asyncapi_json():
+    return Response(yaml.dump(get_asyncapi()), media_type='text/yaml')

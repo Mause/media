@@ -880,3 +880,10 @@ async def test_websocket(
         'code': 1000,
         'reason': 'Finished streaming',
     }
+
+
+@mark.asyncio
+async def test_asyncapi(test_client, snapshot):
+    r = await test_client.get('/asyncapi.yaml')
+
+    snapshot.assert_match(r.text, 'asyncapi.yaml')

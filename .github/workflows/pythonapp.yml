@@ -28,7 +28,7 @@ jobs:
           cache-dependency-glob: 'uv.lock'
       - name: Install dependencies
         run: |
-          uv sync --dev --locked
+          uv sync --dev --locked --all-groups
       - name: Run mypy
         uses: liskin/gh-problem-matcher-wrap@v3
         with:

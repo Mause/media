@@ -8,6 +8,7 @@
     "css-vendor/@babel/runtime": "^7.27.0"
   },
   "dependencies": {
+    "@asyncapi/react-component": "^2.6.3",
     "@auth0/auth0-react": "^2.0.0",
     "@babel/runtime": "^7.27.3",
     "@csstools/normalize.css": "^12.0.0",
@@ -62,6 +63,8 @@
     ]
   },
   "devDependencies": {
+    "@asyncapi/cli": "^3.1.1",
+    "@asyncapi/html-template": "^2.3.14",
     "@eslint/compat": "^1.2.9",
     "@eslint/js": "^9.27.0",
     "@testing-library/dom": "^10.4.0",
@@ -83,12 +86,14 @@
     "eslint-plugin-import-x": "^4.12.2",
     "jiti": "^2.4.2",
     "jsdom": "^26.1.0",
+    "memfs": "^4.17.2",
     "mockdate": "^3.0.2",
     "moxios": "^0.4.0",
     "prettier": "3.5.3",
     "typescript-eslint": "^8.33.1",
     "vite": "^6.3.5",
     "vite-plugin-mkcert": "^1.17.8",
+    "vite-plugin-node-polyfills": "^0.23.0",
     "vitest": "^3.2.1"
   },
   "prettier": {

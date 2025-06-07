@@ -1,9 +1,18 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import mkcert from 'vite-plugin-mkcert';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default defineConfig({
-  plugins: [react(), mkcert()],
+  plugins: [
+    react(),
+    mkcert(),
+    nodePolyfills({
+      overrides: {
+        fs: 'memfs',
+      },
+    }),
+  ],
   envPrefix: 'REACT_APP_',
   build: {
     // to output your build into build dir the same as Webpack

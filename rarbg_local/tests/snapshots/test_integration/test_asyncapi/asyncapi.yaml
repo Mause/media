@@ -1,0 +1,124 @@
+asyncapi: 3.0.0
+channels:
+  root:
+    address: /
+    bindings:
+      ws:
+        query:
+          properties: {}
+          type: object
+    messages:
+      get_results:
+        payload:
+          $ref: '#/components/schemas/StreamArgs'
+      results:
+        payload:
+          $ref: '#/components/schemas/ITorrent'
+components:
+  messages: {}
+  schemas:
+    EpisodeInfo:
+      properties:
+        epnum:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          default: null
+          title: Epnum
+        seasonnum:
+          title: Seasonnum
+          type: integer
+      required:
+      - seasonnum
+      title: EpisodeInfo
+      type: object
+    ITorrent:
+      properties:
+        category:
+          title: Category
+          type: string
+        download:
+          pattern: '^magnet:'
+          title: Download
+          type: string
+        episode_info:
+          anyOf:
+          - $ref: '#/components/schemas/EpisodeInfo'
+          - type: 'null'
+          default: null
+        seeders:
+          title: Seeders
+          type: integer
+        source:
+          $ref: '#/components/schemas/ProviderSource'
+        title:
+          title: Title
+          type: string
+      required:
+      - source
+      - title
+      - seeders
+      - download
+      - category
+      title: ITorrent
+      type: object
+    ProviderSource:
+      enum:
+      - kickass
+      - horriblesubs
+      - rarbg
+      - torrentscsv
+      - nyaasi
+      - piratebay
+      title: ProviderSource
+      type: string
+    StreamArgs:
+      properties:
+        authorization:
+          format: password
+          title: Authorization
+          type: string
+          writeOnly: true
+        episode:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          default: null
+          title: Episode
+        season:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          default: null
+          title: Season
+        tmdb_id:
+          title: Tmdb Id
+          type: integer
+        type:
+          enum:
+          - series
+          - movie
+          title: Type
+          type: string
+      required:
+      - authorization
+      - type
+      - tmdb_id
+      title: StreamArgs
+      type: object
+info:
+  title: Create an AsyncAPI document for an API with WebSocket
+  version: 1.0.0
+operations:
+  helloListener:
+    action: receive
+    channel:
+      $ref: '#/channels/root'
+    messages:
+    - $ref: '#/channels/root/messages/get_results'
+    - $ref: '#/channels/root/messages/results'
+servers:
+  production:
+    host: media.mause.me
+    pathname: /ws
+    protocol: wss
