@@ -8476,6 +8476,7 @@ __metadata:
     typescript-eslint: "npm:^8.33.1"
     typescript-string-operations: "npm:^1.5.1"
     vite: "npm:^6.3.5"
+    vite-plugin-mkcert: "npm:^1.17.8"
     vite-plugin-node-polyfills: "npm:^0.23.0"
     vitest: "npm:^3.2.1"
   languageName: unknown
@@ -8773,7 +8774,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:>=0.13.0, axios@npm:^1.8.2":
+"axios@npm:>=0.13.0, axios@npm:^1.8.2, axios@npm:^1.8.3":
   version: 1.9.0
   resolution: "axios@npm:1.9.0"
   dependencies:
@@ -19985,6 +19986,19 @@ __metadata:
   bin:
     vite-node: vite-node.mjs
   checksum: 10/6cab82aee23137680605e58118c25094d26f7e4f6dee9bce82e4c2288b4ec1419eeae93056992bfd1e7a34611d20d2dc28634a47526dbdf52d392bc2b26eeb5a
+  languageName: node
+  linkType: hard
+
+"vite-plugin-mkcert@npm:^1.17.8":
+  version: 1.17.8
+  resolution: "vite-plugin-mkcert@npm:1.17.8"
+  dependencies:
+    axios: "npm:^1.8.3"
+    debug: "npm:^4.4.0"
+    picocolors: "npm:^1.1.1"
+  peerDependencies:
+    vite: ">=3"
+  checksum: 10/7b26333c737ecdd5e1f3663202938839dc07e897f553f8d82597830db3d8a6d40b7d07e1b51e6bae2d7b02c28650589c55984dea63b2dec1f2f41eb650875c64
   languageName: node
   linkType: hard
 
