@@ -104,11 +104,9 @@ async def monitor_cron(
         session.execute(select(Monitor).filter(not_(Monitor.status))).scalars().all()
     )
 
-
     async def do_with(monitor):
         with session.begin_nested() as nested:
             return await check_monitor(monitor, nested, ntfy)
-
 
     tasks = [do_with(monitor) for monitor in monitors]
 
