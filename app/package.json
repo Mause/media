@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "@asyncapi/cli": "^3.1.1",
+    "@asyncapi/html-template": "^2.3.14",
     "@eslint/compat": "^1.2.9",
     "@eslint/js": "^9.27.0",
     "@testing-library/dom": "^10.4.0",
