@@ -89,9 +89,9 @@ class EpisodeDetails(Base):
     download: Mapped['Download'] = relationship(
         back_populates='episode', passive_deletes=True, uselist=False
     )
-    show_title: Mapped[str] = mapped_column()
-    season: Mapped[int] = mapped_column()
-    episode: Mapped[int | None] = mapped_column()
+    show_title: Mapped[str]
+    season: Mapped[int]
+    episode: Mapped[int | None]
 
     def is_season_pack(self):
         return self.episode is None
@@ -177,12 +177,12 @@ class Monitor(Base):
     __tablename__ = 'monitor'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    tmdb_id: Mapped[TmdbId] = mapped_column()
+    tmdb_id: Mapped[TmdbId]
 
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship()
 
-    title: Mapped[str] = mapped_column()
+    title: Mapped[str]
     type: Mapped[MonitorMediaType] = mapped_column(
         Enum(MonitorMediaType),
         default=MonitorMediaType.MOVIE.name,
