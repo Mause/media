@@ -39,3 +39,18 @@ if 'SENTRY_DSN' in os.environ:
     from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
     app = SentryAsgiMiddleware(app)
+
+token = os.environ.get('LOGFIRE_TOKEN')
+if token:
+    import logfire
+
+    logfire.configure(
+        service_name='media-api', service_version=app.version, token=token
+    )
+    logfire.instrument_fastapi(app, capture_headers=True)
+    logfire.instrument_sqlite3()
+    logfire.instrument_psycopg()
+    logfire.instrument_asyncpg()
+    logfire.instrument_requests()
+    logfire.instrument_sqlalchemy()
+    logfire.instrument_pydantic()
