@@ -27,7 +27,7 @@ from ..new import ProviderSource, SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
 from ..types import ImdbId, TmdbId
-from .conftest import add_json, themoviedb, tolist
+from .conftest import add_json, assert_match_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
     ITorrentFactory,
@@ -213,10 +213,6 @@ def shallow(d: dict):
     return {k: v for k, v in d.items() if not isinstance(v, dict)}
 
 
-def assert_match_json(snapshot, res, name):
-    snapshot.assert_match(json.dumps(res.json(), indent=2), name)
-
-
 @mark.asyncio
 async def test_index(
     responses, aioresponses, test_client, get_torrent, snapshot, session, user
@@ -398,7 +394,7 @@ async def test_foreign_key_integrity(session: Session):
 
 
 @mark.asyncio
-async def test_delete_monitor(aioresponses, test_client, session):
+async def test_delete_monitor(aioresponses, test_client, session, snapshot):
     themoviedb(
         aioresponses,
         '/movie/5',
@@ -419,32 +415,11 @@ async def test_delete_monitor(aioresponses, test_client, session):
         await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'TV'})
     ).raise_for_status()
 
-    ls = (await test_client.get('/api/monitor')).json()
+    ls = await test_client.get('/api/monitor')
 
-    added_by = {
-        'first_name': '',
-        'username': 'python',
-    }
-    assert ls == [
-        {
-            'type': 'MOVIE',
-            'title': 'Hello World',
-            'tmdb_id': 5,
-            'id': 1,
-            'status': False,
-            'added_by': added_by,
-        },
-        {
-            'added_by': added_by,
-            'id': 2,
-            'status': False,
-            'title': 'Hello World',
-            'tmdb_id': 5,
-            'type': 'TV',
-        },
-    ]
+    assert_match_json(snapshot, ls, 'ls.json')
 
-    for item in ls:
+    for item in ls.json():
         r = await test_client.delete(f'/api/monitor/{item["id"]}')
         assert r.status_code == 200
 
