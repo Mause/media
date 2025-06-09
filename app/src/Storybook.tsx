@@ -1,9 +1,20 @@
 import MenuItem from '@mui/material/MenuItem';
 
+import { useEffect, useState } from 'react';
+
+import { Progress } from './render';
 import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 
 export default function Storybook() {
+  const [percentDone, setPercentDone] = useState(0.5);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPercentDone(Math.random());
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+
   return (
     <div>
       <ContextMenu>
@@ -28,6 +39,23 @@ export default function Storybook() {
         ]}
         error={undefined}
         isValidating={false}
+      />
+      <hr />
+      <Progress
+        torrents={{
+          TRANSMISSION_ID: {
+            id: 1,
+            percentDone,
+            eta: 3600,
+            hashString: '1234567890abcdef1234567890abcdef12345678',
+            files: [],
+          },
+        }}
+        item={{
+          download: {
+            transmission_id: 'TRANSMISSION_ID',
+          },
+        }}
       />
     </div>
   );
