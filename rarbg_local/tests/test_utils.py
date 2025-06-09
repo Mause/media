@@ -5,7 +5,7 @@ from pytest import mark
 from ..utils import Message, create_monitored_task
 
 
-async def coro(queue: asyncio.Queue[int]):
+async def coro(queue: asyncio.Queue[int | Message]):
     await queue.put(1)
 
 
