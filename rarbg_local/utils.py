@@ -99,3 +99,7 @@ def create_monitored_task(
     future = asyncio.ensure_future(coro)
     future.add_done_callback(partial(_callback, send))
     return future
+
+
+def format_marker(season: int, episode: int | None) -> str:
+    return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'

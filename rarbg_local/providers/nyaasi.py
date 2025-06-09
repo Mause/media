@@ -9,7 +9,8 @@ from sentry_sdk import trace
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_tv
 from ..types import ImdbId, TmdbId
-from .abc import TvProvider, format, tv_convert
+from ..utils import format_marker
+from .abc import TvProvider, tv_convert
 
 
 class NyaaProvider(TvProvider):
@@ -26,7 +27,7 @@ class NyaaProvider(TvProvider):
 
         name = (await get_tv(tmdb_id)).name
         page = 0
-        template = f'{name} ' + format(season, episode)
+        template = f'{name} ' + format_marker(season, episode)
 
         def search() -> list[Torrent]:
             return trace(ny.search)(keyword=template, page=page)
