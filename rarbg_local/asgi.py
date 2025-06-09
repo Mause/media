@@ -4,24 +4,22 @@ from typing import cast
 
 from fastapi import FastAPI
 
+from .config import commit
 from .new import create_app
 
 logger = logging.getLogger(__name__)
 
 
-if 'SENTRY_DSN' in os.environ:
+if sentry_dsn := os.environ.get('SENTRY_DSN'):
     import sentry_sdk
-    from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
     from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
     logger.info('Configuring Sentry')
 
     sentry_sdk.init(
-        os.environ['SENTRY_DSN'],
+        dsn=sentry_dsn,
         integrations=[SqlalchemyIntegration()],
-        release=os.environ.get(
-            'HEROKU_SLUG_COMMIT', os.environ.get('RAILWAY_GIT_COMMIT_SHA')
-        ),
+        release=commit,
         # Add data like request headers and IP for users, if applicable;
         send_default_pii=True,
         # Set traces_sample_rate to 1.0 to capture 100%
@@ -34,8 +32,23 @@ if 'SENTRY_DSN' in os.environ:
         # there is an active span.
         profile_lifecycle="trace",
     )
-
-    app = cast(FastAPI, SentryAsgiMiddleware(create_app()))
 else:
     logger.warning('Not configuring sentry')
-    app = create_app()
+
+app = create_app()
+
+if token := os.environ.get('LOGFIRE_TOKEN'):
+    import logfire
+    from opentelemetry.instrumentation.aiohttp_client import AioHttpClientInstrumentor
+
+    logfire.configure(service_name='media-api', service_version=commit, token=token)
+    logfire.instrument_fastapi(app, capture_headers=True)
+    logfire.instrument_requests()
+    logfire.instrument_sqlalchemy()
+    logfire.instrument_pydantic()
+    AioHttpClientInstrumentor().instrument()
+
+if sentry_dsn:
+    from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+
+    app = cast(FastAPI, SentryAsgiMiddleware(app))

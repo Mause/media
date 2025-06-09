@@ -27,6 +27,7 @@ from sqlalchemy.orm.session import Session, object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
+from .config import commit, production
 from .db import (
     Download,
     EpisodeDetails,
@@ -394,9 +395,6 @@ api.include_router(health, prefix='/diagnostics')
 
 
 def create_app() -> FastAPI:
-    keys = ['HEROKU_SLUG_COMMIT', 'RAILWAY_GIT_COMMIT_SHA']
-    value = next((os.environ[key] for key in keys if key in os.environ), None)
-
     app = FastAPI(
         servers=[
             {
@@ -413,9 +411,8 @@ def create_app() -> FastAPI:
             {"url": "https://media.mause.me/", "description": "Production"},
         ],
         title='Media',
-        version='0.1.0-' + (value or 'dev'),
-        debug='HEROKU' not in os.environ
-        and 'RAILWAY_ENVIRONMENT_NAME' not in os.environ,
+        version='0.1.0-' + (commit or 'dev'),
+        debug=not production,
     )
     #    app.middleware_stack.generate_plain_text = generate_plain_text
     app.include_router(
@@ -429,8 +426,6 @@ def create_app() -> FastAPI:
     if 'FRONTEND_DOMAIN' in os.environ:
         origins.append('https://' + os.environ['FRONTEND_DOMAIN'])
 
-    on_heroku = 'HEROKU' in os.environ
-    production = os.environ.get('RAILWAY_ENVIRONMENT_NAME') == 'production' or on_heroku
     if not production:
         origins.append('http://localhost:3000')
     app.add_middleware(
