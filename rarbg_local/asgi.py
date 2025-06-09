@@ -1,9 +1,13 @@
 import logging
 import os
 
+from asgiref.typing import ASGI2Protocol
+
 from .new import create_app
 
 logger = logging.getLogger(__name__)
+
+app: ASGI2Protocol
 
 
 if 'SENTRY_DSN' in os.environ:
