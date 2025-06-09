@@ -163,7 +163,7 @@ export function Progress({
       etaDescr,
     );
     return (
-      <LinearProgress variant="determinate" value={progress} title={title} />
+      <LinearProgress variant="determinate" value={percentDone * 100} title={title} />
     );
   }
 }
