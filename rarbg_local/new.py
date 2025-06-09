@@ -19,7 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
-from plexserver.server import PlexServer
+from plexapi.server import PlexServer
 from pydantic import BaseModel
 from sqlalchemy import Row, func
 from sqlalchemy.future import select
