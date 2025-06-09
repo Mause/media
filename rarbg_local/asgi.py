@@ -52,4 +52,3 @@ if token := os.environ.get('LOGFIRE_TOKEN'):
     logfire.instrument_sqlalchemy()
     logfire.instrument_pydantic()
     AioHttpClientInstrumentor().instrument()
-
