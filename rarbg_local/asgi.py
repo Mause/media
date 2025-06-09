@@ -10,15 +10,14 @@ from .new import create_app
 logger = logging.getLogger(__name__)
 
 
-if 'SENTRY_DSN' in os.environ:
+if sentry_dsn := os.environ.get('SENTRY_DSN'):
     import sentry_sdk
-    from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
     from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
     logger.info('Configuring Sentry')
 
     sentry_sdk.init(
-        os.environ['SENTRY_DSN'],
+        dsn=sentry_dsn,
         integrations=[SqlalchemyIntegration()],
         release=commit,
         # Add data like request headers and IP for users, if applicable;
@@ -33,12 +32,10 @@ if 'SENTRY_DSN' in os.environ:
         # there is an active span.
         profile_lifecycle="trace",
     )
-
-    app = cast(FastAPI, SentryAsgiMiddleware(create_app()))
 else:
     logger.warning('Not configuring sentry')
 
-    app = create_app()
+app = create_app()
 
 if token := os.environ.get('LOGFIRE_TOKEN'):
     import logfire
@@ -50,3 +47,8 @@ if token := os.environ.get('LOGFIRE_TOKEN'):
     logfire.instrument_sqlalchemy()
     logfire.instrument_pydantic()
     AioHttpClientInstrumentor().instrument()
+
+if sentry_dsn:
+    from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+
+    app = cast(FastAPI, SentryAsgiMiddleware(app))
