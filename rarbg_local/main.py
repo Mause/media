@@ -227,7 +227,7 @@ async def resolve_series(session: Session) -> list[SeriesDetails]:
 def get_keyed_torrents() -> dict[str, InnerTorrent]:
     try:
         return {
-            t['hashString']: InnerTorrent.model_validate_json(t)
+            t['hashString']: InnerTorrent.model_validate(t)
             for t in get_torrent()['arguments']['torrents']
         }
     except (
