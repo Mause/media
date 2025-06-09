@@ -10,7 +10,7 @@ from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session, object_session
+from sqlalchemy.orm.session import Session, object_session, sessionmaker
 
 from .auth import security
 from .db import (
@@ -18,6 +18,7 @@ from .db import (
     MonitorMediaType,
     User,
     get_db,
+    get_session_local,
     safe_delete,
 )
 from .models import (
@@ -98,6 +99,7 @@ class CronResponse(BaseModel, Generic[T]):
 @monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
     session: Annotated[Session, Depends(get_db)],
+    session_maker: Annotated[sessionmaker, Depends(get_session_local)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ) -> list[CronResponse[MonitorGet]]:
     monitors = (
@@ -105,7 +107,7 @@ async def monitor_cron(
     )
 
     async def do_with(monitor):
-        with session.begin_nested() as nested:
+        with session_maker() as nested, nested.begin():
             return await check_monitor(monitor, nested, ntfy)
 
     tasks = [do_with(monitor) for monitor in monitors]
