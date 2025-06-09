@@ -4,23 +4,6 @@
  */
 
 export interface paths {
-  '/api/user/unauthorized': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** User */
-    get: operations['user'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/api/delete/{type}/{id}': {
     parameters: {
       query?: never;
@@ -647,26 +630,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  user: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': unknown;
-        };
-      };
-    };
-  };
   delete: {
     parameters: {
       query?: never;

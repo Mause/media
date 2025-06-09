@@ -28,32 +28,6 @@
     }
   ],
   "paths": {
-    "/api/user/unauthorized": {
-      "get": {
-        "summary": "User",
-        "operationId": "user",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "openid"
-            ]
-          },
-          {
-            "HTTPBasic": []
-          }
-        ]
-      }
-    },
     "/api/delete/{type}/{id}": {
       "get": {
         "summary": "Delete",
