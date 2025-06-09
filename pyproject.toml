@@ -92,7 +92,6 @@ disallow_untyped_defs = false
 check_untyped_defs = true
 ignore_errors = false
 # implicit_reexport = false
-disallow_untyped_defs = false
 ignore_missing_imports = true
 implicit_reexport = false
 local_partial_types = true
