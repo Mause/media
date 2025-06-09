@@ -1,5 +1,8 @@
 import logging
 import os
+from typing import cast
+
+from fastapi import FastAPI
 
 from .new import create_app
 
@@ -8,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 if 'SENTRY_DSN' in os.environ:
     import sentry_sdk
+    from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
     from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
     logger.info('Configuring Sentry')
@@ -30,12 +34,8 @@ if 'SENTRY_DSN' in os.environ:
         # there is an active span.
         profile_lifecycle="trace",
     )
+
+    app = cast(FastAPI, SentryAsgiMiddleware(create_app()))
 else:
     logger.warning('Not configuring sentry')
-
-app = create_app()
-
-if 'SENTRY_DSN' in os.environ:
-    from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-
-    app = SentryAsgiMiddleware(app)
+    app = create_app()

@@ -20,7 +20,7 @@ from .db import (
     create_movie,
     get_episodes,
 )
-from .models import Episode, SeriesDetails
+from .models import Episode, InnerTorrent, SeriesDetails
 from .tmdb import get_tv_episodes
 from .transmission_proxy import get_torrent, torrent_add
 from .utils import non_null, precondition
@@ -224,14 +224,17 @@ async def resolve_series(session: Session) -> list[SeriesDetails]:
     ]
 
 
-def get_keyed_torrents() -> dict[str, dict]:
+def get_keyed_torrents() -> dict[str, InnerTorrent]:
     try:
-        return {t['hashString']: t for t in get_torrent()['arguments']['torrents']}
+        return {
+            t['hashString']: InnerTorrent.model_validate(t)
+            for t in get_torrent()['arguments']['torrents']
+        }
     except (
         ConnectionError,
         TimeoutError,
         FutureTimeoutError,
     ) as e:
         logger.exception('Unable to connect to transmission')
-        error = 'Unable to connect to transmission: ' + str(e)
+        error = f'Unable to connect to transmission: {str(e)}'
         raise HTTPException(500, error)
