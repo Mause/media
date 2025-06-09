@@ -42,7 +42,6 @@ dependencies = [
     "fastapi-oidc>=0.0.10",
     "pyjwt>=2.10.1",
     "aiontfy>=0.5.3",
-    "asgiref>=3.8.1",
 ]
 
 [dependency-groups]

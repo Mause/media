@@ -1,13 +1,12 @@
 import logging
 import os
+from typing import cast
 
-from asgiref.typing import ASGI2Protocol
+from fastapi import FastAPI
 
 from .new import create_app
 
 logger = logging.getLogger(__name__)
-
-app: ASGI2Protocol
 
 
 if 'SENTRY_DSN' in os.environ:
@@ -36,7 +35,7 @@ if 'SENTRY_DSN' in os.environ:
         profile_lifecycle="trace",
     )
 
-    app = SentryAsgiMiddleware(create_app())
+    app = cast(FastAPI, SentryAsgiMiddleware(create_app()))
 else:
     logger.warning('Not configuring sentry')
     app = create_app()
