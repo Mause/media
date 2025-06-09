@@ -241,7 +241,7 @@ async def test_index(
             create_episode(
                 transmission_id=HASH_STRING[:-1] + 'a',
                 imdb_id='tt0000002',
-                season='1',
+                season=1,
                 episode=None,
                 tmdb_id=3,
                 title='Hello world 2',
