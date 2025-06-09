@@ -5,6 +5,7 @@ from typing import Annotated, TypeVar
 
 import pytest_asyncio
 import uvloop
+from aioresponses import aioresponses as Aioresponses
 from async_asgi_testclient import TestClient
 from fastapi import Depends
 from fastapi.security import SecurityScopes
@@ -94,7 +95,9 @@ async def session(fastapi_app, tmp_path):
         yield session
 
 
-def themoviedb(responses, path, response, query=''):
+def themoviedb(
+    responses: Aioresponses, path: str, response: list | dict, query: str = ''
+) -> None:
     add_json(
         responses,
         'GET',
@@ -103,7 +106,9 @@ def themoviedb(responses, path, response, query=''):
     )
 
 
-def add_json(responses, method: str, url: str | Pattern, json_body) -> None:
+def add_json(
+    responses: Aioresponses, method: str, url: str | Pattern, json_body
+) -> None:
     responses.add(method=method, url=url, body=json.dumps(json_body))
 
 

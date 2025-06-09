@@ -1,6 +1,8 @@
 from collections.abc import AsyncGenerator
+from typing import Any
 
 import aiohttp
+from healthcheck import HealthcheckCallbackResponse
 
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
@@ -11,7 +13,7 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
     type = ProviderSource.TORRENTS_CSV
     root = 'https://torrents-csv.com'
 
-    async def query(self, q: str):
+    async def query(self, q: str) -> list[dict[str, Any]]:
         async with aiohttp.ClientSession() as session:
             res = await session.get(self.root + "/service/search", params={"q": q})
             res.raise_for_status()
@@ -41,5 +43,5 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
                 category=item['category'],
             )
 
-    async def health(self):
+    async def health(self) -> HealthcheckCallbackResponse:
         return await self.check_http(self.root)

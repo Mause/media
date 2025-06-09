@@ -2239,6 +2239,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vitejs/plugin-basic-ssl@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@vitejs/plugin-basic-ssl@npm:2.0.0"
+  peerDependencies:
+    vite: ^6.0.0
+  checksum: 10/ccaf74939d1c1192cbbf9965a67f7ef0da11c83d62cbbdb8f33076428a1f9878f7ac933d73e3e3c7dc6706fcd78cc63b4e4364c296094abaeb48386868ccf5bd
+  languageName: node
+  linkType: hard
+
 "@vitejs/plugin-react@npm:^4.4.1":
   version: 4.5.1
   resolution: "@vitejs/plugin-react@npm:4.5.1"
@@ -2496,6 +2505,7 @@ __metadata:
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
     "@use-it/interval": "npm:^1.0.0"
+    "@vitejs/plugin-basic-ssl": "npm:^2.0.0"
     "@vitejs/plugin-react": "npm:^4.4.1"
     "@vitest/ui": "npm:^3.2.1"
     "@vtex/axios-concurrent-retry": "npm:^4.0.11"

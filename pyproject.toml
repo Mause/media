@@ -9,7 +9,7 @@ requires-python = ">=3.12.0"
 dependencies = [
     "sqlalchemy[mypy]==2.0.41",
     "sqlalchemy-repr==0.1.0",
-    "aiohttp==3.12.9",
+    "aiohttp==3.12.11",
     "backoff==2.2.1",
     "psycopg2-binary",
     "sentry-sdk==2.29.1",
@@ -83,11 +83,21 @@ addopts = "rarbg_local --driver chrome --html report.html --self-contained-html"
 asyncio_default_fixture_loop_scope = "fixture"
 
 [tool.mypy]
-plugins = "sqlalchemy.ext.mypy.plugin, pydantic.mypy"
+plugins = "pydantic.mypy"
 ignore_missing_imports = true
 mypy_path = "stubs"
 disallow_untyped_defs = false
 
 [[tool.mypy.overrides]]
-module = ["rarbg_local.utils", "rarbg_local.tmdb"]
+module = [
+    "rarbg_local.utils",
+    "rarbg_local.tmdb",
+    "rarbg_local.providers",
+    "rarbg_local.providers.abc",
+    "rarbg_local.providers.torrents_csv",
+    "rarbg_local.providers.horriblesubs",
+    "rarbg_local.providers.nyaasi",
+    "rarbg_local.providers.piratebay",
+    "rarbg_local.jikan",
+]
 disallow_untyped_defs = true

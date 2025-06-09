@@ -1,8 +1,9 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), basicSsl()],
   envPrefix: 'REACT_APP_',
   build: {
     // to output your build into build dir the same as Webpack
@@ -12,5 +13,9 @@ export default defineConfig({
   server: {
     open: true,
     port: 3000,
+    https: true,
+    proxy: {
+      '/api': 'http://localhost:5000',
+    },
   },
 });

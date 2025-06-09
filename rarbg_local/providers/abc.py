@@ -25,7 +25,7 @@ class Provider(ABC):
     type: ProviderSource
 
     @abstractmethod
-    def health(self) -> HealthcheckCallbackResponse:
+    async def health(self) -> HealthcheckCallbackResponse:
         raise NotImplementedError()
 
     async def check_http(
@@ -54,7 +54,7 @@ class MovieProvider(Provider):
         raise NotImplementedError()
 
 
-def tv_convert(key):
+def tv_convert(key: str) -> str:
     return {
         '480': 'TV Episodes',
         '480p': 'TV Episodes',
@@ -66,7 +66,7 @@ def tv_convert(key):
     }.get(key, key)
 
 
-def movie_convert(key):
+def movie_convert(key: str) -> str:
     return {
         # None: "XVID",
         # None: "x264",
