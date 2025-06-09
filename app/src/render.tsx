@@ -15,6 +15,7 @@ import {
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import { getPrefix, MLink } from './utils';
 import { TV } from './SeasonSelectComponent';
@@ -161,7 +162,7 @@ export function Progress({
       percentDone * 100,
       etaDescr,
     );
-    return <progress value={percentDone} title={title} />;
+    return <LinearProgress variant="determinate" value={progress} title={title} />;
   }
 }
 
