@@ -87,6 +87,7 @@ plugins = "pydantic.mypy"
 ignore_missing_imports = true
 mypy_path = "stubs"
 disallow_untyped_defs = false
+strict_equality = true
 
 [[tool.mypy.overrides]]
 module = [
