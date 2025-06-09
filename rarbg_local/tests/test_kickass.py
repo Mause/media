@@ -2,6 +2,7 @@ from pytest import mark
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..providers.kickass import KickassProvider
+from ..types import ImdbId, TmdbId
 from .conftest import themoviedb, tolist
 from .factories import MovieResponseFactory, TvApiResponseFactory
 
@@ -35,7 +36,9 @@ async def test_tv_episode(aioresponses, clear_cache):
         body=make('The outer limits S01E01'),
     )
 
-    res = await tolist(KickassProvider().search_for_tv('tt0000000', 1, 1, 1))
+    res = await tolist(
+        KickassProvider().search_for_tv(ImdbId('tt0000000'), TmdbId(1), 1, 1)
+    )
     assert res == [
         ITorrent(
             source=ProviderSource.KICKASS,
@@ -61,7 +64,9 @@ async def test_tv_season(aioresponses, clear_cache):
         body=make('The outer limits S01'),
     )
 
-    res = await tolist(KickassProvider().search_for_tv('tt0000000', 1, 1))
+    res = await tolist(
+        KickassProvider().search_for_tv(ImdbId('tt0000000'), TmdbId(1), 1)
+    )
     assert res == [
         ITorrent(
             source=ProviderSource.KICKASS,
@@ -87,7 +92,9 @@ async def test_movie(aioresponses, clear_cache):
         body=make('The outer limits'),
     )
 
-    res = await tolist(KickassProvider().search_for_movie('tt0000000', 1))
+    res = await tolist(
+        KickassProvider().search_for_movie(ImdbId('tt0000000'), TmdbId(1))
+    )
     assert res == [
         ITorrent(
             source=ProviderSource.KICKASS,
