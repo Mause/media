@@ -1,23 +1,27 @@
 import logging
 import os
 import traceback
-from collections.abc import AsyncGenerator, Callable
+from collections.abc import AsyncGenerator, Callable, Coroutine
 from functools import wraps
 from typing import (
     Annotated,
+    Any,
     Literal,
+    ParamSpec,
     TypeVar,
     Union,
+    cast,
 )
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
-from fastapi.responses import RedirectResponse, StreamingResponse
+from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
+from plexserver.server import PlexServer
 from pydantic import BaseModel
-from sqlalchemy import func
+from sqlalchemy import Row, func
 from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, object_session
 from starlette.staticfiles import StaticFiles
@@ -86,20 +90,16 @@ api = APIRouter()
 logger = logging.getLogger(__name__)
 logging.getLogger('backoff').handlers.clear()
 T = TypeVar('T')
+P = ParamSpec('P')
 
 
-def generate_plain_text(exc):
+def generate_plain_text(exc: BaseException) -> str:
     logger.exception('Error occured', exc_info=exc)
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
-@api.get('/user/unauthorized')
-def user():
-    pass
-
-
 @api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
+async def delete(type: MediaType, id: int, session: Session = Depends(get_db)) -> dict:
     safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
@@ -107,9 +107,11 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)):
     return {}
 
 
-def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
+def eventstream(
+    func: Callable[P, AsyncGenerator[BaseModel, None]],
+) -> Callable[P, Coroutine[Any, Any, StreamingResponse]]:
     @wraps(func)
-    async def decorator(*args, **kwargs):
+    async def decorator(*args: P.args, **kwargs: P.kwargs) -> StreamingResponse:
         async def internal() -> AsyncGenerator[str, None]:
             async for rset in func(*args, **kwargs):
                 yield f'data: {rset.model_dump_json()}\n\n'
@@ -120,7 +122,7 @@ def eventstream(func: Callable[..., AsyncGenerator[BaseModel, None]]):
             media_type="text/event-stream",
         )
 
-    return decorator
+    return cast(Callable[P, Coroutine[None, None, StreamingResponse]], decorator)
 
 
 StreamType = Literal['series', 'movie']
@@ -132,7 +134,7 @@ StreamType = Literal['series', 'movie']
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
 @eventstream
-async def stream(
+async def stream(  # type: ignore[no-untyped-def]
     type: StreamType,
     tmdb_id: TmdbId,
     source: ProviderSource,
@@ -166,10 +168,9 @@ async def stream(
 
 @api.get(
     '/select/{tmdb_id}/season/{season}/download_all',
-    response_model=DownloadAllResponse,
     name='select',
 )
-async def api_select(tmdb_id: TmdbId, season: int):
+async def api_select(tmdb_id: TmdbId, season: int) -> DownloadAllResponse:
     tasks, results = await search_for_tv(await get_tv_imdb_id(tmdb_id), tmdb_id, season)
 
     episodes = (await get_tv_episodes(tmdb_id, season)).episodes
@@ -193,11 +194,11 @@ async def api_select(tmdb_id: TmdbId, season: int):
         grouped_results.items(), lambda rset: len(rset[1]) == len(episodes)
     )
 
-    return {
-        'packs': packs,
-        'complete': complete_or_not.get(True, []),
-        'incomplete': complete_or_not.get(False, []),
-    }
+    return DownloadAllResponse(
+        packs=packs,
+        complete=complete_or_not.get(True, []),
+        incomplete=complete_or_not.get(False, []),
+    )
 
 
 @api.post(
@@ -269,24 +270,26 @@ async def download_post(
     return results
 
 
-@api.get('/index', response_model=IndexResponse)
-async def index(session: Session = Depends(get_db)):
+@api.get('/index')
+async def index(session: Session = Depends(get_db)) -> IndexResponse:
     return IndexResponse(
         series=await resolve_series(session), movies=get_movies(session)
     )
 
 
-@api.get('/stats', response_model=list[StatsResponse])
-async def stats(session: Session = Depends(get_db)):
-    def process(added_by_id: int, values):
+@api.get('/stats')
+async def stats(session: Session = Depends(get_db)) -> list[StatsResponse]:
+    def process(
+        added_by_id: int, values: list[Row[tuple[int, str, int]]]
+    ) -> StatsResponse:
         user = session.get(User, added_by_id)
         if not user:
-            return None
+            raise Exception()
 
-        return {
-            "user": user.username,
-            "values": {type.lower(): value for _, type, value in values},
-        }
+        return StatsResponse(
+            user=user.username,
+            values={type.lower(): value for _, type, value in values},
+        )
 
     keys = Download.added_by_id, Download.type
     query = session.execute(select(*keys, func.count(name='count')).group_by(*keys))
@@ -297,34 +300,34 @@ async def stats(session: Session = Depends(get_db)):
     ]
 
 
-@api.get('/movie/{tmdb_id:int}', response_model=MovieResponse)
-async def movie(tmdb_id: TmdbId):
+@api.get('/movie/{tmdb_id:int}')
+async def movie(tmdb_id: TmdbId) -> MovieResponse:
     return await get_movie(tmdb_id)
 
 
-@api.get('/torrents', response_model=dict[str, InnerTorrent])
-async def torrents():
+@api.get('/torrents')
+async def torrents() -> dict[str, InnerTorrent]:
     return get_keyed_torrents()
 
 
-@api.get('/search', response_model=list[SearchResponse])
-async def search(query: str):
+@api.get('/search')
+async def search(query: str) -> list[SearchResponse]:
     return await search_themoviedb(query)
 
 
 tv_ns = APIRouter(tags=['tv'])
 
 
-@tv_ns.get('/{tmdb_id}', response_model=TvResponse)
-async def api_tv(tmdb_id: TmdbId):
+@tv_ns.get('/{tmdb_id}')
+async def api_tv(tmdb_id: TmdbId) -> TvResponse:
     tv = await get_tv(tmdb_id)
     return TvResponse(
         **tv.model_dump(), imdb_id=await get_tv_imdb_id(tmdb_id), title=tv.name
     )
 
 
-@tv_ns.get('/{tmdb_id}/season/{season}', response_model=TvSeasonResponse)
-async def api_tv_season(tmdb_id: TmdbId, season: int):
+@tv_ns.get('/{tmdb_id}/season/{season}')
+async def api_tv_season(tmdb_id: TmdbId, season: int) -> TvSeasonResponse:
     return await get_tv_episodes(tmdb_id, season)
 
 
@@ -332,12 +335,14 @@ root = APIRouter()
 
 
 @singleton
-def get_static_files(settings: Settings = Depends(get_settings)):
+def get_static_files(settings: Settings = Depends(get_settings)) -> StaticFiles:
     return StaticFiles(directory=str(settings.static_resources_path))
 
 
 @root.get('/redirect/plex/{imdb_id}')
-def redirect_to_plex(imdb_id: ImdbId, plex=Depends(get_plex)):
+def redirect_to_plex(
+    imdb_id: ImdbId, plex: Annotated[PlexServer, Depends(get_plex)]
+) -> RedirectResponse:
     dat = get_imdb_in_plex(imdb_id, plex)
     if not dat:
         raise HTTPException(404, 'Not found in plex')
@@ -359,7 +364,7 @@ async def redirect_to_imdb(
     tmdb_id: TmdbId,
     season: int | None = None,
     episode: int | None = None,
-):
+) -> RedirectResponse:
     if type_ == 'movie':
         imdb_id = await get_movie_imdb_id(tmdb_id)
     elif season:
@@ -376,7 +381,7 @@ async def static(
     request: Request,
     resource: str = '',
     static_files: StaticFiles = Depends(get_static_files),
-):
+) -> Response:
     filename = resource if "." in resource else 'index.html'
 
     return await static_files.get_response(filename, request.scope)
@@ -388,7 +393,7 @@ api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
 
 
-def create_app():
+def create_app() -> FastAPI:
     keys = ['HEROKU_SLUG_COMMIT', 'RAILWAY_GIT_COMMIT_SHA']
     value = next((os.environ[key] for key in keys if key in os.environ), None)
 
@@ -401,12 +406,16 @@ def create_app():
                     "protocol": {"enum": ["http", "https"], "default": "https"}
                 },
             },
-            {"url": "https://media-staging.herokuapps.com/", "description": "Staging"},
+            {
+                "url": "https://media-staging.herokuapps.com/",
+                "description": "Staging",
+            },
             {"url": "https://media.mause.me/", "description": "Production"},
         ],
         title='Media',
         version='0.1.0-' + (value or 'dev'),
-        debug=not ('HEROKU' in os.environ or 'RAILWAY_ENVIRONMENT_NAME' in os.environ),
+        debug='HEROKU' not in os.environ
+        and 'RAILWAY_ENVIRONMENT_NAME' not in os.environ,
     )
     #    app.middleware_stack.generate_plain_text = generate_plain_text
     app.include_router(
