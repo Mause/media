@@ -1,6 +1,5 @@
 import moxios from 'moxios';
 import axios from 'axios';
-import { swrConfig } from './streaming';
 import { render } from '@testing-library/react';
 import { act, ReactElement } from 'react';
 import { Auth0Context, Auth0ContextInterface } from '@auth0/auth0-react';
@@ -11,6 +10,8 @@ import {
 } from '@mui/material/styles';
 import { Location, MemoryHistory } from '@remix-run/router';
 import { Listener } from '@remix-run/router/dist/history';
+
+import { SwrConfigWrapper } from './streaming';
 
 const theme = createTheme();
 
@@ -36,7 +37,9 @@ export function renderWithSWR(el: ReactElement<any>) {
   return render(
     <Auth0Context.Provider value={c}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>{swrConfig(() => el)()}</ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <SwrConfigWrapper>{el}</SwrConfigWrapper>
+        </ThemeProvider>
       </StyledEngineProvider>
     </Auth0Context.Provider>,
   );
@@ -44,11 +47,9 @@ export function renderWithSWR(el: ReactElement<any>) {
 
 export function usesMoxios() {
   beforeEach(() => {
-    // @ts-expect-error
     moxios.install(axios);
   });
   afterEach(() => {
-    // @ts-expect-error
     moxios.uninstall(axios);
   });
 }

@@ -243,6 +243,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/monitor/cron': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Monitor Cron */
+    post: operations['monitor_cron'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/diagnostics': {
     parameters: {
       query?: never;
@@ -338,6 +355,14 @@ export interface components {
      * @enum {string}
      */
     ComponentType: 'datastore' | 'internal' | 'http' | 'generic';
+    /** CronResponse[MonitorGet] */
+    CronResponse_MonitorGet_: {
+      /** Success */
+      success: boolean;
+      /** Message */
+      message: string;
+      subject?: components['schemas']['MonitorGet'] | null;
+    };
     /** DownloadAllResponse */
     DownloadAllResponse: {
       /** Packs */
@@ -1046,6 +1071,26 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  monitor_cron: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CronResponse_MonitorGet_'][];
         };
       };
     };

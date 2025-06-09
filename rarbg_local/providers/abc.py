@@ -1,12 +1,37 @@
 from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
 
+import aiohttp
+from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
+
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
 
 
+async def check_http(url: str, method: str = 'HEAD') -> HealthcheckCallbackResponse:
+    async with aiohttp.ClientSession() as session:
+        async with session.request(method, url) as response:
+            if response.status == 200:
+                return HealthcheckCallbackResponse(
+                    HealthcheckStatus.PASS, repr(response)
+                )
+            else:
+                return HealthcheckCallbackResponse(
+                    HealthcheckStatus.FAIL, f'Failed to reach {url}: {response.status}'
+                )
+
+
 class Provider(ABC):
     type: ProviderSource
+
+    @abstractmethod
+    async def health(self) -> HealthcheckCallbackResponse:
+        raise NotImplementedError()
+
+    async def check_http(
+        self, url: str, method: str = 'HEAD'
+    ) -> HealthcheckCallbackResponse:
+        return await check_http(url, method)
 
 
 class TvProvider(Provider):
@@ -29,7 +54,7 @@ class MovieProvider(Provider):
         raise NotImplementedError()
 
 
-def tv_convert(key):
+def tv_convert(key: str) -> str:
     return {
         '480': 'TV Episodes',
         '480p': 'TV Episodes',
@@ -41,7 +66,7 @@ def tv_convert(key):
     }.get(key, key)
 
 
-def movie_convert(key):
+def movie_convert(key: str) -> str:
     return {
         # None: "XVID",
         # None: "x264",

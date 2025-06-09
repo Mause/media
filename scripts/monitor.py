@@ -1,3 +1,4 @@
+import logging
 import time
 from datetime import datetime
 
@@ -7,6 +8,7 @@ from rich.columns import Columns
 from rich.console import Console, RenderGroup
 from rich_sparklines import Graph
 
+logging.basicConfig(level=logging.INFO)
 console = Console()
 
 
@@ -23,7 +25,7 @@ def get_connections():
     ).json()
 
     if 'errors' in response:
-        print(response['errors'])
+        logging.error('Error fetching connections: %s', response['errors'])
         return '?'
 
     return int(response['data']['postgres']['connections'].split('/')[0])

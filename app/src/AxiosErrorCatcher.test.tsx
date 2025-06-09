@@ -6,6 +6,9 @@ import moxios from 'moxios';
 import axios from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { wait, usesMoxios } from './test.utils';
+import AxiosErrorCatcher from './AxiosErrorCatcher';
+
 usesMoxios();
 
 /*
@@ -21,14 +24,14 @@ afterEach(() => {
 function Fake() {
   const [fire, setFire] = useState(false);
   useEffect(() => {
-    if (fire) axios.get('/');
+    if (fire) void axios.get('/');
     else setFire(true);
   }, [fire]);
   return <div>Thing</div>;
 }
 
 test('AxiosErrorCatcher', async () => {
-  let lerror;
+  let lerror: unknown;
   const { container } = render(
     <ErrorBoundary
       fallback={<div>error</div>}
@@ -49,5 +52,7 @@ test('AxiosErrorCatcher', async () => {
   await wait();
   expect(lerror).toBeTruthy();
   expect(lerror).toBeInstanceOf(Error);
-  expect(lerror!.message).toEqual('Request failed with status code 500');
+  expect((lerror! as Error).message).toEqual(
+    'Request failed with status code 500',
+  );
 });

@@ -8,6 +8,7 @@ from typing import TypeVar, cast
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
+from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, make_transient
 
 from .db import (
@@ -54,7 +55,7 @@ def normalise(episodes: list[Episode], title: str) -> str | None:
         if sel:
             return title
 
-        print('unable to find marker in', title)
+        logger.warn('unable to find marker in %s', title)
         return None
 
     full, _, i_episode = sel.groups()
@@ -71,7 +72,7 @@ def normalise(episodes: list[Episode], title: str) -> str | None:
 
     to_replace = punctuation_re.sub(' ', episode.name)
     to_replace = '.'.join(to_replace.split())
-    title = re.sub(to_replace, 'TITLE', title, re.I)
+    title = re.sub(to_replace, 'TITLE', title, flags=re.I)
 
     title = title.replace(full, 'S00E00')
 
@@ -103,7 +104,7 @@ def add_single(
 ) -> MovieDetails | EpisodeDetails:
     res = torrent_add(magnet, subpath)
     arguments = res['arguments']
-    print(arguments)
+    logger.info('arguments: %s', arguments)
     if not arguments:
         # the error result shape is really weird
         raise ValueError(res['result'], data={'message': res['result']})
@@ -115,10 +116,12 @@ def add_single(
     )['hashString']
 
     already = (
-        session.query(Download).filter_by(transmission_id=transmission_id).one_or_none()
+        session.execute(select(Download).filter_by(transmission_id=transmission_id))
+        .scalars()
+        .one_or_none()
     )
 
-    print('already', already)
+    logger.info('does it already exist? %s', already)
     if not already:
         if is_tv:
             precondition(season, 'Season must be provided for tv type')

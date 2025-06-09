@@ -1,9 +1,13 @@
+import logging
 from itertools import count
 from typing import Any
 from urllib.parse import parse_qsl, urlparse
 from uuid import uuid4
 
 from flask import Flask, jsonify, request
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 id_iter = iter(count())
 app = Flask(__name__)
@@ -35,7 +39,7 @@ def rpc():
     method = js['method']
     arguments = js.get('arguments', {})
 
-    print(method, arguments)
+    logger.info('Received method: %s %s', method, arguments)
 
     return globals()[method.replace('-', '_')](**arguments)
 

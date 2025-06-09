@@ -1,16 +1,14 @@
 import { StrictMode } from 'react';
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
 import { createRoot } from 'react-dom/client';
-// import { appUpdated } from './serviceWorkerCallback';
 import { Auth0Provider } from '@auth0/auth0-react';
-
 import {
   ThemeProvider,
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
+
+import App from './App';
 
 const theme = createTheme();
 
@@ -33,6 +31,7 @@ const rootEl = (
       audience: audience!,
       redirect_uri: window.location.origin,
     }}
+    useRefreshTokensFallback={true}
     useRefreshTokens={true}
     cacheLocation="localstorage"
   >
@@ -44,9 +43,3 @@ const rootEl = (
   </Auth0Provider>
 );
 root.render(<StrictMode>{rootEl}</StrictMode>);
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
-// serviceWorker.register({ onUpdate: appUpdated });

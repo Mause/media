@@ -3,24 +3,50 @@ import { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
-import ContextMenu from './ContextMenu';
-import { usePost, useLocation } from './utils';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
+import MaterialLink from '@mui/material/Link';
+import Button from '@mui/material/Button';
+import { Auth0ContextInterface, useAuth0, User } from '@auth0/auth0-react';
+import useSWRMutation from 'swr/mutation';
+
+import ContextMenu from './ContextMenu';
 import { DisplayError } from './IndexComponent';
-import { components } from './schema';
+import { components, paths } from './schema';
+import { getPrefix, getToken } from './utils';
 
 type Monitor = components['schemas']['MonitorGet'];
+type MonitorPost = components['schemas']['MonitorPost'];
 type MediaType = components['schemas']['MonitorMediaType'];
 
 export function MonitorComponent() {
+  const auth = useAuth0();
   const { data } = useSWR<Monitor[]>('monitor');
   const navigate = useNavigate();
+
+  const path = '/api/monitor/cron' as const;
+  type MonitorCron = paths[typeof path]['post'];
+  const { trigger: recheck, isMutating } = useSWRMutation(
+    path,
+    mutationFetcher<
+      MonitorCron['requestBody'],
+      MonitorCron['responses'][201]['content']['application/json']
+    >(auth),
+  );
 
   return (
     <div>
       <h3>Monitored Media</h3>
+      <Button
+        loading={isMutating}
+        variant="outlined"
+        onClick={() => {
+          void recheck();
+        }}
+      >
+        Recheck
+      </Button>
       {data ? (
         <ul>
           {data.map((m) => {
@@ -40,7 +66,7 @@ export function MonitorComponent() {
                 <ContextMenu>
                   <MenuItem
                     onClick={() =>
-                      navigate(
+                      void navigate(
                         m.type === 'MOVIE'
                           ? `/select/${m.tmdb_id}/options`
                           : `/select/${m.tmdb_id}/season`,
@@ -49,7 +75,9 @@ export function MonitorComponent() {
                   >
                     Search
                   </MenuItem>
-                  <MenuItem onClick={() => navigate(`/monitor/delete/${m.id}`)}>
+                  <MenuItem
+                    onClick={() => void navigate(`/monitor/delete/${m.id}`)}
+                  >
                     Delete
                   </MenuItem>
                 </ContextMenu>
@@ -64,29 +92,66 @@ export function MonitorComponent() {
   );
 }
 
-export function MonitorAddComponent() {
-  const { tmdb_id } = useParams<{ tmdb_id: string }>();
-  const { state } = useLocation<{ type: MediaType }>();
-
-  const { done, error } = usePost('monitor', {
-    tmdb_id: Number(tmdb_id),
-    type: state ? state.type : 'MOVIE',
-  });
+export function MonitorAddComponent({
+  tmdb_id,
+  type,
+}: {
+  tmdb_id: number;
+  type: MediaType;
+}) {
+  const auth = useAuth0();
+  const { data, error, trigger, isMutating } = useSWRMutation<
+    Monitor,
+    Error,
+    string,
+    MonitorPost
+  >('/api/monitor', mutationFetcher<MonitorPost, Monitor>(auth));
 
   if (error) {
     return <DisplayError error={error} />;
+  } else if (isMutating) {
+    return <ReactLoading color="#000000" />;
+  } else if (data) {
+    return <Navigate to="/monitor" />;
+  } else {
+    return (
+      <MaterialLink href="#" onClick={() => void trigger({ tmdb_id, type })}>
+        Add to monitor
+      </MaterialLink>
+    );
   }
+}
 
-  return done ? <Navigate to="/monitor" /> : <ReactLoading color="#000000" />;
+function mutationFetcher<T, R>(
+  auth: Auth0ContextInterface<User>,
+): (
+  key: string,
+  options: Readonly<{
+    arg: T;
+  }>,
+) => Promise<R> {
+  return async function fetching(key: string, options: { arg: T }) {
+    const res = await Axios.post(getPrefix() + key, options.arg, {
+      headers: {
+        Authorization: 'Bearer ' + (await getToken(auth)),
+      },
+    });
+    return res.data as R;
+  };
 }
 
 function useDelete(path: string) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    Axios.delete(`/api/${path}`, { withCredentials: true }).then(() =>
-      setDone(true),
-    );
+    const controller = new AbortController();
+    void Axios.delete(`/api/${path}`, {
+      withCredentials: true,
+      signal: controller.signal,
+    }).then(() => setDone(true));
+    return () => {
+      controller.abort();
+    };
   }, [path]);
 
   return done;

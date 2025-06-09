@@ -1,13 +1,20 @@
 import type { ReactNode } from 'react';
 import { ReactElement, useState, useEffect } from 'react';
 import Axios from 'axios';
+import React, { ReactElement, useState, useEffect } from 'react';
+import Axios, { RawAxiosRequestHeaders } from 'axios';
 import MaterialLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import * as RRD from 'react-router-dom';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
 import { TypographyTypeMap } from '@mui/material';
 import moxios from 'moxios';
-import { useAuth0 } from '@auth0/auth0-react';
+import {
+  Auth0ContextInterface,
+  AuthenticationError,
+  useAuth0,
+} from '@auth0/auth0-react';
+
 import { FetchEventTarget } from './fetch_stream';
 
 // axiosRetry(Axios, { retries: 3 });
@@ -38,7 +45,7 @@ export function subscribe<T>(
   };
   es.addEventListener('abort', onerror);
   const internal_callback = (event: Event) => {
-    callback((event as MessageEvent).data);
+    callback((event as MessageEvent).data as T);
   };
   es.addEventListener('message', internal_callback);
 
@@ -50,12 +57,12 @@ export function subscribe<T>(
 }
 
 export function getPrefix() {
-  const prefix = import.meta.env.REACT_APP_API_PREFIX as string | undefined;
+  const prefix = import.meta.env.REACT_APP_API_PREFIX;
 
   if (!prefix) {
     return '';
   } else if (prefix.includes('localhost')) {
-    return `http://localhost:5000`;
+    return '';
   } else if (prefix) {
     return `https://${prefix}`;
   }
@@ -64,7 +71,7 @@ export function getPrefix() {
 export async function load<T>(
   path: string,
   params?: string,
-  headers?: any,
+  headers?: RawAxiosRequestHeaders,
 ): Promise<T> {
   const t = await Axios.get<T>(`${getPrefix()}/api/${path}`, {
     params,
@@ -80,6 +87,27 @@ interface Res<T> {
   error?: Error;
 }
 
+function isAuthenticationError(e: unknown): e is AuthenticationError {
+  return typeof e === 'object' && e != null && 'error' in e;
+}
+
+export async function getToken(auth0: Auth0ContextInterface): Promise<string> {
+  try {
+    return await auth0.getAccessTokenSilently();
+  } catch (e) {
+    if (isAuthenticationError(e) && e.error === 'missing_refresh_token') {
+      await auth0.loginWithRedirect({
+        authorizationParams: {
+          redirect_uri: window.location.toString(),
+        },
+      });
+      return '';
+    } else {
+      throw e;
+    }
+  }
+}
+
 export function usePost<T>(
   url: string,
   body: object,
@@ -89,8 +117,7 @@ export function usePost<T>(
 
   useEffect(() => {
     const abortController = new AbortController();
-    auth
-      .getAccessTokenSilently()
+    getToken(auth)
       .then((token) =>
         Axios.post<T>('/api/' + url, body, {
           signal: abortController.signal,
@@ -130,10 +157,12 @@ export function ExtMLink(props: { href: string; children: string }) {
 }
 
 export function expectLastRequestBody() {
-  return expect(JSON.parse(moxios.requests.mostRecent().config.data));
+  const mr = moxios.requests.mostRecent();
+  expect(mr).toBeTruthy();
+  return expect(JSON.parse(mr.config.data as string));
 }
 
 export function useLocation<T>() {
   const location = RRD.useLocation();
-  return { ...location, state: location.state as any as T };
+  return { ...location, state: location.state as T };
 }

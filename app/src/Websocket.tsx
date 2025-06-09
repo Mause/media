@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { DisplayTorrent, ITorrent } from './OptionsComponent';
 import _ from 'lodash';
 import qs from 'qs';
 import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
-import { getPrefix } from './utils';
+
+import { DisplayTorrent, ITorrent } from './OptionsComponent';
+import { getPrefix, getToken } from './utils';
+import { getMarker } from './render';
 
 function useMessages<T>(initMessage: object) {
-  let base = getPrefix();
+  const base = getPrefix();
   const url = `${base}/ws`;
 
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
@@ -34,7 +36,7 @@ function Websocket() {
   const { search } = useLocation();
   const query = qs.parse(search.slice(1));
   const auth = useAuth0();
-  const token = 'Bearer ' + usePromise(auth.getAccessTokenSilently, [{}]);
+  const token = 'Bearer ' + usePromise(() => getToken(auth), []);
 
   const initMessage = query.season
     ? {
@@ -62,8 +64,7 @@ function Websocket() {
   return (
     <div>
       <p>{tmdbId}</p>
-      <p>{String(query?.season)}</p>
-      <p>{String(query?.episode)}</p>
+      <p>{getMarker(query)}</p>
       <p>
         {readyState === ReadyState.CONNECTING && 'Connecting...'}
         {readyState === ReadyState.OPEN && 'Connected'}

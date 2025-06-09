@@ -14,17 +14,18 @@ logger = logging.getLogger(__name__)
 
 
 def get_providers() -> list[Provider]:
-    from .horriblesubs import HorriblesubsProvider
-    from .kickass import KickassProvider
+    # from .horriblesubs import HorriblesubsProvider
+    # from .kickass import KickassProvider
     from .nyaasi import NyaaProvider
     from .piratebay import PirateBayProvider
-    from .rarbg import RarbgProvider
+
+    # from .rarbg import RarbgProvider
     from .torrents_csv import TorrentsCsvProvider
 
     return [
-        HorriblesubsProvider(),
-        RarbgProvider(),
-        KickassProvider(),
+        # HorriblesubsProvider(),
+        # RarbgProvider(),
+        # KickassProvider(),
         TorrentsCsvProvider(),
         NyaaProvider(),
         PirateBayProvider(),
@@ -34,7 +35,9 @@ def get_providers() -> list[Provider]:
 async def search_for_tv(
     imdb_id: ImdbId, tmdb_id: TmdbId, season: int, episode: int | None = None
 ) -> tuple[list[Future[None]], Queue[ITorrent | Message]]:
-    async def worker(output_queue: Queue[ITorrent | Message], provider: TvProvider):
+    async def worker(
+        output_queue: Queue[ITorrent | Message], provider: TvProvider
+    ) -> None:
         try:
             async for result in provider.search_for_tv(
                 imdb_id, tmdb_id, season, episode
@@ -52,7 +55,9 @@ async def search_for_tv(
 async def search_for_movie(
     imdb_id: ImdbId, tmdb_id: TmdbId
 ) -> tuple[list[Future[None]], Queue[ITorrent | Message]]:
-    async def worker(output_queue: Queue[ITorrent | Message], provider: MovieProvider):
+    async def worker(
+        output_queue: Queue[ITorrent | Message], provider: MovieProvider
+    ) -> None:
         try:
             async for result in provider.search_for_movie(imdb_id, tmdb_id):
                 output_queue.put_nowait(result)

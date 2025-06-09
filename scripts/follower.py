@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import json
+import logging
 
 import requests
 
@@ -11,7 +12,7 @@ def follow():
 
     r = requests.get(promotion['build']['output_stream_url'], stream=True)
     for line in r.raw:
-        print(line.decode())
+        logging.info(line.decode())
 
 
 if __name__ == "__main__":

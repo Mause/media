@@ -6,9 +6,9 @@
     "output": {
       "worker_id": 1,
       "size": 5,
-      "checkedin": null,
-      "overflow": null,
-      "checkedout": null
+      "checkedin": 0,
+      "overflow": -4,
+      "checkedout": 1
     }
   }
 ]
