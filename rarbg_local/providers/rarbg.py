@@ -10,7 +10,8 @@ from pydantic import BaseModel
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
-from .abc import MovieProvider, TvProvider, format, movie_convert, tv_convert
+from ..utils import format_marker
+from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)
 
@@ -136,7 +137,7 @@ class RarbgProvider(TvProvider, MovieProvider):
         if not imdb_id:
             return
 
-        search_string = format(season, episode)
+        search_string = format_marker(season, episode)
 
         for item in chain.from_iterable(
             get_rarbg_iter(

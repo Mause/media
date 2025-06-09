@@ -38,7 +38,7 @@ from .factories import (
 )
 
 if TYPE_CHECKING:
-    from lxml.etree import ElementBase
+    from lxml.etree import _Element
 
 
 HASH_STRING = '00000000000000000'
@@ -241,7 +241,7 @@ async def test_index(
             create_episode(
                 transmission_id=HASH_STRING[:-1] + 'a',
                 imdb_id='tt0000002',
-                season='1',
+                season=1,
                 episode=None,
                 tmdb_id=3,
                 title='Hello world 2',
@@ -674,9 +674,7 @@ async def test_static(uri, test_client):
     assert r.status_code == 200
 
 
-def add_xml(
-    responses: RequestsMock, method: str, url: str, body: 'ElementBase'
-) -> None:
+def add_xml(responses: RequestsMock, method: str, url: str, body: '_Element') -> None:
     responses.add(
         method,
         url,

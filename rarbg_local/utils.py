@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from functools import partial
 from typing import Any, ParamSpec, Protocol, TypeVar, cast, runtime_checkable
 
-from asyncache import IdentityFunction
 from asyncache import cached as _cached
 from cachetools.func import lru_cache as _lru_cache
 from cachetools.func import ttl_cache as _ttl_cache
@@ -17,6 +16,8 @@ class Cache(Protocol):
 
 T = TypeVar('T')
 P = ParamSpec('P')
+IdentityFunction = Callable[[T], T]
+
 _caches: list[Cache] = []
 
 
@@ -98,3 +99,7 @@ def create_monitored_task(
     future = asyncio.ensure_future(coro)
     future.add_done_callback(partial(_callback, send))
     return future
+
+
+def format_marker(season: int, episode: int | None) -> str:
+    return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'

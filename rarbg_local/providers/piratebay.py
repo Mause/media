@@ -8,7 +8,8 @@ from healthcheck import HealthcheckCallbackResponse
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
-from .abc import MovieProvider, TvProvider, format
+from ..utils import format_marker
+from .abc import MovieProvider, TvProvider
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +80,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
         season: int,
         episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
-        async with self.search(imdb_id + ' ' + format(season, episode)) as data:
+        async with self.search(imdb_id + ' ' + format_marker(season, episode)) as data:
             for item in data:
                 yield ITorrent(
                     source=ProviderSource.PIRATEBAY,

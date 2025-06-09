@@ -6,7 +6,8 @@ from healthcheck import HealthcheckCallbackResponse
 
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
-from .abc import MovieProvider, TvProvider, format
+from ..utils import format_marker
+from .abc import MovieProvider, TvProvider
 
 
 class TorrentsCsvProvider(MovieProvider, TvProvider):
@@ -34,7 +35,7 @@ class TorrentsCsvProvider(MovieProvider, TvProvider):
     async def search_for_tv(
         self, imdb_id: str, tmdb_id: int, season: int, episode: int | None = None
     ) -> AsyncGenerator[ITorrent, None]:
-        for item in await self.query(f"{imdb_id} {format(season, episode)}"):
+        for item in await self.query(f"{imdb_id} {format_marker(season, episode)}"):
             yield ITorrent(
                 source=ProviderSource.TORRENTS_CSV,
                 title=item['name'],
