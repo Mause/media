@@ -88,6 +88,7 @@ ignore_missing_imports = true
 mypy_path = "stubs"
 disallow_untyped_defs = false
 strict_equality = true
+warn_unused_configs = true
 
 [[tool.mypy.overrides]]
 module = [
