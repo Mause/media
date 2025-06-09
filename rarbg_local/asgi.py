@@ -44,9 +44,7 @@ if token := os.environ.get('LOGFIRE_TOKEN'):
     import logfire
     from opentelemetry.instrumentation.aiohttp_client import AioHttpClientInstrumentor
 
-    logfire.configure(
-        service_name='media-api', service_version=app.version, token=token
-    )
+    logfire.configure(service_name='media-api', service_version=commit, token=token)
     logfire.instrument_fastapi(app, capture_headers=True)
     logfire.instrument_requests()
     logfire.instrument_sqlalchemy()
