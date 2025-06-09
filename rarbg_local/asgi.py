@@ -1,6 +1,7 @@
 import logging
 import os
 
+from .config import commit
 from .new import create_app
 
 logger = logging.getLogger(__name__)
@@ -15,9 +16,7 @@ if 'SENTRY_DSN' in os.environ:
     sentry_sdk.init(
         os.environ['SENTRY_DSN'],
         integrations=[SqlalchemyIntegration()],
-        release=os.environ.get(
-            'HEROKU_SLUG_COMMIT', os.environ.get('RAILWAY_GIT_COMMIT_SHA')
-        ),
+        release=commit,
         # Add data like request headers and IP for users, if applicable;
         send_default_pii=True,
         # Set traces_sample_rate to 1.0 to capture 100%
