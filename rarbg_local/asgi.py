@@ -40,17 +40,15 @@ if 'SENTRY_DSN' in os.environ:
 
     app = SentryAsgiMiddleware(app)
 
-token = os.environ.get('LOGFIRE_TOKEN')
-if token:
+if token := os.environ.get('LOGFIRE_TOKEN'):
     import logfire
+    from opentelemetry.instrumentation.aiohttp_client import AioHttpClientInstrumentor
 
     logfire.configure(
         service_name='media-api', service_version=app.version, token=token
     )
     logfire.instrument_fastapi(app, capture_headers=True)
-    logfire.instrument_sqlite3()
-    logfire.instrument_psycopg()
-    logfire.instrument_asyncpg()
     logfire.instrument_requests()
     logfire.instrument_sqlalchemy()
     logfire.instrument_pydantic()
+    AioHttpClientInstrumentor().instrument()
