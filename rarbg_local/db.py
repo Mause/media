@@ -38,7 +38,7 @@ from sqlalchemy_repr import RepresentableBase
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .types import ImdbId, TmdbId
-from .utils import precondition
+from .utils import format_marker, precondition
 
 logger = logging.getLogger(__name__)
 T = TypeVar('T')
@@ -96,15 +96,8 @@ class EpisodeDetails(Base):
     def is_season_pack(self):
         return self.episode is None
 
-    def get_marker(self):
-        return f'S{int(self.season):02d}E{int(self.episode):02d}'
-
     def __repr__(self):
-        return (
-            self.show_title
-            + ' '
-            + (self.get_marker() if self.episode else f'S{int(self.season):02d}')
-        )
+        return self.show_title + ' ' + format_marker(self.season, self.episode)
 
 
 class MovieDetails(Base):
