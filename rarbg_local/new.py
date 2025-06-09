@@ -365,7 +365,7 @@ async def redirect_to_imdb(
     season: int | None = None,
     episode: int | None = None,
 ) -> RedirectResponse:
-    if type_ == 'movie':
+    if type_ == MediaType.MOVIE:
         imdb_id = await get_movie_imdb_id(tmdb_id)
     elif season:
         imdb_id = await get_tv_episode_imdb_id(tmdb_id, season, episode)
