@@ -3,11 +3,23 @@ import os
 from typing import cast
 
 from fastapi import FastAPI
+from pythonjsonlogger.json import JsonFormatter
 
 from .new import create_app
 
 logger = logging.getLogger(__name__)
 
+if 'RAILWAY_ENVIRONMENT_NAME' in os.environ:
+    logger.info("We're running on Railway!")
+    root_logger = logging.getLogger()
+    log_handler = logging.StreamHandler()
+    formatter = JsonFormatter("%(message)s%(asctime)s%(exc_info)s%(levelname)s")
+    log_handler.setFormatter(formatter)
+    root_logger.addHandler(log_handler)
+elif 'HEROKU' in os.environ:
+    logger.info("We're running on Heroku!")
+else:
+    logger.info("We're not running on a cloud platform")
 
 if 'SENTRY_DSN' in os.environ:
     import sentry_sdk
