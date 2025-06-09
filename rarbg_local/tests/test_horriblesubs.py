@@ -15,7 +15,7 @@ from .conftest import add_json, themoviedb, tolist
 from .factories import TvApiResponseFactory
 
 
-def load_html(filename):
+def load_html(filename: str) -> str:
     with (Path(__file__).parent / 'resources' / filename).open('r') as fh:
         return fh.read()
 
@@ -60,7 +60,7 @@ def mock(aioresponses: AioResponses, url: str, html: str) -> None:
     )
 
 
-def magnet_link(torrent_hash):
+def magnet_link(torrent_hash: str) -> str:
     return f'magnet:?xt=urn:btih:{torrent_hash}&tr=udp://tracker.coppersurfer.tk:6969/announce&tr=udp://tracker.internetwarriors.net:1337/announce&tr=udp://tracker.leechersparadise.org:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://open.stealth.si:80/announce&tr=udp://p4p.arenabg.com:1337/announce&tr=udp://mgtracker.org:6969/announce&tr=udp://tracker.tiny-vps.com:6969/announce&tr=udp://peerfect.org:6969/announce&tr=http://share.camoe.cn:8080/announce&tr=http://t.nyaatracker.com:80/announce&tr=https://open.kickasstracker.com:443/announce'
 
 

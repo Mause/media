@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
-import React from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
 import {
   EpisodeSelectComponent,
   Season,
@@ -26,6 +26,7 @@ test('SeasonSelectComponent  render', async () => {
   await mock<TV>('/api/tv/1', {
     title: 'Hello',
     number_of_seasons: 1,
+    imdb_id: null,
     seasons: [
       {
         season_number: 1,

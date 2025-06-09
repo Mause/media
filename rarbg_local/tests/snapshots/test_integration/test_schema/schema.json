@@ -28,8 +28,8 @@
       ],
       "title": "Year"
     },
-    "imdbID": {
-      "title": "Imdbid",
+    "tmdb_id": {
+      "title": "Tmdb Id",
       "type": "integer"
     }
   },
@@ -37,7 +37,7 @@
     "title",
     "type",
     "year",
-    "imdbID"
+    "tmdb_id"
   ],
   "title": "SearchResponse",
   "type": "object"

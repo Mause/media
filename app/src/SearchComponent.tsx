@@ -1,9 +1,9 @@
-import React from 'react';
 import ReactLoading from 'react-loading';
 import qs from 'qs';
 import { useLocation } from 'react-router-dom';
-import { SearchBox } from './IndexComponent';
 import useSWR from 'swr';
+
+import { SearchBox } from './IndexComponent';
 import { MLink } from './utils';
 import { components } from './schema';
 export type SearchResult = components['schemas']['SearchResponse'];
@@ -21,12 +21,12 @@ export function SearchComponent() {
       <ul>
         {results ? (
           results.map((result) => (
-            <li key={result.imdbID}>
+            <li key={result.tmdb_id}>
               <MLink
                 to={
                   result.type === 'movie'
-                    ? `/select/${result.imdbID}/options`
-                    : `/select/${result.imdbID}/season`
+                    ? `/select/${result.tmdb_id}/options`
+                    : `/select/${result.tmdb_id}/season`
                 }
                 state={{ query }}
               >

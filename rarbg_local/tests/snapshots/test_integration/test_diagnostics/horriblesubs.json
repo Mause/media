@@ -1,0 +1,8 @@
+[
+  {
+    "component_name": "horriblesubs",
+    "component_type": "http",
+    "status": "pass",
+    "output": "<ClientResponse(https://horriblesubs.info/) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"
+  }
+]

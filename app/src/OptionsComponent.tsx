@@ -1,18 +1,19 @@
 import _ from 'lodash';
 import qs from 'qs';
-import React, { useState, useEffect } from 'react';
-import { subscribe, MLink } from './utils';
-import { Torrents } from './streaming';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
+import { Breadcrumbs, Typography, Alert } from '@mui/material';
+import { useAuth0 } from '@auth0/auth0-react';
+
+import { subscribe, MLink, getToken } from './utils';
+import { Torrents } from './streaming';
 import { Loading } from './render';
-import { Breadcrumbs, Typography } from '@mui/material';
 import { Shared } from './SeasonSelectComponent';
 import { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
-import { useAuth0 } from '@auth0/auth0-react';
 import { components } from './schema';
-import { Alert } from '@mui/material';
+import { MonitorAddComponent } from './MonitorComponent';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
@@ -30,7 +31,7 @@ export function DisplayTorrent({
   episode,
 }: {
   season?: number;
-  episode?: number;
+  episode?: number | null;
   tmdb_id: string;
   torrent: ITorrent;
   torrents?: Torrents;
@@ -189,12 +190,10 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           </MLink>
         </li>
         <li>
-          <MLink
-            to={`/monitor/add/${tmdb_id}`}
-            state={{ type: type === 'movie' ? 'MOVIE' : 'TV' }}
-          >
-            Add to monitor
-          </MLink>
+          <MonitorAddComponent
+            tmdb_id={parseInt(tmdb_id!)}
+            type={type === 'movie' ? 'MOVIE' : 'TV'}
+          />
         </li>
         <li>
           <MLink
@@ -258,7 +257,7 @@ function useToken() {
   const auth = useAuth0();
   const [token, setToken] = useState<string>();
   useEffect(() => {
-    auth.getAccessTokenSilently().then(setToken);
+    void getToken(auth).then(setToken);
   }, [auth]);
   return token;
 }

@@ -1,6 +1,4 @@
-import React, { FormEvent, useState } from 'react';
-import { TVShows, Movies } from './render';
-import { IndexResponse, Torrents } from './streaming';
+import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
 import useSWR from 'swr';
@@ -15,6 +13,9 @@ import {
 import _ from 'lodash';
 import Search from '@mui/icons-material/Search';
 
+import { IndexResponse, Torrents } from './streaming';
+import { TVShows, Movies } from './render';
+
 const CFG = {
   refreshInterval: 10000,
 };
@@ -27,7 +28,7 @@ function IndexComponent() {
     data: torrents,
     isValidating: loadingTorrents,
     error,
-  } = useSWR<Torrents>('torrents', CFG);
+  } = useSWR<Torrents, Error>('torrents', CFG);
 
   const loading = loadingState || loadingTorrents;
 
@@ -63,7 +64,7 @@ export function DisplayError(props: { error: Error; message?: string }) {
 export function SearchBox() {
   function search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    navigate({ pathname: '/search', search: qs.stringify({ query }) });
+    void navigate({ pathname: '/search', search: qs.stringify({ query }) });
   }
 
   const [query, setQuery] = useState('');

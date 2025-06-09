@@ -1,23 +1,34 @@
 import json
-from asyncio import get_event_loop
 from collections.abc import AsyncGenerator
 from re import Pattern
-from typing import TypeVar
+from typing import Annotated, TypeVar
 
+import uvloop
+from aioresponses import aioresponses as Aioresponses
 from async_asgi_testclient import TestClient
+from fastapi import Depends
+from fastapi.security import SecurityScopes
 from pytest import fixture, hookimpl
 from responses import RequestsMock
+from sqlalchemy.engine.url import URL
+from sqlalchemy.future import select
+from sqlalchemy.orm.session import Session
 
+from ..auth import get_current_user
 from ..db import Base, Role, User, get_db, get_session_local
 from ..new import (
     Settings,
     create_app,
-    get_current_user,
     get_settings,
 )
 from ..singleton import get
 from ..utils import cache_clear
 from .factories import session_var
+
+
+@fixture(scope="session")
+def event_loop_policy():
+    return uvloop.EventLoopPolicy()
 
 
 @fixture
@@ -32,8 +43,13 @@ def clear_cache():
 
 
 @fixture
-def test_client(fastapi_app, clear_cache, user: User) -> TestClient:
-    fastapi_app.dependency_overrides[get_current_user] = lambda: user
+def test_client(fastapi_app, clear_cache, user) -> TestClient:
+    async def gcu(scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]):
+        res = session.execute(select(User)).scalars().first()
+        assert res
+        return res
+
+    fastapi_app.dependency_overrides[get_current_user] = gcu
     return TestClient(fastapi_app)
 
 
@@ -47,25 +63,33 @@ def user(session):
 
 
 @fixture
-def session(fastapi_app):
+def session(fastapi_app, tmp_path, _function_event_loop):
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
-        database_url='sqlite:///:memory:',
+        database_url=str(
+            URL.create(
+                'sqlite',
+                database=str(tmp_path / 'test.db'),
+            )
+        ),
         plex_token='plex_token',
     )
 
-    Session = get_event_loop().run_until_complete(get(fastapi_app, get_session_local))
+    Session = _function_event_loop.run_until_complete(
+        get(fastapi_app, get_session_local)
+    )
     assert hasattr(Session, 'kw'), Session
     engine = Session.kw['bind']
     assert 'sqlite' in repr(engine), repr(engine)
     Base.metadata.create_all(engine)
 
     with Session() as session:
-        fastapi_app.dependency_overrides[get_db] = lambda: session
         session_var.set(session)
         yield session
 
 
-def themoviedb(responses, path, response, query=''):
+def themoviedb(
+    responses: Aioresponses, path: str, response: list | dict, query: str = ''
+) -> None:
     add_json(
         responses,
         'GET',
@@ -74,7 +98,9 @@ def themoviedb(responses, path, response, query=''):
     )
 
 
-def add_json(responses, method: str, url: str | Pattern, json_body) -> None:
+def add_json(
+    responses: Aioresponses, method: str, url: str | Pattern, json_body
+) -> None:
     responses.add(method=method, url=url, body=json.dumps(json_body))
 
 
@@ -129,3 +155,7 @@ async def tolist(a: AsyncGenerator[T, None]) -> list[T]:
     async for t in a:
         lst.append(t)
     return lst
+
+
+def assert_match_json(snapshot, res, name):
+    snapshot.assert_match(json.dumps(res.json(), indent=2), name)

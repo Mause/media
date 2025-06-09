@@ -1,32 +1,32 @@
 [
   {
-    "source": "rarbg",
-    "title": "18",
-    "seeders": 18,
-    "download": "magnet:?xt=urn:btih:00000000000000000",
-    "category": "",
+    "source": "piratebay",
+    "title": "title 201",
+    "seeders": 201,
+    "download": "magnet:?xt=urn:btih:00000000000000000&dn=title+201",
+    "category": "Video - Movies",
     "episode_info": {
       "seasonnum": 1,
       "epnum": 1
     }
   },
   {
-    "source": "rarbg",
-    "title": "41",
-    "seeders": 41,
-    "download": "magnet:?xt=urn:btih:00000000000000000",
-    "category": "",
+    "source": "piratebay",
+    "title": "title 202",
+    "seeders": 202,
+    "download": "magnet:?xt=urn:btih:00000000000000000&dn=title+202",
+    "category": "Video - Movies Dvdr",
     "episode_info": {
       "seasonnum": 1,
       "epnum": 1
     }
   },
   {
-    "source": "rarbg",
-    "title": "49",
-    "seeders": 49,
-    "download": "magnet:?xt=urn:btih:00000000000000000",
-    "category": "",
+    "source": "piratebay",
+    "title": "title 205",
+    "seeders": 205,
+    "download": "magnet:?xt=urn:btih:00000000000000000&dn=title+205",
+    "category": "Video - Tv Shows",
     "episode_info": {
       "seasonnum": 1,
       "epnum": 1

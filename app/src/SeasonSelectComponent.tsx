@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
-import React from 'react';
 import ReactLoading from 'react-loading';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import useSWR from 'swr';
 import qs from 'qs';
+
 import { components } from './schema';
 import { MLink, useLocation } from './utils';
 

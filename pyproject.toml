@@ -4,16 +4,16 @@ version = "0.1.0"
 description = ""
 authors = [{ name = "Elliana May", email = "me@mause.me" }]
 license = "MIT"
-requires-python = ">=3.11.0"
+requires-python = ">=3.12.0"
 
 dependencies = [
     "sqlalchemy[mypy]==2.0.41",
     "sqlalchemy-repr==0.1.0",
-    "aiohttp==3.11.18",
+    "aiohttp==3.12.11",
     "backoff==2.2.1",
     "psycopg2-binary",
-    "sentry-sdk==2.28.0",
-    "alembic==1.15.2",
+    "sentry-sdk==2.29.1",
+    "alembic==1.16.1",
     "plexapi==4.17.0",
     "fuzzywuzzy[speedup]==0.18.0",
     "cachetools==5.5.2",
@@ -29,9 +29,9 @@ dependencies = [
     "aiofiles==24.1.0",
     "fastapi-utils==0.8.0",
     "asyncache==0.3.1",
-    "makefun==1.9.5",
+    "makefun==1.16.0",
     "gunicorn",
-    "nyaapy",
+    "nyaapy>=0.7",
     "python-healthchecklib>=0.1.1",
     "beautifulsoup4>=4.13.4",
     "asyncpg>=0.30.0",
@@ -41,6 +41,7 @@ dependencies = [
     "typing-inspect>=0.9.0",
     "fastapi-oidc>=0.0.10",
     "pyjwt>=2.10.1",
+    "aiontfy>=0.5.3",
     "python-json-logger>=3.3.0",
 ]
 
@@ -55,7 +56,7 @@ dev = [
     "pre-commit>=4.2.0",
     "pytest-snapshot",
     "factory-boy==3.3.3",
-    "pytest-asyncio==0.26.0",
+    "pytest-asyncio==1.0.0",
     "async-asgi-testclient==1.4.11",
     "aioresponses==0.7.8",
     "pytest-sugar",
@@ -68,9 +69,37 @@ dev = [
     "types-cachetools>=5.5.0.20240820",
 ]
 debug = ["pudb", "pdbpp"]
+cli = [
+    "rich>=14.0.0",
+]
 
 [tool.ruff.format]
 quote-style = "preserve"
 
 [tool.ruff.lint]
-select = ["F", "E", "W", "I"]
+select = ["F", "E", "W", "I", "T"]
+
+[tool.pytest.ini_options]
+addopts = "rarbg_local --driver chrome --html report.html --self-contained-html"
+asyncio_default_fixture_loop_scope = "fixture"
+
+[tool.mypy]
+plugins = "pydantic.mypy"
+ignore_missing_imports = true
+mypy_path = "stubs"
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = [
+    "rarbg_local.utils",
+    "rarbg_local.tmdb",
+    "rarbg_local.providers",
+    "rarbg_local.providers.abc",
+    "rarbg_local.providers.torrents_csv",
+    "rarbg_local.providers.horriblesubs",
+    "rarbg_local.providers.nyaasi",
+    "rarbg_local.providers.piratebay",
+    "rarbg_local.new",
+    "rarbg_local.jikan",
+]
+disallow_untyped_defs = true

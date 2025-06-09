@@ -1,19 +1,18 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Annotated
 
 from fastapi import APIRouter
 from jose import constants, jwk
 from pytest import mark
 
-from ..auth import AUTH0_DOMAIN
+from ..auth import AUTH0_DOMAIN, get_current_user, security
 from ..db import User
 from ..models import UserSchema
-from ..new import get_current_user, security
-from .conftest import add_json
+from .conftest import add_json, assert_match_json
 
 
 @mark.asyncio
-async def test_auth(responses, user, fastapi_app, test_client):
+async def test_auth(responses, user, fastapi_app, test_client, snapshot):
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
@@ -41,7 +40,7 @@ async def test_auth(responses, user, fastapi_app, test_client):
         public_exponent=65537, key_size=2048, backend=default_backend()
     )
 
-    iat = datetime.utcnow()
+    iat = datetime.now(UTC)
     exp = iat + timedelta(seconds=36000)
     jw = PyJWT().encode(
         {
@@ -94,7 +93,7 @@ async def test_auth(responses, user, fastapi_app, test_client):
 
     # Assert
     assert r.status_code == 200, r.text
-    assert r.json() == {'first_name': '', 'username': 'python'}, r.text
+    assert_match_json(snapshot, r, 'user.json')
 
 
 @mark.asyncio
@@ -104,4 +103,4 @@ async def test_no_auth(fastapi_app, test_client):
     r = await test_client.get('/api/diagnostics')
 
     assert r.status_code == 403
-    assert r.json() == {'detail': 'Not authenticated'}
+    assert r.json() == {'detail': 'Forbidden'}

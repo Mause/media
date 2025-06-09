@@ -1,20 +1,23 @@
-import { usesMoxios, renderWithSWR, mock, wait, listenTo } from './test.utils';
 import moxios from 'moxios';
-import {
-  MonitorComponent,
-  Monitor,
-  MonitorAddComponent,
-} from './MonitorComponent';
 import {
   unstable_HistoryRouter as HistoryRouter,
   MemoryRouter,
   Routes,
   Route,
 } from 'react-router-dom';
-import * as _ from 'lodash';
-import { expectLastRequestBody } from './utils';
+import _ from 'lodash';
 import { createMemoryHistory } from '@remix-run/router';
 import { act } from 'react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { expectLastRequestBody } from './utils';
+import {
+  MonitorComponent,
+  Monitor,
+  MonitorAddComponent,
+} from './MonitorComponent';
+import { usesMoxios, renderWithSWR, mock, wait, listenTo } from './test.utils';
 
 usesMoxios();
 
@@ -35,7 +38,11 @@ describe('MonitorComponent', () => {
         title: 'Hello World',
         tmdb_id: 5,
         type: 'MOVIE',
-        added_by: 'me',
+        status: false,
+        added_by: {
+          first_name: '',
+          username: 'me',
+        },
       },
     ];
     console.log('mocking');
@@ -48,12 +55,7 @@ describe('MonitorComponent', () => {
 
   it('add', async () => {
     const hist = createMemoryHistory({
-      initialEntries: [
-        {
-          pathname: '/monitor/add/5',
-          state: { type: 'MOVIE' },
-        },
-      ],
+      initialEntries: ['/fake'],
       v5Compat: true,
     });
     const entries = listenTo(hist);
@@ -61,12 +63,21 @@ describe('MonitorComponent', () => {
     renderWithSWR(
       <HistoryRouter history={hist}>
         <Routes>
-          <Route path="/monitor/add/:tmdb_id" Component={MonitorAddComponent} />
+          <Route
+            path="/fake"
+            element={<MonitorAddComponent tmdb_id={5} type={'MOVIE'} />}
+          />
           <Route path="/monitor" element={<div>Monitor</div>} />
           <Route path="/" element={<div>Home</div>} />
         </Routes>
       </HistoryRouter>,
     );
+
+    const events = userEvent.setup();
+
+    await act(async () => {
+      await events.click(await screen.findByText('Add to monitor'));
+    });
 
     await wait();
     await act(async () => {
