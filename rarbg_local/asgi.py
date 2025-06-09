@@ -3,7 +3,6 @@ import os
 from typing import cast
 
 from fastapi import FastAPI
-
 from pythonjsonlogger.json import JsonFormatter
 
 from .new import create_app
