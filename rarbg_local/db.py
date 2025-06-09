@@ -80,7 +80,7 @@ class Download(Base):
     def progress(self):
         from .main import get_keyed_torrents
 
-        return get_keyed_torrents()[self.transmission_id]['percentDone'] * 100
+        return get_keyed_torrents()[self.transmission_id].percentDone * 100
 
 
 class EpisodeDetails(Base):
