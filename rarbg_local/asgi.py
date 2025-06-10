@@ -44,8 +44,8 @@ if token := os.environ.get('LOGFIRE_TOKEN'):
     logfire.configure(service_name='media-api', service_version=commit, token=token)
     logfire.instrument_fastapi(app, capture_headers=True)
     logfire.instrument_requests()
-    logfire.instrument_sqlalchemy()
     logfire.instrument_pydantic()
+    logging.getLogger().addHandler(logfire.LogfireLoggingHandler())
     AioHttpClientInstrumentor().instrument()
 
 if sentry_dsn:

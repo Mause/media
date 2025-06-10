@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Annotated, TypeVar, cast
 
 import backoff
+import logfire
 import psycopg2
 from fastapi import Depends
 from sqlalchemy import (
@@ -357,6 +358,8 @@ def build_engine(db_url: URL, cr: Callable):
             )
             def receive_do_connect(dialect, conn_rec, cargs, cparams):
                 return psycopg2.connect(*cargs, **cparams)
+
+    logfire.instrument_sqlalchemy(engine=engine)
 
     return engine
 
