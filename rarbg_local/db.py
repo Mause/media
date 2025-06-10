@@ -4,8 +4,8 @@ from collections.abc import Callable, Sequence
 from datetime import datetime
 from typing import Annotated, TypeVar, cast
 
-import logfire
 import backoff
+import logfire
 import psycopg2
 from fastapi import Depends
 from sqlalchemy import (
