@@ -2,7 +2,7 @@ import contextvars
 from collections.abc import Callable
 from datetime import datetime
 from os import getpid
-from typing import Any, TypeVar, cast, overload
+from typing import Any, TypeVar, cast, overload, Coroutine
 
 from fastapi import APIRouter
 from fastapi.requests import Request
