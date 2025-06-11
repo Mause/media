@@ -2,7 +2,7 @@ import contextvars
 from collections.abc import Callable
 from datetime import datetime
 from os import getpid
-from typing import Any, TypeVar, cast
+from typing import Any, TypeVar, cast, overload
 
 from fastapi import APIRouter
 from fastapi.requests import Request
@@ -27,8 +27,15 @@ router = APIRouter(tags=['diagnostics'])
 request_var = contextvars.ContextVar[Request]('request_var')
 T = TypeVar('T')
 
+@overload
+async def get(dependent: Callable[..., Coroutine[Any, Any, T]]) -> T: ...
 
-async def get(dependent: Callable[..., T]) -> T:
+
+@overload
+async def get(dependent: Callable[..., T]) -> T: ...
+
+
+async def get(dependent):
     return await _get(request_var.get().app, dependent, request_var.get())
 
 
