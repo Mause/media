@@ -27,6 +27,7 @@ router = APIRouter(tags=['diagnostics'])
 request_var = contextvars.ContextVar[Request]('request_var')
 T = TypeVar('T')
 
+
 @overload
 async def get(dependent: Callable[..., Coroutine[Any, Any, T]]) -> T: ...
 
