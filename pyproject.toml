@@ -68,6 +68,7 @@ dev = [
     "types-selenium>=3.141.9",
     "types-cachetools>=5.5.0.20240820",
     "pytest-cov>=6.1.1",
+    "pyleak>=0.1.11",
 ]
 debug = ["pudb", "pdbpp"]
 cli = [

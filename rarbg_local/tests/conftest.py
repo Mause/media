@@ -3,11 +3,13 @@ from collections.abc import AsyncGenerator
 from re import Pattern
 from typing import Annotated, TypeVar
 
+import pytest_asyncio
 import uvloop
 from aioresponses import aioresponses as Aioresponses
 from async_asgi_testclient import TestClient
 from fastapi import Depends
 from fastapi.security import SecurityScopes
+from pyleak import no_event_loop_blocking, no_task_leaks, no_thread_leaks
 from pytest import fixture, hookimpl
 from responses import RequestsMock
 from sqlalchemy.engine.url import URL
@@ -43,14 +45,24 @@ def clear_cache():
 
 
 @fixture
-def test_client(fastapi_app, clear_cache, user) -> TestClient:
+def _fixture_event_loop():
+    return uvloop.new_event_loop()
+
+
+@pytest_asyncio.fixture
+async def test_client(fastapi_app, clear_cache, user) -> TestClient:
     async def gcu(scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]):
         res = session.execute(select(User)).scalars().first()
         assert res
         return res
 
     fastapi_app.dependency_overrides[get_current_user] = gcu
-    return TestClient(fastapi_app)
+    async with (
+        no_task_leaks('raise'),
+        no_event_loop_blocking('raise'),
+        no_thread_leaks('raise'),
+    ):
+        yield TestClient(fastapi_app)
 
 
 @fixture
