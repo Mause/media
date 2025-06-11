@@ -1,3 +1,4 @@
+import { SearchComponent, SearchResult } from './SearchComponent';
 import { Route, MemoryRouter, Routes } from 'react-router-dom';
 
 import { SearchComponent, SearchResult } from './SearchComponent';

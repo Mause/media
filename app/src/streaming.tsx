@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/react';
+import type { ReactNode, ComponentType, PropsWithChildren } from 'react';
 import { ErrorInfo, ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -61,9 +62,7 @@ function RouteTitle({
 }) {
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
+      <title>{title}</title>
       {children}
     </>
   );

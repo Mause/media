@@ -2,6 +2,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { renderWithSWR, mock, usesMoxios, wait } from './test.utils';
 import { DownloadAllComponent } from './DownloadAllComponent';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { ITorrent } from './OptionsComponent';
 
 usesMoxios();

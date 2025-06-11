@@ -1,4 +1,6 @@
 import { FormEvent, useState } from 'react';
+import { TVShows, Movies } from './render';
+import { IndexResponse, Torrents } from './streaming';
 import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
 import useSWR from 'swr';
