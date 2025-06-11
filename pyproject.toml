@@ -67,6 +67,7 @@ dev = [
     "types-lxml>=2025.3.30",
     "types-selenium>=3.141.9",
     "types-cachetools>=5.5.0.20240820",
+    "pytest-cov>=6.1.1",
 ]
 debug = ["pudb", "pdbpp"]
 cli = [
@@ -80,7 +81,7 @@ quote-style = "preserve"
 select = ["F", "E", "W", "I", "T"]
 
 [tool.pytest.ini_options]
-addopts = "rarbg_local --driver chrome --html report.html --self-contained-html"
+addopts = "rarbg_local --driver chrome --html report.html --self-contained-html --cov-report html --cov"
 asyncio_default_fixture_loop_scope = "fixture"
 
 [tool.mypy]
