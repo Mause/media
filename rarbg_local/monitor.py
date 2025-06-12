@@ -107,8 +107,8 @@ async def monitor_cron(
     )
 
     async def do_with(monitor):
-        with session_maker() as nested, nested.begin():
-            return await check_monitor(monitor, nested, ntfy)
+        with session_maker() as session:
+            return await check_monitor(monitor, session, ntfy)
 
     tasks = [do_with(monitor) for monitor in monitors]
 
