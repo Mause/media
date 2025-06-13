@@ -7,6 +7,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import last from 'lodash/last';
 import sortBy from 'lodash/sortBy';
 import groupBy from 'lodash/groupBy';
+import maxBy from 'lodash/maxBy';
 
 import { subscribe, MLink, getToken } from './utils';
 import { Torrents } from './streaming';
@@ -117,7 +118,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     />
   );
   const grouped = groupBy(results, 'category');
-  const auto = _.maxBy(
+  const auto = maxBy(
     grouped['x264/1080'] || grouped['TV HD Episodes'] || [],
     'seeders',
   );
@@ -297,7 +298,7 @@ function useSubscribes<T>(url: string): {
       .map((t) => t.items || [])
       .reduce((a, b) => a.concat(b), []),
     loading: providers.filter((t) => t.loading).map((t) => t.name),
-    errors: _.fromPairs(
+    errors: Object.fromEntries(
       providers.filter((t) => t.error).map((t, i) => [p[i], t.error]),
     ) as { [key: string]: Error },
   };
