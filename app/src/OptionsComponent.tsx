@@ -1,4 +1,3 @@
-import qs from 'qs';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -6,6 +5,7 @@ import { Breadcrumbs, Typography, Alert } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 
+import * as qs from './qs';
 import { subscribe, MLink, getToken } from './utils';
 import type { Torrents } from './streaming';
 import { Loading } from './render';
