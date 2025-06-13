@@ -389,7 +389,6 @@ async def static(
     return await static_files.get_response(filename, request.scope)
 
 
-
 root.include_router(websocket_ns)
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
