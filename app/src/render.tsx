@@ -2,12 +2,6 @@ import MenuItem from '@mui/material/MenuItem';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
-import last from 'lodash/last';
-import groupBy from 'lodash/groupBy';
-import difference from 'lodash/difference';
-import range from 'lodash/range';
-import sortBy from 'lodash/sortBy';
-import map from 'lodash/map';
 import Collapsible from 'react-collapsible';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -21,6 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
+import * as _ from 'lodash-es';
 
 import { getPrefix, MLink } from './utils';
 import { TV } from './SeasonSelectComponent';
@@ -71,7 +66,7 @@ export function Movies({
   torrents?: Torrents;
   loading: boolean;
 }) {
-  const sortedMovies = groupBy(
+  const sortedMovies = _.groupBy(
     movies,
     (movie) => !!(torrents && getProgress(movie, torrents)?.percentDone === 1),
   );
@@ -265,7 +260,7 @@ function Series({
           </MenuItem>
         </ContextMenu>
       </h3>
-      {sortBy(Object.entries(serie.seasons), ([key]) => parseInt(key)).map(
+      {_.sortBy(Object.entries(serie.seasons), ([key]) => parseInt(key)).map(
         ([i, season]) => (
           <Season
             key={i}
@@ -351,7 +346,7 @@ export function NextEpisodeAirs(props: {
     return <></>;
   }
 
-  const lastEpisode = last(props.season_episodes)!.episode!;
+  const lastEpisode = _.last(props.season_episodes)!.episode!;
 
   const nextEpisode = data.episodes.find(
     (episode) => episode.episode_number === lastEpisode + 1,
@@ -416,10 +411,10 @@ export function shouldCollapse(
     if (seasonMeta) {
       const hasNext = true; // !!data.seasons[i_i + 1];
 
-      const episodeNumbers = range(1, seasonMeta.episode_count + 1);
-      const hasNumbers = map(episodes, 'episode');
+      const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
+      const hasNumbers = _.map(episodes, 'episode');
       const hasAllEpisodes =
-        difference(episodeNumbers, hasNumbers).length === 0;
+        _.difference(episodeNumbers, hasNumbers).length === 0;
       collapse = hasNext && hasAllEpisodes;
     }
   }

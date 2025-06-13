@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { screen } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import remove from 'lodash/remove';
+import * as _ from 'lodash-es';
 
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
@@ -22,7 +22,7 @@ class ES {
   }
   removeEventListener() {}
   close() {
-    remove(sources, this);
+    _.remove(sources, this);
   }
 }
 

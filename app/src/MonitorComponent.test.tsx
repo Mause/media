@@ -9,7 +9,7 @@ import { createMemoryHistory } from '@remix-run/router';
 import { act } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import map from 'lodash/map';
+import * as _ from 'lodash-es';
 
 import { expectLastRequestBody } from './utils';
 import {
@@ -91,6 +91,6 @@ describe('MonitorComponent', () => {
     });
     await wait();
 
-    expect(map(entries, 'pathname')).toEqual(['/monitor']);
+    expect(_.map(entries, 'pathname')).toEqual(['/monitor']);
   });
 });

@@ -3,8 +3,8 @@ import { useParams, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
-import uniqBy from 'lodash/uniqBy';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import * as _ from 'lodash-es';
 
 import { DisplayTorrent, ITorrent } from './OptionsComponent';
 import { getPrefix, getToken } from './utils';
@@ -80,7 +80,7 @@ function Websocket() {
             </li>
           ))}
         </ul>
-        {uniqBy(downloads, 'download').map((message) => (
+        {_.uniqBy(downloads, 'download').map((message) => (
           <li key={message.download}>
             <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
           </li>

@@ -15,7 +15,7 @@ import { styled } from '@mui/material/styles';
 import { SWRConfig } from 'swr';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
-import last from 'lodash/last';
+import * as _ from 'lodash-es';
 
 import { IndexComponent } from './IndexComponent';
 import {
@@ -118,7 +118,7 @@ function ParentComponentInt() {
 
   const auth = useAuth0();
   const location = useLocation();
-  const match = last(useMatches());
+  const match = _.last(useMatches());
   console.log({ user: auth.user });
 
   return (

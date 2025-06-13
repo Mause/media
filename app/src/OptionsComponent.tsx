@@ -4,10 +4,7 @@ import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { Breadcrumbs, Typography, Alert } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
-import last from 'lodash/last';
-import sortBy from 'lodash/sortBy';
-import groupBy from 'lodash/groupBy';
-import maxBy from 'lodash/maxBy';
+import * as _ from 'lodash-es';
 
 import { subscribe, MLink, getToken } from './utils';
 import { Torrents } from './streaming';
@@ -23,7 +20,7 @@ type ProviderSource = components['schemas']['ProviderSource'];
 
 function getHash(magnet: string) {
   const u = new URL(magnet);
-  return last(u.searchParams.get('xt')!.split(':'));
+  return _.last(u.searchParams.get('xt')!.split(':'));
 }
 
 export function DisplayTorrent({
@@ -117,18 +114,18 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       torrent={result}
     />
   );
-  const grouped = groupBy(results, 'category');
-  const auto = maxBy(
+  const grouped = _.groupBy(results, 'category');
+  const auto = _.maxBy(
     grouped['x264/1080'] || grouped['TV HD Episodes'] || [],
     'seeders',
   );
-  const bits = sortBy(
+  const bits = _.sortBy(
     Object.entries(grouped),
     ([category]) => -ranking.indexOf(category),
   ).map(([category, results]) => (
     <div key={category}>
       <h3>{remove(category)}</h3>
-      {sortBy(results, (i) => -i.seeders).map((result) => (
+      {_.sortBy(results, (i) => -i.seeders).map((result) => (
         <li key={result.title}>{dt(result)}</li>
       ))}
     </div>
