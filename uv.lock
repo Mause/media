@@ -530,6 +530,18 @@ wheels = [
 ]
 
 [[package]]
+name = "exceptiongroup"
+version = "1.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0b/9f/a65090624ecf468cdca03533906e7c69ed7588582240cfe7cc9e770b50eb/exceptiongroup-1.3.0.tar.gz", hash = "sha256:b241f5885f560bc56a59ee63ca4c6a8bfa46ae4ad651af316d4e81817bb9fd88", size = 29749, upload-time = "2025-05-10T17:42:51.123Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/36/f4/c6e662dade71f56cd2f3735141b265c3c79293c109549c1e6933b0651ffc/exceptiongroup-1.3.0-py3-none-any.whl", hash = "sha256:4d111e6e0c13d0644cad6ddaa7ed0261a0b36971f6d23e7ec9b4b9097da78a10", size = 16674, upload-time = "2025-05-10T17:42:49.33Z" },
+]
+
+[[package]]
 name = "executing"
 version = "2.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1134,6 +1146,7 @@ dev = [
     { name = "factory-boy" },
     { name = "lxml" },
     { name = "pre-commit" },
+    { name = "pyleak" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
@@ -1204,6 +1217,7 @@ dev = [
     { name = "factory-boy", specifier = "==3.3.3" },
     { name = "lxml" },
     { name = "pre-commit", specifier = ">=4.2.0" },
+    { name = "pyleak", specifier = ">=0.1.11" },
     { name = "pytest" },
     { name = "pytest-asyncio", specifier = "==1.0.0" },
     { name = "pytest-cov", specifier = ">=6.1.1" },
@@ -1849,6 +1863,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e7/46/bd74733ff231675599650d3e47f361794b22ef3e3770998dda30d3b63726/pyjwt-2.10.1.tar.gz", hash = "sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953", size = 87785, upload-time = "2024-11-28T03:43:29.933Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/61/ad/689f02752eeec26aed679477e80e632ef1b682313be70793d798c1d5fc8f/PyJWT-2.10.1-py3-none-any.whl", hash = "sha256:dcdd193e30abefd5debf142f9adfcdd2b58004e644f25406ffaebd50bd98dacb", size = 22997, upload-time = "2024-11-28T03:43:27.893Z" },
+]
+
+[[package]]
+name = "pyleak"
+version = "0.1.11"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "exceptiongroup" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/68/35/c70c8461950323abc7d0fb9445c93f5fd1d5bc715684ab2f54eaa0feff0a/pyleak-0.1.11.tar.gz", hash = "sha256:46b9e615769bdb9e8e97ede2fb5d5c2bc1f824bf0daf9f3a2cf17f1da83f1397", size = 104827, upload-time = "2025-06-09T07:46:10.555Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/64/28/e5ec8a0d269f504a052135e21ff3f57b8a65b65761f7f9bff0fc48569d18/pyleak-0.1.11-py3-none-any.whl", hash = "sha256:238c689ef39b4533910339ea28ca1b2a006f8d7625b71511dd1e6b9dc18bb870", size = 23864, upload-time = "2025-06-09T07:46:09.214Z" },
 ]
 
 [[package]]
