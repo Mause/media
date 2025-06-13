@@ -1,54 +1,10 @@
 from ..tmdb import SearchBaseResponse
 
-null = None
-true = True
-false = False
 
-
-def test_load(snapshot):
+def test_load(snapshot, resource_path):
     snapshot.assert_match(
-        SearchBaseResponse.model_validate(
-            {
-                "page": 1,
-                "results": [
-                    {
-                        "backdrop_path": null,
-                        "id": 468,
-                        "name": "Monster Warriors",
-                        "original_name": "Monster Warriors",
-                        "overview": "Monster Warriors is an original Canadian television series, which airs on YTV in Canada, and also on Jetix since April 2006 in the United Kingdom. It was created by Wilson Coneybeare and produced by Coneybeare Stories Inc. The series concluded its run on July 26, 2008 with a TV movie titled Monster Warriors Finale on YTV",
-                        "poster_path": "/zlVRF32ANgPGPljlNTBA7smmLPY.jpg",
-                        "media_type": "tv",
-                        "adult": false,
-                        "original_language": "en",
-                        "genre_ids": [10765],
-                        "popularity": 13.5561,
-                        "first_air_date": "",
-                        "vote_average": 8.0,
-                        "vote_count": 2,
-                        "origin_country": ["CA"],
-                    },
-                    {
-                        "backdrop_path": "/jGk4MSN5Lg5KqwvAJOe1FljkJJA.jpg",
-                        "id": 270462,
-                        "title": "Ultraman Zoffy: Ultra Warriors vs. the Giant Monster Army",
-                        "original_title": "ウルトラマンZOFFY ウルトラの戦士VS大怪獣軍団",
-                        "overview": "Ultraman Zoffy explains to the audience about the history of the ultra series alongside Pigmon, while having to fight off with various seijin foes.",
-                        "poster_path": "/vB2uV9nce8SiTt1mgaEDvtFpHcP.jpg",
-                        "media_type": "movie",
-                        "adult": false,
-                        "original_language": "ja",
-                        "genre_ids": [28, 12, 878],
-                        "popularity": 0.3969,
-                        "release_date": "1984-03-17",
-                        "video": false,
-                        "vote_average": 7.2,
-                        "vote_count": 4,
-                    },
-                ],
-                "total_pages": 1,
-                "total_results": 2,
-            }
+        SearchBaseResponse.model_validate_json(
+            (resource_path / 'tmdb.json').read_text()
         ).model_dump_json(indent=2),
         'tmdb_search_base_response.json',
     )
