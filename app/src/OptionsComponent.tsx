@@ -7,12 +7,12 @@ import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 
 import { subscribe, MLink, getToken } from './utils';
-import { Torrents } from './streaming';
+import type { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
-import { DownloadState } from './DownloadComponent';
+import type { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
-import { components } from './schema';
+import type { components } from './schema';
 import { MonitorAddComponent } from './MonitorComponent';
 
 export type ITorrent = components['schemas']['ITorrent'];

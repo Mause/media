@@ -5,7 +5,7 @@ import useSWR from 'swr';
 
 import { SearchBox } from './IndexComponent';
 import { MLink } from './utils';
-import { components } from './schema';
+import type { components } from './schema';
 export type SearchResult = components['schemas']['SearchResponse'];
 
 export function SearchComponent() {

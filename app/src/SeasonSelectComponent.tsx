@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import qs from 'qs';
 import * as _ from 'lodash-es';
 
-import { components } from './schema';
+import type { components } from './schema';
 import { MLink, useLocation } from './utils';
 
 export type Season = components['schemas']['TvSeasonResponse'];

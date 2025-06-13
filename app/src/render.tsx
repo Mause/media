@@ -13,13 +13,13 @@ import {
   faCaretDown,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
 
 import { getPrefix, MLink } from './utils';
-import { TV } from './SeasonSelectComponent';
-import {
+import type { TV } from './SeasonSelectComponent';
+import type {
   MovieResponse,
   SeriesResponse,
   Torrents,
