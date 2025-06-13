@@ -24,6 +24,7 @@ module.exports = tseslint.config(
     rules: {
       'deprecation/deprecation': 'error',
       'import-x/no-named-as-default-member': 'off',
+      'no-restricted-imports': ['error', 'lodash'],
       'import-x/order': [
         'error',
         {

@@ -10,8 +10,8 @@ import {
   InputLabel,
   InputAdornment,
 } from '@mui/material';
-import _ from 'lodash';
 import Search from '@mui/icons-material/Search';
+import get from 'lodash/get';
 
 import { IndexResponse, Torrents } from './streaming';
 import { TVShows, Movies } from './render';
@@ -46,7 +46,7 @@ function IndexComponent() {
 
 export function DisplayError(props: { error: Error; message?: string }) {
   const message =
-    _.get(props.error, 'response.data.message') ||
+    get(props.error, 'response.data.message') ||
     (props.message || 'Unable to connect to transmission') +
       ': ' +
       props.error.toString();

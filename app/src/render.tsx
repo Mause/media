@@ -1,8 +1,8 @@
 import MenuItem from '@mui/material/MenuItem';
-import _ from 'lodash';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
+import groupBy from 'lodash/groupBy';
 import Collapsible from 'react-collapsible';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -66,7 +66,7 @@ export function Movies({
   torrents?: Torrents;
   loading: boolean;
 }) {
-  const sortedMovies = _.groupBy(
+  const sortedMovies = groupBy(
     movies,
     (movie) => !!(torrents && getProgress(movie, torrents)?.percentDone === 1),
   );
