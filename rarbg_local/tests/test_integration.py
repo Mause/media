@@ -64,10 +64,17 @@ def add_torrent():
         yield mock
 
 
+@patch('rarbg_local.plex.MyPlexAccount')
 @patch('rarbg_local.health.transmission')
 @mark.asyncio
 async def test_diagnostics(
-    transmission, test_client, user, aioresponses, snapshot, monkeypatch
+    transmission,
+    my_plex_account,
+    test_client,
+    user,
+    aioresponses,
+    snapshot,
+    monkeypatch,
 ):
     monkeypatch.setattr('rarbg_local.health.getpid', lambda: 1)
 
@@ -81,6 +88,10 @@ async def test_diagnostics(
 
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
+
+    my_plex_account.return_value.resource.return_value.connect.return_value.name = (
+        'Rushmoore'
+    )
 
     r = await test_client.get(
         '/api/diagnostics',

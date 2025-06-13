@@ -16,10 +16,12 @@ from healthcheck import (
     HealthcheckStatus,
 )
 from healthcheck.models import ComponentType
+from plexapi.server import PlexServer
 from pydantic import BaseModel
 from sqlalchemy.sql import text
 
 from .db import get_async_engine, get_session_local
+from .plex import get_plex
 from .singleton import get as _get
 from .transmission_proxy import transmission
 
@@ -46,6 +48,7 @@ def build():
     add_component(
         HealthcheckInternalComponent('transmission'), transmission_connectivity
     )
+    add_component(HealthcheckHTTPComponent('plex'), plex_connectivity)
 
     for provider in get_providers():
         add_component(HealthcheckHTTPComponent(provider.type.value), provider.health)
@@ -136,3 +139,8 @@ async def transmission_connectivity():
             'client_is_alive': transmission()._thread.is_alive(),
         },
     )
+
+
+async def plex_connectivity():
+    plex: PlexServer = await get(get_plex)
+    return HealthcheckCallbackResponse(HealthcheckStatus.PASS, plex.name)
