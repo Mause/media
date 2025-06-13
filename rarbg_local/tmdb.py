@@ -63,7 +63,7 @@ class SearchBaseResponse(BaseModel):
         media_type: Literal['tv']
         id: TmdbId
         name: str
-        first_air_date: datetime
+        first_air_date: datetime | None = None
 
     class MovieSearch(EmptyStringAsNoneModel):
         media_type: Literal['movie']
