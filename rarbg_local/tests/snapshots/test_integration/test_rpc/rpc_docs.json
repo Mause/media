@@ -1,0 +1,61 @@
+{
+  "openrpc": "1.2.6",
+  "info": {
+    "version": "0.1.0",
+    "title": "FastAPI"
+  },
+  "servers": [],
+  "methods": [
+    {
+      "name": "echo",
+      "params": [
+        {
+          "name": "data",
+          "schema": {
+            "examples": [
+              "123"
+            ],
+            "title": "Data",
+            "type": "string"
+          },
+          "required": true
+        }
+      ],
+      "result": {
+        "name": "echo_Result",
+        "schema": {
+          "title": "Result",
+          "type": "string"
+        }
+      },
+      "tags": [],
+      "errors": [
+        {
+          "$ref": "#/components/errors/5000"
+        }
+      ]
+    }
+  ],
+  "components": {
+    "schemas": {},
+    "errors": {
+      "5000": {
+        "code": 5000,
+        "message": "My error",
+        "data": {
+          "properties": {
+            "details": {
+              "title": "Details",
+              "type": "string"
+            }
+          },
+          "required": [
+            "details"
+          ],
+          "title": "MyError.Data",
+          "type": "object"
+        }
+      }
+    }
+  }
+}
