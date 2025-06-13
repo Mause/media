@@ -89,8 +89,8 @@ async def test_diagnostics(
     transmission.return_value.channel.consumer_tags = ['ctag1']
     transmission.return_value._thread.is_alive.return_value = True
 
-    my_plex_account.return_value.resource.return_value.connect.return_value.name = (
-        'Rushmoore'
+    my_plex_account.return_value.resource.return_value.connect.return_value._baseurl = (
+        'http://rushmoore'
     )
 
     r = await test_client.get(

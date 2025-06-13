@@ -3,6 +3,6 @@
     "component_name": "plex",
     "component_type": "http",
     "status": "pass",
-    "output": "Rushmoore"
+    "output": "http://rushmoore"
   }
 ]

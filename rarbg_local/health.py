@@ -143,4 +143,4 @@ async def transmission_connectivity():
 
 async def plex_connectivity():
     plex: PlexServer = await get(get_plex)
-    return HealthcheckCallbackResponse(HealthcheckStatus.PASS, plex.name)
+    return HealthcheckCallbackResponse(HealthcheckStatus.PASS, plex._baseurl)
