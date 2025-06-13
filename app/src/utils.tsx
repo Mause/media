@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import * as RRD from 'react-router-dom';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
 import type { TypographyTypeMap } from '@mui/material';
-import moxios from 'moxios';
 import type {
   Auth0ContextInterface,
   AuthenticationError,
@@ -153,12 +152,6 @@ export function ExtMLink(props: { href: string; children: string }) {
       {props.children}
     </MaterialLink>
   );
-}
-
-export function expectLastRequestBody() {
-  const mr = moxios.requests.mostRecent();
-  expect(mr).toBeTruthy();
-  return expect(JSON.parse(mr.config.data as string));
 }
 
 export function useLocation<T>() {

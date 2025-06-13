@@ -74,3 +74,9 @@ export function listenTo(hist: MemoryHistory) {
   };
   return entries;
 }
+
+export function expectLastRequestBody() {
+  const mr = moxios.requests.mostRecent();
+  expect(mr).toBeTruthy();
+  return expect(JSON.parse(mr.config.data as string));
+}
