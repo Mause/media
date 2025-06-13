@@ -5,11 +5,11 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
-import _ from 'lodash';
 import { createMemoryHistory } from '@remix-run/router';
 import { act } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import * as _ from 'lodash-es';
 
 import { expectLastRequestBody } from './utils';
 import {

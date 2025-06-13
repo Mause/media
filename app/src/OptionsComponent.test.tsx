@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { screen } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import _ from 'lodash';
+import * as _ from 'lodash-es';
 
 import { OptionsComponent, ITorrent } from './OptionsComponent';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';

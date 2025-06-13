@@ -10,8 +10,8 @@ import {
   InputLabel,
   InputAdornment,
 } from '@mui/material';
-import _ from 'lodash';
 import Search from '@mui/icons-material/Search';
+import * as _ from 'lodash-es';
 
 import { IndexResponse, Torrents } from './streaming';
 import { TVShows, Movies } from './render';
