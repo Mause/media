@@ -1,15 +1,16 @@
 import * as Sentry from '@sentry/react';
-import { ErrorInfo, ReactNode } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
+import type { RouteObject } from 'react-router-dom';
 import {
   RouterProvider,
   createBrowserRouter,
   Outlet,
-  RouteObject,
   useLocation,
   useMatches,
 } from 'react-router-dom';
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
+import type { FallbackProps } from 'react-error-boundary';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Grid, Link as MaterialLink } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { SWRConfig } from 'swr';
@@ -31,7 +32,7 @@ import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import { Websocket } from './Websocket';
-import { components } from './schema';
+import type { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
 

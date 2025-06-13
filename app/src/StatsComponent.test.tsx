@@ -1,4 +1,5 @@
-import { StatsComponent, StatsResponse } from './StatsComponent';
+import type { StatsResponse } from './StatsComponent';
+import { StatsComponent } from './StatsComponent';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
 
 usesMoxios();

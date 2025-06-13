@@ -1,4 +1,5 @@
-import { FormEvent, useState } from 'react';
+import type { FormEvent } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
 import useSWR from 'swr';
@@ -13,7 +14,7 @@ import {
 import Search from '@mui/icons-material/Search';
 import * as _ from 'lodash-es';
 
-import { IndexResponse, Torrents } from './streaming';
+import type { IndexResponse, Torrents } from './streaming';
 import { TVShows, Movies } from './render';
 
 const CFG = {

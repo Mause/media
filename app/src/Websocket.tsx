@@ -6,7 +6,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import * as _ from 'lodash-es';
 
-import { DisplayTorrent, ITorrent } from './OptionsComponent';
+import type { ITorrent } from './OptionsComponent';
+import { DisplayTorrent } from './OptionsComponent';
 import { getPrefix, getToken } from './utils';
 import { getMarker } from './render';
 
