@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     basicSsl(),
-    bundlesize({ limits: [{ name: 'assets/index-*.js', limit: '920 kB' }] }),
+    bundlesize({ limits: [{ name: 'assets/index-*.js', limit: '914 kB' }] }),
   ],
   envPrefix: 'REACT_APP_',
   build: {
