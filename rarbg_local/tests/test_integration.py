@@ -811,7 +811,7 @@ async def test_websocket_error(test_client, snapshot):
 
 @mark.asyncio
 async def test_rpc(test_client, snapshot):
-    r = await test_client.get('/rpc/docs')
+    r = await test_client.get('/rpc/openrpc.json')
     assert r.status_code == 200
 
     assert_match_json(snapshot, r, 'rpc_docs.json')
