@@ -30,7 +30,7 @@ export async function mock<T>(path: string, response: T) {
   });
 }
 
-export function renderWithSWR(el: ReactElement) {
+export function renderWithSWR(el: ReactElement, cache?: Map<string, any>) {
   const c = {
     isAuthenticated: true,
     getAccessTokenSilently() {
@@ -42,7 +42,7 @@ export function renderWithSWR(el: ReactElement) {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <HelmetProvider>
-            <SwrConfigWrapper>{el}</SwrConfigWrapper>
+            <SwrConfigWrapper cache={cache}>{el}</SwrConfigWrapper>
           </HelmetProvider>
         </ThemeProvider>
       </StyledEngineProvider>
