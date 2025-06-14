@@ -16,6 +16,7 @@ import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Grid, Link as MaterialLink } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import type { Cache } from 'swr';
 import { SWRConfig } from 'swr';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -184,7 +185,7 @@ export function SwrConfigWrapper({
   cache,
 }: {
   children: ReactNode;
-  cache?: Map;
+  cache?: Cache;
 }) {
   const auth = useAuth0();
   return (
