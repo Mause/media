@@ -1,6 +1,6 @@
 import ReactLoading from 'react-loading';
 import { useLocation } from 'react-router-dom';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 
 import * as qs from './qs';
 import { DisplayError } from './DisplayError';
@@ -9,16 +9,30 @@ import { SearchBox } from './SearchBox';
 import type { components } from './schema';
 import { RouteTitle } from './RouteTitle';
 export type SearchResult = components['schemas']['SearchResponse'];
+export type TvResponse = components['schemas']['TvResponse'];
+export type MovieResponse = components['schemas']['MovieResponse'];
 
 export function SearchComponent() {
   const { search } = useLocation();
   const query = new URLSearchParams(search.slice(1)).get('query')!;
+  const { mutate } = useSWRConfig();
 
   const {
     data: results,
     error,
     isValidating,
   } = useSWR<SearchResult[], Error>('search?' + qs.stringify({ query }));
+
+  for (const result of results || []) {
+    const prefix = result.type === 'movie' ? 'movie' : 'tv';
+    const key = `${prefix}/${result.tmdb_id}`;
+    if (prefix === 'movie') {
+      void mutate(key, result satisfies MovieResponse);
+    } else {
+      void mutate(key, result satisfies TvResponse);
+    }
+  }
+
   return (
     <RouteTitle title="Search">
       <SearchBox />

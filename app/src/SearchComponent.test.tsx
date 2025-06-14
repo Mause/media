@@ -7,12 +7,14 @@ import { mock, wait, usesMoxios, renderWithSWR } from './test.utils';
 usesMoxios();
 
 test('SearchComponent', async () => {
+  const cache = new Map();
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/search?query=world']}>
       <Routes>
         <Route path="/search" Component={SearchComponent} />
       </Routes>
     </MemoryRouter>,
+    cache,
   );
 
   const results: SearchResult[] = [
@@ -27,4 +29,5 @@ test('SearchComponent', async () => {
   await wait();
 
   expect(container).toMatchSnapshot();
+  expect(cache.keys()).toContain('movie/10000');
 });

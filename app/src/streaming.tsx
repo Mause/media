@@ -179,7 +179,13 @@ export function ParentComponentInt() {
     </SwrConfigWrapper>
   );
 }
-export function SwrConfigWrapper({ children }: { children: ReactNode }) {
+export function SwrConfigWrapper({
+  children,
+  cache,
+}: {
+  children: ReactNode;
+  cache?: Map;
+}) {
   const auth = useAuth0();
   return (
     <SWRConfig
@@ -196,6 +202,7 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
                 }
               : {},
           ),
+        provider: () => cache || new Map(),
       }}
     >
       {children}
