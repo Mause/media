@@ -14,7 +14,6 @@ class Cache(Protocol):
     def clear(self) -> None: ...
 
 
-T = TypeVar('T')
 P = ParamSpec('P')
 IdentityFunction = Callable[[T], T]
 
@@ -27,7 +26,7 @@ def _append(t: object) -> None:
 
 
 def lru_cache(maxsize: int | None = None) -> IdentityFunction:
-    def wrapper(func: Callable[P, T]) -> Callable[P, T]:
+    def wrapper[T](func: Callable[P, T]) -> Callable[P, T]:
         cache = _lru_cache(maxsize)(func)
         _append(cache)
         return cache
@@ -36,7 +35,7 @@ def lru_cache(maxsize: int | None = None) -> IdentityFunction:
 
 
 def ttl_cache(maxsize: int | None = None) -> IdentityFunction:
-    def wrapper(func: Callable[P, T]) -> Callable[P, T]:
+    def wrapper[T](func: Callable[P, T]) -> Callable[P, T]:
         cache = _ttl_cache(maxsize)(func)
         _append(cache)
         return cache
@@ -45,7 +44,7 @@ def ttl_cache(maxsize: int | None = None) -> IdentityFunction:
 
 
 def cached(cache: MutableMapping[Any, Any]) -> IdentityFunction:
-    def wrapper(func: Callable[P, T]) -> Callable[P, T]:
+    def wrapper[T](func: Callable[P, T]) -> Callable[P, T]:
         c = _cached(cache)(func)
         _append(cache)
         return cast(Callable[P, T], c)
@@ -62,13 +61,13 @@ class NullPointerException(Exception):
     pass
 
 
-def non_null(thing: T | None) -> T:
+def non_null[T](thing: T | None) -> T:
     if not thing:
         raise NullPointerException()
     return thing
 
 
-def precondition(res: T | None, message: str) -> T:
+def precondition[T](res: T | None, message: str) -> T:
     if not res:
         raise AssertionError(message)
     return res
@@ -93,7 +92,7 @@ def _callback(send: Callable[[Message], None], fut: asyncio.Task[Any]) -> None:
         send(Message("exit", "normal", fut))
 
 
-def create_monitored_task(
+def create_monitored_task[T](
     coro: Coroutine[None, None, T], send: Callable[[Message], None]
 ) -> asyncio.Future[T]:
     future = asyncio.ensure_future(coro)
