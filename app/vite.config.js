@@ -2,12 +2,14 @@ import react from '@vitejs/plugin-react-oxc';
 import { defineConfig } from 'vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import bundlesize from 'vite-plugin-bundlesize';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   plugins: [
     react(),
     basicSsl(),
     bundlesize({ limits: [{ name: 'assets/index-*.js', limit: '831 kB' }] }),
+    VitePWA(),
   ],
   envPrefix: 'REACT_APP_',
   build: {
