@@ -15,7 +15,7 @@ class Cache(Protocol):
 
 
 P = ParamSpec('P')
-IdentityFunction = Callable[[T], T]
+type IdentityFunction[T] = Callable[[T], T]
 
 _caches: list[Cache] = []
 
