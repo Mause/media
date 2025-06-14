@@ -89,9 +89,21 @@ asyncio_default_fixture_loop_scope = "fixture"
 plugins = "pydantic.mypy"
 ignore_missing_imports = true
 mypy_path = "stubs"
+
+allow_redefinition = false
 disallow_untyped_defs = false
+check_untyped_defs = true
+ignore_errors = false
+# implicit_reexport = false
+local_partial_types = true
+strict_optional = true
 strict_equality = true
+no_implicit_optional = true
+warn_unused_ignores = true
+warn_redundant_casts = true
 warn_unused_configs = true
+warn_unreachable = true
+warn_no_return = true
 
 [[tool.mypy.overrides]]
 module = [
