@@ -8,8 +8,7 @@ from ..types import ImdbId, TmdbId
 from ..utils import Message, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
 
-T = TypeVar('T')
-ProviderType = Callable[..., Iterable[T]]
+type ProviderType[T] = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
 
 
