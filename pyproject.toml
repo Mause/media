@@ -43,6 +43,7 @@ dependencies = [
     "pyjwt>=2.10.1",
     "aiontfy>=0.5.3",
     "logfire[fastapi,aiohttp,sqlalchemy,requests]>=3.18.0",
+    "fastapi-jsonrpc>=3.4.1",
 ]
 
 [dependency-groups]
