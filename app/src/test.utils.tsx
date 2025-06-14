@@ -15,7 +15,7 @@ import type { Listener } from '@remix-run/router/dist/history';
 import { HelmetProvider } from 'react-helmet-async';
 import type { Cache } from 'swr';
 
-import { SwrConfigWrapper } from './streaming';
+import { SwrConfigWrapper } from './SwrConfigWrapper';
 
 const theme = createTheme();
 
