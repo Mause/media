@@ -2,7 +2,7 @@ import asyncio
 from collections.abc import Callable, Coroutine, MutableMapping
 from dataclasses import dataclass
 from functools import partial
-from typing import Any, ParamSpec, Protocol, TypeVar, cast, runtime_checkable
+from typing import Any, ParamSpec, Protocol, cast, runtime_checkable
 
 from asyncache import cached as _cached
 from cachetools.func import lru_cache as _lru_cache
