@@ -2,7 +2,7 @@ import contextvars
 from collections.abc import Callable, Coroutine
 from datetime import datetime
 from os import getpid
-from typing import Any, TypeVar, cast, overload
+from typing import Any, cast, overload
 
 from fastapi import APIRouter
 from fastapi.requests import Request
@@ -27,15 +27,14 @@ from .transmission_proxy import transmission
 
 router = APIRouter(tags=['diagnostics'])
 request_var = contextvars.ContextVar[Request]('request_var')
-T = TypeVar('T')
 
 
 @overload
-async def get(dependent: Callable[..., Coroutine[Any, Any, T]]) -> T: ...
+async def get[T](dependent: Callable[..., Coroutine[Any, Any, T]]) -> T: ...
 
 
 @overload
-async def get(dependent: Callable[..., T]) -> T: ...
+async def get[T](dependent: Callable[..., T]) -> T: ...
 
 
 async def get(dependent):

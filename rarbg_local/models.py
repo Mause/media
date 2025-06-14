@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Annotated, TypeVar
+from typing import Annotated
 
 from pydantic import BaseModel, StringConstraints
 
@@ -12,7 +12,6 @@ class Orm(BaseModel):
     model_config = {'from_attributes': True}
 
 
-T = TypeVar('T')
 MagnetUri = Annotated[str, StringConstraints(pattern=r'^magnet:')]
 
 
