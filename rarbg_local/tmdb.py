@@ -1,7 +1,7 @@
 import os
 from datetime import date, datetime
 from enum import Enum
-from typing import Annotated, Any, Literal, TypeVar
+from typing import Annotated, Any, Literal
 
 import aiohttp
 import aiohttp.web_exceptions
@@ -21,7 +21,6 @@ from .utils import cached
 
 base = 'https://api.themoviedb.org/3/'
 
-TBaseModel = TypeVar('TBaseModel', bound=BaseModel)
 ThingType = Literal['movie', 'tv']
 
 
@@ -31,7 +30,9 @@ ThingType = Literal['movie', 'tv']
     max_tries=5,
     giveup=lambda e: not isinstance(e, aiohttp.web_exceptions.HTTPTooManyRequests),
 )
-async def get_json(path: str, hydrate: type[TBaseModel], **kwargs: Any) -> TBaseModel:
+async def get_json[TBaseModel: BaseModel](
+    path: str, hydrate: type[TBaseModel], **kwargs: Any
+) -> TBaseModel:
     access_token = (
         'access_token'
         if 'PYTEST_CURRENT_TEST' in os.environ
