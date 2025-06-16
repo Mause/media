@@ -79,7 +79,7 @@ cli = [
 quote-style = "preserve"
 
 [tool.ruff.lint]
-select = ["F", "E", "W", "I", "T", "LOG"]
+select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 
 [tool.pytest.ini_options]
 addopts = "rarbg_local --driver chrome --html report.html --self-contained-html --cov-report html --cov"
