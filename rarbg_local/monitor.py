@@ -4,13 +4,14 @@ from typing import Annotated
 
 from aiohttp import ClientSession
 from aiontfy import Message, Ntfy
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
 from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, object_session
+from yarl import URL
 
 from .auth import security
 from .db import (
@@ -96,6 +97,7 @@ class CronResponse[T](BaseModel):
 @monitor_ns.post('/cron', status_code=201)
 @monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
+    request: Request,
     session: Annotated[Session, Depends(get_db)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ) -> list[CronResponse[MonitorGet]]:
@@ -103,7 +105,7 @@ async def monitor_cron(
         session.execute(select(Monitor).filter(not_(Monitor.status))).scalars().all()
     )
 
-    tasks = [check_monitor(monitor, session, ntfy) for monitor in monitors]
+    tasks = [check_monitor(request, monitor, session, ntfy) for monitor in monitors]
 
     results: list[CronResponse] = []
     for result in await gather(*tasks, return_exceptions=True):
@@ -116,6 +118,7 @@ async def monitor_cron(
 
 
 async def check_monitor(
+    request: Request,
     monitor: Monitor,
     session: Session,
     ntfy: Ntfy,
@@ -161,6 +164,14 @@ async def check_monitor(
             topic="ellianas_notifications",
             title="Hello",
             message=message,
+            click=URL(
+                str(
+                    request.url_for(
+                        'static',
+                        resource=monitor.id,
+                    )
+                )
+            ),
         )
     )
     session.commit()

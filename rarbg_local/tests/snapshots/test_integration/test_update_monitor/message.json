@@ -5,7 +5,7 @@
   "tags": [],
   "priority": null,
   "actions": [],
-  "click": null,
+  "click": "http://localhost/1",
   "attach": null,
   "markdown": false,
   "icon": null,
