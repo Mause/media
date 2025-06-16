@@ -160,13 +160,12 @@ async def check_monitor(
 
     logger.info(message)
 
-    params: dict[str, Any]
+    params = {"tmdb_id": str(monitor.tmdb_id)}
     if typ == MonitorMediaType.MOVIE:
         path = "select/{tmdb_id}/options"
-        params = {"tmdb_id": monitor.tmdb_id}
     else:
         path = "select/{tmdb_id}/season/{season}"
-        params = {"tmdb_id": monitor.tmdb_id, "season": season}
+        params["season"] = str(season)
     conv = compile_path(path)[-1]
     url, qs = replace_params(path, conv, params)
 
