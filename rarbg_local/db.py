@@ -2,7 +2,7 @@ import enum
 import logging
 from collections.abc import Callable, Sequence
 from datetime import datetime
-from typing import Annotated, TypeVar, cast
+from typing import Annotated, cast
 
 import backoff
 import logfire
@@ -42,7 +42,6 @@ from .types import ImdbId, TmdbId
 from .utils import format_marker, precondition
 
 logger = logging.getLogger(__name__)
-T = TypeVar('T')
 
 
 class Base(RepresentableBase, DeclarativeBase):
@@ -262,7 +261,7 @@ def create_episode(
     return ed
 
 
-def get_all(session: Session, model: type[T]) -> Sequence[T]:
+def get_all[T](session: Session, model: type[T]) -> Sequence[T]:
     if model == MovieDetails:
         joint = MovieDetails.download
     elif model == EpisodeDetails:
@@ -280,7 +279,7 @@ def get_movies(session: Session) -> Sequence[MovieDetails]:
     return get_all(session, MovieDetails)
 
 
-def get_or_create(session: Session, model: type[T], defaults=None, **kwargs) -> T:
+def get_or_create[T](session: Session, model: type[T], defaults=None, **kwargs) -> T:
     instance = session.execute(select(model).filter_by(**kwargs)).scalars().first()
     if instance:
         return instance
@@ -385,7 +384,7 @@ def get_db(session_local=Depends(get_session_local)):
         sl.close()
 
 
-def safe_delete(session: Session, entity: type[T], id: int):
+def safe_delete[T](session: Session, entity: type[T], id: int):
     query = session.execute(delete(entity).filter_by(id=id))
     precondition(query.rowcount > 0, 'Nothing to delete')
     session.commit()

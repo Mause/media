@@ -1,7 +1,7 @@
 import logging
 from asyncio import Future, Queue
 from collections.abc import Callable, Coroutine, Iterable
-from typing import Any, TypeVar
+from typing import Any
 
 from ..models import ITorrent
 from ..types import ImdbId, TmdbId
@@ -73,10 +73,7 @@ async def search_for_movie(
     )
 
 
-TT = TypeVar('TT', bound=Provider)
-
-
-async def spin_up_workers(
+async def spin_up_workers[TT: Provider](
     worker: Callable[[Queue[ITorrent | Message], TT], Coroutine[Any, Any, None]],
     providers: list[TT],
 ) -> tuple[list[Future[None]], Queue[ITorrent | Message]]:
