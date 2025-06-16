@@ -138,7 +138,9 @@ async def test_download_movie(
 
 
 @mark.asyncio
-async def test_download(test_client, aioresponses, responses, add_torrent, session) -> None:
+async def test_download(
+    test_client, aioresponses, responses, add_torrent, session
+) -> None:
     themoviedb(
         aioresponses,
         '/tv/95792',
