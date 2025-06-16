@@ -2024,13 +2024,13 @@ __metadata:
   linkType: hard
 
 "@vitejs/plugin-react-oxc@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@vitejs/plugin-react-oxc@npm:0.2.2"
+  version: 0.2.3
+  resolution: "@vitejs/plugin-react-oxc@npm:0.2.3"
   dependencies:
     "@rolldown/pluginutils": "npm:1.0.0-beta.11"
   peerDependencies:
     vite: ^6.3.0 || ^7.0.0-beta.0
-  checksum: 10/b0867a0bb428c6ca52559dfe41c0c1b77ee271ec4d2f4acb5f8413747a6395ed3bebef0240ab9bef2b1337d0701219ab10e258b45574c74967c7831c0c94aa00
+  checksum: 10/f949a571c1050dcfcafc88e526b769a3b5f6ffc082f62da082b58eb976454ece038bbb9a28e4df151d2e0aa6ca29f31a2278797d72527f2171a82e290ed9e917
   languageName: node
   linkType: hard
 
