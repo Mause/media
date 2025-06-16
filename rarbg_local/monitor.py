@@ -11,6 +11,7 @@ from sentry_sdk.crons import monitor
 from sqlalchemy import not_
 from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, object_session
+from starlette.routing import compile_path, replace_params
 from yarl import URL
 
 from .auth import security
@@ -159,6 +160,15 @@ async def check_monitor(
 
     logger.info(message)
 
+    if typ == MonitorMediaType.MOVIE:
+        path = "select/{tmdb_id}/options"
+        params = dict(tmdb_id=monitor.tmdb_id)
+    else:
+        path = "select/{tmdb_id}/season/{season}"
+        params = dict(tmdb_id=monitor.tmdb_id, season=season)
+    conv = compile_path(path)[-1]
+    url, qs = replace_params(path, conv, params)
+
     await ntfy.publish(
         Message(
             topic="ellianas_notifications",
@@ -168,7 +178,7 @@ async def check_monitor(
                 str(
                     request.url_for(
                         'static',
-                        resource=monitor.id,
+                        resource=url,
                     )
                 )
             ),
