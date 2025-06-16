@@ -12,7 +12,7 @@ from .conftest import add_json, assert_match_json
 
 
 @mark.asyncio
-async def test_auth(responses, user, fastapi_app, test_client, snapshot):
+async def test_auth(responses, user, fastapi_app, test_client, snapshot) -> None:
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
@@ -97,7 +97,7 @@ async def test_auth(responses, user, fastapi_app, test_client, snapshot):
 
 
 @mark.asyncio
-async def test_no_auth(fastapi_app, test_client):
+async def test_no_auth(fastapi_app, test_client) -> None:
     del fastapi_app.dependency_overrides[get_current_user]
 
     r = await test_client.get('/api/diagnostics')

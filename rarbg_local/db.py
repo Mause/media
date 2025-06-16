@@ -96,7 +96,7 @@ class EpisodeDetails(Base):
     def is_season_pack(self):
         return self.episode is None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.show_title + ' ' + format_marker(self.season, self.episode)
 
 
@@ -136,7 +136,7 @@ class User(Base):
 
     downloads: Mapped[list[Download]] = relationship()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.username
 
     def __eq__(self, other):
@@ -149,7 +149,7 @@ class Role(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50), unique=True)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.name
 
 
@@ -333,7 +333,7 @@ def build_engine(db_url: URL, cr: Callable):
         )
 
         @listens_for(engine, 'connect')
-        def _fk_pragma_on_connect(dbapi_con, con_record):
+        def _fk_pragma_on_connect(dbapi_con, con_record) -> None:
             if not hasattr(dbapi_con, 'create_collation'):  # async
                 dbapi_con = dbapi_con.driver_connection._connection
             dbapi_con.create_collation(
@@ -384,7 +384,7 @@ def get_db(session_local=Depends(get_session_local)):
         sl.close()
 
 
-def safe_delete[T](session: Session, entity: type[T], id: int):
+def safe_delete[T](session: Session, entity: type[T], id: int) -> None:
     query = session.execute(delete(entity).filter_by(id=id))
     precondition(query.rowcount > 0, 'Nothing to delete')
     session.commit()

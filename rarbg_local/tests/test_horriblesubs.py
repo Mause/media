@@ -21,7 +21,7 @@ def load_html(filename: str) -> str:
 
 
 @mark.asyncio
-async def test_parse(aioresponses):
+async def test_parse(aioresponses) -> None:
     aioresponses.add(
         'https://horriblesubs.info/api.php?method=getlatest',
         'GET',
@@ -65,7 +65,7 @@ def magnet_link(torrent_hash: str) -> str:
 
 
 @mark.asyncio
-async def test_get_downloads(aioresponses):
+async def test_get_downloads(aioresponses) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=batch&showid=1',
@@ -94,7 +94,7 @@ async def test_get_downloads(aioresponses):
 
 
 @mark.asyncio
-async def test_get_downloads_single(aioresponses: AioResponses, snapshot):
+async def test_get_downloads_single(aioresponses: AioResponses, snapshot) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=1',
@@ -107,7 +107,7 @@ async def test_get_downloads_single(aioresponses: AioResponses, snapshot):
 
 
 @mark.asyncio
-async def test_provider(aioresponses: AioResponses, snapshot):
+async def test_provider(aioresponses: AioResponses, snapshot) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=264',
