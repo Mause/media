@@ -7,6 +7,7 @@ from unittest.mock import patch
 from async_asgi_testclient import TestClient
 from fastapi import Depends
 from fastapi.security import OpenIdConnect, SecurityScopes
+from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from lxml.builder import E
 from lxml.etree import tostring
 from psycopg2 import OperationalError
@@ -838,8 +839,8 @@ async def test_websocket(
                 category="video - tv shows",
             )
 
-        async def health(self) -> None:
-            return None
+        async def health(self) -> HealthcheckCallbackResponse:
+            return HealthcheckCallbackResponse(HealthcheckStatus.PASS, 'all good')
 
     async def gcu(
         header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
