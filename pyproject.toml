@@ -75,6 +75,9 @@ cli = [
     "rich>=14.0.0",
 ]
 
+[tool.ruff]
+show-fixes = true
+
 [tool.ruff.format]
 quote-style = "preserve"
 
