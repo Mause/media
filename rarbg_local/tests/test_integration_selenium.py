@@ -46,7 +46,7 @@ def app(mock_transmission):
     )
 
 
-def test_mock(mock_transmission):
+def test_mock(mock_transmission) -> None:
     import requests
 
     url = mock_transmission.url('/transmission/rpc')

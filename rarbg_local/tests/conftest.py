@@ -38,7 +38,7 @@ def fastapi_app():
 
 
 @fixture
-def clear_cache():
+def clear_cache() -> None:
     cache_clear()
 
 
@@ -105,7 +105,7 @@ def add_json(
 
 
 @fixture
-def reverse_imdb(responses):
+def reverse_imdb(responses) -> None:
     themoviedb(
         responses,
         '/find/tt000000',
@@ -154,5 +154,5 @@ async def tolist[T](a: AsyncGenerator[T, None]) -> list[T]:
     return lst
 
 
-def assert_match_json(snapshot, res, name):
+def assert_match_json(snapshot, res, name) -> None:
     snapshot.assert_match(json.dumps(res.json(), indent=2), name)

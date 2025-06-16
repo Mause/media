@@ -1,7 +1,7 @@
 from ..tmdb import SearchBaseResponse
 
 
-def test_load(snapshot, resource_path):
+def test_load(snapshot, resource_path) -> None:
     snapshot.assert_match(
         SearchBaseResponse.model_validate_json(
             (resource_path / 'tmdb.json').read_text()

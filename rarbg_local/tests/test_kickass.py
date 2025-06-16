@@ -7,7 +7,7 @@ from .conftest import themoviedb, tolist
 from .factories import MovieResponseFactory, TvApiResponseFactory
 
 
-def make(title):
+def make(title) -> str:
     return f'''
 <div class="tab_content" id="1080">
     <table>
@@ -24,7 +24,7 @@ def make(title):
 
 
 @mark.asyncio
-async def test_tv_episode(aioresponses, clear_cache):
+async def test_tv_episode(aioresponses, clear_cache) -> None:
     themoviedb(
         aioresponses,
         '/tv/1',
@@ -52,7 +52,7 @@ async def test_tv_episode(aioresponses, clear_cache):
 
 
 @mark.asyncio
-async def test_tv_season(aioresponses, clear_cache):
+async def test_tv_season(aioresponses, clear_cache) -> None:
     themoviedb(
         aioresponses,
         '/tv/1',
@@ -80,7 +80,7 @@ async def test_tv_season(aioresponses, clear_cache):
 
 
 @mark.asyncio
-async def test_movie(aioresponses, clear_cache):
+async def test_movie(aioresponses, clear_cache) -> None:
     themoviedb(
         aioresponses,
         '/movie/1',

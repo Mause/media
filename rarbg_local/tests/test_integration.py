@@ -1,7 +1,7 @@
 import base64
 import json
 from datetime import datetime
-from typing import TYPE_CHECKING, Annotated
+from typing import TYPE_CHECKING, Annotated, Never
 from unittest.mock import patch
 
 from async_asgi_testclient import TestClient
@@ -75,7 +75,7 @@ async def test_diagnostics(
     aioresponses,
     snapshot,
     monkeypatch,
-):
+) -> None:
     monkeypatch.setattr('rarbg_local.health.getpid', lambda: 1)
 
     # aioresponses.add('https://horriblesubs.info', 'HEAD')
@@ -116,7 +116,7 @@ async def test_diagnostics(
 @mark.asyncio
 async def test_download_movie(
     test_client, responses, aioresponses, add_torrent, session
-):
+) -> None:
     themoviedb(
         aioresponses,
         '/movie/533985',
@@ -138,7 +138,7 @@ async def test_download_movie(
 
 
 @mark.asyncio
-async def test_download(test_client, aioresponses, responses, add_torrent, session):
+async def test_download(test_client, aioresponses, responses, add_torrent, session) -> None:
     themoviedb(
         aioresponses,
         '/tv/95792',
@@ -186,7 +186,7 @@ async def test_download(test_client, aioresponses, responses, add_torrent, sessi
 @mark.asyncio
 async def test_download_season_pack(
     test_client, aioresponses, responses, add_torrent, session
-):
+) -> None:
     themoviedb(
         aioresponses,
         '/tv/90000',
@@ -227,7 +227,7 @@ def shallow(d: dict):
 @mark.asyncio
 async def test_index(
     responses, aioresponses, test_client, get_torrent, snapshot, session, user
-):
+) -> None:
     session.add_all(
         [
             create_episode(
@@ -285,7 +285,7 @@ async def test_index(
 
 
 @mark.asyncio
-async def test_search(aioresponses, test_client, snapshot):
+async def test_search(aioresponses, test_client, snapshot) -> None:
     themoviedb(
         aioresponses,
         '/search/multi',
@@ -342,7 +342,7 @@ async def test_search(aioresponses, test_client, snapshot):
 
 
 @mark.asyncio
-async def test_delete_cascade(test_client: TestClient, session):
+async def test_delete_cascade(test_client: TestClient, session) -> None:
     e = EpisodeDetailsFactory.create()
     session.add(e)
     session.commit()
@@ -396,7 +396,7 @@ async def test_select_season(aioresponses, test_client: TestClient, snapshot) ->
 
 
 @mark.asyncio
-async def test_foreign_key_integrity(session: Session):
+async def test_foreign_key_integrity(session: Session) -> None:
     # invalid fkey_id
     with raises(IntegrityError):
         ins = Download(id=1, movie_id=99)
@@ -405,7 +405,7 @@ async def test_foreign_key_integrity(session: Session):
 
 
 @mark.asyncio
-async def test_delete_monitor(aioresponses, test_client, session, snapshot):
+async def test_delete_monitor(aioresponses, test_client, session, snapshot) -> None:
     themoviedb(
         aioresponses,
         '/movie/5',
@@ -442,7 +442,7 @@ async def test_delete_monitor(aioresponses, test_client, session, snapshot):
 @patch('rarbg_local.monitor._stream')
 async def test_update_monitor(
     stream, aioresponses, test_client, session, snapshot, fastapi_app
-):
+) -> None:
     themoviedb(
         aioresponses,
         '/movie/5',
@@ -503,7 +503,7 @@ async def test_update_monitor(
 
 
 @mark.asyncio
-async def test_stats(test_client, session):
+async def test_stats(test_client, session) -> None:
     user1 = UserFactory.create(username='user1')
     user2 = UserFactory.create(username='user2')
 
@@ -524,7 +524,7 @@ async def test_stats(test_client, session):
 
 @patch('rarbg_local.main.get_torrent')
 @mark.asyncio
-async def test_torrents_error(get_torrent, test_client):
+async def test_torrents_error(get_torrent, test_client) -> None:
     get_torrent.side_effect = TimeoutError('Timeout!')
     torrents = await test_client.get('/api/torrents')
     assert torrents.status_code == 500
@@ -533,7 +533,7 @@ async def test_torrents_error(get_torrent, test_client):
 
 @patch('rarbg_local.main.get_torrent')
 @mark.asyncio
-async def test_torrents(get_torrent, test_client):
+async def test_torrents(get_torrent, test_client) -> None:
     get_torrent.return_value = {
         'arguments': {
             'torrents': [
@@ -563,14 +563,14 @@ async def test_torrents(get_torrent, test_client):
 
 @mark.skip
 @mark.asyncio
-async def test_manifest(test_client):
+async def test_manifest(test_client) -> None:
     r = await test_client.get('/api/manifest.json')
 
     assert 'name' in r.json()
 
 
 @mark.asyncio
-async def test_movie(test_client, snapshot, aioresponses):
+async def test_movie(test_client, snapshot, aioresponses) -> None:
     themoviedb(aioresponses, '/movie/1', {'title': 'Hello', 'imdb_id': 'tt0000000'})
     r = await test_client.get('/api/movie/1')
     assert r.status_code == 200
@@ -579,7 +579,7 @@ async def test_movie(test_client, snapshot, aioresponses):
 
 
 @mark.asyncio
-async def test_openapi(test_client, snapshot):
+async def test_openapi(test_client, snapshot) -> None:
     r = await test_client.get('/openapi.json')
     assert r.status_code == 200
 
@@ -590,7 +590,7 @@ async def test_openapi(test_client, snapshot):
 
 @mark.asyncio
 @mark.skip
-async def test_stream_rarbg(test_client, responses, aioresponses, snapshot):
+async def test_stream_rarbg(test_client, responses, aioresponses, snapshot) -> None:
     themoviedb(aioresponses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
     root = 'https://torrentapi.org/pubapi_v2.php?mode=search&ranked=0&limit=100&format=json_extended&app_id=Sonarr'
     add_json(responses, 'GET', root + '&get_token=get_token', {'token': 'aaaaaaa'})
@@ -632,7 +632,7 @@ async def test_stream_rarbg(test_client, responses, aioresponses, snapshot):
 
 
 @mark.asyncio
-async def test_stream(test_client, responses, aioresponses, snapshot):
+async def test_stream(test_client, responses, aioresponses, snapshot) -> None:
     themoviedb(aioresponses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
     add_json(
         aioresponses,
@@ -671,7 +671,7 @@ async def test_stream(test_client, responses, aioresponses, snapshot):
 
 
 @mark.asyncio
-async def test_schema(snapshot):
+async def test_schema(snapshot) -> None:
     snapshot.assert_match(
         json.dumps(SearchResponse.model_json_schema(), indent=2), 'schema.json'
     )
@@ -680,7 +680,7 @@ async def test_schema(snapshot):
 @mark.skipif("not os.path.exists('app/build/index.html')")
 @mark.parametrize('uri', ['/', '/manifest.json'])
 @mark.asyncio
-async def test_static(uri, test_client):
+async def test_static(uri, test_client) -> None:
     r = await test_client.get(uri)
     assert r.status_code == 200
 
@@ -695,7 +695,7 @@ def add_xml(responses: RequestsMock, method: str, url: str, body: '_Element') ->
 
 
 @mark.asyncio
-async def test_plex_redirect(test_client, responses):
+async def test_plex_redirect(test_client, responses) -> None:
     add_xml(
         responses,
         'GET',
@@ -743,8 +743,8 @@ async def test_plex_redirect(test_client, responses):
 
 
 @mark.asyncio
-async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog):
-    def replacement(*args, **kwargs):
+async def test_pyscopg2_error(monkeypatch, fastapi_app, test_client, caplog) -> None:
+    def replacement(*args, **kwargs) -> Never:
         raise OperationalError(message)
 
     message = 'FATAL:  too many connections for role "wlhdyudesczvwl"'
@@ -776,7 +776,7 @@ class ITorrentList(BaseModel):
 
 
 @mark.asyncio
-async def test_piratebay(aioresponses, snapshot):
+async def test_piratebay(aioresponses, snapshot) -> None:
     aioresponses.add(
         'https://apibay.org/q.php?q=tt0000000',
         body=json.dumps(
@@ -811,7 +811,7 @@ async def test_piratebay(aioresponses, snapshot):
 
 
 @mark.asyncio
-async def test_websocket_error(test_client, snapshot):
+async def test_websocket_error(test_client, snapshot) -> None:
     r = test_client.websocket_connect(
         '/ws',
     )
@@ -825,7 +825,7 @@ async def test_websocket_error(test_client, snapshot):
 @patch('rarbg_local.providers.get_providers')
 async def test_websocket(
     get_providers, get_movie_imdb_id, test_client, fastapi_app, snapshot
-):
+) -> None:
     class FakeProvider(MovieProvider):
         async def search_for_movie(self, *args, **kwargs):
             yield ITorrent(
@@ -836,7 +836,7 @@ async def test_websocket(
                 category="video - tv shows",
             )
 
-        async def health(self):
+        async def health(self) -> None:
             return None
 
     async def gcu(

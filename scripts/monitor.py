@@ -47,7 +47,7 @@ def get_pool():
     return data
 
 
-def main():
+def main() -> None:
     data = {}
 
     graphs = [

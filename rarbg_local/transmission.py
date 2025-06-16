@@ -76,7 +76,7 @@ def torrent_add(magnet: str, subpath: str) -> TorrentAdd:
 
 @lru_cache()
 def get_session(url):
-    def refresh_session():
+    def refresh_session() -> None:
         key = 'X-Transmission-Session-Id'
         r = session.post(url, json={'method': 'get-session'}, timeout=3)
         assert r.status_code == 409, (r, r.text, r.headers)
