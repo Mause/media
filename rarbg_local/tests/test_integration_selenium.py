@@ -2,9 +2,10 @@ import json
 import socket
 from contextlib import closing
 from pathlib import Path
-from typing import Optional
+from typing import Generator, Optional
 from urllib.parse import urlencode, urlparse
 
+from fastapi import FastAPI
 from pytest import fixture, mark
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
@@ -17,7 +18,7 @@ pytestmark = mark.skip
 
 
 @fixture
-def free_port():
+def free_port() -> int:
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
         s.bind(('', 0))
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -25,7 +26,7 @@ def free_port():
 
 
 @fixture
-def mock_transmission(free_port):
+def mock_transmission(free_port: int) -> Generator[LiveServer, None, None]:
     from .mock_transmission import app
 
     server = LiveServer(app, 'localhost', free_port, True)
@@ -35,8 +36,8 @@ def mock_transmission(free_port):
 
 
 @fixture
-def app(mock_transmission):
-    yield create_app(
+def app(mock_transmission: LiveServer) -> FastAPI:
+    return create_app(
         {
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'ENV': 'development',
@@ -46,7 +47,7 @@ def app(mock_transmission):
     )
 
 
-def test_mock(mock_transmission) -> None:
+def test_mock(mock_transmission: LiveServer) -> None:
     import requests
 
     url = mock_transmission.url('/transmission/rpc')
@@ -56,12 +57,12 @@ def test_mock(mock_transmission) -> None:
 
 
 @fixture
-def server_url(live_server):
+def server_url(live_server: LiveServer) -> str:
     return live_server.url()
 
 
 @fixture
-def capabilities(capabilities):
+def capabilities(capabilities: dict[str, dict[str, str]]) -> dict[str, dict[str, str]]:
     capabilities['loggingPrefs'] = capabilities['goog:loggingPrefs'] = {
         'performance': 'ALL'
     }
