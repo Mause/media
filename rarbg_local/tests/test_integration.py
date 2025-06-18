@@ -1,9 +1,10 @@
 import base64
 import json
 from datetime import datetime
-from typing import TYPE_CHECKING, Annotated, Never
+from typing import TYPE_CHECKING, Annotated, AsyncGenerator, Never
 from unittest.mock import patch
 
+from aioresponses import aioresponses as Aioresponses
 from async_asgi_testclient import TestClient
 from fastapi import Depends
 from fastapi.security import OpenIdConnect, SecurityScopes
@@ -13,6 +14,7 @@ from lxml.etree import tostring
 from psycopg2 import OperationalError
 from pydantic import BaseModel
 from pytest import fixture, mark, raises
+from pytest_snapshot.plugin import Snapshot
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
@@ -21,7 +23,7 @@ from sqlalchemy.orm.session import Session
 from yarl import URL
 
 from ..auth import get_current_user
-from ..db import MAX_TRIES, Download, Monitor, create_episode, create_movie
+from ..db import MAX_TRIES, Download, Monitor, User, create_episode, create_movie
 from ..main import get_episodes
 from ..models import ITorrent
 from ..new import ProviderSource, SearchResponse, Settings, get_settings
@@ -779,7 +781,7 @@ class ITorrentList(BaseModel):
 
 
 @mark.asyncio
-async def test_piratebay(aioresponses, snapshot) -> None:
+async def test_piratebay(aioresponses: Aioresponses, snapshot: Snapshot) -> None:
     aioresponses.add(
         'https://apibay.org/q.php?q=tt0000000',
         body=json.dumps(
@@ -814,7 +816,7 @@ async def test_piratebay(aioresponses, snapshot) -> None:
 
 
 @mark.asyncio
-async def test_websocket_error(test_client, snapshot) -> None:
+async def test_websocket_error(test_client: TestClient, snapshot: Snapshot) -> None:
     r = test_client.websocket_connect(
         '/ws',
     )
@@ -830,7 +832,9 @@ async def test_websocket(
     get_providers, get_movie_imdb_id, test_client, fastapi_app, snapshot
 ) -> None:
     class FakeProvider(MovieProvider):
-        async def search_for_movie(self, *args, **kwargs):
+        async def search_for_movie(
+            self, imdb_id: ImdbId, tmdb_id: TmdbId
+        ) -> AsyncGenerator[ITorrent, None]:
             yield ITorrent(
                 source="piratebay",
                 title="Ancient Aliens 480p x264-mSD",
@@ -845,7 +849,7 @@ async def test_websocket(
     async def gcu(
         header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
         scopes: SecurityScopes,
-    ):
+    ) -> User:
         assert scopes.scopes == ['openid']
         assert header == 'token'
         return UserFactory.create()
