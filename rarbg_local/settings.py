@@ -14,5 +14,5 @@ class Settings(BaseSettings):
 
 
 @singleton
-async def get_settings():
+async def get_settings() -> Settings:
     return Settings()
