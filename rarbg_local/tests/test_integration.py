@@ -1,7 +1,8 @@
 import base64
 import json
 from datetime import datetime
-from typing import TYPE_CHECKING, Annotated, AsyncGenerator, Never
+from typing import TYPE_CHECKING, Annotated, Never
+from collections.abc import AsyncGenerator
 from unittest.mock import patch
 
 from aioresponses import aioresponses as Aioresponses
