@@ -142,6 +142,7 @@ async def test_download_movie(
     add_torrent.assert_called_with(magnet, 'movies')
 
     download = session.execute(select(Download)).scalars().first()
+    assert download
     assert download.title == 'Bit'
 
 
@@ -530,7 +531,9 @@ async def test_update_monitor(
     r.raise_for_status()
     assert_match_json(snapshot, r, 'cron.json')
 
-    assert session.get(Monitor, ident).status
+    monitor = session.get(Monitor, ident)
+    assert monitor
+    assert monitor.status
 
     message = aioresponses.requests['POST', URL('https://ntfy.sh')][0]
     snapshot.assert_match(
