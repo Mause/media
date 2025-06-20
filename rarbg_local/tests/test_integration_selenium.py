@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from pytest import fixture, mark
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.common.by import By
 
 # from ..main import create_app
 
@@ -71,14 +72,14 @@ def capabilities(capabilities: dict[str, dict[str, str]]) -> dict[str, dict[str,
 
 def click_link(selenium: Chrome, text: str) -> None:
     try:
-        selenium.find_element_by_link_text(text).click()
+        selenium.find_element(By.LINK_TEXT, text).click()
     except Exception as e:
         raise Exception(selenium.current_url) from e
 
 
 def search(selenium: Chrome, text: str) -> None:
-    form = selenium.find_element_by_tag_name('form')
-    form.find_element_by_name('query').send_keys(text)
+    form = selenium.find_element(By.TAG_NAME, 'form')
+    form.find_element(By.NAME, 'query').send_keys(text)
     form.submit()
 
 
@@ -120,7 +121,7 @@ def test_simple(server_url: str, selenium: Chrome) -> None:
 
 
 def check_download_link(selenium: Chrome, text: str, expected: str) -> WebElement:
-    anchor = selenium.find_element_by_partial_link_text(text)
+    anchor = selenium.find_element(By.PARTIAL_LINK_TEXT, text)
     href = anchor.get_attribute('href')
     assert urlparse(href)._asdict() == urlparse(expected)._asdict()
 
@@ -128,7 +129,7 @@ def check_download_link(selenium: Chrome, text: str, expected: str) -> WebElemen
 
 
 def check_no_error(selenium: Chrome) -> None:
-    h3 = [el.text for el in selenium.find_elements_by_class_name('error')]
+    h3 = [el.text for el in selenium.find_elements(By.CLASS_NAME, 'error')]
     assert h3 == []
 
 
@@ -153,7 +154,7 @@ def get_status_code(selenium: Chrome) -> Optional[int]:
 
 def has_download(selenium: Chrome, name: str) -> bool:
     return bool(
-        selenium.find_element_by_xpath(f'.//li/span[contains(text(), "{name}")]')
+        selenium.find_element(By.XPATH, f'.//li/span[contains(text(), "{name}")]')
     )
 
 
