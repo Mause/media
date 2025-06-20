@@ -1,4 +1,5 @@
-from typing import Any, Callable, TypedDict
+from typing import Any, TypedDict
+from collections.abc import Callable
 
 import requests
 
