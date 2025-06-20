@@ -20,7 +20,7 @@ def get_session():
 
 
 def torrent_get(fields: dict[str, Any] | None = None, ids: set[str] | None = None):
-    return jsonify({'arguments': {'torrents': []}})
+    return {'arguments': {'torrents': []}}
 
 
 def torrent_add(filename, **kwargs):
@@ -45,8 +45,8 @@ def rpc(js: Body):
     logger.info('Received method: %s %s', method, arguments)
 
     match method:
-        case 'torrents-add':
-            return torrents_add(**arguments)
+        case 'torrent-add':
+            return torrent_add(**arguments)
         case 'torrents-get':
             return torrent_get(**arguments)
         case 'get-session':
@@ -58,4 +58,4 @@ def rpc(js: Body):
 if __name__ == '__main__':
     import uvicorn
 
-    uvicorn.run(debug=True, port=9091)
+    uvicorn.run(port=9091)
