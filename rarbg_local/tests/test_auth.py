@@ -1,9 +1,13 @@
 from datetime import UTC, datetime, timedelta
 from typing import Annotated
 
-from fastapi import APIRouter
+from async_asgi_testclient import TestClient
+from fastapi import APIRouter, FastAPI
+from fastapi.routing import APIRoute
 from jose import constants, jwk
 from pytest import mark
+from pytest_snapshot.plugin import Snapshot
+from responses import RequestsMock
 
 from ..auth import AUTH0_DOMAIN, get_current_user, security
 from ..db import User
@@ -12,7 +16,13 @@ from .conftest import add_json, assert_match_json
 
 
 @mark.asyncio
-async def test_auth(responses, user, fastapi_app, test_client, snapshot) -> None:
+async def test_auth(
+    responses: RequestsMock,
+    user: User,
+    fastapi_app: FastAPI,
+    test_client: TestClient,
+    snapshot: Snapshot,
+) -> None:
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
@@ -80,12 +90,14 @@ async def test_auth(responses, user, fastapi_app, test_client, snapshot) -> None
     router = APIRouter()
 
     @router.get('/simple', dependencies=[security], response_model=UserSchema)
-    async def show(user: Annotated[User, security]):
+    async def show(user: Annotated[User, security]) -> User:
         return user
 
     fastapi_app.include_router(router)
     fastapi_app.router.routes = [
-        r for r in fastapi_app.router.routes if r.name != 'static'
+        r
+        for r in fastapi_app.router.routes
+        if isinstance(r, APIRoute) and r.name != 'static'
     ]
 
     # Act
@@ -97,7 +109,7 @@ async def test_auth(responses, user, fastapi_app, test_client, snapshot) -> None
 
 
 @mark.asyncio
-async def test_no_auth(fastapi_app, test_client) -> None:
+async def test_no_auth(fastapi_app: FastAPI, test_client: TestClient) -> None:
     del fastapi_app.dependency_overrides[get_current_user]
 
     r = await test_client.get('/api/diagnostics')
