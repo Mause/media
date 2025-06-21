@@ -21,7 +21,7 @@ dependencies = [
     "eventlet==0.40.0",
     "email-validator==2.2.0",
     "mause-rpc==0.0.18",
-    "fastapi==0.115.12",
+    "fastapi==0.115.13",
     "python-multipart==0.0.20",
     "aniso8601==10.0.1",
     "pytz==2025.2",
