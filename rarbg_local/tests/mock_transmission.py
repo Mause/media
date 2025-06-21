@@ -15,15 +15,17 @@ id_iter = iter(count())
 app = FastAPI()
 
 
-def get_session():
-    return Response(status=409, headers={'x-transmission-session-id': uuid4().hex})
+def get_session() -> Response:
+    return Response(409, headers={'x-transmission-session-id': uuid4().hex})
 
 
-def torrent_get(fields: dict[str, Any] | None = None, ids: set[str] | None = None):
+def torrent_get(
+    fields: dict[str, Any] | None = None, ids: set[str] | None = None
+) -> dict:
     return {'arguments': {'torrents': []}}
 
 
-def torrent_add(filename, **kwargs):
+def torrent_add(filename: str) -> dict:
     xt = dict(parse_qsl(urlparse(filename).query))['xt']
 
     _, hash_ = xt.rsplit(':', 1)
@@ -38,7 +40,7 @@ class Body(BaseModel):
 
 
 @app.post('/transmission/rpc')
-def rpc(js: Body):
+def rpc(js: Body) -> Any:
     method = js.method
     arguments = js.arguments
 
@@ -58,4 +60,4 @@ def rpc(js: Body):
 if __name__ == '__main__':
     import uvicorn
 
-    uvicorn.run(port=9091)
+    uvicorn.run(app=app, port=9091)
