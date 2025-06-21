@@ -860,11 +860,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/HealthcheckResponse"
-                  },
-                  "title": "Response Component Diagnostics Api Diagnostics  Component Name  Get"
+                  "$ref": "#/components/schemas/HealthcheckResponses"
                 }
               }
             }
@@ -1403,6 +1399,13 @@
           "output"
         ],
         "title": "HealthcheckResponse"
+      },
+      "HealthcheckResponses": {
+        "items": {
+          "$ref": "#/components/schemas/HealthcheckResponse"
+        },
+        "type": "array",
+        "title": "HealthcheckResponses"
       },
       "HealthcheckStatus": {
         "type": "string",
