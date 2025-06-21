@@ -5,7 +5,8 @@ from datetime import datetime
 import requests
 from requests.exceptions import ConnectionError, ReadTimeout
 from rich.columns import Columns
-from rich.console import Console, RenderGroup
+from rich.console import Console
+from rich.containers import Renderables
 from rich_sparklines import Graph
 
 logging.basicConfig(level=logging.INFO)
@@ -48,7 +49,7 @@ def get_pool() -> dict:
 
 
 def main() -> None:
-    data = {}
+    data: dict[str, str] = {}
 
     graphs = [
         Graph('connections', get_connections),
@@ -64,11 +65,13 @@ def main() -> None:
 
         console.clear()
         console.print(
-            RenderGroup(
-                Columns(graphs),
-                'timestamp: [blue]{}[/], worker: [blue]{}[/]'.format(
-                    datetime.now().isoformat(), data.pop('worker_id', '?')
-                ),
+            Renderables(
+                [
+                    Columns(graphs),
+                    'timestamp: [blue]{}[/], worker: [blue]{}[/]'.format(
+                        datetime.now().isoformat(), data.pop('worker_id', '?')
+                    ),
+                ]
             )
         )
 
