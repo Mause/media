@@ -809,18 +809,18 @@ __metadata:
   linkType: hard
 
 "@mui/icons-material@npm:^7":
-  version: 7.1.1
-  resolution: "@mui/icons-material@npm:7.1.1"
+  version: 7.1.2
+  resolution: "@mui/icons-material@npm:7.1.2"
   dependencies:
     "@babel/runtime": "npm:^7.27.1"
   peerDependencies:
-    "@mui/material": ^7.1.1
+    "@mui/material": ^7.1.2
     "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/84d17de54c12e47105d4fcaead9b048d003a68df768adbc965b4d2374656c1b50d34080bb736cedac6e82703a8024157c7c87720bde723fb393363eac78f80e9
+  checksum: 10/2f0f85562bf9783530e3fe694c29e7d98c266a464f2d67586c043ef6346959b12e25781d08813896970a72e02b1e7d2f8d30ae078345c11bd23fc44765d1677a
   languageName: node
   linkType: hard
 
