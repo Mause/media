@@ -26,7 +26,7 @@ from yarl import URL
 from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, Monitor, User, create_episode, create_movie
 from ..main import get_episodes
-from ..models import ITorrent
+from ..models import ITorrent, MediaType
 from ..new import ProviderSource, SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
@@ -515,7 +515,9 @@ async def test_update_monitor(
         await test_client.post('/api/monitor', json={'tmdb_id': 6, 'type': 'TV'})
     ).raise_for_status()
 
-    async def impl(tmdb_id: TmdbId, imdb_id: ImdbId) -> AsyncGenerator[ITorrent, None]:
+    async def impl(
+        tmdb_id: TmdbId, type: MediaType, season: int, episode: int | None = None
+    ) -> AsyncGenerator[ITorrent, None]:
         if tmdb_id == 5:
             yield ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)
         else:
