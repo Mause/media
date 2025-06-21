@@ -99,7 +99,7 @@ def themoviedb(
 
 
 def add_json(
-    responses: Aioresponses, method: str, url: str | Pattern, json_body
+    responses: RequestsMock | Aioresponses, method: str, url: str | Pattern, json_body
 ) -> None:
     responses.add(method=method, url=url, body=json.dumps(json_body))
 
