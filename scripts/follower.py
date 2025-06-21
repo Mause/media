@@ -8,7 +8,7 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-def follow():
+def follow() -> None:
     with open('promotion.json') as fh:
         promotion = json.load(fh)
 

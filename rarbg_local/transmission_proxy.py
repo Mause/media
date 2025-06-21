@@ -17,7 +17,7 @@ else:
         )
     )
 
-    def __getattr__(name):
+    def __getattr__(name: str) -> Callable:
         return lambda *args, **kwargs: getattr(transmission(), name)(*args, **kwargs)
 
 
