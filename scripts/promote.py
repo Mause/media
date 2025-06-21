@@ -6,6 +6,7 @@ import requests
 from follower import follow
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 token = open('token.txt').read().strip()
 
@@ -14,7 +15,7 @@ r = requests.post(
     headers={"authorization": f"Bearer {token}"},
     json={"branch": "master"},
 )
-logging.info(
+logger.info(
     "Promotion request sent: %s",
     r.text,
 )

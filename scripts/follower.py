@@ -5,6 +5,8 @@ import logging
 
 import requests
 
+logger = logging.getLogger(__name__)
+
 
 def follow():
     with open('promotion.json') as fh:
@@ -12,7 +14,7 @@ def follow():
 
     r = requests.get(promotion['build']['output_stream_url'], stream=True)
     for line in r.raw:
-        logging.info(line.decode())
+        logger.info(line.decode())
 
 
 if __name__ == "__main__":

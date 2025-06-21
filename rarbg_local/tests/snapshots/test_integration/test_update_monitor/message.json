@@ -5,7 +5,7 @@
   "tags": [],
   "priority": null,
   "actions": [],
-  "click": null,
+  "click": "http://localhost/select/5/options",
   "attach": null,
   "markdown": false,
   "icon": null,

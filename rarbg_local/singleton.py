@@ -2,7 +2,6 @@ import inspect
 from asyncio import iscoroutinefunction
 from collections.abc import Callable
 from contextlib import AsyncExitStack
-from typing import TypeVar
 
 from fastapi import FastAPI
 from fastapi.dependencies.utils import solve_dependencies
@@ -10,10 +9,8 @@ from fastapi.requests import Request
 from fastapi.routing import get_dependant, run_endpoint_function
 from makefun import add_signature_parameters, create_function
 
-T = TypeVar('T')
 
-
-async def get(
+async def get[T](
     app: FastAPI, func: Callable[..., T], request: Request | None = None
 ) -> T:
     if func in app.dependency_overrides:

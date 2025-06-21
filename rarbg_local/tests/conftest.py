@@ -1,7 +1,7 @@
 import json
 from collections.abc import AsyncGenerator
 from re import Pattern
-from typing import Annotated, TypeVar
+from typing import Annotated
 
 import uvloop
 from aioresponses import aioresponses as Aioresponses
@@ -147,10 +147,7 @@ def aioresponses():
         yield e
 
 
-T = TypeVar('T')
-
-
-async def tolist(a: AsyncGenerator[T, None]) -> list[T]:
+async def tolist[T](a: AsyncGenerator[T, None]) -> list[T]:
     lst: list[T] = []
     async for t in a:
         lst.append(t)

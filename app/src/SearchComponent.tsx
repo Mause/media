@@ -1,5 +1,4 @@
 import ReactLoading from 'react-loading';
-import qs from 'qs';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -10,7 +9,7 @@ export type SearchResult = components['schemas']['SearchResponse'];
 
 export function SearchComponent() {
   const { search } = useLocation();
-  const { query } = qs.parse(search.slice(1));
+  const query = new URLSearchParams(search.slice(1)).get('query')!;
 
   const { data: results } = useSWR<SearchResult[]>(
     'search?' + qs.stringify({ query }),

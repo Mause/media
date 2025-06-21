@@ -4,7 +4,7 @@ import string
 from collections import defaultdict
 from collections.abc import Callable, Iterable
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from typing import TypeVar, cast
+from typing import cast
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
@@ -28,9 +28,6 @@ from .utils import non_null, precondition
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
-
-K = TypeVar('K')
-V = TypeVar('V')
 
 
 def categorise(string: str) -> str:
@@ -147,7 +144,7 @@ def add_single(
     return already.episode if is_tv else already.movie
 
 
-def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> dict[K, list[V]]:
+def groupby[K, V](iterable: Iterable[V], key: Callable[[V], K]) -> dict[K, list[V]]:
     dd: dict[K, list[V]] = defaultdict(list)
     for item in iterable:
         dd[key(item)].append(item)

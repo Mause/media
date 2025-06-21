@@ -3,9 +3,9 @@ import ReactLoading from 'react-loading';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import useSWR from 'swr';
-import qs from 'qs';
 import * as _ from 'lodash-es';
 
+import * as qs from './qs';
 import type { components } from './schema';
 import { MLink, useLocation } from './utils';
 
