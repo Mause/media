@@ -1,5 +1,7 @@
 import logging
 from asyncio import gather
+from collections.abc import AsyncGenerator, Sequence
+from enum import Enum
 from typing import Annotated
 
 from aiohttp import ClientSession
@@ -35,18 +37,22 @@ logger = logging.getLogger(__name__)
 monitor_ns = APIRouter(tags=['monitor'])
 
 
-async def get_ntfy():
+async def get_ntfy() -> AsyncGenerator[Ntfy, None]:
     async with ClientSession() as session:
         yield Ntfy("https://ntfy.sh", session)
 
 
-@monitor_ns.get('', response_model=list[MonitorGet])
-async def monitor_get(session: Session = Depends(get_db)):
+@monitor_ns.get('')
+async def monitor_get(
+    session: Annotated[Session, Depends(get_db)],
+) -> Sequence[MonitorGet]:
     return session.execute(select(Monitor)).scalars().all()
 
 
 @monitor_ns.delete('/{monitor_id}')
-async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
+async def monitor_delete(
+    monitor_id: int, session: Annotated[Session, Depends(get_db)]
+) -> dict:
     safe_delete(session, Monitor, monitor_id)
 
     return {}
@@ -66,11 +72,11 @@ async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
             raise
 
 
-@monitor_ns.post('', response_model=MonitorGet, status_code=201)
+@monitor_ns.post('', status_code=201)
 async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
-):
+) -> MonitorGet:
     session = non_null(object_session(user))  # resolve to db session session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
@@ -151,7 +157,7 @@ async def check_monitor(
 
     monitor.status = bool(has_results)
 
-    def name(x):
+    def name(x: Enum) -> str:
         return x.name.title()
 
     message = f'''
