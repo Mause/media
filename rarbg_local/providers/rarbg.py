@@ -3,6 +3,7 @@ import logging
 from collections.abc import AsyncGenerator, Iterator
 from itertools import chain
 from json.decoder import JSONDecodeError
+from typing import Any
 
 import backoff
 import requests
@@ -32,7 +33,7 @@ session.headers.update(
 )
 
 
-def get_token(base):
+def get_token(base: str) -> str:
     return session.get(base, params={'get_token': 'get_token'}).json()['token']
 
 
@@ -77,7 +78,9 @@ class RarbgResponse(BaseModel):
     torrent_results: list[RarbgTorrent] = []
 
 
-def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[list[RarbgTorrent]]:
+def get_rarbg_iter(
+    base_url: str, type: str, **kwargs: Any
+) -> Iterator[list[RarbgTorrent]]:
     codes = load_category_codes()
     categories = [codes[key] for key in CATEGORIES[type]]
 
