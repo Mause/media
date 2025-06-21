@@ -2,7 +2,7 @@ import base64
 import json
 from collections.abc import AsyncGenerator, Generator
 from datetime import datetime
-from typing import TYPE_CHECKING, Annotated, Never
+from typing import TYPE_CHECKING, Annotated, Any, Never
 from unittest.mock import MagicMock, patch
 
 from aioresponses import aioresponses as Aioresponses
@@ -801,13 +801,12 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
 
 @mark.asyncio
 async def test_pyscopg2_error(
-    connect: MagicMock,
     monkeypatch: MonkeyPatch,
     fastapi_app: FastAPI,
     test_client: TestClient,
     caplog: LogCaptureFixture,
 ) -> None:
-    def replacement(*args, **kwargs) -> Never:
+    def replacement(*args: Any, **kwargs: Any) -> Never:
         raise OperationalError(message)
 
     message = 'FATAL:  too many connections for role "wlhdyudesczvwl"'
