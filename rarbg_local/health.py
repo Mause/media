@@ -5,8 +5,8 @@ from os import getpid
 from typing import Any, cast, overload
 
 from fastapi import APIRouter
+from fastapi.exceptions import HTTPException
 from fastapi.requests import Request
-from fastapi.responses import JSONResponse
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -15,9 +15,10 @@ from healthcheck import (
     HealthcheckInternalComponent,
     HealthcheckStatus,
 )
+from healthcheck.healthcheck import HealthcheckComponentInterface
 from healthcheck.models import ComponentType
 from plexapi.server import PlexServer
-from pydantic import BaseModel
+from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
 
 from .db import get_async_engine, get_session_local
@@ -41,8 +42,11 @@ async def get(dependent):
     return await _get(request_var.get().app, dependent, request_var.get())
 
 
-def build():
-    def add_component(decl, check):
+def build() -> Healthcheck:
+    def add_component(
+        decl: HealthcheckComponentInterface,
+        check: Callable[[], Coroutine[Any, Any, HealthcheckCallbackResponse]],
+    ) -> HealthcheckComponentInterface:
         health.add_component(decl)
         return decl.add_healthcheck(check)
 
@@ -68,8 +72,8 @@ def build():
     return health
 
 
-@router.get('', response_model=list[str])
-async def diagnostics():
+@router.get('')
+async def diagnostics() -> list[str]:
     return [comp.name for comp in build().components]
 
 
@@ -83,21 +87,27 @@ class HealthcheckResponse(BaseModel):
     output: Any
 
 
-@router.get('/{component_name}', response_model=list[HealthcheckResponse])
-async def component_diagnostics(request: Request, component_name: str):
+class HealthcheckResponses(RootModel[list[HealthcheckResponse]]):
+    pass
+
+
+@router.get('/{component_name}')
+async def component_diagnostics(
+    request: Request, component_name: str
+) -> HealthcheckResponses:
     health = build()
     component = next(
         (comp for comp in health.components if comp.name == component_name), None
     )
     if component is None:
-        return JSONResponse({'error': 'Component not found'}, status_code=404)
+        raise HTTPException(404, ({'error': 'Component not found'}))
 
     request_var.set(request)
 
-    return await component.run()
+    return HealthcheckResponses.model_validate(await component.run())
 
 
-async def check_database():
+async def check_database() -> HealthcheckCallbackResponse:
     engine = await get(get_async_engine)
 
     async with engine.connect() as conn:
@@ -111,13 +121,13 @@ async def check_database():
 
         return HealthcheckCallbackResponse(
             HealthcheckStatus.PASS,
-            {
+            {  # type: ignore[arg-type]
                 'version': res.scalar(),
             },
         )
 
 
-async def pool():
+async def pool() -> HealthcheckCallbackResponse:
     def pget(field: str) -> int:
         value = getattr(pool, field, None)
 
@@ -128,7 +138,7 @@ async def pool():
     pool = sessionlocal.kw['bind'].pool
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,
-        {
+        {  # type: ignore[arg-type]
             'worker_id': getpid(),
             'size': pget('size'),
             'checkedin': pget('checkedin'),
@@ -138,10 +148,10 @@ async def pool():
     )
 
 
-async def transmission_connectivity():
+async def transmission_connectivity() -> HealthcheckCallbackResponse:
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,
-        {
+        {  # type: ignore[arg-type]
             'consumers': transmission().channel.consumer_tags,
             'client_is_alive': transmission()._thread.is_alive(),
         },
