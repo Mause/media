@@ -2,21 +2,38 @@ import json
 import socket
 from contextlib import closing
 from pathlib import Path
-from typing import Generator, Optional
+from typing import Generator, Never, Optional
 from urllib.parse import urlencode, urlparse
 
 from fastapi import FastAPI
 from pytest import fixture, mark
 from selenium.webdriver import Chrome
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
 
-# from ..main import create_app
+from ..new import create_app
 from ..settings import Settings, get_settings
 
 HERE = Path(__name__).resolve().absolute().parent
 
 pytestmark = mark.skip
+
+
+class LiveServer:
+    def __init__(self, app: FastAPI, host: str, port: int, reload: bool = False) -> None:
+        self.app = app
+        self.host = host
+        self.port = port
+        self.reload = reload
+
+    def start(self) -> Never:
+        raise NotImplementedError
+
+    def stop(self) -> Never:
+        raise NotImplementedError
+
+    def url(self, path: str = '') -> str:
+        return f'http://{self.host}:{self.port}{path}'
 
 
 @fixture
