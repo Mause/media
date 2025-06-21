@@ -12,6 +12,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 
 # from ..main import create_app
+from ..settings import Settings, get_settings
 
 HERE = Path(__name__).resolve().absolute().parent
 
@@ -38,14 +39,12 @@ def mock_transmission(free_port: int) -> Generator[LiveServer, None, None]:
 
 @fixture
 def app(mock_transmission: LiveServer) -> FastAPI:
-    return create_app(
-        {
-            'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
-            'ENV': 'development',
-            'TESTING': True,
-            'TRANSMISSION_URL': mock_transmission.url('/transmission/rpc'),
-        }
+    app = create_app()
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        database_url='sqlite:///:memory:',
+        transmission_url=mock_transmission.url('/transmission/rpc'),
     )
+    return app
 
 
 def test_mock(mock_transmission: LiveServer) -> None:
