@@ -800,7 +800,7 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
 
 
 @mark.asyncio
-async def test_pyscopg2_error(
+async def test_psycopg2_error(
     monkeypatch: MonkeyPatch,
     fastapi_app: FastAPI,
     test_client: TestClient,
