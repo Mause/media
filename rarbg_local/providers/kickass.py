@@ -6,6 +6,7 @@ from typing import Any
 
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
+from healthcheck import HealthcheckCallbackResponse
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_movie, get_tv
@@ -125,5 +126,5 @@ class KickassProvider(TvProvider, MovieProvider):
                 category=movie_convert(item['resolution']),
             )
 
-    async def health(self):
+    async def health(self) -> HealthcheckCallbackResponse:
         return await self.check_http(ROOT)

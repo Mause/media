@@ -6,6 +6,7 @@ from json.decoder import JSONDecodeError
 
 import backoff
 import requests
+from healthcheck import HealthcheckCallbackResponse
 from pydantic import BaseModel
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
@@ -170,5 +171,5 @@ class RarbgProvider(TvProvider, MovieProvider):
                 category=movie_convert(item.category),
             )
 
-    async def health(self):
+    async def health(self) -> HealthcheckCallbackResponse:
         return await self.check_http(self.root)
