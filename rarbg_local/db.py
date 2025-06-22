@@ -336,7 +336,7 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
 
         @listens_for(engine, 'connect')
         def _fk_pragma_on_connect(
-            dbapi_con: sqlite3.Connection | AsyncAdapt_aiosqlite_connection,
+            dbapi_con: sqlite3.Connection,
             con_record: sqlalchemy.pool.base._ConnectionRecord,
         ) -> None:
             if isinstance(dbapi_con, AsyncAdapt_aiosqlite_connection):
