@@ -7,17 +7,19 @@ import { SearchBox } from './IndexComponent';
 import { MLink } from './utils';
 import type { components } from './schema';
 export type SearchResult = components['schemas']['SearchResponse'];
+import { DisplayError } from './IndexComponent';
 
 export function SearchComponent() {
   const { search } = useLocation();
   const query = new URLSearchParams(search.slice(1)).get('query')!;
 
-  const { data: results } = useSWR<SearchResult[]>(
+  const { data: results, error } = useSWR<SearchResult[]>(
     'search?' + qs.stringify({ query }),
   );
   return (
     <div>
       <SearchBox />
+      {error && <DisplayError error={error} />}
       <ul>
         {results ? (
           results.map((result) => (
