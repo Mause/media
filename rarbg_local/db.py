@@ -1,13 +1,14 @@
 import enum
 import logging
-from collections.abc import Callable, Sequence
+import sqlite3
+from collections.abc import Callable, Generator, Sequence
 from datetime import datetime
-from typing import Annotated, Any, cast
-from collections.abc import Generator
+from typing import Annotated, Any, Generator, Never, cast
 
 import backoff
 import logfire
 import psycopg2
+import sqlalchemy.pool.base
 from fastapi import Depends
 from sqlalchemy import (
     DateTime,
@@ -18,6 +19,7 @@ from sqlalchemy import (
     delete,
     event,
 )
+from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -314,7 +316,9 @@ def get_engine(settings: Annotated[Settings, Depends(get_settings)]) -> Engine:
     return build_engine(normalise_db_url(settings.database_url), create_engine)
 
 
-def listens_for(engine: Engine | AsyncEngine, event_name: str):
+def listens_for(
+    engine: Engine | AsyncEngine, event_name: str
+) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     if isinstance(engine, AsyncEngine):
         return event.listens_for(engine.sync_engine, event_name)
     else:
@@ -331,8 +335,11 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
         )
 
         @listens_for(engine, 'connect')
-        def _fk_pragma_on_connect(dbapi_con, con_record) -> None:
-            if not hasattr(dbapi_con, 'create_collation'):  # async
+        def _fk_pragma_on_connect(
+            dbapi_con: sqlite3.Connection | AsyncAdapt_aiosqlite_connection,
+            con_record: sqlalchemy.pool.base._ConnectionRecord,
+        ) -> None:
+            if isinstance(dbapi_con, AsyncAdapt_aiosqlite_connection):
                 dbapi_con = dbapi_con.driver_connection._connection
             dbapi_con.create_collation(
                 "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
@@ -353,7 +360,9 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
                 max_tries=MAX_TRIES,
                 giveup=lambda e: "too many connections for role" not in e.args[0],
             )
-            def receive_do_connect(dialect, conn_rec, cargs, cparams):
+            def receive_do_connect(
+                dialect: Never, conn_rec: Never, cargs: tuple, cparams: dict
+            ) -> psycopg2.extensions.connection:
                 return psycopg2.connect(*cargs, **cparams)
 
     logfire.instrument_sqlalchemy(engine=engine)
@@ -374,7 +383,9 @@ def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> session
     return sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
-def get_db(session_local=Depends(get_session_local)) -> Generator[Session, None, None]:
+def get_db(
+    session_local: Annotated[sessionmaker, Depends(get_session_local)],
+) -> Generator[Session, None, None]:
     sl = session_local()
     try:
         yield sl
