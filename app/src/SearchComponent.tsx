@@ -3,11 +3,10 @@ import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import * as qs from './qs';
-import { SearchBox } from './IndexComponent';
+import { SearchBox, DisplayError } from './IndexComponent';
 import { MLink } from './utils';
 import type { components } from './schema';
 export type SearchResult = components['schemas']['SearchResponse'];
-import { DisplayError } from './IndexComponent';
 
 export function SearchComponent() {
   const { search } = useLocation();
