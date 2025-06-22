@@ -2,7 +2,7 @@ import enum
 import logging
 from collections.abc import Callable, Sequence
 from datetime import datetime
-from typing import Annotated, cast
+from typing import Annotated, Any, Generator, cast
 
 import backoff
 import logfire
@@ -88,7 +88,7 @@ class EpisodeDetails(Base):
     season: Mapped[int]
     episode: Mapped[int | None]
 
-    def is_season_pack(self):
+    def is_season_pack(self) -> bool:
         return self.episode is None
 
     def __repr__(self) -> str:
@@ -134,7 +134,7 @@ class User(Base):
     def __repr__(self) -> str:
         return self.username
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         return isinstance(other, User) and self.id == other.id
 
 
@@ -274,7 +274,9 @@ def get_movies(session: Session) -> Sequence[MovieDetails]:
     return get_all(session, MovieDetails)
 
 
-def get_or_create[T](session: Session, model: type[T], defaults=None, **kwargs) -> T:
+def get_or_create[T](
+    session: Session, model: type[T], defaults: Any = None, **kwargs: Any
+) -> T:
     instance = session.execute(select(model).filter_by(**kwargs)).scalars().first()
     if instance:
         return instance
@@ -318,7 +320,7 @@ def listens_for(engine: Engine | AsyncEngine, event_name: str):
         return event.listens_for(engine, event_name)
 
 
-def build_engine(db_url: URL, cr: Callable):
+def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> T:
     logger.info('db_url: %s', db_url)
 
     sqlite = db_url.get_backend_name() == 'sqlite'
@@ -371,7 +373,7 @@ def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> session
     return sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
-def get_db(session_local=Depends(get_session_local)):
+def get_db(session_local=Depends(get_session_local)) -> Generator[Session, None, None]:
     sl = session_local()
     try:
         yield sl
