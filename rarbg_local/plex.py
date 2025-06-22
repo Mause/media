@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from typing import Annotated
 from urllib.parse import urlencode
 
@@ -25,6 +26,10 @@ def get_plex(settings: Annotated[Settings, Depends(get_settings)]) -> PlexServer
 def get_imdb_in_plex(imdb_id: ImdbId, plex: PlexServer) -> Media | None:
     guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
     items = trace(plex.library.search)(guid=guid)
+    return single(items)
+
+
+def single[T](items: Sequence[T]) -> T | None:
     return items[0] if items else None
 
 
