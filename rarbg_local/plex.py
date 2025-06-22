@@ -7,6 +7,7 @@ from plexapi.media import Media
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
 from sentry_sdk import trace
+from yarl import URL
 
 from .settings import Settings, get_settings
 from .singleton import singleton
@@ -22,9 +23,17 @@ def get_plex(settings: Annotated[Settings, Depends(get_settings)]) -> PlexServer
     return trace(novell.connect)(ssl=True)
 
 
+def build_search_guid(imdb_id: ImdbId) -> str:
+    return str(
+        URL.build(
+            scheme='com.plexapp.agents.imdb', host=str(imdb_id), query_string="lang=en"
+        )
+    )
+
+
 @trace
 def get_imdb_in_plex(imdb_id: ImdbId, plex: PlexServer) -> Media | None:
-    guid = f"com.plexapp.agents.imdb://{imdb_id}?lang=en"
+    guid = build_search_guid(imdb_id)
     items = trace(plex.library.search)(guid=guid)
     return single(items)
 
