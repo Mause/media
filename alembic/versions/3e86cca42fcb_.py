@@ -27,7 +27,7 @@ def upgrade() -> None:
     sqlite = get_driver() == 'sqlite'
     ca = sa.Column(
         'timestamp',
-        sa.DateTime(timezone='Etc/GMT+8'),
+        sa.DateTime(timezone=True),
         nullable=False,
         server_default=DefaultClause(str(datetime.now()) if sqlite else func.now()),
     )
