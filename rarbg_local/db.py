@@ -2,7 +2,8 @@ import enum
 import logging
 from collections.abc import Callable, Sequence
 from datetime import datetime
-from typing import Annotated, Any, Generator, cast
+from typing import Annotated, Any, cast
+from collections.abc import Generator
 
 import backoff
 import logfire
