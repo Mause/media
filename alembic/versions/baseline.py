@@ -20,7 +20,9 @@ depends_on = None
 def upgrade() -> None:
     conn = op.get_bind()
     if get_driver() == 'sqlite':
-        conn.connection.driver_connection.create_collation(
+        inner = conn.connection.driver_connection
+        assert inner
+        inner.create_collation(
             "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
         )
     else:
@@ -30,6 +32,8 @@ def upgrade() -> None:
 def downgrade() -> None:
     conn = op.get_bind()
     if get_driver() == 'sqlite':
-        conn.connection.driver_connection.drop_collation("en_AU")
+        inner = conn.connection.driver_connection
+        assert inner
+        inner.drop_collation("en_AU")
     else:
         conn.execute(sa.text("DROP COLLATION IF EXISTS \"en_AU\""))
