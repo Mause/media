@@ -20,7 +20,9 @@ pytestmark = mark.skip
 
 
 class LiveServer:
-    def __init__(self, app: FastAPI, host: str, port: int, reload: bool = False) -> None:
+    def __init__(
+        self, app: FastAPI, host: str, port: int, reload: bool = False
+    ) -> None:
         self.app = app
         self.host = host
         self.port = port
