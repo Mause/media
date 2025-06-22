@@ -4,7 +4,6 @@ import sqlite3
 from collections.abc import Callable, Generator, Sequence
 from datetime import datetime
 from typing import Annotated, Any, Never, cast
-from collections.abc import Generator
 
 import backoff
 import logfire
