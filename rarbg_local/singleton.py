@@ -2,6 +2,7 @@ import inspect
 from asyncio import iscoroutinefunction
 from collections.abc import Callable
 from contextlib import AsyncExitStack
+from typing import Any
 
 from fastapi import FastAPI
 from fastapi.dependencies.utils import solve_dependencies
@@ -38,8 +39,8 @@ async def get[T](
     )
 
 
-def singleton(func: Callable):
-    async def wrapper(request: Request, **kwargs):
+def singleton(func: Callable):  # noqa: ANN201
+    async def wrapper(request: Request, **kwargs: Any) -> Any:
         app = request.app
 
         value = app.dependency_overrides.get(wrapper)

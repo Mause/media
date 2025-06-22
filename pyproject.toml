@@ -75,11 +75,15 @@ cli = [
     "rich>=14.0.0",
 ]
 
+[tool.ruff]
+show-fixes = true
+
 [tool.ruff.format]
 quote-style = "preserve"
 
 [tool.ruff.lint]
-select = ["F", "E", "W", "I", "T", "LOG"]
+select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
+ignore = ["ANN401"]
 
 [tool.pytest.ini_options]
 addopts = "rarbg_local --driver chrome --html report.html --self-contained-html --cov-report html --cov"
