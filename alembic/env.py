@@ -8,6 +8,7 @@ import os
 import sys
 from logging.config import fileConfig
 from pathlib import Path
+from typing import Any, cast
 
 import backoff
 from sqlalchemy import engine_from_config, pool
@@ -38,7 +39,7 @@ else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
 
 
-alembic_config = config.get_section(config.config_ini_section)
+alembic_config = cast(dict[str, Any], config.get_section(config.config_ini_section))
 assert alembic_config
 alembic_config['sqlalchemy.url'] = url
 target_metadata = db.Base.metadata
