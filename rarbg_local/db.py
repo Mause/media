@@ -77,11 +77,6 @@ class Download(Base):
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship(back_populates='downloads')
 
-    def progress(self):
-        from .main import get_keyed_torrents
-
-        return get_keyed_torrents()[self.transmission_id].percentDone * 100
-
 
 class EpisodeDetails(Base):
     __tablename__ = 'episode_details'
