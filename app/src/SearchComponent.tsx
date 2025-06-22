@@ -12,7 +12,7 @@ export function SearchComponent() {
   const { search } = useLocation();
   const query = new URLSearchParams(search.slice(1)).get('query')!;
 
-  const { data: results, error } = useSWR<SearchResult[]>(
+  const { data: results, error } = useSWR<SearchResult[], Error>(
     'search?' + qs.stringify({ query }),
   );
   return (
