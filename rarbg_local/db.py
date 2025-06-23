@@ -1,10 +1,9 @@
 import enum
 import logging
 import sqlite3
-from collections.abc import Callable, Generator, Sequence
+from collections.abc import AsyncGenerator, Callable, Generator, Sequence
 from datetime import datetime
 from typing import Annotated, Any, Never, cast
-from collections.abc import AsyncGenerator
 
 import backoff
 import logfire
