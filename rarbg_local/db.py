@@ -3,7 +3,8 @@ import logging
 import sqlite3
 from collections.abc import Callable, Generator, Sequence
 from datetime import datetime
-from typing import Annotated, Any, Never, cast, AsyncGenerator
+from typing import Annotated, Any, Never, cast
+from collections.abc import AsyncGenerator
 
 import backoff
 import logfire
@@ -392,6 +393,7 @@ def get_db(
         yield sl
     finally:
         sl.close()
+
 
 @singleton
 def get_async_sessionmaker(
