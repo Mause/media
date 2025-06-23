@@ -409,7 +409,6 @@ async def get_async_db(
     try:
         yield sl
     finally:
-        sl.close()
         await sl.close()
 
 
