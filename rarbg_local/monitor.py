@@ -11,8 +11,11 @@ from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, object_session, sessionmaker
+from sqlalchemy.orm import joinedload
+from sqlalchemy.orm.session import Session, object_session
 from starlette.routing import compile_path, replace_params
 from yarl import URL
 
@@ -21,6 +24,7 @@ from .db import (
     Monitor,
     MonitorMediaType,
     User,
+    get_async_db,
     get_db,
     get_session_local,
     safe_delete,
@@ -45,9 +49,13 @@ async def get_ntfy() -> AsyncGenerator[Ntfy, None]:
 
 @monitor_ns.get('')
 async def monitor_get(
-    session: Annotated[Session, Depends(get_db)],
+    session: Annotated[AsyncSession, Depends(get_async_db)],
 ) -> Sequence[MonitorGet]:
-    return session.execute(select(Monitor)).scalars().all()
+    return (
+        (await session.execute(select(Monitor).options(joinedload(Monitor.added_by))))
+        .scalars()
+        .all()
+    )
 
 
 @monitor_ns.delete('/{monitor_id}')
@@ -78,11 +86,13 @@ async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
 ) -> MonitorGet:
-    session = non_null(object_session(user))  # resolve to db session session
+    session = non_null(object_session(user))  # resolve to db session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         session.execute(
-            select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            select(Monitor)
+            .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            .options(joinedload(Monitor.added_by))
         )
         .scalars()
         .one_or_none()
@@ -93,6 +103,7 @@ async def monitor_post(
         )
         session.add(c)
         session.commit()
+        session.refresh(c, attribute_names=['added_by'])
     return c
 
 
@@ -111,7 +122,13 @@ async def monitor_cron(
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ) -> list[CronResponse[MonitorGet]]:
     monitors = (
-        session.execute(select(Monitor).filter(not_(Monitor.status))).scalars().all()
+        session.execute(
+            select(Monitor)
+            .filter(not_(Monitor.status))
+            .options(joinedload(Monitor.added_by))
+        )
+        .scalars()
+        .all()
     )
 
     async def do_with(monitor):
@@ -197,5 +214,6 @@ async def check_monitor(
         )
     )
     session.commit()
+    session.refresh(monitor, attribute_names=['added_by'])
 
     return CronResponse(success=True, message=message, subject=monitor)

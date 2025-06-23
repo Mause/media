@@ -1,7 +1,7 @@
 import enum
 import logging
 import sqlite3
-from collections.abc import Callable, Generator, Sequence
+from collections.abc import AsyncGenerator, Callable, Generator, Sequence
 from datetime import datetime
 from typing import Annotated, Any, Never, cast
 
@@ -23,6 +23,8 @@ from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
     create_async_engine,
 )
 from sqlalchemy.future import select
@@ -63,12 +65,18 @@ class Download(Base):
     transmission_id: Mapped[str]
     imdb_id: Mapped[ImdbId]
     type: Mapped[str]
-    movie: Mapped['MovieDetails'] = relationship(uselist=False, cascade='all,delete')
+    movie: Mapped['MovieDetails'] = relationship(
+        uselist=False,
+        cascade='all,delete',
+        lazy='raise',
+    )
     movie_id: Mapped[int | None] = mapped_column(
         ForeignKey('movie_details.id', ondelete='CASCADE')
     )
     episode: Mapped['EpisodeDetails'] = relationship(
-        uselist=False, cascade='all,delete'
+        uselist=False,
+        cascade='all,delete',
+        lazy='raise',
     )
     episode_id: Mapped[int | None] = mapped_column(
         ForeignKey('episode_details.id', ondelete='CASCADE')
@@ -78,14 +86,17 @@ class Download(Base):
         DateTime(timezone=True), default=func.now()
     )
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    added_by: Mapped['User'] = relationship(back_populates='downloads')
+    added_by: Mapped['User'] = relationship(
+        back_populates='downloads',
+        lazy='raise',
+    )
 
 
 class EpisodeDetails(Base):
     __tablename__ = 'episode_details'
     id: Mapped[int] = mapped_column(primary_key=True)
     download: Mapped['Download'] = relationship(
-        back_populates='episode', passive_deletes=True, uselist=False
+        back_populates='episode', passive_deletes=True, uselist=False, lazy='raise'
     )
     show_title: Mapped[str]
     season: Mapped[int]
@@ -102,7 +113,7 @@ class MovieDetails(Base):
     __tablename__ = 'movie_details'
     id: Mapped[int] = mapped_column(primary_key=True)
     download: Mapped['Download'] = relationship(
-        back_populates='movie', passive_deletes=True, uselist=False
+        back_populates='movie', passive_deletes=True, uselist=False, lazy='raise'
     )
 
 
@@ -130,9 +141,13 @@ class User(Base):
     )
 
     # Define the relationship to Role via UserRoles
-    roles: Mapped[list['Role']] = relationship(secondary='user_roles', uselist=True)
+    roles: Mapped[list['Role']] = relationship(
+        secondary='user_roles',
+        uselist=True,
+        lazy='raise',
+    )
 
-    downloads: Mapped[list[Download]] = relationship()
+    downloads: Mapped[list[Download]] = relationship(lazy='raise')
 
     def __repr__(self) -> str:
         return self.username
@@ -171,7 +186,7 @@ class Monitor(Base):
     tmdb_id: Mapped[TmdbId]
 
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    added_by: Mapped['User'] = relationship()
+    added_by: Mapped['User'] = relationship(lazy='raise')
 
     title: Mapped[str]
     type: Mapped[MonitorMediaType] = mapped_column(
@@ -266,7 +281,13 @@ def get_all[T](session: Session, model: type[T]) -> Sequence[T]:
         joint = EpisodeDetails.download
     else:
         raise ValueError(f'Unknown model: {model}')
-    return session.execute(select(model).options(joinedload(joint))).scalars().all()
+    return (
+        session.execute(
+            select(model).options(joinedload(joint).joinedload(Download.added_by))
+        )
+        .scalars()
+        .all()
+    )
 
 
 def get_episodes(session: Session) -> Sequence[EpisodeDetails]:
@@ -391,6 +412,23 @@ def get_db(
         yield sl
     finally:
         sl.close()
+
+
+@singleton
+def get_async_sessionmaker(
+    engine: Annotated[AsyncEngine, Depends(get_async_engine)],
+) -> async_sessionmaker:
+    return async_sessionmaker(autocommit=False, autoflush=True, bind=engine)
+
+
+async def get_async_db(
+    session_local: Annotated[async_sessionmaker, Depends(get_async_sessionmaker)],
+) -> AsyncGenerator[AsyncSession, None]:
+    sl = session_local()
+    try:
+        yield sl
+    finally:
+        await sl.close()
 
 
 def safe_delete[T](session: Session, entity: type[T], id: int) -> None:

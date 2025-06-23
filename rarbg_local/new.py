@@ -273,6 +273,11 @@ async def download_post(
     session.add_all(results)
     session.commit()
 
+    for res in results:
+        # TODO: can we do this one call, or in the commit?
+        session.refresh(res, attribute_names=['download'])
+        session.refresh(res.download, attribute_names=['added_by'])
+
     return results
 
 
