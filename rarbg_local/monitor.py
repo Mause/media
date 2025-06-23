@@ -11,7 +11,9 @@ from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.session import Session, object_session
 from starlette.routing import compile_path, replace_params
 from yarl import URL
@@ -21,6 +23,7 @@ from .db import (
     Monitor,
     MonitorMediaType,
     User,
+    get_async_db,
     get_db,
     safe_delete,
 )
@@ -44,9 +47,13 @@ async def get_ntfy() -> AsyncGenerator[Ntfy, None]:
 
 @monitor_ns.get('')
 async def monitor_get(
-    session: Annotated[Session, Depends(get_db)],
+    session: Annotated[AsyncSession, Depends(get_async_db)],
 ) -> Sequence[MonitorGet]:
-    return session.execute(select(Monitor)).scalars().all()
+    return (
+        (await session.execute(select(Monitor).options(joinedload(Monitor.added_by))))
+        .scalars()
+        .all()
+    )
 
 
 @monitor_ns.delete('/{monitor_id}')
