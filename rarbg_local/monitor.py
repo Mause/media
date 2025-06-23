@@ -84,7 +84,7 @@ async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
 ) -> MonitorGet:
-    session = non_null(object_session(user))  # resolve to db session session
+    session = non_null(object_session(user))  # resolve to db session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         session.execute(
