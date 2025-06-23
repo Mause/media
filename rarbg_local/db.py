@@ -3,7 +3,7 @@ import logging
 import sqlite3
 from collections.abc import Callable, Sequence
 from datetime import datetime
-from typing import Annotated, Any, Never, cast
+from typing import Annotated, Any, Never, cast, AsyncGenerator
 
 import backoff
 import logfire
@@ -21,6 +21,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
 from sqlalchemy.engine import URL, Engine, make_url
+from sqlalchemy_repr import RepresentableBase
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
     AsyncEngine,
@@ -398,8 +399,8 @@ def get_session_local(
 
 
 async def get_db(
-    session_local: Annotated[sessionmaker, Depends(get_session_local)],
-) -> AsyncGenerator[Session, None]:
+    session_local: Annotated[async_sessionmaker, Depends(get_session_local)],
+) -> AsyncGenerator[AsyncSession, None]:
     sl = session_local()
     try:
         yield sl
