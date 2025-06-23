@@ -14,6 +14,10 @@ from sqlalchemy import not_
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import Session, object_session
 from starlette.routing import compile_path, replace_params
 from yarl import URL
 
@@ -22,6 +26,7 @@ from .db import (
     Monitor,
     MonitorMediaType,
     User,
+    get_async_db,
     get_db,
     safe_delete,
 )
@@ -45,7 +50,7 @@ async def get_ntfy() -> AsyncGenerator[Ntfy, None]:
 
 @monitor_ns.get('')
 async def monitor_get(
-    session: Annotated[AsyncSession, Depends(get_db)],
+    session: Annotated[AsyncSession, Depends(get_async_db)],
 ) -> Sequence[MonitorGet]:
     return (
         (await session.execute(select(Monitor).options(joinedload(Monitor.added_by))))
@@ -119,7 +124,9 @@ async def monitor_cron(
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ) -> list[CronResponse[MonitorGet]]:
     monitors = (
-        (await session.execute(select(Monitor).filter(not_(Monitor.status))))
+        (await session.execute(select(Monitor).filter(not_(Monitor.status)))
+            .options(joinedload(Monitor.added_by))
+        )
         .scalars()
         .all()
     )
@@ -203,5 +210,6 @@ async def check_monitor(
         )
     )
     await session.commit()
+    await session.refresh(monitor, attribute_names=['added_by'])
 
     return CronResponse(success=True, message=message, subject=monitor)

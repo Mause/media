@@ -22,6 +22,7 @@ from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import Session, joinedload
 from yarl import URL
 
 from ..auth import get_current_user

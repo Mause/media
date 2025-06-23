@@ -279,6 +279,11 @@ async def download_post(
         await session.refresh(res)
         await session.run_sync(lambda session: res.download.added_by)
 
+    for res in results:
+        # TODO: can we do this one call, or in the commit?
+        session.refresh(res, attribute_names=['download'])
+        session.refresh(res.download, attribute_names=['added_by'])
+
     return results
 
 
