@@ -88,7 +88,9 @@ async def monitor_post(
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         session.execute(
-            select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            select(Monitor)
+            .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            .options(joinedload(Monitor.added_by))
         )
         .scalars()
         .one_or_none()
@@ -116,7 +118,13 @@ async def monitor_cron(
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ) -> list[CronResponse[MonitorGet]]:
     monitors = (
-        session.execute(select(Monitor).filter(not_(Monitor.status))).scalars().all()
+        session.execute(
+            select(Monitor)
+            .filter(not_(Monitor.status))
+            .options(joinedload(Monitor.added_by))
+        )
+        .scalars()
+        .all()
     )
 
     tasks = [check_monitor(request, monitor, session, ntfy) for monitor in monitors]

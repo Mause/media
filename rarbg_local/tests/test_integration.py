@@ -20,7 +20,7 @@ from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session
+from sqlalchemy.orm import Session, joinedload
 from yarl import URL
 
 from ..auth import get_current_user
@@ -189,7 +189,11 @@ async def test_download(
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
 
-    download = session.execute(select(Download)).scalars().first()
+    download = (
+        session.execute(select(Download).options(joinedload(Download.episode)))
+        .scalars()
+        .first()
+    )
     assert download
     assert download.title == 'Satoshi, Go, and Lugia Go!'
     assert download.episode
@@ -230,7 +234,11 @@ async def test_download_season_pack(
 
     add_torrent.assert_called_with(magnet, 'tv_shows/Watchmen/Season 1')
 
-    download = session.execute(select(Download)).scalars().first()
+    download = (
+        session.execute(select(Download).options(joinedload(Download.episode)))
+        .scalars()
+        .first()
+    )
     assert download
     assert download.title == 'Season 1'
     assert download.episode

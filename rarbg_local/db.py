@@ -281,7 +281,13 @@ def get_all[T](session: Session, model: type[T]) -> Sequence[T]:
         joint = EpisodeDetails.download
     else:
         raise ValueError(f'Unknown model: {model}')
-    return session.execute(select(model).options(joinedload(joint))).scalars().all()
+    return (
+        session.execute(
+            select(model).options(joinedload(joint).joinedload(Download.added_by))
+        )
+        .scalars()
+        .all()
+    )
 
 
 def get_episodes(session: Session) -> Sequence[EpisodeDetails]:
