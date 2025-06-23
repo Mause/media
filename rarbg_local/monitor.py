@@ -13,9 +13,8 @@ from sentry_sdk.crons import monitor
 from sqlalchemy import not_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session, object_session, sessionmaker
 from sqlalchemy.orm import joinedload
-from sqlalchemy.orm.session import Session, object_session
+from sqlalchemy.orm.session import Session, object_session, sessionmaker
 from starlette.routing import compile_path, replace_params
 from yarl import URL
 
