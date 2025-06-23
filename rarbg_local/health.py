@@ -114,7 +114,7 @@ async def check_database() -> HealthcheckCallbackResponse:
         res = await session.execute(
             text(
                 'SELECT SQLITE_VERSION()'
-                if session.kw['bind'].name == 'sqlite'
+                if session.sync_session.bind.name == 'sqlite'
                 else 'SELECT version()'
             )
         )
