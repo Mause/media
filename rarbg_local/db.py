@@ -1,12 +1,14 @@
 import enum
 import logging
-from collections.abc import Callable, Sequence
+import sqlite3
+from collections.abc import Callable, Generator, Sequence
 from datetime import datetime
-from typing import Annotated, TypeVar, cast
+from typing import Annotated, Any, Never, cast
 
 import backoff
 import logfire
 import psycopg2
+import sqlalchemy.pool.base
 from fastapi import Depends
 from sqlalchemy import (
     DateTime,
@@ -17,6 +19,7 @@ from sqlalchemy import (
     delete,
     event,
 )
+from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -42,7 +45,6 @@ from .types import ImdbId, TmdbId
 from .utils import format_marker, precondition
 
 logger = logging.getLogger(__name__)
-T = TypeVar('T')
 
 
 class Base(RepresentableBase, DeclarativeBase):
@@ -78,11 +80,6 @@ class Download(Base):
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     added_by: Mapped['User'] = relationship(back_populates='downloads')
 
-    def progress(self):
-        from .main import get_keyed_torrents
-
-        return get_keyed_torrents()[self.transmission_id].percentDone * 100
-
 
 class EpisodeDetails(Base):
     __tablename__ = 'episode_details'
@@ -94,10 +91,10 @@ class EpisodeDetails(Base):
     season: Mapped[int]
     episode: Mapped[int | None]
 
-    def is_season_pack(self):
+    def is_season_pack(self) -> bool:
         return self.episode is None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.show_title + ' ' + format_marker(self.season, self.episode)
 
 
@@ -137,10 +134,10 @@ class User(Base):
 
     downloads: Mapped[list[Download]] = relationship()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.username
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         return isinstance(other, User) and self.id == other.id
 
 
@@ -150,7 +147,7 @@ class Role(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50), unique=True)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.name
 
 
@@ -262,7 +259,7 @@ def create_episode(
     return ed
 
 
-def get_all(session: Session, model: type[T]) -> Sequence[T]:
+def get_all[T](session: Session, model: type[T]) -> Sequence[T]:
     if model == MovieDetails:
         joint = MovieDetails.download
     elif model == EpisodeDetails:
@@ -280,7 +277,9 @@ def get_movies(session: Session) -> Sequence[MovieDetails]:
     return get_all(session, MovieDetails)
 
 
-def get_or_create(session: Session, model: type[T], defaults=None, **kwargs) -> T:
+def get_or_create[T](
+    session: Session, model: type[T], defaults: Any = None, **kwargs: Any
+) -> T:
     instance = session.execute(select(model).filter_by(**kwargs)).scalars().first()
     if instance:
         return instance
@@ -317,14 +316,16 @@ def get_engine(settings: Annotated[Settings, Depends(get_settings)]) -> Engine:
     return build_engine(normalise_db_url(settings.database_url), create_engine)
 
 
-def listens_for(engine: Engine | AsyncEngine, event_name: str):
+def listens_for(
+    engine: Engine | AsyncEngine, event_name: str
+) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     if isinstance(engine, AsyncEngine):
         return event.listens_for(engine.sync_engine, event_name)
     else:
         return event.listens_for(engine, event_name)
 
 
-def build_engine(db_url: URL, cr: Callable):
+def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> T:
     logger.info('db_url: %s', db_url)
 
     sqlite = db_url.get_backend_name() == 'sqlite'
@@ -334,8 +335,11 @@ def build_engine(db_url: URL, cr: Callable):
         )
 
         @listens_for(engine, 'connect')
-        def _fk_pragma_on_connect(dbapi_con, con_record):
-            if not hasattr(dbapi_con, 'create_collation'):  # async
+        def _fk_pragma_on_connect(
+            dbapi_con: sqlite3.Connection,
+            con_record: sqlalchemy.pool.base._ConnectionRecord,
+        ) -> None:
+            if isinstance(dbapi_con, AsyncAdapt_aiosqlite_connection):
                 dbapi_con = dbapi_con.driver_connection._connection
             dbapi_con.create_collation(
                 "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
@@ -356,7 +360,9 @@ def build_engine(db_url: URL, cr: Callable):
                 max_tries=MAX_TRIES,
                 giveup=lambda e: "too many connections for role" not in e.args[0],
             )
-            def receive_do_connect(dialect, conn_rec, cargs, cparams):
+            def receive_do_connect(
+                dialect: Never, conn_rec: Never, cargs: tuple, cparams: dict
+            ) -> psycopg2.extensions.connection:
                 return psycopg2.connect(*cargs, **cparams)
 
     logfire.instrument_sqlalchemy(engine=engine)
@@ -377,7 +383,9 @@ def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> session
     return sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
-def get_db(session_local=Depends(get_session_local)):
+def get_db(
+    session_local: Annotated[sessionmaker, Depends(get_session_local)],
+) -> Generator[Session, None, None]:
     sl = session_local()
     try:
         yield sl
@@ -385,7 +393,7 @@ def get_db(session_local=Depends(get_session_local)):
         sl.close()
 
 
-def safe_delete(session: Session, entity: type[T], id: int):
+def safe_delete[T](session: Session, entity: type[T], id: int) -> None:
     query = session.execute(delete(entity).filter_by(id=id))
     precondition(query.rowcount > 0, 'Nothing to delete')
     session.commit()

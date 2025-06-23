@@ -5,14 +5,16 @@ from datetime import datetime
 import requests
 from requests.exceptions import ConnectionError, ReadTimeout
 from rich.columns import Columns
-from rich.console import Console, RenderGroup
+from rich.console import Console
+from rich.containers import Renderables
 from rich_sparklines import Graph
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 console = Console()
 
 
-def get_connections():
+def get_connections() -> int | str:
     response = requests.post(
         "https://data-api.heroku.com/graphql",
         json={
@@ -25,13 +27,13 @@ def get_connections():
     ).json()
 
     if 'errors' in response:
-        logging.error('Error fetching connections: %s', response['errors'])
+        logger.error('Error fetching connections: %s', response['errors'])
         return '?'
 
     return int(response['data']['postgres']['connections'].split('/')[0])
 
 
-def get_pool():
+def get_pool() -> dict:
     try:
         data = requests.get(
             'https://media.mause.me/api/diagnostics/pool',
@@ -46,8 +48,8 @@ def get_pool():
     return data
 
 
-def main():
-    data = {}
+def main() -> None:
+    data: dict[str, str] = {}
 
     graphs = [
         Graph('connections', get_connections),
@@ -63,11 +65,13 @@ def main():
 
         console.clear()
         console.print(
-            RenderGroup(
-                Columns(graphs),
-                'timestamp: [blue]{}[/], worker: [blue]{}[/]'.format(
-                    datetime.now().isoformat(), data.pop('worker_id', '?')
-                ),
+            Renderables(
+                [
+                    Columns(graphs),
+                    'timestamp: [blue]{}[/], worker: [blue]{}[/]'.format(
+                        datetime.now().isoformat(), data.pop('worker_id', '?')
+                    ),
+                ]
             )
         )
 

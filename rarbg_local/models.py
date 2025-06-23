@@ -1,18 +1,17 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Annotated, TypeVar
+from typing import Annotated
 
 from pydantic import BaseModel, StringConstraints
 
 from .db import MonitorMediaType
-from .types import TmdbId
+from .types import ImdbId, TmdbId
 
 
 class Orm(BaseModel):
     model_config = {'from_attributes': True}
 
 
-T = TypeVar('T')
 MagnetUri = Annotated[str, StringConstraints(pattern=r'^magnet:')]
 
 
@@ -65,8 +64,8 @@ class EpisodeDetailsSchema(Orm):
 
 class SeriesDetails(Orm):
     title: str
-    imdb_id: str
-    tmdb_id: int
+    imdb_id: ImdbId
+    tmdb_id: TmdbId
     seasons: dict[str, list[EpisodeDetailsSchema]]
 
 

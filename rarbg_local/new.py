@@ -7,8 +7,6 @@ from typing import (
     Annotated,
     Any,
     Literal,
-    ParamSpec,
-    TypeVar,
     Union,
     cast,
 )
@@ -90,8 +88,6 @@ from .websocket import websocket_ns
 api = APIRouter()
 logger = logging.getLogger(__name__)
 logging.getLogger('backoff').handlers.clear()
-T = TypeVar('T')
-P = ParamSpec('P')
 
 
 def generate_plain_text(exc: BaseException) -> str:
@@ -108,7 +104,7 @@ async def delete(type: MediaType, id: int, session: Session = Depends(get_db)) -
     return {}
 
 
-def eventstream(
+def eventstream[**P](
     func: Callable[P, AsyncGenerator[BaseModel, None]],
 ) -> Callable[P, Coroutine[Any, Any, StreamingResponse]]:
     @wraps(func)
@@ -134,14 +130,23 @@ StreamType = Literal['series', 'movie']
     response_class=StreamingResponse,
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
-@eventstream
-async def stream(  # type: ignore[no-untyped-def]
+async def stream(
     type: StreamType,
     tmdb_id: TmdbId,
     source: ProviderSource,
     season: int | None = None,
     episode: int | None = None,
-):
+) -> StreamingResponse:
+    return await eventstream(stream_impl)(type, tmdb_id, source, season, episode)
+
+
+async def stream_impl(
+    type: StreamType,
+    tmdb_id: TmdbId,
+    source: ProviderSource,
+    season: int | None = None,
+    episode: int | None = None,
+) -> AsyncGenerator[ITorrent, None]:
     provider = next(
         (provider for provider in get_providers() if provider.type == source),
         None,

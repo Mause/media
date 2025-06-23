@@ -1,16 +1,21 @@
 import logging
 from asyncio import gather
-from typing import Annotated, Generic, TypeVar
+from collections.abc import AsyncGenerator, Sequence
+from enum import Enum
+from typing import Annotated
 
 from aiohttp import ClientSession
 from aiontfy import Message, Ntfy
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
 from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, object_session, sessionmaker
+from sqlalchemy.orm.session import Session, object_session
+from starlette.routing import compile_path, replace_params
+from yarl import URL
 
 from .auth import security
 from .db import (
@@ -32,21 +37,24 @@ from .websocket import StreamType, _stream
 
 logger = logging.getLogger(__name__)
 monitor_ns = APIRouter(tags=['monitor'])
-T = TypeVar('T')
 
 
-async def get_ntfy():
+async def get_ntfy() -> AsyncGenerator[Ntfy, None]:
     async with ClientSession() as session:
         yield Ntfy("https://ntfy.sh", session)
 
 
-@monitor_ns.get('', response_model=list[MonitorGet])
-async def monitor_get(session: Session = Depends(get_db)):
+@monitor_ns.get('')
+async def monitor_get(
+    session: Annotated[Session, Depends(get_db)],
+) -> Sequence[MonitorGet]:
     return session.execute(select(Monitor)).scalars().all()
 
 
 @monitor_ns.delete('/{monitor_id}')
-async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
+async def monitor_delete(
+    monitor_id: int, session: Annotated[Session, Depends(get_db)]
+) -> dict:
     safe_delete(session, Monitor, monitor_id)
 
     return {}
@@ -66,11 +74,11 @@ async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
             raise
 
 
-@monitor_ns.post('', response_model=MonitorGet, status_code=201)
+@monitor_ns.post('', status_code=201)
 async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
-):
+) -> MonitorGet:
     session = non_null(object_session(user))  # resolve to db session session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
@@ -89,7 +97,7 @@ async def monitor_post(
     return c
 
 
-class CronResponse(BaseModel, Generic[T]):
+class CronResponse[T](BaseModel):
     success: bool
     message: str
     subject: T | None = None
@@ -98,6 +106,7 @@ class CronResponse(BaseModel, Generic[T]):
 @monitor_ns.post('/cron', status_code=201)
 @monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
+    request: Request,
     session: Annotated[Session, Depends(get_db)],
     session_maker: Annotated[sessionmaker, Depends(get_session_local)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
@@ -108,7 +117,7 @@ async def monitor_cron(
 
     async def do_with(monitor):
         with session_maker() as session:
-            return await check_monitor(monitor, session, ntfy)
+            return await check_monitor(request, monitor, session, ntfy)
 
     tasks = [do_with(monitor) for monitor in monitors]
 
@@ -123,6 +132,7 @@ async def monitor_cron(
 
 
 async def check_monitor(
+    request: Request,
     monitor: Monitor,
     session: Session,
     ntfy: Ntfy,
@@ -154,7 +164,7 @@ async def check_monitor(
 
     monitor.status = bool(has_results)
 
-    def name(x):
+    def name(x: Enum) -> str:
         return x.name.title()
 
     message = f'''
@@ -163,11 +173,28 @@ async def check_monitor(
 
     logger.info(message)
 
+    params = {"tmdb_id": str(monitor.tmdb_id)}
+    if typ == MonitorMediaType.MOVIE:
+        path = "select/{tmdb_id}/options"
+    else:
+        path = "select/{tmdb_id}/season/{season}"
+        params["season"] = str(season)
+    conv = compile_path(path)[-1]
+    url, qs = replace_params(path, conv, params)
+
     await ntfy.publish(
         Message(
             topic="ellianas_notifications",
             title="Hello",
             message=message,
+            click=URL(
+                str(
+                    request.url_for(
+                        'static',
+                        resource=url,
+                    )
+                )
+            ),
         )
     )
     session.commit()

@@ -4,24 +4,28 @@ from typing import Any
 from urllib.parse import parse_qsl, urlparse
 from uuid import uuid4
 
-from flask import Flask, jsonify, request
+from fastapi import FastAPI
+from fastapi.responses import Response
+from pydantic import BaseModel
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 id_iter = iter(count())
-app = Flask(__name__)
+app = FastAPI()
 
 
-def get_session():
-    return '', 409, {'x-transmission-session-id': uuid4().hex}
+def get_session() -> Response:
+    return Response(409, headers={'x-transmission-session-id': uuid4().hex})
 
 
-def torrent_get(fields: dict[str, Any] | None = None, ids: set[str] | None = None):
-    return jsonify({'arguments': {'torrents': []}})
+def torrent_get(
+    fields: dict[str, Any] | None = None, ids: set[str] | None = None
+) -> dict:
+    return {'arguments': {'torrents': []}}
 
 
-def torrent_add(filename, **kwargs):
+def torrent_add(filename: str) -> dict:
     xt = dict(parse_qsl(urlparse(filename).query))['xt']
 
     _, hash_ = xt.rsplit(':', 1)
@@ -30,19 +34,30 @@ def torrent_add(filename, **kwargs):
     return {'arguments': {'torrent-added': torrent}}
 
 
-@app.route('/transmission/rpc', methods=['POST', 'GET'])
-def rpc():
-    if request.method == 'GET':
-        return '', 200, {'is-mock': True}
+class Body(BaseModel):
+    method: str
+    arguments: dict[str, Any] = {}
 
-    js = request.get_json()
-    method = js['method']
-    arguments = js.get('arguments', {})
+
+@app.post('/transmission/rpc')
+def rpc(js: Body) -> Any:
+    method = js.method
+    arguments = js.arguments
 
     logger.info('Received method: %s %s', method, arguments)
 
-    return globals()[method.replace('-', '_')](**arguments)
+    match method:
+        case 'torrent-add':
+            return torrent_add(**arguments)
+        case 'torrents-get':
+            return torrent_get(**arguments)
+        case 'get-session':
+            return get_session()
+        case _:
+            raise Exception()
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=9091)
+    import uvicorn
+
+    uvicorn.run(app=app, port=9091)

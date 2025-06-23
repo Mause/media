@@ -2,22 +2,44 @@ import json
 import socket
 from contextlib import closing
 from pathlib import Path
-from typing import Optional
+from typing import Generator, Never, Optional
 from urllib.parse import urlencode, urlparse
 
+from fastapi import FastAPI
 from pytest import fixture, mark
 from selenium.webdriver import Chrome
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-# from ..main import create_app
+from ..new import create_app
+from ..settings import Settings, get_settings
 
 HERE = Path(__name__).resolve().absolute().parent
 
 pytestmark = mark.skip
 
 
+class LiveServer:
+    def __init__(
+        self, app: FastAPI, host: str, port: int, reload: bool = False
+    ) -> None:
+        self.app = app
+        self.host = host
+        self.port = port
+        self.reload = reload
+
+    def start(self) -> Never:
+        raise NotImplementedError
+
+    def stop(self) -> Never:
+        raise NotImplementedError
+
+    def url(self, path: str = '') -> str:
+        return f'http://{self.host}:{self.port}{path}'
+
+
 @fixture
-def free_port():
+def free_port() -> int:
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
         s.bind(('', 0))
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -25,7 +47,7 @@ def free_port():
 
 
 @fixture
-def mock_transmission(free_port):
+def mock_transmission(free_port: int) -> Generator[LiveServer, None, None]:
     from .mock_transmission import app
 
     server = LiveServer(app, 'localhost', free_port, True)
@@ -35,18 +57,16 @@ def mock_transmission(free_port):
 
 
 @fixture
-def app(mock_transmission):
-    yield create_app(
-        {
-            'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
-            'ENV': 'development',
-            'TESTING': True,
-            'TRANSMISSION_URL': mock_transmission.url('/transmission/rpc'),
-        }
+def app(mock_transmission: LiveServer) -> FastAPI:
+    app = create_app()
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        database_url='sqlite:///:memory:',
+        transmission_url=mock_transmission.url('/transmission/rpc'),
     )
+    return app
 
 
-def test_mock(mock_transmission):
+def test_mock(mock_transmission: LiveServer) -> None:
     import requests
 
     url = mock_transmission.url('/transmission/rpc')
@@ -56,12 +76,12 @@ def test_mock(mock_transmission):
 
 
 @fixture
-def server_url(live_server):
+def server_url(live_server: LiveServer) -> str:
     return live_server.url()
 
 
 @fixture
-def capabilities(capabilities):
+def capabilities(capabilities: dict[str, dict[str, str]]) -> dict[str, dict[str, str]]:
     capabilities['loggingPrefs'] = capabilities['goog:loggingPrefs'] = {
         'performance': 'ALL'
     }
@@ -70,14 +90,14 @@ def capabilities(capabilities):
 
 def click_link(selenium: Chrome, text: str) -> None:
     try:
-        selenium.find_element_by_link_text(text).click()
+        selenium.find_element(By.LINK_TEXT, text).click()
     except Exception as e:
         raise Exception(selenium.current_url) from e
 
 
 def search(selenium: Chrome, text: str) -> None:
-    form = selenium.find_element_by_tag_name('form')
-    form.find_element_by_name('query').send_keys(text)
+    form = selenium.find_element(By.TAG_NAME, 'form')
+    form.find_element(By.NAME, 'query').send_keys(text)
     form.submit()
 
 
@@ -119,7 +139,7 @@ def test_simple(server_url: str, selenium: Chrome) -> None:
 
 
 def check_download_link(selenium: Chrome, text: str, expected: str) -> WebElement:
-    anchor = selenium.find_element_by_partial_link_text(text)
+    anchor = selenium.find_element(By.PARTIAL_LINK_TEXT, text)
     href = anchor.get_attribute('href')
     assert urlparse(href)._asdict() == urlparse(expected)._asdict()
 
@@ -127,7 +147,7 @@ def check_download_link(selenium: Chrome, text: str, expected: str) -> WebElemen
 
 
 def check_no_error(selenium: Chrome) -> None:
-    h3 = [el.text for el in selenium.find_elements_by_class_name('error')]
+    h3 = [el.text for el in selenium.find_elements(By.CLASS_NAME, 'error')]
     assert h3 == []
 
 
@@ -152,7 +172,7 @@ def get_status_code(selenium: Chrome) -> Optional[int]:
 
 def has_download(selenium: Chrome, name: str) -> bool:
     return bool(
-        selenium.find_element_by_xpath(f'.//li/span[contains(text(), "{name}")]')
+        selenium.find_element(By.XPATH, f'.//li/span[contains(text(), "{name}")]')
     )
 
 
