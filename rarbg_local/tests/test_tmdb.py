@@ -1,7 +1,11 @@
+from pathlib import Path
+
+from pytest_snapshot.plugin import Snapshot
+
 from ..tmdb import SearchBaseResponse
 
 
-def test_load(snapshot, resource_path):
+def test_load(snapshot: Snapshot, resource_path: Path) -> None:
     snapshot.assert_match(
         SearchBaseResponse.model_validate_json(
             (resource_path / 'tmdb.json').read_text()

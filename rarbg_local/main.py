@@ -4,7 +4,7 @@ import string
 from collections import defaultdict
 from collections.abc import Callable, Iterable
 from concurrent.futures._base import TimeoutError as FutureTimeoutError
-from typing import TypeVar, cast
+from typing import cast
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
@@ -28,9 +28,6 @@ from .utils import non_null, precondition
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pika").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
-
-K = TypeVar('K')
-V = TypeVar('V')
 
 
 def categorise(string: str) -> str:
@@ -147,14 +144,14 @@ def add_single(
     return already.episode if is_tv else already.movie
 
 
-def groupby(iterable: Iterable[V], key: Callable[[V], K]) -> dict[K, list[V]]:
+def groupby[K, V](iterable: Iterable[V], key: Callable[[V], K]) -> dict[K, list[V]]:
     dd: dict[K, list[V]] = defaultdict(list)
     for item in iterable:
         dd[key(item)].append(item)
     return dict(dd)
 
 
-async def resolve_season(episodes) -> list[EpisodeDetails]:
+async def resolve_season(episodes: list[EpisodeDetails]) -> list[EpisodeDetails]:
     if not (len(episodes) == 1 and episodes[0].is_season_pack()):
         return episodes
 
@@ -201,7 +198,7 @@ async def resolve_show(show: list[EpisodeDetails]) -> dict[str, list[EpisodeDeta
     }
 
 
-async def make_series_details(imdb_id, show: list[EpisodeDetails]) -> SeriesDetails:
+async def make_series_details(show: list[EpisodeDetails]) -> SeriesDetails:
     ep = show[0]
     d = ep.download
 
@@ -214,13 +211,12 @@ async def make_series_details(imdb_id, show: list[EpisodeDetails]) -> SeriesDeta
 
 
 async def resolve_series(session: Session) -> list[SeriesDetails]:
+    # TODO: groupby in db
     episodes = get_episodes(session)
 
     return [
-        await make_series_details(imdb_id, show)
-        for imdb_id, show in groupby(
-            episodes, lambda episode: episode.download.tmdb_id
-        ).items()
+        await make_series_details(show)
+        for show in groupby(episodes, lambda episode: episode.download.tmdb_id).values()
     ]
 
 

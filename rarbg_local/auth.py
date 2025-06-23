@@ -84,7 +84,7 @@ def security(
         ),
     ],
     basic_auth: Annotated[HTTPBasicCredentials, Security(HTTPBasic(auto_error=False))],
-):
+) -> User | HTTPBasicCredentials:
     if basic_auth and request.url.path == '/api/monitor/cron':
         return basic_auth
     elif auth0:

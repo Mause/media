@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger('backoff').addHandler(logging.StreamHandler())
 
 
-async def seed():
+async def seed() -> None:
     session_maker = await get(FastAPI(), get_session_local)
 
     with session_maker() as session:

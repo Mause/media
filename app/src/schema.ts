@@ -436,6 +436,8 @@ export interface components {
       /** Output */
       output: unknown;
     };
+    /** HealthcheckResponses */
+    HealthcheckResponses: components['schemas']['HealthcheckResponse'][];
     /**
      * HealthcheckStatus
      * @description Enum used to store the possible service and component health status.
@@ -1026,7 +1028,9 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': unknown;
+          'application/json': {
+            [key: string]: unknown;
+          };
         };
       };
       /** @description Validation Error */
@@ -1097,7 +1101,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['HealthcheckResponse'][];
+          'application/json': components['schemas']['HealthcheckResponses'];
         };
       };
       /** @description Validation Error */
