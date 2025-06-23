@@ -1,3 +1,4 @@
+import { useSentryToolbar } from '@sentry/toolbar';
 import * as Sentry from '@sentry/react';
 import { ErrorInfo, ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -120,6 +121,17 @@ function ParentComponentInt() {
   const location = useLocation();
   const match = last(useMatches());
   console.log({ user: auth.user });
+
+  useSentryToolbar({
+    // Remember to conditionally enable the Toolbar.
+    // This will reduce network traffic for users
+    // who do not have credentials to login to Sentry.
+    enabled: auth.user?.nickname === 'me',
+    initProps: {
+      organizationSlug: 'elliana-may',
+      projectIdOrSlug: 'media',
+    },
+  });
 
   return (
     <>
