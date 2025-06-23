@@ -1,7 +1,7 @@
 import enum
 import logging
 import sqlite3
-from collections.abc import AsyncGenerator, Callable, Sequence
+from collections.abc import AsyncGenerator, Callable, Generator, Sequence
 from datetime import datetime
 from typing import Annotated, Any, Never, cast
 
@@ -405,6 +405,24 @@ async def get_db(
     try:
         yield sl
     finally:
+        await sl.close()
+
+
+@singleton
+def get_async_sessionmaker(
+    engine: Annotated[AsyncEngine, Depends(get_async_engine)],
+) -> async_sessionmaker:
+    return async_sessionmaker(autocommit=False, autoflush=True, bind=engine)
+
+
+async def get_async_db(
+    session_local: Annotated[async_sessionmaker, Depends(get_async_sessionmaker)],
+) -> AsyncGenerator[AsyncSession, None]:
+    sl = session_local()
+    try:
+        yield sl
+    finally:
+        sl.close()
         await sl.close()
 
 

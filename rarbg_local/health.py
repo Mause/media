@@ -21,7 +21,7 @@ from plexapi.server import PlexServer
 from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
 
-from .db import get_async_engine, get_session_local
+from .db import get_async_sessionmaker
 from .plex import get_plex
 from .singleton import get as _get
 from .transmission_proxy import transmission
@@ -108,13 +108,13 @@ async def component_diagnostics(
 
 
 async def check_database() -> HealthcheckCallbackResponse:
-    engine = await get(get_async_engine)
+    Session = await get(get_async_sessionmaker)
 
-    async with engine.connect() as conn:
-        res = await conn.execute(
+    async with Session() as session:
+        res = await session.execute(
             text(
                 'SELECT SQLITE_VERSION()'
-                if engine.name == 'sqlite'
+                if session.sync_session.bind.name == 'sqlite'
                 else 'SELECT version()'
             )
         )
@@ -133,7 +133,7 @@ async def pool() -> HealthcheckCallbackResponse:
 
         return cast(int, value() if callable(value) else value)
 
-    sessionlocal = await get(get_session_local)
+    sessionlocal = await get(get_async_sessionmaker)
 
     pool = sessionlocal.kw['bind'].pool
     return HealthcheckCallbackResponse(
