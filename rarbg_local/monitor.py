@@ -84,11 +84,13 @@ async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
 ) -> MonitorGet:
-    session = non_null(object_session(user))  # resolve to db session session
+    session = non_null(object_session(user))  # resolve to db session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         session.execute(
-            select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            select(Monitor)
+            .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            .options(joinedload(Monitor.added_by))
         )
         .scalars()
         .one_or_none()
@@ -99,6 +101,7 @@ async def monitor_post(
         )
         session.add(c)
         session.commit()
+        session.refresh(c, attribute_names=['added_by'])
     return c
 
 
@@ -116,7 +119,13 @@ async def monitor_cron(
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ) -> list[CronResponse[MonitorGet]]:
     monitors = (
-        session.execute(select(Monitor).filter(not_(Monitor.status))).scalars().all()
+        session.execute(
+            select(Monitor)
+            .filter(not_(Monitor.status))
+            .options(joinedload(Monitor.added_by))
+        )
+        .scalars()
+        .all()
     )
 
     tasks = [check_monitor(request, monitor, session, ntfy) for monitor in monitors]
@@ -198,5 +207,6 @@ async def check_monitor(
         )
     )
     session.commit()
+    session.refresh(monitor, attribute_names=['added_by'])
 
     return CronResponse(success=True, message=message, subject=monitor)
