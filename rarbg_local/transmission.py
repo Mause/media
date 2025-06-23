@@ -1,4 +1,5 @@
-from typing import TypedDict
+from collections.abc import Callable
+from typing import Any, TypedDict
 
 import requests
 
@@ -75,14 +76,14 @@ def torrent_add(magnet: str, subpath: str) -> TorrentAdd:
 
 
 @lru_cache()
-def get_session(url):
-    def refresh_session():
+def get_session(url: str) -> Callable[[str, Any | None], Any]:
+    def refresh_session() -> None:
         key = 'X-Transmission-Session-Id'
         r = session.post(url, json={'method': 'get-session'}, timeout=3)
         assert r.status_code == 409, (r, r.text, r.headers)
         session.headers[key] = r.headers[key]
 
-    def call(method: str, arguments=None):
+    def call(method: str, arguments: Any | None = None) -> Any:
         r = session.post(
             url, json={'method': method, 'arguments': arguments}, timeout=3
         )

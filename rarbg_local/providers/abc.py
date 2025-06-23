@@ -82,7 +82,3 @@ def movie_convert(key: str) -> str:
         # None: "x264/3D",
         # None: "x265/4k/HDR",
     }.get(key, key)
-
-
-def format(season: int, episode: int | None) -> str:
-    return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'

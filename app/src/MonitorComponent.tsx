@@ -8,12 +8,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 import MaterialLink from '@mui/material/Link';
 import Button from '@mui/material/Button';
-import { Auth0ContextInterface, useAuth0, User } from '@auth0/auth0-react';
+import type { Auth0ContextInterface, User } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 import useSWRMutation from 'swr/mutation';
 
 import ContextMenu from './ContextMenu';
 import { DisplayError } from './IndexComponent';
-import { components, paths } from './schema';
+import type { components, paths } from './schema';
 import { getPrefix, getToken } from './utils';
 
 type Monitor = components['schemas']['MonitorGet'];

@@ -1,8 +1,9 @@
 import json
 from pathlib import Path
 
-from aioresponses import aioresponses as AioResponses
+from aioresponses import aioresponses as Aioresponses
 from pytest import mark
+from pytest_snapshot.plugin import Snapshot
 
 from ..providers.horriblesubs import (
     HorriblesubsDownloadType,
@@ -21,7 +22,7 @@ def load_html(filename: str) -> str:
 
 
 @mark.asyncio
-async def test_parse(aioresponses):
+async def test_parse(aioresponses: Aioresponses) -> None:
     aioresponses.add(
         'https://horriblesubs.info/api.php?method=getlatest',
         'GET',
@@ -53,7 +54,7 @@ async def test_parse(aioresponses):
     }
 
 
-def mock(aioresponses: AioResponses, url: str, html: str) -> None:
+def mock(aioresponses: Aioresponses, url: str, html: str) -> None:
     aioresponses.add(url + '&nextid=0', 'GET', body=load_html(html))
     aioresponses.add(
         url + '&nextid=1', 'GET', body='There are no batches for this show yet'
@@ -65,7 +66,7 @@ def magnet_link(torrent_hash: str) -> str:
 
 
 @mark.asyncio
-async def test_get_downloads(aioresponses):
+async def test_get_downloads(aioresponses: Aioresponses) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=batch&showid=1',
@@ -94,7 +95,9 @@ async def test_get_downloads(aioresponses):
 
 
 @mark.asyncio
-async def test_get_downloads_single(aioresponses: AioResponses, snapshot):
+async def test_get_downloads_single(
+    aioresponses: Aioresponses, snapshot: Snapshot
+) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=1',
@@ -107,7 +110,7 @@ async def test_get_downloads_single(aioresponses: AioResponses, snapshot):
 
 
 @mark.asyncio
-async def test_provider(aioresponses: AioResponses, snapshot):
+async def test_provider(aioresponses: Aioresponses, snapshot: Snapshot) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=264',

@@ -42,5 +42,5 @@ def test_normalise(original: str, expected: str) -> None:
         ('sqlite:///:memory:', 'sqlite+aiosqlite:///:memory:'),
     ],
 )
-def test_normalise_db_url(original, expected) -> None:
+def test_normalise_db_url(original: str, expected: str) -> None:
     assert normalise_db_url(original).render_as_string(hide_password=False) == expected

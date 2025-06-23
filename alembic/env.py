@@ -8,6 +8,7 @@ import os
 import sys
 from logging.config import fileConfig
 from pathlib import Path
+from typing import Any, cast
 
 import backoff
 from sqlalchemy import engine_from_config, pool
@@ -38,7 +39,7 @@ else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
 
 
-alembic_config = config.get_section(config.config_ini_section)
+alembic_config = cast(dict[str, Any], config.get_section(config.config_ini_section))
 assert alembic_config
 alembic_config['sqlalchemy.url'] = url
 target_metadata = db.Base.metadata
@@ -49,7 +50,7 @@ target_metadata = db.Base.metadata
 # ... etc.
 
 
-def run_migrations_offline():
+def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
     This configures the context with just a URL
@@ -73,7 +74,7 @@ def run_migrations_offline():
         context.run_migrations()
 
 
-def run_migrations_online():
+def run_migrations_online() -> None:
     """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine

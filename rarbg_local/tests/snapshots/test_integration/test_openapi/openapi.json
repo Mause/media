@@ -28,32 +28,6 @@
     }
   ],
   "paths": {
-    "/api/user/unauthorized": {
-      "get": {
-        "summary": "User",
-        "operationId": "user",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "openid"
-            ]
-          },
-          {
-            "HTTPBasic": []
-          }
-        ]
-      }
-    },
     "/api/delete/{type}/{id}": {
       "get": {
         "summary": "Delete",
@@ -92,7 +66,11 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Delete Api Delete  Type   Id  Get"
+                }
               }
             }
           },
@@ -757,7 +735,11 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Monitor Delete Api Monitor  Monitor Id  Delete"
+                }
               }
             }
           },
@@ -878,11 +860,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/HealthcheckResponse"
-                  },
-                  "title": "Response Component Diagnostics Api Diagnostics  Component Name  Get"
+                  "$ref": "#/components/schemas/HealthcheckResponses"
                 }
               }
             }
@@ -1421,6 +1399,13 @@
           "output"
         ],
         "title": "HealthcheckResponse"
+      },
+      "HealthcheckResponses": {
+        "items": {
+          "$ref": "#/components/schemas/HealthcheckResponse"
+        },
+        "type": "array",
+        "title": "HealthcheckResponses"
       },
       "HealthcheckStatus": {
         "type": "string",
