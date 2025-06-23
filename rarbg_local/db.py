@@ -1,7 +1,7 @@
 import enum
 import logging
 import sqlite3
-from collections.abc import Callable, Generator, Sequence
+from collections.abc import Callable, Sequence
 from datetime import datetime
 from typing import Annotated, Any, Never, cast
 

@@ -14,7 +14,6 @@ from sqlalchemy import not_
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
-from sqlalchemy.orm.session import Session, object_session
 from starlette.routing import compile_path, replace_params
 from yarl import URL
 
@@ -45,7 +44,9 @@ async def get_ntfy() -> AsyncGenerator[Ntfy, None]:
 
 
 @monitor_ns.get('')
-async def monitor_get(session: Annotated[AsyncSession, Depends(get_db)]) -> Sequence[MonitorGet]:
+async def monitor_get(
+    session: Annotated[AsyncSession, Depends(get_db)],
+) -> Sequence[MonitorGet]:
     return (
         (await session.execute(select(Monitor).options(joinedload(Monitor.added_by))))
         .scalars()

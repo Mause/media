@@ -19,9 +19,8 @@ from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
 from plexapi.server import PlexServer
 from pydantic import BaseModel
-from sqlalchemy import func
-from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy import Row, func
+from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
 from starlette.staticfiles import StaticFiles
 
@@ -291,7 +290,9 @@ async def index(session: AsyncSession = Depends(get_db)) -> IndexResponse:
 
 
 @api.get('/stats')
-async def stats(session: Annotated[AsyncSession, Depends(get_db)]) -> list[StatsResponse]:
+async def stats(
+    session: Annotated[AsyncSession, Depends(get_db)],
+) -> list[StatsResponse]:
     async def process(
         added_by_id: int, values: list[Row[tuple[int, str, int]]]
     ) -> StatsResponse:

@@ -552,7 +552,7 @@ async def test_update_monitor(
     r.raise_for_status()
     assert_match_json(snapshot, r, 'cron.json')
 
-    assert (await session.get(Monitor, ident))
+    assert await session.get(Monitor, ident)
     assert monitor
     assert monitor.status
 
