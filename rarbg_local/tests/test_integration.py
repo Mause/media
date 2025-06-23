@@ -259,7 +259,7 @@ async def test_index(
     test_client: TestClient,
     get_torrent: MagicMock,
     snapshot: Snapshot,
-    session: Session,
+    session: AsyncSession,
     user: User,
 ) -> None:
     session.add_all(
