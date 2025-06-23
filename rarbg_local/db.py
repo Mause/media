@@ -3,7 +3,8 @@ import logging
 import sqlite3
 from collections.abc import Callable, Sequence
 from datetime import datetime
-from typing import Annotated, Any, Never, cast, AsyncGenerator
+from typing import Annotated, Any, Never, cast
+from collections.abc import AsyncGenerator
 
 import backoff
 import logfire
@@ -21,7 +22,6 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
 from sqlalchemy.engine import URL, Engine, make_url
-from sqlalchemy_repr import RepresentableBase
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
     AsyncEngine,
@@ -39,6 +39,7 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
+from sqlalchemy_repr import RepresentableBase
 
 from .settings import Settings, get_settings
 from .singleton import singleton
