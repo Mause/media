@@ -48,7 +48,7 @@ def clear_cache() -> None:
 
 def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClient:
     async def gcu(
-        scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]
+        scopes: SecurityScopes, session: Annotated[AsyncSession, Depends(get_db)]
     ) -> User:
         res = (await session.execute(select(User))).scalars().first()
         assert res
@@ -76,8 +76,7 @@ def _fixture_event_loop():
 async def session(
     fastapi_app: FastAPI,
     tmp_path: Path,
-    _function_event_loop: asyncio.AbstractEventLoop,
-) -> AsyncGenerator[Session, None]:
+) -> AsyncGenerator[AsyncSession, None]:
     fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
         database_url=str(
             URL.create(
