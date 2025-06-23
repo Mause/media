@@ -124,7 +124,7 @@ async def test_download_movie(
     responses: RequestsMock,
     aioresponses: Aioresponses,
     add_torrent: MagicMock,
-    session: Session,
+    session: AsyncSession,
 ) -> None:
     themoviedb(
         aioresponses,
@@ -209,7 +209,7 @@ async def test_download_season_pack(
     aioresponses: Aioresponses,
     responses: RequestsMock,
     add_torrent: MagicMock,
-    session: Snapshot,
+    session: AsyncSession,
 ) -> None:
     themoviedb(
         aioresponses,
@@ -454,7 +454,7 @@ async def test_foreign_key_integrity(session: AsyncSession) -> None:
 async def test_delete_monitor(
     aioresponses: Aioresponses,
     test_client: TestClient,
-    session: Session,
+    session: AsyncSession,
     snapshot: Snapshot,
 ) -> None:
     themoviedb(
@@ -499,7 +499,7 @@ async def test_update_monitor(
     stream: MagicMock,
     aioresponses: Aioresponses,
     test_client: TestClient,
-    session: Session,
+    session: AsyncSession,
     snapshot: Snapshot,
     fastapi_app: FastAPI,
 ) -> None:
@@ -567,7 +567,7 @@ async def test_update_monitor(
 
 
 @mark.asyncio
-async def test_stats(test_client: TestClient, session: Session) -> None:
+async def test_stats(test_client: TestClient, session: AsyncSession) -> None:
     user1 = UserFactory.create(username='user1')
     user2 = UserFactory.create(username='user2')
 
