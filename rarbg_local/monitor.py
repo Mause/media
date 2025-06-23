@@ -101,6 +101,7 @@ async def monitor_post(
         )
         session.add(c)
         session.commit()
+        session.refresh(c, attribute_names=['added_by'])
     return c
 
 
@@ -206,5 +207,6 @@ async def check_monitor(
         )
     )
     session.commit()
+    session.refresh(monitor, attribute_names=['added_by'])
 
     return CronResponse(success=True, message=message, subject=monitor)
