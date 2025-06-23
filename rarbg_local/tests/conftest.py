@@ -45,6 +45,7 @@ def clear_cache() -> None:
     cache_clear()
 
 
+@fixture
 def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClient:
     async def gcu(
         scopes: SecurityScopes, session: Annotated[AsyncSession, Depends(get_db)]
