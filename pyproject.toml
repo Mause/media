@@ -9,11 +9,11 @@ requires-python = ">=3.12.0"
 dependencies = [
     "sqlalchemy[mypy]==2.0.41",
     "sqlalchemy-repr==0.1.0",
-    "aiohttp==3.12.9",
+    "aiohttp==3.12.13",
     "backoff==2.2.1",
     "psycopg2-binary",
-    "sentry-sdk==2.29.1",
-    "alembic==1.16.1",
+    "sentry-sdk==2.30.0",
+    "alembic==1.16.2",
     "plexapi==4.17.0",
     "fuzzywuzzy[speedup]==0.18.0",
     "cachetools==5.5.2",
@@ -21,7 +21,7 @@ dependencies = [
     "eventlet==0.40.0",
     "email-validator==2.2.0",
     "mause-rpc==0.0.18",
-    "fastapi==0.115.12",
+    "fastapi==0.115.13",
     "python-multipart==0.0.20",
     "aniso8601==10.0.1",
     "pytz==2025.2",
@@ -41,7 +41,8 @@ dependencies = [
     "typing-inspect>=0.9.0",
     "fastapi-oidc>=0.0.10",
     "pyjwt>=2.10.1",
-    "aiontfy>=0.5.3"
+    "aiontfy>=0.5.3",
+    "logfire[fastapi,aiohttp,sqlalchemy,requests]>=3.18.0",
 ]
 
 [dependency-groups]
@@ -60,34 +61,53 @@ dev = [
     "aioresponses==0.7.8",
     "pytest-sugar",
     "aiosqlite>=0.21.0",
-    "cryptography>=3.2",
+    "cryptography==45.0.4",
     "types-tabulate>=0.9.0.20241207",
     "types-requests>=2.32.0.20250328",
     "types-lxml>=2025.3.30",
     "types-selenium>=3.141.9",
     "types-cachetools>=5.5.0.20240820",
+    "pytest-cov>=6.1.1",
+    "pytest-resource-path>=1.4.0",
 ]
 debug = ["pudb", "pdbpp"]
 cli = [
     "rich>=14.0.0",
 ]
 
+[tool.ruff]
+show-fixes = true
+
 [tool.ruff.format]
 quote-style = "preserve"
 
 [tool.ruff.lint]
-select = ["F", "E", "W", "I", "T"]
+select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
+ignore = ["ANN401"]
 
 [tool.pytest.ini_options]
-addopts = "rarbg_local --driver chrome --html report.html --self-contained-html"
+addopts = "rarbg_local --driver chrome --html report.html --self-contained-html --cov-report html --cov"
 asyncio_default_fixture_loop_scope = "fixture"
 
 [tool.mypy]
-plugins = "sqlalchemy.ext.mypy.plugin, pydantic.mypy"
+plugins = "pydantic.mypy"
 ignore_missing_imports = true
 mypy_path = "stubs"
 disallow_untyped_defs = false
+strict_equality = true
+warn_unused_configs = true
 
 [[tool.mypy.overrides]]
-module = ["rarbg_local.utils", "rarbg_local.tmdb"]
+module = [
+    "rarbg_local.utils",
+    "rarbg_local.tmdb",
+    "rarbg_local.providers",
+    "rarbg_local.providers.abc",
+    "rarbg_local.providers.torrents_csv",
+    "rarbg_local.providers.horriblesubs",
+    "rarbg_local.providers.nyaasi",
+    "rarbg_local.providers.piratebay",
+    "rarbg_local.new",
+    "rarbg_local.jikan",
+]
 disallow_untyped_defs = true

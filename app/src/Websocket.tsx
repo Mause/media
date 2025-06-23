@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import _ from 'lodash';
-import qs from 'qs';
 import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import * as _ from 'lodash-es';
 
-import { DisplayTorrent, ITorrent } from './OptionsComponent';
+import type { ITorrent } from './OptionsComponent';
+import { DisplayTorrent } from './OptionsComponent';
 import { getPrefix, getToken } from './utils';
 import { getMarker } from './render';
 
@@ -34,16 +34,16 @@ function useMessages<T>(initMessage: object) {
 function Websocket() {
   const { tmdbId } = useParams<{ tmdbId: string }>();
   const { search } = useLocation();
-  const query = qs.parse(search.slice(1));
+  const query = new URLSearchParams(search.slice(1));
   const auth = useAuth0();
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
 
-  const initMessage = query.season
+  const initMessage = query.has('season')
     ? {
         type: 'series',
         tmdb_id: tmdbId,
-        season: query.season,
-        episode: query.episode,
+        season: query.get('season'),
+        episode: query.get('episode'),
         authorization: token,
       }
     : {
@@ -64,7 +64,16 @@ function Websocket() {
   return (
     <div>
       <p>{tmdbId}</p>
-      <p>{getMarker(query)}</p>
+      <p>
+        {query.has('season')
+          ? getMarker({
+              season: parseInt(query.get('season')!, 10),
+              episode: query.has('episode')
+                ? parseInt(query.get('episode')!, 10)
+                : undefined,
+            })
+          : 'No season'}
+      </p>
       <p>
         {readyState === ReadyState.CONNECTING && 'Connecting...'}
         {readyState === ReadyState.OPEN && 'Connected'}

@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
-import { components } from './schema';
+import type { components } from './schema';
 
 type HealthcheckResponse = components['schemas']['HealthcheckResponse'];
 

@@ -1,16 +1,17 @@
-import React, { ReactElement, useState, useEffect } from 'react';
-import Axios, { RawAxiosRequestHeaders } from 'axios';
+import type { ReactElement } from 'react';
+import React, { useState, useEffect } from 'react';
+import type { RawAxiosRequestHeaders } from 'axios';
+import Axios from 'axios';
 import MaterialLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import * as RRD from 'react-router-dom';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
-import { TypographyTypeMap } from '@mui/material';
-import moxios from 'moxios';
-import {
+import type { TypographyTypeMap } from '@mui/material';
+import type {
   Auth0ContextInterface,
   AuthenticationError,
-  useAuth0,
 } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import { FetchEventTarget } from './fetch_stream';
 
@@ -59,7 +60,7 @@ export function getPrefix() {
   if (!prefix) {
     return '';
   } else if (prefix.includes('localhost')) {
-    return `http://localhost:5000`;
+    return '';
   } else if (prefix) {
     return `https://${prefix}`;
   }
@@ -151,12 +152,6 @@ export function ExtMLink(props: { href: string; children: string }) {
       {props.children}
     </MaterialLink>
   );
-}
-
-export function expectLastRequestBody() {
-  const mr = moxios.requests.mostRecent();
-  expect(mr).toBeTruthy();
-  return expect(JSON.parse(mr.config.data as string));
 }
 
 export function useLocation<T>() {

@@ -3,14 +3,17 @@ import logging
 from collections.abc import AsyncGenerator, Iterator
 from itertools import chain
 from json.decoder import JSONDecodeError
+from typing import Any
 
 import backoff
 import requests
+from healthcheck import HealthcheckCallbackResponse
 from pydantic import BaseModel
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
-from .abc import MovieProvider, TvProvider, format, movie_convert, tv_convert
+from ..utils import format_marker
+from .abc import MovieProvider, TvProvider, movie_convert, tv_convert
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +33,7 @@ session.headers.update(
 )
 
 
-def get_token(base):
+def get_token(base: str) -> str:
     return session.get(base, params={'get_token': 'get_token'}).json()['token']
 
 
@@ -75,7 +78,9 @@ class RarbgResponse(BaseModel):
     torrent_results: list[RarbgTorrent] = []
 
 
-def get_rarbg_iter(base_url: str, type: str, **kwargs) -> Iterator[list[RarbgTorrent]]:
+def get_rarbg_iter(
+    base_url: str, type: str, **kwargs: Any
+) -> Iterator[list[RarbgTorrent]]:
     codes = load_category_codes()
     categories = [codes[key] for key in CATEGORIES[type]]
 
@@ -136,7 +141,7 @@ class RarbgProvider(TvProvider, MovieProvider):
         if not imdb_id:
             return
 
-        search_string = format(season, episode)
+        search_string = format_marker(season, episode)
 
         for item in chain.from_iterable(
             get_rarbg_iter(
@@ -169,5 +174,5 @@ class RarbgProvider(TvProvider, MovieProvider):
                 category=movie_convert(item.category),
             )
 
-    async def health(self):
+    async def health(self) -> HealthcheckCallbackResponse:
         return await self.check_http(self.root)

@@ -2,9 +2,8 @@ import asyncio
 from collections.abc import Callable, Coroutine, MutableMapping
 from dataclasses import dataclass
 from functools import partial
-from typing import Any, ParamSpec, Protocol, TypeVar, cast, runtime_checkable
+from typing import Any, Protocol, cast, runtime_checkable
 
-from asyncache import IdentityFunction
 from asyncache import cached as _cached
 from cachetools.func import lru_cache as _lru_cache
 from cachetools.func import ttl_cache as _ttl_cache
@@ -15,8 +14,8 @@ class Cache(Protocol):
     def clear(self) -> None: ...
 
 
-T = TypeVar('T')
-P = ParamSpec('P')
+type IdentityFunction[T] = Callable[[T], T]
+
 _caches: list[Cache] = []
 
 
@@ -26,7 +25,7 @@ def _append(t: object) -> None:
 
 
 def lru_cache(maxsize: int | None = None) -> IdentityFunction:
-    def wrapper(func: Callable[P, T]) -> Callable[P, T]:
+    def wrapper[T, **P](func: Callable[P, T]) -> Callable[P, T]:
         cache = _lru_cache(maxsize)(func)
         _append(cache)
         return cache
@@ -35,7 +34,7 @@ def lru_cache(maxsize: int | None = None) -> IdentityFunction:
 
 
 def ttl_cache(maxsize: int | None = None) -> IdentityFunction:
-    def wrapper(func: Callable[P, T]) -> Callable[P, T]:
+    def wrapper[T, **P](func: Callable[P, T]) -> Callable[P, T]:
         cache = _ttl_cache(maxsize)(func)
         _append(cache)
         return cache
@@ -44,7 +43,7 @@ def ttl_cache(maxsize: int | None = None) -> IdentityFunction:
 
 
 def cached(cache: MutableMapping[Any, Any]) -> IdentityFunction:
-    def wrapper(func: Callable[P, T]) -> Callable[P, T]:
+    def wrapper[T, **P](func: Callable[P, T]) -> Callable[P, T]:
         c = _cached(cache)(func)
         _append(cache)
         return cast(Callable[P, T], c)
@@ -61,13 +60,13 @@ class NullPointerException(Exception):
     pass
 
 
-def non_null(thing: T | None) -> T:
+def non_null[T](thing: T | None) -> T:
     if not thing:
         raise NullPointerException()
     return thing
 
 
-def precondition(res: T | None, message: str) -> T:
+def precondition[T](res: T | None, message: str) -> T:
     if not res:
         raise AssertionError(message)
     return res
@@ -92,9 +91,13 @@ def _callback(send: Callable[[Message], None], fut: asyncio.Task[Any]) -> None:
         send(Message("exit", "normal", fut))
 
 
-def create_monitored_task(
+def create_monitored_task[T](
     coro: Coroutine[None, None, T], send: Callable[[Message], None]
 ) -> asyncio.Future[T]:
     future = asyncio.ensure_future(coro)
     future.add_done_callback(partial(_callback, send))
     return future
+
+
+def format_marker(season: int, episode: int | None) -> str:
+    return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'

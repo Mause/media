@@ -1,5 +1,4 @@
 import MenuItem from '@mui/material/MenuItem';
-import _ from 'lodash';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
@@ -14,11 +13,13 @@ import {
   faCaretDown,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import LinearProgress from '@mui/material/LinearProgress';
+import * as _ from 'lodash-es';
 
 import { getPrefix, MLink } from './utils';
-import { TV } from './SeasonSelectComponent';
-import {
+import type { TV } from './SeasonSelectComponent';
+import type {
   MovieResponse,
   SeriesResponse,
   Torrents,
@@ -161,7 +162,13 @@ export function Progress({
       percentDone * 100,
       etaDescr,
     );
-    return <progress value={percentDone} title={title} />;
+    return (
+      <LinearProgress
+        variant="determinate"
+        value={percentDone * 100}
+        title={title}
+      />
+    );
   }
 }
 
@@ -253,7 +260,7 @@ function Series({
           </MenuItem>
         </ContextMenu>
       </h3>
-      {_.sortBy(_.toPairs(serie.seasons), ([key]) => parseInt(key)).map(
+      {_.sortBy(Object.entries(serie.seasons), ([key]) => parseInt(key)).map(
         ([i, season]) => (
           <Season
             key={i}

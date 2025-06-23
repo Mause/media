@@ -4,10 +4,12 @@ from contextlib import asynccontextmanager
 from urllib.parse import urlencode
 
 import aiohttp
+from healthcheck import HealthcheckCallbackResponse
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
-from .abc import MovieProvider, TvProvider, format
+from ..utils import format_marker
+from .abc import MovieProvider, TvProvider
 
 logger = logging.getLogger(__name__)
 
@@ -29,12 +31,15 @@ categories = {
         'hd_movies': 207,
         'hd_tv_shows': 208,
         '3d': 209,
+        'cam_ts_movies': 210,  # CAM/TS - Movies
+        'ultra_hd_movies': 211,  # UHD/4k - Movies
+        'ultra_hd_tv_shows': 212,  # UHD/4k - TV shows
         'other': 299,
     },
 }
 
 
-def convert_category(category: int):
+def convert_category(category: int) -> str:
     for broad, subcats in categories.items():
         for subcat, cat in subcats.items():
             if category == cat:
@@ -75,7 +80,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
         season: int,
         episode: int | None = None,
     ) -> AsyncGenerator[ITorrent, None]:
-        async with self.search(imdb_id + ' ' + format(season, episode)) as data:
+        async with self.search(imdb_id + ' ' + format_marker(season, episode)) as data:
             for item in data:
                 yield ITorrent(
                     source=ProviderSource.PIRATEBAY,
@@ -99,5 +104,5 @@ class PirateBayProvider(TvProvider, MovieProvider):
                     category=convert_category(int(item['category'])),
                 )
 
-    async def health(self):
+    async def health(self) -> HealthcheckCallbackResponse:
         return await self.check_http(self.root)

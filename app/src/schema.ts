@@ -4,23 +4,6 @@
  */
 
 export interface paths {
-  '/api/user/unauthorized': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** User */
-    get: operations['user'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/api/delete/{type}/{id}': {
     parameters: {
       query?: never;
@@ -453,6 +436,8 @@ export interface components {
       /** Output */
       output: unknown;
     };
+    /** HealthcheckResponses */
+    HealthcheckResponses: components['schemas']['HealthcheckResponse'][];
     /**
      * HealthcheckStatus
      * @description Enum used to store the possible service and component health status.
@@ -647,26 +632,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  user: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': unknown;
-        };
-      };
-    };
-  };
   delete: {
     parameters: {
       query?: never;
@@ -685,7 +650,9 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': unknown;
+          'application/json': {
+            [key: string]: unknown;
+          };
         };
       };
       /** @description Validation Error */
@@ -1061,7 +1028,9 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': unknown;
+          'application/json': {
+            [key: string]: unknown;
+          };
         };
       };
       /** @description Validation Error */
@@ -1132,7 +1101,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['HealthcheckResponse'][];
+          'application/json': components['schemas']['HealthcheckResponses'];
         };
       };
       /** @description Validation Error */

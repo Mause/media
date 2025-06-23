@@ -1,12 +1,12 @@
 import contextvars
-from collections.abc import Callable
+from collections.abc import Callable, Coroutine
 from datetime import datetime
 from os import getpid
-from typing import Any, TypeVar
+from typing import Any, cast, overload
 
 from fastapi import APIRouter
+from fastapi.exceptions import HTTPException
 from fastapi.requests import Request
-from fastapi.responses import JSONResponse
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -15,25 +15,38 @@ from healthcheck import (
     HealthcheckInternalComponent,
     HealthcheckStatus,
 )
+from healthcheck.healthcheck import HealthcheckComponentInterface
 from healthcheck.models import ComponentType
-from pydantic import BaseModel
+from plexapi.server import PlexServer
+from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
 
 from .db import get_async_engine, get_session_local
+from .plex import get_plex
 from .singleton import get as _get
 from .transmission_proxy import transmission
 
 router = APIRouter(tags=['diagnostics'])
 request_var = contextvars.ContextVar[Request]('request_var')
-T = TypeVar('T')
 
 
-async def get(dependent: Callable[..., T]) -> T:
+@overload
+async def get[T](dependent: Callable[..., Coroutine[Any, Any, T]]) -> T: ...
+
+
+@overload
+async def get[T](dependent: Callable[..., T]) -> T: ...
+
+
+async def get(dependent):
     return await _get(request_var.get().app, dependent, request_var.get())
 
 
-def build():
-    def add_component(decl, check):
+def build() -> Healthcheck:
+    def add_component(
+        decl: HealthcheckComponentInterface,
+        check: Callable[[], Coroutine[Any, Any, HealthcheckCallbackResponse]],
+    ) -> HealthcheckComponentInterface:
         health.add_component(decl)
         return decl.add_healthcheck(check)
 
@@ -46,6 +59,7 @@ def build():
     add_component(
         HealthcheckInternalComponent('transmission'), transmission_connectivity
     )
+    add_component(HealthcheckHTTPComponent('plex'), plex_connectivity)
 
     for provider in get_providers():
         add_component(HealthcheckHTTPComponent(provider.type.value), provider.health)
@@ -58,8 +72,8 @@ def build():
     return health
 
 
-@router.get('', response_model=list[str])
-async def diagnostics():
+@router.get('')
+async def diagnostics() -> list[str]:
     return [comp.name for comp in build().components]
 
 
@@ -73,21 +87,27 @@ class HealthcheckResponse(BaseModel):
     output: Any
 
 
-@router.get('/{component_name}', response_model=list[HealthcheckResponse])
-async def component_diagnostics(request: Request, component_name: str):
+class HealthcheckResponses(RootModel[list[HealthcheckResponse]]):
+    pass
+
+
+@router.get('/{component_name}')
+async def component_diagnostics(
+    request: Request, component_name: str
+) -> HealthcheckResponses:
     health = build()
     component = next(
         (comp for comp in health.components if comp.name == component_name), None
     )
     if component is None:
-        return JSONResponse({'error': 'Component not found'}, status_code=404)
+        raise HTTPException(404, ({'error': 'Component not found'}))
 
     request_var.set(request)
 
-    return await component.run()
+    return HealthcheckResponses.model_validate(await component.run())
 
 
-async def check_database():
+async def check_database() -> HealthcheckCallbackResponse:
     engine = await get(get_async_engine)
 
     async with engine.connect() as conn:
@@ -101,24 +121,24 @@ async def check_database():
 
         return HealthcheckCallbackResponse(
             HealthcheckStatus.PASS,
-            {
+            {  # type: ignore[arg-type]
                 'version': res.scalar(),
             },
         )
 
 
-async def pool():
-    def pget(field):
+async def pool() -> HealthcheckCallbackResponse:
+    def pget(field: str) -> int:
         value = getattr(pool, field, None)
 
-        return value() if callable(value) else value
+        return cast(int, value() if callable(value) else value)
 
     sessionlocal = await get(get_session_local)
 
     pool = sessionlocal.kw['bind'].pool
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,
-        {
+        {  # type: ignore[arg-type]
             'worker_id': getpid(),
             'size': pget('size'),
             'checkedin': pget('checkedin'),
@@ -128,11 +148,16 @@ async def pool():
     )
 
 
-async def transmission_connectivity():
+async def transmission_connectivity() -> HealthcheckCallbackResponse:
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,
-        {
+        {  # type: ignore[arg-type]
             'consumers': transmission().channel.consumer_tags,
             'client_is_alive': transmission()._thread.is_alive(),
         },
     )
+
+
+async def plex_connectivity() -> HealthcheckCallbackResponse:
+    plex: PlexServer = await get(get_plex)
+    return HealthcheckCallbackResponse(HealthcheckStatus.PASS, plex._baseurl)

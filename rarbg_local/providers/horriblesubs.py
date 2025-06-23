@@ -1,11 +1,12 @@
 import re
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Iterable
 from enum import Enum
 from functools import lru_cache
-from itertools import chain
+from typing import TYPE_CHECKING, TypedDict
 
 from aiohttp import ClientSession
 from cachetools import TTLCache
+from healthcheck import HealthcheckCallbackResponse
 from lxml.html import fromstring
 
 from ..jikan import closeness, get_names
@@ -15,12 +16,21 @@ from ..types import ImdbId, TmdbId
 from ..utils import cached
 from .abc import TvProvider, tv_convert
 
+if TYPE_CHECKING:
+    from lxml.etree import ElementBase
+
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
 ROOT = 'https://horriblesubs.info/'
 
 
-def make_session():
+def make_session() -> ClientSession:
     return ClientSession(base_url=ROOT)
+
+
+class Result(TypedDict):
+    episode: str
+    resolution: str
+    download: str | None
 
 
 class HorriblesubsDownloadType(Enum):
@@ -50,8 +60,8 @@ async def get_show_id(path: str) -> int | None:
         return int(m.group(1)) if m else None
 
 
-def parse(html) -> dict[str, str]:
-    def process(li) -> tuple[str, str]:
+def parse(html: 'ElementBase') -> dict[str, str]:
+    def process(li: 'ElementBase') -> tuple[str, str]:
         line = ' '.join(line.strip('- \n') for line in li.xpath('./a/text()')).strip()
         return (
             ' '.join(map(str.strip, line.splitlines())),
@@ -61,14 +71,16 @@ def parse(html) -> dict[str, str]:
     return dict(process(li) for li in html.xpath('./li'))
 
 
-async def get_latest():
+async def get_latest() -> dict[str, str]:
     async with make_session() as session:
         r = await session.get('/api.php', params={'method': 'getlatest'})
         html = fromstring(await r.text())
         return parse(html)
 
 
-async def get_downloads(showid: int, type: HorriblesubsDownloadType):
+async def get_downloads(
+    showid: int, type: HorriblesubsDownloadType
+) -> AsyncGenerator[Result, None]:
     page = 0
     while True:
         downloads = list(await _get_downloads(showid, type, page))
@@ -80,9 +92,11 @@ async def get_downloads(showid: int, type: HorriblesubsDownloadType):
             break
 
 
-async def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int):
-    def process(div):
-        def fn(res: str):
+async def _get_downloads(
+    showid: int, type: HorriblesubsDownloadType, page: int
+) -> Iterable[Result]:
+    def process(div: 'ElementBase') -> list[Result]:
+        def fn(res: str) -> str | None:
             t = div.xpath(
                 f'.//div[contains(@class, "link-{res}")]/span/a[@title="Magnet'
                 ' Link"]/@href'
@@ -119,10 +133,11 @@ async def _get_downloads(showid: int, type: HorriblesubsDownloadType, page: int)
         torrents = [html]
     else:
         torrents = html.xpath('.//div[contains(@class, "rls-info-container")]')
-    return chain.from_iterable(process(div) for div in torrents)
+
+    return [page for div in torrents for page in process(div)]
 
 
-async def search(showid: int, search_term: str):
+async def search(showid: int, search_term: str) -> None:
     async with make_session() as session:
         await session.get(
             'api.php',
@@ -136,7 +151,9 @@ async def search(showid: int, search_term: str):
         )
 
 
-async def search_for_tv(tmdb_id: TmdbId, season: int, episode: int | None = None):
+async def search_for_tv(
+    tmdb_id: TmdbId, season: int, episode: int | None = None
+) -> AsyncGenerator[Result, None]:
     if season != 1:
         return
 
@@ -180,5 +197,5 @@ class HorriblesubsProvider(TvProvider):
                 episode_info=EpisodeInfo(seasonnum=season, epnum=item['episode']),
             )
 
-    async def health(self):
+    async def health(self) -> HealthcheckCallbackResponse:
         return await self.check_http(ROOT)

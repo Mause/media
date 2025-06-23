@@ -1,8 +1,9 @@
 import json
 from pathlib import Path
 
-from aioresponses import aioresponses as AioResponses
+from aioresponses import aioresponses as Aioresponses
 from pytest import mark
+from pytest_snapshot.plugin import Snapshot
 
 from ..providers.horriblesubs import (
     HorriblesubsDownloadType,
@@ -15,13 +16,13 @@ from .conftest import add_json, themoviedb, tolist
 from .factories import TvApiResponseFactory
 
 
-def load_html(filename):
+def load_html(filename: str) -> str:
     with (Path(__file__).parent / 'resources' / filename).open('r') as fh:
         return fh.read()
 
 
 @mark.asyncio
-async def test_parse(aioresponses):
+async def test_parse(aioresponses: Aioresponses) -> None:
     aioresponses.add(
         'https://horriblesubs.info/api.php?method=getlatest',
         'GET',
@@ -53,19 +54,19 @@ async def test_parse(aioresponses):
     }
 
 
-def mock(aioresponses: AioResponses, url: str, html: str) -> None:
+def mock(aioresponses: Aioresponses, url: str, html: str) -> None:
     aioresponses.add(url + '&nextid=0', 'GET', body=load_html(html))
     aioresponses.add(
         url + '&nextid=1', 'GET', body='There are no batches for this show yet'
     )
 
 
-def magnet_link(torrent_hash):
+def magnet_link(torrent_hash: str) -> str:
     return f'magnet:?xt=urn:btih:{torrent_hash}&tr=udp://tracker.coppersurfer.tk:6969/announce&tr=udp://tracker.internetwarriors.net:1337/announce&tr=udp://tracker.leechersparadise.org:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://open.stealth.si:80/announce&tr=udp://p4p.arenabg.com:1337/announce&tr=udp://mgtracker.org:6969/announce&tr=udp://tracker.tiny-vps.com:6969/announce&tr=udp://peerfect.org:6969/announce&tr=http://share.camoe.cn:8080/announce&tr=http://t.nyaatracker.com:80/announce&tr=https://open.kickasstracker.com:443/announce'
 
 
 @mark.asyncio
-async def test_get_downloads(aioresponses):
+async def test_get_downloads(aioresponses: Aioresponses) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=batch&showid=1',
@@ -94,7 +95,9 @@ async def test_get_downloads(aioresponses):
 
 
 @mark.asyncio
-async def test_get_downloads_single(aioresponses: AioResponses, snapshot):
+async def test_get_downloads_single(
+    aioresponses: Aioresponses, snapshot: Snapshot
+) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=1',
@@ -107,7 +110,7 @@ async def test_get_downloads_single(aioresponses: AioResponses, snapshot):
 
 
 @mark.asyncio
-async def test_provider(aioresponses: AioResponses, snapshot):
+async def test_provider(aioresponses: Aioresponses, snapshot: Snapshot) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=264',

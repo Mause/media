@@ -6,6 +6,7 @@ import sys
 import backoff
 from fastapi import FastAPI
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.future import select
 
 from rarbg_local.db import (
     Role,
@@ -21,11 +22,13 @@ logger = logging.getLogger(__name__)
 logging.getLogger('backoff').addHandler(logging.StreamHandler())
 
 
-async def seed():
+async def seed() -> None:
     session_maker = await get(FastAPI(), get_session_local)
 
     with session_maker() as session:
-        first = session.query(User).filter_by(username='Mause').first
+        first = (
+            session.execute(select(User).filter_by(username='Mause')).scalars().first
+        )
 
         user = backoff.on_exception(
             backoff.expo,

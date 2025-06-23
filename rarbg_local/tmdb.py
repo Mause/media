@@ -1,7 +1,7 @@
 import os
 from datetime import date, datetime
 from enum import Enum
-from typing import Annotated, Any, Literal, TypeVar
+from typing import Annotated, Any, Literal
 
 import aiohttp
 import aiohttp.web_exceptions
@@ -21,8 +21,6 @@ from .utils import cached
 
 base = 'https://api.themoviedb.org/3/'
 
-T = TypeVar('T')
-TBaseModel = TypeVar('TBaseModel', bound=BaseModel)
 ThingType = Literal['movie', 'tv']
 
 
@@ -32,7 +30,9 @@ ThingType = Literal['movie', 'tv']
     max_tries=5,
     giveup=lambda e: not isinstance(e, aiohttp.web_exceptions.HTTPTooManyRequests),
 )
-async def get_json(path: str, hydrate: type[TBaseModel], **kwargs: Any) -> TBaseModel:
+async def get_json[TBaseModel: BaseModel](
+    path: str, hydrate: type[TBaseModel], **kwargs: Any
+) -> TBaseModel:
     access_token = (
         'access_token'
         if 'PYTEST_CURRENT_TEST' in os.environ
@@ -52,7 +52,7 @@ async def get_json(path: str, hydrate: type[TBaseModel], **kwargs: Any) -> TBase
 class EmptyStringAsNoneModel(BaseModel):
     @model_validator(mode="before")
     @classmethod
-    def empty_str_to_none(cls, data: T) -> T | dict:
+    def empty_str_to_none[T](cls, data: T) -> T | dict:
         if isinstance(data, dict):
             return {k: (None if v == '' else v) for k, v in data.items()}
         return data
@@ -63,7 +63,7 @@ class SearchBaseResponse(BaseModel):
         media_type: Literal['tv']
         id: TmdbId
         name: str
-        first_air_date: datetime
+        first_air_date: datetime | None = None
 
     class MovieSearch(EmptyStringAsNoneModel):
         media_type: Literal['movie']
