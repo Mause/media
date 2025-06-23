@@ -65,12 +65,18 @@ class Download(Base):
     transmission_id: Mapped[str]
     imdb_id: Mapped[ImdbId]
     type: Mapped[str]
-    movie: Mapped['MovieDetails'] = relationship(uselist=False, cascade='all,delete')
+    movie: Mapped['MovieDetails'] = relationship(
+        uselist=False,
+        cascade='all,delete',
+        lazy='raise',
+    )
     movie_id: Mapped[int | None] = mapped_column(
         ForeignKey('movie_details.id', ondelete='CASCADE')
     )
     episode: Mapped['EpisodeDetails'] = relationship(
-        uselist=False, cascade='all,delete'
+        uselist=False,
+        cascade='all,delete',
+        lazy='raise',
     )
     episode_id: Mapped[int | None] = mapped_column(
         ForeignKey('episode_details.id', ondelete='CASCADE')
@@ -80,14 +86,17 @@ class Download(Base):
         DateTime(timezone=True), default=func.now()
     )
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    added_by: Mapped['User'] = relationship(back_populates='downloads')
+    added_by: Mapped['User'] = relationship(
+        back_populates='downloads',
+        lazy='raise',
+    )
 
 
 class EpisodeDetails(Base):
     __tablename__ = 'episode_details'
     id: Mapped[int] = mapped_column(primary_key=True)
     download: Mapped['Download'] = relationship(
-        back_populates='episode', passive_deletes=True, uselist=False
+        back_populates='episode', passive_deletes=True, uselist=False, lazy='raise'
     )
     show_title: Mapped[str]
     season: Mapped[int]
@@ -104,7 +113,7 @@ class MovieDetails(Base):
     __tablename__ = 'movie_details'
     id: Mapped[int] = mapped_column(primary_key=True)
     download: Mapped['Download'] = relationship(
-        back_populates='movie', passive_deletes=True, uselist=False
+        back_populates='movie', passive_deletes=True, uselist=False, lazy='raise'
     )
 
 
@@ -132,9 +141,13 @@ class User(Base):
     )
 
     # Define the relationship to Role via UserRoles
-    roles: Mapped[list['Role']] = relationship(secondary='user_roles', uselist=True)
+    roles: Mapped[list['Role']] = relationship(
+        secondary='user_roles',
+        uselist=True,
+        lazy='raise',
+    )
 
-    downloads: Mapped[list[Download]] = relationship()
+    downloads: Mapped[list[Download]] = relationship(lazy='raise')
 
     def __repr__(self) -> str:
         return self.username
@@ -173,7 +186,7 @@ class Monitor(Base):
     tmdb_id: Mapped[TmdbId]
 
     added_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    added_by: Mapped['User'] = relationship()
+    added_by: Mapped['User'] = relationship(lazy='raise')
 
     title: Mapped[str]
     type: Mapped[MonitorMediaType] = mapped_column(
