@@ -121,8 +121,10 @@ async def monitor_cron(
 ) -> list[CronResponse[MonitorGet]]:
     monitors = (
         (
-            await session.execute(select(Monitor).filter(not_(Monitor.status))).options(
-                joinedload(Monitor.added_by)
+            await session.execute(
+                select(Monitor)
+                .filter(not_(Monitor.status))
+                .options(joinedload(Monitor.added_by))
             )
         )
         .scalars()
