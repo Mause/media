@@ -14,7 +14,7 @@ from sqlalchemy import not_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
-from sqlalchemy.orm.session import Session, object_session
+from sqlalchemy.orm.session import Session, object_session, sessionmaker
 from starlette.routing import compile_path, replace_params
 from yarl import URL
 
@@ -25,6 +25,7 @@ from .db import (
     User,
     get_async_db,
     get_db,
+    get_session_local,
     safe_delete,
 )
 from .models import (
@@ -116,6 +117,7 @@ class CronResponse[T](BaseModel):
 async def monitor_cron(
     request: Request,
     session: Annotated[Session, Depends(get_db)],
+    session_maker: Annotated[sessionmaker, Depends(get_session_local)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ) -> list[CronResponse[MonitorGet]]:
     monitors = (
@@ -128,7 +130,11 @@ async def monitor_cron(
         .all()
     )
 
-    tasks = [check_monitor(request, monitor, session, ntfy) for monitor in monitors]
+    async def do_with(monitor):
+        with session_maker() as session:
+            return await check_monitor(request, monitor, session, ntfy)
+
+    tasks = [do_with(monitor) for monitor in monitors]
 
     results: list[CronResponse] = []
     for result in await gather(*tasks, return_exceptions=True):
