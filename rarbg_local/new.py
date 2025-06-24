@@ -95,8 +95,8 @@ def generate_plain_text(exc: BaseException) -> str:
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
-@api.get('/delete/{type}/{id}', name='delete')
-async def delete_item(
+@api.get('/delete/{type}/{id}')
+async def delete(
     type: MediaType, id: int, session: Annotated[AsyncSession, Depends(get_db)]
 ) -> dict:
     await safe_delete(
