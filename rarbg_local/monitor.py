@@ -115,14 +115,16 @@ class CronResponse[T](BaseModel):
 @monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
     request: Request,
-    session: Annotated[Session, Depends(get_db)],
+    session: Annotated[AsyncSession, Depends(get_async_db)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ) -> list[CronResponse[MonitorGet]]:
     monitors = (
-        session.execute(
-            select(Monitor)
-            .filter(not_(Monitor.status))
-            .options(joinedload(Monitor.added_by))
+        (
+            await session.execute(
+                select(Monitor)
+                .filter(not_(Monitor.status))
+                .options(joinedload(Monitor.added_by))
+            )
         )
         .scalars()
         .all()
@@ -130,11 +132,13 @@ async def monitor_cron(
 
     tasks = [check_monitor(request, monitor, session, ntfy) for monitor in monitors]
 
-    results: list[CronResponse] = []
+    results: list[CronResponse[MonitorGet]] = []
     for result in await gather(*tasks, return_exceptions=True):
         if isinstance(result, BaseException):
             logger.exception('Error checking monitor', exc_info=result)
-            results.append(CronResponse(success=False, message=repr(result)))
+            results.append(
+                CronResponse[MonitorGet](success=False, message=repr(result))
+            )
         else:
             results.append(result)
     return results
@@ -143,9 +147,9 @@ async def monitor_cron(
 async def check_monitor(
     request: Request,
     monitor: Monitor,
-    session: Session,
+    session: AsyncSession,
     ntfy: Ntfy,
-) -> CronResponse:
+) -> CronResponse[MonitorGet]:
     def convert_type(type: MonitorMediaType) -> StreamType:
         if type == MonitorMediaType.MOVIE:
             return 'movie'
@@ -206,7 +210,7 @@ async def check_monitor(
             ),
         )
     )
-    session.commit()
-    session.refresh(monitor, attribute_names=['added_by'])
+    await session.commit()
+    await monitor.awaitable_attrs.added_by
 
-    return CronResponse(success=True, message=message, subject=monitor)
+    return CronResponse[MonitorGet](success=True, message=message, subject=monitor)
