@@ -369,9 +369,12 @@ def redirect_to_plex(
 
     server_id = plex.machineIdentifier
 
-    return RedirectResponse(
-        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
-        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
+    return RedirectResponse(build_plex_url(server_id, dat.ratingKey))
+
+
+def build_plex_url(server_id: str, rating_key: str) -> str:
+    return f'https://app.plex.tv/desktop#!/server/{server_id}/details?' + urlencode(
+        {'key': f'/library/metadata/{rating_key}'}
     )
 
 
