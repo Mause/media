@@ -1,5 +1,7 @@
 import logging
 from asyncio import gather
+from collections.abc import AsyncGenerator, Sequence
+from enum import Enum
 from typing import Annotated
 
 from aiohttp import ClientSession
@@ -9,7 +11,9 @@ from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.session import Session, object_session
 from starlette.routing import compile_path, replace_params
 from yarl import URL
@@ -19,6 +23,7 @@ from .db import (
     Monitor,
     MonitorMediaType,
     User,
+    get_async_db,
     get_db,
     safe_delete,
 )
@@ -35,18 +40,26 @@ logger = logging.getLogger(__name__)
 monitor_ns = APIRouter(tags=['monitor'])
 
 
-async def get_ntfy():
+async def get_ntfy() -> AsyncGenerator[Ntfy, None]:
     async with ClientSession() as session:
         yield Ntfy("https://ntfy.sh", session)
 
 
-@monitor_ns.get('', response_model=list[MonitorGet])
-async def monitor_get(session: Session = Depends(get_db)):
-    return session.execute(select(Monitor)).scalars().all()
+@monitor_ns.get('')
+async def monitor_get(
+    session: Annotated[AsyncSession, Depends(get_async_db)],
+) -> Sequence[MonitorGet]:
+    return (
+        (await session.execute(select(Monitor).options(joinedload(Monitor.added_by))))
+        .scalars()
+        .all()
+    )
 
 
 @monitor_ns.delete('/{monitor_id}')
-async def monitor_delete(monitor_id: int, session: Session = Depends(get_db)):
+async def monitor_delete(
+    monitor_id: int, session: Annotated[Session, Depends(get_db)]
+) -> dict:
     safe_delete(session, Monitor, monitor_id)
 
     return {}
@@ -66,16 +79,18 @@ async def validate_id(type: MonitorMediaType, tmdb_id: TmdbId) -> str:
             raise
 
 
-@monitor_ns.post('', response_model=MonitorGet, status_code=201)
+@monitor_ns.post('', status_code=201)
 async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
-):
-    session = non_null(object_session(user))  # resolve to db session session
+) -> MonitorGet:
+    session = non_null(object_session(user))  # resolve to db session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
         session.execute(
-            select(Monitor).filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            select(Monitor)
+            .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+            .options(joinedload(Monitor.added_by))
         )
         .scalars()
         .one_or_none()
@@ -86,6 +101,7 @@ async def monitor_post(
         )
         session.add(c)
         session.commit()
+        session.refresh(c, attribute_names=['added_by'])
     return c
 
 
@@ -99,20 +115,30 @@ class CronResponse[T](BaseModel):
 @monitor(monitor_slug='monitor-cron')
 async def monitor_cron(
     request: Request,
-    session: Annotated[Session, Depends(get_db)],
+    session: Annotated[AsyncSession, Depends(get_async_db)],
     ntfy: Annotated[Ntfy, Depends(get_ntfy)],
 ) -> list[CronResponse[MonitorGet]]:
     monitors = (
-        session.execute(select(Monitor).filter(not_(Monitor.status))).scalars().all()
+        (
+            await session.execute(
+                select(Monitor)
+                .filter(not_(Monitor.status))
+                .options(joinedload(Monitor.added_by))
+            )
+        )
+        .scalars()
+        .all()
     )
 
     tasks = [check_monitor(request, monitor, session, ntfy) for monitor in monitors]
 
-    results: list[CronResponse] = []
+    results: list[CronResponse[MonitorGet]] = []
     for result in await gather(*tasks, return_exceptions=True):
         if isinstance(result, BaseException):
             logger.exception('Error checking monitor', exc_info=result)
-            results.append(CronResponse(success=False, message=repr(result)))
+            results.append(
+                CronResponse[MonitorGet](success=False, message=repr(result))
+            )
         else:
             results.append(result)
     return results
@@ -121,9 +147,9 @@ async def monitor_cron(
 async def check_monitor(
     request: Request,
     monitor: Monitor,
-    session: Session,
+    session: AsyncSession,
     ntfy: Ntfy,
-) -> CronResponse:
+) -> CronResponse[MonitorGet]:
     def convert_type(type: MonitorMediaType) -> StreamType:
         if type == MonitorMediaType.MOVIE:
             return 'movie'
@@ -151,7 +177,7 @@ async def check_monitor(
 
     monitor.status = bool(has_results)
 
-    def name(x):
+    def name(x: Enum) -> str:
         return x.name.title()
 
     message = f'''
@@ -184,6 +210,7 @@ async def check_monitor(
             ),
         )
     )
-    session.commit()
+    await session.commit()
+    await monitor.awaitable_attrs.added_by
 
-    return CronResponse(success=True, message=message, subject=monitor)
+    return CronResponse[MonitorGet](success=True, message=message, subject=monitor)

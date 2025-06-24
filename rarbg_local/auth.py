@@ -11,10 +11,10 @@ from fastapi.security import (
     SecurityScopes,
 )
 from fastapi_oidc import get_auth
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session
 
-from .db import User, get_db
+from .db import User, get_async_db
 
 logger = logging.getLogger(__name__)
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
@@ -23,7 +23,7 @@ t = TTLCache[str, dict](maxsize=10, ttl=3600)
 
 get_my_jwkaas = get_auth(
     client_id="",
-    audience=AUTH0_DOMAIN + 'userinfo',
+    audience=f'{AUTH0_DOMAIN}userinfo',
     base_authorization_server_uri=AUTH0_DOMAIN,
     issuer=AUTH0_DOMAIN,
     signature_cache_ttl=3600,
@@ -33,7 +33,7 @@ cast(OpenIdConnect, anno.dependency).auto_error = False
 
 
 async def get_current_user(
-    session: Annotated[Session, Depends(get_db)],
+    session: Annotated[AsyncSession, Depends(get_async_db)],
     security_scopes: SecurityScopes,
     header: Annotated[str, anno],
 ) -> User | None:
@@ -60,7 +60,11 @@ async def get_current_user(
 
     email = getattr(token_info, 'https://media.mause.me/email')
 
-    user = session.execute(select(User).filter_by(email=email)).scalars().one_or_none()
+    user = (
+        (await session.execute(select(User).filter_by(email=email)))
+        .scalars()
+        .one_or_none()
+    )
 
     if user is None:
         logger.info("User not found")
@@ -74,7 +78,7 @@ async def get_current_user(
 
 
 @Depends
-def security(
+async def security(
     request: Request,
     auth0: Annotated[
         User,
@@ -84,7 +88,7 @@ def security(
         ),
     ],
     basic_auth: Annotated[HTTPBasicCredentials, Security(HTTPBasic(auto_error=False))],
-):
+) -> User | HTTPBasicCredentials:
     if basic_auth and request.url.path == '/api/monitor/cron':
         return basic_auth
     elif auth0:

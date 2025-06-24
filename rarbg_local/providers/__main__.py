@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 install(show_locals=True)
 
 
-async def main():
+async def main() -> None:
     logging.basicConfig(level=logging.DEBUG, handlers=[RichHandler()])
 
     console = Console()

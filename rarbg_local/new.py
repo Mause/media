@@ -130,14 +130,23 @@ StreamType = Literal['series', 'movie']
     response_class=StreamingResponse,
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
-@eventstream
-async def stream(  # type: ignore[no-untyped-def]
+async def stream(
     type: StreamType,
     tmdb_id: TmdbId,
     source: ProviderSource,
     season: int | None = None,
     episode: int | None = None,
-):
+) -> StreamingResponse:
+    return await eventstream(stream_impl)(type, tmdb_id, source, season, episode)
+
+
+async def stream_impl(
+    type: StreamType,
+    tmdb_id: TmdbId,
+    source: ProviderSource,
+    season: int | None = None,
+    episode: int | None = None,
+) -> AsyncGenerator[ITorrent, None]:
     provider = next(
         (provider for provider in get_providers() if provider.type == source),
         None,
@@ -263,6 +272,11 @@ async def download_post(
 
     session.add_all(results)
     session.commit()
+
+    for res in results:
+        # TODO: can we do this one call, or in the commit?
+        session.refresh(res, attribute_names=['download'])
+        session.refresh(res.download, attribute_names=['added_by'])
 
     return results
 
