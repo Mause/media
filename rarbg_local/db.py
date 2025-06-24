@@ -22,6 +22,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
+    AsyncAttrs,
     AsyncEngine,
     AsyncSession,
     async_sessionmaker,
@@ -49,7 +50,7 @@ from .utils import format_marker, precondition
 logger = logging.getLogger(__name__)
 
 
-class Base(RepresentableBase, DeclarativeBase):
+class Base(AsyncAttrs, RepresentableBase, DeclarativeBase):
     type_annotation_map = {
         TmdbId: Integer,
         ImdbId: String,
