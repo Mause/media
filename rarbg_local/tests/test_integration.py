@@ -153,7 +153,7 @@ async def test_download(
     aioresponses: Aioresponses,
     responses: RequestsMock,
     add_torrent: MagicMock,
-    session: Snapshot,
+    session: Session,
 ) -> None:
     themoviedb(
         aioresponses,
@@ -209,7 +209,7 @@ async def test_download_season_pack(
     aioresponses: Aioresponses,
     responses: RequestsMock,
     add_torrent: MagicMock,
-    session: Snapshot,
+    session: Session,
 ) -> None:
     themoviedb(
         aioresponses,
