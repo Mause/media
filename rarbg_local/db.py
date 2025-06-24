@@ -2,6 +2,7 @@ import enum
 import logging
 import sqlite3
 from collections.abc import AsyncGenerator, Callable, Sequence
+from collections.abc import AsyncGenerator, Callable, Coroutine, Generator, Sequence
 from datetime import datetime
 from typing import Annotated, Any, Never, cast
 
@@ -36,8 +37,12 @@ from sqlalchemy.orm import (
     mapped_column,
     relationship,
 )
+from sqlalchemy.orm.attributes import CALLABLES_OK, instance_dict, instance_state
+from sqlalchemy.orm.base import PassiveFlag
+from sqlalchemy.orm.state import SQL_OK
 from sqlalchemy.sql import ClauseElement, func
 from sqlalchemy.types import Enum
+from sqlalchemy.util.concurrency import greenlet_spawn
 from sqlalchemy_repr import RepresentableBase
 
 from .settings import Settings, get_settings
@@ -48,11 +53,30 @@ from .utils import format_marker, precondition
 logger = logging.getLogger(__name__)
 
 
-class Base(AsyncAttrs, RepresentableBase, DeclarativeBase):
+class Awaitable[T: Base]:
+    parent: T
+
+    def __init__(self, parent: T) -> None:
+        self.parent: T = parent
+
+    def __getattr__(self, name: str) -> Coroutine[Any, Any, Any]:
+        passive = CALLABLES_OK + PassiveFlag.NO_RAISE + SQL_OK
+        do_get = getattr(type(self.parent), name).impl.get
+
+        return greenlet_spawn(
+            do_get, instance_state(self.parent), instance_dict(self.parent), passive
+        )
+
+
+class Base(RepresentableBase, DeclarativeBase):
     type_annotation_map = {
         TmdbId: Integer,
         ImdbId: String,
     }
+
+    @property
+    def awaitable_attrs(self) -> Awaitable['Base']:
+        return Awaitable(self)
 
 
 class Download(Base):
