@@ -75,12 +75,12 @@ def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClie
     return TestClient(fastapi_app)
 
 
-@fixture
-def user(session: Session) -> User:
+@pytest_asyncio.fixture
+async def user(async_session: AsyncSession) -> User:
     u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
-    session.add(u)
-    session.commit()
+    async_session.add(u)
+    await async_session.commit()
     return u
 
 
