@@ -100,8 +100,8 @@ async def monitor_post(
             tmdb_id=monitor.tmdb_id, added_by=user, type=monitor.type, title=media
         )
         session.add(c)
-        session.commit()
-        session.refresh(c, attribute_names=['added_by'])
+        await session.commit()
+        await session.refresh(c, attribute_names=['added_by'])
     return c
 
 
