@@ -22,6 +22,7 @@ from pydantic import BaseModel
 from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
+from sqlalchemy.orm.session import object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -32,7 +33,6 @@ from .db import (
     MovieDetails,
     User,
     get_async_db,
-    get_db,
     get_movies,
     safe_delete,
 )
@@ -295,7 +295,7 @@ async def index(
 
 @api.get('/stats')
 async def stats(
-    session: Annotated[AsyncSession, Depends(get_db)],
+    session: Annotated[AsyncSession, Depends(get_async_db)],
 ) -> list[StatsResponse]:
     async def process(
         added_by_id: int, values: list[Row[tuple[int, str, int]]]
