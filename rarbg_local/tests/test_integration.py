@@ -19,6 +19,7 @@ from pytest_snapshot.plugin import Snapshot
 from responses import RequestsMock
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.exc import OperationalError as SQLAOperationError
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import Session, joinedload
 from yarl import URL
@@ -377,26 +378,26 @@ async def test_search(
 
 
 @mark.asyncio
-async def test_delete_cascade(test_client: TestClient, session: Session) -> None:
-    def check() -> tuple[int, int]:
+async def test_delete_cascade(
+    test_client: TestClient, session: Session, async_session: AsyncSession
+) -> None:
+    async def check() -> tuple[int, int]:
         return (
-            len(get_episodes(session)),
-            len((session.execute(select(Download))).scalars().all()),
+            len(await get_episodes(async_session)),
+            len((await async_session.execute(select(Download))).scalars().all()),
         )
 
     e = EpisodeDetailsFactory.create()
     session.add(e)
     session.commit()
 
-    assert check() == (1, 1)
+    assert await check() == (1, 1)
 
     res = await test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
     assert res.json() == {}
 
-    session.commit()
-
-    assert check() == (0, 0)
+    assert await check() == (0, 0)
 
 
 @mark.asyncio
