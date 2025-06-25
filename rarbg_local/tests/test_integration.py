@@ -386,7 +386,7 @@ async def test_delete_cascade(
 
     e = EpisodeDetailsFactory.create()
     session.add(e)
-    await session.commit()
+    session.commit()
 
     assert await check() == (1, 1)
 
