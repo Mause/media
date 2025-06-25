@@ -5,6 +5,7 @@ from pathlib import Path
 from re import Pattern
 from typing import Annotated, Any, Protocol
 
+import pytest_asyncio
 import uvloop
 from aioresponses import aioresponses as Aioresponses
 from async_asgi_testclient import TestClient
@@ -14,11 +15,12 @@ from pytest import fixture
 from pytest_snapshot.plugin import Snapshot
 from responses import RequestsMock
 from sqlalchemy.engine.url import URL
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
-from ..db import Base, Role, User, get_db, get_session_local
+from ..db import Base, Role, User, get_async_sessionmaker, get_db, get_session_local
 from ..new import (
     Settings,
     create_app,
@@ -32,6 +34,11 @@ from .factories import session_var
 @fixture(scope="session")
 def event_loop_policy() -> uvloop.EventLoopPolicy:
     return uvloop.EventLoopPolicy()
+
+
+@fixture
+def _fixture_event_loop() -> asyncio.AbstractEventLoop:
+    return asyncio.new_event_loop()
 
 
 @fixture
@@ -93,6 +100,16 @@ def session(
 
     with Session() as session:
         session_var.set(session)
+        yield session
+
+
+@pytest_asyncio.fixture
+async def async_session(
+    _function_event_loop: asyncio.BaseEventLoop, fastapi_app: FastAPI
+) -> AsyncGenerator[AsyncSession, None]:
+    Session = await get(fastapi_app, get_async_sessionmaker)
+
+    async with Session() as session:
         yield session
 
 
