@@ -17,7 +17,6 @@ from responses import RequestsMock
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
 from ..db import (
@@ -26,7 +25,6 @@ from ..db import (
     User,
     get_async_db,
     get_async_sessionmaker,
-    get_session_local,
 )
 from ..new import (
     Settings,
@@ -90,20 +88,6 @@ async def user(async_session: AsyncSession) -> User:
     await async_session.commit()
     await async_session.refresh(u)
     return u
-
-
-@fixture
-def session(
-    fastapi_app: FastAPI,
-    _function_event_loop: asyncio.AbstractEventLoop,
-) -> Generator[Session, None, None]:
-    Session = _function_event_loop.run_until_complete(
-        get(fastapi_app, get_session_local)
-    )
-
-    with Session() as session:
-        Base.metadata.create_all(session.bind)
-        yield session
 
 
 @pytest_asyncio.fixture
