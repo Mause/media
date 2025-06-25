@@ -297,7 +297,7 @@ def create_episode(
     return ed
 
 
-def get_all[T](session: Session, model: type[T]) -> Sequence[T]:
+async def get_all[T](session: AsyncSession, model: type[T]) -> Sequence[T]:
     if model == MovieDetails:
         joint = MovieDetails.download
     elif model == EpisodeDetails:
@@ -305,20 +305,22 @@ def get_all[T](session: Session, model: type[T]) -> Sequence[T]:
     else:
         raise ValueError(f'Unknown model: {model}')
     return (
-        session.execute(
-            select(model).options(joinedload(joint).joinedload(Download.added_by))
+        (
+            await session.execute(
+                select(model).options(joinedload(joint).joinedload(Download.added_by))
+            )
         )
         .scalars()
         .all()
     )
 
 
-def get_episodes(session: Session) -> Sequence[EpisodeDetails]:
-    return get_all(session, EpisodeDetails)
+async def get_episodes(session: AsyncSession) -> Sequence[EpisodeDetails]:
+    return await get_all(session, EpisodeDetails)
 
 
-def get_movies(session: Session) -> Sequence[MovieDetails]:
-    return get_all(session, MovieDetails)
+async def get_movies(session: AsyncSession) -> Sequence[MovieDetails]:
+    return await get_all(session, MovieDetails)
 
 
 def get_or_create[T](

@@ -8,6 +8,7 @@ from typing import cast
 
 from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, make_transient
 
@@ -210,9 +211,9 @@ async def make_series_details(show: list[EpisodeDetails]) -> SeriesDetails:
     )
 
 
-async def resolve_series(session: Session) -> list[SeriesDetails]:
+async def resolve_series(session: AsyncSession) -> list[SeriesDetails]:
     # TODO: groupby in db
-    episodes = get_episodes(session)
+    episodes = await get_episodes(session)
 
     return [
         await make_series_details(show)
