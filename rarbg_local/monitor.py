@@ -14,7 +14,6 @@ from sqlalchemy import not_
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
-from sqlalchemy.orm.session import object_session
 from starlette.routing import compile_path, replace_params
 from yarl import URL
 
