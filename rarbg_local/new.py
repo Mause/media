@@ -285,7 +285,9 @@ async def download_post(
 
 
 @api.get('/index')
-async def index(session: AsyncSession = Depends(get_db)) -> IndexResponse:
+async def index(
+    session: Annotated[AsyncSession, Depends(get_async_db)],
+) -> IndexResponse:
     return IndexResponse(
         series=await resolve_series(session), movies=await get_movies(session)
     )

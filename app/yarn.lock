@@ -1505,11 +1505,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:^24":
-  version: 24.0.3
-  resolution: "@types/node@npm:24.0.3"
+  version: 24.0.4
+  resolution: "@types/node@npm:24.0.4"
   dependencies:
     undici-types: "npm:~7.8.0"
-  checksum: 10/6cce0afa9b0ff7f8eab7cb0339909c1e4ef480b824b8de5adc9cee05dac63ee3d8c7a46e1f95f13ecc94e84608118741f9949527a92fbf3f0e1f7714b37a7b61
+  checksum: 10/81cd63dfeea7b7cd0d13a6435c3aa38de48da1eb59a5572f3528396dd5a8d9ff6811d947a2a6856d38e3b813ac26207abb1b44eb98848f78553a8fb4b2886e37
   languageName: node
   linkType: hard
 
@@ -3139,8 +3139,8 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-import-x@npm:^4.12.2":
-  version: 4.15.2
-  resolution: "eslint-plugin-import-x@npm:4.15.2"
+  version: 4.16.0
+  resolution: "eslint-plugin-import-x@npm:4.16.0"
   dependencies:
     "@typescript-eslint/types": "npm:^8.34.0"
     comment-parser: "npm:^1.4.1"
@@ -3160,7 +3160,7 @@ __metadata:
       optional: true
     eslint-import-resolver-node:
       optional: true
-  checksum: 10/5b0cedb7fa3dc5ecedddaa2dd08719429f717b3d3ff5986e7b7523db3ddd88b1dff4a0a56c3326f83eefd5d6971a30ecb5ce767ba2f1dfd449f4b9d77217f9db
+  checksum: 10/3e9f57e1d4524a35d1f069022768eba15b640f12d134c0f14a42e292714fbc3a1d21da561c650a0329c642b07e993ed7cb60c62fd40f89650017b647275dce34
   languageName: node
   linkType: hard
 
