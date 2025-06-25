@@ -72,11 +72,6 @@ async def user(session: AsyncSession) -> User:
     return u
 
 
-@fixture
-def _fixture_event_loop():
-    return uvloop.new_event_loop()
-
-
 @pytest_asyncio.fixture
 async def session(
     fastapi_app: FastAPI,
