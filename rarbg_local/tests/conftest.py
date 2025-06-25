@@ -97,7 +97,6 @@ def session(
 
     with Session() as session:
         Base.metadata.create_all(session.bind)
-        session_var.set(session)
         yield session
 
 
@@ -109,6 +108,7 @@ async def async_session(
 
     async with Session() as session:
         await session.run_sync(lambda s: Base.metadata.create_all(s.bind))
+        session_var.set(session.sync_session)
         yield session
 
 
