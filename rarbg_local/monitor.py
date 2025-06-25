@@ -11,10 +11,9 @@ from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
 from sqlalchemy import not_
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
-from sqlalchemy.orm.session import object_session
 from starlette.routing import compile_path, replace_params
 from yarl import URL
 
@@ -83,13 +82,15 @@ async def monitor_post(
     monitor: MonitorPost,
     user: Annotated[User, security],
 ) -> MonitorGet:
-    session = non_null(object_session(user))  # resolve to db session
+    session = non_null(async_object_session(user))  # resolve to db session
     media = await validate_id(monitor.type, monitor.tmdb_id)
     c = (
-        session.execute(
-            select(Monitor)
-            .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
-            .options(joinedload(Monitor.added_by))
+        (
+            await session.execute(
+                select(Monitor)
+                .filter_by(tmdb_id=monitor.tmdb_id, type=monitor.type)
+                .options(joinedload(Monitor.added_by))
+            )
         )
         .scalars()
         .one_or_none()
