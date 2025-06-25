@@ -22,7 +22,7 @@ from pydantic import BaseModel
 from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session, object_session
+from sqlalchemy.orm.session import object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -33,7 +33,6 @@ from .db import (
     MovieDetails,
     User,
     get_async_db,
-    get_db,
     get_movies,
     safe_delete,
 )
@@ -295,11 +294,13 @@ async def index(
 
 
 @api.get('/stats')
-async def stats(session: Session = Depends(get_db)) -> list[StatsResponse]:
-    def process(
+async def stats(
+    session: Annotated[AsyncSession, Depends(get_async_db)],
+) -> list[StatsResponse]:
+    async def process(
         added_by_id: int, values: list[Row[tuple[int, str, int]]]
     ) -> StatsResponse:
-        user = session.get(User, added_by_id)
+        user = await session.get(User, added_by_id)
         if not user:
             raise Exception()
 
@@ -309,10 +310,12 @@ async def stats(session: Session = Depends(get_db)) -> list[StatsResponse]:
         )
 
     keys = Download.added_by_id, Download.type
-    query = session.execute(select(*keys, func.count(name='count')).group_by(*keys))
+    query = await session.execute(
+        select(*keys, func.count(name='count')).group_by(*keys)
+    )
 
     return [
-        process(added_by_id, values)
+        await process(added_by_id, values)
         for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
     ]
 
