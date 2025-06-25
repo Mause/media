@@ -81,6 +81,7 @@ async def user(async_session: AsyncSession) -> User:
     u.roles = [Role(name='Member')]
     async_session.add(u)
     await async_session.commit()
+    await async_session.refresh(u)
     return u
 
 
