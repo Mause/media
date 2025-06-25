@@ -31,6 +31,7 @@ from .db import (
     EpisodeDetails,
     MovieDetails,
     User,
+    get_async_db,
     get_db,
     get_movies,
     safe_delete,
@@ -97,7 +98,7 @@ def generate_plain_text(exc: BaseException) -> str:
 
 @api.get('/delete/{type}/{id}')
 async def delete(
-    type: MediaType, id: int, session: Annotated[AsyncSession, Depends(get_db)]
+    type: MediaType, id: int, session: Annotated[AsyncSession, Depends(get_async_db)]
 ) -> dict:
     await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id

@@ -14,6 +14,7 @@ from sqlalchemy import not_
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
+from sqlalchemy.orm.session import object_session
 from starlette.routing import compile_path, replace_params
 from yarl import URL
 
@@ -23,7 +24,6 @@ from .db import (
     MonitorMediaType,
     User,
     get_async_db,
-    get_db,
     safe_delete,
 )
 from .models import (
@@ -57,7 +57,7 @@ async def monitor_get(
 
 @monitor_ns.delete('/{monitor_id}')
 async def monitor_delete(
-    monitor_id: int, session: Annotated[AsyncSession, Depends(get_db)]
+    monitor_id: int, session: Annotated[AsyncSession, Depends(get_async_db)]
 ) -> dict:
     await safe_delete(session, Monitor, monitor_id)
 
