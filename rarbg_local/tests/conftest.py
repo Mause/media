@@ -20,7 +20,14 @@ from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
-from ..db import Base, Role, User, get_async_sessionmaker, get_db, get_session_local
+from ..db import (
+    Base,
+    Role,
+    User,
+    get_async_db,
+    get_async_sessionmaker,
+    get_session_local,
+)
 from ..new import (
     Settings,
     create_app,
@@ -65,10 +72,9 @@ def clear_cache() -> None:
 @fixture
 def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClient:
     async def gcu(
-        scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]
+        scopes: SecurityScopes, session: Annotated[AsyncSession, Depends(get_async_db)]
     ) -> User:
-        # FIXME - use right session
-        res = (session.execute(select(User))).scalars().first()
+        res = (await session.execute(select(User))).scalars().first()
         assert res
         return res
 
