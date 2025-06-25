@@ -378,12 +378,17 @@ async def test_search(
 
 @mark.asyncio
 async def test_delete_cascade(test_client: TestClient, session: Session) -> None:
+    def check() -> tuple[int, int]:
+        return (
+            len(get_episodes(session)),
+            len((session.execute(select(Download))).scalars().all()),
+        )
+
     e = EpisodeDetailsFactory.create()
     session.add(e)
     session.commit()
 
-    assert len(get_episodes(session)) == 1
-    assert len(session.execute(select(Download)).scalars().all()) == 1
+    assert check() == (1, 1)
 
     res = await test_client.get(f'/api/delete/series/{e.id}')
     assert res.status_code == 200
@@ -391,8 +396,7 @@ async def test_delete_cascade(test_client: TestClient, session: Session) -> None
 
     session.commit()
 
-    assert len(get_episodes(session)) == 0
-    assert len(session.execute(select(Download)).scalars().all()) == 0
+    assert check() == (0, 0)
 
 
 @mark.asyncio
