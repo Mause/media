@@ -20,6 +20,7 @@ from fastapi_utils.openapi import simplify_operation_ids
 from plexapi.server import PlexServer
 from pydantic import BaseModel
 from sqlalchemy import Row, func
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm.session import Session, object_session
 from starlette.staticfiles import StaticFiles
@@ -31,6 +32,7 @@ from .db import (
     EpisodeDetails,
     MovieDetails,
     User,
+    get_async_db,
     get_db,
     get_movies,
     safe_delete,
@@ -96,8 +98,10 @@ def generate_plain_text(exc: BaseException) -> str:
 
 
 @api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)) -> dict:
-    safe_delete(
+async def delete(
+    type: MediaType, id: int, session: Annotated[AsyncSession, Depends(get_async_db)]
+) -> dict:
+    await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
 
