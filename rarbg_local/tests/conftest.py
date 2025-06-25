@@ -42,9 +42,19 @@ def _fixture_event_loop() -> asyncio.AbstractEventLoop:
 
 
 @fixture
-def fastapi_app() -> FastAPI:
+def fastapi_app(tmp_path: Path) -> FastAPI:
     cache_clear()
-    return create_app()
+    app = create_app()
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        database_url=str(
+            URL.create(
+                'sqlite',
+                database=str(tmp_path / 'test.db'),
+            )
+        ),
+        plex_token='plex_token',
+    )
+    return app
 
 
 @fixture
@@ -77,19 +87,8 @@ def user(session: Session) -> User:
 @fixture
 def session(
     fastapi_app: FastAPI,
-    tmp_path: Path,
     _function_event_loop: asyncio.AbstractEventLoop,
 ) -> Generator[Session, None, None]:
-    fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
-        database_url=str(
-            URL.create(
-                'sqlite',
-                database=str(tmp_path / 'test.db'),
-            )
-        ),
-        plex_token='plex_token',
-    )
-
     Session = _function_event_loop.run_until_complete(
         get(fastapi_app, get_session_local)
     )
