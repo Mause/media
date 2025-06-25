@@ -256,10 +256,10 @@ async def test_index(
     test_client: TestClient,
     get_torrent: MagicMock,
     snapshot: Snapshot,
-    session: Session,
+    async_session: AsyncSession,
     user: User,
 ) -> None:
-    session.add_all(
+    async_session.add_all(
         [
             create_episode(
                 transmission_id=HASH_STRING,
@@ -293,7 +293,7 @@ async def test_index(
             ),
         ]
     )
-    session.commit()
+    await async_session.commit()
 
     aioresponses.add(
         'https://api.themoviedb.org/3/tv/3/season/1',
