@@ -67,7 +67,8 @@ def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClie
     async def gcu(
         scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]
     ) -> User:
-        res = session.execute(select(User)).scalars().first()
+        # FIXME - use right session
+        res = (session.execute(select(User))).scalars().first()
         assert res
         return res
 

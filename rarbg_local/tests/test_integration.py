@@ -811,6 +811,7 @@ async def test_websocket(
     ) -> User:
         assert scopes.scopes == ['openid']
         assert header == 'token'
+        # FIXME - use right session
         return UserFactory.create()
 
     fastapi_app.dependency_overrides[get_current_user] = gcu
