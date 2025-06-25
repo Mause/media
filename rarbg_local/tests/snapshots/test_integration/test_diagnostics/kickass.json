@@ -1,8 +1,0 @@
-[
-  {
-    "component_name": "kickass",
-    "component_type": "http",
-    "status": "pass",
-    "output": "<ClientResponse(https://katcr.co) [200 OK]>\n<CIMultiDict('Content-Type': 'application/json')>\n"
-  }
-]
