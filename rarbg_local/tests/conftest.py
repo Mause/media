@@ -101,7 +101,7 @@ def session(
 
 @pytest_asyncio.fixture
 async def async_session(
-    _function_event_loop: asyncio.BaseEventLoop, fastapi_app: FastAPI
+    fastapi_app: FastAPI,
 ) -> AsyncGenerator[AsyncSession, None]:
     Session = await get(fastapi_app, get_async_sessionmaker)
 
