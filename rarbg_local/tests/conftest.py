@@ -92,12 +92,9 @@ def session(
     Session = _function_event_loop.run_until_complete(
         get(fastapi_app, get_session_local)
     )
-    assert hasattr(Session, 'kw'), Session
-    engine = Session.kw['bind']
-    assert 'sqlite' in repr(engine), repr(engine)
-    Base.metadata.create_all(engine)
 
     with Session() as session:
+        Base.metadata.create_all(session.bind)
         session_var.set(session)
         yield session
 
@@ -109,6 +106,7 @@ async def async_session(
     Session = await get(fastapi_app, get_async_sessionmaker)
 
     async with Session() as session:
+        await session.run_sync(lambda s: Base.metadata.create_all(s.bind))
         yield session
 
 
