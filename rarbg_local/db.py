@@ -454,7 +454,7 @@ async def get_async_db(
         await sl.close()
 
 
-def safe_delete[T](session: Session, entity: type[T], id: int) -> None:
-    query = session.execute(delete(entity).filter_by(id=id))
+async def safe_delete[T](session: AsyncSession, entity: type[T], id: int) -> None:
+    query = await session.execute(delete(entity).filter_by(id=id))
     precondition(query.rowcount > 0, 'Nothing to delete')
-    session.commit()
+    await session.commit()
