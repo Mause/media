@@ -86,7 +86,7 @@
     "jsdom": "^26.1.0",
     "mockdate": "^3.0.2",
     "moxios": "^0.4.0",
-    "prettier": "3.5.3",
+    "prettier": "3.6.0",
     "typescript-eslint": "^8.34.0",
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-bundlesize": "^0.2.0",
