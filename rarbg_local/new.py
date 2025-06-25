@@ -22,7 +22,6 @@ from pydantic import BaseModel
 from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
