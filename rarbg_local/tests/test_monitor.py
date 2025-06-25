@@ -8,7 +8,7 @@ from async_asgi_testclient import TestClient
 from fastapi import FastAPI
 from pytest import mark
 from pytest_snapshot.plugin import Snapshot
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from yarl import URL
 
 from ..auth import get_current_user
@@ -24,7 +24,6 @@ from .factories import ITorrentFactory, MovieResponseFactory, TvApiResponseFacto
 async def test_delete_monitor(
     aioresponses: Aioresponses,
     test_client: TestClient,
-    session: Session,
     snapshot: Snapshot,
 ) -> None:
     themoviedb(
@@ -65,7 +64,7 @@ async def test_update_monitor(
     stream: MagicMock,
     aioresponses: Aioresponses,
     test_client: TestClient,
-    session: Session,
+    async_session: AsyncSession,
     snapshot: Snapshot,
     fastapi_app: FastAPI,
 ) -> None:
@@ -118,7 +117,7 @@ async def test_update_monitor(
     r.raise_for_status()
     assert_match_json(snapshot, r, 'cron.json')
 
-    monitor = session.get(Monitor, ident)
+    monitor = await async_session.get(Monitor, ident)
     assert monitor
     assert monitor.status
 
