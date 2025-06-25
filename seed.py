@@ -13,8 +13,8 @@ from rarbg_local.db import (
     User,
     create_episode,
     create_movie,
+    get_async_sessionmaker,
     get_or_create,
-    get_session_local,
 )
 from rarbg_local.singleton import get
 
@@ -23,11 +23,13 @@ logging.getLogger('backoff').addHandler(logging.StreamHandler())
 
 
 async def seed() -> None:
-    session_maker = await get(FastAPI(), get_session_local)
+    session_maker = await get(FastAPI(), get_async_sessionmaker)
 
     with session_maker() as session:
         first = (
-            session.execute(select(User).filter_by(username='Mause')).scalars().first
+            (await session.execute(select(User).filter_by(username='Mause')))
+            .scalars()
+            .first
         )
 
         user = backoff.on_exception(
@@ -41,8 +43,8 @@ async def seed() -> None:
                 username='Mause',
                 email='me@mause.me',
                 roles=[
-                    get_or_create(session, Role, name='Admin'),
-                    get_or_create(session, Role, name='Member'),
+                    await get_or_create(session, Role, name='Admin'),
+                    await get_or_create(session, Role, name='Member'),
                 ],
             )
             session.add(user)

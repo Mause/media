@@ -323,10 +323,12 @@ async def get_movies(session: AsyncSession) -> Sequence[MovieDetails]:
     return await get_all(session, MovieDetails)
 
 
-def get_or_create[T](
-    session: Session, model: type[T], defaults: Any = None, **kwargs: Any
+async def get_or_create[T](
+    session: AsyncSession, model: type[T], defaults: Any = None, **kwargs: Any
 ) -> T:
-    instance = session.execute(select(model).filter_by(**kwargs)).scalars().first()
+    instance = (
+        (await session.execute(select(model).filter_by(**kwargs))).scalars().first()
+    )
     if instance:
         return instance
     params = {k: v for k, v in kwargs.items() if not isinstance(v, ClauseElement)}
