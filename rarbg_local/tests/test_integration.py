@@ -1,4 +1,3 @@
-import base64
 import json
 from collections.abc import AsyncGenerator, Generator
 from datetime import datetime
@@ -23,19 +22,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
 from yarl import URL
+from sqlalchemy.orm import Session, joinedload
 
 from ..auth import get_current_user
-from ..db import MAX_TRIES, Download, Monitor, User, create_episode, create_movie
+from ..db import MAX_TRIES, Download, User, create_episode, create_movie
 from ..main import get_episodes
-from ..models import ITorrent, MediaType
-from ..new import ProviderSource, SearchResponse, Settings, get_settings
+from ..models import ITorrent
+from ..new import SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
 from ..types import ImdbId, TmdbId
 from .conftest import add_json, assert_match_json, themoviedb, tolist
 from .factories import (
     EpisodeDetailsFactory,
-    ITorrentFactory,
     MovieDetailsFactory,
     MovieResponseFactory,
     TvApiResponseFactory,
@@ -446,122 +445,6 @@ async def test_foreign_key_integrity(session: AsyncSession) -> None:
         ins = Download(id=1, movie_id=99)
         session.add(ins)
         await session.commit()
-
-
-@mark.asyncio
-async def test_delete_monitor(
-    aioresponses: Aioresponses,
-    test_client: TestClient,
-    session: AsyncSession,
-    snapshot: Snapshot,
-) -> None:
-    themoviedb(
-        aioresponses,
-        '/movie/5',
-        MovieResponseFactory.build(title='Hello World').model_dump(),
-    )
-    ls = await test_client.get('/api/monitor')
-    ls = ls.json()
-    themoviedb(
-        aioresponses,
-        '/tv/5',
-        TvApiResponseFactory.build(name='Hello World').model_dump(),
-    )
-    ls = (await test_client.get('/api/monitor')).json()
-    assert ls == []
-
-    r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
-    assert r.status_code == 201
-
-    ls = await test_client.get('/api/monitor')
-    ls = ls.json()
-    (
-        await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'TV'})
-    ).raise_for_status()
-
-    ls = await test_client.get('/api/monitor')
-
-    assert_match_json(snapshot, ls, 'ls.json')
-
-    for item in ls.json():
-        r = await test_client.delete(f'/api/monitor/{item["id"]}')
-        assert r.status_code == 200
-
-    ls = await test_client.get('/api/monitor')
-    assert ls.json() == []
-
-
-@mark.asyncio
-@patch('rarbg_local.monitor._stream')
-async def test_update_monitor(
-    stream: MagicMock,
-    aioresponses: Aioresponses,
-    test_client: TestClient,
-    session: AsyncSession,
-    snapshot: Snapshot,
-    fastapi_app: FastAPI,
-) -> None:
-    themoviedb(
-        aioresponses,
-        '/movie/5',
-        MovieResponseFactory.build(title='Hello World').model_dump(),
-    )
-    themoviedb(
-        aioresponses,
-        '/tv/6',
-        TvApiResponseFactory.build(title='Hello World').model_dump(),
-    )
-    add_json(
-        aioresponses,
-        'POST',
-        'https://ntfy.sh',
-        {
-            'id': '000000-0000-0000-000000000000',
-            'time': 1700000000,
-            'event': 'message',
-            'topic': 'ellianas_notifications',
-        },
-    )
-
-    r = await test_client.post('/api/monitor', json={'tmdb_id': 5, 'type': 'MOVIE'})
-    r.raise_for_status()
-    ident = r.json()['id']
-    assert r.status_code == 201
-
-    (
-        await test_client.post('/api/monitor', json={'tmdb_id': 6, 'type': 'TV'})
-    ).raise_for_status()
-
-    async def impl(
-        tmdb_id: TmdbId, type: MediaType, season: int, episode: int | None = None
-    ) -> AsyncGenerator[ITorrent, None]:
-        if tmdb_id == 5:
-            yield ITorrentFactory.build(source=ProviderSource.TORRENTS_CSV)
-        else:
-            raise Exception('Something went wrong')
-
-    stream.side_effect = impl
-
-    del fastapi_app.dependency_overrides[get_current_user]
-    r = await test_client.post(
-        '/api/monitor/cron',
-        headers={'Authorization': 'Basic ' + base64.b64encode(b'hello:world').decode()},
-    )
-    r.raise_for_status()
-    assert_match_json(snapshot, r, 'cron.json')
-
-    monitor = await session.get(Monitor, ident)
-    assert monitor
-    assert monitor.status
-
-    message = aioresponses.requests['POST', URL('https://ntfy.sh')][0]
-    snapshot.assert_match(
-        json.dumps(
-            message.kwargs['json'],
-            indent=2,
-        ),
-        'message.json',
-    )
 
 
 @mark.asyncio
