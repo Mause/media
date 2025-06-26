@@ -340,7 +340,7 @@ async def get_or_create[T](
 
 def normalise_db_url(database_url: str) -> URL:
     parsed = make_url(database_url)
-    if parsed.get_backend_name() == 'postgres':
+    if parsed.get_backend_name() in ('postgres', 'postgresql'):
         parsed = parsed.set(drivername='postgresql+psycopg')
     return parsed
 
