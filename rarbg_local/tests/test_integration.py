@@ -11,7 +11,7 @@ from fastapi.security import OpenIdConnect, SecurityScopes
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from lxml.builder import E
 from lxml.etree import tostring
-from psycopg2 import OperationalError
+from psycopg import OperationalError
 from pydantic import BaseModel
 from pytest import LogCaptureFixture, MonkeyPatch, fixture, mark, raises
 from pytest_snapshot.plugin import Snapshot
@@ -708,7 +708,7 @@ async def test_psycopg2_error(
         raise OperationalError(message)
 
     message = 'FATAL:  too many connections for role "wlhdyudesczvwl"'
-    monkeypatch.setattr('psycopg2.connect', replacement)
+    monkeypatch.setattr('psycopg.connect', replacement)
 
     do = fastapi_app.dependency_overrides
     fastapi_app.dependency_overrides

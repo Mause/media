@@ -34,7 +34,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 db = __import__('rarbg_local.db').db
 
 if 'HEROKU' in os.environ or 'RAILWAY_SERVICE_ID' in os.environ:
-    url = os.environ['DATABASE_URL'].replace('postgres://', 'postgresql://')
+    url = (
+        os.environ['DATABASE_URL']
+        .replace('postgres://', 'postgresql+psycopg://')
+        .replace('postgresql://', 'postgresql+psycopg://')
+    )
 else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
 
