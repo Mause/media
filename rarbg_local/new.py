@@ -20,9 +20,8 @@ from fastapi_utils.openapi import simplify_operation_ids
 from plexapi.server import PlexServer
 from pydantic import BaseModel
 from sqlalchemy import Row, func
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -221,7 +220,7 @@ async def download_post(
 
     # work around a fastapi bug
     # see for more details https://github.com/fastapi/fastapi/discussions/6024
-    session = non_null(object_session(added_by))
+    session = non_null(async_object_session(added_by))
 
     for thing in things:
         is_tv = thing.season is not None
@@ -253,7 +252,7 @@ async def download_post(
             subpath = 'movies'
 
         results.append(
-            add_single(
+            await add_single(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
@@ -274,12 +273,12 @@ async def download_post(
         )
 
     session.add_all(results)
-    session.commit()
+    await session.commit()
 
     for res in results:
         # TODO: can we do this one call, or in the commit?
-        session.refresh(res, attribute_names=['download'])
-        session.refresh(res.download, attribute_names=['added_by'])
+        await session.refresh(res, attribute_names=['download'])
+        await session.refresh(res.download, attribute_names=['added_by'])
 
     return results
 
