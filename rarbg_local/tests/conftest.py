@@ -41,9 +41,19 @@ def _fixture_event_loop() -> asyncio.AbstractEventLoop:
 
 
 @fixture
-def fastapi_app() -> FastAPI:
+def fastapi_app(tmp_path: Path) -> FastAPI:
     cache_clear()
-    return create_app()
+    app = create_app()
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        database_url=str(
+            URL.create(
+                'sqlite',
+                database=str(tmp_path / 'test.db'),
+            )
+        ),
+        plex_token='plex_token',
+    )
+    return app
 
 
 @fixture
@@ -76,36 +86,26 @@ async def user(session: AsyncSession) -> User:
 @pytest_asyncio.fixture
 async def session(
     fastapi_app: FastAPI,
-    tmp_path: Path,
-) -> AsyncGenerator[AsyncSession, None]:
-    fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
-        database_url=str(
-            URL.create(
-                'sqlite+aiosqlite',
-                database=str(tmp_path / 'test.db'),
-            )
-        ),
-        plex_token='plex_token',
+    _function_event_loop: asyncio.AbstractEventLoop,
+) -> Generator[Session, None, None]:
+    Session = _function_event_loop.run_until_complete(
+        get(fastapi_app, get_session_local)
     )
 
-    Session = await get(fastapi_app, get_session_local)
-    assert hasattr(Session, 'kw'), Session
-    engine = Session.kw['bind']
-    assert 'sqlite' in repr(engine.sync_engine), repr(engine.sync_engine)
-
-    async with engine.connect() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-    async with Session() as session:
+    with Session() as session:
+        Base.metadata.create_all(session.bind)
         session_var.set(session)
         yield session
 
 
 @pytest_asyncio.fixture
-async def async_session(fastapi_app: FastAPI) -> AsyncGenerator[AsyncSession, None]:
+async def async_session(
+    fastapi_app: FastAPI,
+) -> AsyncGenerator[AsyncSession, None]:
     Session = await get(fastapi_app, get_async_sessionmaker)
 
     async with Session() as session:
+        await session.run_sync(lambda s: Base.metadata.create_all(s.bind))
         yield session
 
 

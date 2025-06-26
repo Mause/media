@@ -37,7 +37,7 @@ def test_normalise(original: str, expected: str) -> None:
     [
         (
             'postgres://user:pass@localhost:5432/db',
-            'postgresql+asyncpg://user:pass@localhost:5432/db',
+            'postgresql+psycopg://user:pass@localhost:5432/db',
         ),
         ('sqlite:///:memory:', 'sqlite+aiosqlite:///:memory:'),
     ],

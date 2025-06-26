@@ -7,7 +7,7 @@ from typing import Annotated, Any, Never, cast
 
 import backoff
 import logfire
-import psycopg2
+import psycopg
 import sqlalchemy.pool.base
 from fastapi import Depends
 from sqlalchemy import (
@@ -338,8 +338,8 @@ async def get_or_create[T](
 
 def normalise_db_url(database_url: str) -> URL:
     parsed = make_url(database_url)
-    if parsed.get_backend_name() == 'postgres':
-        parsed = parsed.set(drivername='postgresql+asyncpg')
+    if parsed.get_backend_name() in ('postgres', 'postgresql'):
+        parsed = parsed.set(drivername='postgresql+psycopg')
     else:
         parsed = parsed.set(drivername='sqlite+aiosqlite')
     return parsed
@@ -351,7 +351,7 @@ def normalise_db_url_async(database_url: str) -> URL:
         drivername=(
             'sqlite+aiosqlite'
             if url.get_backend_name() == 'sqlite'
-            else 'postgresql+asyncpg'
+            else 'postgresql+psycopg'
         )
     )
 
@@ -399,19 +399,19 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
             db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
         )
 
-        if db_url.get_driver_name() == 'psycopg2':
+        if not engine.dialect.is_async:
 
             @listens_for(engine, "do_connect")
             @backoff.on_exception(
                 backoff.fibo,
-                psycopg2.OperationalError,
+                psycopg.OperationalError,
                 max_tries=MAX_TRIES,
                 giveup=lambda e: "too many connections for role" not in e.args[0],
             )
             def receive_do_connect(
                 dialect: Never, conn_rec: Never, cargs: tuple, cparams: dict
-            ) -> psycopg2.extensions.connection:
-                return psycopg2.connect(*cargs, **cparams)
+            ) -> psycopg.Connection:
+                return psycopg.connect(*cargs, **cparams)
 
     logfire.instrument_sqlalchemy(engine=engine)
 
