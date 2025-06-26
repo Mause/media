@@ -401,22 +401,26 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
         )
 
         if db_url.get_driver_name() == 'psycopg':
-
-            @listens_for(engine, "do_connect")
-            @backoff.on_exception(
+            retry = backoff.on_exception(
                 backoff.fibo,
                 psycopg.OperationalError,
                 max_tries=MAX_TRIES,
                 giveup=lambda e: "too many connections for role" not in e.args[0],
             )
-            def receive_do_connect(
-                dialect: PGDialect, conn_rec: Never, cargs: tuple, cparams: dict
-            ) -> Coroutine[Any, Any, psycopg.AsyncConnection] | psycopg.Connection:
-                return (
-                    psycopg.AsyncConnection.connect(*cargs, **cparams)
-                    if dialect.is_async
-                    else psycopg.connect(*cargs, **cparams)
-                )
+            if db_url.dialect.is_async:
+                @listens_for(engine, "do_connect")
+                @retry
+                async def receive_do_connect(
+                    dialect: Never, conn_rec: Never, cargs: tuple, cparams: dict
+                ) -> psycopg.AsyncConnection:
+                    return await psycopg.AsyncConnection.connect(*cargs, **cparams)
+            else:
+                @listens_for(engine, "do_connect")
+                @retry
+                def receive_do_connect(
+                    dialect: Never, conn_rec: Never, cargs: tuple, cparams: dict
+                ) -> psycopg.Connection:
+                    return psycopg.connect(*cargs, **cparams)
 
     logfire.instrument_sqlalchemy(engine=engine)
 
