@@ -25,7 +25,7 @@ logging.getLogger('backoff').addHandler(logging.StreamHandler())
 async def seed() -> None:
     session_maker = await get(FastAPI(), get_async_sessionmaker)
 
-    with session_maker() as session:
+    async with session_maker() as session:
         first = (
             (await session.execute(select(User).filter_by(username='Mause')))
             .scalars()
