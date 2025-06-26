@@ -411,7 +411,7 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
             )
             def receive_do_connect(
                 dialect: PGDialect, conn_rec: Never, cargs: tuple, cparams: dict
-            ) -> psycopg.AsyncConnection | psycopg.Connection:
+            ) -> Coroutine[Any, Any, psycopg.AsyncConnection] | psycopg.Connection:
                 return (
                     psycopg.AsyncConnection.connect(*cargs, **cparams)
                     if dialect.is_async
