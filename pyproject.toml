@@ -41,7 +41,8 @@ dependencies = [
     "pyjwt>=2.10.1",
     "aiontfy>=0.5.3",
     "logfire[fastapi,aiohttp,sqlalchemy,requests]>=3.18.0",
-    "psycopg[pool]>=3.2.9",
+    "psycopg[c,pool]>=3.2.9; 'android' in platform_release",
+    "psycopg[binary,pool]>=3.2.9; 'android' not in platform_release",
 ]
 
 [dependency-groups]
