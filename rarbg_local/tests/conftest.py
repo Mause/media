@@ -17,10 +17,15 @@ from responses import RequestsMock
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
-from ..db import Base, Role, User, get_async_sessionmaker, get_db, get_session_local
+from ..db import (
+    Base,
+    Role,
+    User,
+    get_async_db,
+    get_async_sessionmaker,
+)
 from ..new import (
     Settings,
     create_app,
@@ -42,9 +47,19 @@ def _fixture_event_loop() -> asyncio.AbstractEventLoop:
 
 
 @fixture
-def fastapi_app() -> FastAPI:
+def fastapi_app(tmp_path: Path) -> FastAPI:
     cache_clear()
-    return create_app()
+    app = create_app()
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        database_url=str(
+            URL.create(
+                'sqlite',
+                database=str(tmp_path / 'test.db'),
+            )
+        ),
+        plex_token='plex_token',
+    )
+    return app
 
 
 @fixture
@@ -55,9 +70,9 @@ def clear_cache() -> None:
 @fixture
 def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClient:
     async def gcu(
-        scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]
+        scopes: SecurityScopes, session: Annotated[AsyncSession, Depends(get_async_db)]
     ) -> User:
-        res = session.execute(select(User)).scalars().first()
+        res = (await session.execute(select(User))).scalars().first()
         assert res
         return res
 
@@ -65,51 +80,25 @@ def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClie
     return TestClient(fastapi_app)
 
 
-@fixture
-def user(session: Session) -> User:
+@pytest_asyncio.fixture
+async def user(async_session: AsyncSession) -> User:
     u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
-    session.add(u)
-    session.commit()
+    async_session.add(u)
+    await async_session.commit()
+    await async_session.refresh(u)
     return u
-
-
-@fixture
-def session(
-    fastapi_app: FastAPI,
-    tmp_path: Path,
-    _function_event_loop: asyncio.AbstractEventLoop,
-) -> Generator[Session, None, None]:
-    fastapi_app.dependency_overrides[get_settings] = lambda: Settings(
-        database_url=str(
-            URL.create(
-                'sqlite',
-                database=str(tmp_path / 'test.db'),
-            )
-        ),
-        plex_token='plex_token',
-    )
-
-    Session = _function_event_loop.run_until_complete(
-        get(fastapi_app, get_session_local)
-    )
-    assert hasattr(Session, 'kw'), Session
-    engine = Session.kw['bind']
-    assert 'sqlite' in repr(engine), repr(engine)
-    Base.metadata.create_all(engine)
-
-    with Session() as session:
-        session_var.set(session)
-        yield session
 
 
 @pytest_asyncio.fixture
 async def async_session(
-    _function_event_loop: asyncio.BaseEventLoop, fastapi_app: FastAPI
+    fastapi_app: FastAPI,
 ) -> AsyncGenerator[AsyncSession, None]:
     Session = await get(fastapi_app, get_async_sessionmaker)
 
     async with Session() as session:
+        await session.run_sync(lambda s: Base.metadata.create_all(s.bind))
+        session_var.set(session.sync_session)
         yield session
 
 

@@ -1,13 +1,13 @@
 import enum
 import logging
 import sqlite3
-from collections.abc import AsyncGenerator, Callable, Coroutine, Generator, Sequence
+from collections.abc import AsyncGenerator, Callable, Coroutine, Sequence
 from datetime import datetime
 from typing import Annotated, Any, Never, cast
 
 import backoff
 import logfire
-import psycopg2
+import psycopg
 import sqlalchemy.pool.base
 from fastapi import Depends
 from sqlalchemy import (
@@ -31,11 +31,9 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
-    Session,
     joinedload,
     mapped_column,
     relationship,
-    sessionmaker,
 )
 from sqlalchemy.orm.attributes import CALLABLES_OK, instance_dict, instance_state
 from sqlalchemy.orm.base import PassiveFlag
@@ -323,10 +321,12 @@ async def get_movies(session: AsyncSession) -> Sequence[MovieDetails]:
     return await get_all(session, MovieDetails)
 
 
-def get_or_create[T](
-    session: Session, model: type[T], defaults: Any = None, **kwargs: Any
+async def get_or_create[T](
+    session: AsyncSession, model: type[T], defaults: Any = None, **kwargs: Any
 ) -> T:
-    instance = session.execute(select(model).filter_by(**kwargs)).scalars().first()
+    instance = (
+        (await session.execute(select(model).filter_by(**kwargs))).scalars().first()
+    )
     if instance:
         return instance
     params = {k: v for k, v in kwargs.items() if not isinstance(v, ClauseElement)}
@@ -338,8 +338,8 @@ def get_or_create[T](
 
 def normalise_db_url(database_url: str) -> URL:
     parsed = make_url(database_url)
-    if parsed.get_backend_name() == 'postgres':
-        parsed = parsed.set(drivername='postgresql')
+    if parsed.get_backend_name() in ('postgres', 'postgresql'):
+        parsed = parsed.set(drivername='postgresql+psycopg')
     return parsed
 
 
@@ -349,7 +349,7 @@ def normalise_db_url_async(database_url: str) -> URL:
         drivername=(
             'sqlite+aiosqlite'
             if url.get_backend_name() == 'sqlite'
-            else 'postgresql+asyncpg'
+            else 'postgresql+psycopg'
         )
     )
 
@@ -397,19 +397,19 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
             db_url, max_overflow=10, pool_size=5, pool_recycle=300, echo_pool='debug'
         )
 
-        if db_url.get_driver_name() == 'psycopg2':
+        if not engine.dialect.is_async:
 
             @listens_for(engine, "do_connect")
             @backoff.on_exception(
                 backoff.fibo,
-                psycopg2.OperationalError,
+                psycopg.OperationalError,
                 max_tries=MAX_TRIES,
                 giveup=lambda e: "too many connections for role" not in e.args[0],
             )
             def receive_do_connect(
                 dialect: Never, conn_rec: Never, cargs: tuple, cparams: dict
-            ) -> psycopg2.extensions.connection:
-                return psycopg2.connect(*cargs, **cparams)
+            ) -> psycopg.Connection:
+                return psycopg.connect(*cargs, **cparams)
 
     logfire.instrument_sqlalchemy(engine=engine)
 
@@ -422,21 +422,6 @@ async def get_async_engine(
     return build_engine(
         normalise_db_url_async(settings.database_url), create_async_engine
     )
-
-
-@singleton
-def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> sessionmaker:
-    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
-
-
-def get_db(
-    session_local: Annotated[sessionmaker, Depends(get_session_local)],
-) -> Generator[Session, None, None]:
-    sl = session_local()
-    try:
-        yield sl
-    finally:
-        sl.close()
 
 
 @singleton
