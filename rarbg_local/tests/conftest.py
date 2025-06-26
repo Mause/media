@@ -17,7 +17,6 @@ from responses import RequestsMock
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session
 
 from ..auth import get_current_user
 from ..db import Base, Role, User, get_async_sessionmaker, get_db, get_session_local
@@ -65,9 +64,9 @@ def clear_cache() -> None:
 @fixture
 def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClient:
     async def gcu(
-        scopes: SecurityScopes, session: Annotated[Session, Depends(get_db)]
+        scopes: SecurityScopes, session: Annotated[AsyncSession, Depends(get_db)]
     ) -> User:
-        res = session.execute(select(User)).scalars().first()
+        res = (await session.execute(select(User))).scalars().first()
         assert res
         return res
 
@@ -75,17 +74,17 @@ def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClie
     return TestClient(fastapi_app)
 
 
-@fixture
-def user(session: Session) -> User:
+@pytest_asyncio.fixture
+async def user(session: AsyncSession) -> User:
     u = User(username='python', password='', email='python@python.org')
     u.roles = [Role(name='Member')]
     session.add(u)
-    session.commit()
+    await session.commit()
     return u
 
 
-@fixture
-def session(
+@pytest_asyncio.fixture
+async def session(
     fastapi_app: FastAPI,
     _function_event_loop: asyncio.AbstractEventLoop,
 ) -> Generator[Session, None, None]:

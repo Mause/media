@@ -1,7 +1,7 @@
 import enum
 import logging
 import sqlite3
-from collections.abc import AsyncGenerator, Callable, Coroutine, Generator, Sequence
+from collections.abc import AsyncGenerator, Callable, Coroutine, Sequence
 from datetime import datetime
 from typing import Annotated, Any, Never, cast
 
@@ -31,11 +31,9 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
-    Session,
     joinedload,
     mapped_column,
     relationship,
-    sessionmaker,
 )
 from sqlalchemy.orm.attributes import CALLABLES_OK, instance_dict, instance_state
 from sqlalchemy.orm.base import PassiveFlag
@@ -342,6 +340,8 @@ def normalise_db_url(database_url: str) -> URL:
     parsed = make_url(database_url)
     if parsed.get_backend_name() in ('postgres', 'postgresql'):
         parsed = parsed.set(drivername='postgresql+psycopg')
+    else:
+        parsed = parsed.set(drivername='sqlite+aiosqlite')
     return parsed
 
 
@@ -427,18 +427,20 @@ async def get_async_engine(
 
 
 @singleton
-def get_session_local(engine: Annotated[Engine, Depends(get_engine)]) -> sessionmaker:
-    return sessionmaker(autocommit=False, autoflush=True, bind=engine)
+def get_session_local(
+    engine: Annotated[AsyncEngine, Depends(get_async_engine)],
+) -> async_sessionmaker:
+    return async_sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 
-def get_db(
-    session_local: Annotated[sessionmaker, Depends(get_session_local)],
-) -> Generator[Session, None, None]:
+async def get_db(
+    session_local: Annotated[async_sessionmaker, Depends(get_session_local)],
+) -> AsyncGenerator[AsyncSession, None]:
     sl = session_local()
     try:
         yield sl
     finally:
-        sl.close()
+        await sl.close()
 
 
 @singleton

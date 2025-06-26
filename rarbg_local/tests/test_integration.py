@@ -121,7 +121,7 @@ async def test_download_movie(
     responses: RequestsMock,
     aioresponses: Aioresponses,
     add_torrent: MagicMock,
-    session: Session,
+    session: AsyncSession,
 ) -> None:
     themoviedb(
         aioresponses,
@@ -139,7 +139,7 @@ async def test_download_movie(
 
     add_torrent.assert_called_with(magnet, 'movies')
 
-    download = session.execute(select(Download)).scalars().first()
+    download = (await session.execute(select(Download))).scalars().first()
     assert download
     assert download.title == 'Bit'
 
@@ -188,7 +188,7 @@ async def test_download(
     add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
 
     download = (
-        session.execute(select(Download).options(joinedload(Download.episode)))
+        (await session.execute(select(Download).options(joinedload(Download.episode))))
         .scalars()
         .first()
     )
@@ -206,7 +206,7 @@ async def test_download_season_pack(
     aioresponses: Aioresponses,
     responses: RequestsMock,
     add_torrent: MagicMock,
-    session: Snapshot,
+    session: AsyncSession,
 ) -> None:
     themoviedb(
         aioresponses,
@@ -233,7 +233,7 @@ async def test_download_season_pack(
     add_torrent.assert_called_with(magnet, 'tv_shows/Watchmen/Season 1')
 
     download = (
-        session.execute(select(Download).options(joinedload(Download.episode)))
+        (await session.execute(select(Download).options(joinedload(Download.episode))))
         .scalars()
         .first()
     )
@@ -256,7 +256,7 @@ async def test_index(
     test_client: TestClient,
     get_torrent: MagicMock,
     snapshot: Snapshot,
-    session: Session,
+    session: AsyncSession,
     user: User,
 ) -> None:
     session.add_all(
@@ -293,7 +293,7 @@ async def test_index(
             ),
         ]
     )
-    session.commit()
+    await session.commit()
 
     aioresponses.add(
         'https://api.themoviedb.org/3/tv/3/season/1',
@@ -437,16 +437,16 @@ async def test_select_season(
 
 
 @mark.asyncio
-async def test_foreign_key_integrity(session: Session) -> None:
+async def test_foreign_key_integrity(session: AsyncSession) -> None:
     # invalid fkey_id
     with raises(IntegrityError):
         ins = Download(id=1, movie_id=99)
         session.add(ins)
-        session.commit()
+        await session.commit()
 
 
 @mark.asyncio
-async def test_stats(test_client: TestClient, session: Session) -> None:
+async def test_stats(test_client: TestClient, session: AsyncSession) -> None:
     user1 = UserFactory.create(username='user1')
     user2 = UserFactory.create(username='user2')
 
@@ -457,9 +457,10 @@ async def test_stats(test_client: TestClient, session: Session) -> None:
             MovieDetailsFactory.create(download__added_by=user1),
         ]
     )
-    session.commit()
+    await session.commit()
 
-    assert (await test_client.get('/api/stats')).json() == [
+    res = await test_client.get('/api/stats')
+    assert res.json() == [
         {'user': 'user1', 'values': {'episode': 1, 'movie': 1}},
         {'user': 'user2', 'values': {'episode': 1, 'movie': 0}},
     ]

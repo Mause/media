@@ -10,7 +10,7 @@ from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session, make_transient
+from sqlalchemy.orm.session import make_transient
 
 from .db import (
     Download,
@@ -86,9 +86,9 @@ def extract_marker(title: str) -> tuple[str, str | None]:
     return cast(tuple[str, str], tuple(m.groups()[1:]))
 
 
-def add_single(
+async def add_single(
     *,
-    session: Session,
+    session: AsyncSession,
     magnet: str,
     subpath: str,
     is_tv: bool,
@@ -114,7 +114,11 @@ def add_single(
     )['hashString']
 
     already = (
-        session.execute(select(Download).filter_by(transmission_id=transmission_id))
+        (
+            await session.execute(
+                select(Download).filter_by(transmission_id=transmission_id)
+            )
+        )
         .scalars()
         .one_or_none()
     )
