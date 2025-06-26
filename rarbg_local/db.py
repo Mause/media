@@ -20,6 +20,7 @@ from sqlalchemy import (
     event,
 )
 from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
+from sqlalchemy.dialects.postgresql.base import PGDialect
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -409,9 +410,14 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
                 giveup=lambda e: "too many connections for role" not in e.args[0],
             )
             def receive_do_connect(
-                dialect: Never, conn_rec: Never, cargs: tuple, cparams: dict
-            ) -> psycopg.Connection:
-                return psycopg.connect(*cargs, **cparams)
+                dialect: PGDialect, conn_rec: Never, cargs: tuple, cparams: dict
+            ) -> psycopg.AsyncConnection | psycopg.Connection:
+                return (
+                    psycopg.AsyncConnection.connect(*cargs, **cparams)
+                    if dialect.is_async
+                    else
+                    psycopg.connect(*cargs, **cparams)
+                )
 
     logfire.instrument_sqlalchemy(engine=engine)
 
