@@ -19,8 +19,8 @@ from sqlalchemy import (
     delete,
     event,
 )
-from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
 from sqlalchemy.dialects.postgresql.base import PGDialect
+from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -415,8 +415,7 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
                 return (
                     psycopg.AsyncConnection.connect(*cargs, **cparams)
                     if dialect.is_async
-                    else
-                    psycopg.connect(*cargs, **cparams)
+                    else psycopg.connect(*cargs, **cparams)
                 )
 
     logfire.instrument_sqlalchemy(engine=engine)
