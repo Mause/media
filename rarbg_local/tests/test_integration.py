@@ -706,7 +706,6 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
 
 
 @mark.asyncio
-@mark.skip(reason='Need to figure out retries with async api')
 async def test_psycopg2_error(
     monkeypatch: MonkeyPatch,
     fastapi_app: FastAPI,
