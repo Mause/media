@@ -19,7 +19,6 @@ from sqlalchemy import (
     delete,
     event,
 )
-from sqlalchemy.dialects.postgresql.base import PGDialect
 from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
 from sqlalchemy.engine import URL, Engine, make_url
 from sqlalchemy.ext.asyncio import (
@@ -408,6 +407,7 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
                 giveup=lambda e: "too many connections for role" not in e.args[0],
             )
             if db_url.dialect.is_async:
+
                 @listens_for(engine, "do_connect")
                 @retry
                 async def receive_do_connect(
@@ -415,6 +415,7 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
                 ) -> psycopg.AsyncConnection:
                     return await psycopg.AsyncConnection.connect(*cargs, **cparams)
             else:
+
                 @listens_for(engine, "do_connect")
                 @retry
                 def receive_do_connect(
