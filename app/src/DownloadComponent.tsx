@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 import { usePost, useLocation } from './utils';
 import { DisplayError } from './IndexComponent';
-import { components } from './schema';
+import type { components } from './schema';
 
 export type DownloadCall = components['schemas']['DownloadPost'];
 export interface DownloadState {

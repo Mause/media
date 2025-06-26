@@ -63,8 +63,8 @@ async def _stream(
 
 
 @websocket_ns.websocket("/ws")
-async def websocket_stream(websocket: WebSocket):
-    def fake(user: Annotated[User, security]):
+async def websocket_stream(websocket: WebSocket) -> None:
+    def fake(user: Annotated[User, security]) -> User:
         return user
 
     logger.info('Got websocket connection')

@@ -1,15 +1,17 @@
 import moxios from 'moxios';
 import axios from 'axios';
 import { render } from '@testing-library/react';
-import { act, ReactElement } from 'react';
-import { Auth0Context, Auth0ContextInterface } from '@auth0/auth0-react';
+import type { ReactElement } from 'react';
+import { act } from 'react';
+import type { Auth0ContextInterface } from '@auth0/auth0-react';
+import { Auth0Context } from '@auth0/auth0-react';
 import {
   ThemeProvider,
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
-import { Location, MemoryHistory } from '@remix-run/router';
-import { Listener } from '@remix-run/router/dist/history';
+import type { Location, MemoryHistory } from '@remix-run/router';
+import type { Listener } from '@remix-run/router/dist/history';
 import { HelmetProvider } from 'react-helmet-async';
 
 import { SwrConfigWrapper } from './streaming';
@@ -71,4 +73,10 @@ export function listenTo(hist: MemoryHistory) {
     return () => {};
   };
   return entries;
+}
+
+export function expectLastRequestBody() {
+  const mr = moxios.requests.mostRecent();
+  expect(mr).toBeTruthy();
+  return expect(JSON.parse(mr.config.data as string));
 }

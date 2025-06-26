@@ -37,10 +37,10 @@ def test_normalise(original: str, expected: str) -> None:
     [
         (
             'postgres://user:pass@localhost:5432/db',
-            'postgresql://user:pass@localhost:5432/db',
+            'postgresql+psycopg://user:pass@localhost:5432/db',
         ),
         ('sqlite:///:memory:', 'sqlite:///:memory:'),
     ],
 )
-def test_normalise_db_url(original, expected) -> None:
+def test_normalise_db_url(original: str, expected: str) -> None:
     assert normalise_db_url(original).render_as_string(hide_password=False) == expected

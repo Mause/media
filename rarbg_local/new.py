@@ -7,8 +7,6 @@ from typing import (
     Annotated,
     Any,
     Literal,
-    ParamSpec,
-    TypeVar,
     Union,
     cast,
 )
@@ -22,8 +20,8 @@ from fastapi_utils.openapi import simplify_operation_ids
 from plexapi.server import PlexServer
 from pydantic import BaseModel
 from sqlalchemy import Row, func
+from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session, object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -33,7 +31,7 @@ from .db import (
     EpisodeDetails,
     MovieDetails,
     User,
-    get_db,
+    get_async_db,
     get_movies,
     safe_delete,
 )
@@ -91,8 +89,6 @@ from .websocket import websocket_ns
 api = APIRouter()
 logger = logging.getLogger(__name__)
 logging.getLogger('backoff').handlers.clear()
-T = TypeVar('T')
-P = ParamSpec('P')
 
 
 def generate_plain_text(exc: BaseException) -> str:
@@ -101,15 +97,17 @@ def generate_plain_text(exc: BaseException) -> str:
 
 
 @api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)) -> dict:
-    safe_delete(
+async def delete(
+    type: MediaType, id: int, session: Annotated[AsyncSession, Depends(get_async_db)]
+) -> dict:
+    await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
 
     return {}
 
 
-def eventstream(
+def eventstream[**P](
     func: Callable[P, AsyncGenerator[BaseModel, None]],
 ) -> Callable[P, Coroutine[Any, Any, StreamingResponse]]:
     @wraps(func)
@@ -135,14 +133,23 @@ StreamType = Literal['series', 'movie']
     response_class=StreamingResponse,
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
-@eventstream
-async def stream(  # type: ignore[no-untyped-def]
+async def stream(
     type: StreamType,
     tmdb_id: TmdbId,
     source: ProviderSource,
     season: int | None = None,
     episode: int | None = None,
-):
+) -> StreamingResponse:
+    return await eventstream(stream_impl)(type, tmdb_id, source, season, episode)
+
+
+async def stream_impl(
+    type: StreamType,
+    tmdb_id: TmdbId,
+    source: ProviderSource,
+    season: int | None = None,
+    episode: int | None = None,
+) -> AsyncGenerator[ITorrent, None]:
     provider = next(
         (provider for provider in get_providers() if provider.type == source),
         None,
@@ -214,7 +221,7 @@ async def download_post(
 
     # work around a fastapi bug
     # see for more details https://github.com/fastapi/fastapi/discussions/6024
-    session = non_null(object_session(added_by))
+    session = non_null(async_object_session(added_by))
 
     for thing in things:
         is_tv = thing.season is not None
@@ -246,7 +253,7 @@ async def download_post(
             subpath = 'movies'
 
         results.append(
-            add_single(
+            await add_single(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
@@ -267,24 +274,33 @@ async def download_post(
         )
 
     session.add_all(results)
-    session.commit()
+    await session.commit()
+
+    for res in results:
+        # TODO: can we do this one call, or in the commit?
+        await session.refresh(res, attribute_names=['download'])
+        await session.refresh(res.download, attribute_names=['added_by'])
 
     return results
 
 
 @api.get('/index')
-async def index(session: Session = Depends(get_db)) -> IndexResponse:
+async def index(
+    session: Annotated[AsyncSession, Depends(get_async_db)],
+) -> IndexResponse:
     return IndexResponse(
-        series=await resolve_series(session), movies=get_movies(session)
+        series=await resolve_series(session), movies=await get_movies(session)
     )
 
 
 @api.get('/stats')
-async def stats(session: Session = Depends(get_db)) -> list[StatsResponse]:
-    def process(
+async def stats(
+    session: Annotated[AsyncSession, Depends(get_async_db)],
+) -> list[StatsResponse]:
+    async def process(
         added_by_id: int, values: list[Row[tuple[int, str, int]]]
     ) -> StatsResponse:
-        user = session.get(User, added_by_id)
+        user = await session.get(User, added_by_id)
         if not user:
             raise Exception()
 
@@ -294,10 +310,12 @@ async def stats(session: Session = Depends(get_db)) -> list[StatsResponse]:
         )
 
     keys = Download.added_by_id, Download.type
-    query = session.execute(select(*keys, func.count(name='count')).group_by(*keys))
+    query = await session.execute(
+        select(*keys, func.count(name='count')).group_by(*keys)
+    )
 
     return [
-        process(added_by_id, values)
+        await process(added_by_id, values)
         for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
     ]
 

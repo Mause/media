@@ -1,18 +1,18 @@
-import _ from 'lodash';
-import qs from 'qs';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { Breadcrumbs, Typography, Alert } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
+import * as _ from 'lodash-es';
 
+import * as qs from './qs';
 import { subscribe, MLink, getToken } from './utils';
-import { Torrents } from './streaming';
+import type { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
-import { DownloadState } from './DownloadComponent';
+import type { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
-import { components } from './schema';
+import type { components } from './schema';
 import { MonitorAddComponent } from './MonitorComponent';
 
 export type ITorrent = components['schemas']['ITorrent'];
@@ -120,7 +120,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     'seeders',
   );
   const bits = _.sortBy(
-    _.toPairs(grouped),
+    Object.entries(grouped),
     ([category]) => -ranking.indexOf(category),
   ).map(([category, results]) => (
     <div key={category}>
@@ -295,7 +295,7 @@ function useSubscribes<T>(url: string): {
       .map((t) => t.items || [])
       .reduce((a, b) => a.concat(b), []),
     loading: providers.filter((t) => t.loading).map((t) => t.name),
-    errors: _.fromPairs(
+    errors: Object.fromEntries(
       providers.filter((t) => t.error).map((t, i) => [p[i], t.error]),
     ) as { [key: string]: Error },
   };

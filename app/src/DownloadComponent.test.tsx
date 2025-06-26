@@ -8,9 +8,15 @@ import { createMemoryHistory } from '@remix-run/router';
 import moxios from 'moxios';
 import { act } from 'react';
 
-import { expectLastRequestBody } from './utils';
-import { wait, usesMoxios, renderWithSWR, listenTo } from './test.utils';
-import { DownloadComponent, DownloadState } from './DownloadComponent';
+import {
+  wait,
+  usesMoxios,
+  renderWithSWR,
+  listenTo,
+  expectLastRequestBody,
+} from './test.utils';
+import type { DownloadState } from './DownloadComponent';
+import { DownloadComponent } from './DownloadComponent';
 
 usesMoxios();
 
