@@ -406,7 +406,7 @@ def build_engine[T: Engine | AsyncEngine](db_url: URL, cr: Callable[..., T]) -> 
                 max_tries=MAX_TRIES,
                 giveup=lambda e: "too many connections for role" not in e.args[0],
             )
-            if db_url.dialect.is_async:
+            if engine.dialect.is_async:
 
                 @listens_for(engine, "do_connect")
                 @retry
