@@ -19,7 +19,7 @@
     "@mui/icons-material": "^7",
     "@mui/material": "^7",
     "@remix-run/router": "^1.23.0",
-    "@sentry/react": "^9.31.0",
+    "@sentry/react": "^9.32.0",
     "@sentry/toolbar": "1.0.0-beta.11",
     "@use-it/interval": "^1.0.0",
     "@vtex/axios-concurrent-retry": "^4.0.11",
