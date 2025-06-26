@@ -71,7 +71,7 @@ async def seed() -> None:
             )
         )
 
-        session.commit()
+        await session.commit()
 
 
 do_seed = (
