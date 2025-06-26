@@ -712,11 +712,11 @@ async def test_psycopg2_error(
     test_client: TestClient,
     caplog: LogCaptureFixture,
 ) -> None:
-    def replacement(*args: Any, **kwargs: Any) -> Never:
+    async def replacement(*args: Any, **kwargs: Any) -> Never:
         raise OperationalError(message)
 
     message = 'FATAL:  too many connections for role "wlhdyudesczvwl"'
-    monkeypatch.setattr('psycopg.connect', replacement)
+    monkeypatch.setattr('psycopg.AsyncConnection.connect', replacement)
 
     do = fastapi_app.dependency_overrides
     fastapi_app.dependency_overrides
