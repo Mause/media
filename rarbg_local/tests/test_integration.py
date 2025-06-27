@@ -24,6 +24,7 @@ from sqlalchemy.orm import joinedload
 
 from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, User, create_episode, create_movie
+from ..health import DiagnosticsRoot
 from ..main import get_episodes
 from ..models import ITorrent
 from ..new import SearchResponse, Settings, get_settings
@@ -99,10 +100,10 @@ async def test_diagnostics(
         '/api/diagnostics',
     )
     assert r.status_code == 200
-    results = r.json()
-    snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
+    root = DiagnosticsRoot.model_validate(r.json())
+    snapshot.assert_match(root.model_dump_json(indent=2), 'healthcheck.json')
 
-    for component in results:
+    for component in root.checks:
         r = await test_client.get(f'/api/diagnostics/{component}')
         r.raise_for_status()
         results = r.json()

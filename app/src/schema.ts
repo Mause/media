@@ -346,6 +346,13 @@ export interface components {
       message: string;
       subject?: components['schemas']['MonitorGet'] | null;
     };
+    /** DiagnosticsRoot */
+    DiagnosticsRoot: {
+      /** Version */
+      version: string;
+      /** Checks */
+      checks: string[];
+    };
     /** DownloadAllResponse */
     DownloadAllResponse: {
       /** Packs */
@@ -1079,7 +1086,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': string[];
+          'application/json': components['schemas']['DiagnosticsRoot'];
         };
       };
     };
