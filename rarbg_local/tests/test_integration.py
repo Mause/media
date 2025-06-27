@@ -100,10 +100,10 @@ async def test_diagnostics(
         '/api/diagnostics',
     )
     assert r.status_code == 200
-    results = DiagnosticsRoot.model_validate(r.json())
-    snapshot.assert_match(results.model_dump_json(indent=2), 'healthcheck.json')
+    root = DiagnosticsRoot.model_validate(r.json())
+    snapshot.assert_match(root.model_dump_json(indent=2), 'healthcheck.json')
 
-    for component in results.checks:
+    for component in root.checks:
         r = await test_client.get(f'/api/diagnostics/{component}')
         r.raise_for_status()
         results = r.json()
