@@ -804,11 +804,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array",
-                  "title": "Response Diagnostics Api Diagnostics Get"
+                  "$ref": "#/components/schemas/DiagnosticsRoot"
                 }
               }
             }
@@ -1110,6 +1106,27 @@
           "message"
         ],
         "title": "CronResponse[MonitorGet]"
+      },
+      "DiagnosticsRoot": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "checks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Checks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "checks"
+        ],
+        "title": "DiagnosticsRoot"
       },
       "DownloadAllResponse": {
         "properties": {
