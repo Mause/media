@@ -73,6 +73,7 @@ from .providers.abc import (
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import (
+    Discover,
     get_movie,
     get_movie_imdb_id,
     get_tv,
@@ -80,6 +81,9 @@ from .tmdb import (
     get_tv_episodes,
     get_tv_imdb_id,
     search_themoviedb,
+)
+from .tmdb import (
+    discover as tmdb_discover,
 )
 from .types import ImdbId, TmdbId
 from .utils import Message, non_null
@@ -332,6 +336,16 @@ async def torrents() -> dict[str, InnerTorrent]:
 @api.get('/search')
 async def search(query: str) -> list[SearchResponse]:
     return await search_themoviedb(query)
+
+
+@api.get('/providers', name='get_providers')
+async def get_provider_list() -> list[ProviderSource]:
+    return [provider.type for provider in get_providers()]
+
+
+@api.get('/discover')
+async def discover() -> Discover:
+    return tmdb_discover()
 
 
 tv_ns = APIRouter(tags=['tv'])

@@ -505,6 +505,66 @@
         }
       }
     },
+    "/api/providers": {
+      "get": {
+        "summary": "Get Providers",
+        "operationId": "get_providers",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderSource"
+                  },
+                  "type": "array",
+                  "title": "Response Get Providers Api Providers Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ]
+      }
+    },
+    "/api/discover": {
+      "get": {
+        "summary": "Discover",
+        "operationId": "discover",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Discover"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ]
+      }
+    },
     "/api/tv/{tmdb_id}": {
       "get": {
         "tags": [
@@ -1127,6 +1187,11 @@
           "checks"
         ],
         "title": "DiagnosticsRoot"
+      },
+      "Discover": {
+        "properties": {},
+        "type": "object",
+        "title": "Discover"
       },
       "DownloadAllResponse": {
         "properties": {
