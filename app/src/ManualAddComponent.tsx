@@ -34,13 +34,13 @@ export function ManualAddComponent() {
     tmdb_id: string;
   }>();
   const state = {
-    season: state_s?.season ? parseInt(state_s.season) : undefined,
-    episode: state_s?.episode ? parseInt(state_s.episode) : undefined,
+    season: state_s?.season ? Number.parseInt(state_s.season) : undefined,
+    episode: state_s?.episode ? Number.parseInt(state_s.episode) : undefined,
     tmdb_id: state_s.tmdb_id,
   };
 
   const { data } = useSWR<{ title: string }>(
-    () => (state.season ? 'tv' : 'movie') + `/` + state.tmdb_id,
+    () => (state.season ? 'tv' : 'movie') + '/' + state.tmdb_id,
   );
   const [magnet, setMagnet] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -54,7 +54,7 @@ export function ManualAddComponent() {
         {
           magnet,
           ...state,
-          tmdb_id: parseInt(state.tmdb_id),
+          tmdb_id: Number.parseInt(state.tmdb_id),
         },
       ],
     };

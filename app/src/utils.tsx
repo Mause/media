@@ -60,9 +60,11 @@ export function getPrefix() {
 
   if (!prefix) {
     return '';
-  } else if (prefix.includes('localhost')) {
+  }
+  if (prefix.includes('localhost')) {
     return '';
-  } else if (prefix) {
+  }
+  if (prefix) {
     return `https://${prefix}`;
   }
 }
@@ -101,9 +103,8 @@ export async function getToken(auth0: Auth0ContextInterface): Promise<string> {
         },
       });
       return '';
-    } else {
-      throw e;
     }
+    throw e;
   }
 }
 

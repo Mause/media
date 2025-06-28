@@ -67,9 +67,9 @@ function Websocket() {
       <p>
         {query.has('season')
           ? getMarker({
-              season: parseInt(query.get('season')!, 10),
+              season: Number.parseInt(query.get('season')!, 10),
               episode: query.has('episode')
-                ? parseInt(query.get('episode')!, 10)
+                ? Number.parseInt(query.get('episode')!, 10)
                 : undefined,
             })
           : 'No season'}

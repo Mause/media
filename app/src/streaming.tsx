@@ -101,17 +101,16 @@ const Login = () => {
         Logout
       </MaterialLink>
     );
-  } else {
-    return (
-      <MaterialLink
-        href="#"
-        onClick={() => void loginWithRedirect({})}
-        underline="hover"
-      >
-        Login
-      </MaterialLink>
-    );
   }
+  return (
+    <MaterialLink
+      href="#"
+      onClick={() => void loginWithRedirect({})}
+      underline="hover"
+    >
+      Login
+    </MaterialLink>
+  );
 };
 
 function ParentComponentInt() {
