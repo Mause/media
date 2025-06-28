@@ -377,10 +377,10 @@ export function NextEpisodeAirs(props: {
   );
 }
 
-function getMessage(air_date: string) {
+export function getMessage(air_date: string) {
   const today = Moment().startOf('day');
-  const tomorrow = today.add(1, 'day');
-  const yesterday = today.subtract(1, 'day');
+  const tomorrow = today.clone().add(1, 'day');
+  const yesterday = today.clone().subtract(1, 'day');
   const dt = Moment(air_date);
   const dts = dt.format('DD/MM/YYYY');
 
