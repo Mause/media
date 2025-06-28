@@ -110,17 +110,18 @@ export function MonitorAddComponent({
 
   if (error) {
     return <DisplayError error={error} />;
-  } else if (isMutating) {
-    return <ReactLoading color="#000000" />;
-  } else if (data) {
-    return <Navigate to="/monitor" />;
-  } else {
-    return (
-      <MaterialLink href="#" onClick={() => void trigger({ tmdb_id, type })}>
-        Add to monitor
-      </MaterialLink>
-    );
   }
+  if (isMutating) {
+    return <ReactLoading color="#000000" />;
+  }
+  if (data) {
+    return <Navigate to="/monitor" />;
+  }
+  return (
+    <MaterialLink href="#" onClick={() => void trigger({ tmdb_id, type })}>
+      Add to monitor
+    </MaterialLink>
+  );
 }
 
 function mutationFetcher<T, R>(

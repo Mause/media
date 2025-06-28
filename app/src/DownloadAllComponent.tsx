@@ -16,7 +16,7 @@ function DownloadAllComponent() {
     tmdb_id: string;
     season: string;
   }>();
-  const season = parseInt(season_s!);
+  const season = Number.parseInt(season_s!);
 
   const { data: torrents } = useSWR<Torrents>('torrents');
   const { data, isValidating, error } = useSWR<
@@ -94,7 +94,9 @@ function Individual(props: {
           props.items.map(([name, torrents]) => (
             <div key={name}>
               <h4>
-                <MLink {...download_all(parseInt(props.tmdb_id), torrents)}>
+                <MLink
+                  {...download_all(Number.parseInt(props.tmdb_id), torrents)}
+                >
                   {name}
                 </MLink>
               </h4>
