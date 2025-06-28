@@ -345,7 +345,7 @@ async def get_provider_list() -> list[ProviderSource]:
 
 @api.get('/discover')
 async def discover() -> Discover:
-    return tmdb_discover()
+    return await tmdb_discover()
 
 
 tv_ns = APIRouter(tags=['tv'])
