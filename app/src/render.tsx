@@ -396,13 +396,6 @@ export function getMessage(air_date: string) {
   } else {
     message = 'aired on ' + dts;
   }
-  console.log({
-    today: today.toISOString(),
-    tomorrow: tomorrow.toISOString(),
-    yesterday: yesterday.toISOString(),
-    dt: dt.toISOString(),
-    message,
-  });
   return message;
 }
 
