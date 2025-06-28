@@ -86,3 +86,6 @@ repos:
     hooks:
     -   id: biome-check
         additional_dependencies: ["@biomejs/biome@2.0.6"]
+        args:
+          - --config-path
+          - app/biome.json
