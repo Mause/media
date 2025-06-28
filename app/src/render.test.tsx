@@ -205,22 +205,20 @@ describe('shouldCollapse', () => {
 });
 
 describe('getMessage', () => {
-  beforeEach(() => {
-    MockDate.set('2020-01-03');
-  });
+  const today = '2020-01-03';
   it('2020-01-01', () => {
-    expect(getMessage('2020-01-01')).toBe('aired on 01/01/2020');
+    expect(getMessage('2020-01-01', today)).toBe('aired on 01/01/2020');
   });
   it('2020-01-02', () => {
-    expect(getMessage('2020-01-02')).toBe('aired yesterday');
+    expect(getMessage('2020-01-02', today)).toBe('aired yesterday');
   });
   it('2020-01-03', () => {
-    expect(getMessage('2020-01-03')).toBe('airs today');
+    expect(getMessage('2020-01-03', today)).toBe('airs today');
   });
   it('2020-01-04', () => {
-    expect(getMessage('2020-01-04')).toBe('airs tomorrow');
+    expect(getMessage('2020-01-04', today)).toBe('airs tomorrow');
   });
   it('2020-01-05', () => {
-    expect(getMessage('2020-01-05')).toBe('airs on 05/01/2020');
+    expect(getMessage('2020-01-05', today)).toBe('airs on 05/01/2020');
   });
 });
