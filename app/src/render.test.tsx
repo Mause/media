@@ -3,9 +3,9 @@ import MockDate from 'mockdate';
 import { MemoryRouter } from 'react-router-dom';
 
 import {
+  getMessage,
   Movies,
   NextEpisodeAirs,
-  getMessage,
   Progress,
   shouldCollapse,
   TVShows,
