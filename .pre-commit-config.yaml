@@ -85,6 +85,3 @@ repos:
     rev: "v2.0.6"  # Use the sha / tag you want to point at
     hooks:
     -   id: biome-check
-        args:
-          - --config-path
-          - app/biome.json
