@@ -1,41 +1,40 @@
-import { useSentryToolbar } from '@sentry/toolbar';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Grid, Link as MaterialLink } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import * as Sentry from '@sentry/react';
+import { useProfiler } from '@sentry/react';
+import { useSentryToolbar } from '@sentry/toolbar';
+import * as _ from 'lodash-es';
 import type { ErrorInfo, ReactNode } from 'react';
+import type { FallbackProps } from 'react-error-boundary';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Helmet } from 'react-helmet-async';
 import type { RouteObject } from 'react-router-dom';
 import {
-  RouterProvider,
   createBrowserRouter,
   Outlet,
+  RouterProvider,
   useLocation,
   useMatches,
 } from 'react-router-dom';
-import type { FallbackProps } from 'react-error-boundary';
-import { ErrorBoundary } from 'react-error-boundary';
-import { Grid, Link as MaterialLink } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { SWRConfig } from 'swr';
-import { useProfiler } from '@sentry/react';
-import { useAuth0 } from '@auth0/auth0-react';
-import * as _ from 'lodash-es';
-
+import { DiagnosticsComponent } from './DiagnosticsComponent';
+import { DownloadAllComponent } from './DownloadAllComponent';
+import { DownloadComponent } from './DownloadComponent';
 import { IndexComponent } from './IndexComponent';
+import { ManualAddComponent } from './ManualAddComponent';
+import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
+import { OptionsComponent } from './OptionsComponent';
+import { SearchComponent } from './SearchComponent';
 import {
   EpisodeSelectComponent,
   SeasonSelectComponent,
 } from './SeasonSelectComponent';
 import { StatsComponent } from './StatsComponent';
-import { SearchComponent } from './SearchComponent';
-import { OptionsComponent } from './OptionsComponent';
-import { load, MLink, ExtMLink, getToken } from './utils';
-import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
-import { ManualAddComponent } from './ManualAddComponent';
-import { DownloadComponent } from './DownloadComponent';
-import { DownloadAllComponent } from './DownloadAllComponent';
-import { Websocket } from './Websocket';
-import type { components } from './schema';
-import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
+import type { components } from './schema';
+import { ExtMLink, getToken, load, MLink } from './utils';
+import { Websocket } from './Websocket';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({

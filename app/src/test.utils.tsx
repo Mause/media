@@ -1,17 +1,17 @@
-import moxios from 'moxios';
-import axios from 'axios';
-import { render } from '@testing-library/react';
-import type { ReactElement } from 'react';
-import { act } from 'react';
 import type { Auth0ContextInterface } from '@auth0/auth0-react';
 import { Auth0Context } from '@auth0/auth0-react';
 import {
-  ThemeProvider,
-  StyledEngineProvider,
   createTheme,
+  StyledEngineProvider,
+  ThemeProvider,
 } from '@mui/material/styles';
 import type { Location, MemoryHistory } from '@remix-run/router';
 import type { Listener } from '@remix-run/router/dist/history';
+import { render } from '@testing-library/react';
+import axios from 'axios';
+import moxios from 'moxios';
+import type { ReactElement } from 'react';
+import { act } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 
 import { SwrConfigWrapper } from './streaming';

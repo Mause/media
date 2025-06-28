@@ -6,7 +6,7 @@ import {
   EpisodeSelectComponent,
   SeasonSelectComponent,
 } from './SeasonSelectComponent';
-import { mock, usesMoxios, wait, renderWithSWR } from './test.utils';
+import { mock, renderWithSWR, usesMoxios, wait } from './test.utils';
 
 usesMoxios();
 

@@ -1,31 +1,30 @@
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import {
+  faCaretDown,
+  faCaretUp,
+  faCheckCircle,
+  faSearch,
+  faSpinner,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LinearProgress from '@mui/material/LinearProgress';
 import MenuItem from '@mui/material/MenuItem';
-import { String } from 'typescript-string-operations';
+import * as _ from 'lodash-es';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSearch,
-  faSpinner,
-  faCaretUp,
-  faCaretDown,
-  faCheckCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import LinearProgress from '@mui/material/LinearProgress';
-import * as _ from 'lodash-es';
-
-import { getPrefix, MLink } from './utils';
+import { String } from 'typescript-string-operations';
+import ContextMenu from './ContextMenu';
 import type { TV } from './SeasonSelectComponent';
 import type {
+  EpisodeResponse,
   MovieResponse,
   SeriesResponse,
   Torrents,
-  EpisodeResponse,
 } from './streaming';
-import ContextMenu from './ContextMenu';
+import { getPrefix, MLink } from './utils';
 
 export function Loading({
   loading,

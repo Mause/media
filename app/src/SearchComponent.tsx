@@ -1,11 +1,10 @@
 import ReactLoading from 'react-loading';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
-
+import { DisplayError, SearchBox } from './IndexComponent';
 import * as qs from './qs';
-import { SearchBox, DisplayError } from './IndexComponent';
-import { MLink } from './utils';
 import type { components } from './schema';
+import { MLink } from './utils';
 export type SearchResult = components['schemas']['SearchResponse'];
 
 export function SearchComponent() {

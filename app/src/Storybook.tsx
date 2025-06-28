@@ -1,9 +1,8 @@
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
-
-import { Progress } from './render';
 import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
+import { Progress } from './render';
 
 export default function Storybook() {
   const [percentDone, setPercentDone] = useState(0.5);
