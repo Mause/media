@@ -74,7 +74,7 @@ export async function load<T>(
     withCredentials: true,
     headers,
   });
-  return t && t.data;
+  return t?.data;
 }
 
 interface Res<T> {
