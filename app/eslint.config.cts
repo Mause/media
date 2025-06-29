@@ -21,6 +21,7 @@ module.exports = tseslint.config(
     plugins: {
       // @ts-expect-error
       deprecation: fixupPluginRules(pluginDeprecation),
+      'react-refresh': reactRefresh
     },
     rules: {
       'deprecation/deprecation': 'error',
@@ -33,17 +34,16 @@ module.exports = tseslint.config(
         } satisfies typeof DefaultOptions,
       ],
       '@typescript-eslint/consistent-type-imports': 'error',
-    },
-    settings: {
-      'import-x/resolver-next': [createTypeScriptImportResolver({})],
       'react-refresh/only-export-components': [
         'error',
         { allowExportNames: ['meta', 'links', 'headers', 'loader', 'action'] },
       ],
     },
+    settings: {
+      'import-x/resolver-next': [createTypeScriptImportResolver({})],
+    },
   },
   eslintImport.flatConfigs.recommended,
   eslintImport.flatConfigs.typescript,
   eslintImport.flatConfigs.react,
-  reactRefresh.configs.vite,
 );
