@@ -372,8 +372,11 @@ function getRoutes() {
         {
           path: '/discover',
           lazy: async () => {
-            const { DiscoveryComponent } = await import('./DiscoveryComponent');
+            const { DiscoveryComponent, loader } = await import(
+              './DiscoveryComponent'
+            );
             return {
+              loader,
               element: (
                 <RouteTitle title="Discover">
                   <DiscoveryComponent />
