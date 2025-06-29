@@ -38,7 +38,7 @@
     "react-use-websocket": "^4.13.0",
     "swr": "^2.0.0",
     "typescript": "^5",
-    "typescript-string-operations": "^1.5.1"
+    "typescript-string-operations": "^1.6.1"
   },
   "scripts": {
     "start": "vite",
