@@ -370,6 +370,19 @@ function getRoutes() {
           ),
         },
         {
+          path: '/discover',
+          lazy: async () => {
+            const { DiscoveryComponent } = await import('./DiscoveryComponent');
+            return {
+              element: (
+                <RouteTitle title="Discover">
+                  <DiscoveryComponent />
+                </RouteTitle>
+              ),
+            };
+          },
+        },
+        {
           path: '/',
           element: (
             <RouteTitle title="Media">
