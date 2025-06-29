@@ -1189,9 +1189,98 @@
         "title": "DiagnosticsRoot"
       },
       "Discover": {
-        "properties": {},
+        "properties": {
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverMovie"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "total_pages": {
+            "type": "integer",
+            "title": "Total Pages"
+          },
+          "total_results": {
+            "type": "integer",
+            "title": "Total Results"
+          }
+        },
         "type": "object",
+        "required": [
+          "page",
+          "results",
+          "total_pages",
+          "total_results"
+        ],
         "title": "Discover"
+      },
+      "DiscoverMovie": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "release_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Date"
+          },
+          "poster_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Poster Path"
+          },
+          "backdrop_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Backdrop Path"
+          },
+          "overview": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overview"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "DiscoverMovie"
       },
       "DownloadAllResponse": {
         "properties": {

@@ -388,7 +388,31 @@ export interface components {
       checks: string[];
     };
     /** Discover */
-    Discover: Record<string, never>;
+    Discover: {
+      /** Page */
+      page: number;
+      /** Results */
+      results: components['schemas']['DiscoverMovie'][];
+      /** Total Pages */
+      total_pages: number;
+      /** Total Results */
+      total_results: number;
+    };
+    /** DiscoverMovie */
+    DiscoverMovie: {
+      /** Id */
+      id: number;
+      /** Title */
+      title: string;
+      /** Release Date */
+      release_date?: string | null;
+      /** Poster Path */
+      poster_path?: string | null;
+      /** Backdrop Path */
+      backdrop_path?: string | null;
+      /** Overview */
+      overview?: string | null;
+    };
     /** DownloadAllResponse */
     DownloadAllResponse: {
       /** Packs */
