@@ -4,6 +4,7 @@ import tseslint from 'typescript-eslint';
 import eslintImport from 'eslint-plugin-import-x';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import pluginDeprecation from 'eslint-plugin-deprecation';
+import reactRefresh from 'eslint-plugin-react-refresh';
 
 const DefaultOptions = eslintImport.rules.order.defaultOptions[0];
 
@@ -35,9 +36,14 @@ module.exports = tseslint.config(
     },
     settings: {
       'import-x/resolver-next': [createTypeScriptImportResolver({})],
+      'react-refresh/only-export-components': [
+        'error',
+        { allowExportNames: ['meta', 'links', 'headers', 'loader', 'action'] },
+      ],
     },
   },
   eslintImport.flatConfigs.recommended,
   eslintImport.flatConfigs.typescript,
   eslintImport.flatConfigs.react,
+  reactRefresh.configs.vite,
 );
