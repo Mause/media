@@ -2,14 +2,7 @@ import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MockDate from 'mockdate';
 
-import {
-  Movies,
-  TVShows,
-  getMessage,
-  Progress,
-  shouldCollapse,
-  NextEpisodeAirs,
-} from './render';
+import { Movies, TVShows, Progress, NextEpisodeAirs } from './render';
 import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
 import type {
   MovieResponse,
@@ -18,6 +11,7 @@ import type {
   SeriesResponse,
   EpisodeResponse,
 } from './streaming';
+import { getMessage, shouldCollapse } from './utils';
 
 usesMoxios();
 beforeEach(() => MockDate.reset());

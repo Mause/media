@@ -17,7 +17,7 @@ import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
 
-import { getPrefix, MLink } from './utils';
+import { getMarker, getMessage, getPrefix, shouldCollapse } from './utils';
 import type { TV } from './SeasonSelectComponent';
 import type {
   MovieResponse,
@@ -26,6 +26,7 @@ import type {
   EpisodeResponse,
 } from './streaming';
 import ContextMenu from './ContextMenu';
+import { MLink } from './MLink';
 
 export function Loading({
   loading,
@@ -170,13 +171,6 @@ export function Progress({
       />
     );
   }
-}
-
-export function getMarker(episode: {
-  season?: number;
-  episode?: number | null;
-}) {
-  return String.format('S{0:00}E{1:00}', episode.season, episode.episode);
 }
 
 function getProgress(
@@ -375,48 +369,4 @@ export function NextEpisodeAirs(props: {
       </MLink>
     </small>
   );
-}
-
-export function getMessage(air_date: string) {
-  const today = Moment().startOf('day');
-  const tomorrow = today.clone().add(1, 'day');
-  const yesterday = today.clone().subtract(1, 'day');
-  const dt = Moment(air_date);
-  const dts = dt.format('DD/MM/YYYY');
-
-  let message;
-  if (today.isSame(dt)) {
-    message = 'airs today';
-  } else if (dt.isSame(yesterday)) {
-    message = 'aired yesterday';
-  } else if (dt.isSame(tomorrow)) {
-    message = 'airs tomorrow';
-  } else if (dt.isAfter(today)) {
-    message = 'airs on ' + dts;
-  } else {
-    message = 'aired on ' + dts;
-  }
-  return message;
-}
-
-export function shouldCollapse(
-  i: string,
-  data: TV | undefined,
-  episodes: EpisodeResponse[],
-): boolean {
-  let collapse = false;
-  if (data) {
-    const i_i = +i;
-    const seasonMeta = data.seasons.find((s) => s.season_number === i_i);
-    if (seasonMeta) {
-      const hasNext = true; // !!data.seasons[i_i + 1];
-
-      const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
-      const hasNumbers = _.map(episodes, 'episode');
-      const hasAllEpisodes =
-        _.difference(episodeNumbers, hasNumbers).length === 0;
-      collapse = hasNext && hasAllEpisodes;
-    }
-  }
-  return collapse;
 }

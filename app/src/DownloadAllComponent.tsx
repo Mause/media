@@ -5,7 +5,7 @@ import type { ITorrent } from './OptionsComponent';
 import { DisplayTorrent } from './OptionsComponent';
 import { Loading } from './render';
 import { EpisodeSelectBreadcrumbs } from './SeasonSelectComponent';
-import { MLink } from './utils';
+import { MLink } from './MLink';
 import type { DownloadCall } from './DownloadComponent';
 import type { Torrents } from './streaming';
 import { DisplayError } from './IndexComponent';
