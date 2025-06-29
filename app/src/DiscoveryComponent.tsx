@@ -12,7 +12,7 @@ export function DiscoveryComponent() {
   const data = useLoaderData<typeof loader>();
   return (
     <div>
-      <h1>Discovery Component</h1>
+      <h3>Discovery Component</h3>
       <p>This is a placeholder for the Discovery component.</p>
       <p>{data?.message}</p>
     </div>
