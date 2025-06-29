@@ -54,28 +54,27 @@ export function SimpleDiagnosticDisplay({
     <li>
       {component}: {isValidating && <ReactLoading type="balls" color="#000" />}
       <ul>
-        {data &&
-          data.map((item, i) => (
-            <li key={i}>
-              <FontAwesomeIcon
-                icon={faCircle}
-                className={getColour(item.status)}
-              />
-              <pre>
-                <code>
-                  {JSON.stringify(
-                    {
-                      component_type: item.component_type,
-                      time: item.time,
-                      output: item.output,
-                    },
-                    null,
-                    2,
-                  )}
-                </code>
-              </pre>
-            </li>
-          ))}
+        {data?.map((item, i) => (
+          <li key={i}>
+            <FontAwesomeIcon
+              icon={faCircle}
+              className={getColour(item.status)}
+            />
+            <pre>
+              <code>
+                {JSON.stringify(
+                  {
+                    component_type: item.component_type,
+                    time: item.time,
+                    output: item.output,
+                  },
+                  null,
+                  2,
+                )}
+              </code>
+            </pre>
+          </li>
+        ))}
       </ul>
       {error ? (
         <pre>
@@ -104,12 +103,11 @@ export function DiagnosticsComponent() {
       )}
 
       <ul>
-        {data &&
-          data.checks.map((component) => (
-            <li key={component}>
-              <SingleDiagnostic component={component} />
-            </li>
-          ))}
+        {data?.checks.map((component) => (
+          <li key={component}>
+            <SingleDiagnostic component={component} />
+          </li>
+        ))}
       </ul>
     </div>
   );

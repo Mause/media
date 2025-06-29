@@ -136,7 +136,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     header = (
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
-        <Typography color="textPrimary">{meta && meta.title}</Typography>
+        <Typography color="textPrimary">{meta?.title}</Typography>
       </Breadcrumbs>
     );
   } else {
@@ -145,7 +145,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
         <MLink color="inherit" to={url}>
-          {meta && meta.title}
+          {meta?.title}
         </MLink>
         <MLink color="inherit" to={`${url}/${season}`}>
           Season {season}
