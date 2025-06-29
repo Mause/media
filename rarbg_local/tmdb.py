@@ -176,6 +176,7 @@ class Discover(BaseModel):
         poster_path: str | None = None
         backdrop_path: str | None = None
         overview: str | None = None
+
     page: int
     results: list[DiscoverMovie]
     total_pages: int
