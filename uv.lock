@@ -76,6 +76,15 @@ wheels = [
 ]
 
 [[package]]
+name = "aiojobs"
+version = "1.4.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/03/54/751969398e2039b4dc458fa153dc066a0f7337a5b480d58944f59b7b38ae/aiojobs-1.4.0.tar.gz", hash = "sha256:463665c75d1fcc46c78d44375c1034abf5e3f087894b0fc5ec4dd16ef90fdc98", size = 139598, upload-time = "2025-04-05T00:39:07.771Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ce/89/5a30b3c041712a8b2dadb5ccef2bae12a874469650c61c018705039699cd/aiojobs-1.4.0-py3-none-any.whl", hash = "sha256:e95eb0d10d1f6095aefb04d228d2b4b3747514503f26540de722c2228a8500ca", size = 9455, upload-time = "2025-04-05T00:39:06.279Z" },
+]
+
+[[package]]
 name = "aiontfy"
 version = "0.5.3"
 source = { registry = "https://pypi.org/simple" }
@@ -567,6 +576,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/20/64/ec0788201b5554e2a87c49af26b77a4d132f807a0fa9675257ac92c6aa0e/fastapi-0.115.13.tar.gz", hash = "sha256:55d1d25c2e1e0a0a50aceb1c8705cd932def273c102bff0b1c1da88b3c6eb307", size = 295680, upload-time = "2025-06-17T11:49:45.575Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/59/4a/e17764385382062b0edbb35a26b7cf76d71e27e456546277a42ba6545c6e/fastapi-0.115.13-py3-none-any.whl", hash = "sha256:0a0cab59afa7bab22f5eb347f8c9864b681558c278395e94035a741fc10cd865", size = 95315, upload-time = "2025-06-17T11:49:44.106Z" },
+]
+
+[[package]]
+name = "fastapi-jsonrpc"
+version = "3.4.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiojobs" },
+    { name = "fastapi" },
+    { name = "pydantic" },
+    { name = "starlette" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/7f/d8/95f0a6041ed4900b1b5e8a5edcdc79169711421359188a2c30b4c9d8762e/fastapi_jsonrpc-3.4.1.tar.gz", hash = "sha256:3a0933003ae1c8baaea957ef9963508f2b0a20fd0053291f94883aee2ee2718f", size = 19644, upload-time = "2025-04-24T14:51:24.529Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3f/19/ebaf4486722822d1e21b64000ed0b1ccec8d56719174c4819c41d2b755b4/fastapi_jsonrpc-3.4.1-py3-none-any.whl", hash = "sha256:5c3466a342701863440928a3f7767a77fc7ee5eaa82b00c867465af3dc369eba", size = 20026, upload-time = "2025-04-24T14:51:22.867Z" },
 ]
 
 [[package]]
@@ -1073,6 +1097,7 @@ dependencies = [
     { name = "email-validator" },
     { name = "eventlet" },
     { name = "fastapi" },
+    { name = "fastapi-jsonrpc" },
     { name = "fastapi-oidc" },
     { name = "fastapi-utils" },
     { name = "fuzzywuzzy", extra = ["speedup"] },
@@ -1147,6 +1172,7 @@ requires-dist = [
     { name = "email-validator", specifier = "==2.2.0" },
     { name = "eventlet", specifier = "==0.40.1" },
     { name = "fastapi", specifier = "==0.115.13" },
+    { name = "fastapi-jsonrpc", specifier = ">=3.4.1" },
     { name = "fastapi-oidc", specifier = ">=0.0.10" },
     { name = "fastapi-utils", specifier = "==0.8.0" },
     { name = "fuzzywuzzy", extras = ["speedup"], specifier = "==0.18.0" },

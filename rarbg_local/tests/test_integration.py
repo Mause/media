@@ -791,6 +791,14 @@ async def test_websocket_error(test_client: TestClient, snapshot: Snapshot) -> N
 
 
 @mark.asyncio
+async def test_rpc(test_client, snapshot):
+    r = await test_client.get('/rpc/openrpc.json')
+    assert r.status_code == 200
+
+    assert_match_json(snapshot, r, 'rpc_docs.json')
+
+
+@mark.asyncio
 @patch('rarbg_local.websocket.get_movie_imdb_id')
 @patch('rarbg_local.providers.get_providers')
 async def test_websocket(
