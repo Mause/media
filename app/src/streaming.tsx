@@ -14,7 +14,6 @@ import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Grid, Link as MaterialLink } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { SWRConfig } from 'swr';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
@@ -27,7 +26,7 @@ import {
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import { OptionsComponent } from './OptionsComponent';
-import { load, MLink, ExtMLink, getToken } from './utils';
+import { MLink, ExtMLink } from './utils';
 import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
@@ -36,6 +35,7 @@ import { Websocket } from './Websocket';
 import type { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
+import { SwrConfigWrapper } from './SwrConfigWrapper';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -197,29 +197,6 @@ function ParentComponentInt() {
         )}
       </ErrorBoundary>
     </>
-  );
-}
-export function SwrConfigWrapper({ children }: { children: ReactNode }) {
-  const auth = useAuth0();
-  return (
-    <SWRConfig
-      value={{
-        // five minute refresh
-        refreshInterval: 5 * 60 * 1000,
-        fetcher: async (path: string, params: string) =>
-          await load(
-            path,
-            params,
-            auth.isAuthenticated
-              ? {
-                  Authorization: 'Bearer ' + (await getToken(auth)),
-                }
-              : {},
-          ),
-      }}
-    >
-      {children}
-    </SWRConfig>
   );
 }
 
