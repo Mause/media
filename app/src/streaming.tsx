@@ -37,6 +37,7 @@ import type { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
 import { ExtMLink, MLink } from './MLink';
+import { Loading } from './render';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -372,7 +373,7 @@ function getRoutes() {
         },
         {
           path: '/discover',
-          hydrateFallbackElement: <div>Loading...</div>,
+          hydrateFallbackElement: <Loading loading />,
           lazy: async () => {
             const { DiscoveryComponent } = await import('./DiscoveryComponent');
             return {
