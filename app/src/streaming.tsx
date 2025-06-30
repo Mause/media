@@ -27,7 +27,7 @@ import {
 import { StatsComponent } from './StatsComponent';
 import { SearchComponent } from './SearchComponent';
 import { OptionsComponent } from './OptionsComponent';
-import { load, MLink, ExtMLink, getToken } from './utils';
+import { load, getToken } from './utils';
 import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
 import { ManualAddComponent } from './ManualAddComponent';
 import { DownloadComponent } from './DownloadComponent';
@@ -36,6 +36,7 @@ import { Websocket } from './Websocket';
 import type { components } from './schema';
 import { DiagnosticsComponent } from './DiagnosticsComponent';
 import Storybook from './Storybook';
+import { ExtMLink, MLink } from './MLink';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -371,6 +372,7 @@ function getRoutes() {
         },
         {
           path: '/discover',
+          hydrateFallbackElement: <div>Loading...</div>,
           lazy: async () => {
             const { DiscoveryComponent, loader } = await import(
               './DiscoveryComponent'

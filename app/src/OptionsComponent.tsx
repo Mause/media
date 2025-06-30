@@ -6,7 +6,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 
 import * as qs from './qs';
-import { subscribe, MLink, getToken } from './utils';
+import { subscribe, getToken } from './utils';
 import type { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
@@ -14,6 +14,7 @@ import type { DownloadState } from './DownloadComponent';
 import { DisplayError } from './IndexComponent';
 import type { components } from './schema';
 import { MonitorAddComponent } from './MonitorComponent';
+import { MLink } from './MLink';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];

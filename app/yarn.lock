@@ -2325,6 +2325,7 @@ __metadata:
     eslint-import-resolver-typescript: "npm:^4.4.1"
     eslint-plugin-deprecation: "npm:^3.0.0"
     eslint-plugin-import-x: "npm:^4.12.2"
+    eslint-plugin-react-refresh: "npm:^0.4.20"
     jiti: "npm:^2.4.2"
     jsdom: "npm:^26.1.0"
     lodash-es: "npm:^4.17.21"
@@ -3176,6 +3177,15 @@ __metadata:
     eslint-import-resolver-node:
       optional: true
   checksum: 10/d1390d49499b613c1334e48fe8b104221584a1473fbec8974584002561aacef5347c4450c559df6fe24c3abe3b0d167eefdc5510e794e96a4ea4f9cb1d501515
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-react-refresh@npm:^0.4.20":
+  version: 0.4.20
+  resolution: "eslint-plugin-react-refresh@npm:0.4.20"
+  peerDependencies:
+    eslint: ">=8.40"
+  checksum: 10/88aec8eeaf96f1a09df72a2134dc36dd8ef22a3ceb1ccba7865e63a128596e6be31942925edf896dcd12d0d51b8cb77530293ef4e738b600955a5a5c913f52d8
   languageName: node
   linkType: hard
 
