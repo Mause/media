@@ -3,6 +3,7 @@ import { Grid } from '@mui/material';
 
 import type { paths } from './schema';
 import { Loading } from './render';
+import { DisplayError } from './IndexComponent';
 
 type DiscoverResponse =
   paths['/api/discover']['get']['responses']['200']['content']['application/json'];
