@@ -169,7 +169,18 @@ class ReleaseType(Enum):
 
 
 class Discover(BaseModel):
-    pass
+    class DiscoverMovie(BaseModel):
+        id: TmdbId
+        title: str
+        release_date: datetime | None = None
+        poster_path: str | None = None
+        backdrop_path: str | None = None
+        overview: str | None = None
+
+    page: int
+    results: list[DiscoverMovie]
+    total_pages: int
+    total_results: int
 
 
 async def discover(

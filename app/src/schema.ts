@@ -157,6 +157,40 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/providers': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Providers */
+    get: operations['get_providers'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/discover': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Discover */
+    get: operations['discover'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/tv/{tmdb_id}': {
     parameters: {
       query?: never;
@@ -352,6 +386,32 @@ export interface components {
       version: string;
       /** Checks */
       checks: string[];
+    };
+    /** Discover */
+    Discover: {
+      /** Page */
+      page: number;
+      /** Results */
+      results: components['schemas']['DiscoverMovie'][];
+      /** Total Pages */
+      total_pages: number;
+      /** Total Results */
+      total_results: number;
+    };
+    /** DiscoverMovie */
+    DiscoverMovie: {
+      /** Id */
+      id: number;
+      /** Title */
+      title: string;
+      /** Release Date */
+      release_date?: string | null;
+      /** Poster Path */
+      poster_path?: string | null;
+      /** Backdrop Path */
+      backdrop_path?: string | null;
+      /** Overview */
+      overview?: string | null;
     };
     /** DownloadAllResponse */
     DownloadAllResponse: {
@@ -898,6 +958,46 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_providers: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProviderSource'][];
+        };
+      };
+    };
+  };
+  discover: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Discover'];
         };
       };
     };
