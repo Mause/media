@@ -372,6 +372,7 @@ function getRoutes() {
         },
         {
           path: '/discover',
+          hydrateFallbackElement: <div>Loading...</div>,
           lazy: async () => {
             const { DiscoveryComponent, loader } = await import(
               './DiscoveryComponent'
