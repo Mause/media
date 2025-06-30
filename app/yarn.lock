@@ -2032,7 +2032,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react-oxc@npm:^0.2.2":
+"@vitejs/plugin-react@npm:@vitejs/plugin-react-oxc@^0.2.2":
   version: 0.2.3
   resolution: "@vitejs/plugin-react-oxc@npm:0.2.3"
   dependencies:
@@ -2309,7 +2309,7 @@ __metadata:
     "@types/react-dom": "npm:^18"
     "@use-it/interval": "npm:^1.0.0"
     "@vitejs/plugin-basic-ssl": "npm:^2.0.0"
-    "@vitejs/plugin-react-oxc": "npm:^0.2.2"
+    "@vitejs/plugin-react": "npm:@vitejs/plugin-react-oxc@^0.2.2"
     "@vitest/ui": "npm:^3.2.1"
     "@vtex/axios-concurrent-retry": "npm:^4.0.11"
     axios: "npm:^1.8.2"
