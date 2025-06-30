@@ -2338,7 +2338,7 @@ __metadata:
     swr: "npm:^2.0.0"
     typescript: "npm:^5"
     typescript-eslint: "npm:^8.34.0"
-    typescript-string-operations: "npm:^1.5.1"
+    typescript-string-operations: "npm:^1.6.1"
     vite: "npm:rolldown-vite@latest"
     vite-plugin-bundlesize: "npm:^0.2.0"
     vitest: "npm:^3.2.1"
@@ -5783,10 +5783,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-string-operations@npm:^1.5.1":
-  version: 1.5.1
-  resolution: "typescript-string-operations@npm:1.5.1"
-  checksum: 10/cec5ad55922ff6e5fc9f43bd7cdcbbb4049bf7b69b18d0ff508b7227519b4da2ce1873b913760b3bf12651833b67d314e0c1c8cee26a25cc0e138335e34bb250
+"typescript-string-operations@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "typescript-string-operations@npm:1.6.1"
+  checksum: 10/c89dcab18c6b082caabd2dc61055a8ed1c75f1bc650d8a9fe5688054003f18169bb7d4ab91d291af6f5650c14f2d4b6ac4f1174d2afa9bf98a26b352ff282e7d
   languageName: node
   linkType: hard
 
