@@ -1,21 +1,21 @@
+import Search from '@mui/icons-material/Search';
+import {
+  Alert,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from '@mui/material';
+import * as _ from 'lodash-es';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
-import {
-  Alert,
-  FormControl,
-  OutlinedInput,
-  IconButton,
-  InputLabel,
-  InputAdornment,
-} from '@mui/material';
-import Search from '@mui/icons-material/Search';
-import * as _ from 'lodash-es';
 
 import * as qs from './qs';
+import { Movies, TVShows } from './render';
 import type { IndexResponse, Torrents } from './streaming';
-import { TVShows, Movies } from './render';
 
 const CFG = {
   refreshInterval: 10000,

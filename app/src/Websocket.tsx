@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
-import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
 import * as _ from 'lodash-es';
+import { useEffect, useState } from 'react';
+import usePromise from 'react-promise-suspense';
+import { useLocation, useParams } from 'react-router-dom';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 import type { ITorrent } from './OptionsComponent';
 import { DisplayTorrent } from './OptionsComponent';
-import { getPrefix, getToken } from './utils';
 import { getMarker } from './render';
+import { getPrefix, getToken } from './utils';
 
 function useMessages<T>(initMessage: object) {
   const base = getPrefix();

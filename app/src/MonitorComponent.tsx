@@ -1,15 +1,15 @@
-import useSWR from 'swr';
-import { useState, useEffect } from 'react';
-import ReactLoading from 'react-loading';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import MenuItem from '@mui/material/MenuItem';
-import Axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
-import MaterialLink from '@mui/material/Link';
-import Button from '@mui/material/Button';
 import type { Auth0ContextInterface, User } from '@auth0/auth0-react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { faCircle, faTicketAlt, faTv } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button from '@mui/material/Button';
+import MaterialLink from '@mui/material/Link';
+import MenuItem from '@mui/material/MenuItem';
+import Axios from 'axios';
+import { useEffect, useState } from 'react';
+import ReactLoading from 'react-loading';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 import ContextMenu from './ContextMenu';

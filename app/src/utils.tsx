@@ -1,17 +1,18 @@
-import type { ReactElement } from 'react';
-import React, { useState, useEffect } from 'react';
-import type { RawAxiosRequestHeaders } from 'axios';
-import Axios from 'axios';
-import MaterialLink from '@mui/material/Link';
-import { Link } from 'react-router-dom';
-import * as RRD from 'react-router-dom';
-// import axiosRetry from '@vtex/axios-concurrent-retry';
-import type { TypographyTypeMap } from '@mui/material';
 import type {
   Auth0ContextInterface,
   AuthenticationError,
 } from '@auth0/auth0-react';
 import { useAuth0 } from '@auth0/auth0-react';
+// import axiosRetry from '@vtex/axios-concurrent-retry';
+import type { TypographyTypeMap } from '@mui/material';
+import MaterialLink from '@mui/material/Link';
+import type { RawAxiosRequestHeaders } from 'axios';
+import Axios from 'axios';
+import type React from 'react';
+import type { ReactElement } from 'react';
+import { useEffect, useState } from 'react';
+import * as RRD from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { FetchEventTarget } from './fetch_stream';
 

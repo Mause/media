@@ -1,8 +1,7 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
-import { renderWithSWR, mock, usesMoxios, wait } from './test.utils';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import type { ITorrent } from './OptionsComponent';
+import { mock, renderWithSWR, usesMoxios, wait } from './test.utils';
 
 usesMoxios();
 
