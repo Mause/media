@@ -7,7 +7,8 @@ import * as _ from 'lodash-es';
 
 import * as qs from './qs';
 import type { components } from './schema';
-import { MLink, useLocation } from './utils';
+import { useLocation } from './utils';
+import { MLink } from './MLink';
 
 export type Season = components['schemas']['TvSeasonResponse'];
 export type EpisodeResponse = components['schemas']['Episode'];
