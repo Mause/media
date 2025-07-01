@@ -9,7 +9,7 @@ import { MLink } from './MLink';
 import { DisplayError } from './IndexComponent';
 import type { GetResponse } from './utils';
 
-type DiscoverResponse = GetResponse<paths['/api/discover']>;
+export type DiscoverResponse = GetResponse<paths['/api/discover']>;
 type Configuration = GetResponse<paths['/api/tmdb/configuration']>;
 
 function getYear(release_date: string | null | undefined): string | number {
