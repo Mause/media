@@ -195,3 +195,21 @@ async def discover(
             'with_release_type': '|'.join(str(ReleaseType(i).value) for i in types),
         },
     )
+
+
+class Configuration(BaseModel):
+    class ImagesConfiguration(BaseModel):
+        base_url: str
+        secure_base_url: str
+        backdrop_sizes: list[str]
+        logo_sizes: list[str]
+        poster_sizes: list[str]
+        profile_sizes: list[str]
+        still_sizes: list[str]
+
+    images: ImagesConfiguration
+    change_keys: list[str]
+
+
+async def get_configuration() -> Configuration:
+    return await get_json('configuration', Configuration)

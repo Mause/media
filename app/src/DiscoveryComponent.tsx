@@ -10,6 +10,7 @@ import { DisplayError } from './IndexComponent';
 import type { GetResponse } from './utils';
 
 type DiscoverResponse = GetResponse<paths['/api/discover']>;
+type Configuration = GetResponse<paths['/api/tmdb/configuration']>;
 
 function getYear(release_date: string | null | undefined): string | number {
   if (release_date) {
@@ -38,10 +39,28 @@ export function DiscoveryComponent() {
                 <FontAwesomeIcon icon={faSearch} />
               </MLink>
             </h4>
+            {result.poster_path && <Poster poster_path={result.poster_path} />}
             <p>{result.overview}</p>
           </Grid>
         ))}
       </Grid>
     </div>
   );
+}
+
+function Poster({ poster_path }: { poster_path: string }) {
+  const { data, isValidating } = useSWR<Configuration>('configuration');
+
+  if (isValidating) {
+    return undefined;
+  }
+
+  const base = data!.images.secure_base_url;
+
+  const srcset = data!.images.poster_sizes.map((size) => [
+    `${base}/${size}/${poster_path}`,
+    size,
+  ]);
+
+  return <img srcSet={srcset.map((pair) => pair.join(' ')).join(', ')} />;
 }
