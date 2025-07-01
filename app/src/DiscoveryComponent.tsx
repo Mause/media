@@ -10,7 +10,7 @@ type DiscoverResponse =
 
 export function DiscoveryComponent() {
   const { data, isValidating, error } = useSWR<DiscoverResponse, Error>(
-    '/api/discover',
+    'discover',
   );
 
   return (
