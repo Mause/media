@@ -67,7 +67,9 @@ exports[`DiscoveryComponent 2`] = `
             </svg>
           </a>
         </h4>
-        <p />
+        <p>
+          A man loses his mind
+        </p>
       </div>
     </div>
   </div>
