@@ -32,7 +32,7 @@ export function DiscoveryComponent() {
       {error && <DisplayError error={error} />}
       <Grid container spacing={2}>
         {data?.results.map((result) => (
-          <Grid>
+          <Grid key={result.id}>
             <h4>
               {result.title} ({getYear(result.release_date)})
               <MLink to={`/select/${result.id}/options`}>
