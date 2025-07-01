@@ -10,7 +10,6 @@ import {
   InputAdornment,
 } from '@mui/material';
 import Search from '@mui/icons-material/Search';
-import * as _ from 'lodash-es';
 
 import * as qs from './qs';
 import type { IndexResponse, Torrents } from './streaming';
