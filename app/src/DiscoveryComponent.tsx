@@ -26,7 +26,7 @@ export function DiscoveryComponent() {
           <Grid>
             <h4>
               {result.title}
-              <MLink to={`/select/${tmdb_id}/options`}>
+              <MLink to={`/select/${result.id}/options`}>
                 <FontAwesomeIcon icon={faSearch} />
               </MLink>
             </h4>
