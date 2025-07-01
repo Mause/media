@@ -21,7 +21,7 @@ module.exports = tseslint.config(
     plugins: {
       // @ts-expect-error
       deprecation: fixupPluginRules(pluginDeprecation),
-      'react-refresh': reactRefresh
+      'react-refresh': reactRefresh,
     },
     rules: {
       'deprecation/deprecation': 'error',

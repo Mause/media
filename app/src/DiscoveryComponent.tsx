@@ -1,12 +1,12 @@
 import useSWR from 'swr';
 import { Grid } from '@mui/material';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import type { paths } from './schema';
 import { Loading } from './render';
 import { MLink } from './MLink';
 import { DisplayError } from './IndexComponent';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type DiscoverResponse =
   paths['/api/discover']['get']['responses']['200']['content']['application/json'];
