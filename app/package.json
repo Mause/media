@@ -18,6 +18,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^7",
     "@mui/material": "^7",
+    "@react-router/dev": "^7.6.3",
     "@sentry/react": "^9.36.0",
     "@sentry/toolbar": "1.0.0-beta.11",
     "@sentry/vite-plugin": "^3.6.0",
