@@ -1,8 +1,7 @@
-import moxios from 'moxios';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { wait, usesMoxios, renderWithSWR } from './test.utils';
-import type { DiscoverResponse } from './DiscoveryComponent';
+import { wait, usesMoxios, renderWithSWR, mock } from './test.utils';
+import type { Configuration, DiscoverResponse } from './DiscoveryComponent';
 import { DiscoveryComponent } from './DiscoveryComponent';
 
 usesMoxios();
@@ -11,20 +10,15 @@ test('DiscoveryComponent', async () => {
   const { container } = renderWithSWR(
     <MemoryRouter>
       <Routes>
-        <Route
-          index
-          path="/"
-          element={<DiscoveryComponent></DiscoveryComponent>}
-        />
+        <Route index path="/" element={<DiscoveryComponent />} />
       </Routes>
     </MemoryRouter>,
   );
 
   expect(container).toMatchSnapshot();
 
-  await moxios.stubOnce('GET', /api\/discover/, {
-    status: 200,
-    response: {
+  await Promise.all([
+    mock('/api/discover', {
       results: [
         {
           id: 101,
@@ -37,8 +31,20 @@ test('DiscoveryComponent', async () => {
       page: 1,
       total_pages: 1,
       total_results: 1,
-    } satisfies DiscoverResponse,
-  });
+    } satisfies DiscoverResponse),
+    mock('/api/tmdb/configuration', {
+      images: {
+        backdrop_sizes: [],
+        base_url: 'https://tmdb.org',
+        logo_sizes: [],
+        poster_sizes: ['800w'],
+        profile_sizes: [],
+        secure_base_url: 'https://tmdb.org',
+        still_sizes: [],
+      },
+      change_keys: [],
+    } as Configuration),
+  ]);
   await wait();
 
   expect(container).toMatchSnapshot();
