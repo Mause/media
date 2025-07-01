@@ -7,9 +7,9 @@ import type { paths } from './schema';
 import { Loading } from './render';
 import { MLink } from './MLink';
 import { DisplayError } from './IndexComponent';
+import type { GetResponse } from './utils';
 
-type DiscoverResponse =
-  paths['/api/discover']['get']['responses']['200']['content']['application/json'];
+type DiscoverResponse = GetResponse<paths['/api/discover']>;
 
 export function DiscoveryComponent() {
   const { data, isValidating, error } = useSWR<DiscoverResponse, Error>(
