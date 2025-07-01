@@ -5,9 +5,7 @@ import type { paths } from './schema';
 import { Loading } from './render';
 import { MLink } from './MLink';
 import { DisplayError } from './IndexComponent';
-import {
-  faSearch,
-} from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type DiscoverResponse =
