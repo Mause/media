@@ -11,6 +11,14 @@ import type { GetResponse } from './utils';
 
 type DiscoverResponse = GetResponse<paths['/api/discover']>;
 
+function getYear(release_date: string | null | undefined): string | number {
+  if (release_date) {
+    return new Date(release_date).getFullYear();
+  } else {
+    return 'Unknown';
+  }
+}
+
 export function DiscoveryComponent() {
   const { data, isValidating, error } = useSWR<DiscoverResponse, Error>(
     'discover',
@@ -25,7 +33,7 @@ export function DiscoveryComponent() {
         {data?.results.map((result) => (
           <Grid>
             <h4>
-              {result.title}
+              {result.title} ({getYear(result.release_date)})
               <MLink to={`/select/${result.id}/options`}>
                 <FontAwesomeIcon icon={faSearch} />
               </MLink>
