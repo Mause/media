@@ -70,6 +70,7 @@ from .providers.abc import (
     MovieProvider,
     TvProvider,
 )
+from .rpc import app as rpc_ns
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import (
@@ -452,6 +453,7 @@ def create_app() -> FastAPI:
         prefix='/api',
         dependencies=[security],
     )
+    app.mount('/rpc', rpc_ns)
     app.include_router(root, prefix='')
 
     origins = []
