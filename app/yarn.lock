@@ -1700,7 +1700,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-router/node@npm:7.6.3":
+"@react-router/node@npm:7.6.3, @react-router/node@npm:^7.6.3":
   version: 7.6.3
   resolution: "@react-router/node@npm:7.6.3"
   dependencies:
@@ -3158,6 +3158,7 @@ __metadata:
     "@mui/icons-material": "npm:^7"
     "@mui/material": "npm:^7"
     "@react-router/dev": "npm:^7.6.3"
+    "@react-router/node": "npm:^7.6.3"
     "@sentry/react": "npm:^9.36.0"
     "@sentry/toolbar": "npm:1.0.0-beta.11"
     "@sentry/vite-plugin": "npm:^3.6.0"
@@ -3182,6 +3183,7 @@ __metadata:
     eslint-plugin-deprecation: "npm:^3.0.0"
     eslint-plugin-import-x: "npm:^4.12.2"
     eslint-plugin-react-refresh: "npm:^0.4.20"
+    isbot: "npm:^5"
     jiti: "npm:^2.4.2"
     jsdom: "npm:^26.1.0"
     lodash-es: "npm:^4.17.21"
@@ -5125,6 +5127,13 @@ __metadata:
   version: 1.0.0
   resolution: "isarray@npm:1.0.0"
   checksum: 10/f032df8e02dce8ec565cf2eb605ea939bdccea528dbcf565cdf92bfa2da9110461159d86a537388ef1acef8815a330642d7885b29010e8f7eac967c9993b65ab
+  languageName: node
+  linkType: hard
+
+"isbot@npm:^5":
+  version: 5.1.28
+  resolution: "isbot@npm:5.1.28"
+  checksum: 10/8cf014c170bcff9bc74dd51582f786ebb307dd9b61dc4423ae4d4809e52481cc5a66ed5fcb1107b149ad60fdf5f761eb16cb6eeba17a6781da9ac2931a222115
   languageName: node
   linkType: hard
 
