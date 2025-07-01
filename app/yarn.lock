@@ -130,7 +130,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.27.1, @babel/runtime@npm:^7.27.3, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.27.1, @babel/runtime@npm:^7.27.3, @babel/runtime@npm:^7.27.6, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.27.6
   resolution: "@babel/runtime@npm:7.27.6"
   checksum: 10/cc957a12ba3781241b83d528eb69ddeb86ca5ac43179a825e83aa81263a6b3eb88c57bed8a937cdeacfc3192e07ec24c73acdfea4507d0c0428c8e23d6322bfe
@@ -809,18 +809,18 @@ __metadata:
   linkType: hard
 
 "@mui/icons-material@npm:^7":
-  version: 7.1.2
-  resolution: "@mui/icons-material@npm:7.1.2"
+  version: 7.2.0
+  resolution: "@mui/icons-material@npm:7.2.0"
   dependencies:
-    "@babel/runtime": "npm:^7.27.1"
+    "@babel/runtime": "npm:^7.27.6"
   peerDependencies:
-    "@mui/material": ^7.1.2
+    "@mui/material": ^7.2.0
     "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/2f0f85562bf9783530e3fe694c29e7d98c266a464f2d67586c043ef6346959b12e25781d08813896970a72e02b1e7d2f8d30ae078345c11bd23fc44765d1677a
+  checksum: 10/62d7cf8a8d6b7968fe8b4a6ebdad9f8513505b972baa1589b9f4b246bca4218603c724e69de45cd8010a7d9e35be0f7f43e38c8564544d0ca16edec4fc370771
   languageName: node
   linkType: hard
 
@@ -2031,11 +2031,11 @@ __metadata:
   linkType: hard
 
 "@vitejs/plugin-basic-ssl@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@vitejs/plugin-basic-ssl@npm:2.0.0"
+  version: 2.1.0
+  resolution: "@vitejs/plugin-basic-ssl@npm:2.1.0"
   peerDependencies:
-    vite: ^6.0.0
-  checksum: 10/ccaf74939d1c1192cbbf9965a67f7ef0da11c83d62cbbdb8f33076428a1f9878f7ac933d73e3e3c7dc6706fcd78cc63b4e4364c296094abaeb48386868ccf5bd
+    vite: ^6.0.0 || ^7.0.0
+  checksum: 10/9c3e991b960410f22455dda9e421c11f5a4d135e44b2be40e7ba0838038c86222f702ed56086e473fa4b2dee58cf0bea58873fec1e2d504bfae3afc392552f8e
   languageName: node
   linkType: hard
 
