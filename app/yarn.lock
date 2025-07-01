@@ -2031,11 +2031,11 @@ __metadata:
   linkType: hard
 
 "@vitejs/plugin-basic-ssl@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@vitejs/plugin-basic-ssl@npm:2.0.0"
+  version: 2.1.0
+  resolution: "@vitejs/plugin-basic-ssl@npm:2.1.0"
   peerDependencies:
-    vite: ^6.0.0
-  checksum: 10/ccaf74939d1c1192cbbf9965a67f7ef0da11c83d62cbbdb8f33076428a1f9878f7ac933d73e3e3c7dc6706fcd78cc63b4e4364c296094abaeb48386868ccf5bd
+    vite: ^6.0.0 || ^7.0.0
+  checksum: 10/9c3e991b960410f22455dda9e421c11f5a4d135e44b2be40e7ba0838038c86222f702ed56086e473fa4b2dee58cf0bea58873fec1e2d504bfae3afc392552f8e
   languageName: node
   linkType: hard
 
