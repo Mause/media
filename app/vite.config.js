@@ -1,4 +1,4 @@
-import react from '@vitejs/plugin-react';
+import react from '@react-router/dev/vite';
 import { defineConfig } from 'vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import bundlesize from 'vite-plugin-bundlesize';
