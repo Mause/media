@@ -1,7 +1,6 @@
 import { useSentryToolbar } from '@sentry/toolbar';
 import * as Sentry from '@sentry/react';
 import type { ErrorInfo, ReactNode } from 'react';
-import { Helmet } from 'react-helmet-async';
 import type { RouteObject } from 'react-router-dom';
 import {
   RouterProvider,
@@ -23,6 +22,7 @@ import { load, getToken } from './utils';
 import type { components } from './schema';
 import { ExtMLink, MLink } from './MLink';
 import { Loading } from './render';
+import { RouteTitle } from './RouteTitle';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -40,23 +40,6 @@ export type IndexResponse = components['schemas']['IndexResponse'];
 export type MovieResponse = components['schemas']['MovieDetailsSchema'];
 export type SeriesResponse = components['schemas']['SeriesDetails'];
 export type EpisodeResponse = components['schemas']['EpisodeDetailsSchema'];
-
-function RouteTitle({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
-      {children}
-    </>
-  );
-}
 
 function reportError(error: Error, info: ErrorInfo) {
   Sentry.withScope((scope) => {
