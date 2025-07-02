@@ -9,6 +9,7 @@ import * as qs from './qs';
 import type { components } from './schema';
 import { useLocation } from './utils';
 import { MLink } from './MLink';
+import { RouteTitle } from './RouteTitle';
 
 export type Season = components['schemas']['TvSeasonResponse'];
 export type EpisodeResponse = components['schemas']['Episode'];
@@ -43,7 +44,7 @@ export function SeasonSelectComponent() {
   const { data: tv } = useSWR<TV>(`tv/${tmdb_id}`);
 
   return (
-    <div>
+    <RouteTitle title="Select Season">
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
         <Typography color="textPrimary" data-testid="title">
@@ -61,6 +62,6 @@ export function SeasonSelectComponent() {
           ))}
         </ul>
       )}
-    </div>
+    </RouteTitle>
   );
 }

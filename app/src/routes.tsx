@@ -81,11 +81,7 @@ export function getRoutes() {
               './SeasonSelectComponent'
             );
             return {
-              element: (
-                <RouteTitle title="Select Season">
-                  <SeasonSelectComponent />
-                </RouteTitle>
-              ),
+              Component: SeasonSelectComponent,
             };
           },
         },
