@@ -183,11 +183,7 @@ export function getRoutes() {
           lazy: async () => {
             const { IndexComponent } = await import('./IndexComponent');
             return {
-              element: (
-                <RouteTitle title="Media">
-                  <IndexComponent />
-                </RouteTitle>
-              ),
+              Component: IndexComponent,
             };
           },
         },
