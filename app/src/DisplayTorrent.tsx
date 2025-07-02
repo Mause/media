@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 
 import { Torrents } from './streaming';
 import { DownloadState } from './DownloadComponent';
-import { MLink } from './utils';
+import { MLink } from './MLink';
 import { ITorrent } from './OptionsComponent';
 
 function getHash(magnet: string) {

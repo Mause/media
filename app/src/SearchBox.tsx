@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import qs from 'qs';
+import * as qs from './qs';
 import { useNavigate } from 'react-router-dom';
 import {
   FormControl,

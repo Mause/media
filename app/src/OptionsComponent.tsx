@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import qs from 'qs';
+import * as qs from './qs';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { Alert, Breadcrumbs, Typography } from '@mui/material';
