@@ -115,9 +115,11 @@ def run_migrations_online() -> None:
             )
             dbapi_con.execute('pragma foreign_keys=ON')
 
-    retrying_connect = backoff.on_exception(
-        backoff.expo, OperationalError, max_time=60
-    )(connectable.connect)
+        retrying_connect = backoff.on_exception(
+            backoff.expo, OperationalError, max_time=60
+        )(connectable.connect)
+    else:
+        retrying_connect = connectable.connect
 
     with retrying_connect() as connection:
         context.configure(
