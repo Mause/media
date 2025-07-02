@@ -44,9 +44,11 @@ else:
     url = 'sqlite:///' + str(Path(__file__).parent.parent.absolute() / 'db.db')
 
 
-alembic_config = cast(dict[str, Any], config.get_section(config.config_ini_section))
+alembic_config = cast(dict[str, Any], config.get_section(config.config_ini_section, {}))
 assert alembic_config
-alembic_config['sqlalchemy.url'] = url
+
+# we only override if it's not already set
+alembic_config.setdefault('sqlalchemy.url', url)
 target_metadata = db.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -90,7 +92,7 @@ def run_migrations_online() -> None:
     """
 
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
+        alembic_config,
         prefix='sqlalchemy.',
         poolclass=pool.NullPool,
         pool_pre_ping=True,
