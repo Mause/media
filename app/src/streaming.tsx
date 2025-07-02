@@ -20,7 +20,7 @@ import * as _ from 'lodash-es';
 import { load, getToken } from './utils';
 import type { components } from './schema';
 import { ExtMLink, MLink } from './MLink';
-import { getRoutes } from './routes';
+import routes from './routes';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -192,7 +192,7 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
 }
 
 export function ParentComponent() {
-  const router = createBrowserRouter(getRoutes());
+  const router = createBrowserRouter(routes);
 
   return <RouterProvider router={router} />;
 }
