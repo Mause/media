@@ -1,5 +1,4 @@
 import useSWR from 'swr';
-import * as _ from 'lodash-es';
 
 import type { IndexResponse, Torrents } from './streaming';
 import { TVShows, Movies } from './render';

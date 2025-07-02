@@ -1,5 +1,5 @@
-import { FormEvent, useState } from 'react';
-import * as qs from './qs';
+import type { FormEvent } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FormControl,
@@ -9,6 +9,8 @@ import {
   OutlinedInput,
 } from '@mui/material';
 import Search from '@mui/icons-material/Search';
+
+import * as qs from './qs';
 
 export function SearchBox() {
   function search(event: FormEvent<HTMLFormElement>) {
