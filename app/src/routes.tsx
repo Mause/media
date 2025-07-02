@@ -28,11 +28,7 @@ export function getRoutes() {
           lazy: async () => {
             const { Websocket } = await import('./Websocket');
             return {
-              element: (
-                <RouteTitle title="Websocket">
-                  <Websocket />
-                </RouteTitle>
-              ),
+              Component: Websocket,
             };
           },
         },
