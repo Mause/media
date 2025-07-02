@@ -59,11 +59,7 @@ export function getRoutes() {
               './DownloadAllComponent'
             );
             return {
-              element: (
-                <RouteTitle title="Download Season">
-                  <DownloadAllComponent />
-                </RouteTitle>
-              ),
+              Component: DownloadAllComponent,
             };
           },
         },

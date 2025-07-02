@@ -9,6 +9,7 @@ import type { DownloadCall } from './DownloadComponent';
 import type { Torrents } from './streaming';
 import { DisplayError } from './DisplayError';
 import { DisplayTorrent } from './DisplayTorrent';
+import { RouteTitle } from './RouteTitle';
 
 type MapType = [string, ITorrent[]][];
 
@@ -30,7 +31,7 @@ function DownloadAllComponent() {
   >(`select/${tmdb_id}/season/${season}/download_all`);
 
   return (
-    <div>
+    <RouteTitle title="Download Season">
       {error && <DisplayError error={error} />}
       <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={season} />
       <Loading loading={isValidating} />
@@ -65,7 +66,7 @@ function DownloadAllComponent() {
         tmdb_id={tmdb_id!}
         torrents={torrents}
       />
-    </div>
+    </RouteTitle>
   );
 }
 
