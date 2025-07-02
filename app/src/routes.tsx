@@ -67,7 +67,7 @@ export function getRoutes() {
           path: '/select/:tmdb_id/season/:season',
           lazy: async () => {
             const { EpisodeSelectComponent } = await import(
-              './SeasonSelectComponent'
+              './EpisodeSelectComponent'
             );
             return {
               element: (

@@ -3,7 +3,7 @@ import useSWR from 'swr';
 
 import type { ITorrent } from './OptionsComponent';
 import { Loading } from './render';
-import { EpisodeSelectBreadcrumbs } from './SeasonSelectComponent';
+import { EpisodeSelectBreadcrumbs } from './EpisodeSelectComponent';
 import { MLink } from './MLink';
 import type { DownloadCall } from './DownloadComponent';
 import type { Torrents } from './streaming';
