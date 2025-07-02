@@ -234,26 +234,20 @@ function getRoutes() {
         {
           path: '/select/:tmdb_id/options',
           lazy: async () => {
-            const { OptionsComponent } = await import('./OptionsComponent');
+            const { MovieOptionsComponent } = await import(
+              './MovieOptionsComponent'
+            );
             return {
-              element: (
-                <RouteTitle title="Movie Options">
-                  <OptionsComponent type="movie" />
-                </RouteTitle>
-              ),
+              Component: MovieOptionsComponent,
             };
           },
         },
         {
           path: '/select/:tmdb_id/season/:season/episode/:episode/options',
           lazy: async () => {
-            const { OptionsComponent } = await import('./OptionsComponent');
+            const { TvOptionsComponent } = await import('./TvOptionsComponent');
             return {
-              element: (
-                <RouteTitle title="TV Options">
-                  <OptionsComponent type="series" />
-                </RouteTitle>
-              ),
+              Component: TvOptionsComponent,
             };
           },
         },
