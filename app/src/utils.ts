@@ -18,6 +18,12 @@ import type { EpisodeResponse } from './streaming';
 
 // axiosRetry(Axios, { retries: 3 });
 
+export type GetResponse<T> = T extends {
+  get: { responses: { '200': { content: { 'application/json': unknown } } } };
+}
+  ? T['get']['responses']['200']['content']['application/json']
+  : T;
+
 export function subscribe<T>(
   path: string,
   callback: (a: T) => void,

@@ -4,11 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 import type { paths } from './schema';
+import type { GetResponse } from './utils';
 
-type DiagnosticsRoot =
-  paths['/api/diagnostics']['get']['responses']['200']['content']['application/json'];
-type HealthcheckResponse =
-  paths['/api/diagnostics/{component_name}']['get']['responses']['200']['content']['application/json'];
+type DiagnosticsRoot = GetResponse<paths['/api/diagnostics']>;
+type HealthcheckResponse = GetResponse<
+  paths['/api/diagnostics/{component_name}']
+>;
 type Healthcheck = HealthcheckResponse[0];
 
 function getColour(status?: Healthcheck['status']) {

@@ -4,9 +4,9 @@ import { Grid } from '@mui/material';
 import type { paths } from './schema';
 import { Loading } from './render';
 import { DisplayError } from './DisplayError';
+import type { GetResponse } from './utils';
 
-type DiscoverResponse =
-  paths['/api/discover']['get']['responses']['200']['content']['application/json'];
+type DiscoverResponse = GetResponse<paths['/api/discover']>;
 
 export function DiscoveryComponent() {
   const { data, isValidating, error } = useSWR<DiscoverResponse, Error>(
