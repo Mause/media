@@ -15,7 +15,7 @@ export function StatsComponent() {
   if (!stats) return <ReactLoading type="balls" color="#000" />;
 
   return (
-    <div>
+    <RouteTitle title="Stats">
       {stats.map(({ user, values }) => (
         <div key={user}>
           <h3>{user}</h3>
@@ -25,6 +25,6 @@ export function StatsComponent() {
           <br />
         </div>
       ))}
-    </div>
+    </RouteTitle>
   );
 }
