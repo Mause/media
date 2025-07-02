@@ -70,11 +70,7 @@ export function getRoutes() {
               './EpisodeSelectComponent'
             );
             return {
-              element: (
-                <RouteTitle title="Select Episode">
-                  <EpisodeSelectComponent />
-                </RouteTitle>
-              ),
+              Component: EpisodeSelectComponent,
             };
           },
         },

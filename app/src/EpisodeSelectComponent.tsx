@@ -7,6 +7,7 @@ import { Loading } from './render';
 import { MLink } from './MLink';
 import type { Season, TV } from './SeasonSelectComponent';
 import { Shared } from './SeasonSelectComponent';
+import { RouteTitle } from './RouteTitle';
 
 export function EpisodeSelectBreadcrumbs(props: {
   tmdb_id: string;
@@ -37,7 +38,7 @@ export function EpisodeSelectComponent() {
   );
 
   return (
-    <div>
+    <RouteTitle title="Select Episode">
       <EpisodeSelectBreadcrumbs
         tmdb_id={tmdb_id!}
         season={parseInt(seasonNumber!)}
@@ -61,6 +62,6 @@ export function EpisodeSelectComponent() {
         Download season
       </MLink>
       <br />
-    </div>
+    </RouteTitle>
   );
 }
