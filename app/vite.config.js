@@ -1,11 +1,11 @@
-import react from '@react-router/dev/vite';
+import { reactRouter } from '@react-router/dev/vite';
 import { defineConfig } from 'vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import bundlesize from 'vite-plugin-bundlesize';
 
 export default defineConfig({
   plugins: [
-    react(),
+    reactRouter(),
     basicSsl(),
     bundlesize({ limits: [{ name: 'assets/index-*.js', limit: '832.5 kB' }] }),
   ],
@@ -23,4 +23,5 @@ export default defineConfig({
       '/api': 'http://localhost:5000',
     },
   },
+  root: __dirname,
 });
