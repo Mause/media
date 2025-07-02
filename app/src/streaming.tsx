@@ -20,7 +20,7 @@ import * as _ from 'lodash-es';
 import { load, getToken } from './utils';
 import type { components } from './schema';
 import { ExtMLink, MLink } from './MLink';
-import { getRoutes } from './routes';
+import routes from './routes';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -103,7 +103,7 @@ export function ParentComponentInt() {
   });
 
   return (
-    <>
+    <SwrConfigWrapper>
       <h1>Media</h1>
 
       <NavRoot className={classes.root}>
@@ -164,7 +164,7 @@ export function ParentComponentInt() {
           <div>Please login</div>
         )}
       </ErrorBoundary>
-    </>
+    </SwrConfigWrapper>
   );
 }
 export function SwrConfigWrapper({ children }: { children: ReactNode }) {
@@ -192,7 +192,7 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
 }
 
 export function ParentComponent() {
-  const router = createBrowserRouter(getRoutes());
+  const router = createBrowserRouter(routes);
 
   return <RouterProvider router={router} />;
 }

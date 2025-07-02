@@ -2,12 +2,12 @@ import type { RouteObject } from 'react-router-dom';
 
 import { RouteTitle } from './RouteTitle';
 import { MLink } from './MLink';
-import { getRoutes } from './routes';
+import routes from './routes';
 
 export function SitemapRoot() {
   return (
     <RouteTitle title="Sitemap">
-      <Sitemap routes={getRoutes()} />
+      <Sitemap routes={routes} />
     </RouteTitle>
   );
 }
