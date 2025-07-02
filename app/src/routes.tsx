@@ -108,11 +108,7 @@ export function getRoutes() {
           lazy: async () => {
             const { ManualAddComponent } = await import('./ManualAddComponent');
             return {
-              element: (
-                <RouteTitle title="Manual">
-                  <ManualAddComponent />
-                </RouteTitle>
-              ),
+              Component: ManualAddComponent,
             };
           },
         },

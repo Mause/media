@@ -62,19 +62,21 @@ export function ManualAddComponent() {
   }
 
   return (
-    <Root className={classes.root} onSubmit={onSubmit}>
-      <h3>{data?.title}</h3>
-      <TextField
-        variant="standard"
-        placeholder="magnet:..."
-        onChange={(e) => setMagnet(e.target.value)}
-        slotProps={{
-          htmlInput: { pattern: '^magnet:.*' },
-        }}
-      />
-      <Button type="submit" variant="outlined">
-        Download
-      </Button>
-    </Root>
+    <RouteTitle title="Manual">
+      <Root className={classes.root} onSubmit={onSubmit}>
+        <h3>{data?.title}</h3>
+        <TextField
+          variant="standard"
+          placeholder="magnet:..."
+          onChange={(e) => setMagnet(e.target.value)}
+          slotProps={{
+            htmlInput: { pattern: '^magnet:.*' },
+          }}
+        />
+        <Button type="submit" variant="outlined">
+          Download
+        </Button>
+      </Root>
+    </RouteTitle>
   );
 }
