@@ -1,7 +1,6 @@
 import useSWR from 'swr';
-import { useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import Axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -140,35 +139,6 @@ function mutationFetcher<T, R>(
     });
     return res.data as R;
   };
-}
-
-function useDelete(path: string) {
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    void Axios.delete(`/api/${path}`, {
-      withCredentials: true,
-      signal: controller.signal,
-    }).then(() => setDone(true));
-    return () => {
-      controller.abort();
-    };
-  }, [path]);
-
-  return done;
-}
-
-export function MonitorDeleteComponent() {
-  const { id } = useParams<{ id: string }>();
-
-  const done = useDelete(`monitor/${id}`);
-
-  return (
-    <RouteTitle title="Delete Monitor">
-      {done ? <Navigate to="/monitor" /> : <ReactLoading color="#000000" />}
-    </RouteTitle>
-  );
 }
 
 export type { Monitor };

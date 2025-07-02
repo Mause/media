@@ -145,7 +145,7 @@ export function getRoutes() {
           path: '/monitor/delete/:id',
           lazy: async () => {
             const { MonitorDeleteComponent } = await import(
-              './MonitorComponent'
+              './MonitorDeleteComponent'
             );
             return {
               Component: MonitorDeleteComponent,
