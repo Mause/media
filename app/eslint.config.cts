@@ -21,7 +21,7 @@ module.exports = tseslint.config(
     plugins: {
       // @ts-expect-error
       deprecation: fixupPluginRules(pluginDeprecation),
-      'react-refresh': reactRefresh
+      'react-refresh': reactRefresh,
     },
     rules: {
       'deprecation/deprecation': 'error',
@@ -36,7 +36,18 @@ module.exports = tseslint.config(
       '@typescript-eslint/consistent-type-imports': 'error',
       'react-refresh/only-export-components': [
         'error',
-        { allowExportNames: ['meta', 'links', 'headers', 'loader', 'action'] },
+        {
+          allowExportNames: [
+            'meta',
+            'links',
+            'headers',
+            'loader',
+            'action',
+
+            // TODO: remove getRoutes
+            'getRoutes',
+          ],
+        },
       ],
     },
     settings: {

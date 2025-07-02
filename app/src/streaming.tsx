@@ -1,8 +1,6 @@
 import { useSentryToolbar } from '@sentry/toolbar';
 import * as Sentry from '@sentry/react';
 import type { ErrorInfo, ReactNode } from 'react';
-import { Helmet } from 'react-helmet-async';
-import type { RouteObject } from 'react-router-dom';
 import {
   RouterProvider,
   createBrowserRouter,
@@ -22,7 +20,7 @@ import * as _ from 'lodash-es';
 import { load, getToken } from './utils';
 import type { components } from './schema';
 import { ExtMLink, MLink } from './MLink';
-import { Loading } from './render';
+import { getRoutes } from './routes';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -40,23 +38,6 @@ export type IndexResponse = components['schemas']['IndexResponse'];
 export type MovieResponse = components['schemas']['MovieDetailsSchema'];
 export type SeriesResponse = components['schemas']['SeriesDetails'];
 export type EpisodeResponse = components['schemas']['EpisodeDetailsSchema'];
-
-function RouteTitle({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
-      {children}
-    </>
-  );
-}
 
 function reportError(error: Error, info: ErrorInfo) {
   Sentry.withScope((scope) => {
@@ -102,7 +83,7 @@ const Login = () => {
   }
 };
 
-function ParentComponentInt() {
+export function ParentComponentInt() {
   useProfiler('ParentComponentInt');
 
   const auth = useAuth0();
@@ -214,271 +195,4 @@ export function ParentComponent() {
   const router = createBrowserRouter(getRoutes());
 
   return <RouterProvider router={router} />;
-}
-
-function getRoutes() {
-  return [
-    {
-      path: '/',
-      element: (
-        <SwrConfigWrapper>
-          <ParentComponentInt />
-        </SwrConfigWrapper>
-      ),
-      children: [
-        {
-          id: 'notFound',
-          path: '*',
-          element: (
-            <RouteTitle title="Page not Found">
-              <div>Page not found</div>
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/websocket/:tmdbId',
-          lazy: async () => {
-            const { Websocket } = await import('./Websocket');
-            return {
-              element: (
-                <RouteTitle title="Websocket">
-                  <Websocket />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/select/:tmdb_id/options',
-          lazy: async () => {
-            const { OptionsComponent } = await import('./OptionsComponent');
-            return {
-              element: (
-                <RouteTitle title="Movie Options">
-                  <OptionsComponent type="movie" />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/select/:tmdb_id/season/:season/episode/:episode/options',
-          lazy: async () => {
-            const { OptionsComponent } = await import('./OptionsComponent');
-            return {
-              element: (
-                <RouteTitle title="TV Options">
-                  <OptionsComponent type="series" />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/select/:tmdb_id/season/:season/download_all',
-          lazy: async () => {
-            const { DownloadAllComponent } = await import(
-              './DownloadAllComponent'
-            );
-            return {
-              element: (
-                <RouteTitle title="Download Season">
-                  <DownloadAllComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/select/:tmdb_id/season/:season',
-          lazy: async () => {
-            const { EpisodeSelectComponent } = await import(
-              './SeasonSelectComponent'
-            );
-            return {
-              element: (
-                <RouteTitle title="Select Episode">
-                  <EpisodeSelectComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/select/:tmdb_id/season',
-          lazy: async () => {
-            const { SeasonSelectComponent } = await import(
-              './SeasonSelectComponent'
-            );
-            return {
-              element: (
-                <RouteTitle title="Select Season">
-                  <SeasonSelectComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/search',
-          lazy: async () => {
-            const { SearchComponent } = await import('./SearchComponent');
-            return {
-              element: (
-                <RouteTitle title="Search">
-                  <SearchComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/download',
-          lazy: async () => {
-            const { DownloadComponent } = await import('./DownloadComponent');
-            return {
-              element: (
-                <RouteTitle title="Download">
-                  <DownloadComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/manual',
-          lazy: async () => {
-            const { ManualAddComponent } = await import('./ManualAddComponent');
-            return {
-              element: (
-                <RouteTitle title="Manual">
-                  <ManualAddComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/stats',
-          lazy: async () => {
-            const { StatsComponent } = await import('./StatsComponent');
-            return {
-              element: (
-                <RouteTitle title="Stats">
-                  <StatsComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/diagnostics',
-          lazy: async () => {
-            const { DiagnosticsComponent } = await import(
-              './DiagnosticsComponent'
-            );
-            return {
-              element: (
-                <RouteTitle title="Diagnostics">
-                  <DiagnosticsComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/storybook',
-          lazy: async () => {
-            const { Storybook } = await import('./Storybook');
-            return {
-              element: (
-                <RouteTitle title="Storybook">
-                  <Storybook />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/monitor/delete/:id',
-          lazy: async () => {
-            const { MonitorDeleteComponent } = await import(
-              './MonitorComponent'
-            );
-            return {
-              element: (
-                <RouteTitle title="Monitor">
-                  <MonitorDeleteComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/monitor',
-          lazy: async () => {
-            const { MonitorComponent } = await import('./MonitorComponent');
-            return {
-              element: (
-                <RouteTitle title="Monitor">
-                  <MonitorComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/sitemap',
-          element: (
-            <RouteTitle title="Sitemap">
-              <SitemapRoot />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/discover',
-          hydrateFallbackElement: <Loading loading />,
-          lazy: async () => {
-            const { DiscoveryComponent } = await import('./DiscoveryComponent');
-            return {
-              element: (
-                <RouteTitle title="Discover">
-                  <DiscoveryComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-        {
-          path: '/',
-          lazy: async () => {
-            const { IndexComponent } = await import('./IndexComponent');
-            return {
-              element: (
-                <RouteTitle title="Media">
-                  <IndexComponent />
-                </RouteTitle>
-              ),
-            };
-          },
-        },
-      ],
-    },
-  ] satisfies RouteObject[];
-}
-
-function SitemapRoot() {
-  return <Sitemap routes={getRoutes()} />;
-}
-function Sitemap({ routes }: { routes: RouteObject[] }) {
-  return (
-    <ul>
-      {routes.map((route) => (
-        <li key={route.path}>
-          <MLink to={route.path!}>{route.path}</MLink>
-          {route.children ? <Sitemap routes={route.children} /> : undefined}
-        </li>
-      ))}
-    </ul>
-  );
 }
