@@ -174,11 +174,7 @@ export function getRoutes() {
           lazy: async () => {
             const { DiscoveryComponent } = await import('./DiscoveryComponent');
             return {
-              element: (
-                <RouteTitle title="Discover">
-                  <DiscoveryComponent />
-                </RouteTitle>
-              ),
+              Component: DiscoveryComponent,
             };
           },
         },
