@@ -1,9 +1,11 @@
-import ReactLoading from 'react-loading';
 import { Navigate } from 'react-router-dom';
+import type { ReactNode } from 'react';
 
 import { usePost, useLocation } from './utils';
 import type { components } from './schema';
 import { DisplayError } from './DisplayError';
+import { Loading } from './render';
+import { RouteTitle } from './RouteTitle';
 
 export type DownloadCall = components['schemas']['DownloadPost'];
 export interface DownloadState {
@@ -21,9 +23,14 @@ export function DownloadComponent() {
     })),
   );
 
-  if (error) {
-    return <DisplayError error={error} />;
+  let res: ReactNode;
+  if (done) {
+    res = <Navigate to="/" />;
+  } else if (error) {
+    res = <DisplayError error={error} />;
+  } else {
+    res = <Loading loading />;
   }
 
-  return done ? <Navigate to="/" /> : <ReactLoading color="#000000" />;
+  return <RouteTitle title="Download">{res}</RouteTitle>;
 }

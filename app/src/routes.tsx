@@ -99,11 +99,7 @@ export function getRoutes() {
           lazy: async () => {
             const { DownloadComponent } = await import('./DownloadComponent');
             return {
-              element: (
-                <RouteTitle title="Download">
-                  <DownloadComponent />
-                </RouteTitle>
-              ),
+              Component: DownloadComponent,
             };
           },
         },
