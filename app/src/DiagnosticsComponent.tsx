@@ -5,6 +5,7 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 import type { paths } from './schema';
 import type { GetResponse } from './utils';
+import { RouteTitle } from './RouteTitle';
 
 type DiagnosticsRoot = GetResponse<paths['/api/diagnostics']>;
 type HealthcheckResponse = GetResponse<

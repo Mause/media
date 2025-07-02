@@ -1,6 +1,8 @@
 import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 
+import { RouteTitle } from './RouteTitle';
+
 export type StatsResponse = {
   user: string;
   values: {

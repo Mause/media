@@ -7,6 +7,7 @@ import { DisplayError } from './DisplayError';
 import { MLink } from './MLink';
 import { SearchBox } from './SearchBox';
 import type { components } from './schema';
+import { RouteTitle } from './RouteTitle';
 export type SearchResult = components['schemas']['SearchResponse'];
 
 export function SearchComponent() {
