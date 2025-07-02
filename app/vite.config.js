@@ -1,5 +1,5 @@
 import { sentryVitePlugin } from '@sentry/vite-plugin';
-import react from '@react-router/dev/vite';
+import { reactRouter } from '@react-router/dev/vite';
 import { defineConfig } from 'vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import bundlesize from 'vite-plugin-bundlesize';
@@ -8,7 +8,7 @@ const gitpodWorkspace = process.env.GITPOD_WORKSPACE_URL;
 
 export default defineConfig({
   plugins: [
-    react(),
+    reactRouter(),
     gitpodWorkspace && basicSsl(),
     bundlesize({ limits: [{ name: 'assets/index-*.js', limit: '832.5 kB' }] }),
     sentryVitePlugin({
@@ -31,4 +31,5 @@ export default defineConfig({
       '/api': 'http://localhost:5000',
     },
   },
+  root: __dirname,
 });

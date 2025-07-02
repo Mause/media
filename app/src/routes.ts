@@ -1,187 +1,79 @@
-import type { RouteObject } from 'react-router-dom';
-
-import { ParentComponentInt } from './ParentComponent';
+import type { RouteConfig } from '@react-router/dev/routes';
 
 export default [
   {
     path: '/',
-    Component: ParentComponentInt,
+    file: './ParentComponentInt.tsx',
     children: [
       {
-        id: 'notFound',
-        path: '*',
-        lazy: async () => {
-          const { FourOhFour } = await import('./catchall');
-          return {
-            Component: FourOhFour,
-          };
-        },
-      },
-      {
         path: '/websocket/:tmdbId',
-        lazy: async () => {
-          const { Websocket } = await import('./Websocket');
-          return {
-            Component: Websocket,
-          };
-        },
+        file: './Websocket.tsx',
       },
       {
         path: '/select/:tmdb_id/options',
-        lazy: async () => {
-          const { MovieOptionsComponent } = await import(
-            './select/MovieOptionsComponent'
-          );
-          return {
-            Component: MovieOptionsComponent,
-          };
-        },
+        file: './select/MovieOptionsComponent.tsx',
       },
+
       {
         path: '/select/:tmdb_id/season/:season/episode/:episode/options',
-        lazy: async () => {
-          const { TvOptionsComponent } = await import(
-            './select/TvOptionsComponent'
-          );
-          return {
-            Component: TvOptionsComponent,
-          };
-        },
+        file: './select/EpisodeOptionsComponent.tsx',
       },
       {
         path: '/select/:tmdb_id/season/:season/download_all',
-        lazy: async () => {
-          const { DownloadAllComponent } = await import(
-            './select/DownloadAllComponent'
-          );
-          return {
-            Component: DownloadAllComponent,
-          };
-        },
+        file: './select/DownloadAllComponent.tsx',
       },
       {
         path: '/select/:tmdb_id/season/:season',
-        lazy: async () => {
-          const { EpisodeSelectComponent } = await import(
-            './select/EpisodeSelectComponent'
-          );
-          return {
-            Component: EpisodeSelectComponent,
-          };
-        },
+        file: './select/EpisodeSelectComponent.tsx',
       },
       {
         path: '/select/:tmdb_id/season',
-        lazy: async () => {
-          const { SeasonSelectComponent } = await import(
-            './select/SeasonSelectComponent'
-          );
-          return {
-            Component: SeasonSelectComponent,
-          };
-        },
+        file: './select/SeasonSelectComponent.tsx',
       },
       {
         path: '/search',
-        lazy: async () => {
-          const { SearchComponent } = await import('./SearchComponent');
-          return {
-            Component: SearchComponent,
-          };
-        },
+        file: './SearchComponent.tsx',
       },
       {
         path: '/download',
-        lazy: async () => {
-          const { DownloadComponent } = await import('./DownloadComponent');
-          return {
-            Component: DownloadComponent,
-          };
-        },
+        file: './DownloadComponent.tsx',
       },
       {
         path: '/manual',
-        lazy: async () => {
-          const { ManualAddComponent } = await import('./ManualAddComponent');
-          return {
-            Component: ManualAddComponent,
-          };
-        },
+        file: './ManualAddComponent.tsx',
       },
       {
         path: '/stats',
-        lazy: async () => {
-          const { StatsComponent } = await import('./StatsComponent');
-          return {
-            Component: StatsComponent,
-          };
-        },
+        file: './StatsComponent.tsx',
       },
       {
         path: '/diagnostics',
-        lazy: async () => {
-          const { DiagnosticsComponent } = await import(
-            './DiagnosticsComponent'
-          );
-          return {
-            Component: DiagnosticsComponent,
-          };
-        },
+        file: './DiagnosticsComponent.tsx',
       },
       {
         path: '/storybook',
-        lazy: async () => {
-          const { Storybook } = await import('./Storybook');
-          return {
-            Component: Storybook,
-          };
-        },
+        file: './Storybook.tsx',
       },
       {
         path: '/monitor/delete/:id',
-        lazy: async () => {
-          const { MonitorDeleteComponent } = await import(
-            './MonitorDeleteComponent'
-          );
-          return {
-            Component: MonitorDeleteComponent,
-          };
-        },
+        file: './MonitorDeleteComponent.tsx',
       },
       {
         path: '/monitor',
-        lazy: async () => {
-          const { MonitorComponent } = await import('./MonitorComponent');
-          return {
-            Component: MonitorComponent,
-          };
-        },
+        file: './MonitorComponent.tsx',
       },
       {
         path: '/sitemap',
-        lazy: async () => {
-          const { SitemapRoot } = await import('./SitemapRoot');
-          return { Component: SitemapRoot };
-        },
+        file: './SitemapRoot.tsx',
       },
       {
         path: '/discover',
-        lazy: async () => {
-          const { DiscoveryComponent } = await import('./DiscoveryComponent');
-          return {
-            Component: DiscoveryComponent,
-          };
-        },
+        file: './DiscoveryComponent.tsx',
       },
       {
         path: '/',
-        lazy: async () => {
-          const { IndexComponent } = await import('./IndexComponent');
-          return {
-            Component: IndexComponent,
-          };
-        },
+        file: './IndexComponent.tsx',
       },
     ],
   },
-] satisfies RouteObject[];
+] satisfies RouteConfig;
