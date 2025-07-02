@@ -36,7 +36,12 @@ module.exports = tseslint.config(
       '@typescript-eslint/consistent-type-imports': 'error',
       'react-refresh/only-export-components': [
         'error',
-        { allowExportNames: ['meta', 'links', 'headers', 'loader', 'action'] },
+        { allowExportNames: ['meta', 'links', 'headers', 'loader', 'action',
+
+// TODO: remove getRoutes
+'getRoutes'
+
+        ] },
       ],
     },
     settings: {
