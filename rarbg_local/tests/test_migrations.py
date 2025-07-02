@@ -8,13 +8,16 @@ from pytest_alembic.tests import (
     # test_up_down_consistency,
     # test_upgrade,
 )
+from sqlalchemy import URL
 
 
 @fixture
 def alembic_config(tmp_path: Path) -> Config:
     return Config(
         config_options={
-            'sqlalchemy.url': f'sqlite://{tmp_path}/db.db',
+            'sqlalchemy.url': str(
+                URL.create(drivername='sqlite', database=str(tmp_path / 'db.db'))
+            )
         }
     )
 
