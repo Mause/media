@@ -1,5 +1,6 @@
 import logging
 import os
+import sqlite3
 
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -11,7 +12,12 @@ from pathlib import Path
 from typing import Any, cast
 
 import backoff
-from sqlalchemy import engine_from_config, pool
+import sqlalchemy.pool.base
+from sqlalchemy import (
+    engine_from_config,
+    event,
+    pool,
+)
 from sqlalchemy.exc import OperationalError
 
 from alembic import context
@@ -97,6 +103,18 @@ def run_migrations_online() -> None:
         if 'postgres' in url
         else {},
     )
+    sqlite = connectable.url.get_backend_name() == 'sqlite'
+    if sqlite:
+
+        @event.listens_for(connectable, 'connect')
+        def _fk_pragma_on_connect(
+            dbapi_con: sqlite3.Connection,
+            con_record: sqlalchemy.pool.base._ConnectionRecord,
+        ) -> None:
+            dbapi_con.create_collation(
+                "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
+            )
+            dbapi_con.execute('pragma foreign_keys=ON')
 
     retrying_connect = backoff.on_exception(
         backoff.expo, OperationalError, max_time=60
