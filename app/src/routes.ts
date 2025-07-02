@@ -1,17 +1,12 @@
 import type { RouteObject } from 'react-router-dom';
 
-import { ParentComponentInt, SwrConfigWrapper } from './streaming';
-import { Loading } from './render';
+import { ParentComponentInt } from './streaming';
 
 export function getRoutes() {
   return [
     {
       path: '/',
-      element: (
-        <SwrConfigWrapper>
-          <ParentComponentInt />
-        </SwrConfigWrapper>
-      ),
+      Component: ParentComponentInt,
       children: [
         {
           id: 'notFound',
@@ -170,7 +165,6 @@ export function getRoutes() {
         },
         {
           path: '/discover',
-          hydrateFallbackElement: <Loading loading />,
           lazy: async () => {
             const { DiscoveryComponent } = await import('./DiscoveryComponent');
             return {
