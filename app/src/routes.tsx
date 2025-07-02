@@ -128,11 +128,7 @@ export function getRoutes() {
               './DiagnosticsComponent'
             );
             return {
-              element: (
-                <RouteTitle title="Diagnostics">
-                  <DiagnosticsComponent />
-                </RouteTitle>
-              ),
+              Component: DiagnosticsComponent,
             };
           },
         },

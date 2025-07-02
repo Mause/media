@@ -93,7 +93,7 @@ export function DiagnosticsComponent() {
   );
 
   return (
-    <div>
+    <RouteTitle title="Diagnostics">
       <h3>Diagnostics: Media {data?.version}</h3>
 
       {isValidating && <ReactLoading type="balls" color="#000" />}
@@ -112,6 +112,6 @@ export function DiagnosticsComponent() {
             </li>
           ))}
       </ul>
-    </div>
+    </RouteTitle>
   );
 }
