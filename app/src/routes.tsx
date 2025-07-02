@@ -148,11 +148,7 @@ export function getRoutes() {
               './MonitorComponent'
             );
             return {
-              element: (
-                <RouteTitle title="Monitor">
-                  <MonitorDeleteComponent />
-                </RouteTitle>
-              ),
+              Component: MonitorDeleteComponent,
             };
           },
         },
@@ -161,11 +157,7 @@ export function getRoutes() {
           lazy: async () => {
             const { MonitorComponent } = await import('./MonitorComponent');
             return {
-              element: (
-                <RouteTitle title="Monitor">
-                  <MonitorComponent />
-                </RouteTitle>
-              ),
+              Component: MonitorComponent,
             };
           },
         },

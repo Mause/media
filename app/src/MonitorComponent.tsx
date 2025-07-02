@@ -16,6 +16,7 @@ import ContextMenu from './ContextMenu';
 import type { components, paths } from './schema';
 import { getPrefix, getToken } from './utils';
 import { DisplayError } from './DisplayError';
+import { RouteTitle } from './RouteTitle';
 
 type Monitor = components['schemas']['MonitorGet'];
 type MonitorPost = components['schemas']['MonitorPost'];
@@ -37,7 +38,7 @@ export function MonitorComponent() {
   );
 
   return (
-    <div>
+    <RouteTitle title="Monitor">
       <h3>Monitored Media</h3>
       <Button
         loading={isMutating}
@@ -89,7 +90,7 @@ export function MonitorComponent() {
       ) : (
         <ReactLoading color="#000000" />
       )}
-    </div>
+    </RouteTitle>
   );
 }
 
@@ -163,7 +164,11 @@ export function MonitorDeleteComponent() {
 
   const done = useDelete(`monitor/${id}`);
 
-  return done ? <Navigate to="/monitor" /> : <ReactLoading color="#000000" />;
+  return (
+    <RouteTitle title="Delete Monitor">
+      {done ? <Navigate to="/monitor" /> : <ReactLoading color="#000000" />}
+    </RouteTitle>
+  );
 }
 
 export type { Monitor };
