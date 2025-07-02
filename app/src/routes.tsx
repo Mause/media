@@ -1,6 +1,5 @@
 import type { RouteObject } from 'react-router-dom';
 
-import { RouteTitle } from './RouteTitle';
 import { ParentComponentInt, SwrConfigWrapper } from './streaming';
 import { Loading } from './render';
 
@@ -17,11 +16,12 @@ export function getRoutes() {
         {
           id: 'notFound',
           path: '*',
-          element: (
-            <RouteTitle title="Page not Found">
-              <div>Page not found</div>
-            </RouteTitle>
-          ),
+          lazy: async () => {
+            const { FourOhFour } = await import('./catchall');
+            return {
+              Component: FourOhFour,
+            };
+          },
         },
         {
           path: '/websocket/:tmdbId',
