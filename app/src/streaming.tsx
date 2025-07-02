@@ -103,7 +103,7 @@ export function ParentComponentInt() {
   });
 
   return (
-    <>
+    <SwrConfigWrapper>
       <h1>Media</h1>
 
       <NavRoot className={classes.root}>
@@ -164,7 +164,7 @@ export function ParentComponentInt() {
           <div>Please login</div>
         )}
       </ErrorBoundary>
-    </>
+    </SwrConfigWrapper>
   );
 }
 export function SwrConfigWrapper({ children }: { children: ReactNode }) {
