@@ -90,11 +90,7 @@ export function getRoutes() {
           lazy: async () => {
             const { SearchComponent } = await import('./SearchComponent');
             return {
-              element: (
-                <RouteTitle title="Search">
-                  <SearchComponent />
-                </RouteTitle>
-              ),
+              Component: SearchComponent,
             };
           },
         },

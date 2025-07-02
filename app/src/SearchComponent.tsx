@@ -19,7 +19,7 @@ export function SearchComponent() {
     isValidating,
   } = useSWR<SearchResult[], Error>('search?' + qs.stringify({ query }));
   return (
-    <div>
+    <RouteTitle title="Search">
       <SearchBox />
       {error && <DisplayError error={error} />}
       {isValidating && <ReactLoading type="balls" color="#000" />}
@@ -40,6 +40,6 @@ export function SearchComponent() {
         ))}
       </ul>
       {results && results.length === 0 ? 'No results' : null}
-    </div>
+    </RouteTitle>
   );
 }
