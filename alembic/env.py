@@ -1,11 +1,6 @@
 import logging
 import os
 import sqlite3
-
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
 import sys
 from logging.config import fileConfig
 from pathlib import Path
