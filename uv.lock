@@ -548,7 +548,7 @@ version = "0.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyreadline3", marker = "sys_platform == 'win32'" },
-    { name = "pyrepl", marker = "python_full_version < '3.13' and python_full_version >= '3.12'" },
+    { name = "pyrepl", marker = "python_full_version < '3.13' and python_full_version >= '3.12.0'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/f3/03/eb007f5e90c13016debb6ecd717f0595ce758bf30906f2cb273673e8427d/fancycompleter-0.11.0.tar.gz", hash = "sha256:632b265b29dd0315b96d33d13d83132a541d6312262214f50211b3981bb4fa00", size = 341517, upload-time = "2025-04-13T12:48:09.487Z" }
 wheels = [
@@ -1116,6 +1116,7 @@ dev = [
     { name = "lxml" },
     { name = "pre-commit" },
     { name = "pytest" },
+    { name = "pytest-alembic" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
     { name = "pytest-html" },
@@ -1187,6 +1188,7 @@ dev = [
     { name = "lxml" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pytest" },
+    { name = "pytest-alembic", specifier = ">=0.12.1" },
     { name = "pytest-asyncio", specifier = "==1.0.0" },
     { name = "pytest-cov", specifier = ">=6.1.1" },
     { name = "pytest-html", specifier = ">=3.1.1" },
@@ -1676,7 +1678,7 @@ name = "psycopg"
 version = "3.2.9"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "python_full_version < '3.13' and python_full_version >= '3.12'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13' and python_full_version >= '3.12.0'" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/27/4a/93a6ab570a8d1a4ad171a1f4256e205ce48d828781312c0bbaff36380ecb/psycopg-3.2.9.tar.gz", hash = "sha256:2fbb46fcd17bc81f993f28c47f1ebea38d66ae97cc2dbc3cad73b37cefbff700", size = 158122, upload-time = "2025-05-13T16:11:15.533Z" }
@@ -1914,6 +1916,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ae/3c/c9d525a414d506893f0cd8a8d0de7706446213181570cdbd766691164e40/pytest-8.3.5.tar.gz", hash = "sha256:f4efe70cc14e511565ac476b57c279e12a855b11f48f212af1080ef2263d3845", size = 1450891, upload-time = "2025-03-02T12:54:54.503Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/30/3d/64ad57c803f1fa1e963a7946b6e0fea4a70df53c1a7fed304586539c2bac/pytest-8.3.5-py3-none-any.whl", hash = "sha256:c69214aa47deac29fad6c2a4f590b9c4a9fdb16a403176fe154b79c0b4d4d820", size = 343634, upload-time = "2025-03-02T12:54:52.069Z" },
+]
+
+[[package]]
+name = "pytest-alembic"
+version = "0.12.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "alembic" },
+    { name = "pytest" },
+    { name = "sqlalchemy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f9/37/ad095d92242fe5c6b4b793191240375c01f6508960f31179de7f0e22cb96/pytest_alembic-0.12.1.tar.gz", hash = "sha256:4e2b477d93464d0cfe80487fdf63922bfd22f29153ca980c1bccf1dbf833cf12", size = 30635, upload-time = "2025-05-27T14:15:29.85Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8b/f4/ded73992f972360adf84781b7e58729a3778e4358d482e1fe375c83948b4/pytest_alembic-0.12.1-py3-none-any.whl", hash = "sha256:d0d6be79f1c597278fbeda08c5558e7b8770af099521b0aa164e0df4aed945da", size = 36571, upload-time = "2025-05-27T14:15:28.817Z" },
 ]
 
 [[package]]
@@ -2318,7 +2334,7 @@ name = "sqlalchemy"
 version = "2.0.41"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "greenlet", marker = "(python_full_version < '3.14' and python_full_version >= '3.12' and platform_machine == 'AMD64') or (python_full_version < '3.14' and python_full_version >= '3.12' and platform_machine == 'WIN32') or (python_full_version < '3.14' and python_full_version >= '3.12' and platform_machine == 'aarch64') or (python_full_version < '3.14' and python_full_version >= '3.12' and platform_machine == 'amd64') or (python_full_version < '3.14' and python_full_version >= '3.12' and platform_machine == 'ppc64le') or (python_full_version < '3.14' and python_full_version >= '3.12' and platform_machine == 'win32') or (python_full_version < '3.14' and python_full_version >= '3.12' and platform_machine == 'x86_64')" },
+    { name = "greenlet", marker = "(python_full_version < '3.14' and python_full_version >= '3.12.0' and platform_machine == 'AMD64') or (python_full_version < '3.14' and python_full_version >= '3.12.0' and platform_machine == 'WIN32') or (python_full_version < '3.14' and python_full_version >= '3.12.0' and platform_machine == 'aarch64') or (python_full_version < '3.14' and python_full_version >= '3.12.0' and platform_machine == 'amd64') or (python_full_version < '3.14' and python_full_version >= '3.12.0' and platform_machine == 'ppc64le') or (python_full_version < '3.14' and python_full_version >= '3.12.0' and platform_machine == 'win32') or (python_full_version < '3.14' and python_full_version >= '3.12.0' and platform_machine == 'x86_64')" },
     { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/63/66/45b165c595ec89aa7dcc2c1cd222ab269bc753f1fc7a1e68f8481bd957bf/sqlalchemy-2.0.41.tar.gz", hash = "sha256:edba70118c4be3c2b1f90754d308d0b79c6fe2c0fdc52d8ddf603916f83f4db9", size = 9689424, upload-time = "2025-05-14T17:10:32.339Z" }
@@ -2443,7 +2459,7 @@ dependencies = [
     { name = "beautifulsoup4" },
     { name = "cssselect" },
     { name = "types-html5lib" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13' and python_full_version >= '3.12'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13' and python_full_version >= '3.12.0'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/84/01/9e45ccd26ca36982ef505174a6e5f661abb68565fa27c77d2e56a3f0e9f5/types_lxml-2025.3.30.tar.gz", hash = "sha256:ea4da0d2b61a73e114e14e2dcca1f62671182d80016a483369c553a24ba8f163", size = 152963, upload-time = "2025-03-29T22:29:04.497Z" }
 wheels = [

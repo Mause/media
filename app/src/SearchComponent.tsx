@@ -3,9 +3,11 @@ import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import * as qs from './qs';
-import { SearchBox, DisplayError } from './IndexComponent';
+import { DisplayError } from './DisplayError';
 import { MLink } from './MLink';
+import { SearchBox } from './SearchBox';
 import type { components } from './schema';
+import { RouteTitle } from './RouteTitle';
 export type SearchResult = components['schemas']['SearchResponse'];
 
 export function SearchComponent() {
@@ -18,7 +20,7 @@ export function SearchComponent() {
     isValidating,
   } = useSWR<SearchResult[], Error>('search?' + qs.stringify({ query }));
   return (
-    <div>
+    <RouteTitle title="Search">
       <SearchBox />
       {error && <DisplayError error={error} />}
       {isValidating && <ReactLoading type="balls" color="#000" />}
@@ -39,6 +41,6 @@ export function SearchComponent() {
         ))}
       </ul>
       {results && results.length === 0 ? 'No results' : null}
-    </div>
+    </RouteTitle>
   );
 }

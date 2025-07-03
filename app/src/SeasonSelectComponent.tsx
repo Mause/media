@@ -9,6 +9,7 @@ import * as qs from './qs';
 import type { components } from './schema';
 import { useLocation } from './utils';
 import { MLink } from './MLink';
+import { RouteTitle } from './RouteTitle';
 
 export type Season = components['schemas']['TvSeasonResponse'];
 export type EpisodeResponse = components['schemas']['Episode'];
@@ -38,12 +39,12 @@ export function Shared() {
   );
 }
 
-function SeasonSelectComponent() {
+export function SeasonSelectComponent() {
   const { tmdb_id } = useParams<{ tmdb_id: string }>();
   const { data: tv } = useSWR<TV>(`tv/${tmdb_id}`);
 
   return (
-    <div>
+    <RouteTitle title="Select Season">
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
         <Typography color="textPrimary" data-testid="title">
@@ -61,65 +62,6 @@ function SeasonSelectComponent() {
           ))}
         </ul>
       )}
-    </div>
+    </RouteTitle>
   );
 }
-
-export function EpisodeSelectBreadcrumbs(props: {
-  tmdb_id: string;
-  season: number;
-}) {
-  const { data: tv } = useSWR<TV>(`tv/${props.tmdb_id}`);
-
-  return (
-    <Breadcrumbs aria-label="breadcrumb">
-      <Shared />
-      <MLink color="inherit" to={`/select/${props.tmdb_id}/season`}>
-        {tv ? tv.title : ''}
-      </MLink>
-      <Typography color="textPrimary" data-testid="title">
-        Season {props.season}
-      </Typography>
-    </Breadcrumbs>
-  );
-}
-
-function EpisodeSelectComponent() {
-  const { tmdb_id, season: seasonNumber } = useParams<{
-    tmdb_id: string;
-    season: string;
-  }>();
-  const { data: season } = useSWR<Season>(
-    `tv/${tmdb_id}/season/${seasonNumber}`,
-  );
-
-  return (
-    <div>
-      <EpisodeSelectBreadcrumbs
-        tmdb_id={tmdb_id!}
-        season={parseInt(seasonNumber!)}
-      />
-      {season ? (
-        <ol>
-          {season.episodes.map((episode) => (
-            <li key={episode.id} value={episode.episode_number}>
-              <MLink
-                to={`/select/${tmdb_id}/season/${seasonNumber}/episode/${episode.episode_number}/options`}
-              >
-                {episode.name}
-              </MLink>
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <ReactLoading type="balls" color="#000" />
-      )}
-      <MLink to={`/select/${tmdb_id}/season/${seasonNumber}/download_all`}>
-        Download season
-      </MLink>
-      <br />
-    </div>
-  );
-}
-
-export { SeasonSelectComponent, EpisodeSelectComponent };

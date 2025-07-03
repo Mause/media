@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { Progress } from './render';
 import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
+import { RouteTitle } from './RouteTitle';
 
-export default function Storybook() {
+export function Storybook() {
   const [percentDone, setPercentDone] = useState(0.5);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -15,7 +16,7 @@ export default function Storybook() {
   });
 
   return (
-    <div>
+    <RouteTitle title="Storybook">
       <ContextMenu>
         <MenuItem component="a" href="http://google.com" target="_blank">
           Hello
@@ -56,6 +57,6 @@ export default function Storybook() {
           },
         }}
       />
-    </div>
+    </RouteTitle>
   );
 }

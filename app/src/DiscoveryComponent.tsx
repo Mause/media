@@ -6,8 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { paths } from './schema';
 import { Loading } from './render';
 import { MLink } from './MLink';
-import { DisplayError } from './IndexComponent';
+import { DisplayError } from './DisplayError';
 import type { GetResponse } from './utils';
+import { RouteTitle } from './RouteTitle';
 
 export type DiscoverResponse = GetResponse<paths['/api/discover']>;
 export type Configuration = GetResponse<paths['/api/tmdb/configuration']>;
@@ -27,6 +28,7 @@ export function DiscoveryComponent() {
 
   return (
     <div>
+    <RouteTitle title="Discover">
       <h3>Discovery</h3>
       <Loading loading={isValidating} />
       {error && <DisplayError error={error} />}
@@ -44,7 +46,7 @@ export function DiscoveryComponent() {
           </Grid>
         ))}
       </Grid>
-    </div>
+    </RouteTitle>
   );
 }
 

@@ -4,73 +4,71 @@ exports[`Storybook > renders without crashing 1`] = `
 <div
   aria-hidden="true"
 >
-  <div>
-    <svg
-      aria-hidden="true"
-      class="svg-inline--fa fa-list "
-      data-icon="list"
-      data-prefix="fas"
-      data-testid="context-menu-open"
-      focusable="false"
-      role="img"
-      style="cursor: context-menu;"
-      viewBox="0 0 512 512"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
-        fill="currentColor"
-      />
-    </svg>
-    <hr />
-    <li>
-      Storybook
-      : 
-      <ul>
-        <li>
-          <svg
-            aria-hidden="true"
-            class="svg-inline--fa fa-circle green"
-            data-icon="circle"
-            data-prefix="fas"
-            focusable="false"
-            role="img"
-            viewBox="0 0 512 512"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"
-              fill="currentColor"
-            />
-          </svg>
-          <pre>
-            <code>
-              {
+  <svg
+    aria-hidden="true"
+    class="svg-inline--fa fa-list "
+    data-icon="list"
+    data-prefix="fas"
+    data-testid="context-menu-open"
+    focusable="false"
+    role="img"
+    style="cursor: context-menu;"
+    viewBox="0 0 512 512"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
+      fill="currentColor"
+    />
+  </svg>
+  <hr />
+  <li>
+    Storybook
+    : 
+    <ul>
+      <li>
+        <svg
+          aria-hidden="true"
+          class="svg-inline--fa fa-circle green"
+          data-icon="circle"
+          data-prefix="fas"
+          focusable="false"
+          role="img"
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"
+            fill="currentColor"
+          />
+        </svg>
+        <pre>
+          <code>
+            {
   "component_type": "datastore",
   "time": "2022-01-01T10:10:00",
   "output": {
     "hello": "world"
   }
 }
-            </code>
-          </pre>
-        </li>
-      </ul>
-    </li>
-    <hr />
+          </code>
+        </pre>
+      </li>
+    </ul>
+  </li>
+  <hr />
+  <span
+    aria-valuemax="100"
+    aria-valuemin="0"
+    aria-valuenow="50"
+    class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate css-1txyin7-MuiLinearProgress-root"
+    role="progressbar"
+    title="50% (an hour remaining)"
+  >
     <span
-      aria-valuemax="100"
-      aria-valuemin="0"
-      aria-valuenow="50"
-      class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate css-1txyin7-MuiLinearProgress-root"
-      role="progressbar"
-      title="50% (an hour remaining)"
-    >
-      <span
-        class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate css-l16vtb-MuiLinearProgress-bar1"
-        style="transform: translateX(-50%);"
-      />
-    </span>
-  </div>
+      class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate css-l16vtb-MuiLinearProgress-bar1"
+      style="transform: translateX(-50%);"
+    />
+  </span>
 </div>
 `;

@@ -5,6 +5,7 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 import type { paths } from './schema';
 import type { GetResponse } from './utils';
+import { RouteTitle } from './RouteTitle';
 
 type DiagnosticsRoot = GetResponse<paths['/api/diagnostics']>;
 type HealthcheckResponse = GetResponse<
@@ -93,7 +94,7 @@ export function DiagnosticsComponent() {
   );
 
   return (
-    <div>
+    <RouteTitle title="Diagnostics">
       <h3>Diagnostics: Media {data?.version}</h3>
 
       {isValidating && <ReactLoading type="balls" color="#000" />}
@@ -112,6 +113,6 @@ export function DiagnosticsComponent() {
             </li>
           ))}
       </ul>
-    </div>
+    </RouteTitle>
   );
 }

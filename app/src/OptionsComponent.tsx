@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { Breadcrumbs, Typography, Alert } from '@mui/material';
+import { Alert, Breadcrumbs, Typography } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 
@@ -10,60 +10,14 @@ import { subscribe, getToken } from './utils';
 import type { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
-import type { DownloadState } from './DownloadComponent';
-import { DisplayError } from './IndexComponent';
 import type { components } from './schema';
+import { DisplayError } from './DisplayError';
 import { MonitorAddComponent } from './MonitorComponent';
 import { MLink } from './MLink';
+import { DisplayTorrent } from './DisplayTorrent';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
-
-function getHash(magnet: string) {
-  const u = new URL(magnet);
-  return _.last(u.searchParams.get('xt')!.split(':'));
-}
-
-export function DisplayTorrent({
-  torrent,
-  torrents,
-  tmdb_id,
-  season,
-  episode,
-}: {
-  season?: number;
-  episode?: number | null;
-  tmdb_id: string;
-  torrent: ITorrent;
-  torrents?: Torrents;
-}) {
-  const state: DownloadState = {
-    downloads: [
-      {
-        tmdb_id: parseInt(tmdb_id),
-        magnet: torrent.download,
-        season: season,
-        episode: episode,
-      },
-    ],
-  };
-  const url = { to: '/download', state };
-  return (
-    <span>
-      <strong title={torrent.source}>
-        {torrent.source.substring(0, 1).toUpperCase()}
-      </strong>
-      &nbsp;
-      <MLink {...url}>{torrent.title}</MLink>
-      &nbsp;
-      <small>{torrent.seeders}</small>
-      &nbsp;
-      {torrents && getHash(torrent.download)! in torrents && (
-        <small>downloaded</small>
-      )}
-    </span>
-  );
-}
 
 const ranking = [
   'Movies/XVID',

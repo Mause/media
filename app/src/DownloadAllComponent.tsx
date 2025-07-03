@@ -2,15 +2,21 @@ import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import type { ITorrent } from './OptionsComponent';
-import { DisplayTorrent } from './OptionsComponent';
 import { Loading } from './render';
-import { EpisodeSelectBreadcrumbs } from './SeasonSelectComponent';
+import { EpisodeSelectBreadcrumbs } from './EpisodeSelectComponent';
 import { MLink } from './MLink';
 import type { DownloadCall } from './DownloadComponent';
 import type { Torrents } from './streaming';
-import { DisplayError } from './IndexComponent';
+import { DisplayError } from './DisplayError';
+import { DisplayTorrent } from './DisplayTorrent';
+import { RouteTitle } from './RouteTitle';
+import type { paths } from './schema';
+import type { GetResponse } from './utils';
 
-type MapType = [string, ITorrent[]][];
+type DownloadAllResponse = GetResponse<
+  paths['/api/select/{tmdb_id}/season/{season}/download_all']
+>;
+type MapType = DownloadAllResponse['complete'];
 
 function DownloadAllComponent() {
   const { tmdb_id, season: season_s } = useParams<{
@@ -20,17 +26,12 @@ function DownloadAllComponent() {
   const season = parseInt(season_s!);
 
   const { data: torrents } = useSWR<Torrents>('torrents');
-  const { data, isValidating, error } = useSWR<
-    {
-      packs: ITorrent[];
-      complete: MapType;
-      incomplete: MapType;
-    },
-    Error
-  >(`select/${tmdb_id}/season/${season}/download_all`);
+  const { data, isValidating, error } = useSWR<DownloadAllResponse, Error>(
+    `select/${tmdb_id}/season/${season}/download_all`,
+  );
 
   return (
-    <div>
+    <RouteTitle title="Download Season">
       {error && <DisplayError error={error} />}
       <EpisodeSelectBreadcrumbs tmdb_id={tmdb_id!} season={season} />
       <Loading loading={isValidating} />
@@ -65,7 +66,7 @@ function DownloadAllComponent() {
         tmdb_id={tmdb_id!}
         torrents={torrents}
       />
-    </div>
+    </RouteTitle>
   );
 }
 
