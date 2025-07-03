@@ -10,7 +10,7 @@ from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import make_transient
+from sqlalchemy.orm import joinedload, make_transient
 
 from .db import (
     Download,
@@ -116,7 +116,12 @@ async def add_single(
     already = (
         (
             await session.execute(
-                select(Download).filter_by(transmission_id=transmission_id)
+                select(Download)
+                .filter_by(transmission_id=transmission_id)
+                .options(
+                    joinedload(Download.episode),
+                    joinedload(Download.movie),
+                )
             )
         )
         .scalars()
