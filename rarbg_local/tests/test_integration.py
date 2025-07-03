@@ -246,11 +246,7 @@ async def test_download_duplicate(
     hash_string = "HASHHASHHASH"
     DownloadFactory.create(transmission_id=hash_string)
     add_torrent.return_value = {
-        "arguments": {
-            "torrent-added": {
-                "hashString": hash_string
-            }
-        }
+        "arguments": {"torrent-added": {"hashString": hash_string}}
     }
 
     res = await test_client.post(
@@ -276,7 +272,6 @@ async def test_download_duplicate(
     assert download.episode.season == 1
     assert download.episode.episode == 2
     assert download.episode.show_title == 'Pocket Monsters'
-
 
 
 @mark.asyncio
