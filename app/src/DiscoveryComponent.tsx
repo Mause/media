@@ -1,13 +1,25 @@
 import useSWR from 'swr';
 import { Grid } from '@mui/material';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import type { paths } from './schema';
 import { Loading } from './render';
+import { MLink } from './MLink';
 import { DisplayError } from './DisplayError';
 import type { GetResponse } from './utils';
 import { RouteTitle } from './RouteTitle';
 
-type DiscoverResponse = GetResponse<paths['/api/discover']>;
+export type DiscoverResponse = GetResponse<paths['/api/discover']>;
+export type Configuration = GetResponse<paths['/api/tmdb/configuration']>;
+
+function getYear(release_date: string | null | undefined): string | number {
+  if (release_date) {
+    return new Date(release_date).getFullYear();
+  } else {
+    return 'Unknown';
+  }
+}
 
 export function DiscoveryComponent() {
   const { data, isValidating, error } = useSWR<DiscoverResponse, Error>(
@@ -16,17 +28,40 @@ export function DiscoveryComponent() {
 
   return (
     <RouteTitle title="Discover">
-      <h3>DiscoveryComponent</h3>
+      <h3>Discovery</h3>
       <Loading loading={isValidating} />
       {error && <DisplayError error={error} />}
       <Grid container spacing={2}>
         {data?.results.map((result) => (
-          <Grid>
-            <h4>{result.title}</h4>
+          <Grid key={result.id}>
+            <h4>
+              {result.title} ({getYear(result.release_date)})
+              <MLink to={`/select/${result.id}/options`}>
+                <FontAwesomeIcon icon={faSearch} />
+              </MLink>
+            </h4>
+            {result.poster_path && <Poster poster_path={result.poster_path} />}
             <p>{result.overview}</p>
           </Grid>
         ))}
       </Grid>
     </RouteTitle>
   );
+}
+
+function Poster({ poster_path }: { poster_path: string }) {
+  const { data, isValidating } = useSWR<Configuration>('tmdb/configuration');
+
+  if (isValidating) {
+    return undefined;
+  }
+
+  const base = data!.images.secure_base_url;
+
+  const srcset = data!.images.poster_sizes.map((size) => [
+    `${base}/${size}${poster_path}`,
+    size,
+  ]);
+
+  return <img srcSet={srcset.map((pair) => pair.join(' ')).join(', ')} />;
 }

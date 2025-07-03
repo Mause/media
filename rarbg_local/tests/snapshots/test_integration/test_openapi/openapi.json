@@ -565,6 +565,34 @@
         ]
       }
     },
+    "/api/tmdb/configuration": {
+      "get": {
+        "summary": "Tmdb Configuration",
+        "operationId": "tmdb_configuration",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Configuration"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ]
+      }
+    },
     "/api/tv/{tmdb_id}": {
       "get": {
         "tags": [
@@ -1139,6 +1167,26 @@
         "title": "ComponentType",
         "description": "Enum used to store the component types."
       },
+      "Configuration": {
+        "properties": {
+          "images": {
+            "$ref": "#/components/schemas/ImagesConfiguration"
+          },
+          "change_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Change Keys"
+          }
+        },
+        "type": "object",
+        "required": [
+          "images",
+          "change_keys"
+        ],
+        "title": "Configuration"
+      },
       "CronResponse_MonitorGet_": {
         "properties": {
           "success": {
@@ -1630,6 +1678,64 @@
           "category"
         ],
         "title": "ITorrent"
+      },
+      "ImagesConfiguration": {
+        "properties": {
+          "base_url": {
+            "type": "string",
+            "title": "Base Url"
+          },
+          "secure_base_url": {
+            "type": "string",
+            "title": "Secure Base Url"
+          },
+          "backdrop_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Backdrop Sizes"
+          },
+          "logo_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Logo Sizes"
+          },
+          "poster_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Poster Sizes"
+          },
+          "profile_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Profile Sizes"
+          },
+          "still_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Still Sizes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "base_url",
+          "secure_base_url",
+          "backdrop_sizes",
+          "logo_sizes",
+          "poster_sizes",
+          "profile_sizes",
+          "still_sizes"
+        ],
+        "title": "ImagesConfiguration"
       },
       "IndexResponse": {
         "properties": {
