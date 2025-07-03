@@ -244,7 +244,7 @@ async def test_download_duplicate(
     )
 
     hash_string = "HASHHASHHASH"
-    DownloadFactory.create(transmission_id=hash_string)
+    EpisodeDetailsFactory.create(download__transmission_id=hash_string)
     add_torrent.return_value = {
         "arguments": {"torrent-added": {"hashString": hash_string}}
     }
