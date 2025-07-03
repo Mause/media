@@ -57,7 +57,7 @@ function Poster({ poster_path }: { poster_path: string }) {
   }
 
   const base = data!.images.secure_base_url;
-  const build = (size) => `${base}${size}${poster_path}`;
+  const build = (size: string) => `${base}${size}${poster_path}`;
 
   const srcset = data!.images.poster_sizes
     .filter((size) => size !== 'original')
