@@ -65,6 +65,7 @@ exports[`DiscoveryComponent 2`] = `
         </a>
       </h4>
       <img
+        src="https://tmdb.org/original/hello.png"
         srcset="https://tmdb.org/w800/hello.png 800w"
       />
       <p>

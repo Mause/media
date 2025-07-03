@@ -37,7 +37,7 @@ test('DiscoveryComponent', async () => {
         backdrop_sizes: [],
         base_url: 'https://tmdb.org/',
         logo_sizes: [],
-        poster_sizes: ['w800'],
+        poster_sizes: ['w800', 'original'],
         profile_sizes: [],
         secure_base_url: 'https://tmdb.org/',
         still_sizes: [],
