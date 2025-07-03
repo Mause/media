@@ -35,11 +35,11 @@ test('DiscoveryComponent', async () => {
     mock('/api/tmdb/configuration', {
       images: {
         backdrop_sizes: [],
-        base_url: 'https://tmdb.org',
+        base_url: 'https://tmdb.org/',
         logo_sizes: [],
-        poster_sizes: ['800w'],
+        poster_sizes: ['w800'],
         profile_sizes: [],
-        secure_base_url: 'https://tmdb.org',
+        secure_base_url: 'https://tmdb.org/',
         still_sizes: [],
       },
       change_keys: [],

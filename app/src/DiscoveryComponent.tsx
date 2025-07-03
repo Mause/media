@@ -59,9 +59,15 @@ function Poster({ poster_path }: { poster_path: string }) {
   const base = data!.images.secure_base_url;
 
   const srcset = data!.images.poster_sizes.map((size) => [
-    `${base}/${size}${poster_path}`,
+    `${base}${size}${poster_path}`,
     size,
   ]);
 
-  return <img srcSet={srcset.map((pair) => pair.join(' ')).join(', ')} />;
+  return (
+    <img
+      srcSet={srcset
+        .map(([url, size]) => `${url} ${size.slice(1)}w`)
+        .join(', ')}
+    />
+  );
 }
