@@ -206,6 +206,83 @@ async def test_download(
 
 
 @mark.asyncio
+async def test_download_duplicate(
+    test_client: TestClient,
+    aioresponses: Aioresponses,
+    responses: RequestsMock,
+    add_torrent: MagicMock,
+    async_session: AsyncSession,
+) -> None:
+    '''
+    https://elliana-may.sentry.io/issues/6715511623/?project=1869914
+    '''
+    themoviedb(
+        aioresponses,
+        '/tv/95792',
+        TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
+    )
+    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(
+        aioresponses,
+        '/tv/95792/season/1',
+        {
+            'episodes': [
+                {'id': 1, 'name': "Pikachu is Born!", 'episode_number': 1},
+                {'id': 2, 'name': "Satoshi, Go, and Lugia Go!", 'episode_number': 2},
+            ]
+        },
+    )
+
+    magnet = (
+        'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313'
+        '&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv'
+        '&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce'
+        '&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce'
+        '&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce'
+        '&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce'
+        '&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
+    )
+
+    hash_string = "HASHHASHHASH"
+    EpisodeDetailsFactory.create(
+        download__transmission_id=hash_string,
+        download__title='Satoshi, Go, and Lugia Go!',
+        season=1,
+        episode=2,
+        show_title='Pocket Monsters',
+    )
+    await async_session.commit()
+
+    add_torrent.return_value = {
+        "arguments": {"torrent-added": {"hashString": hash_string}}
+    }
+
+    res = await test_client.post(
+        '/api/download',
+        json=[{'magnet': magnet, 'tmdb_id': 95792, 'season': '1', 'episode': '2'}],
+    )
+    assert res.status_code == 200
+
+    add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
+
+    download = (
+        (
+            await async_session.execute(
+                select(Download).options(joinedload(Download.episode))
+            )
+        )
+        .scalars()
+        .first()
+    )
+    assert download
+    assert download.title == 'Satoshi, Go, and Lugia Go!'
+    assert download.episode
+    assert download.episode.season == 1
+    assert download.episode.episode == 2
+    assert download.episode.show_title == 'Pocket Monsters'
+
+
+@mark.asyncio
 async def test_download_season_pack(
     test_client: TestClient,
     aioresponses: Aioresponses,
