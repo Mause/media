@@ -27,7 +27,6 @@ export function DiscoveryComponent() {
   );
 
   return (
-    <div>
     <RouteTitle title="Discover">
       <h3>Discovery</h3>
       <Loading loading={isValidating} />
