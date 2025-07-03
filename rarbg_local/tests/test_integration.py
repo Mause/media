@@ -244,7 +244,13 @@ async def test_download_duplicate(
     )
 
     hash_string = "HASHHASHHASH"
-    EpisodeDetailsFactory.create(download__transmission_id=hash_string)
+    EpisodeDetailsFactory.create(
+        download__transmission_id=hash_string,
+        download__title='Satoshi, Go, and Lugia Go!',
+        season=1,
+        episode=2,
+        show_title='Pocket Monsters',
+    )
     await async_session.commit()
 
     add_torrent.return_value = {
