@@ -57,11 +57,20 @@ function Poster({ poster_path }: { poster_path: string }) {
   }
 
   const base = data!.images.secure_base_url;
+  const build = (size: string) => `${base}${size}${poster_path}`;
 
-  const srcset = data!.images.poster_sizes.map((size) => [
-    `${base}/${size}${poster_path}`,
-    size,
-  ]);
+  const srcset = data!.images.poster_sizes
+    .filter((size) => size !== 'original')
+    .map((size) => [build(size), size]);
 
-  return <img srcSet={srcset.map((pair) => pair.join(' ')).join(', ')} />;
+  const original = build('original');
+
+  return (
+    <img
+      srcSet={srcset
+        .map(([url, size]) => `${url} ${size.slice(1)}${size[0]}`)
+        .join(', ')}
+      src={original}
+    />
+  );
 }
