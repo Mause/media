@@ -21,7 +21,7 @@ export default defineConfig({
     open: true,
     port: 3000,
     https: !gitpodWorkspace,
-    allowedHosts: [gitpodWorkspace && '3000-' + new URL(gitpodWorkspace).host],
+    allowedHosts: gitpodWorkspace && ['3000-' + new URL(gitpodWorkspace).host],
     proxy: {
       '/api': 'http://localhost:5000',
     },
