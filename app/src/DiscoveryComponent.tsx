@@ -35,8 +35,7 @@ export function DiscoveryComponent() {
         {data?.results.map((result) => (
           <Grid key={result.id} size={{ xs: 12, sm: 6, lg: 2 }}>
             <h4>
-              {result.title} ({getYear(result.release_date)})
-              {' '}
+              {result.title} ({getYear(result.release_date)}){' '}
               <MLink to={`/select/${result.id}/options`}>
                 <FontAwesomeIcon icon={faSearch} />
               </MLink>
