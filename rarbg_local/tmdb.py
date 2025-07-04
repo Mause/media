@@ -75,8 +75,11 @@ class SearchBaseResponse(BaseModel):
         media_type: Literal['person']
         id: TmdbId
 
+    class CollectionSearch(BaseModel):
+        media_type: Literal['collection']
+
     results: Annotated[
-        list[TvSearch | MovieSearch | PersonSearch], Field(default_factory=list)
+        list[TvSearch | MovieSearch | PersonSearch | CollectionResponse], Field(default_factory=list)
     ]
 
 
