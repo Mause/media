@@ -14,7 +14,7 @@ function DiscoveryStory() {
   mutate('tmdb/configuration', {});
   mutate('discover', {});
 
-  return <DiscoveryComponent />
+  return <DiscoveryComponent />;
 }
 
 export function Storybook() {
