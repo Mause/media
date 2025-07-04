@@ -4,7 +4,18 @@ import { useEffect, useState } from 'react';
 import { Progress } from './render';
 import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
+import { DiscoveryComponent } from './DiscoverComponent';
 import { RouteTitle } from './RouteTitle';
+import { useSWRConfig } from 'swr';
+
+function DiscoveryStory() {
+  const { mutate } = useSWRConfig();
+
+  mutate('tmdb/configuration', {});
+  mutate('discover', {});
+
+  return <DiscoveryComponent />
+}
 
 export function Storybook() {
   const [percentDone, setPercentDone] = useState(0.5);
@@ -57,6 +68,8 @@ export function Storybook() {
           },
         }}
       />
+      <hr />
+      <DiscoveryStory />
     </RouteTitle>
   );
 }
