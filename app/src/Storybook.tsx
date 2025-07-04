@@ -8,10 +8,10 @@ import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 import { PureDiscoveryComponent } from './DiscoveryComponent';
 import { RouteTitle } from './RouteTitle';
 
-async function DiscoveryStory() {
+function DiscoveryStory() {
   const { mutate } = useSWRConfig();
 
-  await mutate('tmdb/configuration', {});
+  void mutate('tmdb/configuration', {});
 
   return (
     <PureDiscoveryComponent
