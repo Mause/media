@@ -10,7 +10,10 @@ import { DisplayError } from './DisplayError';
 import type { GetResponse } from './utils';
 import { RouteTitle } from './RouteTitle';
 
-export type DiscoverResponse = GetResponse<paths['/api/discover']>;
+export type DiscoverResponse = Pick<
+  GetResponse<paths['/api/discover']>,
+  'results'
+>;
 export type Configuration = GetResponse<paths['/api/tmdb/configuration']>;
 
 function getYear(release_date: string | null | undefined): string | number {
@@ -26,6 +29,24 @@ export function DiscoveryComponent() {
     'discover',
   );
 
+  return (
+    <PureDiscoveryComponent
+      data={data}
+      isValidating={isValidating}
+      error={error}
+    />
+  );
+}
+
+export function PureDiscoveryComponent({
+  data,
+  isValidating,
+  error,
+}: {
+  isValidating: boolean;
+  error: Error | undefined;
+  data: DiscoverResponse | undefined;
+}) {
   return (
     <RouteTitle title="Discover">
       <h3>Discovery</h3>

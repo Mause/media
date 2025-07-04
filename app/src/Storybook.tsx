@@ -1,20 +1,33 @@
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
+import { useSWRConfig } from 'swr';
 
 import { Progress } from './render';
 import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
-import { DiscoveryComponent } from './DiscoveryComponent';
+import { PureDiscoveryComponent } from './DiscoveryComponent';
 import { RouteTitle } from './RouteTitle';
-import { useSWRConfig } from 'swr';
 
-function DiscoveryStory() {
+async function DiscoveryStory() {
   const { mutate } = useSWRConfig();
 
-  mutate('tmdb/configuration', {});
-  mutate('discover', {});
+  await mutate('tmdb/configuration', {});
 
-  return <DiscoveryComponent />;
+  return (
+    <PureDiscoveryComponent
+      data={{
+        results: [
+          {
+            id: 1,
+            title: 'Hello World',
+            release_date: '2022-01-01',
+          },
+        ],
+      }}
+      error={undefined}
+      isValidating={false}
+    />
+  );
 }
 
 export function Storybook() {
