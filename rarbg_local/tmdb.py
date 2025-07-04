@@ -79,7 +79,7 @@ class SearchBaseResponse(BaseModel):
         media_type: Literal['collection']
 
     results: Annotated[
-        list[TvSearch | MovieSearch | PersonSearch | CollectionResponse],
+        list[TvSearch | MovieSearch | PersonSearch | CollectionSearch],
         Field(default_factory=list),
     ]
 
