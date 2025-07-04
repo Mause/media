@@ -33,9 +33,10 @@ export function DiscoveryComponent() {
       {error && <DisplayError error={error} />}
       <Grid container spacing={2}>
         {data?.results.map((result) => (
-          <Grid key={result.id}>
+          <Grid key={result.id} size={{ xs: 12, sm: 6, lg: 2 }}>
             <h4>
               {result.title} ({getYear(result.release_date)})
+              {' '}
               <MLink to={`/select/${result.id}/options`}>
                 <FontAwesomeIcon icon={faSearch} />
               </MLink>
