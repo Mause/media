@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Progress } from './render';
 import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
-import { DiscoveryComponent } from './DiscoverComponent';
+import { DiscoveryComponent } from './DiscoveryComponent';
 import { RouteTitle } from './RouteTitle';
 import { useSWRConfig } from 'swr';
 
