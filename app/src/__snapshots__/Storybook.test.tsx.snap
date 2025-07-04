@@ -74,41 +74,42 @@ exports[`Storybook > renders without crashing 1`] = `
   <h3>
     Discovery
   </h3>
-  <div>
-    <br />
-    <div
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorWarning MuiAlert-standardWarning MuiAlert-standard css-10cv5sc-MuiPaper-root-MuiAlert-root"
-      role="alert"
-      style="--Paper-shadow: none;"
-    >
-      <div
-        class="MuiAlert-icon css-vab54s-MuiAlert-icon"
-      >
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1ckov0h-MuiSvgIcon-root"
-          data-testid="SuccessOutlinedIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.76,4 13.5,4.11 14.2, 4.31L15.77,2.74C14.61,2.26 13.34,2 12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0, 0 22,12M7.91,10.08L6.5,11.5L11,16L21,6L19.59,4.58L11,13.17L7.91,10.08Z"
-          />
-        </svg>
-      </div>
-      <div
-        class="MuiAlert-message css-zioonp-MuiAlert-message"
-      >
-        <span
-          data-testid="errorMessage"
-        >
-          Unable to connect to transmission: AxiosError: Network Error
-        </span>
-      </div>
-    </div>
-  </div>
   <div
     class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 css-zjhuaj-MuiGrid-root"
-  />
+  >
+    <div
+      class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-lg-2 css-rv49wc-MuiGrid-root"
+    >
+      <h4>
+        Hello World
+         (
+        2022
+        )
+         
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+          data-discover="true"
+          href="/select/1/options"
+        >
+          <svg
+            aria-hidden="true"
+            class="svg-inline--fa fa-magnifying-glass "
+            data-icon="magnifying-glass"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            viewBox="0 0 512 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+              fill="currentColor"
+            />
+          </svg>
+        </a>
+      </h4>
+      <p />
+    </div>
+  </div>
 </div>
 `;
