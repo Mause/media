@@ -16,13 +16,11 @@ function DiscoveryStory() {
   return (
     <PureDiscoveryComponent
       data={{
-        results: [
-          {
-            id: 1,
-            title: 'Hello World',
-            release_date: '2022-01-01',
-          },
-        ],
+        results: Array.from({ length: 12 }, (_, id) => ({
+          id,
+          title: `Hello World - ${id}`,
+          release_date: `2022-01-${String(id + 1).padStart(2, '0')}`,
+        })),
       }}
       error={undefined}
       isValidating={false}
