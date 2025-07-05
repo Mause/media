@@ -140,7 +140,29 @@ async def get_tv_imdb_id(tv_id: TmdbId) -> ImdbId:
 
 
 class ExternalIds(BaseModel):
+    id: TmdbId
     imdb_id: ImdbId
+
+
+class TvExternalIds(ExternalIds):
+    freebase_mid: str | None = None
+    freebase_id: str | None = None
+    tvdb_id: int
+    tvrage_id: int | None = None
+
+
+class MovieExternalIds(ExternalIds):
+    pass
+
+
+@cached(LRUCache(360))
+async def get_external_ids(
+    type: ThingType, id: TmdbId
+) -> MovieExternalIds | TvExternalIds:
+    return await get_json(
+        f'{type}/{id}/external_ids',
+        MovieExternalIds if type == 'movie' else TvExternalIds,
+    )
 
 
 @cached(LRUCache(360))
@@ -153,9 +175,8 @@ async def get_tv_episode_imdb_id(tmdb_id: TmdbId, season: int, episode: int) -> 
     ).imdb_id
 
 
-@cached(LRUCache(360))
 async def get_imdb_id(type: ThingType, id: TmdbId) -> ImdbId:
-    return (await get_json(f'{type}/{id}/external_ids', ExternalIds)).imdb_id
+    return (await get_external_ids(type, id)).imdb_id
 
 
 @cached(TTLCache(256, 360))

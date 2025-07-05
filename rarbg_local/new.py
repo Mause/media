@@ -10,7 +10,6 @@ from typing import (
     Union,
     cast,
 )
-from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,6 +22,7 @@ from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
 from starlette.staticfiles import StaticFiles
+from yarl import URL
 
 from .auth import security
 from .config import commit, production
@@ -389,9 +389,14 @@ def redirect_to_plex(
 
     server_id = plex.machineIdentifier
 
-    return RedirectResponse(
-        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
-        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
+    return RedirectResponse(build_plex_url(server_id, dat.ratingKey))
+
+
+def build_plex_url(server_id: str, rating_key: str) -> str:
+    return str(
+        URL(f'https://app.plex.tv/desktop#!/server/{server_id}/details').extend_query(
+            key=f'/library/metadata/{rating_key}'
+        )
     )
 
 
