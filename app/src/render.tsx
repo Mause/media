@@ -58,6 +58,28 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
   );
 }
 
+function RenderMovie({ movie }: { movie: MovieResponse }) {
+  return (
+    <>
+      <span>{movie.download.title}</span>
+      &nbsp;
+      <ContextMenu>
+        <OpenPlex download={movie.download} />
+        <MenuItem
+          component="a"
+          href={`https://www.imdb.com/title/${movie.download.imdb_id}`}
+          target="_blank"
+        >
+          Open in IMDB
+        </MenuItem>
+        {movie.download.added_by ? (
+          <MenuItem>Added by: {movie.download.added_by.username}</MenuItem>
+        ) : null}
+      </ContextMenu>
+    </>
+  );
+}
+
 export function Movies({
   movies,
   torrents,
@@ -102,7 +124,7 @@ export function Movies({
           <ul>
             {(sortedMovies.true || []).map((movie) => (
               <li key={movie.id}>
-                <span>{movie.download.title}</span>
+                <RenderMovie movie={movie} />
               </li>
             ))}
           </ul>
@@ -111,23 +133,7 @@ export function Movies({
       <ul>
         {(sortedMovies.false || []).map((movie) => (
           <li key={movie.id}>
-            <span>{movie.download.title}</span>
-            &nbsp;
-            <ContextMenu>
-              <OpenPlex download={movie.download} />
-              <MenuItem
-                component="a"
-                href={`https://www.imdb.com/title/${movie.download.imdb_id}`}
-                target="_blank"
-              >
-                Open in IMDB
-              </MenuItem>
-              {movie.download.added_by ? (
-                <MenuItem>
-                  Added by: {movie.download.added_by.username}
-                </MenuItem>
-              ) : null}
-            </ContextMenu>
+            <RenderMovie movie={movie} />
             &nbsp;
             <Progress torrents={torrents} item={movie} />
           </li>
