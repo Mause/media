@@ -49,6 +49,7 @@ assert alembic_config
 
 # we only override if it's not already set
 alembic_config.setdefault('sqlalchemy.url', url)
+url = alembic_config['sqlalchemy.url']
 target_metadata = db.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
