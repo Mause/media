@@ -76,7 +76,7 @@ function RenderMovie({ movie }: { movie: MovieResponse }) {
       &nbsp;
       <ContextMenu>
         <OpenPlex download={movie.download} />
-        <OpenIMDB imdb_id={movie.download} />
+        <OpenIMDB download={movie.download} />
         {movie.download.added_by ? (
           <MenuItem>Added by: {movie.download.added_by.username}</MenuItem>
         ) : null}
