@@ -85,8 +85,8 @@ class EpisodeInfoFactory(Factory):
     class Meta:
         model = EpisodeInfo
 
-    seasonnum = Faker('numerify', text='#')
-    epnum = Faker('numerify', text='#')
+    seasonnum = Faker('numerify')
+    epnum = Faker('numerify')
 
 
 class ITorrentFactory(Factory):
@@ -95,7 +95,7 @@ class ITorrentFactory(Factory):
 
     source = FuzzyChoice(ProviderSource)
     title = Faker('file_name')
-    seeders = Faker('numerify', text='##')
+    seeders = Faker('numerify')
     download = lazy_attribute(lambda a: 'magnet://' + a.title)
     category = FuzzyChoice(['A', 'B', 'C'])
     episode_info = SubFactory(EpisodeInfoFactory)
@@ -128,7 +128,7 @@ class DownloadFactory(SQLFactory):
     added_by = SubFactory(UserFactory)
     title = Faker('name')
 
-    tmdb_id = Faker('numerify', text='######')
+    tmdb_id = Faker('numerify')
     transmission_id = Faker('uuid4')
     imdb_id = imdb_id
     timestamp = FuzzyDateTime(start_dt=datetime(2000, 1, 1, tzinfo=timezone.utc))
@@ -141,8 +141,8 @@ class EpisodeDetailsFactory(SQLFactory):
     show_title = Faker('name')
     download = SubFactory(DownloadFactory, type='EPISODE')
 
-    season = Faker('numerify', text='#')
-    episode = Faker('numerify', text='#')
+    season = Faker('numerify')
+    episode = Faker('numerify')
 
 
 class MovieDetailsFactory(SQLFactory):

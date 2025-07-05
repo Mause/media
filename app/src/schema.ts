@@ -191,6 +191,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/tmdb/configuration': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Tmdb Configuration */
+    get: operations['tmdb_configuration'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/tv/{tmdb_id}': {
     parameters: {
       query?: never;
@@ -372,6 +389,12 @@ export interface components {
      * @enum {string}
      */
     ComponentType: 'datastore' | 'internal' | 'http' | 'generic';
+    /** Configuration */
+    Configuration: {
+      images: components['schemas']['ImagesConfiguration'];
+      /** Change Keys */
+      change_keys: string[];
+    };
     /** CronResponse[MonitorGet] */
     CronResponse_MonitorGet_: {
       /** Success */
@@ -523,6 +546,23 @@ export interface components {
       /** Category */
       category: string;
       episode_info?: components['schemas']['EpisodeInfo'] | null;
+    };
+    /** ImagesConfiguration */
+    ImagesConfiguration: {
+      /** Base Url */
+      base_url: string;
+      /** Secure Base Url */
+      secure_base_url: string;
+      /** Backdrop Sizes */
+      backdrop_sizes: string[];
+      /** Logo Sizes */
+      logo_sizes: string[];
+      /** Poster Sizes */
+      poster_sizes: string[];
+      /** Profile Sizes */
+      profile_sizes: string[];
+      /** Still Sizes */
+      still_sizes: string[];
     };
     /** IndexResponse */
     IndexResponse: {
@@ -998,6 +1038,26 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['Discover'];
+        };
+      };
+    };
+  };
+  tmdb_configuration: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Configuration'];
         };
       };
     };

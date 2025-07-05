@@ -22,7 +22,7 @@ export type GetResponse<T> = T extends {
   get: { responses: { '200': { content: { 'application/json': unknown } } } };
 }
   ? T['get']['responses']['200']['content']['application/json']
-  : T;
+  : never;
 
 export function subscribe<T>(
   path: string,
