@@ -1,10 +1,32 @@
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
+import { useSWRConfig } from 'swr';
 
 import { Progress } from './render';
 import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
+import { PureDiscoveryComponent } from './DiscoveryComponent';
 import { RouteTitle } from './RouteTitle';
+
+function DiscoveryStory() {
+  const { mutate } = useSWRConfig();
+
+  void mutate('tmdb/configuration', {});
+
+  return (
+    <PureDiscoveryComponent
+      data={{
+        results: Array.from({ length: 12 }, (_, id) => ({
+          id,
+          title: `Hello World - ${id}`,
+          release_date: `2022-01-${String(id + 1).padStart(2, '0')}`,
+        })),
+      }}
+      error={undefined}
+      isValidating={false}
+    />
+  );
+}
 
 export function Storybook() {
   const [percentDone, setPercentDone] = useState(0.5);
@@ -57,6 +79,8 @@ export function Storybook() {
           },
         }}
       />
+      <hr />
+      <DiscoveryStory />
     </RouteTitle>
   );
 }

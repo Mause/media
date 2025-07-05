@@ -28,9 +28,6 @@ test('DiscoveryComponent', async () => {
           poster_path: '/hello.png',
         },
       ],
-      page: 1,
-      total_pages: 1,
-      total_results: 1,
     } satisfies DiscoverResponse),
     mock('/api/tmdb/configuration', {
       images: {

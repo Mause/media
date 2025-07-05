@@ -10,7 +10,10 @@ import { DisplayError } from './DisplayError';
 import type { GetResponse } from './utils';
 import { RouteTitle } from './RouteTitle';
 
-export type DiscoverResponse = GetResponse<paths['/api/discover']>;
+export type DiscoverResponse = Pick<
+  GetResponse<paths['/api/discover']>,
+  'results'
+>;
 export type Configuration = GetResponse<paths['/api/tmdb/configuration']>;
 
 function getYear(release_date: string | null | undefined): string | number {
@@ -27,15 +30,33 @@ export function DiscoveryComponent() {
   );
 
   return (
+    <PureDiscoveryComponent
+      data={data}
+      isValidating={isValidating}
+      error={error}
+    />
+  );
+}
+
+export function PureDiscoveryComponent({
+  data,
+  isValidating,
+  error,
+}: {
+  isValidating: boolean;
+  error: Error | undefined;
+  data: DiscoverResponse | undefined;
+}) {
+  return (
     <RouteTitle title="Discover">
       <h3>Discovery</h3>
       <Loading loading={isValidating} />
       {error && <DisplayError error={error} />}
       <Grid container spacing={2}>
         {data?.results.map((result) => (
-          <Grid key={result.id}>
+          <Grid key={result.id} size={{ xs: 12, sm: 6, lg: 2 }}>
             <h4>
-              {result.title} ({getYear(result.release_date)})
+              {result.title} ({getYear(result.release_date)}){' '}
               <MLink to={`/select/${result.id}/options`}>
                 <FontAwesomeIcon icon={faSearch} />
               </MLink>
