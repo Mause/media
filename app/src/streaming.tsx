@@ -1,12 +1,16 @@
 import { useSentryToolbar } from '@sentry/toolbar';
 import * as Sentry from '@sentry/react';
 import type { ErrorInfo, ReactNode } from 'react';
+import { useEffect } from 'react';
 import {
   RouterProvider,
   createBrowserRouter,
   Outlet,
   useLocation,
   useMatches,
+  createRoutesFromChildren,
+  matchRoutes,
+  useNavigationType
 } from 'react-router-dom';
 import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -27,8 +31,16 @@ if (import.meta.env.NODE_ENV === 'production') {
     dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
     release: import.meta.env.REACT_APP_HEROKU_SLUG_COMMIT,
     environment: 'development',
-    integrations: [Sentry.browserTracingIntegration()],
-    tracesSampleRate: 0.75, // must be present and non-zero
+    integrations: [
+      Sentry.reactRouterV7BrowserTracingIntegration({
+        useEffect,
+        useLocation,
+        useNavigationType,
+        createRoutesFromChildren,
+        matchRoutes,
+      }),
+    ],
+    tracesSampleRate: 1.0,
   });
 }
 
@@ -192,7 +204,11 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
 }
 
 export function ParentComponent() {
-  const router = createBrowserRouter(routes);
+  // Call this AFTER Sentry.init()
+  const sentryCreateBrowserRouter =
+    Sentry.wrapCreateBrowserRouterV7(createBrowserRouter);
+
+  const router = sentryCreateBrowserRouter(routes);
 
   return <RouterProvider router={router} />;
 }
