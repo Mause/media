@@ -10,7 +10,7 @@ import {
   useMatches,
   createRoutesFromChildren,
   matchRoutes,
-  useNavigationType
+  useNavigationType,
 } from 'react-router-dom';
 import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
