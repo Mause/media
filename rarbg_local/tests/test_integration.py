@@ -158,7 +158,7 @@ async def test_download(
         '/tv/95792',
         TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'tt12345678'})
     themoviedb(
         aioresponses,
         '/tv/95792/season/1',
@@ -221,7 +221,7 @@ async def test_download_duplicate(
         '/tv/95792',
         TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'tt12345678'})
     themoviedb(
         aioresponses,
         '/tv/95792/season/1',
@@ -295,7 +295,7 @@ async def test_download_season_pack(
         '/tv/90000',
         TvApiResponseFactory.create(name='Watchmen').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'tt12345678'})
 
     magnet = (
         'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313'
@@ -758,7 +758,7 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
     add_xml(
         responses,
         'GET',
-        'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2F10000%3Flang%3Den',
+        'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2Ftt10000%3Flang%3Den',
         E.Search(E.Video(type='Video.episode', ratingKey='aaa')),
     )
 
@@ -775,7 +775,7 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
         ),
     )
 
-    r = await test_client.get('/redirect/plex/10000', allow_redirects=False)
+    r = await test_client.get('/redirect/plex/tt10000', allow_redirects=False)
 
     assert (
         r.headers['Location']
