@@ -8,6 +8,7 @@ from factory.fuzzy import FuzzyChoice, FuzzyDateTime
 from ..db import Download, EpisodeDetails, MovieDetails, User
 from ..models import (
     DownloadAllResponse,
+    DownloadPost,
     Episode,
     EpisodeInfo,
     ITorrent,
@@ -150,3 +151,13 @@ class MovieDetailsFactory(SQLFactory):
         model = MovieDetails
 
     download = SubFactory(DownloadFactory, type='MOVIE')
+
+
+class DownloadPostFactory(Factory):
+    class Meta:
+        model = DownloadPost
+
+    tmdb_id = Faker('numerify')  # : TmdbId
+    magnet = lazy_attribute(lambda a: 'magnet://' + a.title)
+    season = Faker('numerify')  #: int | None = None
+    episode = Faker('numerify')  #: int | None = None

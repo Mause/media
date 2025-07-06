@@ -33,6 +33,7 @@ from ..providers.piratebay import PirateBayProvider
 from ..types import ImdbId, TmdbId
 from .conftest import add_json, assert_match_json, themoviedb, tolist
 from .factories import (
+    DownloadPostFactory,
     EpisodeDetailsFactory,
     MovieDetailsFactory,
     MovieResponseFactory,
@@ -134,7 +135,8 @@ async def test_download_movie(
     magnet = 'magnet:...'
 
     res = await test_client.post(
-        '/api/download', json=[{'magnet': magnet, 'tmdb_id': 533985}]
+        '/api/download',
+        json=[DownloadPostFactory.build(magnet=magnet, tmdb_id=533985).model_dump()],
     )
     assert res.status_code == 200
 
@@ -182,7 +184,7 @@ async def test_download(
 
     res = await test_client.post(
         '/api/download',
-        json=[{'magnet': magnet, 'tmdb_id': 95792, 'season': '1', 'episode': '2'}],
+        json=[{'magnet': magnet, 'tmdb_id': 95792, 'season': 1, 'episode': 2}],
     )
     assert res.status_code == 200
 
