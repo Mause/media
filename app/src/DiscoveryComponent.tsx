@@ -88,6 +88,7 @@ function Poster({ poster_path }: { poster_path: string }) {
 
   return (
     <img
+      style={{ width: '100%' }}
       srcSet={srcset
         .map(([url, size]) => `${url} ${size.slice(1)}${size[0]}`)
         .join(', ')}
