@@ -68,6 +68,7 @@ exports[`DiscoveryComponent 2`] = `
       <img
         src="https://tmdb.org/original/hello.png"
         srcset="https://tmdb.org/w800/hello.png 800w"
+        style="width: 100%;"
       />
       <p>
         A man loses his mind
