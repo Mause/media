@@ -973,6 +973,7 @@
             "required": true,
             "schema": {
               "type": "string",
+              "pattern": "^tt\\d+$",
               "title": "Imdb Id"
             }
           }
@@ -1996,6 +1997,7 @@
           },
           "imdb_id": {
             "type": "string",
+            "pattern": "^tt\\d+$",
             "title": "Imdb Id"
           },
           "tmdb_id": {
