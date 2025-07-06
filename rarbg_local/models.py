@@ -2,14 +2,14 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Annotated
 
-from pydantic import BaseModel, StringConstraints
+from pydantic import BaseModel, ConfigDict, StringConstraints
 
 from .db import MonitorMediaType
 from .types import ImdbId, TmdbId
 
 
 class Orm(BaseModel):
-    model_config = {'from_attributes': True}
+    model_config = ConfigDict(from_attributes=True)
 
 
 MagnetUri = Annotated[str, StringConstraints(pattern=r'^magnet:')]
