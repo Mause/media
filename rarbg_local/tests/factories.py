@@ -163,5 +163,5 @@ class DownloadPostFactory(Factory):
 
     tmdb_id = Faker('random_number')
     magnet = lazy_attribute(lambda a: 'magnet://' + a.filename)
-    season = Maybe('is_tv', yes_declaration='random_number')
-    episode = Maybe('is_tv', yes_declaration='random_number')
+    season = Maybe('is_tv', yes_declaration=Faker('random_number'))
+    episode = Maybe('is_tv', yes_declaration=Faker('random_number'))
