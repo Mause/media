@@ -34,8 +34,8 @@ class EpisodeFactory(Factory):
         model = Episode
 
     name = Faker('name')
-    id = Faker('numerify')
-    episode_number = Faker('numerify')
+    id = Faker('random_number')
+    episode_number = Faker('random_number')
     air_date = Faker('date')
 
 
@@ -50,8 +50,8 @@ class SeasonFactory(Factory):
     class Meta:
         model = SeasonMeta
 
-    episode_count = Faker('numerify')
-    season_number = Faker('numerify')
+    episode_count = Faker('random_number')
+    season_number = Faker('random_number')
 
 
 class TvBaseResponseFactory(Factory):
@@ -86,8 +86,8 @@ class EpisodeInfoFactory(Factory):
     class Meta:
         model = EpisodeInfo
 
-    seasonnum = Faker('numerify')
-    epnum = Faker('numerify')
+    seasonnum = Faker('random_number')
+    epnum = Faker('random_number')
 
 
 class ITorrentFactory(Factory):
@@ -96,7 +96,7 @@ class ITorrentFactory(Factory):
 
     source = FuzzyChoice(ProviderSource)
     title = Faker('file_name')
-    seeders = Faker('numerify')
+    seeders = Faker('random_number')
     download = lazy_attribute(lambda a: 'magnet://' + a.title)
     category = FuzzyChoice(['A', 'B', 'C'])
     episode_info = SubFactory(EpisodeInfoFactory)
@@ -129,7 +129,7 @@ class DownloadFactory(SQLFactory):
     added_by = SubFactory(UserFactory)
     title = Faker('name')
 
-    tmdb_id = Faker('numerify')
+    tmdb_id = Faker('random_number')
     transmission_id = Faker('uuid4')
     imdb_id = imdb_id
     timestamp = FuzzyDateTime(start_dt=datetime(2000, 1, 1, tzinfo=timezone.utc))
@@ -142,8 +142,8 @@ class EpisodeDetailsFactory(SQLFactory):
     show_title = Faker('name')
     download = SubFactory(DownloadFactory, type='EPISODE')
 
-    season = Faker('numerify')
-    episode = Faker('numerify')
+    season = Faker('random_number')
+    episode = Faker('random_number')
 
 
 class MovieDetailsFactory(SQLFactory):
@@ -157,7 +157,7 @@ class DownloadPostFactory(Factory):
     class Meta:
         model = DownloadPost
 
-    tmdb_id = Faker('numerify')  # : TmdbId
+    tmdb_id = Faker('random_number')
     magnet = lazy_attribute(lambda a: 'magnet://' + a.title)
-    season = Faker('numerify')  #: int | None = None
-    episode = Faker('numerify')  #: int | None = None
+    season = Faker('random_number')  #: int | None = None
+    episode = Faker('random_number')  #: int | None = None
