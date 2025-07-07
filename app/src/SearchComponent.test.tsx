@@ -1,6 +1,6 @@
 import { Route, MemoryRouter, Routes } from 'react-router-dom';
 
-import type { SearchResult } from './SearchComponent';
+import type { SearchResponse } from './SearchComponent';
 import { SearchComponent } from './SearchComponent';
 import { mock, wait, usesMoxios, renderWithSWR } from './test.utils';
 
@@ -17,7 +17,7 @@ test('SearchComponent', async () => {
     cache,
   );
 
-  const results: SearchResult[] = [
+  const results: SearchResponse = [
     {
       type: 'movie',
       tmdb_id: 10000,
