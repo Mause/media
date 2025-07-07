@@ -22,3 +22,4 @@ media_token.txt
 .yarn
 .envrc
 .idea
+.coverage
