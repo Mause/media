@@ -13,8 +13,9 @@ import {
 import type { Location, MemoryHistory } from '@remix-run/router';
 import type { Listener } from '@remix-run/router/dist/history';
 import { HelmetProvider } from 'react-helmet-async';
+import type { Cache } from 'swr';
 
-import { SwrConfigWrapper } from './streaming';
+import { SwrConfigWrapper } from './SwrConfigWrapper';
 
 const theme = createTheme();
 
@@ -30,7 +31,7 @@ export async function mock<T>(path: string, response: T) {
   });
 }
 
-export function renderWithSWR(el: ReactElement) {
+export function renderWithSWR(el: ReactElement, cache?: Cache) {
   const c = {
     isAuthenticated: true,
     getAccessTokenSilently() {
@@ -42,7 +43,7 @@ export function renderWithSWR(el: ReactElement) {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <HelmetProvider>
-            <SwrConfigWrapper>{el}</SwrConfigWrapper>
+            <SwrConfigWrapper cache={cache}>{el}</SwrConfigWrapper>
           </HelmetProvider>
         </ThemeProvider>
       </StyledEngineProvider>

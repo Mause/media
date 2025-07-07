@@ -1,6 +1,6 @@
 import { useSentryToolbar } from '@sentry/toolbar';
 import * as Sentry from '@sentry/react';
-import type { ErrorInfo, ReactNode } from 'react';
+import type { ErrorInfo } from 'react';
 import { useEffect } from 'react';
 import {
   RouterProvider,
@@ -16,15 +16,14 @@ import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Grid, Link as MaterialLink } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { SWRConfig } from 'swr';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 
-import { load, getToken } from './utils';
 import type { components } from './schema';
 import { ExtMLink, MLink } from './MLink';
 import routes from './routes';
+import { SwrConfigWrapper } from './SwrConfigWrapper';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -177,29 +176,6 @@ export function ParentComponentInt() {
         )}
       </ErrorBoundary>
     </SwrConfigWrapper>
-  );
-}
-export function SwrConfigWrapper({ children }: { children: ReactNode }) {
-  const auth = useAuth0();
-  return (
-    <SWRConfig
-      value={{
-        // five minute refresh
-        refreshInterval: 5 * 60 * 1000,
-        fetcher: async (path: string, params: string) =>
-          await load(
-            path,
-            params,
-            auth.isAuthenticated
-              ? {
-                  Authorization: 'Bearer ' + (await getToken(auth)),
-                }
-              : {},
-          ),
-      }}
-    >
-      {children}
-    </SWRConfig>
   );
 }
 

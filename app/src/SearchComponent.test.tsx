@@ -1,21 +1,23 @@
 import { Route, MemoryRouter, Routes } from 'react-router-dom';
 
-import type { SearchResult } from './SearchComponent';
+import type { SearchResponse } from './SearchComponent';
 import { SearchComponent } from './SearchComponent';
 import { mock, wait, usesMoxios, renderWithSWR } from './test.utils';
 
 usesMoxios();
 
 test('SearchComponent', async () => {
+  const cache = new Map();
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/search?query=world']}>
       <Routes>
         <Route path="/search" Component={SearchComponent} />
       </Routes>
     </MemoryRouter>,
+    cache,
   );
 
-  const results: SearchResult[] = [
+  const results: SearchResponse = [
     {
       type: 'movie',
       tmdb_id: 10000,
@@ -27,4 +29,5 @@ test('SearchComponent', async () => {
   await wait();
 
   expect(container).toMatchSnapshot();
+  expect(cache.keys()).toContain('movie/10000');
 });
