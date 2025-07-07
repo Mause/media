@@ -10,7 +10,6 @@ from typing import (
     Union,
     cast,
 )
-from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -61,7 +60,7 @@ from .models import (
     TvSeasonResponse,
 )
 from .monitor import monitor_ns
-from .plex import get_imdb_in_plex, get_plex
+from .plex import get_imdb_in_plex, get_plex, make_plex_url
 from .providers import (
     get_providers,
     search_for_tv,
@@ -389,10 +388,7 @@ def redirect_to_plex(
 
     server_id = plex.machineIdentifier
 
-    return RedirectResponse(
-        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
-        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
-    )
+    return RedirectResponse(make_plex_url(server_id, dat))
 
 
 @root.get('/redirect/{type_}/{tmdb_id}')
