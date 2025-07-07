@@ -6,9 +6,9 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import * as _ from 'lodash-es';
 
 import type { ITorrent } from './OptionsComponent';
-import { DisplayTorrent } from './OptionsComponent';
-import { getPrefix, getToken } from './utils';
-import { getMarker } from './render';
+import { getMarker, getPrefix, getToken } from './utils';
+import { DisplayTorrent } from './DisplayTorrent';
+import { RouteTitle } from './RouteTitle';
 
 function useMessages<T>(initMessage: object) {
   const base = getPrefix();
@@ -62,7 +62,7 @@ function Websocket() {
   ) as ITorrent[];
 
   return (
-    <div>
+    <RouteTitle title="Websocket">
       <p>{tmdbId}</p>
       <p>
         {query.has('season')
@@ -95,7 +95,7 @@ function Websocket() {
           </li>
         ))}
       </ul>
-    </div>
+    </RouteTitle>
   );
 }
 

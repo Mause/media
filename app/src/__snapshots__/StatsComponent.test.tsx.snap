@@ -3,17 +3,15 @@
 exports[`render 1`] = `
 <div>
   <div>
-    <div>
-      <h3>
-        Mause
-      </h3>
-      Movie: 
-      1
-      <br />
-      Episode: 
-      1
-      <br />
-    </div>
+    <h3>
+      Mause
+    </h3>
+    Movie: 
+    1
+    <br />
+    Episode: 
+    1
+    <br />
   </div>
 </div>
 `;

@@ -1,10 +1,13 @@
-[
-  "database",
-  "pool",
-  "transmission",
-  "plex",
-  "torrentscsv",
-  "nyaasi",
-  "piratebay",
-  "jikan"
-]
+{
+  "version": "dev",
+  "checks": [
+    "database",
+    "pool",
+    "transmission",
+    "plex",
+    "torrentscsv",
+    "nyaasi",
+    "piratebay",
+    "jikan"
+  ]
+}

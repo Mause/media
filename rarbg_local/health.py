@@ -21,6 +21,7 @@ from plexapi.server import PlexServer
 from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
 
+from .config import commit
 from .db import get_async_sessionmaker
 from .plex import get_plex
 from .singleton import get as _get
@@ -72,9 +73,16 @@ def build() -> Healthcheck:
     return health
 
 
+class DiagnosticsRoot(BaseModel):
+    version: str
+    checks: list[str]
+
+
 @router.get('')
-async def diagnostics() -> list[str]:
-    return [comp.name for comp in build().components]
+async def diagnostics() -> DiagnosticsRoot:
+    return DiagnosticsRoot(
+        version=commit or 'dev', checks=[comp.name for comp in build().components]
+    )
 
 
 class HealthcheckResponse(BaseModel):

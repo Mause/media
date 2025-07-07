@@ -2,108 +2,21 @@
 
 exports[`DownloadComponent > success 1`] = `
 <div>
-  <div
-    style="fill: #000000; height: 64px; width: 64px;"
+  <svg
+    aria-hidden="true"
+    class="svg-inline--fa fa-spinner fa-spin fa-xs "
+    data-icon="spinner"
+    data-prefix="fas"
+    focusable="false"
+    role="img"
+    viewBox="0 0 512 512"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    <svg
-      class="icon-loading"
-      viewBox="0 0 32 32"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      
-  
-      <path
-        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
-        transform="translate(-8 0)"
-      >
-         
-    
-        <animatetransform
-          attributeName="transform"
-          begin="0"
-          calcMode="spline"
-          dur="0.8s"
-          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
-          keyTimes="0;.25;1"
-          repeatCount="indefinite"
-          type="translate"
-          values="-8 0; 2 0; 2 0;"
-        />
-        
-  
-      </path>
-      
-  
-      <path
-        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
-        transform="translate(2 0)"
-      >
-         
-    
-        <animatetransform
-          attributeName="transform"
-          begin="0"
-          calcMode="spline"
-          dur="0.8s"
-          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
-          keyTimes="0;.35;1"
-          repeatCount="indefinite"
-          type="translate"
-          values="2 0; 12 0; 12 0;"
-        />
-        
-  
-      </path>
-      
-  
-      <path
-        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
-        transform="translate(12 0)"
-      >
-         
-    
-        <animatetransform
-          attributeName="transform"
-          begin="0"
-          calcMode="spline"
-          dur="0.8s"
-          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
-          keyTimes="0;.45;1"
-          repeatCount="indefinite"
-          type="translate"
-          values="12 0; 22 0; 22 0;"
-        />
-        
-  
-      </path>
-      
-  
-      <path
-        d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"
-        transform="translate(24 0)"
-      >
-         
-    
-        <animatetransform
-          attributeName="transform"
-          begin="0"
-          calcMode="spline"
-          dur="0.8s"
-          keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8"
-          keyTimes="0;.55;1"
-          repeatCount="indefinite"
-          type="translate"
-          values="22 0; 32 0; 32 0;"
-        />
-        
-  
-      </path>
-      
-
-    </svg>
-    
-
-  </div>
+    <path
+      d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"
+      fill="currentColor"
+    />
+  </svg>
 </div>
 `;
 

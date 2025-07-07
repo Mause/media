@@ -1,14 +1,16 @@
 import { useSentryToolbar } from '@sentry/toolbar';
 import * as Sentry from '@sentry/react';
 import type { ErrorInfo, ReactNode } from 'react';
-import { Helmet } from 'react-helmet-async';
-import type { RouteObject } from 'react-router-dom';
+import { useEffect } from 'react';
 import {
   RouterProvider,
   createBrowserRouter,
   Outlet,
   useLocation,
   useMatches,
+  createRoutesFromChildren,
+  matchRoutes,
+  useNavigationType,
 } from 'react-router-dom';
 import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -19,31 +21,26 @@ import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 
-import { IndexComponent } from './IndexComponent';
-import {
-  EpisodeSelectComponent,
-  SeasonSelectComponent,
-} from './SeasonSelectComponent';
-import { StatsComponent } from './StatsComponent';
-import { SearchComponent } from './SearchComponent';
-import { OptionsComponent } from './OptionsComponent';
-import { load, MLink, ExtMLink, getToken } from './utils';
-import { MonitorComponent, MonitorDeleteComponent } from './MonitorComponent';
-import { ManualAddComponent } from './ManualAddComponent';
-import { DownloadComponent } from './DownloadComponent';
-import { DownloadAllComponent } from './DownloadAllComponent';
-import { Websocket } from './Websocket';
+import { load, getToken } from './utils';
 import type { components } from './schema';
-import { DiagnosticsComponent } from './DiagnosticsComponent';
-import Storybook from './Storybook';
+import { ExtMLink, MLink } from './MLink';
+import routes from './routes';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
     release: import.meta.env.REACT_APP_HEROKU_SLUG_COMMIT,
     environment: 'development',
-    integrations: [Sentry.browserTracingIntegration()],
-    tracesSampleRate: 0.75, // must be present and non-zero
+    integrations: [
+      Sentry.reactRouterV7BrowserTracingIntegration({
+        useEffect,
+        useLocation,
+        useNavigationType,
+        createRoutesFromChildren,
+        matchRoutes,
+      }),
+    ],
+    tracesSampleRate: 1.0,
   });
 }
 
@@ -53,23 +50,6 @@ export type IndexResponse = components['schemas']['IndexResponse'];
 export type MovieResponse = components['schemas']['MovieDetailsSchema'];
 export type SeriesResponse = components['schemas']['SeriesDetails'];
 export type EpisodeResponse = components['schemas']['EpisodeDetailsSchema'];
-
-function RouteTitle({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
-      {children}
-    </>
-  );
-}
 
 function reportError(error: Error, info: ErrorInfo) {
   Sentry.withScope((scope) => {
@@ -115,7 +95,7 @@ const Login = () => {
   }
 };
 
-function ParentComponentInt() {
+export function ParentComponentInt() {
   useProfiler('ParentComponentInt');
 
   const auth = useAuth0();
@@ -135,7 +115,7 @@ function ParentComponentInt() {
   });
 
   return (
-    <>
+    <SwrConfigWrapper>
       <h1>Media</h1>
 
       <NavRoot className={classes.root}>
@@ -196,7 +176,7 @@ function ParentComponentInt() {
           <div>Please login</div>
         )}
       </ErrorBoundary>
-    </>
+    </SwrConfigWrapper>
   );
 }
 export function SwrConfigWrapper({ children }: { children: ReactNode }) {
@@ -224,176 +204,11 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
 }
 
 export function ParentComponent() {
-  const router = createBrowserRouter(getRoutes());
+  // Call this AFTER Sentry.init()
+  const sentryCreateBrowserRouter =
+    Sentry.wrapCreateBrowserRouterV7(createBrowserRouter);
+
+  const router = sentryCreateBrowserRouter(routes);
 
   return <RouterProvider router={router} />;
-}
-
-function getRoutes() {
-  return [
-    {
-      path: '/',
-      element: (
-        <SwrConfigWrapper>
-          <ParentComponentInt />
-        </SwrConfigWrapper>
-      ),
-      children: [
-        {
-          id: 'notFound',
-          path: '*',
-          element: (
-            <RouteTitle title="Page not Found">
-              <div>Page not found</div>
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/websocket/:tmdbId',
-          element: (
-            <RouteTitle title="Websocket">
-              <Websocket />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/select/:tmdb_id/options',
-          element: (
-            <RouteTitle title="Movie Options">
-              <OptionsComponent type="movie" />
-            </RouteTitle>
-          ),
-        },
-
-        {
-          path: '/select/:tmdb_id/season/:season/episode/:episode/options',
-          element: (
-            <RouteTitle title="TV Options">
-              <OptionsComponent type="series" />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/select/:tmdb_id/season/:season/download_all',
-          element: (
-            <RouteTitle title="Download Season">
-              <DownloadAllComponent />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/select/:tmdb_id/season/:season',
-          element: (
-            <RouteTitle title="Select Episode">
-              <EpisodeSelectComponent />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/select/:tmdb_id/season',
-          element: (
-            <RouteTitle title="Select Season">
-              <SeasonSelectComponent />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/search',
-          element: (
-            <RouteTitle title="Search">
-              <SearchComponent />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/download',
-          element: (
-            <RouteTitle title="Download">
-              <DownloadComponent />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/manual',
-          element: (
-            <RouteTitle title="Manual">
-              <ManualAddComponent />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/stats',
-          element: (
-            <RouteTitle title="Stats">
-              <StatsComponent />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/diagnostics',
-          element: (
-            <RouteTitle title="Diagnostics">
-              <DiagnosticsComponent />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/storybook',
-          element: (
-            <RouteTitle title="Storybook">
-              <Storybook />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/monitor/delete/:id',
-          element: (
-            <RouteTitle title="Monitor">
-              <MonitorDeleteComponent />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/monitor',
-          element: (
-            <RouteTitle title="Monitor">
-              <MonitorComponent />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/sitemap',
-          element: (
-            <RouteTitle title="Sitemap">
-              <SitemapRoot />
-            </RouteTitle>
-          ),
-        },
-        {
-          path: '/',
-          element: (
-            <RouteTitle title="Media">
-              <IndexComponent />
-            </RouteTitle>
-          ),
-        },
-      ],
-    },
-  ] satisfies RouteObject[];
-}
-
-function SitemapRoot() {
-  return <Sitemap routes={getRoutes()} />;
-}
-function Sitemap({ routes }: { routes: RouteObject[] }) {
-  return (
-    <ul>
-      {routes.map((route) => (
-        <li key={route.path}>
-          <MLink to={route.path!}>{route.path}</MLink>
-          {route.children ? <Sitemap routes={route.children} /> : undefined}
-        </li>
-      ))}
-    </ul>
-  );
 }

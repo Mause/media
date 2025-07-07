@@ -24,6 +24,7 @@ from sqlalchemy.orm import joinedload
 
 from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, User, create_episode, create_movie
+from ..health import DiagnosticsRoot
 from ..main import get_episodes
 from ..models import ITorrent
 from ..new import SearchResponse, Settings, get_settings
@@ -99,10 +100,10 @@ async def test_diagnostics(
         '/api/diagnostics',
     )
     assert r.status_code == 200
-    results = r.json()
-    snapshot.assert_match(json.dumps(results, indent=2), 'healthcheck.json')
+    root = DiagnosticsRoot.model_validate(r.json())
+    snapshot.assert_match(root.model_dump_json(indent=2), 'healthcheck.json')
 
-    for component in results:
+    for component in root.checks:
         r = await test_client.get(f'/api/diagnostics/{component}')
         r.raise_for_status()
         results = r.json()
@@ -157,7 +158,7 @@ async def test_download(
         '/tv/95792',
         TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'tt12345678'})
     themoviedb(
         aioresponses,
         '/tv/95792/season/1',
@@ -205,6 +206,83 @@ async def test_download(
 
 
 @mark.asyncio
+async def test_download_duplicate(
+    test_client: TestClient,
+    aioresponses: Aioresponses,
+    responses: RequestsMock,
+    add_torrent: MagicMock,
+    async_session: AsyncSession,
+) -> None:
+    '''
+    https://elliana-may.sentry.io/issues/6715511623/?project=1869914
+    '''
+    themoviedb(
+        aioresponses,
+        '/tv/95792',
+        TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
+    )
+    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'tt12345678'})
+    themoviedb(
+        aioresponses,
+        '/tv/95792/season/1',
+        {
+            'episodes': [
+                {'id': 1, 'name': "Pikachu is Born!", 'episode_number': 1},
+                {'id': 2, 'name': "Satoshi, Go, and Lugia Go!", 'episode_number': 2},
+            ]
+        },
+    )
+
+    magnet = (
+        'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313'
+        '&dn=%5BSome-Stuffs%5D_Pocket_Monsters_%282019%29_002_%281080p%29_%5BCCBE335E%5D.mkv'
+        '&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce'
+        '&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce'
+        '&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce'
+        '&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce'
+        '&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce'
+    )
+
+    hash_string = "HASHHASHHASH"
+    EpisodeDetailsFactory.create(
+        download__transmission_id=hash_string,
+        download__title='Satoshi, Go, and Lugia Go!',
+        season=1,
+        episode=2,
+        show_title='Pocket Monsters',
+    )
+    await async_session.commit()
+
+    add_torrent.return_value = {
+        "arguments": {"torrent-added": {"hashString": hash_string}}
+    }
+
+    res = await test_client.post(
+        '/api/download',
+        json=[{'magnet': magnet, 'tmdb_id': 95792, 'season': '1', 'episode': '2'}],
+    )
+    assert res.status_code == 200
+
+    add_torrent.assert_called_with(magnet, 'tv_shows/Pocket Monsters/Season 1')
+
+    download = (
+        (
+            await async_session.execute(
+                select(Download).options(joinedload(Download.episode))
+            )
+        )
+        .scalars()
+        .first()
+    )
+    assert download
+    assert download.title == 'Satoshi, Go, and Lugia Go!'
+    assert download.episode
+    assert download.episode.season == 1
+    assert download.episode.episode == 2
+    assert download.episode.show_title == 'Pocket Monsters'
+
+
+@mark.asyncio
 async def test_download_season_pack(
     test_client: TestClient,
     aioresponses: Aioresponses,
@@ -217,7 +295,7 @@ async def test_download_season_pack(
         '/tv/90000',
         TvApiResponseFactory.create(name='Watchmen').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'tt12345678'})
 
     magnet = (
         'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313'
@@ -680,7 +758,7 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
     add_xml(
         responses,
         'GET',
-        'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2F10000%3Flang%3Den',
+        'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2Ftt10000%3Flang%3Den',
         E.Search(E.Video(type='Video.episode', ratingKey='aaa')),
     )
 
@@ -697,7 +775,7 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
         ),
     )
 
-    r = await test_client.get('/redirect/plex/10000', allow_redirects=False)
+    r = await test_client.get('/redirect/plex/tt10000', allow_redirects=False)
 
     assert (
         r.headers['Location']

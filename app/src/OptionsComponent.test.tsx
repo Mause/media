@@ -4,7 +4,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import * as _ from 'lodash-es';
 
 import type { ITorrent } from './OptionsComponent';
-import { OptionsComponent } from './OptionsComponent';
+import { MovieOptionsComponent } from './MovieOptionsComponent';
 import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
 
 usesMoxios();
@@ -34,7 +34,7 @@ describe('OptionsComponent', () => {
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
-          <OptionsComponent type="movie" />
+          <MovieOptionsComponent />
         </Route>
       </MemoryRouter>,
     );
@@ -66,7 +66,7 @@ describe('OptionsComponent', () => {
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
-          <OptionsComponent type="movie" />
+          <MovieOptionsComponent />
         </Route>
       </MemoryRouter>,
     );

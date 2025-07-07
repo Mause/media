@@ -36,8 +36,10 @@ jobs:
           run: uv run mypy --show-column-numbers rarbg_local
       - run: uv run alembic upgrade head --sql
       - name: Test with pytest
-        run: |
-          uv run pytest -vv
+        uses: liskin/gh-problem-matcher-wrap@v3
+        with:
+          linters: pytest
+          run: uv run pytest -vv
         env:
           CLOUDAMQP_URL: 'https://hello'
           TMDB_API_KEY: word
