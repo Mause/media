@@ -1,7 +1,7 @@
 from contextvars import ContextVar
 from datetime import datetime, timezone
 
-from factory import Factory, Faker, List, SubFactory, lazy_attribute
+from factory import Factory, Faker, List, Maybe, SubFactory, lazy_attribute
 from factory.alchemy import SQLAlchemyModelFactory
 from factory.fuzzy import FuzzyChoice, FuzzyDateTime
 
@@ -157,7 +157,10 @@ class DownloadPostFactory(Factory):
     class Meta:
         model = DownloadPost
 
+    class Params:
+        is_tv = Faker('boolean')
+
     tmdb_id = Faker('random_number')
     magnet = lazy_attribute(lambda a: 'magnet://' + a.title)
-    season = Faker('random_number')  #: int | None = None
-    episode = Faker('random_number')  #: int | None = None
+    season = Maybe('is_tv', yes_declaration='random_number')
+    episode = Maybe('is_tv', yes_declaration='random_number')
