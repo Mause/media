@@ -1978,7 +1978,7 @@
       "PlexMedia": {
         "properties": {
           "ratingKey": {
-            "type": "string",
+            "type": "integer",
             "title": "Ratingkey"
           },
           "year": {

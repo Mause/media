@@ -183,7 +183,7 @@ class InnerTorrent(BaseModel):
 
 
 class HasRatingKey(BaseModel):
-    ratingKey: str
+    ratingKey: int
 
 
 class PlexMedia(Orm, HasRatingKey):

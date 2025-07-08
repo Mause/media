@@ -28,7 +28,7 @@ def get_imdb_in_plex(imdb_id: ImdbId, plex: PlexServer) -> Media | None:
     return items[0] if items else None
 
 
-def make_plex_url(server_id: str, rating_key: str) -> str:
+def make_plex_url(server_id: str, rating_key: int) -> str:
     return f'https://app.plex.tv/desktop#!/server/{server_id}/details?' + urlencode(
         {'key': f'/library/metadata/{rating_key}'}
     )
