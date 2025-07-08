@@ -53,6 +53,8 @@ from .models import (
     MediaType,
     MovieDetailsSchema,
     MovieResponse,
+    PlexMedia,
+    PlexResponse,
     ProviderSource,
     SearchResponse,
     StatsResponse,
@@ -352,6 +354,21 @@ async def discover() -> Discover:
 @api.get('/tmdb/configuration')
 async def tmdb_configuration() -> Configuration:
     return await get_configuration()
+
+
+@api.get('/plex/imdb/{imdb_id}')
+async def get_plex_imdb(
+    imdb_id: ImdbId,
+    plex: Annotated[PlexServer, Depends(get_plex)],
+) -> PlexResponse[PlexMedia]:
+    dat = get_imdb_in_plex(imdb_id, plex)
+    if not dat:
+        raise HTTPException(404, 'Not found in plex')
+    media = PlexMedia.model_validate(dat)
+    return PlexResponse[PlexMedia](
+        item=media,
+        server_id=plex.machineIdentifier,
+    )
 
 
 tv_ns = APIRouter(tags=['tv'])

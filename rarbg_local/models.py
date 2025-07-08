@@ -1,8 +1,8 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Annotated
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, StringConstraints
+from pydantic import AnyUrl, BaseModel, ConfigDict, StringConstraints, computed_field
 
 from .db import MonitorMediaType
 from .types import ImdbId, TmdbId
@@ -180,3 +180,28 @@ class InnerTorrent(BaseModel):
     id: int
     percentDone: float
     files: list[InnerTorrentFile]
+
+
+class HasRatingKey(BaseModel):
+    ratingKey: str
+
+
+class PlexMedia(Orm, HasRatingKey):
+    # title: str
+    year: int | None = None
+    type: Literal['Video.movie', 'Video.episode', 'Video.season']
+    guid: str | None = None
+    summary: str | None = None
+    thumb: str | None = None
+    art: str | None = None
+
+
+class PlexResponse[T: HasRatingKey](Orm):
+    server_id: str
+    item: T
+
+    @computed_field
+    def link(self) -> AnyUrl:
+        from .plex import make_plex_url
+
+        return AnyUrl(make_plex_url(self.server_id, self.item.ratingKey))

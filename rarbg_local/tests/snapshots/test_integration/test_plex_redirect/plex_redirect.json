@@ -1,0 +1,13 @@
+{
+  "server_id": "aaaa",
+  "item": {
+    "ratingKey": "aaa",
+    "year": null,
+    "type": "Video.episode",
+    "guid": null,
+    "summary": null,
+    "thumb": null,
+    "art": null
+  },
+  "link": "https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2Faaa"
+}

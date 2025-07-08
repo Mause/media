@@ -736,7 +736,9 @@ def add_xml(responses: RequestsMock, method: str, url: str, body: '_Element') ->
 
 
 @mark.asyncio
-async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -> None:
+async def test_plex_redirect(
+    test_client: TestClient, responses: RequestsMock, snapshot: Snapshot
+) -> None:
     add_xml(
         responses,
         'GET',
@@ -781,6 +783,10 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
         r.headers['Location']
         == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2Faaa'
     )
+
+    r = await test_client.get('/api/plex/imdb/tt10000')
+    r.raise_for_status()
+    assert_match_json(snapshot, r, 'plex_redirect.json')
 
 
 @mark.asyncio
