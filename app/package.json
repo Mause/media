@@ -88,7 +88,7 @@
     "mockdate": "^3.0.2",
     "moxios": "^0.4.0",
     "prettier": "3.6.2",
-    "typescript-eslint": "^8.34.0",
+    "typescript-eslint": "^8.36.0",
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-bundlesize": "^0.2.0",
     "vitest": "^3.2.1"
