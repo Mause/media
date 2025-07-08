@@ -34,18 +34,25 @@ export function DiscoveryComponent() {
       data={data}
       isValidating={isValidating}
       error={error}
+      build={build}
     />
   );
 }
+
+const build = (base: string | undefined, size: string, poster_path: string) =>
+  `${base}${size}${poster_path}`;
+type BuildFn = typeof build;
 
 export function PureDiscoveryComponent({
   data,
   isValidating,
   error,
+  build,
 }: {
   isValidating: boolean;
   error: Error | undefined;
   data: DiscoverResponse | undefined;
+  build: BuildFn;
 }) {
   return (
     <RouteTitle title="Discover">
@@ -61,7 +68,9 @@ export function PureDiscoveryComponent({
                 <FontAwesomeIcon icon={faSearch} />
               </MLink>
             </h4>
-            {result.poster_path && <Poster poster_path={result.poster_path} />}
+            {result.poster_path && (
+              <Poster poster_path={result.poster_path} build={build} />
+            )}
             <p>{result.overview}</p>
           </Grid>
         ))}
@@ -70,7 +79,13 @@ export function PureDiscoveryComponent({
   );
 }
 
-function Poster({ poster_path }: { poster_path: string }) {
+function Poster({
+  poster_path,
+  build,
+}: {
+  poster_path: string;
+  build: BuildFn;
+}) {
   const { data, isValidating } = useSWR<Configuration>('tmdb/configuration');
 
   if (isValidating) {
@@ -78,13 +93,12 @@ function Poster({ poster_path }: { poster_path: string }) {
   }
 
   const base = data!.images.secure_base_url;
-  const build = (size: string) => `${base}${size}${poster_path}`;
 
   const srcset = data!.images.poster_sizes
     .filter((size) => size !== 'original')
-    .map((size) => [build(size), size]);
+    .map((size) => [build(base, size, poster_path), size]);
 
-  const original = build('original');
+  const original = build(base, 'original', poster_path);
 
   return (
     <img

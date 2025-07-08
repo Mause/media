@@ -11,7 +11,11 @@ import { RouteTitle } from './RouteTitle';
 function DiscoveryStory() {
   const { mutate } = useSWRConfig();
 
-  void mutate('tmdb/configuration', {});
+  void mutate('tmdb/configuration', {
+    images: {
+      poster_sizes: ['w800'],
+    },
+  });
 
   return (
     <PureDiscoveryComponent
@@ -24,6 +28,12 @@ function DiscoveryStory() {
       }}
       error={undefined}
       isValidating={false}
+      build={(_base, size) => {
+        const width = Number.parseInt(size.substring(1));
+        const height = width * 1.5;
+
+        return `https://placecats.com/${width}/${height}`;
+      }}
     />
   );
 }
