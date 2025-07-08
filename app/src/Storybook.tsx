@@ -24,6 +24,7 @@ function DiscoveryStory() {
           id,
           title: `Hello World - ${id}`,
           release_date: `2022-01-${String(id + 1).padStart(2, '0')}`,
+          poster_path: 'dummy.png',
         })),
       }}
       error={undefined}

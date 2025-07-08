@@ -108,6 +108,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -141,6 +150,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -174,6 +192,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -207,6 +234,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -240,6 +276,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -273,6 +318,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -306,6 +360,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -339,6 +402,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -372,6 +444,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -405,6 +486,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -438,6 +528,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
     <div
@@ -471,6 +570,15 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
+      <div
+        style="width: 100%;"
+      >
+        <img
+          src="https://placecats.com/NaN/NaN"
+          srcset="https://placecats.com/800/1200 800w"
+          style="width: 0px; height: 0px;"
+        />
+      </div>
       <p />
     </div>
   </div>
