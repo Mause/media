@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { Grid } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
@@ -80,6 +80,16 @@ export function PureDiscoveryComponent({
   );
 }
 
+const PREFIX = 'Poster';
+const classes = {
+  root: `${PREFIX}-root`,
+};
+const PosterElement = styled('div')(() => ({
+  [`& .${classes.root}`]: {
+    width: '100%',
+  },
+}));
+
 function Poster({
   poster_path,
   build,
@@ -106,7 +116,7 @@ function Poster({
   const original = build(base, 'original', poster_path);
 
   return (
-    <div ref={ref} style={{ width: '100%' }}>
+    <PosterElement ref={ref} className={classes.root}>
       <img
         style={{
           width,
@@ -117,6 +127,6 @@ function Poster({
           .join(', ')}
         src={original}
       />
-    </div>
+    </PosterElement>
   );
 }

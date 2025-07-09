@@ -66,7 +66,7 @@ exports[`DiscoveryComponent 2`] = `
         </a>
       </h4>
       <div
-        style="width: 100%;"
+        class="Poster-root css-2h5k8y"
       >
         <img
           src="https://tmdb.org/original/hello.png"
