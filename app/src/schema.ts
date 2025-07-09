@@ -659,13 +659,15 @@ export interface components {
     PlexMedia: {
       /** Ratingkey */
       ratingKey: number;
+      /** Title */
+      title: string;
       /** Year */
       year?: number | null;
       /**
        * Type
        * @enum {string}
        */
-      type: 'Video.movie' | 'Video.episode' | 'Video.season';
+      type: 'movie' | 'episode' | 'season';
       /** Guid */
       guid?: string | null;
       /** Summary */
