@@ -187,7 +187,7 @@ class HasRatingKey(BaseModel):
 
 
 class PlexMedia(Orm, HasRatingKey):
-    # title: str
+    title: str
     year: int | None = None
     type: Literal['movie', 'episode', 'season']
     guid: str | None = None

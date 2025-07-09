@@ -1981,6 +1981,10 @@
             "type": "integer",
             "title": "Ratingkey"
           },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
           "year": {
             "anyOf": [
               {
@@ -2049,6 +2053,7 @@
         "type": "object",
         "required": [
           "ratingKey",
+          "title",
           "type"
         ],
         "title": "PlexMedia"

@@ -2,6 +2,7 @@
   "server_id": "aaaa",
   "item": {
     "ratingKey": 666,
+    "title": "Hello World",
     "year": null,
     "type": "episode",
     "guid": null,
