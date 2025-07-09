@@ -1,6 +1,5 @@
 from collections.abc import Sequence
 from typing import Annotated
-from urllib.parse import urlencode
 
 from fastapi import Depends
 from plexapi.media import Media
@@ -45,6 +44,6 @@ def single[T](items: Sequence[T]) -> T | None:
 def make_plex_url(server_id: str, rating_key: int) -> str:
     return str(
         URL('https://app.plex.tv/desktop')
-            .with_fragment(f'!/server/{server_id}/details')
-            .with_query(key=f'/library/metadata/{rating_key}')
+        .with_fragment(f'!/server/{server_id}/details')
+        .with_query(key=f'/library/metadata/{rating_key}')
     )
