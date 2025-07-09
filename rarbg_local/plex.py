@@ -1,5 +1,6 @@
 from collections.abc import Sequence
 from typing import Annotated
+from urllib.parse import urlencode
 
 from fastapi import Depends
 from plexapi.media import Media
@@ -39,3 +40,9 @@ def get_imdb_in_plex(imdb_id: ImdbId, plex: PlexServer) -> Media | None:
 
 def single[T](items: Sequence[T]) -> T | None:
     return items[0] if items else None
+
+
+def make_plex_url(server_id: str, rating_key: int) -> str:
+    return f'https://app.plex.tv/desktop#!/server/{server_id}/details?' + urlencode(
+        {'key': f'/library/metadata/{rating_key}'}
+    )

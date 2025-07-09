@@ -54,6 +54,8 @@ from .models import (
     MediaType,
     MovieDetailsSchema,
     MovieResponse,
+    PlexMedia,
+    PlexResponse,
     ProviderSource,
     SearchResponse,
     StatsResponse,
@@ -61,7 +63,7 @@ from .models import (
     TvSeasonResponse,
 )
 from .monitor import monitor_ns
-from .plex import get_imdb_in_plex, get_plex
+from .plex import get_imdb_in_plex, get_plex, make_plex_url
 from .providers import (
     get_providers,
     search_for_tv,
@@ -355,6 +357,21 @@ async def tmdb_configuration() -> Configuration:
     return await get_configuration()
 
 
+@api.get('/plex/imdb/{imdb_id}')
+async def get_plex_imdb(
+    imdb_id: ImdbId,
+    plex: Annotated[PlexServer, Depends(get_plex)],
+) -> PlexResponse[PlexMedia]:
+    dat = get_imdb_in_plex(imdb_id, plex)
+    if not dat:
+        raise HTTPException(404, 'Not found in plex')
+    media = PlexMedia.model_validate(dat)
+    return PlexResponse[PlexMedia](
+        item=media,
+        server_id=plex.machineIdentifier,
+    )
+
+
 tv_ns = APIRouter(tags=['tv'])
 
 
@@ -389,15 +406,7 @@ def redirect_to_plex(
 
     server_id = plex.machineIdentifier
 
-    return RedirectResponse(build_plex_url(server_id, dat.ratingKey))
-
-
-def build_plex_url(server_id: str, rating_key: str) -> str:
-    return str(
-        URL(f'https://app.plex.tv/desktop#!/server/{server_id}/details').extend_query(
-            key=f'/library/metadata/{rating_key}'
-        )
-    )
+    return RedirectResponse(make_plex_url(server_id, dat.ratingKey))
 
 
 @root.get('/redirect/{type_}/{tmdb_id}')

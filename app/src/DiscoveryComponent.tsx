@@ -1,7 +1,8 @@
 import useSWR from 'swr';
-import { Grid } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useRef, useState } from 'react';
 
 import type { paths } from './schema';
 import { Loading } from './render';
@@ -34,18 +35,25 @@ export function DiscoveryComponent() {
       data={data}
       isValidating={isValidating}
       error={error}
+      build={build}
     />
   );
 }
+
+const build = (base: string | undefined, size: string, poster_path: string) =>
+  `${base}${size}${poster_path}`;
+type BuildFn = typeof build;
 
 export function PureDiscoveryComponent({
   data,
   isValidating,
   error,
+  build,
 }: {
   isValidating: boolean;
   error: Error | undefined;
   data: DiscoverResponse | undefined;
+  build: BuildFn;
 }) {
   return (
     <RouteTitle title="Discover">
@@ -61,7 +69,9 @@ export function PureDiscoveryComponent({
                 <FontAwesomeIcon icon={faSearch} />
               </MLink>
             </h4>
-            {result.poster_path && <Poster poster_path={result.poster_path} />}
+            {result.poster_path && (
+              <Poster poster_path={result.poster_path} build={build} />
+            )}
             <p>{result.overview}</p>
           </Grid>
         ))}
@@ -70,29 +80,53 @@ export function PureDiscoveryComponent({
   );
 }
 
-function Poster({ poster_path }: { poster_path: string }) {
-  const { data, isValidating } = useSWR<Configuration>('tmdb/configuration');
+const PREFIX = 'Poster';
+const classes = {
+  root: `${PREFIX}-root`,
+};
+const PosterElement = styled('div')(() => ({
+  [`& .${classes.root}`]: {
+    width: '100%',
+  },
+}));
 
-  if (isValidating) {
-    return undefined;
-  }
+function Poster({
+  poster_path,
+  build,
+}: {
+  poster_path: string;
+  build: BuildFn;
+}) {
+  const { data } = useSWR<Configuration>('tmdb/configuration');
+  const [width, setWidth] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const { current } = ref;
+    if (current) {
+      setWidth(current.clientWidth);
+    }
+  }, [ref]);
 
-  const base = data!.images.secure_base_url;
-  const build = (size: string) => `${base}${size}${poster_path}`;
+  const base = data?.images.secure_base_url;
 
-  const srcset = data!.images.poster_sizes
+  const srcset = data?.images.poster_sizes
     .filter((size) => size !== 'original')
-    .map((size) => [build(size), size]);
+    .map((size) => [build(base, size, poster_path), size]);
 
-  const original = build('original');
+  const original = build(base, 'original', poster_path);
 
   return (
-    <img
-      style={{ width: '100%' }}
-      srcSet={srcset
-        .map(([url, size]) => `${url} ${size.slice(1)}${size[0]}`)
-        .join(', ')}
-      src={original}
-    />
+    <PosterElement ref={ref} className={classes.root}>
+      <img
+        style={{
+          width,
+          height: width * 1.5,
+        }}
+        srcSet={srcset
+          ?.map(([url, size]) => `${url} ${size.slice(1)}${size[0]}`)
+          .join(', ')}
+        src={original}
+      />
+    </PosterElement>
   );
 }

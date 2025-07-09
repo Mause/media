@@ -593,6 +593,56 @@
         ]
       }
     },
+    "/api/plex/imdb/{imdb_id}": {
+      "get": {
+        "summary": "Get Plex Imdb",
+        "operationId": "get_plex_imdb",
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "imdb_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^tt\\d+$",
+              "title": "Imdb Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/tv/{tmdb_id}": {
       "get": {
         "tags": [
@@ -1924,6 +1974,113 @@
           "imdb_id"
         ],
         "title": "MovieResponse"
+      },
+      "PlexMedia": {
+        "properties": {
+          "ratingKey": {
+            "type": "integer",
+            "title": "Ratingkey"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "movie",
+              "show"
+            ],
+            "title": "Type"
+          },
+          "guid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guid"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "thumb": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumb"
+          },
+          "art": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Art"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ratingKey",
+          "title",
+          "type"
+        ],
+        "title": "PlexMedia"
+      },
+      "PlexResponse_PlexMedia_": {
+        "properties": {
+          "server_id": {
+            "type": "string",
+            "title": "Server Id"
+          },
+          "item": {
+            "$ref": "#/components/schemas/PlexMedia"
+          },
+          "link": {
+            "type": "string",
+            "minLength": 1,
+            "format": "uri",
+            "title": "Link",
+            "readOnly": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "server_id",
+          "item",
+          "link"
+        ],
+        "title": "PlexResponse[PlexMedia]"
       },
       "ProviderSource": {
         "type": "string",

@@ -38,30 +38,28 @@ function DownloadAllComponent() {
       <div>
         <h3>Packs</h3>
         <ul>
-          {data &&
-            data.packs &&
-            data.packs.map((t) => (
-              <li key={t.download}>
-                <DisplayTorrent
-                  torrents={torrents}
-                  torrent={t}
-                  tmdb_id={tmdb_id!}
-                  season={season}
-                />
-              </li>
-            ))}
+          {data?.packs?.map((t) => (
+            <li key={t.download}>
+              <DisplayTorrent
+                torrents={torrents}
+                torrent={t}
+                tmdb_id={tmdb_id!}
+                season={season}
+              />
+            </li>
+          ))}
         </ul>
       </div>
       <Individual
         label="Complete Sets"
-        items={data && data.complete}
+        items={data?.complete}
         season={season}
         tmdb_id={tmdb_id!}
         torrents={torrents}
       />
       <Individual
         label="Incomplete Sets"
-        items={data && data.incomplete}
+        items={data?.incomplete}
         season={season}
         tmdb_id={tmdb_id!}
         torrents={torrents}
@@ -92,29 +90,28 @@ function Individual(props: {
     <div>
       <h3>{props.label}</h3>
       <ul>
-        {props.items &&
-          props.items.map(([name, torrents]) => (
-            <div key={name}>
-              <h4>
-                <MLink {...download_all(parseInt(props.tmdb_id), torrents)}>
-                  {name}
-                </MLink>
-              </h4>
-              <ul>
-                {torrents.map((t) => (
-                  <li key={t.download}>
-                    <DisplayTorrent
-                      torrents={props.torrents}
-                      torrent={t}
-                      tmdb_id={props.tmdb_id}
-                      season={props.season}
-                      episode={t.episode_info?.epnum}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        {props.items?.map(([name, torrents]) => (
+          <div key={name}>
+            <h4>
+              <MLink {...download_all(parseInt(props.tmdb_id), torrents)}>
+                {name}
+              </MLink>
+            </h4>
+            <ul>
+              {torrents.map((t) => (
+                <li key={t.download}>
+                  <DisplayTorrent
+                    torrents={props.torrents}
+                    torrent={t}
+                    tmdb_id={props.tmdb_id}
+                    season={props.season}
+                    episode={t.episode_info?.epnum}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </ul>
       {props.items && !props.items.length && <p>No results found</p>}
     </div>
