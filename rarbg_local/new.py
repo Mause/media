@@ -22,7 +22,6 @@ from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
 from starlette.staticfiles import StaticFiles
-from yarl import URL
 
 from .auth import security
 from .config import commit, production
