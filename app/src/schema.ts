@@ -667,7 +667,7 @@ export interface components {
        * Type
        * @enum {string}
        */
-      type: 'movie' | 'episode' | 'season';
+      type: 'movie' | 'show';
       /** Guid */
       guid?: string | null;
       /** Summary */

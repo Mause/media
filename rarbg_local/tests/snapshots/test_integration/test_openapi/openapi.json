@@ -2000,8 +2000,7 @@
             "type": "string",
             "enum": [
               "movie",
-              "episode",
-              "season"
+              "show"
             ],
             "title": "Type"
           },
