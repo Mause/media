@@ -12,7 +12,7 @@ dependencies = [
     "aiohttp==3.12.13",
     "backoff==2.2.1",
     "sentry-sdk==2.32.0",
-    "alembic==1.16.2",
+    "alembic==1.16.3",
     "plexapi==4.17.0",
     "fuzzywuzzy[speedup]==0.18.0",
     "cachetools==5.5.2",
@@ -81,6 +81,8 @@ show-fixes = true
 
 [tool.ruff.format]
 quote-style = "preserve"
+docstring-code-format = true
+docstring-code-line-length = 20
 
 [tool.ruff.lint]
 select = ["F", "E", "W", "I", "T", "LOG", "ANN"]

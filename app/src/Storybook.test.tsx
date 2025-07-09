@@ -16,7 +16,10 @@ describe('Storybook', () => {
       </MemoryRouter>,
     );
 
-    const button = screen.getByTestId('context-menu-open');
+    let button = screen.getByTestId('misc');
+    await user.click(button);
+
+    button = screen.getByTestId('context-menu-open');
     await user.click(button);
 
     expect(container).toMatchSnapshot();
