@@ -108,10 +108,15 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
   );
 
   if (data) {
-    setOpen(false);
     return <Navigate to={data.link} />;
   }
 
+  // Close the Snackbar when data becomes available
+  useEffect(() => {
+    if (data) {
+      setOpen(false);
+    }
+  }, [data]);
   return (
     <>
       <Snackbar
