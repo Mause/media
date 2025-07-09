@@ -1,13 +1,14 @@
 from contextvars import ContextVar
 from datetime import datetime, timezone
 
-from factory import Factory, Faker, List, SubFactory, lazy_attribute
+from factory import Factory, Faker, List, Maybe, SubFactory, lazy_attribute
 from factory.alchemy import SQLAlchemyModelFactory
 from factory.fuzzy import FuzzyChoice, FuzzyDateTime
 
 from ..db import Download, EpisodeDetails, MovieDetails, User
 from ..models import (
     DownloadAllResponse,
+    DownloadPost,
     Episode,
     EpisodeInfo,
     ITorrent,
@@ -33,8 +34,8 @@ class EpisodeFactory(Factory):
         model = Episode
 
     name = Faker('name')
-    id = Faker('numerify')
-    episode_number = Faker('numerify')
+    id = Faker('random_number')
+    episode_number = Faker('random_number')
     air_date = Faker('date')
 
 
@@ -49,8 +50,8 @@ class SeasonFactory(Factory):
     class Meta:
         model = SeasonMeta
 
-    episode_count = Faker('numerify')
-    season_number = Faker('numerify')
+    episode_count = Faker('random_number')
+    season_number = Faker('random_number')
 
 
 class TvBaseResponseFactory(Factory):
@@ -85,8 +86,8 @@ class EpisodeInfoFactory(Factory):
     class Meta:
         model = EpisodeInfo
 
-    seasonnum = Faker('numerify')
-    epnum = Faker('numerify')
+    seasonnum = Faker('random_number')
+    epnum = Faker('random_number')
 
 
 class ITorrentFactory(Factory):
@@ -95,7 +96,7 @@ class ITorrentFactory(Factory):
 
     source = FuzzyChoice(ProviderSource)
     title = Faker('file_name')
-    seeders = Faker('numerify')
+    seeders = Faker('random_number')
     download = lazy_attribute(lambda a: 'magnet://' + a.title)
     category = FuzzyChoice(['A', 'B', 'C'])
     episode_info = SubFactory(EpisodeInfoFactory)
@@ -128,7 +129,7 @@ class DownloadFactory(SQLFactory):
     added_by = SubFactory(UserFactory)
     title = Faker('name')
 
-    tmdb_id = Faker('numerify')
+    tmdb_id = Faker('random_number')
     transmission_id = Faker('uuid4')
     imdb_id = imdb_id
     timestamp = FuzzyDateTime(start_dt=datetime(2000, 1, 1, tzinfo=timezone.utc))
@@ -141,8 +142,8 @@ class EpisodeDetailsFactory(SQLFactory):
     show_title = Faker('name')
     download = SubFactory(DownloadFactory, type='EPISODE')
 
-    season = Faker('numerify')
-    episode = Faker('numerify')
+    season = Faker('random_number')
+    episode = Faker('random_number')
 
 
 class MovieDetailsFactory(SQLFactory):
@@ -150,3 +151,17 @@ class MovieDetailsFactory(SQLFactory):
         model = MovieDetails
 
     download = SubFactory(DownloadFactory, type='MOVIE')
+
+
+class DownloadPostFactory(Factory):
+    class Meta:
+        model = DownloadPost
+
+    class Params:
+        is_tv = Faker('boolean')
+        filename = Faker('file_name')
+
+    tmdb_id = Faker('random_number')
+    magnet = lazy_attribute(lambda a: 'magnet://' + a.filename)
+    season = Maybe('is_tv', yes_declaration=Faker('random_number'))
+    episode = Maybe('is_tv', yes_declaration=Faker('random_number'))
