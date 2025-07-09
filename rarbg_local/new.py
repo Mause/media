@@ -405,7 +405,7 @@ def redirect_to_plex(
 
     server_id = plex.machineIdentifier
 
-    return RedirectResponse(make_plex_url(server_id, dat))
+    return RedirectResponse(make_plex_url(server_id, dat.ratingKey))
 
 
 @root.get('/redirect/{type_}/{tmdb_id}')
