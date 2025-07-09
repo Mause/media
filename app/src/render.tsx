@@ -23,7 +23,7 @@ import * as _ from 'lodash-es';
 import useSWRMutation from 'swr/mutation';
 import { useAuth0 } from '@auth0/auth0-react';
 import type { SyntheticEvent } from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import type { GetResponse } from './utils';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
