@@ -17,7 +17,8 @@ import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
 
-import { getMarker, getMessage, getPrefix, shouldCollapse } from './utils';
+import type { GetResponse } from './utils';
+import { getMarker, getMessage, shouldCollapse } from './utils';
 import type { TV } from './SeasonSelectComponent';
 import type {
   MovieResponse,
@@ -27,6 +28,7 @@ import type {
 } from './streaming';
 import ContextMenu from './ContextMenu';
 import { MLink } from './MLink';
+import type { paths } from './schema';
 
 export function Loading({
   loading,
@@ -57,13 +59,12 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   );
 }
 
+type PlexResponse = GetResponse<paths['/api/plex/imdb/{imdb_id}']>;
+
 function OpenPlex({ download }: { download: { imdb_id: string } }) {
+  const { data } = useSWR<PlexResponse>(`plex/imdb/${download.imdb_id}`);
   return (
-    <MenuItem
-      component="a"
-      href={`${getPrefix()}/redirect/plex/${download.imdb_id}`}
-      target="_blank"
-    >
+    <MenuItem component="a" href={data?.link} target="_blank">
       <span className="unselectable">Open in Plex</span>
     </MenuItem>
   );
