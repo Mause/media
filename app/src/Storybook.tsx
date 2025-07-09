@@ -1,6 +1,7 @@
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
 import { useSWRConfig } from 'swr';
+import { en_AU, Faker, en, base } from '@faker-js/faker';
 
 import { Progress } from './render';
 import ContextMenu from './ContextMenu';
@@ -11,7 +12,16 @@ import { RouteTitle } from './RouteTitle';
 function DiscoveryStory() {
   const { mutate } = useSWRConfig();
 
-  void mutate('tmdb/configuration', {});
+  void mutate('tmdb/configuration', {
+    images: {
+      poster_sizes: ['w800'],
+    },
+  });
+
+  const faker = new Faker({
+    locale: [en_AU, en, base],
+    seed: 42,
+  });
 
   return (
     <PureDiscoveryComponent
@@ -20,10 +30,19 @@ function DiscoveryStory() {
           id,
           title: `Hello World - ${id}`,
           release_date: `2022-01-${String(id + 1).padStart(2, '0')}`,
+          poster_path: 'dummy.png',
+          overview: faker.lorem.sentence(10),
         })),
       }}
       error={undefined}
       isValidating={false}
+      build={(_base, size) => {
+        const width =
+          size === 'original' ? 400 : Number.parseInt(size.substring(1));
+        const height = width * 1.5;
+
+        return `https://placecats.com/${width}/${height}`;
+      }}
     />
   );
 }
