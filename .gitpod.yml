@@ -12,3 +12,6 @@ tasks:
   - init: |
       uv sync --all-groups
       uvx pre-commit install
+  - init: |
+      wget https://github.com/git-town/git-town/releases/latest/download/git-town_linux_intel_64.deb
+      sudo dpkg -i git-town_linux_intel_64.deb
