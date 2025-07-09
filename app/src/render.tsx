@@ -3,7 +3,7 @@ import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -16,9 +16,11 @@ import {
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
+import useSWRMutation from 'swr/mutation';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import type { GetResponse } from './utils';
-import { getMarker, getMessage, shouldCollapse } from './utils';
+import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
 import type { TV } from './SeasonSelectComponent';
 import type {
   MovieResponse,
@@ -62,9 +64,27 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
 type PlexResponse = GetResponse<paths['/api/plex/imdb/{imdb_id}']>;
 
 function OpenPlex({ download }: { download: { imdb_id: string } }) {
-  const { data } = useSWR<PlexResponse>(`plex/imdb/${download.imdb_id}`);
+  const auth = useAuth0();
+  const { data, trigger } = useSWRMutation<PlexResponse>(
+    `plex/imdb/${download.imdb_id}`,
+    async (key: string): Promise<PlexResponse> => {
+      const res = await fetch(key, {
+        headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
+      });
+      return (await res.json()) as PlexResponse;
+    },
+  );
+
+  if (data) {
+    return <Navigate to={data.link} />;
+  }
+
   return (
-    <MenuItem component="a" href={data?.link} target="_blank">
+    <MenuItem
+      onClick={() => {
+        void trigger();
+      }}
+    >
       <span className="unselectable">Open in Plex</span>
     </MenuItem>
   );
