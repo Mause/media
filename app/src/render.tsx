@@ -65,7 +65,7 @@ type PlexResponse = GetResponse<paths['/api/plex/imdb/{imdb_id}']>;
 
 function OpenPlex({ download }: { download: { imdb_id: string } }) {
   const auth = useAuth0();
-  const { data, trigger } = useSWRMutation<PlexResponse>(
+  const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
     `plex/imdb/${download.imdb_id}`,
     async (key: string): Promise<PlexResponse> => {
       const res = await fetch(key, {
@@ -86,6 +86,7 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
       }}
     >
       <span className="unselectable">Open in Plex</span>
+      <Loading loading={isMutating} />
     </MenuItem>
   );
 }
