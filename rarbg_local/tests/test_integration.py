@@ -742,7 +742,9 @@ def add_xml(responses: RequestsMock, method: str, url: str, body: '_Element') ->
 
 
 @mark.asyncio
-async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -> None:
+async def test_plex_redirect(
+    test_client: TestClient, responses: RequestsMock, snapshot: Snapshot
+) -> None:
     add_xml(
         responses,
         'GET',
@@ -765,7 +767,13 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
         responses,
         'GET',
         'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2Ftt10000%3Flang%3Den',
-        E.Search(E.Video(type='Video.episode', ratingKey='aaa')),
+        E.Search(
+            E.Directory(
+                type="show",
+                title="Hello World",
+                ratingKey="666",
+            )
+        ),
     )
 
     add_xml(
@@ -785,8 +793,12 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
 
     assert (
         r.headers['Location']
-        == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2Faaa'
+        == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2F666'
     )
+
+    r = await test_client.get('/api/plex/imdb/tt10000')
+    r.raise_for_status()
+    assert_match_json(snapshot, r, 'plex_redirect.json')
 
 
 @mark.asyncio
