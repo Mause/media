@@ -1,4 +1,8 @@
 import MenuItem from '@mui/material/MenuItem';
+import type { SnackbarCloseReason } from '@mui/material/Snackbar';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
@@ -18,6 +22,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
 import useSWRMutation from 'swr/mutation';
 import { useAuth0 } from '@auth0/auth0-react';
+import type { SyntheticEvent } from 'react';
+import { useState } from 'react';
 
 import type { GetResponse } from './utils';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
@@ -74,19 +80,56 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
       return (await res.json()) as PlexResponse;
     },
   );
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (
+    event: SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const action = (
+    <>
+      Opening plex...
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
 
   if (data) {
+    setOpen(false);
     return <Navigate to={data.link} />;
   }
 
   return (
-    <MenuItem
-      onClick={() => {
-        void trigger();
-      }}
-    >
-      <span className="unselectable">Open in Plex</span>
-    </MenuItem>
+    <>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Note archived"
+        action={action}
+      />
+      <MenuItem
+        onClick={() => {
+          setOpen(true);
+          void trigger();
+        }}
+      >
+        <span className="unselectable">Open in Plex</span>
+      </MenuItem>
+    </>
   );
 }
 
