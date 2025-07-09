@@ -83,10 +83,9 @@ const PREFIX = 'Poster';
 const classes = {
   root: `${PREFIX}-root`,
 };
-const PosterElement = styled('img')(() => ({
+const PosterElement = styled('div')(() => ({
   [`& .${classes.root}`]: {
     width: '100%',
-    aspectRatio: 'auto && 2 / 3',
   },
 }));
 
@@ -103,17 +102,21 @@ function Poster({
 
   const srcset = data?.images.poster_sizes
     .filter((size) => size !== 'original')
-    .map((size) => [build(base, size, poster_path), size]);
+    .map((size): [string, number] => [
+      build(base, size, poster_path),
+      Number.parseInt(size.slice(1)),
+    ]);
 
   const original = build(base, 'original', poster_path);
 
   return (
-    <PosterElement
-      className={classes.root}
-      srcSet={srcset
-        ?.map(([url, size]) => `${url} ${size.slice(1)}${size[0]}`)
-        .join(', ')}
-      src={original}
-    />
+    <PosterElement className={classes.root}>
+      <picture>
+        {srcset?.map(([url, size]) => (
+          <source key={url} srcSet={url} width={size} height={size * 1.5} />
+        ))}
+        <img src={original} />
+      </picture>
+    </PosterElement>
   );
 }

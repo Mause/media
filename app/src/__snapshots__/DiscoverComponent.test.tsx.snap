@@ -65,11 +65,20 @@ exports[`DiscoveryComponent 2`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://tmdb.org/original/hello.png"
-        srcset="https://tmdb.org/w800/hello.png 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://tmdb.org/w800/hello.png"
+            width="800"
+          />
+          <img
+            src="https://tmdb.org/original/hello.png"
+          />
+        </picture>
+      </div>
       <p>
         A man loses his mind
       </p>

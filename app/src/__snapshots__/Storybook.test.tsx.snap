@@ -108,11 +108,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Corrupti virga synagoga patruus armarium armarium adsum usitas paulatim suggero.
       </p>
@@ -148,11 +157,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Accusator volubilis tristis benevolentia attonbitus auctus cognomen esse custodia clamo.
       </p>
@@ -188,11 +206,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Perspiciatis apud claro copiose defleo territo aveho doloribus omnis adipiscor.
       </p>
@@ -228,11 +255,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Pectus assumenda advoco vinum vociferor titulus cogo alter stella decerno.
       </p>
@@ -268,11 +304,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Animus deputo adeo verbera caute somniculosus color eius incidunt audacia.
       </p>
@@ -308,11 +353,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Volubilis terga vigor varius patrocinor verus alienus autus adipisci comparo.
       </p>
@@ -348,11 +402,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Creta cernuus tribuo consuasor cicuta illo aqua thorax aestas vos.
       </p>
@@ -388,11 +451,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Ter avarus abscido tot suffragium suspendo tepidus aer contego ancilla.
       </p>
@@ -428,11 +500,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Urbanus qui comptus adversus colo communis suspendo repellendus valens demens.
       </p>
@@ -468,11 +549,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Animadverto summisse temptatio laudantium tepidus depulso eos cursus acies amita.
       </p>
@@ -508,11 +598,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Addo repellat comburo dolor venustas carus cunae temeritas calco aestus.
       </p>
@@ -548,11 +647,20 @@ exports[`Storybook > renders without crashing 1`] = `
           </svg>
         </a>
       </h4>
-      <img
-        class="Poster-root css-tj577z"
-        src="https://placecats.com/400/600"
-        srcset="https://placecats.com/800/1200 800w"
-      />
+      <div
+        class="Poster-root css-2h5k8y"
+      >
+        <picture>
+          <source
+            height="1200"
+            srcset="https://placecats.com/800/1200"
+            width="800"
+          />
+          <img
+            src="https://placecats.com/400/600"
+          />
+        </picture>
+      </div>
       <p>
         Clam arx vetus titulus recusandae ut thymbra audentia vapulus fugit.
       </p>
