@@ -1995,9 +1995,9 @@
           "type": {
             "type": "string",
             "enum": [
-              "Video.movie",
-              "Video.episode",
-              "Video.season"
+              "movie",
+              "episode",
+              "season"
             ],
             "title": "Type"
           },

@@ -761,7 +761,7 @@ async def test_plex_redirect(
         responses,
         'GET',
         'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2Ftt10000%3Flang%3Den',
-        E.Search(E.Video(type='Video.episode', ratingKey=str(666))),
+        E.Search(E.Video(type='episode', ratingKey=str(666))),
     )
 
     add_xml(

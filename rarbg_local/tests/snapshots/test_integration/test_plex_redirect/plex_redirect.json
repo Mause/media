@@ -3,7 +3,7 @@
   "item": {
     "ratingKey": 666,
     "year": null,
-    "type": "Video.episode",
+    "type": "episode",
     "guid": null,
     "summary": null,
     "thumb": null,
