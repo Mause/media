@@ -33,6 +33,7 @@ if (import.meta.env.NODE_ENV === 'production') {
     environment: 'development',
     integrations: [
       Sentry.reactRouterV7BrowserTracingIntegration({
+        trackFetchStreamPerformance: true,
         useEffect,
         useLocation,
         useNavigationType,
