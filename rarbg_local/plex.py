@@ -43,6 +43,8 @@ def single[T](items: Sequence[T]) -> T | None:
 
 
 def make_plex_url(server_id: str, rating_key: int) -> str:
-    return f'https://app.plex.tv/desktop#!/server/{server_id}/details?' + urlencode(
-        {'key': f'/library/metadata/{rating_key}'}
+    return str(
+        URL('https://app.plex.tv/desktop')
+            .with_fragment(f'!/server/{server_id}/details')
+            .with_query(key=f'/library/metadata/{rating_key}')
     )
