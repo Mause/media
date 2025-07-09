@@ -40,6 +40,8 @@ if (import.meta.env.NODE_ENV === 'production') {
         matchRoutes,
       }),
     ],
+    // Enable logs to be sent to Sentry
+    _experiments: { enableLogs: true },
     tracesSampleRate: 1.0,
   });
 }
