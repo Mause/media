@@ -136,7 +136,11 @@ async def test_download_movie(
 
     res = await test_client.post(
         '/api/download',
-        json=[DownloadPostFactory.build(magnet=magnet, tmdb_id=533985, is_tv=False).model_dump()],
+        json=[
+            DownloadPostFactory.build(
+                magnet=magnet, tmdb_id=533985, is_tv=False
+            ).model_dump()
+        ],
     )
     assert res.status_code == 200
 
