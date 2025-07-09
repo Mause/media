@@ -112,7 +112,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -156,7 +156,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -200,7 +200,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -244,7 +244,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -288,7 +288,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -332,7 +332,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -376,7 +376,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -420,7 +420,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -464,7 +464,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -508,7 +508,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -552,7 +552,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />
@@ -596,7 +596,7 @@ exports[`Storybook > renders without crashing 1`] = `
         style="width: 100%;"
       >
         <img
-          src="https://placecats.com/NaN/NaN"
+          src="https://placecats.com/400/600"
           srcset="https://placecats.com/800/1200 800w"
           style="width: 0px; height: 0px;"
         />

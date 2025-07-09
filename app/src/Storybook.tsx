@@ -37,7 +37,8 @@ function DiscoveryStory() {
       error={undefined}
       isValidating={false}
       build={(_base, size) => {
-        const width = Number.parseInt(size.substring(1));
+        const width =
+          size === 'original' ? 400 : Number.parseInt(size.substring(1));
         const height = width * 1.5;
 
         return `https://placecats.com/${width}/${height}`;
