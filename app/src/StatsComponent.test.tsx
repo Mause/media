@@ -1,8 +1,6 @@
 import type { StatsResponse } from './StatsComponent';
 import { StatsComponent } from './StatsComponent';
-import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
-
-usesMoxios();
+import { mock, renderWithSWR, wait } from './test.utils';
 
 test('render', async () => {
   const { container } = renderWithSWR(<StatsComponent />);

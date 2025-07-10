@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import MockDate from 'mockdate';
 
 import { Movies, TVShows, Progress, NextEpisodeAirs } from './render';
-import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
+import { renderWithSWR, mock, wait } from './test.utils';
 import type {
   MovieResponse,
   Torrents,
@@ -13,7 +13,6 @@ import type {
 } from './streaming';
 import { getMessage, shouldCollapse } from './utils';
 
-usesMoxios();
 beforeEach(() => MockDate.reset());
 
 test('Movies', () => {

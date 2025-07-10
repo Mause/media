@@ -14,15 +14,12 @@ import * as _ from 'lodash-es';
 import type { Monitor } from './MonitorComponent';
 import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
 import {
-  usesMoxios,
   renderWithSWR,
   mock,
   wait,
   listenTo,
   expectLastRequestBody,
 } from './test.utils';
-
-usesMoxios();
 
 describe('MonitorComponent', () => {
   it('view', async () => {

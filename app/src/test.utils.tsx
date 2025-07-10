@@ -1,5 +1,4 @@
 import moxios from 'moxios';
-import axios from 'axios';
 import { render } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { act } from 'react';
@@ -49,15 +48,6 @@ export function renderWithSWR(el: ReactElement) {
       </StyledEngineProvider>
     </Auth0Context.Provider>,
   );
-}
-
-export function usesMoxios() {
-  beforeEach(() => {
-    moxios.install(axios);
-  });
-  afterEach(() => {
-    moxios.uninstall(axios);
-  });
 }
 
 export function listenTo(hist: MemoryHistory) {

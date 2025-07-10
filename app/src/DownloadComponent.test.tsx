@@ -10,15 +10,12 @@ import { act } from 'react';
 
 import {
   wait,
-  usesMoxios,
   renderWithSWR,
   listenTo,
   expectLastRequestBody,
 } from './test.utils';
 import type { DownloadState } from './DownloadComponent';
 import { DownloadComponent } from './DownloadComponent';
-
-usesMoxios();
 
 describe('DownloadComponent', () => {
   it('success', async () => {

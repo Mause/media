@@ -3,10 +3,8 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import type { Season, TV } from './SeasonSelectComponent';
 import { SeasonSelectComponent } from './SeasonSelectComponent';
-import { mock, usesMoxios, wait, renderWithSWR } from './test.utils';
+import { mock, wait, renderWithSWR } from './test.utils';
 import { EpisodeSelectComponent } from './EpisodeSelectComponent';
-
-usesMoxios();
 
 test('SeasonSelectComponent  render', async () => {
   const { container } = renderWithSWR(
