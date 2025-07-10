@@ -23,17 +23,19 @@ const Root = styled('form')(({ theme }) => ({
   },
 }));
 
+export interface ManualAddComponentState {
+  season?: `${string}`;
+  episode?: `${string}`;
+  tmdb_id: `${string}`;
+}
+
 export function ManualAddComponent() {
   function onSubmit(event: FormEvent) {
     event.preventDefault();
     setSubmitted(true);
   }
 
-  const { state: state_s } = useLocation<{
-    season?: string;
-    episode?: string;
-    tmdb_id: string;
-  }>();
+  const { state: state_s } = useLocation<ManualAddComponentState>();
   const state = {
     season: state_s?.season ? parseInt(state_s.season) : undefined,
     episode: state_s?.episode ? parseInt(state_s.episode) : undefined,
