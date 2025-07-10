@@ -3,7 +3,7 @@ import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -16,8 +16,11 @@ import {
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
+import useSWRMutation from 'swr/mutation';
+import { useAuth0 } from '@auth0/auth0-react';
 
-import { getMarker, getMessage, getPrefix, shouldCollapse } from './utils';
+import type { GetResponse } from './utils';
+import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
 import type { TV } from './SeasonSelectComponent';
 import type {
   MovieResponse,
@@ -27,6 +30,7 @@ import type {
 } from './streaming';
 import ContextMenu from './ContextMenu';
 import { MLink } from './MLink';
+import type { paths } from './schema';
 
 export function Loading({
   loading,
@@ -57,14 +61,32 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   );
 }
 
+type PlexResponse = GetResponse<paths['/api/plex/imdb/{imdb_id}']>;
+
 function OpenPlex({ download }: { download: { imdb_id: string } }) {
+  const auth = useAuth0();
+  const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
+    `/api/plex/imdb/${download.imdb_id}`,
+    async (key: string): Promise<PlexResponse> => {
+      const res = await fetch(key, {
+        headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
+      });
+      return (await res.json()) as PlexResponse;
+    },
+  );
+
+  if (data) {
+    return <Navigate to={data.link} />;
+  }
+
   return (
     <MenuItem
-      component="a"
-      href={`${getPrefix()}/redirect/plex/${download.imdb_id}`}
-      target="_blank"
+      onClick={() => {
+        void trigger();
+      }}
     >
       <span className="unselectable">Open in Plex</span>
+      <Loading loading={isMutating} />
     </MenuItem>
   );
 }
