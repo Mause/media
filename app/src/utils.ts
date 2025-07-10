@@ -69,7 +69,9 @@ export async function load<T>(
   params?: string,
   headers?: RawAxiosRequestHeaders,
 ): Promise<T> {
-  const t = await Axios.get<T>(`${getPrefix()}/api/${path}`, {
+  const url = `${getPrefix()}/api/${path}`;
+  console.log('Loading', { url, params });
+  const t = await Axios.get<T>(url, {
     params,
     withCredentials: true,
     headers,
