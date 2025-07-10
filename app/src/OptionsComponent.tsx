@@ -144,7 +144,11 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
           <MLink
             to="/manual"
             state={
-              { tmdb_id, season, episode } satisfies ManualAddComponentState
+              {
+                tmdb_id: tmdb_id!,
+                season,
+                episode,
+              } satisfies ManualAddComponentState
             }
           >
             Add manually

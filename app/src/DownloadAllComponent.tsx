@@ -70,7 +70,12 @@ function DownloadAllComponent() {
         <li>
           <MLink
             to="/manual"
-            state={{ tmdb_id, season } satisfies ManualAddComponentState}
+            state={
+              {
+                tmdb_id: tmdb_id!,
+                season: season_s!,
+              } satisfies ManualAddComponentState
+            }
           >
             Add manually
           </MLink>
