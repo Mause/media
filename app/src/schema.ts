@@ -208,6 +208,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/plex/imdb/{imdb_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Plex Imdb */
+    get: operations['get_plex_imdb'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/tv/{tmdb_id}': {
     parameters: {
       query?: never;
@@ -638,6 +655,39 @@ export interface components {
       /** Imdb Id */
       imdb_id: string;
     };
+    /** PlexMedia */
+    PlexMedia: {
+      /** Ratingkey */
+      ratingKey: number;
+      /** Title */
+      title: string;
+      /** Year */
+      year?: number | null;
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: 'movie' | 'show';
+      /** Guid */
+      guid?: string | null;
+      /** Summary */
+      summary?: string | null;
+      /** Thumb */
+      thumb?: string | null;
+      /** Art */
+      art?: string | null;
+    };
+    /** PlexResponse[PlexMedia] */
+    PlexResponse_PlexMedia_: {
+      /** Server Id */
+      server_id: string;
+      item: components['schemas']['PlexMedia'];
+      /**
+       * Link
+       * Format: uri
+       */
+      readonly link: string;
+    };
     /**
      * ProviderSource
      * @enum {string}
@@ -1058,6 +1108,37 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['Configuration'];
+        };
+      };
+    };
+  };
+  get_plex_imdb: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        imdb_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PlexResponse_PlexMedia_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
         };
       };
     };

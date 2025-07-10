@@ -33,6 +33,7 @@ from ..providers.piratebay import PirateBayProvider
 from ..types import ImdbId, TmdbId
 from .conftest import add_json, assert_match_json, themoviedb, tolist
 from .factories import (
+    DownloadPostFactory,
     EpisodeDetailsFactory,
     MovieDetailsFactory,
     MovieResponseFactory,
@@ -134,7 +135,12 @@ async def test_download_movie(
     magnet = 'magnet:...'
 
     res = await test_client.post(
-        '/api/download', json=[{'magnet': magnet, 'tmdb_id': 533985}]
+        '/api/download',
+        json=[
+            DownloadPostFactory.build(
+                magnet=magnet, tmdb_id=533985, is_tv=False
+            ).model_dump()
+        ],
     )
     assert res.status_code == 200
 
@@ -158,7 +164,7 @@ async def test_download(
         '/tv/95792',
         TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'tt12345678'})
     themoviedb(
         aioresponses,
         '/tv/95792/season/1',
@@ -182,7 +188,7 @@ async def test_download(
 
     res = await test_client.post(
         '/api/download',
-        json=[{'magnet': magnet, 'tmdb_id': 95792, 'season': '1', 'episode': '2'}],
+        json=[{'magnet': magnet, 'tmdb_id': 95792, 'season': 1, 'episode': 2}],
     )
     assert res.status_code == 200
 
@@ -221,7 +227,7 @@ async def test_download_duplicate(
         '/tv/95792',
         TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'tt12345678'})
     themoviedb(
         aioresponses,
         '/tv/95792/season/1',
@@ -295,7 +301,7 @@ async def test_download_season_pack(
         '/tv/90000',
         TvApiResponseFactory.create(name='Watchmen').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'ttwhatever'})
+    themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'tt12345678'})
 
     magnet = (
         'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313'
@@ -736,7 +742,9 @@ def add_xml(responses: RequestsMock, method: str, url: str, body: '_Element') ->
 
 
 @mark.asyncio
-async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -> None:
+async def test_plex_redirect(
+    test_client: TestClient, responses: RequestsMock, snapshot: Snapshot
+) -> None:
     add_xml(
         responses,
         'GET',
@@ -758,8 +766,14 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
     add_xml(
         responses,
         'GET',
-        'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2F10000%3Flang%3Den',
-        E.Search(E.Video(type='Video.episode', ratingKey='aaa')),
+        'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2Ftt10000%3Flang%3Den',
+        E.Search(
+            E.Directory(
+                type="show",
+                title="Hello World",
+                ratingKey="666",
+            )
+        ),
     )
 
     add_xml(
@@ -775,12 +789,16 @@ async def test_plex_redirect(test_client: TestClient, responses: RequestsMock) -
         ),
     )
 
-    r = await test_client.get('/redirect/plex/10000', allow_redirects=False)
+    r = await test_client.get('/redirect/plex/tt10000', allow_redirects=False)
 
     assert (
         r.headers['Location']
-        == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2Faaa'
+        == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2F666'
     )
+
+    r = await test_client.get('/api/plex/imdb/tt10000')
+    r.raise_for_status()
+    assert_match_json(snapshot, r, 'plex_redirect.json')
 
 
 @mark.asyncio

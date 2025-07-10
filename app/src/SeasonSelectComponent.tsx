@@ -48,7 +48,7 @@ export function SeasonSelectComponent() {
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
         <Typography color="textPrimary" data-testid="title">
-          {tv && tv.title}
+          {tv?.title}
         </Typography>
       </Breadcrumbs>
       {!tv ? (

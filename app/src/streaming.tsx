@@ -33,6 +33,7 @@ if (import.meta.env.NODE_ENV === 'production') {
     environment: 'development',
     integrations: [
       Sentry.reactRouterV7BrowserTracingIntegration({
+        trackFetchStreamPerformance: true,
         useEffect,
         useLocation,
         useNavigationType,
@@ -40,6 +41,12 @@ if (import.meta.env.NODE_ENV === 'production') {
         matchRoutes,
       }),
     ],
+    // Adds request headers and IP for users, for more info visit:
+    // https://docs.sentry.io/platforms/javascript/guides/react/configuration/options/#sendDefaultPii
+    sendDefaultPii: true,
+
+    // Enable logs to be sent to Sentry
+    _experiments: { enableLogs: true },
     tracesSampleRate: 1.0,
   });
 }
