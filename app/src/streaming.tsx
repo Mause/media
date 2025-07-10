@@ -139,6 +139,9 @@ export function ParentComponentInt() {
           <Grid size={{ xs: 'auto' }}>
             <ExtMLink href="https://app.plex.tv">Plex</ExtMLink>
           </Grid>
+          <Grid size={{ xs: 'auto' }}>
+            <MLink to="/discover">Discover</MLink>
+          </Grid>
           {auth.user && <Grid size={{ xs: 'auto' }}>{auth.user.name}</Grid>}
           <Grid size={{ xs: 'auto' }}>
             <Login />
