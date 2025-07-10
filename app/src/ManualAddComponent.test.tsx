@@ -1,9 +1,8 @@
-import { renderWithSWR, wait, mock, usesMoxios } from './test.utils';
-import {
-  ManualAddComponent,
-  ManualAddComponentState,
-} from './ManualAddComponent';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
+import { renderWithSWR, wait, mock, usesMoxios } from './test.utils';
+import type { ManualAddComponentState } from './ManualAddComponent';
+import { ManualAddComponent } from './ManualAddComponent';
 
 usesMoxios();
 
