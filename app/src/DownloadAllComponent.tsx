@@ -12,6 +12,7 @@ import { DisplayTorrent } from './DisplayTorrent';
 import { RouteTitle } from './RouteTitle';
 import type { paths } from './schema';
 import type { GetResponse } from './utils';
+import type { ManualAddCompomentState } from './ManualAddComponent';
 
 type DownloadAllResponse = GetResponse<
   paths['/api/select/{tmdb_id}/season/{season}/download_all']
@@ -67,7 +68,10 @@ function DownloadAllComponent() {
 
       <ul>
         <li>
-          <MLink to="/manual" state={{ tmdb_id, type: 'tv', season }}>
+          <MLink
+            to="/manual"
+            state={{ tmdb_id, season } satisfies ManualAddCompomentState}
+          >
             Add manually
           </MLink>
         </li>
