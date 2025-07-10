@@ -6,7 +6,7 @@ import type { FormEvent } from 'react';
 import { useState } from 'react';
 
 import type { DownloadState } from './DownloadComponent';
-import { useLocation } from './utils';
+import { useLocation, getMarker } from './utils';
 import { RouteTitle } from './RouteTitle';
 
 const PREFIX = 'ManualAddComponent';
@@ -65,7 +65,9 @@ export function ManualAddComponent() {
   return (
     <RouteTitle title="Manual">
       <Root className={classes.root} onSubmit={onSubmit}>
-        <h3>{data?.title}</h3>
+        <h3>
+          {data?.title} {state.season && getMarker(state)}
+        </h3>
         <TextField
           variant="standard"
           placeholder="magnet:..."
