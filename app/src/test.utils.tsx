@@ -26,6 +26,7 @@ export async function wait() {
 
 export async function mock<T>(path: string, response: T) {
   await moxios.stubOnce('GET', new RegExp(path.replace(/\?/, '\\?')), {
+    status: 200,
     response,
   });
 }
