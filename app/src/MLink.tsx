@@ -8,8 +8,8 @@ type Props = Parameters<typeof NavLink>[0];
 export function MLink(props: {
   children: ReactNode;
   color?: TypographyTypeMap['props']['color'];
-  to: Props['to'] & {};
-  state: Props['state'];
+  to: Props['to'];
+  state?: Props['state'];
 }): ReactElement {
   const match = useMatch(
     typeof props.to === 'string' ? props.to : props.to.pathname!,
