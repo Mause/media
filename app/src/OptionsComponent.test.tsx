@@ -5,9 +5,7 @@ import * as _ from 'lodash-es';
 
 import type { ITorrent } from './OptionsComponent';
 import { MovieOptionsComponent } from './MovieOptionsComponent';
-import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
-
-usesMoxios();
+import { mock, renderWithSWR, wait } from './test.utils';
 
 const sources: ES[] = [];
 type CB = (event: { data: string }) => void;

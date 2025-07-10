@@ -2,9 +2,7 @@ import { Route, MemoryRouter, Routes } from 'react-router-dom';
 
 import type { SearchResponse } from './SearchComponent';
 import { SearchComponent } from './SearchComponent';
-import { mock, wait, usesMoxios, renderWithSWR } from './test.utils';
-
-usesMoxios();
+import { mock, wait, renderWithSWR } from './test.utils';
 
 test('SearchComponent', async () => {
   const { container } = renderWithSWR(
