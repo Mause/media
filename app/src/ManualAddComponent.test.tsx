@@ -26,11 +26,8 @@ it('works', async () => {
 
   expect(container).toMatchSnapshot();
 
-  await mock('tv/12345', {
-    id: 12345,
-    name: 'Test TV Show',
-    overview: 'This is a test TV show.',
-    poster_path: '/test-poster.jpg',
+  await mock('/api/tv/12345', {
+    title: 'Test TV Show',
   });
   await wait();
 
