@@ -114,6 +114,17 @@ exports[`DownloadAllComponent 1`] = `
     </h3>
     <ul />
   </div>
+  <ul>
+    <li>
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+        data-discover="true"
+        href="/manual"
+      >
+        Add manually
+      </a>
+    </li>
+  </ul>
 </div>
 `;
 
@@ -245,5 +256,16 @@ exports[`DownloadAllComponent 2`] = `
       No results found
     </p>
   </div>
+  <ul>
+    <li>
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+        data-discover="true"
+        href="/manual"
+      >
+        Add manually
+      </a>
+    </li>
+  </ul>
 </div>
 `;

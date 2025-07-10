@@ -15,6 +15,7 @@ import { DisplayError } from './DisplayError';
 import { MonitorAddComponent } from './MonitorComponent';
 import { MLink } from './MLink';
 import { DisplayTorrent } from './DisplayTorrent';
+import type { ManualAddComponentState } from './ManualAddComponent';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
@@ -140,7 +141,16 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       )}
       <ul>
         <li>
-          <MLink to="/manual" state={{ tmdb_id, season, episode }}>
+          <MLink
+            to="/manual"
+            state={
+              {
+                tmdb_id: tmdb_id!,
+                season,
+                episode,
+              } satisfies ManualAddComponentState
+            }
+          >
             Add manually
           </MLink>
         </li>
