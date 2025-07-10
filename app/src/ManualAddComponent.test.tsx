@@ -1,9 +1,11 @@
-import { renderWithSWR, wait, mock } from './test.utils';
+import { renderWithSWR, wait, mock, usesMoxios } from './test.utils';
 import {
   ManualAddComponent,
   ManualAddComponentState,
 } from './ManualAddComponent';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
+usesMoxios();
 
 it('works', async () => {
   const { container } = renderWithSWR(
