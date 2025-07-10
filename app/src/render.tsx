@@ -66,7 +66,7 @@ type PlexResponse = GetResponse<paths['/api/plex/imdb/{imdb_id}']>;
 function OpenPlex({ download }: { download: { imdb_id: string } }) {
   const auth = useAuth0();
   const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
-    `plex/imdb/${download.imdb_id}`,
+    `/api/plex/imdb/${download.imdb_id}`,
     async (key: string): Promise<PlexResponse> => {
       const res = await fetch(key, {
         headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
