@@ -57,7 +57,8 @@ exports[`EpisodeSelectComponent render 1`] = `
         class="MuiBreadcrumbs-li"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+          aria-current="page"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root active"
           data-discover="true"
           href="/select/1/season"
         >
