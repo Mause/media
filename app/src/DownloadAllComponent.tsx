@@ -64,6 +64,14 @@ function DownloadAllComponent() {
         tmdb_id={tmdb_id!}
         torrents={torrents}
       />
+
+      <ul>
+        <li>
+          <MLink to="/manual" state={{ tmdb_id, type: 'tv', season }}>
+            Add manually
+          </MLink>
+        </li>
+      </ul>
     </RouteTitle>
   );
 }
