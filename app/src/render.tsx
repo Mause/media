@@ -69,7 +69,7 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
     `/api/plex/imdb/${download.imdb_id}`,
     async (key: string): Promise<PlexResponse> => {
       const res = await fetch(key, {
-        headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
+        headers: { Authorization: `Bearer ${await getToken(auth)}` },
       });
       return (await res.json()) as PlexResponse;
     },
@@ -382,7 +382,7 @@ export function NextEpisodeAirs(props: {
     // unoriginal episode names
     message = `${ep_num} ${message}`;
   } else {
-    message = ep_num + ` "${nextEpisode.name}" ` + message;
+    message = `${ep_num} "${nextEpisode.name}" ${message}`;
   }
 
   return (

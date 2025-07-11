@@ -36,7 +36,7 @@ function Websocket() {
   const { search } = useLocation();
   const query = new URLSearchParams(search.slice(1));
   const auth = useAuth0();
-  const token = 'Bearer ' + usePromise(() => getToken(auth), []);
+  const token = `Bearer ${usePromise(() => getToken(auth), [])}`;
 
   const initMessage = query.has('season')
     ? {

@@ -51,7 +51,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   const { season, episode, tmdb_id } = useParams();
 
   const { data: meta } = useSWR<{ title: string }>(
-    (season ? 'tv' : 'movie') + '/' + tmdb_id,
+    `${season ? 'tv' : 'movie'}/${tmdb_id}`,
   );
   const { data: torrents } = useSWR<Torrents>('torrents');
   const {
@@ -59,7 +59,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     loading,
     errors,
   } = useSubscribes<ITorrent>(
-    `/api/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
+    `/api/stream/${type}/${tmdb_id}?${qs.stringify({ season, episode })}`,
   );
   const dt = (result: ITorrent) => (
     <DisplayTorrent
@@ -187,7 +187,7 @@ function useSubscribe<T>(
   name: string,
   authorization?: string,
 ): SubscriptionShape<T> {
-  const url = baseUrl + '&source=' + name;
+  const url = `${baseUrl}&source=${name}`;
   const [subscription, setSubscription] = useState<SubscriptionShape<T>>({
     items: [],
     loading: true,
