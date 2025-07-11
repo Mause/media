@@ -502,6 +502,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@biomejs/cli-linux-x64@npm:^2.1.1":
+  version: 2.4.15
+  resolution: "@biomejs/cli-linux-x64@npm:2.4.15"
+  checksum: 10/8d2d8d04634cb080a05f2e100053c292113840437c2f399b091996fdfa46e251ab28ad31f2d106cf09153b532601a652d4df05ca4f8c9f9d8d327da98d600c0e
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
 "@csstools/color-helpers@npm:^5.1.0":
   version: 5.1.0
   resolution: "@csstools/color-helpers@npm:5.1.0"
@@ -3068,6 +3076,7 @@ __metadata:
   dependencies:
     "@auth0/auth0-react": "npm:^2.0.0"
     "@babel/runtime": "npm:^7.28.2"
+    "@biomejs/cli-linux-x64": "npm:^2.1.1"
     "@csstools/normalize.css": "npm:^12.0.0"
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.1"
