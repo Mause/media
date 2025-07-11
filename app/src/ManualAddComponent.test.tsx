@@ -1,8 +1,7 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
-import { renderWithSWR, wait, mock } from './test.utils';
 import type { ManualAddComponentState } from './ManualAddComponent';
 import { ManualAddComponent } from './ManualAddComponent';
+import { mock, renderWithSWR, wait } from './test.utils';
 
 it('works', async () => {
   const { container } = renderWithSWR(

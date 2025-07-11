@@ -1,8 +1,7 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
-import { wait, renderWithSWR, mock } from './test.utils';
 import type { Configuration, DiscoverResponse } from './DiscoveryComponent';
 import { DiscoveryComponent } from './DiscoveryComponent';
+import { mock, renderWithSWR, wait } from './test.utils';
 
 test('DiscoveryComponent', async () => {
   const { container } = renderWithSWR(

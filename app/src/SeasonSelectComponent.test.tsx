@@ -1,10 +1,9 @@
 import { screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
+import { EpisodeSelectComponent } from './EpisodeSelectComponent';
 import type { Season, TV } from './SeasonSelectComponent';
 import { SeasonSelectComponent } from './SeasonSelectComponent';
-import { mock, wait, renderWithSWR } from './test.utils';
-import { EpisodeSelectComponent } from './EpisodeSelectComponent';
+import { mock, renderWithSWR, wait } from './test.utils';
 
 test('SeasonSelectComponent  render', async () => {
   const { container } = renderWithSWR(

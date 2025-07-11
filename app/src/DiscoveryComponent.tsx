@@ -1,15 +1,14 @@
-import useSWR from 'swr';
-import { Grid, styled } from '@mui/material';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Grid, styled } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-
-import type { paths } from './schema';
-import { Loading } from './render';
-import { MLink } from './MLink';
+import useSWR from 'swr';
 import { DisplayError } from './DisplayError';
-import type { GetResponse } from './utils';
+import { MLink } from './MLink';
 import { RouteTitle } from './RouteTitle';
+import { Loading } from './render';
+import type { paths } from './schema';
+import type { GetResponse } from './utils';
 
 export type DiscoverResponse = Pick<
   GetResponse<paths['/api/discover']>,

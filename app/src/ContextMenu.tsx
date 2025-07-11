@@ -1,6 +1,6 @@
-import Menu from '@mui/material/Menu';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Menu from '@mui/material/Menu';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 

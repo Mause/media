@@ -1,9 +1,8 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
-import { renderWithSWR } from './test.utils';
 import { Storybook } from './Storybook';
+import { renderWithSWR } from './test.utils';
 
 describe('Storybook', () => {
   it('renders without crashing', async () => {

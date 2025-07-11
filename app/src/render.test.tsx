@@ -1,16 +1,16 @@
 import { render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import MockDate from 'mockdate';
+import { MemoryRouter } from 'react-router-dom';
 
-import { Movies, TVShows, Progress, NextEpisodeAirs } from './render';
-import { renderWithSWR, mock, wait } from './test.utils';
+import { Movies, NextEpisodeAirs, Progress, TVShows } from './render';
 import type {
-  MovieResponse,
-  Torrents,
-  TorrentFile,
-  SeriesResponse,
   EpisodeResponse,
+  MovieResponse,
+  SeriesResponse,
+  TorrentFile,
+  Torrents,
 } from './streaming';
+import { mock, renderWithSWR, wait } from './test.utils';
 import { getMessage, shouldCollapse } from './utils';
 
 beforeEach(() => MockDate.reset());

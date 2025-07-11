@@ -1,21 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Alert, Breadcrumbs, Typography } from '@mui/material';
+import * as _ from 'lodash-es';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { Alert, Breadcrumbs, Typography } from '@mui/material';
-import { useAuth0 } from '@auth0/auth0-react';
-import * as _ from 'lodash-es';
-
+import { DisplayError } from './DisplayError';
+import { DisplayTorrent } from './DisplayTorrent';
+import type { ManualAddComponentState } from './ManualAddComponent';
+import { MLink } from './MLink';
+import { MonitorAddComponent } from './MonitorComponent';
 import * as qs from './qs';
-import { subscribe, getToken } from './utils';
-import type { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
 import type { components } from './schema';
-import { DisplayError } from './DisplayError';
-import { MonitorAddComponent } from './MonitorComponent';
-import { MLink } from './MLink';
-import { DisplayTorrent } from './DisplayTorrent';
-import type { ManualAddComponentState } from './ManualAddComponent';
+import type { Torrents } from './streaming';
+import { getToken, subscribe } from './utils';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];

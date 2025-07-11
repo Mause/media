@@ -1,13 +1,12 @@
 import ReactLoading from 'react-loading';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
-
-import * as qs from './qs';
 import { DisplayError } from './DisplayError';
 import { MLink } from './MLink';
+import * as qs from './qs';
+import { RouteTitle } from './RouteTitle';
 import { SearchBox } from './SearchBox';
 import type { components, paths } from './schema';
-import { RouteTitle } from './RouteTitle';
 import type { GetResponse } from './utils';
 
 export type SearchResponse = GetResponse<paths['/api/search']>;

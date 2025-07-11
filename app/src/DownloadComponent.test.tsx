@@ -1,21 +1,20 @@
-import { screen } from '@testing-library/react';
-import {
-  Route,
-  Routes,
-  unstable_HistoryRouter as HistoryRouter,
-} from 'react-router-dom';
 import { createMemoryHistory } from '@remix-run/router';
+import { screen } from '@testing-library/react';
 import moxios from 'moxios';
 import { act } from 'react';
-
 import {
-  wait,
-  renderWithSWR,
-  listenTo,
-  expectLastRequestBody,
-} from './test.utils';
+  unstable_HistoryRouter as HistoryRouter,
+  Route,
+  Routes,
+} from 'react-router-dom';
 import type { DownloadState } from './DownloadComponent';
 import { DownloadComponent } from './DownloadComponent';
+import {
+  expectLastRequestBody,
+  listenTo,
+  renderWithSWR,
+  wait,
+} from './test.utils';
 
 describe('DownloadComponent', () => {
   it('success', async () => {

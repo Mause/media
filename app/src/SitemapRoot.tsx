@@ -1,7 +1,6 @@
 import type { RouteObject } from 'react-router-dom';
-
-import { RouteTitle } from './RouteTitle';
 import { MLink } from './MLink';
+import { RouteTitle } from './RouteTitle';
 import routes from './routes';
 
 export function SitemapRoot() {

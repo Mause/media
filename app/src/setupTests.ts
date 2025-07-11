@@ -4,9 +4,9 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/vitest';
 
-import { afterEach, beforeEach } from 'vitest';
-import moxios from 'moxios';
 import axios from 'axios';
+import moxios from 'moxios';
+import { afterEach, beforeEach } from 'vitest';
 
 beforeEach(() => {
   moxios.install(axios);
