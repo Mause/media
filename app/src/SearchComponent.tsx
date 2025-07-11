@@ -21,7 +21,7 @@ export function SearchComponent() {
     data: results,
     error,
     isValidating,
-  } = useSWR<SearchResponse, Error>('search?' + qs.stringify({ query }));
+  } = useSWR<SearchResponse, Error>(`search?${qs.stringify({ query })}`);
 
   return (
     <RouteTitle title="Search">

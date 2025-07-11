@@ -201,7 +201,7 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
             params,
             auth.isAuthenticated
               ? {
-                  Authorization: 'Bearer ' + (await getToken(auth)),
+                  Authorization: `Bearer ${await getToken(auth)}`,
                 }
               : {},
           ),

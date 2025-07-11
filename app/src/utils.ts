@@ -33,7 +33,7 @@ export function subscribe<T>(
 ): () => void {
   const es = FetchEventTarget(path, {
     headers: new Headers({
-      Authorization: 'Bearer ' + authorization,
+      Authorization: `Bearer ${authorization}`,
     }),
   });
   const onerror = (event: Event) => {
@@ -117,10 +117,10 @@ export function usePost<T>(
     const abortController = new AbortController();
     getToken(auth)
       .then((token) =>
-        Axios.post<T>('/api/' + url, body, {
+        Axios.post<T>(`/api/${url}`, body, {
           signal: abortController.signal,
           headers: {
-            Authorization: 'Bearer ' + token,
+            Authorization: `Bearer ${token}`,
           },
         }),
       )
@@ -172,9 +172,9 @@ export function getMessage(air_date: string) {
   } else if (dt.isSame(tomorrow)) {
     message = 'airs tomorrow';
   } else if (dt.isAfter(today)) {
-    message = 'airs on ' + dts;
+    message = `airs on ${dts}`;
   } else {
-    message = 'aired on ' + dts;
+    message = `aired on ${dts}`;
   }
   return message;
 }

@@ -134,7 +134,7 @@ function mutationFetcher<T, R>(
   return async function fetching(key: string, options: { arg: T }) {
     const res = await Axios.post(getPrefix() + key, options.arg, {
       headers: {
-        Authorization: 'Bearer ' + (await getToken(auth)),
+        Authorization: `Bearer ${await getToken(auth)}`,
       },
     });
     return res.data as R;

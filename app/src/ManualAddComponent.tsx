@@ -43,7 +43,7 @@ export function ManualAddComponent() {
   };
 
   const { data } = useSWR<{ title: string }>(
-    () => (state.season ? 'tv' : 'movie') + `/` + state.tmdb_id,
+    () => `${state.season ? 'tv' : 'movie'}/${state.tmdb_id}`,
   );
   const [magnet, setMagnet] = useState('');
   const [submitted, setSubmitted] = useState(false);

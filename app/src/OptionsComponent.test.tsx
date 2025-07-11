@@ -92,7 +92,7 @@ describe('OptionsComponent', () => {
           data: JSON.stringify({
             ...torrent,
             source: source_names[i],
-            title: 'title ' + i++,
+            title: `title ${i++}`,
           }),
         });
       }
