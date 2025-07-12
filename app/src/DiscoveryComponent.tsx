@@ -2,7 +2,6 @@ import useSWR from 'swr';
 import { Grid, styled } from '@mui/material';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useRef, useState } from 'react';
 
 import type { paths } from './schema';
 import { Loading } from './render';
@@ -98,35 +97,26 @@ function Poster({
   build: BuildFn;
 }) {
   const { data } = useSWR<Configuration>('tmdb/configuration');
-  const [width, setWidth] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const { current } = ref;
-    if (current) {
-      setWidth(current.clientWidth);
-    }
-  }, [ref]);
 
   const base = data?.images.secure_base_url;
 
   const srcset = data?.images.poster_sizes
     .filter((size) => size !== 'original')
-    .map((size) => [build(base, size, poster_path), size]);
+    .map((size): [string, number] => [
+      build(base, size, poster_path),
+      Number.parseInt(size.slice(1)),
+    ]);
 
   const original = build(base, 'original', poster_path);
 
   return (
-    <PosterElement ref={ref} className={classes.root}>
-      <img
-        style={{
-          width,
-          height: width * 1.5,
-        }}
-        srcSet={srcset
-          ?.map(([url, size]) => `${url} ${size.slice(1)}${size[0]}`)
-          .join(', ')}
-        src={original}
-      />
+    <PosterElement className={classes.root}>
+      <picture>
+        {srcset?.map(([url, size]) => (
+          <source key={url} srcSet={url} width={size} height={size * 1.5} />
+        ))}
+        <img src={original} />
+      </picture>
     </PosterElement>
   );
 }
