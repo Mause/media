@@ -18,7 +18,16 @@ function DiscoveryStory() {
       poster_sizes: ['w800'],
     },
   });
-  const cats = ['neo', 'millie', 'millie_neo', 'neo_banana', 'neo_2', 'bella'];
+  const cats = [
+    'neo',
+    'millie',
+    'millie_neo',
+    'neo_banana',
+    'neo_2',
+    'bella',
+    'poppy',
+    'louie',
+  ];
 
   const faker = new Faker({
     locale: [en_AU, en, base],
