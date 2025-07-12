@@ -75,7 +75,8 @@ export function PureDiscoveryComponent({
           <Grid key={result.id} size={{ xs: 12, sm: 6, lg: 2 }}>
             <Card variant="outlined">
               <CardHeader
-                title={`${result.title} (${getYear(result.release_date)})`}
+                title={result.title}
+                subheader={getYear(result.release_date)}
                 action={
                   <IconButton
                     as={Link}
