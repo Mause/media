@@ -92,6 +92,7 @@
     "typescript-eslint": "^8.36.0",
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-bundlesize": "^0.2.0",
+    "vite-plugin-pwa": "^1.0.0",
     "vitest": "^3.2.1"
   },
   "prettier": {
