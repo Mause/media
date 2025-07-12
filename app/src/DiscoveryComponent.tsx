@@ -2,6 +2,7 @@ import useSWR from 'swr';
 import {
   Grid,
   styled,
+  IconButton,
   Card,
   CardHeader,
   CardContent,
@@ -10,6 +11,8 @@ import {
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
+import { Link } from 'react-router-dom';
 
 import type { paths } from './schema';
 import { Loading } from './render';
@@ -74,9 +77,13 @@ export function PureDiscoveryComponent({
               <CardHeader
                 title={`${result.title} (${getYear(result.release_date)})`}
                 action={
-                  <MLink to={`/select/${result.id}/options`}>
-                    <FontAwesomeIcon icon={faSearch} />
-                  </MLink>
+                  <IconButton
+                    as={Link}
+                    to={`/select/${result.id}/options`}
+                    aria-label="search"
+                  >
+                    <SearchIcon />
+                  </IconButton>
                 }
               />
               {result.poster_path && (
