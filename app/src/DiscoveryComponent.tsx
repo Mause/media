@@ -1,12 +1,19 @@
 import useSWR from 'swr';
-import { Grid, styled } from '@mui/material';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  Grid,
+  styled,
+  IconButton,
+  Card,
+  CardHeader,
+  CardContent,
+  CardMedia,
+} from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
+import { Link } from 'react-router-dom';
 
 import type { paths } from './schema';
 import { Loading } from './render';
-import { MLink } from './MLink';
 import { DisplayError } from './DisplayError';
 import type { GetResponse } from './utils';
 import { RouteTitle } from './RouteTitle';
@@ -63,16 +70,29 @@ export function PureDiscoveryComponent({
       <Grid container spacing={2}>
         {data?.results.map((result) => (
           <Grid key={result.id} size={{ xs: 12, sm: 6, lg: 2 }}>
-            <h4>
-              {result.title} ({getYear(result.release_date)}){' '}
-              <MLink to={`/select/${result.id}/options`}>
-                <FontAwesomeIcon icon={faSearch} />
-              </MLink>
-            </h4>
-            {result.poster_path && (
-              <Poster poster_path={result.poster_path} build={build} />
-            )}
-            <p>{result.overview}</p>
+            <Card variant="outlined">
+              <CardHeader
+                title={result.title}
+                subheader={getYear(result.release_date)}
+                action={
+                  <IconButton
+                    component={Link}
+                    to={`/select/${result.id}/options`}
+                    aria-label="search"
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                }
+              />
+              {result.poster_path && (
+                <CardMedia>
+                  <Poster poster_path={result.poster_path} build={build} />
+                </CardMedia>
+              )}
+              <CardContent>
+                <p>{result.overview}</p>
+              </CardContent>
+            </Card>
           </Grid>
         ))}
       </Grid>
@@ -107,7 +127,7 @@ function Poster({
     }
   }, [ref]);
 
-  const base = data?.images.secure_base_url;
+  const base = data?.images?.secure_base_url;
 
   const srcset = data?.images.poster_sizes
     .filter((size) => size !== 'original')
@@ -117,7 +137,8 @@ function Poster({
 
   return (
     <PosterElement ref={ref} className={classes.root}>
-      <img
+      <CardMedia
+        component="img"
         style={{
           width,
           height: width * 1.5,

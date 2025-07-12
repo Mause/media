@@ -18,6 +18,16 @@ function DiscoveryStory() {
       poster_sizes: ['w800'],
     },
   });
+  const cats = [
+    'neo',
+    'millie',
+    'millie_neo',
+    'neo_banana',
+    'neo_2',
+    'bella',
+    'poppy',
+    'louie',
+  ];
 
   const faker = new Faker({
     locale: [en_AU, en, base],
@@ -31,18 +41,18 @@ function DiscoveryStory() {
           id,
           title: `Hello World - ${id}`,
           release_date: `2022-01-${String(id + 1).padStart(2, '0')}`,
-          poster_path: 'dummy.png',
+          poster_path: cats[id % cats.length],
           overview: faker.lorem.sentence(10),
         })),
       }}
       error={undefined}
       isValidating={false}
-      build={(_base, size) => {
+      build={(_base, size, poster_path) => {
         const width =
           size === 'original' ? 400 : Number.parseInt(size.substring(1));
         const height = width * 1.5;
 
-        return `https://placecats.com/${width}/${height}`;
+        return `https://placecats.com/${poster_path}/${width}/${height}`;
       }}
     />
   );
