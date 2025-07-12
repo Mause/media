@@ -37,46 +37,69 @@ exports[`DiscoveryComponent 2`] = `
     <div
       class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-lg-2 css-rv49wc-MuiGrid-root"
     >
-      <h4>
-        Machinist
-         (
-        2022
-        )
-         
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
-          data-discover="true"
-          href="/select/101/options"
-        >
-          <svg
-            aria-hidden="true"
-            class="svg-inline--fa fa-magnifying-glass "
-            data-icon="magnifying-glass"
-            data-prefix="fas"
-            focusable="false"
-            role="img"
-            viewBox="0 0 512 512"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
-              fill="currentColor"
-            />
-          </svg>
-        </a>
-      </h4>
       <div
-        class="Poster-root css-2h5k8y"
+        class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root css-196bwzp-MuiPaper-root-MuiCard-root"
       >
-        <img
-          src="https://tmdb.org/original/hello.png"
-          srcset="https://tmdb.org/w800/hello.png 800w"
-          style="width: 0px; height: 0px;"
-        />
+        <div
+          class="MuiCardHeader-root css-149tc0y-MuiCardHeader-root"
+        >
+          <div
+            class="MuiCardHeader-content css-1jkp9bu-MuiCardHeader-content"
+          >
+            <span
+              class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-16xl4zq-MuiTypography-root"
+            >
+              Machinist (2022)
+            </span>
+          </div>
+          <div
+            class="MuiCardHeader-action css-116l9hl-MuiCardHeader-action"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+              data-discover="true"
+              href="/select/101/options"
+            >
+              <svg
+                aria-hidden="true"
+                class="svg-inline--fa fa-magnifying-glass "
+                data-icon="magnifying-glass"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                  fill="currentColor"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div
+          class="MuiCardMedia-root css-utntyq-MuiCardMedia-root"
+        >
+          <div
+            class="Poster-root css-2h5k8y"
+          >
+            <img
+              class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1kuwa16-MuiCardMedia-root"
+              src="https://tmdb.org/original/hello.png"
+              srcset="https://tmdb.org/w800/hello.png 800w"
+              style="width: 0px; height: 0px;"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
+        >
+          <p>
+            A man loses his mind
+          </p>
+        </div>
       </div>
-      <p>
-        A man loses his mind
-      </p>
     </div>
   </div>
 </div>
