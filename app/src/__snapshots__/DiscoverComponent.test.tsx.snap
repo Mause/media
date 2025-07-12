@@ -49,30 +49,32 @@ exports[`DiscoveryComponent 2`] = `
             <span
               class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-16xl4zq-MuiTypography-root"
             >
-              Machinist (2022)
+              Machinist
+            </span>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiCardHeader-subheader css-1ro85z9-MuiTypography-root"
+            >
+              2022
             </span>
           </div>
           <div
             class="MuiCardHeader-action css-116l9hl-MuiCardHeader-action"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+              aria-label="search"
+              class="MuiIconButton-root MuiIconButton-sizeMedium css-febl3d-MuiIconButton-root"
               data-discover="true"
               href="/select/101/options"
             >
               <svg
                 aria-hidden="true"
-                class="svg-inline--fa fa-magnifying-glass "
-                data-icon="magnifying-glass"
-                data-prefix="fas"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+                data-testid="SearchIcon"
                 focusable="false"
-                role="img"
-                viewBox="0 0 512 512"
-                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
               >
                 <path
-                  d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
-                  fill="currentColor"
+                  d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
                 />
               </svg>
             </a>
