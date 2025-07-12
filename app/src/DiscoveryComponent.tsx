@@ -122,7 +122,7 @@ function Poster({
     }
   }, [ref]);
 
-  const base = data?.images.secure_base_url;
+  const base = data?.images?.secure_base_url;
 
   const srcset = data?.images.poster_sizes
     .filter((size) => size !== 'original')
