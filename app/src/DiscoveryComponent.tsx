@@ -79,7 +79,7 @@ export function PureDiscoveryComponent({
                 subheader={getYear(result.release_date)}
                 action={
                   <IconButton
-                    as={Link}
+                    component={Link}
                     to={`/select/${result.id}/options`}
                     aria-label="search"
                   >
