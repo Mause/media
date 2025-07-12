@@ -8,15 +8,12 @@ import {
   CardContent,
   CardMedia,
 } from '@mui/material';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
 
 import type { paths } from './schema';
 import { Loading } from './render';
-import { MLink } from './MLink';
 import { DisplayError } from './DisplayError';
 import type { GetResponse } from './utils';
 import { RouteTitle } from './RouteTitle';
