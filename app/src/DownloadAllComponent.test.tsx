@@ -1,8 +1,7 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
-import { renderWithSWR, mock, wait } from './test.utils';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import type { ITorrent } from './OptionsComponent';
+import { mock, renderWithSWR, wait } from './test.utils';
 
 test('DownloadAllComponent', async () => {
   const { container } = renderWithSWR(

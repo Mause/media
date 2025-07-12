@@ -25,6 +25,7 @@ repos:
       - id: trailing-whitespace
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v9.30.1
+    enabled: false
     hooks:
       - id: eslint
         args:
@@ -81,3 +82,7 @@ repos:
     -   id: pyupgrade
         args:
           - --py311-plus
+  - repo: https://github.com/biomejs/pre-commit
+    rev: "v2.0.6"  # Use the sha / tag you want to point at
+    hooks:
+    -   id: biome-check

@@ -1,15 +1,14 @@
-import { useParams } from 'react-router-dom';
-import ReactLoading from 'react-loading';
-import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import useSWR from 'swr';
+import Typography from '@mui/material/Typography';
 import * as _ from 'lodash-es';
-
+import ReactLoading from 'react-loading';
+import { useParams } from 'react-router-dom';
+import useSWR from 'swr';
+import { MLink } from './MLink';
 import * as qs from './qs';
+import { RouteTitle } from './RouteTitle';
 import type { components } from './schema';
 import { useLocation } from './utils';
-import { MLink } from './MLink';
-import { RouteTitle } from './RouteTitle';
 
 export type Season = components['schemas']['TvSeasonResponse'];
 export type EpisodeResponse = components['schemas']['Episode'];

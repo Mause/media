@@ -1,36 +1,35 @@
+import { useAuth0 } from '@auth0/auth0-react';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import {
+  faCaretDown,
+  faCaretUp,
+  faCheckCircle,
+  faSearch,
+  faSpinner,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LinearProgress from '@mui/material/LinearProgress';
 import MenuItem from '@mui/material/MenuItem';
-import { String } from 'typescript-string-operations';
+import * as _ from 'lodash-es';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
 import { Navigate, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSearch,
-  faSpinner,
-  faCaretUp,
-  faCaretDown,
-  faCheckCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import LinearProgress from '@mui/material/LinearProgress';
-import * as _ from 'lodash-es';
 import useSWRMutation from 'swr/mutation';
-import { useAuth0 } from '@auth0/auth0-react';
-
-import type { GetResponse } from './utils';
-import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
+import { String } from 'typescript-string-operations';
+import ContextMenu from './ContextMenu';
+import { MLink } from './MLink';
 import type { TV } from './SeasonSelectComponent';
+import type { paths } from './schema';
 import type {
+  EpisodeResponse,
   MovieResponse,
   SeriesResponse,
   Torrents,
-  EpisodeResponse,
 } from './streaming';
-import ContextMenu from './ContextMenu';
-import { MLink } from './MLink';
-import type { paths } from './schema';
+import type { GetResponse } from './utils';
+import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
 
 export function Loading({
   loading,
@@ -69,7 +68,7 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
     `/api/plex/imdb/${download.imdb_id}`,
     async (key: string): Promise<PlexResponse> => {
       const res = await fetch(key, {
-        headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
+        headers: { Authorization: `Bearer ${await getToken(auth)}` },
       });
       return (await res.json()) as PlexResponse;
     },
@@ -382,7 +381,7 @@ export function NextEpisodeAirs(props: {
     // unoriginal episode names
     message = `${ep_num} ${message}`;
   } else {
-    message = ep_num + ` "${nextEpisode.name}" ` + message;
+    message = `${ep_num} "${nextEpisode.name}" ${message}`;
   }
 
   return (

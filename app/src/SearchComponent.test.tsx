@@ -1,8 +1,8 @@
-import { Route, MemoryRouter, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import type { SearchResponse } from './SearchComponent';
 import { SearchComponent } from './SearchComponent';
-import { mock, wait, renderWithSWR } from './test.utils';
+import { mock, renderWithSWR, wait } from './test.utils';
 
 test('SearchComponent', async () => {
   const { container } = renderWithSWR(

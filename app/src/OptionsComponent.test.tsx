@@ -1,10 +1,9 @@
-import { act } from 'react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
 import * as _ from 'lodash-es';
-
-import type { ITorrent } from './OptionsComponent';
+import { act } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { MovieOptionsComponent } from './MovieOptionsComponent';
+import type { ITorrent } from './OptionsComponent';
 import { mock, renderWithSWR, wait } from './test.utils';
 
 const sources: ES[] = [];
@@ -93,7 +92,7 @@ describe('OptionsComponent', () => {
           data: JSON.stringify({
             ...torrent,
             source: source_names[i],
-            title: 'title ' + i++,
+            title: `title ${i++}`,
           }),
         });
       }
