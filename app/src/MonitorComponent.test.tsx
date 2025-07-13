@@ -13,18 +13,13 @@ import * as _ from 'lodash-es';
 import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 
-import type { Monitor } from './MonitorComponent';
 import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
-import {
-  renderWithSWR,
-  mock,
-  wait,
-  listenTo,
-  expectLastRequestBody,
-  waitForRequests,
-} from './test.utils';
+import { renderWithSWR, listenTo, waitForRequests } from './test.utils';
 import { server } from './msw';
+import type { GetResponse } from './utils';
+import type { paths } from './schema';
 
+type MonitorResponse = GetResponse<paths['/api/monitor']>;
 
 describe('MonitorComponent', () => {
   it('view', async () => {
@@ -39,7 +34,7 @@ describe('MonitorComponent', () => {
       </MemoryRouter>,
     );
 
-    const res: Monitor[] = [
+    const res: MonitorResponse = [
       {
         id: 1,
         title: 'Hello World',
@@ -84,17 +79,22 @@ describe('MonitorComponent', () => {
       await events.click(await screen.findByText('Add to monitor'));
     });
 
-    await wait();
-    await act(async () => {
-      expectLastRequestBody().toEqual({
-        type: 'MOVIE',
-        tmdb_id: 5,
-      });
-      await moxios.requests
-        .mostRecent()
-        .respondWith({ status: 200, response: {} });
-    });
-    await wait();
+    server.use(
+      http.post('/api/monitor', async ({ request }) => {
+        expect(await request.json()).toEqual({
+          type: 'MOVIE',
+          tmdb_id: 5,
+        });
+        return HttpResponse.json({});
+      }),
+    );
+    await waitForRequests();
+    server.use(
+      http.get('/api/monitor', () => {
+        return HttpResponse.json([] satisfies MonitorResponse);
+      }),
+    );
+    await waitForRequests();
 
     expect(_.map(entries, 'pathname')).toEqual(['/monitor']);
   });
