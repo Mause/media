@@ -69,7 +69,7 @@ export function PureDiscoveryComponent({
       {error && <DisplayError error={error} />}
       <Grid container spacing={2}>
         {data?.results.map((result) => (
-          <Grid key={result.id} size={{ xs: 12, sm: 6, lg: 2 }}>
+          <Grid key={result.id} size={{ xs: 12, sm: 6, lg: 4 }}>
             <Card variant="outlined">
               <CardHeader
                 title={result.title}
