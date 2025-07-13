@@ -356,11 +356,22 @@ async def tmdb_configuration() -> Configuration:
     return await get_configuration()
 
 
+async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServer:
+    try:
+        return await get_plex(request, settings)
+    except Exception as exc:
+        logger.exception('Error getting plex server', exc_info=exc)
+        raise HTTPException(500, 'Error getting plex server')
+
+
 @api.get('/plex/imdb/{imdb_id}')
 async def get_plex_imdb(
     imdb_id: ImdbId,
-    plex: Annotated[PlexServer, Depends(get_plex)],
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
 ) -> PlexResponse[PlexMedia]:
+    plex = await gracefully_get_plex(request, settings)
+
     dat = get_imdb_in_plex(imdb_id, plex)
     if not dat:
         raise HTTPException(404, 'Not found in plex')
