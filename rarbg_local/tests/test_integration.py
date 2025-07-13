@@ -30,6 +30,7 @@ from ..models import ITorrent
 from ..new import SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
+from ..tmdb import ExternalIds
 from ..types import ImdbId, TmdbId
 from .conftest import add_json, assert_match_json, themoviedb, tolist
 from .factories import (
@@ -117,6 +118,17 @@ async def test_diagnostics(
         snapshot.assert_match(json.dumps(results, indent=2), f'{component}.json')
 
 
+def stub_movie_external_ids(aioresponses: Aioresponses) -> None:
+    tmdb_id = TmdbId(533985)
+    themoviedb(
+        aioresponses,
+        f'/movie/{tmdb_id}/external_ids',
+        ExternalIds.model_validate(
+            {'id': tmdb_id, 'imdb_id': "tt8425034"}
+        ).model_dump(),
+    )
+
+
 @mark.asyncio
 async def test_download_movie(
     test_client: TestClient,
@@ -130,7 +142,7 @@ async def test_download_movie(
         '/movie/533985',
         MovieResponseFactory.build(title='Bit').model_dump(),
     )
-    themoviedb(aioresponses, '/movie/533985/external_ids', {'imdb_id': "tt8425034"})
+    stub_movie_external_ids(aioresponses)
 
     magnet = 'magnet:...'
 
@@ -164,7 +176,7 @@ async def test_download(
         '/tv/95792',
         TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'tt12345678'})
+    stub_tv_external_ids(aioresponses)
     themoviedb(
         aioresponses,
         '/tv/95792/season/1',
@@ -227,7 +239,7 @@ async def test_download_duplicate(
         '/tv/95792',
         TvApiResponseFactory.create(name='Pocket Monsters').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/95792/external_ids', {'imdb_id': 'tt12345678'})
+    stub_tv_external_ids(aioresponses)
     themoviedb(
         aioresponses,
         '/tv/95792/season/1',
@@ -296,12 +308,13 @@ async def test_download_season_pack(
     add_torrent: MagicMock,
     async_session: AsyncSession,
 ) -> None:
+    tmdb_id = TmdbId(90000)
     themoviedb(
         aioresponses,
-        '/tv/90000',
+        f'/tv/{tmdb_id}',
         TvApiResponseFactory.create(name='Watchmen').model_dump(),
     )
-    themoviedb(aioresponses, '/tv/90000/external_ids', {'imdb_id': 'tt12345678'})
+    stub_tv_external_ids(aioresponses, tmdb_id=tmdb_id)
 
     magnet = (
         'magnet:?xt=urn:btih:dacf233f2586b49709fd3526b390033849438313'
@@ -314,7 +327,7 @@ async def test_download_season_pack(
     )
 
     res = await test_client.post(
-        '/api/download', json=[{'magnet': magnet, 'tmdb_id': 90000, 'season': '1'}]
+        '/api/download', json=[{'magnet': magnet, 'tmdb_id': tmdb_id, 'season': 1}]
     )
     assert res.status_code == 200
 
@@ -625,6 +638,16 @@ async def test_openapi(test_client: TestClient, snapshot: Snapshot) -> None:
     snapshot.assert_match(json.dumps(data, indent=2), 'openapi.json')
 
 
+def stub_tv_external_ids(
+    aioresponses: Aioresponses, *, tmdb_id: TmdbId = TmdbId(95792)
+) -> None:
+    themoviedb(
+        aioresponses,
+        f'/tv/{tmdb_id}/external_ids',
+        ExternalIds.model_validate({'id': tmdb_id, 'imdb_id': 'tt00000'}).model_dump(),
+    )
+
+
 @mark.asyncio
 @mark.skip
 async def test_stream_rarbg(
@@ -633,7 +656,7 @@ async def test_stream_rarbg(
     aioresponses: Aioresponses,
     snapshot: Snapshot,
 ) -> None:
-    themoviedb(aioresponses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
+    stub_tv_external_ids(aioresponses)
     root = 'https://torrentapi.org/pubapi_v2.php?mode=search&ranked=0&limit=100&format=json_extended&app_id=Sonarr'
     add_json(responses, 'GET', root + '&get_token=get_token', {'token': 'aaaaaaa'})
 
