@@ -14,6 +14,7 @@ import type { Listener } from '@remix-run/router/dist/history';
 import { HelmetProvider } from 'react-helmet-async';
 
 import { SwrConfigWrapper } from './streaming';
+import { server } from './msw';
 
 const theme = createTheme();
 
@@ -70,4 +71,16 @@ export function expectLastRequestBody() {
   const mr = moxios.requests.mostRecent();
   expect(mr).toBeTruthy();
   return expect(JSON.parse(mr.config.data as string));
+}
+
+export async function waitForRequests() {
+  await act(async () => {
+    await new Promise<void>((resolve) => {
+      const listener = () => {
+        server.events.removeListener('request:end', listener);
+        resolve();
+      };
+      return server.events.on('request:end', listener);
+    });
+  });
 }

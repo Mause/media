@@ -3,12 +3,12 @@ import moxios from 'moxios';
 import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 
-import { renderWithSWR } from './test.utils';
+import { renderWithSWR, waitForRequests } from './test.utils';
 import type { Configuration, DiscoverResponse } from './DiscoveryComponent';
 import { DiscoveryComponent } from './DiscoveryComponent';
 import { server } from './msw';
 
-test('DiscoveryComponent', () => {
+test('DiscoveryComponent', async () => {
   moxios.uninstall(axios);
 
   const { container } = renderWithSWR(
@@ -52,6 +52,8 @@ test('DiscoveryComponent', () => {
       } as Configuration),
     ),
   );
+
+  await waitForRequests();
 
   expect(container).toMatchSnapshot();
 });
