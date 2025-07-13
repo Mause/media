@@ -789,13 +789,6 @@ async def test_plex_redirect(
         ),
     )
 
-    r = await test_client.get('/redirect/plex/tt10000', allow_redirects=False)
-
-    assert (
-        r.headers['Location']
-        == 'https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2F666'
-    )
-
     r = await test_client.get('/api/plex/imdb/tt10000')
     r.raise_for_status()
     assert_match_json(snapshot, r, 'plex_redirect.json')

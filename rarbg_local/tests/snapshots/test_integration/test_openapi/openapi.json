@@ -1012,44 +1012,6 @@
         }
       }
     },
-    "/redirect/plex/{imdb_id}": {
-      "get": {
-        "summary": "Redirect To Plex",
-        "operationId": "redirect_to_plex",
-        "parameters": [
-          {
-            "name": "imdb_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "pattern": "^tt\\d+$",
-              "title": "Imdb Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/redirect/{type_}/{tmdb_id}/{season}/{episode}": {
       "get": {
         "summary": "Redirect To Imdb Deep",
