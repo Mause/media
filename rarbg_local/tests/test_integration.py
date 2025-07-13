@@ -523,22 +523,23 @@ async def test_season_info(
 async def test_select_season(
     aioresponses: Aioresponses, test_client: TestClient, snapshot: Snapshot
 ) -> None:
+    tmdb_id = TmdbId(100000)
     themoviedb(
         aioresponses,
-        '/tv/100000',
+        f'/tv/{tmdb_id}',
         {
             'number_of_seasons': 1,
             'seasons': [{'episode_count': 1, 'season_number': 1}],
             'name': 'hello',
         },
     )
-    themoviedb(aioresponses, '/tv/100000/external_ids', {'imdb_id': 'tt1000'})
+    stub_tv_external_ids(aioresponses, tmdb_id=tmdb_id)
 
-    res = await test_client.get('/api/tv/100000')
+    res = await test_client.get(f'/api/tv/{tmdb_id}')
 
     assert res.status_code == 200
 
-    assert_match_json(snapshot, res, 'tv_100000.json')
+    assert_match_json(snapshot, res, f'tv_{tmdb_id}.json')
 
 
 @mark.asyncio
@@ -703,7 +704,7 @@ async def test_stream(
     aioresponses: Aioresponses,
     snapshot: Snapshot,
 ) -> None:
-    themoviedb(aioresponses, '/tv/1/external_ids', {'imdb_id': 'tt00000'})
+    stub_tv_external_ids(aioresponses, tmdb_id=TmdbId(1))
     add_json(
         aioresponses,
         'GET',
