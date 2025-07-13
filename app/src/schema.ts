@@ -345,23 +345,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/redirect/plex/{imdb_id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** Redirect To Plex */
-    get: operations['redirect_to_plex'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/redirect/{type_}/{tmdb_id}/{season}/{episode}': {
     parameters: {
       query?: never;
@@ -1350,37 +1333,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['HealthcheckResponses'];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['HTTPValidationError'];
-        };
-      };
-    };
-  };
-  redirect_to_plex: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        imdb_id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': unknown;
         };
       };
       /** @description Validation Error */

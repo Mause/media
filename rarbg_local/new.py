@@ -62,7 +62,7 @@ from .models import (
     TvSeasonResponse,
 )
 from .monitor import monitor_ns
-from .plex import get_imdb_in_plex, get_plex, make_plex_url
+from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     get_providers,
     search_for_tv,
@@ -393,19 +393,6 @@ root = APIRouter()
 @singleton
 def get_static_files(settings: Settings = Depends(get_settings)) -> StaticFiles:
     return StaticFiles(directory=str(settings.static_resources_path))
-
-
-@root.get('/redirect/plex/{imdb_id}')
-def redirect_to_plex(
-    imdb_id: ImdbId, plex: Annotated[PlexServer, Depends(get_plex)]
-) -> RedirectResponse:
-    dat = get_imdb_in_plex(imdb_id, plex)
-    if not dat:
-        raise HTTPException(404, 'Not found in plex')
-
-    server_id = plex.machineIdentifier
-
-    return RedirectResponse(make_plex_url(server_id, dat.ratingKey))
 
 
 @root.get('/redirect/{type_}/{tmdb_id}')
