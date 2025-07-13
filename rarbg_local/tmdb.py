@@ -147,7 +147,7 @@ class ExternalIds(BaseModel):
 class TvExternalIds(ExternalIds):
     freebase_mid: str | None = None
     freebase_id: str | None = None
-    tvdb_id: int
+    tvdb_id: int | None = None
     tvrage_id: int | None = None
 
 
