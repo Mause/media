@@ -788,10 +788,11 @@ async def test_plex_redirect(
         E.Root(machineIdentifier="aaaa"),
     )
     add_xml(responses, 'GET', 'https://test/library', E.Library())
+    imdb_id = 'tt10000'
     add_xml(
         responses,
         'GET',
-        'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2Ftt10000%3Flang%3Den',
+        f'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2F{imdb_id}%3Flang%3Den',
         E.Search(
             E.Directory(
                 type="show",
