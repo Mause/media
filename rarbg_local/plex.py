@@ -1,3 +1,17 @@
+"""
+<Guid id="imdb://tt28476983"/>
+<Guid id="tmdb://6065761"/>
+<Guid id="tvdb://10368107"/>
+
+guid="plex://episode/65f11b8a1ddca1a96e3a9b72"
+parentGuid="plex://season/64bbe921d10f4a2f439cdce6"
+grandparentGuid="plex://show/64bab869275860ea7c00cc88"
+
+guid="com.plexapp.agents.thetvdb://70327/1/1?lang=en"
+parentGuid="com.plexapp.agents.thetvdb://70327/1?lang=en"
+grandparentGuid="com.plexapp.agents.thetvdb://70327?lang=en"
+"""
+
 from asyncio import gather
 from collections.abc import Sequence
 from typing import Annotated
