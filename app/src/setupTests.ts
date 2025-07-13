@@ -8,9 +8,12 @@ import { afterEach, beforeEach } from 'vitest';
 import moxios from 'moxios';
 import axios from 'axios';
 
+import { server } from './msw';
+
 beforeEach(() => {
   moxios.install(axios);
 });
 afterEach(() => {
   moxios.uninstall(axios);
+  server.resetHandlers();
 });
