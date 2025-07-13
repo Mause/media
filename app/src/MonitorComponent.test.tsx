@@ -77,10 +77,6 @@ describe('MonitorComponent', () => {
 
     const events = userEvent.setup();
 
-    await act(async () => {
-      await events.click(await screen.findByText('Add to monitor'));
-    });
-
     server.use(
       http.post('/api/monitor', async ({ request }) => {
         expect(await request.json()).toEqual({
@@ -90,13 +86,15 @@ describe('MonitorComponent', () => {
         return HttpResponse.json({});
       }),
     );
-    await waitForRequests();
     server.use(
       http.get('/api/monitor', () => {
         return HttpResponse.json([] satisfies MonitorResponse);
       }),
     );
-    await waitForRequests();
+
+    await act(async () => {
+      await events.click(await screen.findByText('Add to monitor'));
+    });
 
     expect(_.map(entries, 'pathname')).toEqual(['/monitor']);
   });
