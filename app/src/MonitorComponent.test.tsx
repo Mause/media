@@ -54,6 +54,8 @@ describe('MonitorComponent', () => {
   });
 
   it('add', async () => {
+    moxios.uninstall(axios);
+
     const hist = createMemoryHistory({
       initialEntries: ['/fake'],
       v5Compat: true,
