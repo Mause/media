@@ -208,7 +208,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/plex/imdb/{imdb_id}': {
+  '/api/plex/{thing_type}/{tmdb_id}': {
     parameters: {
       query?: never;
       header?: never;
@@ -1100,7 +1100,8 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        imdb_id: string;
+        thing_type: 'movie' | 'tv';
+        tmdb_id: number;
       };
       cookie?: never;
     };
@@ -1112,7 +1113,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['PlexResponse_PlexMedia_'];
+          'application/json': components['schemas']['PlexResponse_PlexMedia_'][];
         };
       };
       /** @description Validation Error */

@@ -76,6 +76,7 @@ from .singleton import singleton
 from .tmdb import (
     Configuration,
     Discover,
+    ThingType,
     get_configuration,
     get_movie,
     get_movie_imdb_id,
@@ -88,7 +89,7 @@ from .tmdb import (
 from .tmdb import (
     discover as tmdb_discover,
 )
-from .types import ImdbId, TmdbId
+from .types import TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
 
@@ -364,22 +365,25 @@ async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServe
         raise HTTPException(500, 'Error getting plex server')
 
 
-@api.get('/plex/imdb/{imdb_id}')
+@api.get('/plex/{thing_type}/{tmdb_id}')
 async def get_plex_imdb(
-    imdb_id: ImdbId,
+    thing_type: ThingType,
+    tmdb_id: TmdbId,
     request: Request,
     settings: Annotated[Settings, Depends(get_settings)],
-) -> PlexResponse[PlexMedia]:
+) -> list[PlexResponse[PlexMedia]]:
     plex = await gracefully_get_plex(request, settings)
 
-    dat = get_imdb_in_plex(imdb_id, plex)
+    dat = await get_imdb_in_plex(thing_type, tmdb_id, plex)
     if not dat:
         raise HTTPException(404, 'Not found in plex')
-    media = PlexMedia.model_validate(dat)
-    return PlexResponse[PlexMedia](
-        item=media,
-        server_id=plex.machineIdentifier,
-    )
+    return [
+        PlexResponse[PlexMedia](
+            item=PlexMedia.model_validate(item),
+            server_id=plex.machineIdentifier,
+        )
+        for item in dat
+    ]
 
 
 tv_ns = APIRouter(tags=['tv'])

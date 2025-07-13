@@ -44,7 +44,7 @@ async def get_imdb_in_plex(
     search_guid = trace(plex.library.search)
 
     return [
-        item
+        single(item)
         for item in await gather(
             *[run_in_threadpool(search_guid, guid=guid) for guid in guids]
         )

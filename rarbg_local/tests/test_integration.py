@@ -770,7 +770,10 @@ def add_xml(responses: RequestsMock, method: str, url: str, body: '_Element') ->
 
 @mark.asyncio
 async def test_plex_redirect(
-    test_client: TestClient, responses: RequestsMock, snapshot: Snapshot
+    test_client: TestClient,
+    responses: RequestsMock,
+    aioresponses: Aioresponses,
+    snapshot: Snapshot,
 ) -> None:
     add_xml(
         responses,
@@ -790,19 +793,28 @@ async def test_plex_redirect(
         E.Root(machineIdentifier="aaaa"),
     )
     add_xml(responses, 'GET', 'https://test/library', E.Library())
-    imdb_id = 'tt10000'
+    imdb_id = ImdbId('tt00000')
+    tmdb_id = TmdbId(10000)
+    search = E.Search(
+        E.Directory(
+            type="show",
+            title="Hello World",
+            ratingKey="666",
+        )
+    )
     add_xml(
         responses,
         'GET',
         'https://test/library/all?'
-        + urlencode({'guid': f'com.plexapp.agents.imdb://{imdb_id}/?lang=en'}),
-        E.Search(
-            E.Directory(
-                type="show",
-                title="Hello World",
-                ratingKey="666",
-            )
-        ),
+        + urlencode({'guid': f'com.plexapp.agents.imdb://{imdb_id}'}),
+        search,
+    )
+    add_xml(
+        responses,
+        'GET',
+        'https://test/library/all?'
+        + urlencode({'guid': f'com.plexapp.agents.tmdb://{tmdb_id}'}),
+        search,
     )
 
     add_xml(
@@ -817,8 +829,9 @@ async def test_plex_redirect(
             )
         ),
     )
+    stub_tv_external_ids(aioresponses, tmdb_id=tmdb_id)
 
-    r = await test_client.get('/api/plex/imdb/tt10000')
+    r = await test_client.get(f'/api/plex/tv/{tmdb_id}')
     r.raise_for_status()
     assert_match_json(snapshot, r, 'plex_redirect.json')
 
