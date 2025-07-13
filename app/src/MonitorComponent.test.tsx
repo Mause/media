@@ -10,6 +10,8 @@ import { act } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as _ from 'lodash-es';
+import axios from 'axios';
+import { http, HttpResponse } from 'msw';
 
 import type { Monitor } from './MonitorComponent';
 import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
@@ -19,10 +21,15 @@ import {
   wait,
   listenTo,
   expectLastRequestBody,
+  waitForRequests,
 } from './test.utils';
+import { server } from './msw';
+
 
 describe('MonitorComponent', () => {
   it('view', async () => {
+    moxios.uninstall(axios);
+
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/monitor']}>
         <Routes>
@@ -45,10 +52,8 @@ describe('MonitorComponent', () => {
         },
       },
     ];
-    console.log('mocking');
-    await mock('monitor', res);
-    console.log('mocked');
-    await wait();
+    server.use(http.get('/api/monitor', () => HttpResponse.json(res)));
+    await waitForRequests();
 
     expect(container).toMatchSnapshot();
   });
