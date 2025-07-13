@@ -13,7 +13,7 @@ from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from lxml.builder import E
 from lxml.etree import tostring
 from psycopg import OperationalError
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 from pytest import LogCaptureFixture, MonkeyPatch, fixture, mark, raises
 from pytest_snapshot.plugin import Snapshot
 from responses import RequestsMock
@@ -27,7 +27,7 @@ from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, User, create_episode, create_movie
 from ..health import DiagnosticsRoot
 from ..main import get_episodes
-from ..models import ITorrent
+from ..models import ITorrent, ProviderSource
 from ..new import SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
@@ -851,14 +851,14 @@ async def test_psycopg2_error(
     monkeypatch.setattr('psycopg.AsyncConnection.connect', replacement)
 
     do = fastapi_app.dependency_overrides
-    fastapi_app.dependency_overrides
     cu = do[get_current_user]
     do.clear()
     do.update(
         {
             get_current_user: cu,
             get_settings: lambda: Settings(
-                database_url='postgresql:///:memory:', plex_token='plex_token'
+                database_url='postgresql:///:memory:',
+                plex_token=SecretStr('plex_token'),
             ),
         }
     )
@@ -935,7 +935,7 @@ async def test_websocket(
             self, imdb_id: ImdbId, tmdb_id: TmdbId
         ) -> AsyncGenerator[ITorrent, None]:
             yield ITorrent(
-                source="piratebay",
+                source=ProviderSource.PIRATEBAY,
                 title="Ancient Aliens 480p x264-mSD",
                 seeders=2,
                 download="magnet:?xt=urn:btih:00000000000000000",
