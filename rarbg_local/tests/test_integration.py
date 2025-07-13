@@ -3,6 +3,7 @@ from collections.abc import AsyncGenerator, Generator
 from datetime import datetime
 from typing import TYPE_CHECKING, Annotated, Any, Never
 from unittest.mock import MagicMock, patch
+from urllib.parse import urlencode
 
 from aioresponses import aioresponses as Aioresponses
 from async_asgi_testclient import TestClient
@@ -793,7 +794,8 @@ async def test_plex_redirect(
     add_xml(
         responses,
         'GET',
-        f'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2F{imdb_id}%3Flang%3Den',
+        'https://test/library/all?'
+        + urlencode({'guid': f'com.plexapp.agents.imdb://{imdb_id}/?lang=en'}),
         E.Search(
             E.Directory(
                 type="show",
