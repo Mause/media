@@ -1,16 +1,19 @@
+from asyncio import gather
 from collections.abc import Sequence
 from typing import Annotated
 
 from fastapi import Depends
-from plexapi.media import Media
+from fastapi.concurrency import run_in_threadpool
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
+from plexapi.video import Video
 from sentry_sdk import trace
 from yarl import URL
 
 from .settings import Settings, get_settings
 from .singleton import singleton
-from .types import ImdbId
+from .tmdb import ThingType, get_external_ids
+from .types import ImdbId, TmdbId
 
 
 @singleton
@@ -22,19 +25,31 @@ def get_plex(settings: Annotated[Settings, Depends(get_settings)]) -> PlexServer
     return trace(novell.connect)(ssl=True)
 
 
-def build_search_guid(imdb_id: ImdbId) -> str:
-    return str(
-        URL.build(
-            scheme='com.plexapp.agents.imdb', host=str(imdb_id), query_string="lang=en"
-        )
-    )
+def build_agent_guid(scheme: str, id: ImdbId | TmdbId) -> str:
+    return str(URL.build(scheme=f'com.plexapp.agents.{scheme}', host=str(id)))
 
 
 @trace
-def get_imdb_in_plex(imdb_id: ImdbId, plex: PlexServer) -> Media | None:
-    guid = build_search_guid(imdb_id)
-    items = trace(plex.library.search)(guid=guid)
-    return single(items)
+async def get_imdb_in_plex(
+    type: ThingType,
+    tmdb_id: TmdbId,
+    plex: PlexServer,
+) -> list[Video]:
+    external_ids = await get_external_ids(type, tmdb_id)
+    guids = [
+        build_agent_guid("tmdb", tmdb_id),
+        build_agent_guid("imdb", external_ids.imdb_id),
+    ]
+
+    search_guid = trace(plex.library.search)
+
+    return [
+        item
+        for item in await gather(
+            *[run_in_threadpool(search_guid, guid=guid) for guid in guids]
+        )
+        if item
+    ]
 
 
 def single[T](items: Sequence[T]) -> T | None:
