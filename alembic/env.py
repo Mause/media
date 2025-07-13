@@ -118,11 +118,11 @@ async def run_async_migrations() -> None:
             )
             dbapi_con.execute('pragma foreign_keys=ON')
 
+        retrying_connect = connectable.connect
+    else:
         retrying_connect = backoff.on_exception(
             backoff.expo, OperationalError, max_time=60
         )(connectable.connect)
-    else:
-        retrying_connect = connectable.connect
 
     def do_run_migrations(connection: Connection) -> None:
         context.configure(
