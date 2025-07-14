@@ -45,6 +45,10 @@ test('Movies', () => {
 });
 
 test('TVShows', () => {
+  moxios.uninstall(axios);
+  server.use(http.get('/api/tv/1/season/1', () => HttpResponse.json({})));
+  server.use(http.get('/api/tv/1', () => HttpResponse.json({})));
+
   const series: SeriesResponse[] = [
     {
       tmdb_id: 1,
