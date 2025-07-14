@@ -1,5 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`MonitorComponent > add 1`] = `
+<div>
+  <div>
+    Monitor
+  </div>
+</div>
+`;
+
 exports[`MonitorComponent > view 1`] = `
 <div>
   <h3>

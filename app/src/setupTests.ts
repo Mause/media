@@ -4,18 +4,9 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/vitest';
 
-import { afterEach, beforeEach } from 'vitest';
-import moxios from 'moxios';
-import axios from 'axios';
+import { afterEach } from 'vitest';
 
 import { server } from './msw';
-
-beforeEach(() => {
-  moxios.install(axios);
-});
-afterEach(() => {
-  moxios.uninstall(axios);
-});
 
 // Start server before all tests
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));

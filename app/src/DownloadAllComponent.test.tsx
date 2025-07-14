@@ -1,7 +1,5 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
-import axios from 'axios';
-import moxios from 'moxios';
 
 import { renderWithSWR, waitForRequests } from './test.utils';
 import { DownloadAllComponent } from './DownloadAllComponent';
@@ -9,7 +7,6 @@ import type { ITorrent } from './OptionsComponent';
 import { server } from './msw';
 
 test('DownloadAllComponent', async () => {
-  moxios.uninstall(axios);
   server.use(
     http.get('/api/select/1/season/1/download_all', () =>
       HttpResponse.json({

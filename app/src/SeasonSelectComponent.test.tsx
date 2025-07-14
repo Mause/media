@@ -1,7 +1,5 @@
 import { screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import moxios from 'moxios';
-import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 
 import type { Season, TV } from './SeasonSelectComponent';
@@ -11,8 +9,6 @@ import { EpisodeSelectComponent } from './EpisodeSelectComponent';
 import { server } from './msw';
 
 test('SeasonSelectComponent  render', async () => {
-  moxios.uninstall(axios);
-
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/select/1/season']}>
       <Routes>
@@ -46,8 +42,6 @@ test('SeasonSelectComponent  render', async () => {
 });
 
 test('EpisodeSelectComponent render', async () => {
-  moxios.uninstall(axios);
-
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/select/1/season/1']}>
       <Routes>

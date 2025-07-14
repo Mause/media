@@ -1,7 +1,5 @@
 import { Route, MemoryRouter, Routes } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
-import axios from 'axios';
-import moxios from 'moxios';
 
 import type { SearchResponse } from './SearchComponent';
 import { SearchComponent } from './SearchComponent';
@@ -9,8 +7,6 @@ import { renderWithSWR, waitForRequests } from './test.utils';
 import { server } from './msw';
 
 test('SearchComponent', async () => {
-  moxios.uninstall(axios);
-
   server.use(
     http.get('/api/search', ({ request }) => {
       expect(new URL(request.url).search).toEqual('?query=world');

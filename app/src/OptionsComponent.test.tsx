@@ -3,8 +3,6 @@ import { screen } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import * as _ from 'lodash-es';
 import { http, HttpResponse } from 'msw';
-import axios from 'axios';
-import moxios from 'moxios';
 
 import type { ITorrent } from './OptionsComponent';
 import { MovieOptionsComponent } from './MovieOptionsComponent';
@@ -33,7 +31,6 @@ Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
   it.skip('failure', async () => {
-    moxios.uninstall(axios);
     server.use(
       http.get('movie/1', () => HttpResponse.json({ title: 'Hello World' })),
     );
@@ -69,7 +66,6 @@ describe('OptionsComponent', () => {
     expect(container).toMatchSnapshot();
   });
   it.skip('success', async () => {
-    moxios.uninstall(axios);
     server.use(
       http.get('/api/movie/1', () =>
         HttpResponse.json({ title: 'Hello World' }),

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
 import { http, HttpResponse } from 'msw';
-import moxios from 'moxios';
 
 import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { server } from './msw';
@@ -24,7 +23,6 @@ function Fake() {
 
 test('AxiosErrorCatcher', async () => {
   let lerror: unknown;
-  moxios.uninstall(axios);
   server.use(
     http.get(/.*/, () =>
       HttpResponse.json(

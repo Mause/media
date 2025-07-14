@@ -1,8 +1,6 @@
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MockDate from 'mockdate';
-import moxios from 'moxios';
-import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 
 import { Movies, TVShows, Progress, NextEpisodeAirs } from './render';
@@ -45,7 +43,6 @@ test('Movies', () => {
 });
 
 test('TVShows', () => {
-  moxios.uninstall(axios);
   server.use(http.get('/api/tv/1/season/1', () => HttpResponse.json({})));
   server.use(http.get('/api/tv/1', () => HttpResponse.json({})));
 
@@ -133,7 +130,6 @@ describe('Progress', () => {
 
 describe('NextEpisodeAirs', () => {
   it('works', async () => {
-    moxios.uninstall(axios);
     MockDate.set('2020-04-20');
     const tmdb_id = 10000;
     const season = '1';
