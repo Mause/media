@@ -1,12 +1,12 @@
 import { StrictMode } from 'react';
 import './index.css';
-import { createRoot } from 'react-dom/client';
 import { Auth0Provider } from '@auth0/auth0-react';
 import {
-  ThemeProvider,
-  StyledEngineProvider,
   createTheme,
+  StyledEngineProvider,
+  ThemeProvider,
 } from '@mui/material/styles';
+import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 
 import App from './App';

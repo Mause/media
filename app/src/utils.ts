@@ -1,16 +1,16 @@
-import { String } from 'typescript-string-operations';
-import { useState, useEffect } from 'react';
-import type { RawAxiosRequestHeaders } from 'axios';
-import Axios from 'axios';
-import * as RRD from 'react-router-dom';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
 import type {
   Auth0ContextInterface,
   AuthenticationError,
 } from '@auth0/auth0-react';
 import { useAuth0 } from '@auth0/auth0-react';
-import moment from 'moment';
+import type { RawAxiosRequestHeaders } from 'axios';
+import Axios from 'axios';
 import * as _ from 'lodash-es';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
+import * as RRD from 'react-router-dom';
+import { String } from 'typescript-string-operations';
 
 import { FetchEventTarget } from './fetch_stream';
 import type { TV } from './SeasonSelectComponent';

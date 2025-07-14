@@ -1,13 +1,12 @@
-import { act } from 'react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
 import * as _ from 'lodash-es';
-import { http, HttpResponse } from 'msw';
-
-import type { ITorrent } from './OptionsComponent';
+import { HttpResponse, http } from 'msw';
+import { act } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { MovieOptionsComponent } from './MovieOptionsComponent';
-import { renderWithSWR, waitForRequests } from './test.utils';
 import { server } from './msw';
+import type { ITorrent } from './OptionsComponent';
+import { renderWithSWR, waitForRequests } from './test.utils';
 
 const sources: ES[] = [];
 type CB = (event: { data: string }) => void;

@@ -1,21 +1,21 @@
-import useSWR from 'swr';
-import ReactLoading from 'react-loading';
-import { Navigate, useNavigate } from 'react-router-dom';
-import MenuItem from '@mui/material/MenuItem';
-import Axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faTv, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
-import MaterialLink from '@mui/material/Link';
-import Button from '@mui/material/Button';
 import type { Auth0ContextInterface, User } from '@auth0/auth0-react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { faCircle, faTicketAlt, faTv } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button from '@mui/material/Button';
+import MaterialLink from '@mui/material/Link';
+import MenuItem from '@mui/material/MenuItem';
+import Axios from 'axios';
+import ReactLoading from 'react-loading';
+import { Navigate, useNavigate } from 'react-router-dom';
+import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 import ContextMenu from './ContextMenu';
-import type { components, paths } from './schema';
-import { getPrefix, getToken } from './utils';
 import { DisplayError } from './DisplayError';
 import { RouteTitle } from './RouteTitle';
+import type { components, paths } from './schema';
+import { getPrefix, getToken } from './utils';
 
 type Monitor = components['schemas']['MonitorGet'];
 type MonitorPost = components['schemas']['MonitorPost'];
