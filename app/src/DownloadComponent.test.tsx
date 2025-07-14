@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 import { Route, Routes, MemoryRouter } from 'react-router-dom';
 import { HttpResponse, http } from 'msw';
+import { act } from 'react';
 
 import { renderWithSWR, waitForRequests } from './test.utils';
 import type { DownloadCall, DownloadState } from './DownloadComponent';
@@ -67,6 +68,7 @@ describe('DownloadComponent', () => {
     console.log(request.method, request.url);
     expect(request.method).toBe('POST');
     expect(body).toEqual([{ magnet: '...', tmdb_id: 10000 }]);
+    await act(async () => {});
 
     expect(container).toMatchSnapshot();
   });
