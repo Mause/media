@@ -8,7 +8,7 @@ import { renderWithSWR, waitForRequests } from './test.utils';
 import type { DownloadCall, DownloadState } from './DownloadComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { server } from './msw';
-import { paths } from './schema';
+import type { paths } from './schema';
 
 type DownloadResponse =
   paths['/api/download']['post']['responses']['200']['content']['application/json'];
@@ -66,7 +66,9 @@ describe('DownloadComponent', () => {
 
     expect(container).toMatchSnapshot();
 
-    await waitForRequests();
+    const request = await waitForRequests();
+    console.log(request.method, request.url);
+    expect(request.method).toBe('POST');
     expect(body).toEqual([{ magnet: '...', tmdb_id: 10000 }]);
 
     expect(container).toMatchSnapshot();

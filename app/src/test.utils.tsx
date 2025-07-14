@@ -73,21 +73,24 @@ export function expectLastRequestBody() {
   return expect(JSON.parse(mr.config.data as string));
 }
 
-export async function waitForRequests() {
-  await act(async () => {
-    await Promise.race([
-      new Promise<void>((resolve) => {
-        const listener = () => {
-          server.events.removeListener('request:end', listener);
-          resolve();
-        };
-        return server.events.on('request:end', listener);
-      }),
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          reject(new Error('Timed out waiting for requests'));
-        }, 1000);
-      }),
-    ]);
-  });
+export async function waitForRequests(nRequests = 1): Promise<Request> {
+  let remaining = nRequests;
+  return await act<Request>(
+    async () =>
+      await Promise.race([
+        new Promise<Request>((resolve) => {
+          const listener = ({ request }: { request: Request }) => {
+            if (--remaining > 0) return;
+            server.events.removeListener('request:end', listener);
+            resolve(request);
+          };
+          return server.events.on('request:end', listener);
+        }),
+        new Promise<Request>((resolve, reject) => {
+          setTimeout(() => {
+            reject(new Error('Timed out waiting for requests'));
+          }, 1000);
+        }),
+      ]),
+  );
 }
