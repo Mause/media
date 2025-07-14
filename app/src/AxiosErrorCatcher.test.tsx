@@ -1,21 +1,17 @@
 import { render } from '@testing-library/react';
-import React, { useEffect, useState } from 'react';
-import moxios from 'moxios';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
+import { http, HttpResponse } from 'msw';
+import moxios from 'moxios';
 
-import { wait } from './test.utils';
 import AxiosErrorCatcher from './AxiosErrorCatcher';
+import { server } from './msw';
+import { waitForRequests } from './test.utils';
 
-/*
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
+  vitest.spyOn(console, 'error').mockImplementation(() => {});
 });
-
-afterEach(() => {
-  console.error.mockRestore();
-});
-*/
 
 function Fake() {
   const [fire, setFire] = useState(false);
@@ -28,6 +24,18 @@ function Fake() {
 
 test('AxiosErrorCatcher', async () => {
   let lerror: unknown;
+  moxios.uninstall(axios);
+  server.use(
+    http.get(/.*/, () =>
+      HttpResponse.json(
+        { body: {}, message: 'an error has occured' },
+        {
+          status: 500,
+        },
+      ),
+    ),
+  );
+
   const { container } = render(
     <ErrorBoundary
       fallback={<div>error</div>}
@@ -41,11 +49,8 @@ test('AxiosErrorCatcher', async () => {
 
   expect(container).toMatchSnapshot();
 
-  await moxios.stubOnce('GET', /.*/, {
-    status: 500,
-    response: { body: {}, message: 'an error has occured' },
-  });
-  await wait();
+  await waitForRequests();
+
   expect(lerror).toBeTruthy();
   expect(lerror).toBeInstanceOf(Error);
   expect((lerror! as Error).message).toEqual(
