@@ -26,7 +26,7 @@ from yarl import URL
 
 from .settings import Settings, get_settings
 from .singleton import singleton
-from .tmdb import ThingType
+from .tmdb import ThingType, get_external_ids
 from .types import ImdbId, TmdbId
 
 
@@ -77,10 +77,10 @@ async def get_imdb_in_plex(
     tmdb_id: TmdbId,
     plex: PlexServer,
 ) -> dict[str, Video | None]:
-    # external_ids = await get_external_ids(type, tmdb_id)
+    external_ids = await get_external_ids(type, tmdb_id)
     guids = [
         build_guid("tmdb", tmdb_id),
-        # build_guid("imdb", external_ids.imdb_id),
+        build_guid("imdb", external_ids.imdb_id),
     ]
     # if hasattr(external_ids, 'tvdb_id'):
     #     guids.append(build_guid("tvdb", external_ids.tvdb_id))

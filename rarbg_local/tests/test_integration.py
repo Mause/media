@@ -793,6 +793,7 @@ async def test_plex_redirect(
         E.Root(machineIdentifier="aaaa"),
     )
     add_xml(responses, 'GET', 'https://test/library', E.Library())
+    imdb_id = ImdbId('tt00000')
     tmdb_id = TmdbId(10000)
     add_xml(
         responses,
@@ -821,6 +822,13 @@ async def test_plex_redirect(
         f'https://test/matches?manual=1&title=tmdb-{tmdb_id}&year=None&language=None&agent={agent_identifier}',
         E.Search(E.SearchResult(guid=guid)),
     )
+    add_xml(
+        responses,
+        'GET',
+        f'https://test/matches?manual=1&title=imdb-{imdb_id}&year=None&language=None&agent=com.plexapp.agents.thetvdb',
+        E.Search(E.SearchResult(guid=guid)),
+    )
+
     add_xml(
         responses,
         'GET',
