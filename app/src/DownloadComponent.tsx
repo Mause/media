@@ -23,6 +23,8 @@ export function DownloadComponent() {
     })),
   );
 
+  console.log({ done, error });
+
   let res: ReactNode;
   if (done) {
     res = <Navigate to="/" />;

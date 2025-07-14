@@ -1,9 +1,7 @@
-import moxios from 'moxios';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { act } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 
 import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
@@ -16,8 +14,6 @@ type MonitorResponse = GetResponse<paths['/api/monitor']>;
 
 describe('MonitorComponent', () => {
   it('view', async () => {
-    moxios.uninstall(axios);
-
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/monitor']}>
         <Routes>
@@ -47,8 +43,6 @@ describe('MonitorComponent', () => {
   });
 
   it('add', async () => {
-    moxios.uninstall(axios);
-
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/fake']}>
         <Routes>

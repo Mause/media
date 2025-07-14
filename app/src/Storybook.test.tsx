@@ -2,8 +2,6 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
-import axios from 'axios';
-import moxios from 'moxios';
 
 import { renderWithSWR } from './test.utils';
 import { Storybook } from './Storybook';
@@ -11,7 +9,6 @@ import { server } from './msw';
 
 describe('Storybook', () => {
   it('renders without crashing', async () => {
-    moxios.uninstall(axios);
     server.use(
       http.get('/api/tmdb/configuration', () =>
         HttpResponse.json({
