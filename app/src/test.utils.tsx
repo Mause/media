@@ -1,4 +1,3 @@
-import moxios from 'moxios';
 import { render } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { act } from 'react';
@@ -17,19 +16,6 @@ import { SwrConfigWrapper } from './streaming';
 import { server } from './msw';
 
 const theme = createTheme();
-
-export async function wait() {
-  return await act(
-    async () => await new Promise<void>((resolve) => moxios.wait(resolve)),
-  );
-}
-
-export async function mock<T>(path: string, response: T) {
-  await moxios.stubOnce('GET', new RegExp(path.replace(/\?/, '\\?')), {
-    status: 200,
-    response,
-  });
-}
 
 export function renderWithSWR(el: ReactElement) {
   const c = {
@@ -65,12 +51,6 @@ export function listenTo(hist: MemoryHistory) {
     return () => {};
   };
   return entries;
-}
-
-export function expectLastRequestBody() {
-  const mr = moxios.requests.mostRecent();
-  expect(mr).toBeTruthy();
-  return expect(JSON.parse(mr.config.data as string));
 }
 
 export async function waitForRequests() {

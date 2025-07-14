@@ -1,7 +1,5 @@
 import { screen } from '@testing-library/react';
 import { Route, Routes, MemoryRouter } from 'react-router-dom';
-import axios from 'axios';
-import moxios from 'moxios';
 import { HttpResponse, http } from 'msw';
 
 import { renderWithSWR, waitForRequests } from './test.utils';
@@ -11,7 +9,6 @@ import { server } from './msw';
 
 describe('DownloadComponent', () => {
   it('success', async () => {
-    moxios.uninstall(axios);
     const initialEntries = [
       {
         pathname: '/download',
@@ -51,7 +48,6 @@ describe('DownloadComponent', () => {
     expect(container).toMatchSnapshot();
   });
   it.skip('failure', async () => {
-    moxios.uninstall(axios);
     const initialEntries = [
       {
         pathname: '/download',

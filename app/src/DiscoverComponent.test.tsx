@@ -1,6 +1,4 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import moxios from 'moxios';
-import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 
 import { renderWithSWR, waitForRequests } from './test.utils';
@@ -9,8 +7,6 @@ import { DiscoveryComponent } from './DiscoveryComponent';
 import { server } from './msw';
 
 test('DiscoveryComponent', async () => {
-  moxios.uninstall(axios);
-
   const { container } = renderWithSWR(
     <MemoryRouter>
       <Routes>
