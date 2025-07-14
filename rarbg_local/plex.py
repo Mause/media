@@ -13,7 +13,7 @@ grandparentGuid="com.plexapp.agents.thetvdb://70327?lang=en"
 """
 
 from asyncio import gather
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Annotated
 
 from fastapi import Depends
@@ -26,7 +26,7 @@ from yarl import URL
 
 from .settings import Settings, get_settings
 from .singleton import singleton
-from .tmdb import ThingType, get_external_ids
+from .tmdb import ThingType
 from .types import ImdbId, TmdbId
 
 
@@ -35,12 +35,40 @@ from .types import ImdbId, TmdbId
 def get_plex(settings: Annotated[Settings, Depends(get_settings)]) -> PlexServer:
     acct = MyPlexAccount(token=settings.plex_token.get_secret_value())
     novell = trace(acct.resource)('Novell')
-    novell.connections = [c for c in novell.connections if not c.local]
+    # novell.connections = [c for c in novell.connections if not c.local]
     return trace(novell.connect)(ssl=True)
 
 
 def build_agent_guid(scheme: str, id: ImdbId | TmdbId) -> str:
-    return str(URL.build(scheme=f'com.plexapp.agents.{scheme}', host=str(id)))
+    return build_guid(f'com.plexapp.agents.{scheme}', id)
+
+
+def build_guid(scheme: str, id: ImdbId | TmdbId) -> str:
+    return str(
+        URL.build(
+            scheme=scheme,
+            host=str(id),
+        )
+    )
+
+
+def build_search_guid(
+    plex: PlexServer, section_name: str
+) -> Callable[[str], tuple[str, Video | None]]:
+    def real_search(original_guid: str) -> tuple[str, Video | None]:
+        guid = original_guid
+        if not guid.startswith('plex://'):
+            res = single(dummy.matches(agent=agent, title=guid.replace('://', '-')))
+            if not res:
+                return original_guid, None
+            guid = res.guid
+
+        return (original_guid, section.getGuid(guid))
+
+    section = plex.library.section(section_name)
+    dummy = section.search(maxresults=1)[0]
+    agent = section.agent
+    return real_search
 
 
 @trace
@@ -48,22 +76,20 @@ async def get_imdb_in_plex(
     type: ThingType,
     tmdb_id: TmdbId,
     plex: PlexServer,
-) -> list[Video]:
-    external_ids = await get_external_ids(type, tmdb_id)
+) -> dict[str, Video | None]:
+    # external_ids = await get_external_ids(type, tmdb_id)
     guids = [
-        build_agent_guid("tmdb", tmdb_id),
-        build_agent_guid("imdb", external_ids.imdb_id),
+        build_guid("tmdb", tmdb_id),
+        # build_guid("imdb", external_ids.imdb_id),
     ]
+    # if hasattr(external_ids, 'tvdb_id'):
+    #     guids.append(build_guid("tvdb", external_ids.tvdb_id))
 
-    search_guid = trace(plex.library.search)
+    section = 'Movies' if type == 'movie' else 'TV Shows'
 
-    return [
-        single(item)
-        for item in await gather(
-            *[run_in_threadpool(search_guid, guid=guid) for guid in guids]
-        )
-        if item
-    ]
+    search_guid = await run_in_threadpool(build_search_guid, plex, section)
+
+    return dict(await gather(*[run_in_threadpool(search_guid, guid) for guid in guids]))
 
 
 def single[T](items: Sequence[T]) -> T | None:

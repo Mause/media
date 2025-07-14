@@ -371,19 +371,21 @@ async def get_plex_imdb(
     tmdb_id: TmdbId,
     request: Request,
     settings: Annotated[Settings, Depends(get_settings)],
-) -> list[PlexResponse[PlexMedia]]:
+) -> dict[str, PlexResponse[PlexMedia] | None]:
     plex = await gracefully_get_plex(request, settings)
 
     dat = await get_imdb_in_plex(thing_type, tmdb_id, plex)
     if not dat:
         raise HTTPException(404, 'Not found in plex')
-    return [
-        PlexResponse[PlexMedia](
-            item=PlexMedia.model_validate(item),
+    return {
+        key: PlexResponse[PlexMedia](
+            item=PlexMedia.model_validate(value),
             server_id=plex.machineIdentifier,
         )
-        for item in dat
-    ]
+        if value
+        else None
+        for key, value in dat.items()
+    }
 
 
 tv_ns = APIRouter(tags=['tv'])

@@ -1,19 +1,5 @@
-[
-  {
-    "server_id": "aaaa",
-    "item": {
-      "ratingKey": 666,
-      "title": "Hello World",
-      "year": null,
-      "type": "show",
-      "guid": null,
-      "summary": null,
-      "thumb": null,
-      "art": null
-    },
-    "link": "https://app.plex.tv/desktop?key=/library/metadata/666#!/server/aaaa/details"
-  },
-  {
+{
+  "tmdb://10000": {
     "server_id": "aaaa",
     "item": {
       "ratingKey": 666,
@@ -27,4 +13,4 @@
     },
     "link": "https://app.plex.tv/desktop?key=/library/metadata/666#!/server/aaaa/details"
   }
-]
+}

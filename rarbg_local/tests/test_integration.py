@@ -793,30 +793,76 @@ async def test_plex_redirect(
         E.Root(machineIdentifier="aaaa"),
     )
     add_xml(responses, 'GET', 'https://test/library', E.Library())
-    imdb_id = ImdbId('tt00000')
     tmdb_id = TmdbId(10000)
-    search = E.Search(
-        E.Directory(
-            type="show",
-            title="Hello World",
-            ratingKey="666",
-        )
+    add_xml(
+        responses,
+        'GET',
+        'https://test/library/sections',
+        E.Sections(
+            E.Section(
+                title='TV Shows',
+                key='1',
+                type='show',
+                agent='com.plexapp.agents.thetvdb',
+            )
+        ),
     )
     add_xml(
         responses,
         'GET',
-        'https://test/library/all?'
-        + urlencode({'guid': f'com.plexapp.agents.imdb://{imdb_id}'}),
-        search,
+        'https://test/library/sections/1/all?includeGuids=1',
+        E.Section(getattr(E, 'Video.movie')(), librarySectionID='1'),
+    )
+    agent_identifier = "com.plexapp.agents.thetvdb"
+    guid = 'plex://aaaaaaaaa'
+    add_xml(
+        responses,
+        'GET',
+        f'https://test/matches?manual=1&title=tmdb-{tmdb_id}&year=None&language=None&agent={agent_identifier}',
+        E.Search(E.SearchResult(guid=guid)),
     )
     add_xml(
         responses,
         'GET',
-        'https://test/library/all?'
-        + urlencode({'guid': f'com.plexapp.agents.tmdb://{tmdb_id}'}),
-        search,
+        'https://test/library/sections/1/all?includeMeta=1&includeAdvanced=1&X-Plex-Container-Start=0&X-Plex-Container-Size=0',
+        E.AllFromSection(
+            E.Meta(
+                E.Type(
+                    type='show',
+                )
+            )
+        ),
     )
-
+    add_xml(
+        responses,
+        'GET',
+        'https://test/library/sections/1/all?'
+        + urlencode({'includeGuids': '1', 'show.guid': guid}),
+        E.Section(
+            E.Directory(
+                title='Hello World',
+                type='show',
+                ratingKey='666',
+            )
+        ),
+    )
+    add_xml(
+        responses,
+        'GET',
+        'https://test/library/sections/1/collections?includeMeta=1&includeAdvanced=1&X-Plex-Container-Start=0&X-Plex-Container-Size=0',
+        E.Collections(),
+    )
+    add_xml(
+        responses,
+        'GET',
+        'https://test/system/agents?mediaType=2',
+        E.Agents(
+            E.Agent(
+                name="thetvdb",
+                identifier=agent_identifier,
+            )
+        ),
+    )
     add_xml(
         responses,
         'GET',
