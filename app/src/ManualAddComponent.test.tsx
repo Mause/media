@@ -1,7 +1,5 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
-import axios from 'axios';
-import moxios from 'moxios';
 
 import { renderWithSWR, waitForRequests } from './test.utils';
 import type { ManualAddComponentState } from './ManualAddComponent';
@@ -9,7 +7,6 @@ import { ManualAddComponent } from './ManualAddComponent';
 import { server } from './msw';
 
 it('works', async () => {
-  moxios.uninstall(axios);
   const { container } = renderWithSWR(
     <MemoryRouter
       initialEntries={[
