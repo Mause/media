@@ -82,8 +82,8 @@ async def get_imdb_in_plex(
         build_guid("tmdb", tmdb_id),
         build_guid("imdb", external_ids.imdb_id),
     ]
-    # if hasattr(external_ids, 'tvdb_id'):
-    #     guids.append(build_guid("tvdb", external_ids.tvdb_id))
+    if getattr(external_ids, 'tvdb_id', None):
+        guids.append(build_guid("tvdb", external_ids.tvdb_id))
 
     section = 'Movies' if type == 'movie' else 'TV Shows'
 
