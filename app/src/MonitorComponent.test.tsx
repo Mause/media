@@ -1,20 +1,13 @@
 import moxios from 'moxios';
-import {
-  unstable_HistoryRouter as HistoryRouter,
-  MemoryRouter,
-  Routes,
-  Route,
-} from 'react-router-dom';
-import { createMemoryHistory } from '@remix-run/router';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { act } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import * as _ from 'lodash-es';
 import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 
 import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
-import { renderWithSWR, listenTo, waitForRequests } from './test.utils';
+import { renderWithSWR, waitForRequests } from './test.utils';
 import { server } from './msw';
 import type { GetResponse } from './utils';
 import type { paths } from './schema';
@@ -56,23 +49,16 @@ describe('MonitorComponent', () => {
   it('add', async () => {
     moxios.uninstall(axios);
 
-    const hist = createMemoryHistory({
-      initialEntries: ['/fake'],
-      v5Compat: true,
-    });
-    const entries = listenTo(hist);
-
-    renderWithSWR(
-      <HistoryRouter history={hist}>
+    const { container } = renderWithSWR(
+      <MemoryRouter initialEntries={['/fake']}>
         <Routes>
           <Route
             path="/fake"
             element={<MonitorAddComponent tmdb_id={5} type={'MOVIE'} />}
           />
           <Route path="/monitor" element={<div>Monitor</div>} />
-          <Route path="/" element={<div>Home</div>} />
         </Routes>
-      </HistoryRouter>,
+      </MemoryRouter>,
     );
 
     const events = userEvent.setup();
@@ -96,6 +82,6 @@ describe('MonitorComponent', () => {
       await events.click(await screen.findByText('Add to monitor'));
     });
 
-    expect(_.map(entries, 'pathname')).toEqual(['/monitor']);
+    expect(container).toMatchSnapshot();
   });
 });
