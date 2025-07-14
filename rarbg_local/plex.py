@@ -15,6 +15,7 @@ grandparentGuid="com.plexapp.agents.thetvdb://70327?lang=en"
 from asyncio import gather
 from collections.abc import Callable, Sequence
 from typing import Annotated
+from urllib.parse import urlencode
 
 from fastapi import Depends
 from fastapi.concurrency import run_in_threadpool
@@ -98,7 +99,8 @@ def single[T](items: Sequence[T]) -> T | None:
 
 def make_plex_url(server_id: str, rating_key: int) -> str:
     return str(
-        URL('https://app.plex.tv/desktop')
-        .with_fragment(f'!/server/{server_id}/details')
-        .with_query(key=f'/library/metadata/{rating_key}')
+        URL('https://app.plex.tv/desktop').with_fragment(
+            f'!/server/{server_id}/details?'
+            + urlencode({'key': f'/library/metadata/{rating_key}'})
+        )
     )

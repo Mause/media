@@ -11,7 +11,7 @@
       "thumb": null,
       "art": null
     },
-    "link": "https://app.plex.tv/desktop?key=/library/metadata/666#!/server/aaaa/details"
+    "link": "https://app.plex.tv/desktop#!/server/aaaa/details?key=%252Flibrary%252Fmetadata%252F666"
   },
   "imdb://tt00000": {
     "server_id": "aaaa",
@@ -25,6 +25,6 @@
       "thumb": null,
       "art": null
     },
-    "link": "https://app.plex.tv/desktop?key=/library/metadata/666#!/server/aaaa/details"
+    "link": "https://app.plex.tv/desktop#!/server/aaaa/details?key=%252Flibrary%252Fmetadata%252F666"
   }
 }
