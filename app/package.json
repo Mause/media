@@ -38,7 +38,8 @@
     "react-use-websocket": "^4.13.0",
     "swr": "^2.0.0",
     "typescript": "^5",
-    "typescript-string-operations": "^1.6.1"
+    "typescript-string-operations": "^1.6.1",
+    "uritemplate": "^0.3.4"
   },
   "scripts": {
     "start": "vite",
@@ -75,6 +76,7 @@
     "@types/node": "^24",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uritemplate": "^0",
     "@vitejs/plugin-basic-ssl": "^2.0.0",
     "@vitejs/plugin-react": "npm:@vitejs/plugin-react-oxc@^0.2.2",
     "@vitest/ui": "^3.2.1",

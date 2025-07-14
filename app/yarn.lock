@@ -1720,6 +1720,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/uritemplate@npm:^0":
+  version: 0.3.6
+  resolution: "@types/uritemplate@npm:0.3.6"
+  checksum: 10/9fc6e7e83e39d8dbcd9a79e8594ae95069254e72ae8d4aa3f27e3420af0b6912fa75d66879b3e2984c655afeef1aeeb151d459d484585107575e2eee5051cd13
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/eslint-plugin@npm:8.36.0":
   version: 8.36.0
   resolution: "@typescript-eslint/eslint-plugin@npm:8.36.0"
@@ -2491,6 +2498,7 @@ __metadata:
     "@types/node": "npm:^24"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
+    "@types/uritemplate": "npm:^0"
     "@use-it/interval": "npm:^1.0.0"
     "@vitejs/plugin-basic-ssl": "npm:^2.0.0"
     "@vitejs/plugin-react": "npm:@vitejs/plugin-react-oxc@^0.2.2"
@@ -2525,6 +2533,7 @@ __metadata:
     typescript: "npm:^5"
     typescript-eslint: "npm:^8.36.0"
     typescript-string-operations: "npm:^1.6.1"
+    uritemplate: "npm:^0.3.4"
     vite: "npm:rolldown-vite@latest"
     vite-plugin-bundlesize: "npm:^0.2.0"
     vitest: "npm:^3.2.1"
@@ -6378,6 +6387,13 @@ __metadata:
   dependencies:
     punycode: "npm:^2.1.0"
   checksum: 10/e9499d30bfa7559acc255ab196bf7be0db9e5e5550cc0dfd8aeaeabbe423c323b18e261b31b996a409465b29f6ad814f8683f0c4f476ee347a57103dba0fb7f7
+  languageName: node
+  linkType: hard
+
+"uritemplate@npm:^0.3.4":
+  version: 0.3.4
+  resolution: "uritemplate@npm:0.3.4"
+  checksum: 10/e90601559e917bb3b3793bce5f3ba3e1f7d3e9246bff1297c9e675315edbb7429c02a23c98932ebbeec92476eb17f8c603b114ca3889d321d7783188c8d61bfb
   languageName: node
   linkType: hard
 
