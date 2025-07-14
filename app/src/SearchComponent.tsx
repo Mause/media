@@ -2,7 +2,6 @@ import ReactLoading from 'react-loading';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import * as qs from './qs';
 import { DisplayError } from './DisplayError';
 import { MLink } from './MLink';
 import { SearchBox } from './SearchBox';
@@ -22,7 +21,7 @@ export function SearchComponent() {
     data: results,
     error,
     isValidating,
-  } = useSWR<SearchResponse, Error>('search?' + qs.stringify({ query }));
+  } = useSWR<SearchResponse, Error>(['search', { query }]);
 
   return (
     <RouteTitle title="Search">

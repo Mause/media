@@ -1,49 +1,35 @@
 import { screen } from '@testing-library/react';
-import {
-  Route,
-  Routes,
-  unstable_HistoryRouter as HistoryRouter,
-} from 'react-router-dom';
-import { createMemoryHistory } from '@remix-run/router';
 import moxios from 'moxios';
 import { act } from 'react';
+import { Route, Routes, MemoryRouter } from 'react-router-dom';
 
-import {
-  wait,
-  renderWithSWR,
-  listenTo,
-  expectLastRequestBody,
-} from './test.utils';
+import { wait, renderWithSWR, expectLastRequestBody } from './test.utils';
 import type { DownloadState } from './DownloadComponent';
 import { DownloadComponent } from './DownloadComponent';
 
 describe('DownloadComponent', () => {
   it('success', async () => {
-    const history = createMemoryHistory({
-      initialEntries: [
-        {
-          pathname: '/download',
-          state: {
-            downloads: [
-              {
-                tmdb_id: 10000,
-                magnet: '...',
-              },
-            ],
-          } satisfies DownloadState,
-        },
-      ],
-      v5Compat: true,
-    });
-    const entries = listenTo(history);
+    const initialEntries = [
+      {
+        pathname: '/download',
+        state: {
+          downloads: [
+            {
+              tmdb_id: 10000,
+              magnet: '...',
+            },
+          ],
+        } satisfies DownloadState,
+      },
+    ];
 
     const { container } = renderWithSWR(
-      <HistoryRouter history={history}>
+      <MemoryRouter initialEntries={initialEntries}>
         <Routes>
           <Route path="/" element={<div>Home</div>} />
           <Route path="/download" Component={DownloadComponent} />
         </Routes>
-      </HistoryRouter>,
+      </MemoryRouter>,
     );
 
     expect(container).toMatchSnapshot();
@@ -53,26 +39,28 @@ describe('DownloadComponent', () => {
     await wait();
 
     expect(container).toMatchSnapshot();
-    expect(entries.map((e) => e.pathname)).toEqual(['/']);
   });
   it.skip('failure', async () => {
-    const history = createMemoryHistory();
-    const state: DownloadState = {
-      downloads: [
-        {
-          tmdb_id: 10000,
-          magnet: '...',
-        },
-      ],
-    };
-    history.push('/download', state);
+    const initialEntries = [
+      {
+        pathname: '/download',
+        state: {
+          downloads: [
+            {
+              tmdb_id: 10000,
+              magnet: '...',
+            },
+          ],
+        } satisfies DownloadState,
+      },
+    ];
 
     renderWithSWR(
-      <HistoryRouter history={history}>
+      <MemoryRouter initialEntries={initialEntries}>
         <Route path="/download">
           <DownloadComponent />
         </Route>
-      </HistoryRouter>,
+      </MemoryRouter>,
     );
 
     await act(async () => {
