@@ -1,21 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Alert, Breadcrumbs, Typography } from '@mui/material';
+import * as _ from 'lodash-es';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { Alert, Breadcrumbs, Typography } from '@mui/material';
-import { useAuth0 } from '@auth0/auth0-react';
-import * as _ from 'lodash-es';
-
+import { DisplayError } from './DisplayError';
+import { DisplayTorrent } from './DisplayTorrent';
+import type { ManualAddComponentState } from './ManualAddComponent';
+import { MLink } from './MLink';
+import { MonitorAddComponent } from './MonitorComponent';
 import * as qs from './qs';
-import { subscribe, getToken } from './utils';
-import type { Torrents } from './streaming';
 import { Loading } from './render';
 import { Shared } from './SeasonSelectComponent';
 import type { components } from './schema';
-import { DisplayError } from './DisplayError';
-import { MonitorAddComponent } from './MonitorComponent';
-import { MLink } from './MLink';
-import { DisplayTorrent } from './DisplayTorrent';
-import type { ManualAddComponentState } from './ManualAddComponent';
+import type { Torrents } from './streaming';
+import { getToken, subscribe } from './utils';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
@@ -51,7 +50,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
   const { season, episode, tmdb_id } = useParams();
 
   const { data: meta } = useSWR<{ title: string }>(
-    (season ? 'tv' : 'movie') + '/' + tmdb_id,
+    `${season ? 'tv' : 'movie'}/${tmdb_id}`,
   );
   const { data: torrents } = useSWR<Torrents>('torrents');
   const {
@@ -59,7 +58,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     loading,
     errors,
   } = useSubscribes<ITorrent>(
-    `/api/stream/${type}/${tmdb_id}?` + qs.stringify({ season, episode }),
+    `/api/stream/${type}/${tmdb_id}?${qs.stringify({ season, episode })}`,
   );
   const dt = (result: ITorrent) => (
     <DisplayTorrent
@@ -187,7 +186,7 @@ function useSubscribe<T>(
   name: string,
   authorization?: string,
 ): SubscriptionShape<T> {
-  const url = baseUrl + '&source=' + name;
+  const url = `${baseUrl}&source=${name}`;
   const [subscription, setSubscription] = useState<SubscriptionShape<T>>({
     items: [],
     loading: true,

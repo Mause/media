@@ -1,13 +1,12 @@
 import { screen } from '@testing-library/react';
-import { Route, Routes, MemoryRouter } from 'react-router-dom';
 import { HttpResponse, http } from 'msw';
 import { act } from 'react';
-
-import { renderWithSWR, waitForRequests } from './test.utils';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import type { DownloadCall, DownloadState } from './DownloadComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { server } from './msw';
 import type { paths } from './schema';
+import { renderWithSWR, waitForRequests } from './test.utils';
 
 type DownloadResponse =
   paths['/api/download']['post']['responses']['200']['content']['application/json'];
@@ -28,7 +27,7 @@ describe('DownloadComponent', () => {
       },
     ];
 
-    let body: DownloadCall[] | undefined = undefined;
+    let body: DownloadCall[] | undefined;
     server.use(
       http.post('/api/download', async ({ request }) => {
         body = (await request.json()) as DownloadCall[];

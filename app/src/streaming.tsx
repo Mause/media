@@ -1,30 +1,29 @@
-import { useSentryToolbar } from '@sentry/toolbar';
-import * as Sentry from '@sentry/react';
-import type { ErrorInfo, ReactNode } from 'react';
-import { useEffect } from 'react';
-import {
-  RouterProvider,
-  createBrowserRouter,
-  Outlet,
-  useLocation,
-  useMatches,
-  createRoutesFromChildren,
-  matchRoutes,
-  useNavigationType,
-} from 'react-router-dom';
-import type { FallbackProps } from 'react-error-boundary';
-import { ErrorBoundary } from 'react-error-boundary';
+import { useAuth0 } from '@auth0/auth0-react';
 import { Grid, Link as MaterialLink } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { SWRConfig } from 'swr';
+import * as Sentry from '@sentry/react';
 import { useProfiler } from '@sentry/react';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useSentryToolbar } from '@sentry/toolbar';
 import * as _ from 'lodash-es';
-
-import { load, getToken } from './utils';
-import type { components } from './schema';
+import type { ErrorInfo, ReactNode } from 'react';
+import { useEffect } from 'react';
+import type { FallbackProps } from 'react-error-boundary';
+import { ErrorBoundary } from 'react-error-boundary';
+import {
+  createBrowserRouter,
+  createRoutesFromChildren,
+  matchRoutes,
+  Outlet,
+  RouterProvider,
+  useLocation,
+  useMatches,
+  useNavigationType,
+} from 'react-router-dom';
+import { SWRConfig } from 'swr';
 import { ExtMLink, MLink } from './MLink';
 import routes from './routes';
+import type { components } from './schema';
+import { getToken, load } from './utils';
 
 if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -197,7 +196,7 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
         // five minute refresh
         refreshInterval: 5 * 60 * 1000,
         fetcher: async (path: string | [string, object]) => {
-          let params = undefined;
+          let params;
           if (Array.isArray(path)) {
             params = path[1];
             path = path[0];
@@ -207,7 +206,7 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
             params,
             auth.isAuthenticated
               ? {
-                  Authorization: 'Bearer ' + (await getToken(auth)),
+                  Authorization: `Bearer ${await getToken(auth)}`,
                 }
               : {},
           );

@@ -1,18 +1,17 @@
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-
-import type { ITorrent } from './OptionsComponent';
-import { Loading } from './render';
-import { EpisodeSelectBreadcrumbs } from './EpisodeSelectComponent';
-import { MLink } from './MLink';
-import type { DownloadCall } from './DownloadComponent';
-import type { Torrents } from './streaming';
 import { DisplayError } from './DisplayError';
 import { DisplayTorrent } from './DisplayTorrent';
-import { RouteTitle } from './RouteTitle';
-import type { paths } from './schema';
-import type { GetResponse } from './utils';
+import type { DownloadCall } from './DownloadComponent';
+import { EpisodeSelectBreadcrumbs } from './EpisodeSelectComponent';
 import type { ManualAddComponentState } from './ManualAddComponent';
+import { MLink } from './MLink';
+import type { ITorrent } from './OptionsComponent';
+import { RouteTitle } from './RouteTitle';
+import { Loading } from './render';
+import type { paths } from './schema';
+import type { Torrents } from './streaming';
+import type { GetResponse } from './utils';
 
 type DownloadAllResponse = GetResponse<
   paths['/api/select/{tmdb_id}/season/{season}/download_all']

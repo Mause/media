@@ -1,22 +1,21 @@
-import useSWR from 'swr';
+import SearchIcon from '@mui/icons-material/Search';
 import {
-  Grid,
-  styled,
-  IconButton,
   Card,
-  CardHeader,
   CardContent,
+  CardHeader,
   CardMedia,
+  Grid,
+  IconButton,
+  styled,
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
-
-import type { paths } from './schema';
-import { Loading } from './render';
+import useSWR from 'swr';
 import { DisplayError } from './DisplayError';
-import type { GetResponse } from './utils';
 import { RouteTitle } from './RouteTitle';
+import { Loading } from './render';
+import type { paths } from './schema';
+import type { GetResponse } from './utils';
 
 export type DiscoverResponse = Pick<
   GetResponse<paths['/api/discover']>,

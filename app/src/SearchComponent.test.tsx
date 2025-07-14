@@ -1,10 +1,9 @@
-import { Route, MemoryRouter, Routes } from 'react-router-dom';
-import { http, HttpResponse } from 'msw';
-
+import { HttpResponse, http } from 'msw';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { server } from './msw';
 import type { SearchResponse } from './SearchComponent';
 import { SearchComponent } from './SearchComponent';
 import { renderWithSWR, waitForRequests } from './test.utils';
-import { server } from './msw';
 
 test('SearchComponent', async () => {
   server.use(

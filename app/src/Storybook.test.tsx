@@ -1,11 +1,10 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { HttpResponse, http } from 'msw';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { http, HttpResponse } from 'msw';
-
-import { renderWithSWR } from './test.utils';
-import { Storybook } from './Storybook';
 import { server } from './msw';
+import { Storybook } from './Storybook';
+import { renderWithSWR } from './test.utils';
 
 describe('Storybook', () => {
   it('renders without crashing', async () => {
