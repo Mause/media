@@ -35,7 +35,7 @@ from .types import ImdbId, TmdbId
 def get_plex(settings: Annotated[Settings, Depends(get_settings)]) -> PlexServer:
     acct = MyPlexAccount(token=settings.plex_token.get_secret_value())
     novell = trace(acct.resource)('Novell')
-    # novell.connections = [c for c in novell.connections if not c.local]
+    novell.connections = [c for c in novell.connections if not c.local]
     return trace(novell.connect)(ssl=True)
 
 
