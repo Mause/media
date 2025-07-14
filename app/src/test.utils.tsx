@@ -8,8 +8,6 @@ import {
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
-import type { Location, MemoryHistory } from '@remix-run/router';
-import type { Listener } from '@remix-run/router/dist/history';
 import { HelmetProvider } from 'react-helmet-async';
 
 import { SwrConfigWrapper } from './streaming';
@@ -35,22 +33,6 @@ export function renderWithSWR(el: ReactElement) {
       </StyledEngineProvider>
     </Auth0Context.Provider>,
   );
-}
-
-export function listenTo(hist: MemoryHistory) {
-  const entries: Location[] = [];
-  const otherListeners: Listener[] = [];
-  hist.listen((hist) => {
-    entries.push(hist.location);
-    for (const listener of otherListeners) {
-      listener(hist);
-    }
-  });
-  hist.listen = (listener) => {
-    otherListeners.push(listener);
-    return () => {};
-  };
-  return entries;
 }
 
 export async function waitForRequests() {
