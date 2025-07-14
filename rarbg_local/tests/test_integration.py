@@ -3,6 +3,7 @@ from collections.abc import AsyncGenerator, Generator
 from datetime import datetime
 from typing import TYPE_CHECKING, Annotated, Any, Never
 from unittest.mock import MagicMock, patch
+from urllib.parse import urlencode
 
 from aioresponses import aioresponses as Aioresponses
 from async_asgi_testclient import TestClient
@@ -12,7 +13,7 @@ from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from lxml.builder import E
 from lxml.etree import tostring
 from psycopg import OperationalError
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 from pytest import LogCaptureFixture, MonkeyPatch, fixture, mark, raises
 from pytest_snapshot.plugin import Snapshot
 from responses import RequestsMock
@@ -26,11 +27,11 @@ from ..auth import get_current_user
 from ..db import MAX_TRIES, Download, User, create_episode, create_movie
 from ..health import DiagnosticsRoot
 from ..main import get_episodes
-from ..models import ITorrent
+from ..models import ITorrent, ProviderSource
 from ..new import SearchResponse, Settings, get_settings
 from ..providers.abc import MovieProvider
 from ..providers.piratebay import PirateBayProvider
-from ..tmdb import ExternalIds
+from ..tmdb import MovieExternalIds, TvExternalIds
 from ..types import ImdbId, TmdbId
 from .conftest import add_json, assert_match_json, themoviedb, tolist
 from .factories import (
@@ -123,7 +124,7 @@ def stub_movie_external_ids(aioresponses: Aioresponses) -> None:
     themoviedb(
         aioresponses,
         f'/movie/{tmdb_id}/external_ids',
-        ExternalIds.model_validate(
+        MovieExternalIds.model_validate(
             {'id': tmdb_id, 'imdb_id': "tt8425034"}
         ).model_dump(),
     )
@@ -645,7 +646,9 @@ def stub_tv_external_ids(
     themoviedb(
         aioresponses,
         f'/tv/{tmdb_id}/external_ids',
-        ExternalIds.model_validate({'id': tmdb_id, 'imdb_id': 'tt00000'}).model_dump(),
+        TvExternalIds.model_validate(
+            {'id': tmdb_id, 'imdb_id': 'tt00000', 'tvdb_id': None}
+        ).model_dump(),
     )
 
 
@@ -767,7 +770,10 @@ def add_xml(responses: RequestsMock, method: str, url: str, body: '_Element') ->
 
 @mark.asyncio
 async def test_plex_redirect(
-    test_client: TestClient, responses: RequestsMock, snapshot: Snapshot
+    test_client: TestClient,
+    responses: RequestsMock,
+    aioresponses: Aioresponses,
+    snapshot: Snapshot,
 ) -> None:
     add_xml(
         responses,
@@ -787,19 +793,84 @@ async def test_plex_redirect(
         E.Root(machineIdentifier="aaaa"),
     )
     add_xml(responses, 'GET', 'https://test/library', E.Library())
+    imdb_id = ImdbId('tt00000')
+    tmdb_id = TmdbId(10000)
     add_xml(
         responses,
         'GET',
-        'https://test/library/all?guid=com.plexapp.agents.imdb%3A%2F%2Ftt10000%3Flang%3Den',
-        E.Search(
-            E.Directory(
-                type="show",
-                title="Hello World",
-                ratingKey="666",
+        'https://test/library/sections',
+        E.Sections(
+            E.Section(
+                title='TV Shows',
+                key='1',
+                type='show',
+                agent='com.plexapp.agents.thetvdb',
             )
         ),
     )
+    add_xml(
+        responses,
+        'GET',
+        'https://test/library/sections/1/all?includeGuids=1',
+        E.Section(getattr(E, 'Video.movie')(), librarySectionID='1'),
+    )
+    agent_identifier = "com.plexapp.agents.thetvdb"
+    guid = 'plex://aaaaaaaaa'
+    add_xml(
+        responses,
+        'GET',
+        f'https://test/matches?manual=1&title=tmdb-{tmdb_id}&year=None&language=None&agent={agent_identifier}',
+        E.Search(E.SearchResult(guid=guid)),
+    )
+    add_xml(
+        responses,
+        'GET',
+        f'https://test/matches?manual=1&title=imdb-{imdb_id}&year=None&language=None&agent=com.plexapp.agents.thetvdb',
+        E.Search(E.SearchResult(guid=guid)),
+    )
 
+    add_xml(
+        responses,
+        'GET',
+        'https://test/library/sections/1/all?includeMeta=1&includeAdvanced=1&X-Plex-Container-Start=0&X-Plex-Container-Size=0',
+        E.AllFromSection(
+            E.Meta(
+                E.Type(
+                    type='show',
+                )
+            )
+        ),
+    )
+    add_xml(
+        responses,
+        'GET',
+        'https://test/library/sections/1/all?'
+        + urlencode({'includeGuids': '1', 'show.guid': guid}),
+        E.Section(
+            E.Directory(
+                title='Hello World',
+                type='show',
+                ratingKey='666',
+            )
+        ),
+    )
+    add_xml(
+        responses,
+        'GET',
+        'https://test/library/sections/1/collections?includeMeta=1&includeAdvanced=1&X-Plex-Container-Start=0&X-Plex-Container-Size=0',
+        E.Collections(),
+    )
+    add_xml(
+        responses,
+        'GET',
+        'https://test/system/agents?mediaType=2',
+        E.Agents(
+            E.Agent(
+                name="thetvdb",
+                identifier=agent_identifier,
+            )
+        ),
+    )
     add_xml(
         responses,
         'GET',
@@ -812,8 +883,9 @@ async def test_plex_redirect(
             )
         ),
     )
+    stub_tv_external_ids(aioresponses, tmdb_id=tmdb_id)
 
-    r = await test_client.get('/api/plex/imdb/tt10000')
+    r = await test_client.get(f'/api/plex/tv/{tmdb_id}')
     r.raise_for_status()
     assert_match_json(snapshot, r, 'plex_redirect.json')
 
@@ -833,14 +905,14 @@ async def test_psycopg2_error(
     monkeypatch.setattr('psycopg.AsyncConnection.connect', replacement)
 
     do = fastapi_app.dependency_overrides
-    fastapi_app.dependency_overrides
     cu = do[get_current_user]
     do.clear()
     do.update(
         {
             get_current_user: cu,
             get_settings: lambda: Settings(
-                database_url='postgresql:///:memory:', plex_token='plex_token'
+                database_url='postgresql:///:memory:',
+                plex_token=SecretStr('plex_token'),
             ),
         }
     )
@@ -917,7 +989,7 @@ async def test_websocket(
             self, imdb_id: ImdbId, tmdb_id: TmdbId
         ) -> AsyncGenerator[ITorrent, None]:
             yield ITorrent(
-                source="piratebay",
+                source=ProviderSource.PIRATEBAY,
                 title="Ancient Aliens 480p x264-mSD",
                 seeders=2,
                 download="magnet:?xt=urn:btih:00000000000000000",

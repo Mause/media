@@ -18,6 +18,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
 import useSWRMutation from 'swr/mutation';
 import { useAuth0 } from '@auth0/auth0-react';
+import * as uritemplate from 'uritemplate';
 
 import type { GetResponse } from './utils';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
@@ -61,12 +62,15 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   );
 }
 
-type PlexResponse = GetResponse<paths['/api/plex/imdb/{imdb_id}']>;
+const path = '/api/plex/{thing_type}/{tmdb_id}' as const;
+type PlexResponse = GetResponse<paths[typeof path]>;
 
 function OpenPlex({ download }: { download: { imdb_id: string } }) {
   const auth = useAuth0();
   const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
-    `/api/plex/imdb/${download.imdb_id}`,
+    uritemplate.parse(path).expand({
+      imdb_id: download.imdb_id,
+    }),
     async (key: string): Promise<PlexResponse> => {
       const res = await fetch(key, {
         headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
@@ -76,7 +80,10 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
   );
 
   if (data) {
-    return <Navigate to={data.link} />;
+    const first = _.toPairs(data)
+      .map(([, v]) => v?.link)
+      .find((v) => v);
+    return <Navigate to={first!} />;
   }
 
   return (
