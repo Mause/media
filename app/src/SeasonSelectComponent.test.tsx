@@ -1,12 +1,18 @@
 import { screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import moxios from 'moxios';
+import axios from 'axios';
+import { http, HttpResponse } from 'msw';
 
 import type { Season, TV } from './SeasonSelectComponent';
 import { SeasonSelectComponent } from './SeasonSelectComponent';
-import { mock, wait, renderWithSWR } from './test.utils';
+import { renderWithSWR, waitForRequests } from './test.utils';
 import { EpisodeSelectComponent } from './EpisodeSelectComponent';
+import { server } from './msw';
 
 test('SeasonSelectComponent  render', async () => {
+  moxios.uninstall(axios);
+
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/select/1/season']}>
       <Routes>
@@ -18,24 +24,30 @@ test('SeasonSelectComponent  render', async () => {
     </MemoryRouter>,
   );
 
-  await mock<TV>('/api/tv/1', {
-    title: 'Hello',
-    number_of_seasons: 1,
-    imdb_id: null,
-    seasons: [
-      {
-        season_number: 1,
-        episode_count: 1,
-      },
-    ],
-  });
-  await wait();
+  server.use(
+    http.get('/api/tv/1', () =>
+      HttpResponse.json({
+        title: 'Hello',
+        number_of_seasons: 1,
+        imdb_id: null,
+        seasons: [
+          {
+            season_number: 1,
+            episode_count: 1,
+          },
+        ],
+      } satisfies TV),
+    ),
+  );
+  await waitForRequests();
 
   expect(screen.getByTestId('title').textContent).toEqual('Hello');
   expect(container).toMatchSnapshot();
 });
 
 test('EpisodeSelectComponent render', async () => {
+  moxios.uninstall(axios);
+
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/select/1/season/1']}>
       <Routes>
@@ -47,16 +59,20 @@ test('EpisodeSelectComponent render', async () => {
     </MemoryRouter>,
   );
 
-  await mock<Season>('/api/tv/1/season/1', {
-    episodes: [
-      {
-        episode_number: 1,
-        id: 1,
-        name: 'Episode 1',
-      },
-    ],
-  });
-  await wait();
+  server.use(
+    http.get('/api/tv/1/season/1', () =>
+      HttpResponse.json({
+        episodes: [
+          {
+            episode_number: 1,
+            id: 1,
+            name: 'Episode 1',
+          },
+        ],
+      } satisfies Season),
+    ),
+  );
+  await waitForRequests();
 
   expect(screen.getByTestId('title').textContent).toEqual('Season 1');
   expect(container).toMatchSnapshot();
