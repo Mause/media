@@ -1,10 +1,36 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { http, HttpResponse } from 'msw';
+import axios from 'axios';
+import moxios from 'moxios';
 
-import { renderWithSWR, mock, wait } from './test.utils';
+import { renderWithSWR, waitForRequests } from './test.utils';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import type { ITorrent } from './OptionsComponent';
+import { server } from './msw';
 
 test('DownloadAllComponent', async () => {
+  moxios.uninstall(axios);
+  server.use(
+    http.get('/api/select/1/season/1/download_all', () =>
+      HttpResponse.json({
+        packs: [
+          {
+            source: 'horriblesubs',
+            category: 'Movie',
+            download: 'magnets://?xt=hello',
+            episode_info: { seasonnum: 1, epnum: 1 },
+            seeders: 5,
+            title: 'Hello World',
+          },
+        ] satisfies ITorrent[],
+        incomplete: [],
+        complete: [],
+      }),
+    ),
+  );
+  server.use(http.get('/api/tv/1', () => HttpResponse.json({})));
+  server.use(http.get('/api/torrents', () => HttpResponse.json({})));
+
   const { container } = renderWithSWR(
     <MemoryRouter initialEntries={['/select/1/season/1/download_all']}>
       <Routes>
@@ -18,23 +44,7 @@ test('DownloadAllComponent', async () => {
 
   expect(container).toMatchSnapshot();
 
-  const packs: ITorrent[] = [
-    {
-      source: 'horriblesubs',
-      category: 'Movie',
-      download: 'magnet:....',
-      episode_info: { seasonnum: 1, epnum: 1 },
-      seeders: 5,
-      title: 'Hello World',
-    },
-  ];
-
-  await mock('/api/select/1/season/1/download_all', {
-    packs,
-    incomplete: [],
-    complete: [],
-  });
-  await wait();
+  await waitForRequests();
 
   expect(container).toMatchSnapshot();
 });
