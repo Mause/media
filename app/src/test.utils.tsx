@@ -75,12 +75,19 @@ export function expectLastRequestBody() {
 
 export async function waitForRequests() {
   await act(async () => {
-    await new Promise<void>((resolve) => {
-      const listener = () => {
-        server.events.removeListener('request:end', listener);
-        resolve();
-      };
-      return server.events.on('request:end', listener);
-    });
+    await Promise.race([
+      new Promise<void>((resolve) => {
+        const listener = () => {
+          server.events.removeListener('request:end', listener);
+          resolve();
+        };
+        return server.events.on('request:end', listener);
+      }),
+      new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject(new Error('Timed out waiting for requests'));
+        }, 1000);
+      }),
+    ]);
   });
 }

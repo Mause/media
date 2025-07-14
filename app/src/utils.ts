@@ -66,7 +66,7 @@ export function getPrefix() {
 
 export async function load<T>(
   path: string,
-  params?: string,
+  params?: object,
   headers?: RawAxiosRequestHeaders,
 ): Promise<T> {
   const url = `${getPrefix()}/api/${path}`;
