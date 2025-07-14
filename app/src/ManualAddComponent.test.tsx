@@ -1,10 +1,15 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { http, HttpResponse } from 'msw';
+import axios from 'axios';
+import moxios from 'moxios';
 
-import { renderWithSWR, wait, mock } from './test.utils';
+import { renderWithSWR, waitForRequests } from './test.utils';
 import type { ManualAddComponentState } from './ManualAddComponent';
 import { ManualAddComponent } from './ManualAddComponent';
+import { server } from './msw';
 
 it('works', async () => {
+  moxios.uninstall(axios);
   const { container } = renderWithSWR(
     <MemoryRouter
       initialEntries={[
@@ -25,10 +30,14 @@ it('works', async () => {
 
   expect(container).toMatchSnapshot();
 
-  await mock('/api/tv/12345', {
-    title: 'Test TV Show',
-  });
-  await wait();
+  server.use(
+    http.get('/api/tv/12345', () =>
+      HttpResponse.json({
+        title: 'Test TV Show',
+      }),
+    ),
+  );
+  await waitForRequests();
 
   expect(container).toMatchSnapshot();
 });
