@@ -1,14 +1,17 @@
 import { screen } from '@testing-library/react';
-import moxios from 'moxios';
-import { act } from 'react';
 import { Route, Routes, MemoryRouter } from 'react-router-dom';
+import axios from 'axios';
+import moxios from 'moxios';
+import { HttpResponse, http } from 'msw';
 
-import { wait, renderWithSWR, expectLastRequestBody } from './test.utils';
+import { renderWithSWR, waitForRequests } from './test.utils';
 import type { DownloadState } from './DownloadComponent';
 import { DownloadComponent } from './DownloadComponent';
+import { server } from './msw';
 
 describe('DownloadComponent', () => {
   it('success', async () => {
+    moxios.uninstall(axios);
     const initialEntries = [
       {
         pathname: '/download',
@@ -23,6 +26,15 @@ describe('DownloadComponent', () => {
       },
     ];
 
+    server.use(
+      http.post('/api/download', async ({ request }) => {
+        expect(await request.json()).toEqual([
+          { magnet: '...', tmdb_id: 10000 },
+        ]);
+        return HttpResponse.json({});
+      }),
+    );
+
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={initialEntries}>
         <Routes>
@@ -34,13 +46,12 @@ describe('DownloadComponent', () => {
 
     expect(container).toMatchSnapshot();
 
-    await moxios.stubOnce('POST', /\/api\/download/, {});
-    expectLastRequestBody().toEqual([{ magnet: '...', tmdb_id: 10000 }]);
-    await wait();
+    await waitForRequests();
 
     expect(container).toMatchSnapshot();
   });
   it.skip('failure', async () => {
+    moxios.uninstall(axios);
     const initialEntries = [
       {
         pathname: '/download',
@@ -63,12 +74,8 @@ describe('DownloadComponent', () => {
       </MemoryRouter>,
     );
 
-    await act(async () => {
-      await moxios.stubFailure('POST', /\/api\/download/, {
-        status: 500,
-        response: { body: {}, message: 'an error has occured' },
-      });
-    });
+    server.use(http.post('/api/download', () => HttpResponse.error()));
+    await waitForRequests();
 
     expect(await screen.findByTestId('errorMessage')).toHaveTextContent(
       'an error has occured',
