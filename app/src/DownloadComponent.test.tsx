@@ -5,7 +5,7 @@ import moxios from 'moxios';
 import { HttpResponse, http } from 'msw';
 
 import { renderWithSWR, waitForRequests } from './test.utils';
-import type { DownloadState } from './DownloadComponent';
+import type { DownloadCall, DownloadState } from './DownloadComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { server } from './msw';
 
@@ -26,11 +26,10 @@ describe('DownloadComponent', () => {
       },
     ];
 
+    let body: DownloadCall[];
     server.use(
       http.post('/api/download', async ({ request }) => {
-        expect(await request.json()).toEqual([
-          { magnet: '...', tmdb_id: 10000 },
-        ]);
+        body = (await request.json()) as DownloadCall[];
         return HttpResponse.json({});
       }),
     );
@@ -47,6 +46,7 @@ describe('DownloadComponent', () => {
     expect(container).toMatchSnapshot();
 
     await waitForRequests();
+    expect(body).toEqual([{ magnet: '...', tmdb_id: 10000 }]);
 
     expect(container).toMatchSnapshot();
   });
