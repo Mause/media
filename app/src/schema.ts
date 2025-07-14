@@ -1113,7 +1113,11 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['PlexResponse_PlexMedia_'][];
+          'application/json': {
+            [key: string]:
+              | components['schemas']['PlexResponse_PlexMedia_']
+              | null;
+          };
         };
       };
       /** @description Validation Error */

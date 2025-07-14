@@ -637,9 +637,16 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+                  "type": "object",
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "title": "Response Get Plex Imdb Api Plex  Thing Type   Tmdb Id  Get"
                 }
