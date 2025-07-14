@@ -196,8 +196,13 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
       value={{
         // five minute refresh
         refreshInterval: 5 * 60 * 1000,
-        fetcher: async (path: string, params: string) =>
-          await load(
+        fetcher: async (path: string | [string, object]) => {
+          let params = undefined;
+          if (Array.isArray(path)) {
+            params = path[1];
+            path = path[0];
+          }
+          return await load(
             path,
             params,
             auth.isAuthenticated
@@ -205,7 +210,8 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
                   Authorization: 'Bearer ' + (await getToken(auth)),
                 }
               : {},
-          ),
+          );
+        },
       }}
     >
       {children}
