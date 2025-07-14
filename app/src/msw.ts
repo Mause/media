@@ -13,3 +13,11 @@ server.events.on('request:end', ({ request }) => {
 server.events.on('request:unhandled', ({ request }) => {
   console.error('Request unhandled:', request.method, request.url);
 });
+server.events.on('unhandledException', ({ request, error }) => {
+  console.error(
+    'Request unhandledException:',
+    request.method,
+    request.url,
+    error,
+  );
+});

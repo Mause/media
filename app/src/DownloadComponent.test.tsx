@@ -3,9 +3,13 @@ import { Route, Routes, MemoryRouter } from 'react-router-dom';
 import { HttpResponse, http } from 'msw';
 
 import { renderWithSWR, waitForRequests } from './test.utils';
-import type { DownloadState } from './DownloadComponent';
+import type { DownloadCall, DownloadState } from './DownloadComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { server } from './msw';
+import type { paths } from './schema';
+
+type DownloadResponse =
+  paths['/api/download']['post']['responses']['200']['content']['application/json'];
 
 describe('DownloadComponent', () => {
   it('success', async () => {
@@ -23,12 +27,28 @@ describe('DownloadComponent', () => {
       },
     ];
 
+    let body: DownloadCall[] | undefined = undefined;
     server.use(
       http.post('/api/download', async ({ request }) => {
-        expect(await request.json()).toEqual([
-          { magnet: '...', tmdb_id: 10000 },
-        ]);
-        return HttpResponse.json({});
+        body = (await request.json()) as DownloadCall[];
+        return HttpResponse.json([
+          {
+            id: 12345,
+            download: {
+              tmdb_id: 10000,
+              transmission_id: '12345',
+              id: 12345,
+              imdb_id: 'tt1234567',
+              type: 'movie',
+              title: 'Test Movie',
+              timestamp: '2023-10-01T00:00:00Z',
+              added_by: {
+                username: 'testuser',
+                first_name: 'Test',
+              },
+            },
+          },
+        ] satisfies DownloadResponse);
       }),
     );
 
@@ -43,7 +63,10 @@ describe('DownloadComponent', () => {
 
     expect(container).toMatchSnapshot();
 
-    await waitForRequests();
+    const request = await waitForRequests();
+    console.log(request.method, request.url);
+    expect(request.method).toBe('POST');
+    expect(body).toEqual([{ magnet: '...', tmdb_id: 10000 }]);
 
     expect(container).toMatchSnapshot();
   });
