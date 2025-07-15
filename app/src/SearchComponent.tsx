@@ -15,7 +15,7 @@ export type SearchResponse = GetResponse<paths['/api/search']>;
 export type TvResponse = components['schemas']['TvResponse'];
 export type MovieResponse = components['schemas']['MovieResponse'];
 
-export function SearchComponent() {
+export default function SearchComponent() {
   const { search } = useLocation();
   const query = new URLSearchParams(search.slice(1)).get('query')!;
 
