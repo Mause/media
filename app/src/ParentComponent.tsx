@@ -71,7 +71,7 @@ const Login = () => {
   }
 };
 
-export function ParentComponentInt() {
+export default function ParentComponentInt() {
   useProfiler('ParentComponentInt');
 
   const auth = useAuth0();
