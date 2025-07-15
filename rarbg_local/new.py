@@ -363,7 +363,7 @@ async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServe
         return await wait_for(get_plex(request, settings), timeout=25)
     except Exception as exc:
         logger.exception('Error getting plex server', exc_info=exc)
-        raise HTTPException(500, 'Error getting plex server')
+        raise HTTPException(500, {'error': 'Error getting plex server', 'details': str(exc)})
 
 
 @api.get('/plex/{thing_type}/{tmdb_id}')
