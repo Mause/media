@@ -16,7 +16,7 @@ export default [
 
       {
         path: '/select/:tmdb_id/season/:season/episode/:episode/options',
-        file: './select/EpisodeOptionsComponent.tsx',
+        file: './select/TvOptionsComponent.tsx',
       },
       {
         path: '/select/:tmdb_id/season/:season/download_all',
