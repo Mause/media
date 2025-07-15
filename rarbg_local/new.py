@@ -1,6 +1,7 @@
 import logging
 import os
 import traceback
+from asyncio import wait_for
 from collections.abc import AsyncGenerator, Callable, Coroutine
 from functools import wraps
 from typing import (
@@ -359,7 +360,7 @@ async def tmdb_configuration() -> Configuration:
 
 async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServer:
     try:
-        return await get_plex(request, settings)
+        return await wait_for(get_plex(request, settings), timeout=25)
     except Exception as exc:
         logger.exception('Error getting plex server', exc_info=exc)
         raise HTTPException(500, 'Error getting plex server')
