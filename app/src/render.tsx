@@ -123,7 +123,6 @@ export function OpenPlex({
         }}
       >
         <span className="unselectable">Open in Plex</span>
-        <Loading loading={isMutating} />
       </MenuItem>
     </>
   );
