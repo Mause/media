@@ -1,9 +1,10 @@
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MockDate from 'mockdate';
+import { http, HttpResponse } from 'msw';
 
 import { Movies, TVShows, Progress, NextEpisodeAirs } from './render';
-import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
+import { renderWithSWR, waitForRequests } from './test.utils';
 import type {
   MovieResponse,
   Torrents,
@@ -12,8 +13,8 @@ import type {
   EpisodeResponse,
 } from './streaming';
 import { getMessage, shouldCollapse } from './utils';
+import { server } from './msw';
 
-usesMoxios();
 beforeEach(() => MockDate.reset());
 
 test('Movies', () => {
@@ -42,6 +43,9 @@ test('Movies', () => {
 });
 
 test('TVShows', () => {
+  server.use(http.get('/api/tv/1/season/1', () => HttpResponse.json({})));
+  server.use(http.get('/api/tv/1', () => HttpResponse.json({})));
+
   const series: SeriesResponse[] = [
     {
       tmdb_id: 1,
@@ -129,6 +133,17 @@ describe('NextEpisodeAirs', () => {
     MockDate.set('2020-04-20');
     const tmdb_id = 10000;
     const season = '1';
+
+    server.use(
+      http.get(`/api/tv/${tmdb_id}/season/${season}`, () =>
+        HttpResponse.json({
+          episodes: [
+            { name: 'EP2', air_date: '2020-04-24', episode_number: 2 },
+          ],
+        }),
+      ),
+    );
+
     const { container } = renderWithSWR(
       <MemoryRouter>
         <NextEpisodeAirs
@@ -140,10 +155,7 @@ describe('NextEpisodeAirs', () => {
       </MemoryRouter>,
     );
 
-    await mock(`tv/${tmdb_id}/season/${season}`, {
-      episodes: [{ name: 'EP2', air_date: '2020-04-24', episode_number: 2 }],
-    });
-    await wait();
+    await waitForRequests();
 
     expect(container).toMatchSnapshot();
   });

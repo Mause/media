@@ -2,12 +2,12 @@ import { act } from 'react';
 import { screen } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import * as _ from 'lodash-es';
+import { http, HttpResponse } from 'msw';
 
 import type { ITorrent } from './OptionsComponent';
 import { MovieOptionsComponent } from './MovieOptionsComponent';
-import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
-
-usesMoxios();
+import { renderWithSWR, waitForRequests } from './test.utils';
+import { server } from './msw';
 
 const sources: ES[] = [];
 type CB = (event: { data: string }) => void;
@@ -31,6 +31,10 @@ Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
   it.skip('failure', async () => {
+    server.use(
+      http.get('movie/1', () => HttpResponse.json({ title: 'Hello World' })),
+    );
+
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
@@ -39,8 +43,7 @@ describe('OptionsComponent', () => {
       </MemoryRouter>,
     );
 
-    await mock('movie/1', { title: 'Hello World' });
-    await wait();
+    await waitForRequests();
 
     expect(container).toMatchSnapshot();
 
@@ -62,7 +65,13 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
   });
-  it.skip('success', () => {
+  it.skip('success', async () => {
+    server.use(
+      http.get('/api/movie/1', () =>
+        HttpResponse.json({ title: 'Hello World' }),
+      ),
+    );
+
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
@@ -70,9 +79,8 @@ describe('OptionsComponent', () => {
         </Route>
       </MemoryRouter>,
     );
-    act(() => {
-      void mock('movie/1', { title: 'Hello World' });
-    });
+
+    await waitForRequests();
 
     expect(container).toMatchSnapshot();
 

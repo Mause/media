@@ -1,8 +1,11 @@
 import logging
 import os
 import traceback
+from asyncio import wait_for
 from collections.abc import AsyncGenerator, Callable, Coroutine
+from contextvars import ContextVar
 from functools import wraps
+from logging import Handler
 from typing import (
     Annotated,
     Any,
@@ -62,7 +65,7 @@ from .models import (
     TvSeasonResponse,
 )
 from .monitor import monitor_ns
-from .plex import get_imdb_in_plex, get_plex, make_plex_url
+from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     get_providers,
     search_for_tv,
@@ -76,6 +79,7 @@ from .singleton import singleton
 from .tmdb import (
     Configuration,
     Discover,
+    ThingType,
     get_configuration,
     get_movie,
     get_movie_imdb_id,
@@ -88,9 +92,13 @@ from .tmdb import (
 from .tmdb import (
     discover as tmdb_discover,
 )
-from .types import ImdbId, TmdbId
+from .types import TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
+
+local_appender: ContextVar[list[logging.LogRecord]] = ContextVar[
+    list[logging.LogRecord]
+]('local_appender')
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -356,19 +364,55 @@ async def tmdb_configuration() -> Configuration:
     return await get_configuration()
 
 
-@api.get('/plex/imdb/{imdb_id}')
+class Appender(Handler):
+    def emit(self, record: logging.LogRecord) -> None:
+        appender = local_appender.get(None)
+        if appender is not None:
+            appender.append(record)
+
+
+logging.getLogger().addHandler(Appender())
+
+
+async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServer:
+    records: list[logging.LogRecord] = []
+    try:
+        token = local_appender.set(records)
+        return await wait_for(get_plex(request, settings), timeout=25)
+    except Exception as exc:
+        local_appender.reset(token)
+        logger.exception('Error getting plex server', exc_info=exc)
+        raise HTTPException(
+            500,
+            {
+                'error': 'Error getting plex server',
+                'details': str(exc),
+                'records': [record.getMessage() for record in records],
+            },
+        ) from exc
+
+
+@api.get('/plex/{thing_type}/{tmdb_id}')
 async def get_plex_imdb(
-    imdb_id: ImdbId,
-    plex: Annotated[PlexServer, Depends(get_plex)],
-) -> PlexResponse[PlexMedia]:
-    dat = get_imdb_in_plex(imdb_id, plex)
+    thing_type: ThingType,
+    tmdb_id: TmdbId,
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> dict[str, PlexResponse[PlexMedia] | None]:
+    plex = await gracefully_get_plex(request, settings)
+
+    dat = await get_imdb_in_plex(thing_type, tmdb_id, plex)
     if not dat:
         raise HTTPException(404, 'Not found in plex')
-    media = PlexMedia.model_validate(dat)
-    return PlexResponse[PlexMedia](
-        item=media,
-        server_id=plex.machineIdentifier,
-    )
+    return {
+        key: PlexResponse[PlexMedia](
+            item=PlexMedia.model_validate(value),
+            server_id=plex.machineIdentifier,
+        )
+        if value
+        else None
+        for key, value in dat.items()
+    }
 
 
 tv_ns = APIRouter(tags=['tv'])
@@ -393,19 +437,6 @@ root = APIRouter()
 @singleton
 def get_static_files(settings: Settings = Depends(get_settings)) -> StaticFiles:
     return StaticFiles(directory=str(settings.static_resources_path))
-
-
-@root.get('/redirect/plex/{imdb_id}')
-def redirect_to_plex(
-    imdb_id: ImdbId, plex: Annotated[PlexServer, Depends(get_plex)]
-) -> RedirectResponse:
-    dat = get_imdb_in_plex(imdb_id, plex)
-    if not dat:
-        raise HTTPException(404, 'Not found in plex')
-
-    server_id = plex.machineIdentifier
-
-    return RedirectResponse(make_plex_url(server_id, dat.ratingKey))
 
 
 @root.get('/redirect/{type_}/{tmdb_id}')

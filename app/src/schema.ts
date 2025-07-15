@@ -208,7 +208,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/api/plex/imdb/{imdb_id}': {
+  '/api/plex/{thing_type}/{tmdb_id}': {
     parameters: {
       query?: never;
       header?: never;
@@ -337,23 +337,6 @@ export interface paths {
     };
     /** Component Diagnostics */
     get: operations['component_diagnostics'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/redirect/plex/{imdb_id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** Redirect To Plex */
-    get: operations['redirect_to_plex'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1117,7 +1100,8 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        imdb_id: string;
+        thing_type: 'movie' | 'tv';
+        tmdb_id: number;
       };
       cookie?: never;
     };
@@ -1129,7 +1113,11 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['PlexResponse_PlexMedia_'];
+          'application/json': {
+            [key: string]:
+              | components['schemas']['PlexResponse_PlexMedia_']
+              | null;
+          };
         };
       };
       /** @description Validation Error */
@@ -1350,37 +1338,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['HealthcheckResponses'];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['HTTPValidationError'];
-        };
-      };
-    };
-  };
-  redirect_to_plex: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        imdb_id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': unknown;
         };
       };
       /** @description Validation Error */

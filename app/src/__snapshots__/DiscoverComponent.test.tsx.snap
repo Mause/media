@@ -35,44 +35,74 @@ exports[`DiscoveryComponent 2`] = `
     class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 css-zjhuaj-MuiGrid-root"
   >
     <div
-      class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-lg-2 css-rv49wc-MuiGrid-root"
+      class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-lg-4 css-q62fa9-MuiGrid-root"
     >
-      <h4>
-        Machinist
-         (
-        2022
-        )
-         
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
-          data-discover="true"
-          href="/select/101/options"
+      <div
+        class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root css-196bwzp-MuiPaper-root-MuiCard-root"
+      >
+        <div
+          class="MuiCardHeader-root css-149tc0y-MuiCardHeader-root"
         >
-          <svg
-            aria-hidden="true"
-            class="svg-inline--fa fa-magnifying-glass "
-            data-icon="magnifying-glass"
-            data-prefix="fas"
-            focusable="false"
-            role="img"
-            viewBox="0 0 512 512"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="MuiCardHeader-content css-1jkp9bu-MuiCardHeader-content"
           >
-            <path
-              d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
-              fill="currentColor"
+            <span
+              class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-16xl4zq-MuiTypography-root"
+            >
+              Machinist
+            </span>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiCardHeader-subheader css-1ro85z9-MuiTypography-root"
+            >
+              2022
+            </span>
+          </div>
+          <div
+            class="MuiCardHeader-action css-116l9hl-MuiCardHeader-action"
+          >
+            <a
+              aria-label="search"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-53g0n7-MuiButtonBase-root-MuiIconButton-root"
+              data-discover="true"
+              href="/select/101/options"
+              tabindex="0"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+                data-testid="SearchIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div
+          class="MuiCardMedia-root css-utntyq-MuiCardMedia-root"
+        >
+          <div
+            class="Poster-root css-2h5k8y"
+          >
+            <img
+              class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-1kuwa16-MuiCardMedia-root"
+              src="https://tmdb.org/original/hello.png"
+              srcset="https://tmdb.org/w800/hello.png 800w"
+              style="width: 0px; height: 0px;"
             />
-          </svg>
-        </a>
-      </h4>
-      <img
-        src="https://tmdb.org/original/hello.png"
-        srcset="https://tmdb.org/w800/hello.png 800w"
-        style="width: 100%;"
-      />
-      <p>
-        A man loses his mind
-      </p>
+          </div>
+        </div>
+        <div
+          class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
+        >
+          <p>
+            A man loses his mind
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

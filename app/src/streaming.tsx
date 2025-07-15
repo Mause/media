@@ -33,6 +33,7 @@ if (import.meta.env.NODE_ENV === 'production') {
     environment: 'development',
     integrations: [
       Sentry.reactRouterV7BrowserTracingIntegration({
+        trackFetchStreamPerformance: true,
         useEffect,
         useLocation,
         useNavigationType,
@@ -40,6 +41,12 @@ if (import.meta.env.NODE_ENV === 'production') {
         matchRoutes,
       }),
     ],
+    // Adds request headers and IP for users, for more info visit:
+    // https://docs.sentry.io/platforms/javascript/guides/react/configuration/options/#sendDefaultPii
+    sendDefaultPii: true,
+
+    // Enable logs to be sent to Sentry
+    _experiments: { enableLogs: true },
     tracesSampleRate: 1.0,
   });
 }
@@ -132,6 +139,9 @@ export function ParentComponentInt() {
           <Grid size={{ xs: 'auto' }}>
             <ExtMLink href="https://app.plex.tv">Plex</ExtMLink>
           </Grid>
+          <Grid size={{ xs: 'auto' }}>
+            <MLink to="/discover">Discover</MLink>
+          </Grid>
           {auth.user && <Grid size={{ xs: 'auto' }}>{auth.user.name}</Grid>}
           <Grid size={{ xs: 'auto' }}>
             <Login />
@@ -186,8 +196,13 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
       value={{
         // five minute refresh
         refreshInterval: 5 * 60 * 1000,
-        fetcher: async (path: string, params: string) =>
-          await load(
+        fetcher: async (path: string | [string, object]) => {
+          let params = undefined;
+          if (Array.isArray(path)) {
+            params = path[1];
+            path = path[0];
+          }
+          return await load(
             path,
             params,
             auth.isAuthenticated
@@ -195,7 +210,8 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
                   Authorization: 'Bearer ' + (await getToken(auth)),
                 }
               : {},
-          ),
+          );
+        },
       }}
     >
       {children}

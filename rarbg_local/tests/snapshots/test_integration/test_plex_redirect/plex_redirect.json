@@ -1,14 +1,30 @@
 {
-  "server_id": "aaaa",
-  "item": {
-    "ratingKey": 666,
-    "title": "Hello World",
-    "year": null,
-    "type": "show",
-    "guid": null,
-    "summary": null,
-    "thumb": null,
-    "art": null
+  "tmdb://10000": {
+    "server_id": "aaaa",
+    "item": {
+      "ratingKey": 666,
+      "title": "Hello World",
+      "year": null,
+      "type": "show",
+      "guid": null,
+      "summary": null,
+      "thumb": null,
+      "art": null
+    },
+    "link": "https://app.plex.tv/desktop#!/server/aaaa/details?key=%252Flibrary%252Fmetadata%252F666"
   },
-  "link": "https://app.plex.tv/desktop#!/server/aaaa/details?key=%2Flibrary%2Fmetadata%2F666"
+  "imdb://tt00000": {
+    "server_id": "aaaa",
+    "item": {
+      "ratingKey": 666,
+      "title": "Hello World",
+      "year": null,
+      "type": "show",
+      "guid": null,
+      "summary": null,
+      "thumb": null,
+      "art": null
+    },
+    "link": "https://app.plex.tv/desktop#!/server/aaaa/details?key=%252Flibrary%252Fmetadata%252F666"
+  }
 }

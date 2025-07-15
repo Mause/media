@@ -593,7 +593,7 @@
         ]
       }
     },
-    "/api/plex/imdb/{imdb_id}": {
+    "/api/plex/{thing_type}/{tmdb_id}": {
       "get": {
         "summary": "Get Plex Imdb",
         "operationId": "get_plex_imdb",
@@ -609,13 +609,25 @@
         ],
         "parameters": [
           {
-            "name": "imdb_id",
+            "name": "thing_type",
             "in": "path",
             "required": true,
             "schema": {
+              "enum": [
+                "movie",
+                "tv"
+              ],
               "type": "string",
-              "pattern": "^tt\\d+$",
-              "title": "Imdb Id"
+              "title": "Thing Type"
+            }
+          },
+          {
+            "name": "tmdb_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Tmdb Id"
             }
           }
         ],
@@ -625,7 +637,18 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+                  "type": "object",
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "title": "Response Get Plex Imdb Api Plex  Thing Type   Tmdb Id  Get"
                 }
               }
             }
@@ -996,44 +1019,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/HealthcheckResponses"
                 }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/redirect/plex/{imdb_id}": {
-      "get": {
-        "summary": "Redirect To Plex",
-        "operationId": "redirect_to_plex",
-        "parameters": [
-          {
-            "name": "imdb_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "pattern": "^tt\\d+$",
-              "title": "Imdb Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
               }
             }
           },

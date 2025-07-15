@@ -6,7 +6,7 @@ import type { FormEvent } from 'react';
 import { useState } from 'react';
 
 import type { DownloadState } from './DownloadComponent';
-import { useLocation } from './utils';
+import { useLocation, getMarker } from './utils';
 import { RouteTitle } from './RouteTitle';
 
 const PREFIX = 'ManualAddComponent';
@@ -23,17 +23,19 @@ const Root = styled('form')(({ theme }) => ({
   },
 }));
 
+export interface ManualAddComponentState {
+  season?: `${string}`;
+  episode?: `${string}`;
+  tmdb_id: `${string}`;
+}
+
 export function ManualAddComponent() {
   function onSubmit(event: FormEvent) {
     event.preventDefault();
     setSubmitted(true);
   }
 
-  const { state: state_s } = useLocation<{
-    season?: string;
-    episode?: string;
-    tmdb_id: string;
-  }>();
+  const { state: state_s } = useLocation<ManualAddComponentState>();
   const state = {
     season: state_s?.season ? parseInt(state_s.season) : undefined,
     episode: state_s?.episode ? parseInt(state_s.episode) : undefined,
@@ -65,7 +67,9 @@ export function ManualAddComponent() {
   return (
     <RouteTitle title="Manual">
       <Root className={classes.root} onSubmit={onSubmit}>
-        <h3>{data?.title}</h3>
+        <h3>
+          {data?.title} {state.season && getMarker(state)}
+        </h3>
         <TextField
           variant="standard"
           placeholder="magnet:..."

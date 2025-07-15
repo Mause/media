@@ -66,10 +66,12 @@ export function getPrefix() {
 
 export async function load<T>(
   path: string,
-  params?: string,
+  params?: object,
   headers?: RawAxiosRequestHeaders,
 ): Promise<T> {
-  const t = await Axios.get<T>(`${getPrefix()}/api/${path}`, {
+  const url = `${getPrefix()}/api/${path}`;
+  console.log('Loading', { url, params });
+  const t = await Axios.get<T>(url, {
     params,
     withCredentials: true,
     headers,
@@ -148,7 +150,11 @@ export function getMarker(episode: {
   season?: number;
   episode?: number | null;
 }) {
-  return String.format('S{0:00}E{1:00}', episode.season, episode.episode);
+  if (episode.episode) {
+    return String.format('S{0:00}E{1:00}', episode.season, episode.episode);
+  } else {
+    return String.format('S{0:00}', episode.season);
+  }
 }
 
 export function getMessage(air_date: string) {

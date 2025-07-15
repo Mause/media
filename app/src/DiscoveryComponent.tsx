@@ -1,11 +1,19 @@
 import useSWR from 'swr';
-import { Grid } from '@mui/material';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  Grid,
+  styled,
+  IconButton,
+  Card,
+  CardHeader,
+  CardContent,
+  CardMedia,
+} from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
+import { Link } from 'react-router-dom';
 
 import type { paths } from './schema';
 import { Loading } from './render';
-import { MLink } from './MLink';
 import { DisplayError } from './DisplayError';
 import type { GetResponse } from './utils';
 import { RouteTitle } from './RouteTitle';
@@ -34,18 +42,25 @@ export function DiscoveryComponent() {
       data={data}
       isValidating={isValidating}
       error={error}
+      build={build}
     />
   );
 }
+
+const build = (base: string | undefined, size: string, poster_path: string) =>
+  `${base}${size}${poster_path}`;
+type BuildFn = typeof build;
 
 export function PureDiscoveryComponent({
   data,
   isValidating,
   error,
+  build,
 }: {
   isValidating: boolean;
   error: Error | undefined;
   data: DiscoverResponse | undefined;
+  build: BuildFn;
 }) {
   return (
     <RouteTitle title="Discover">
@@ -54,15 +69,30 @@ export function PureDiscoveryComponent({
       {error && <DisplayError error={error} />}
       <Grid container spacing={2}>
         {data?.results.map((result) => (
-          <Grid key={result.id} size={{ xs: 12, sm: 6, lg: 2 }}>
-            <h4>
-              {result.title} ({getYear(result.release_date)}){' '}
-              <MLink to={`/select/${result.id}/options`}>
-                <FontAwesomeIcon icon={faSearch} />
-              </MLink>
-            </h4>
-            {result.poster_path && <Poster poster_path={result.poster_path} />}
-            <p>{result.overview}</p>
+          <Grid key={result.id} size={{ xs: 12, sm: 6, lg: 4 }}>
+            <Card variant="outlined">
+              <CardHeader
+                title={result.title}
+                subheader={getYear(result.release_date)}
+                action={
+                  <IconButton
+                    component={Link}
+                    to={`/select/${result.id}/options`}
+                    aria-label="search"
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                }
+              />
+              {result.poster_path && (
+                <CardMedia>
+                  <Poster poster_path={result.poster_path} build={build} />
+                </CardMedia>
+              )}
+              <CardContent>
+                <p>{result.overview}</p>
+              </CardContent>
+            </Card>
           </Grid>
         ))}
       </Grid>
@@ -70,29 +100,54 @@ export function PureDiscoveryComponent({
   );
 }
 
-function Poster({ poster_path }: { poster_path: string }) {
-  const { data, isValidating } = useSWR<Configuration>('tmdb/configuration');
+const PREFIX = 'Poster';
+const classes = {
+  root: `${PREFIX}-root`,
+};
+const PosterElement = styled('div')(() => ({
+  [`& .${classes.root}`]: {
+    width: '100%',
+  },
+}));
 
-  if (isValidating) {
-    return undefined;
-  }
+function Poster({
+  poster_path,
+  build,
+}: {
+  poster_path: string;
+  build: BuildFn;
+}) {
+  const { data } = useSWR<Configuration>('tmdb/configuration');
+  const [width, setWidth] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const { current } = ref;
+    if (current) {
+      setWidth(current.clientWidth);
+    }
+  }, [ref]);
 
-  const base = data!.images.secure_base_url;
-  const build = (size: string) => `${base}${size}${poster_path}`;
+  const base = data?.images?.secure_base_url;
 
-  const srcset = data!.images.poster_sizes
+  const srcset = data?.images.poster_sizes
     .filter((size) => size !== 'original')
-    .map((size) => [build(size), size]);
+    .map((size) => [build(base, size, poster_path), size]);
 
-  const original = build('original');
+  const original = build(base, 'original', poster_path);
 
   return (
-    <img
-      style={{ width: '100%' }}
-      srcSet={srcset
-        .map(([url, size]) => `${url} ${size.slice(1)}${size[0]}`)
-        .join(', ')}
-      src={original}
-    />
+    <PosterElement ref={ref} className={classes.root}>
+      <CardMedia
+        component="img"
+        style={{
+          width,
+          height: width * 1.5,
+        }}
+        srcSet={srcset
+          ?.map(([url, size]) => `${url} ${size.slice(1)}${size[0]}`)
+          .join(', ')}
+        src={original}
+      />
+    </PosterElement>
   );
 }

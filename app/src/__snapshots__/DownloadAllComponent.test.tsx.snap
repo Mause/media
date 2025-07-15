@@ -57,7 +57,8 @@ exports[`DownloadAllComponent 1`] = `
         class="MuiBreadcrumbs-li"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+          aria-current="page"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root active"
           data-discover="true"
           href="/select/1/season"
         />
@@ -114,6 +115,17 @@ exports[`DownloadAllComponent 1`] = `
     </h3>
     <ul />
   </div>
+  <ul>
+    <li>
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+        data-discover="true"
+        href="/manual"
+      >
+        Add manually
+      </a>
+    </li>
+  </ul>
 </div>
 `;
 
@@ -174,7 +186,8 @@ exports[`DownloadAllComponent 2`] = `
         class="MuiBreadcrumbs-li"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+          aria-current="page"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root active"
           data-discover="true"
           href="/select/1/season"
         />
@@ -245,5 +258,16 @@ exports[`DownloadAllComponent 2`] = `
       No results found
     </p>
   </div>
+  <ul>
+    <li>
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+        data-discover="true"
+        href="/manual"
+      >
+        Add manually
+      </a>
+    </li>
+  </ul>
 </div>
 `;

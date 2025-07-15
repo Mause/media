@@ -24,6 +24,7 @@ import useSWRMutation from 'swr/mutation';
 import { useAuth0 } from '@auth0/auth0-react';
 import type { SyntheticEvent } from 'react';
 import { useState, useEffect } from 'react';
+import * as uritemplate from 'uritemplate';
 
 import type { GetResponse } from './utils';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
@@ -67,12 +68,22 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   );
 }
 
-type PlexResponse = GetResponse<paths['/api/plex/imdb/{imdb_id}']>;
+const path = '/api/plex/{thing_type}/{tmdb_id}' as const;
+type PlexResponse = GetResponse<paths[typeof path]>;
 
-function OpenPlex({ download }: { download: { imdb_id: string } }) {
+function OpenPlex({
+  download,
+  type,
+}: {
+  download: { tmdb_id: number };
+  type: 'movie' | 'tv';
+}) {
   const auth = useAuth0();
-  const { data, trigger } = useSWRMutation<PlexResponse>(
-    `plex/imdb/${download.imdb_id}`,
+  const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
+    uritemplate.parse(path).expand({
+      tmdb_id: download.tmdb_id,
+      thing_type: type,
+    } satisfies paths[typeof path]['get']['parameters']['path']),
     async (key: string): Promise<PlexResponse> => {
       const res = await fetch(key, {
         headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
@@ -108,7 +119,10 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
   );
 
   if (data) {
-    return <Navigate to={data.link} />;
+    const first = _.toPairs(data)
+      .map(([, v]) => v?.link)
+      .find((v) => v);
+    return <Navigate to={first!} />;
   }
 
   // Close the Snackbar when data becomes available
@@ -133,6 +147,7 @@ function OpenPlex({ download }: { download: { imdb_id: string } }) {
         }}
       >
         <span className="unselectable">Open in Plex</span>
+        <Loading loading={isMutating} />
       </MenuItem>
     </>
   );
@@ -144,7 +159,7 @@ function RenderMovie({ movie }: { movie: MovieResponse }) {
       <span>{movie.download.title}</span>
       &nbsp;
       <ContextMenu>
-        <OpenPlex download={movie.download} />
+        <OpenPlex download={movie.download} type="movie" />
         <OpenIMDB download={movie.download} />
         {movie.download.added_by ? (
           <MenuItem>Added by: {movie.download.added_by.username}</MenuItem>
@@ -319,7 +334,7 @@ function Series({
         &nbsp;
         <ContextMenu>
           {serie.imdb_id && <OpenIMDB download={serie} />}
-          <OpenPlex download={serie} />
+          <OpenPlex download={serie} type="tv" />
           <MenuItem
             onClick={() => void navigate(`/select/${serie.tmdb_id}/season`)}
           >

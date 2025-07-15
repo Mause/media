@@ -1,15 +1,26 @@
 import type { ReactElement, ReactNode } from 'react';
 import MaterialLink from '@mui/material/Link';
-import { Link } from 'react-router-dom';
+import { NavLink, useMatch } from 'react-router-dom';
 import type { TypographyTypeMap } from '@mui/material';
 
-export function MLink(
-  props: {
-    children: ReactNode;
-    color?: TypographyTypeMap['props']['color'];
-  } & Pick<Parameters<typeof Link>[0], 'to' | 'state'>,
-): ReactElement {
-  return <MaterialLink component={Link} {...props} underline="hover" />;
+type Props = Parameters<typeof NavLink>[0];
+
+export function MLink(props: {
+  children: ReactNode;
+  color?: TypographyTypeMap['props']['color'];
+  to: Props['to'];
+  state?: Props['state'];
+}): ReactElement {
+  const match = useMatch(
+    typeof props.to === 'string' ? props.to : props.to.pathname!,
+  );
+  return (
+    <MaterialLink
+      component={NavLink}
+      {...props}
+      underline={match ? 'always' : 'hover'}
+    />
+  );
 }
 
 export function ExtMLink(props: { href: string; children: string }) {
