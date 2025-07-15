@@ -111,7 +111,7 @@ export function OpenPlex({
     <>
       <Snackbar
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={600000}
         onClose={handleClose}
         message="Media located"
         action={action}
