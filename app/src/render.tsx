@@ -137,7 +137,7 @@ function OpenPlex({
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        message="Note archived"
+        message="Media located"
         action={action}
       />
       <MenuItem
