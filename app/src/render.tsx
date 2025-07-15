@@ -21,7 +21,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
 import useSWRMutation from 'swr/mutation';
 import { useAuth0 } from '@auth0/auth0-react';
-import type { SyntheticEvent } from 'react';
+import type { SyntheticEvent, ReactElement } from 'react';
 import { useState } from 'react';
 import * as uritemplate from 'uritemplate';
 
@@ -85,26 +85,28 @@ export function OpenPlex({
     setOpen(false);
   };
 
-  const action = (
-    <>
-      Opening plex...
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </>
-  );
-
+  let action: ReactElement | null = null;
   if (data) {
     setOpen(false);
     const first = _.toPairs(data)
       .map(([, v]) => v?.link)
       .find((v) => v);
-    return <Navigate to={first!} />;
+
+    action = (
+      <>
+        Opening plex...
+        <IconButton
+          size="small"
+          aria-label="close"
+          color="inherit"
+          onClick={() => {
+            setOpen(false);
+          }}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </>
+    );
   }
 
   return (
