@@ -1,4 +1,5 @@
 import json
+import logging
 from collections.abc import AsyncGenerator, Generator
 from datetime import datetime
 from typing import TYPE_CHECKING, Annotated, Any, Never
@@ -769,12 +770,18 @@ def add_xml(responses: RequestsMock, method: str, url: str, body: '_Element') ->
 
 
 @mark.asyncio
-@patch('rarbg_local.plex.get_plex')
-async def test_plex_error(get_plex: MagicMock, test_client: TestClient) -> None:
-    get_plex.side_effect = Exception('Plex is down')
+@patch('rarbg_local.new.get_plex')
+async def test_plex_error(
+    get_plex: MagicMock, test_client: TestClient, snapshot: Snapshot
+) -> None:
+    async def simulate_get_plex(settings: Settings, token: str) -> None:
+        logging.getLogger(__name__).error('Plex is down')
+        raise Exception('Plex is down')
+
+    get_plex.side_effect = simulate_get_plex
     r = await test_client.get('/api/plex/tv/1')
     assert r.status_code == 500
-    assert r.json() == {'detail': 'Unable to connect to plex: Plex is down'}
+    assert_match_json(snapshot, r, 'plex_error.json')
 
 
 @mark.asyncio
