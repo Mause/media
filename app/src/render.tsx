@@ -23,7 +23,7 @@ import * as _ from 'lodash-es';
 import useSWRMutation from 'swr/mutation';
 import { useAuth0 } from '@auth0/auth0-react';
 import type { SyntheticEvent } from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import * as uritemplate from 'uritemplate';
 
 import type { GetResponse } from './utils';
@@ -119,18 +119,13 @@ function OpenPlex({
   );
 
   if (data) {
+    setOpen(false);
     const first = _.toPairs(data)
       .map(([, v]) => v?.link)
       .find((v) => v);
     return <Navigate to={first!} />;
   }
 
-  // Close the Snackbar when data becomes available
-  useEffect(() => {
-    if (data) {
-      setOpen(false);
-    }
-  }, [data]);
   return (
     <>
       <Snackbar
