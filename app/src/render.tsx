@@ -65,12 +65,19 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
 const path = '/api/plex/{thing_type}/{tmdb_id}' as const;
 type PlexResponse = GetResponse<paths[typeof path]>;
 
-function OpenPlex({ download }: { download: { tmdb_id: number } }) {
+function OpenPlex({
+  download,
+  type,
+}: {
+  download: { tmdb_id: number };
+  type: 'movie' | 'tv';
+}) {
   const auth = useAuth0();
   const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
     uritemplate.parse(path).expand({
       tmdb_id: download.tmdb_id,
-    } satisfies paths[typeof path]['parameters']),
+      thing_type: type,
+    } satisfies paths[typeof path]['get']['parameters']['path']),
     async (key: string): Promise<PlexResponse> => {
       const res = await fetch(key, {
         headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
@@ -104,7 +111,7 @@ function RenderMovie({ movie }: { movie: MovieResponse }) {
       <span>{movie.download.title}</span>
       &nbsp;
       <ContextMenu>
-        <OpenPlex download={movie.download} />
+        <OpenPlex download={movie.download} type="movie" />
         <OpenIMDB download={movie.download} />
         {movie.download.added_by ? (
           <MenuItem>Added by: {movie.download.added_by.username}</MenuItem>
@@ -279,7 +286,7 @@ function Series({
         &nbsp;
         <ContextMenu>
           {serie.imdb_id && <OpenIMDB download={serie} />}
-          <OpenPlex download={serie} />
+          <OpenPlex download={serie} type="tv" />
           <MenuItem
             onClick={() => void navigate(`/select/${serie.tmdb_id}/season`)}
           >
