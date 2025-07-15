@@ -24,3 +24,6 @@ yarn-error.log*
 
 bundlemeta.json
 stats.html
+
+# Sentry Config File
+.env.sentry-build-plugin
