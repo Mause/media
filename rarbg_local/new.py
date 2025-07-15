@@ -3,7 +3,9 @@ import os
 import traceback
 from asyncio import wait_for
 from collections.abc import AsyncGenerator, Callable, Coroutine
+from contextvars import ContextVar
 from functools import wraps
+from logging import Handler
 from typing import (
     Annotated,
     Any,
@@ -93,6 +95,8 @@ from .tmdb import (
 from .types import TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
+
+local_appender = ContextVar('local_appender', default=None)
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -358,12 +362,32 @@ async def tmdb_configuration() -> Configuration:
     return await get_configuration()
 
 
+class Appender(Handler):
+    def emit(self, record: logging.LogRecord) -> None:
+        appender = local_appender.get()
+        if appender is not None:
+            appender.append(record)
+
+
+logging.getLogger().addHandler(Appender())
+
+
 async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServer:
+    records = []
     try:
+        token = local_appender.set(records)
         return await wait_for(get_plex(request, settings), timeout=25)
     except Exception as exc:
+        local_appender.reset(token)
         logger.exception('Error getting plex server', exc_info=exc)
-        raise HTTPException(500, {'error': 'Error getting plex server', 'details': str(exc)})
+        raise HTTPException(
+            500,
+            {
+                'error': 'Error getting plex server',
+                'details': str(exc),
+                'records': [record.getMessage() for record in records],
+            },
+        ) from exc
 
 
 @api.get('/plex/{thing_type}/{tmdb_id}')

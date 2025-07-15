@@ -769,6 +769,15 @@ def add_xml(responses: RequestsMock, method: str, url: str, body: '_Element') ->
 
 
 @mark.asyncio
+@patch('rarbg_local.plex.get_plex')
+async def test_plex_error(get_plex: MagicMock, test_client: TestClient) -> None:
+    get_plex.side_effect = Exception('Plex is down')
+    r = await test_client.get('/api/plex/tv/1')
+    assert r.status_code == 500
+    assert r.json() == {'detail': 'Unable to connect to plex: Plex is down'}
+
+
+@mark.asyncio
 async def test_plex_redirect(
     test_client: TestClient,
     responses: RequestsMock,
