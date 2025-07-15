@@ -144,7 +144,7 @@ export function Storybook() {
           }}
         />
         <hr />
-        <OpenPlex download={{ tmdb_id: 0 }} type='movie' />
+        <OpenPlex download={{ tmdb_id: 0 }} type="movie" />
       </CustomTabPanel>
     </RouteTitle>
   );
