@@ -70,7 +70,7 @@ function OpenPlex({ download }: { download: { tmdb_id: number } }) {
   const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
     uritemplate.parse(path).expand({
       tmdb_id: download.tmdb_id,
-    } satifies paths[typeof path]['parameters']),
+    } satisfies paths[typeof path]['parameters']),
     async (key: string): Promise<PlexResponse> => {
       const res = await fetch(key, {
         headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
