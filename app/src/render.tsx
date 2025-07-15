@@ -71,7 +71,7 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
 const path = '/api/plex/{thing_type}/{tmdb_id}' as const;
 type PlexResponse = GetResponse<paths[typeof path]>;
 
-function OpenPlex({
+export function OpenPlex({
   download,
   type,
 }: {

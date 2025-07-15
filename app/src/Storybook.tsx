@@ -4,7 +4,7 @@ import { useSWRConfig } from 'swr';
 import { en_AU, Faker, en, base } from '@faker-js/faker';
 import { Box, Tab, Tabs } from '@mui/material';
 
-import { Progress } from './render';
+import { OpenPlex, Progress } from './render';
 import ContextMenu from './ContextMenu';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 import { PureDiscoveryComponent } from './DiscoveryComponent';
@@ -143,6 +143,8 @@ export function Storybook() {
             },
           }}
         />
+        <hr />
+        <OpenPlex download={{ tmdb_id: 0 }} type='movie' />
       </CustomTabPanel>
     </RouteTitle>
   );
