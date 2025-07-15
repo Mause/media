@@ -65,12 +65,12 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
 const path = '/api/plex/{thing_type}/{tmdb_id}' as const;
 type PlexResponse = GetResponse<paths[typeof path]>;
 
-function OpenPlex({ download }: { download: { imdb_id: string } }) {
+function OpenPlex({ download }: { download: { tmdb_id: number } }) {
   const auth = useAuth0();
   const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
     uritemplate.parse(path).expand({
-      imdb_id: download.imdb_id,
-    }),
+      tmdb_id: download.tmdb_id,
+    } satifies paths[typeof path]['parameters']),
     async (key: string): Promise<PlexResponse> => {
       const res = await fetch(key, {
         headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
