@@ -107,6 +107,7 @@ export function Storybook() {
             Hello
           </MenuItem>
           <MenuItem>World</MenuItem>
+          <OpenPlex download={{ tmdb_id: 0 }} type="movie" />
         </ContextMenu>
         <hr />
         <SimpleDiagnosticDisplay
@@ -142,8 +143,6 @@ export function Storybook() {
             },
           }}
         />
-        <hr />
-        <OpenPlex download={{ tmdb_id: 0 }} type="movie" />
       </CustomTabPanel>
     </RouteTitle>
   );
