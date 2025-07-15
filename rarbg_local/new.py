@@ -366,7 +366,7 @@ async def tmdb_configuration() -> Configuration:
 
 class Appender(Handler):
     def emit(self, record: logging.LogRecord) -> None:
-        appender = local_appender.get()
+        appender = local_appender.get(None)
         if appender is not None:
             appender.append(record)
 
