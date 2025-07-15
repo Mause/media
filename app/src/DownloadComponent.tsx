@@ -10,7 +10,7 @@ export interface DownloadState {
   downloads: DownloadCall[];
 }
 
-export function DownloadComponent() {
+export default function DownloadComponent() {
   const { state } = useLocation<DownloadState>();
 
   const { done, error } = usePost(

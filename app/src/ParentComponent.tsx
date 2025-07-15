@@ -159,6 +159,7 @@ export default function ParentComponentInt() {
   );
 }
 
+// TODO: remove me
 export function ParentComponent() {
   // Call this AFTER Sentry.init()
   const sentryCreateBrowserRouter =
