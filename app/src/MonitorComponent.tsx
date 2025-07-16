@@ -11,11 +11,9 @@ import type { Auth0ContextInterface, User } from '@auth0/auth0-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import useSWRMutation from 'swr/mutation';
 
-import ContextMenu from './ContextMenu';
+import { ContextMenu, DisplayError, RouteTitle } from './components';
 import type { components, paths } from './schema';
 import { getPrefix, getToken } from './utils';
-import { DisplayError } from './DisplayError';
-import { RouteTitle } from './RouteTitle';
 
 type Monitor = components['schemas']['MonitorGet'];
 type MonitorPost = components['schemas']['MonitorPost'];

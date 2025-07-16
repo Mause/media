@@ -1,25 +1,28 @@
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import type { ITorrent } from './OptionsComponent';
-import { Loading } from './render';
+import {
+  MLink,
+  DisplayError,
+  DisplayTorrent,
+  RouteTitle,
+  Loading,
+} from '../components';
+import type { DownloadCall } from '../DownloadComponent';
+import type { Torrents } from '../ParentComponent';
+import type { paths } from '../schema';
+import type { GetResponse } from '../utils';
+import type { ManualAddComponentState } from '../ManualAddComponent';
+
 import { EpisodeSelectBreadcrumbs } from './EpisodeSelectComponent';
-import { MLink } from './MLink';
-import type { DownloadCall } from './DownloadComponent';
-import type { Torrents } from './streaming';
-import { DisplayError } from './DisplayError';
-import { DisplayTorrent } from './DisplayTorrent';
-import { RouteTitle } from './RouteTitle';
-import type { paths } from './schema';
-import type { GetResponse } from './utils';
-import type { ManualAddComponentState } from './ManualAddComponent';
+import type { ITorrent } from './OptionsComponent';
 
 type DownloadAllResponse = GetResponse<
   paths['/api/select/{tmdb_id}/season/{season}/download_all']
 >;
 type MapType = DownloadAllResponse['complete'];
 
-function DownloadAllComponent() {
+export function DownloadAllComponent() {
   const { tmdb_id, season: season_s } = useParams<{
     tmdb_id: string;
     season: string;
@@ -134,5 +137,3 @@ function Individual(props: {
     </div>
   );
 }
-
-export { DownloadAllComponent };

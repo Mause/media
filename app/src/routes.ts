@@ -1,6 +1,6 @@
 import type { RouteObject } from 'react-router-dom';
 
-import { ParentComponentInt } from './streaming';
+import { ParentComponentInt } from './ParentComponent';
 
 export default [
   {
@@ -30,7 +30,7 @@ export default [
         path: '/select/:tmdb_id/options',
         lazy: async () => {
           const { MovieOptionsComponent } = await import(
-            './MovieOptionsComponent'
+            './select/MovieOptionsComponent'
           );
           return {
             Component: MovieOptionsComponent,
@@ -40,7 +40,9 @@ export default [
       {
         path: '/select/:tmdb_id/season/:season/episode/:episode/options',
         lazy: async () => {
-          const { TvOptionsComponent } = await import('./TvOptionsComponent');
+          const { TvOptionsComponent } = await import(
+            './select/TvOptionsComponent'
+          );
           return {
             Component: TvOptionsComponent,
           };
@@ -50,7 +52,7 @@ export default [
         path: '/select/:tmdb_id/season/:season/download_all',
         lazy: async () => {
           const { DownloadAllComponent } = await import(
-            './DownloadAllComponent'
+            './select/DownloadAllComponent'
           );
           return {
             Component: DownloadAllComponent,
@@ -61,7 +63,7 @@ export default [
         path: '/select/:tmdb_id/season/:season',
         lazy: async () => {
           const { EpisodeSelectComponent } = await import(
-            './EpisodeSelectComponent'
+            './select/EpisodeSelectComponent'
           );
           return {
             Component: EpisodeSelectComponent,
@@ -72,7 +74,7 @@ export default [
         path: '/select/:tmdb_id/season',
         lazy: async () => {
           const { SeasonSelectComponent } = await import(
-            './SeasonSelectComponent'
+            './select/SeasonSelectComponent'
           );
           return {
             Component: SeasonSelectComponent,

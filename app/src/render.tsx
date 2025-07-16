@@ -12,7 +12,6 @@ import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
-  faSpinner,
   faCaretUp,
   faCaretDown,
   faCheckCircle,
@@ -28,34 +27,16 @@ import * as uritemplate from 'uritemplate';
 
 import type { GetResponse } from './utils';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
-import type { TV } from './SeasonSelectComponent';
+import type { TV } from './select/SeasonSelectComponent';
 import type {
   MovieResponse,
   SeriesResponse,
   Torrents,
   EpisodeResponse,
-} from './streaming';
-import ContextMenu from './ContextMenu';
-import { MLink } from './MLink';
+} from './ParentComponent';
+import { ContextMenu, Loading, MLink } from './components';
 import type { paths } from './schema';
 
-export function Loading({
-  loading,
-  large,
-}: {
-  loading: boolean;
-  large?: boolean;
-}) {
-  return loading ? (
-    <FontAwesomeIcon
-      spin={true}
-      icon={faSpinner}
-      size={large ? undefined : 'xs'}
-    />
-  ) : (
-    <></>
-  );
-}
 function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   return (
     <MenuItem

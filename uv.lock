@@ -1167,7 +1167,7 @@ requires-dist = [
     { name = "python-healthchecklib", specifier = ">=0.1.1" },
     { name = "python-multipart", specifier = "==0.0.20" },
     { name = "pytz", specifier = "==2025.2" },
-    { name = "sentry-sdk", specifier = "==2.32.0" },
+    { name = "sentry-sdk", specifier = "==2.33.0" },
     { name = "sqlalchemy", extras = ["mypy"], specifier = "==2.0.41" },
     { name = "sqlalchemy-repr", specifier = "==0.1.0" },
     { name = "typing-inspect", specifier = ">=0.9.0" },
@@ -1190,7 +1190,7 @@ dev = [
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pytest" },
     { name = "pytest-alembic", specifier = ">=0.12.1" },
-    { name = "pytest-asyncio", specifier = "==1.0.0" },
+    { name = "pytest-asyncio", specifier = "==1.1.0" },
     { name = "pytest-cov", specifier = ">=6.1.1" },
     { name = "pytest-html", specifier = ">=3.1.1" },
     { name = "pytest-resource-path", specifier = ">=1.4.0" },
@@ -1935,14 +1935,14 @@ wheels = [
 
 [[package]]
 name = "pytest-asyncio"
-version = "1.0.0"
+version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pytest" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d0/d4/14f53324cb1a6381bef29d698987625d80052bb33932d8e7cbf9b337b17c/pytest_asyncio-1.0.0.tar.gz", hash = "sha256:d15463d13f4456e1ead2594520216b225a16f781e144f8fdf6c5bb4667c48b3f", size = 46960, upload-time = "2025-05-26T04:54:40.484Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4e/51/f8794af39eeb870e87a8c8068642fc07bce0c854d6865d7dd0f2a9d338c2/pytest_asyncio-1.1.0.tar.gz", hash = "sha256:796aa822981e01b68c12e4827b8697108f7205020f24b5793b3c41555dab68ea", size = 46652, upload-time = "2025-07-16T04:29:26.393Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/30/05/ce271016e351fddc8399e546f6e23761967ee09c8c568bbfbecb0c150171/pytest_asyncio-1.0.0-py3-none-any.whl", hash = "sha256:4f024da9f1ef945e680dc68610b52550e36590a67fd31bb3b4943979a1f90ef3", size = 15976, upload-time = "2025-05-26T04:54:39.035Z" },
+    { url = "https://files.pythonhosted.org/packages/c7/9d/bf86eddabf8c6c9cb1ea9a869d6873b46f105a5d292d3a6f7071f5b07935/pytest_asyncio-1.1.0-py3-none-any.whl", hash = "sha256:5fe2d69607b0bd75c656d1211f969cadba035030156745ee09e7d71740e58ecf", size = 15157, upload-time = "2025-07-16T04:29:24.929Z" },
 ]
 
 [[package]]
@@ -2283,15 +2283,15 @@ wheels = [
 
 [[package]]
 name = "sentry-sdk"
-version = "2.32.0"
+version = "2.33.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "certifi" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/10/59/eb90c45cb836cf8bec973bba10230ddad1c55e2b2e9ffa9d7d7368948358/sentry_sdk-2.32.0.tar.gz", hash = "sha256:9016c75d9316b0f6921ac14c8cd4fb938f26002430ac5be9945ab280f78bec6b", size = 334932, upload-time = "2025-06-27T08:10:02.89Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/09/0b/6139f589436c278b33359845ed77019cd093c41371f898283bbc14d26c02/sentry_sdk-2.33.0.tar.gz", hash = "sha256:cdceed05e186846fdf80ceea261fe0a11ebc93aab2f228ed73d076a07804152e", size = 335233, upload-time = "2025-07-15T12:07:42.413Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/01/a1/fc4856bd02d2097324fb7ce05b3021fb850f864b83ca765f6e37e92ff8ca/sentry_sdk-2.32.0-py2.py3-none-any.whl", hash = "sha256:6cf51521b099562d7ce3606da928c473643abe99b00ce4cb5626ea735f4ec345", size = 356122, upload-time = "2025-06-27T08:10:01.424Z" },
+    { url = "https://files.pythonhosted.org/packages/93/e5/f24e9f81c9822a24a2627cfcb44c10a3971382e67e5015c6e068421f5787/sentry_sdk-2.33.0-py2.py3-none-any.whl", hash = "sha256:a762d3f19a1c240e16c98796f2a5023f6e58872997d5ae2147ac3ed378b23ec2", size = 356397, upload-time = "2025-07-15T12:07:40.729Z" },
 ]
 
 [[package]]

@@ -1,5 +1,6 @@
+import { RouteTitle } from '../components';
+
 import { OptionsComponent } from './OptionsComponent';
-import { RouteTitle } from './RouteTitle';
 
 export function MovieOptionsComponent() {
   return (

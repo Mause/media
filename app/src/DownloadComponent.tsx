@@ -3,9 +3,7 @@ import type { ReactNode } from 'react';
 
 import { usePost, useLocation } from './utils';
 import type { components } from './schema';
-import { DisplayError } from './DisplayError';
-import { Loading } from './render';
-import { RouteTitle } from './RouteTitle';
+import { DisplayError, Loading, RouteTitle } from './components';
 
 export type DownloadCall = components['schemas']['DownloadPost'];
 export interface DownloadState {

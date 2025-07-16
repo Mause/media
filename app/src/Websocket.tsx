@@ -5,10 +5,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import * as _ from 'lodash-es';
 
-import type { ITorrent } from './OptionsComponent';
+import type { ITorrent } from './select/OptionsComponent';
 import { getMarker, getPrefix, getToken } from './utils';
-import { DisplayTorrent } from './DisplayTorrent';
-import { RouteTitle } from './RouteTitle';
+import { DisplayTorrent, RouteTitle } from './components';
 
 function useMessages<T>(initMessage: object) {
   const base = getPrefix();

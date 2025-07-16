@@ -2,11 +2,12 @@ import { screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
 
+import { renderWithSWR, waitForRequests } from '../test.utils';
+import { server } from '../msw';
+
 import type { Season, TV } from './SeasonSelectComponent';
 import { SeasonSelectComponent } from './SeasonSelectComponent';
-import { renderWithSWR, waitForRequests } from './test.utils';
 import { EpisodeSelectComponent } from './EpisodeSelectComponent';
-import { server } from './msw';
 
 test('SeasonSelectComponent  render', async () => {
   const { container } = renderWithSWR(

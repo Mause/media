@@ -5,10 +5,9 @@ import { en_AU, Faker, en, base } from '@faker-js/faker';
 import { Box, Tab, Tabs } from '@mui/material';
 
 import { OpenPlex, Progress } from './render';
-import ContextMenu from './ContextMenu';
+import { ContextMenu, RouteTitle } from './components';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 import { PureDiscoveryComponent } from './DiscoveryComponent';
-import { RouteTitle } from './RouteTitle';
 
 function DiscoveryStory() {
   const { mutate } = useSWRConfig();
