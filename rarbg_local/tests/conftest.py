@@ -1,4 +1,3 @@
-import asyncio
 import json
 from collections.abc import AsyncGenerator, Generator
 from pathlib import Path
@@ -39,11 +38,6 @@ from .factories import session_var
 @fixture(scope="session")
 def event_loop_policy() -> uvloop.EventLoopPolicy:
     return uvloop.EventLoopPolicy()
-
-
-@fixture
-def _fixture_event_loop() -> asyncio.AbstractEventLoop:
-    return asyncio.new_event_loop()
 
 
 @fixture

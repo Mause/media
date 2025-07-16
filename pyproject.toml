@@ -56,7 +56,7 @@ dev = [
     "pre-commit>=4.2.0",
     "pytest-snapshot",
     "factory-boy==3.3.3",
-    "pytest-asyncio==1.0.0",
+    "pytest-asyncio==1.1.0",
     "async-asgi-testclient==1.4.11",
     "aioresponses==0.7.8",
     "pytest-sugar",
@@ -91,7 +91,7 @@ ignore = ["ANN401"]
 [tool.pytest.ini_options]
 addopts = "--driver chrome --html report.html --self-contained-html --cov-report html --cov"
 testpaths = ["./rarbg_local/tests"]
-asyncio_default_fixture_loop_scope = "fixture"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.mypy]
 plugins = "pydantic.mypy"
