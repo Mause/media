@@ -1,8 +1,13 @@
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import { Loading } from '../render';
-import { MLink, DisplayError, DisplayTorrent, RouteTitle } from '../components';
+import {
+  MLink,
+  DisplayError,
+  DisplayTorrent,
+  RouteTitle,
+  Loading,
+} from '../components';
 import type { DownloadCall } from '../DownloadComponent';
 import type { Torrents } from '../streaming';
 import type { paths } from '../schema';

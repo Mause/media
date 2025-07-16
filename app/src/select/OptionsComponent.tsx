@@ -8,9 +8,8 @@ import * as _ from 'lodash-es';
 import * as qs from '../qs';
 import { subscribe, getToken } from '../utils';
 import type { Torrents } from '../streaming';
-import { Loading } from '../render';
 import type { components } from '../schema';
-import { DisplayError, MLink, DisplayTorrent } from '../components';
+import { DisplayError, MLink, DisplayTorrent, Loading } from '../components';
 import { MonitorAddComponent } from '../MonitorComponent';
 import type { ManualAddComponentState } from '../ManualAddComponent';
 

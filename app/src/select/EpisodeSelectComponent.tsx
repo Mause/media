@@ -3,8 +3,7 @@ import Typography from '@mui/material/Typography';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import { Loading } from '../render';
-import { MLink, RouteTitle } from '../components';
+import { Loading, MLink, RouteTitle } from '../components';
 
 import type { Season, TV } from './SeasonSelectComponent';
 import { Shared } from './SeasonSelectComponent';

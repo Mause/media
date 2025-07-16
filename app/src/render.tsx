@@ -8,7 +8,6 @@ import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
-  faSpinner,
   faCaretUp,
   faCaretDown,
   faCheckCircle,
@@ -29,26 +28,9 @@ import type {
   Torrents,
   EpisodeResponse,
 } from './streaming';
-import { ContextMenu, MLink } from './components';
+import { ContextMenu, Loading, MLink } from './components';
 import type { paths } from './schema';
 
-export function Loading({
-  loading,
-  large,
-}: {
-  loading: boolean;
-  large?: boolean;
-}) {
-  return loading ? (
-    <FontAwesomeIcon
-      spin={true}
-      icon={faSpinner}
-      size={large ? undefined : 'xs'}
-    />
-  ) : (
-    <></>
-  );
-}
 function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   return (
     <MenuItem
