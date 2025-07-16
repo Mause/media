@@ -8,7 +8,7 @@ import { renderWithSWR, waitForRequests } from '../test.utils';
 import { server } from '../msw';
 
 import type { ITorrent } from './OptionsComponent';
-import { MovieOptionsComponent } from './MovieOptionsComponent';
+import MovieOptionsComponent from './MovieOptionsComponent';
 
 const sources: ES[] = [];
 type CB = (event: { data: string }) => void;
