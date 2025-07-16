@@ -91,7 +91,7 @@ ignore = ["ANN401"]
 [tool.pytest.ini_options]
 addopts = "--driver chrome --html report.html --self-contained-html --cov-report html --cov"
 testpaths = ["./rarbg_local/tests"]
-asyncio_default_fixture_loop_scope = "fixture"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.mypy]
 plugins = "pydantic.mypy"
