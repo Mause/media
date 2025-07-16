@@ -22,7 +22,7 @@ import * as uritemplate from 'uritemplate';
 
 import type { GetResponse } from './utils';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
-import type { TV } from './SeasonSelectComponent';
+import type { TV } from './select/SeasonSelectComponent';
 import type {
   MovieResponse,
   SeriesResponse,
