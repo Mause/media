@@ -5,11 +5,11 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import useSWR from 'swr';
 import * as _ from 'lodash-es';
 
-import * as qs from './qs';
-import type { components } from './schema';
-import { useLocation } from './utils';
-import { MLink } from './MLink';
-import { RouteTitle } from './RouteTitle';
+import * as qs from '../qs';
+import type { components } from '../schema';
+import { useLocation } from '../utils';
+import { MLink } from '../MLink';
+import { RouteTitle } from '../RouteTitle';
 
 export type Season = components['schemas']['TvSeasonResponse'];
 export type EpisodeResponse = components['schemas']['Episode'];

@@ -3,11 +3,12 @@ import Typography from '@mui/material/Typography';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import { Loading } from './render';
-import { MLink } from './MLink';
+import { Loading } from '../render';
+import { MLink } from '../MLink';
+import { RouteTitle } from '../RouteTitle';
+
 import type { Season, TV } from './SeasonSelectComponent';
 import { Shared } from './SeasonSelectComponent';
-import { RouteTitle } from './RouteTitle';
 
 export function EpisodeSelectBreadcrumbs(props: {
   tmdb_id: string;
