@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 import type { StatsResponse } from './StatsComponent';
-import { StatsComponent } from './StatsComponent';
+import StatsComponent from './StatsComponent';
 import { renderWithSWR, waitForRequests } from './test.utils';
 import { server } from './msw';
 

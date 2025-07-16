@@ -4,7 +4,7 @@ import { http, HttpResponse } from 'msw';
 import { renderWithSWR, waitForRequests } from '../test.utils';
 import { server } from '../msw';
 
-import { DownloadAllComponent } from './DownloadAllComponent';
+import DownloadAllComponent from './DownloadAllComponent';
 import type { ITorrent } from './OptionsComponent';
 
 test('DownloadAllComponent', async () => {

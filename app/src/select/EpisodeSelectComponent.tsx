@@ -8,7 +8,7 @@ import { Loading, MLink, RouteTitle } from '../components';
 import type { Season, TV } from './SeasonSelectComponent';
 import { Shared } from './SeasonSelectComponent';
 
-export default function EpisodeSelectBreadcrumbs(props: {
+export function EpisodeSelectBreadcrumbs(props: {
   tmdb_id: string;
   season: number;
 }) {
@@ -27,7 +27,7 @@ export default function EpisodeSelectBreadcrumbs(props: {
   );
 }
 
-export function EpisodeSelectComponent() {
+export default function EpisodeSelectComponent() {
   const { tmdb_id, season: seasonNumber } = useParams<{
     tmdb_id: string;
     season: string;
