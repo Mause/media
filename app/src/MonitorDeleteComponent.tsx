@@ -2,7 +2,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
 
-import { RouteTitle } from './RouteTitle';
+import { RouteTitle } from './components';
 import { Loading } from './render';
 
 function useDelete(path: string) {

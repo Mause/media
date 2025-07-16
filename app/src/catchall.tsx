@@ -1,4 +1,4 @@
-import { RouteTitle } from './RouteTitle';
+import { RouteTitle } from './components';
 
 export function FourOhFour() {
   return (

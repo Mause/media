@@ -29,8 +29,7 @@ import type {
   Torrents,
   EpisodeResponse,
 } from './streaming';
-import ContextMenu from './ContextMenu';
-import { MLink } from './MLink';
+import { ContextMenu, MLink } from './components';
 import type { paths } from './schema';
 
 export function Loading({
