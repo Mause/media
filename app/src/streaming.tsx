@@ -1,16 +1,12 @@
 import { useSentryToolbar } from '@sentry/toolbar';
 import * as Sentry from '@sentry/react';
 import type { ErrorInfo } from 'react';
-import { useEffect } from 'react';
 import {
   RouterProvider,
   createBrowserRouter,
   Outlet,
   useLocation,
   useMatches,
-  createRoutesFromChildren,
-  matchRoutes,
-  useNavigationType,
 } from 'react-router-dom';
 import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -23,31 +19,6 @@ import * as _ from 'lodash-es';
 import type { components } from './schema';
 import { ExtMLink, MLink, SwrConfigWrapper } from './components';
 import routes from './routes';
-
-if (import.meta.env.NODE_ENV === 'production') {
-  Sentry.init({
-    dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
-    release: import.meta.env.REACT_APP_HEROKU_SLUG_COMMIT,
-    environment: 'development',
-    integrations: [
-      Sentry.reactRouterV7BrowserTracingIntegration({
-        trackFetchStreamPerformance: true,
-        useEffect,
-        useLocation,
-        useNavigationType,
-        createRoutesFromChildren,
-        matchRoutes,
-      }),
-    ],
-    // Adds request headers and IP for users, for more info visit:
-    // https://docs.sentry.io/platforms/javascript/guides/react/configuration/options/#sendDefaultPii
-    sendDefaultPii: true,
-
-    // Enable logs to be sent to Sentry
-    _experiments: { enableLogs: true },
-    tracesSampleRate: 1.0,
-  });
-}
 
 export type TorrentFile = components['schemas']['InnerTorrentFile'];
 export type Torrents = { [key: string]: components['schemas']['InnerTorrent'] };
