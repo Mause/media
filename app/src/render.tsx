@@ -115,7 +115,7 @@ export function OpenPlex({
         open={open}
         autoHideDuration={600000}
         onClose={handleClose}
-        message="Media located"
+        message="Searching plex..."
         action={action}
       />
       <MenuItem
