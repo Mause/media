@@ -7,7 +7,7 @@ import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -60,7 +60,8 @@ export function OpenPlex({
   type: 'movie' | 'tv';
 }) {
   const auth = useAuth0();
-  const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
+  // TODO: error handling
+  const { data, trigger } = useSWRMutation<PlexResponse>(
     uritemplate.parse(path).expand({
       tmdb_id: download.tmdb_id,
       thing_type: type,
