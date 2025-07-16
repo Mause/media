@@ -1,55 +1,24 @@
 import { useSentryToolbar } from '@sentry/toolbar';
 import * as Sentry from '@sentry/react';
-import type { ErrorInfo, ReactNode } from 'react';
-import { useEffect } from 'react';
+import type { ErrorInfo } from 'react';
 import {
   RouterProvider,
   createBrowserRouter,
   Outlet,
   useLocation,
   useMatches,
-  createRoutesFromChildren,
-  matchRoutes,
-  useNavigationType,
 } from 'react-router-dom';
 import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Grid, Link as MaterialLink } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { SWRConfig } from 'swr';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 
-import { load, getToken } from './utils';
 import type { components } from './schema';
-import { ExtMLink, MLink } from './MLink';
+import { ExtMLink, MLink, SwrConfigWrapper } from './components';
 import routes from './routes';
-
-if (import.meta.env.NODE_ENV === 'production') {
-  Sentry.init({
-    dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
-    release: import.meta.env.REACT_APP_HEROKU_SLUG_COMMIT,
-    environment: 'development',
-    integrations: [
-      Sentry.reactRouterV7BrowserTracingIntegration({
-        trackFetchStreamPerformance: true,
-        useEffect,
-        useLocation,
-        useNavigationType,
-        createRoutesFromChildren,
-        matchRoutes,
-      }),
-    ],
-    // Adds request headers and IP for users, for more info visit:
-    // https://docs.sentry.io/platforms/javascript/guides/react/configuration/options/#sendDefaultPii
-    sendDefaultPii: true,
-
-    // Enable logs to be sent to Sentry
-    _experiments: { enableLogs: true },
-    tracesSampleRate: 1.0,
-  });
-}
 
 export type TorrentFile = components['schemas']['InnerTorrentFile'];
 export type Torrents = { [key: string]: components['schemas']['InnerTorrent'] };
@@ -187,35 +156,6 @@ export function ParentComponentInt() {
         )}
       </ErrorBoundary>
     </SwrConfigWrapper>
-  );
-}
-export function SwrConfigWrapper({ children }: { children: ReactNode }) {
-  const auth = useAuth0();
-  return (
-    <SWRConfig
-      value={{
-        // five minute refresh
-        refreshInterval: 5 * 60 * 1000,
-        fetcher: async (path: string | [string, object]) => {
-          let params = undefined;
-          if (Array.isArray(path)) {
-            params = path[1];
-            path = path[0];
-          }
-          return await load(
-            path,
-            params,
-            auth.isAuthenticated
-              ? {
-                  Authorization: 'Bearer ' + (await getToken(auth)),
-                }
-              : {},
-          );
-        },
-      }}
-    >
-      {children}
-    </SWRConfig>
   );
 }
 

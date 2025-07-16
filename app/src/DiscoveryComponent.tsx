@@ -13,10 +13,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
 
 import type { paths } from './schema';
-import { Loading } from './render';
-import { DisplayError } from './DisplayError';
+import { DisplayError, Loading, RouteTitle } from './components';
 import type { GetResponse } from './utils';
-import { RouteTitle } from './RouteTitle';
 
 export type DiscoverResponse = Pick<
   GetResponse<paths['/api/discover']>,

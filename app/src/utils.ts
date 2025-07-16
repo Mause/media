@@ -14,7 +14,7 @@ import * as _ from 'lodash-es';
 
 import { FetchEventTarget } from './fetch_stream';
 import type { TV } from './select/SeasonSelectComponent';
-import type { EpisodeResponse } from './streaming';
+import type { EpisodeResponse } from './ParentComponent';
 
 // axiosRetry(Axios, { retries: 3 });
 

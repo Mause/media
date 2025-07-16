@@ -1,10 +1,8 @@
 import useSWR from 'swr';
 
-import type { IndexResponse, Torrents } from './streaming';
+import type { IndexResponse, Torrents } from './ParentComponent';
 import { TVShows, Movies } from './render';
-import { DisplayError } from './DisplayError';
-import { SearchBox } from './SearchBox';
-import { RouteTitle } from './RouteTitle';
+import { DisplayError, SearchBox, RouteTitle } from './components';
 
 const CFG = {
   refreshInterval: 10000,

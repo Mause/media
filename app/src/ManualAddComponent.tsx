@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 import type { DownloadState } from './DownloadComponent';
 import { useLocation, getMarker } from './utils';
-import { RouteTitle } from './RouteTitle';
+import { RouteTitle } from './components';
 
 const PREFIX = 'ManualAddComponent';
 
