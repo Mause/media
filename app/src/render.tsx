@@ -100,6 +100,9 @@ export function OpenPlex({
           size="small"
           aria-label="close"
           color="inherit"
+          component="a"
+          href={first}
+          target="_blank"
           onClick={() => {
             setOpen(false);
           }}
