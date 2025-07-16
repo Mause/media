@@ -118,6 +118,15 @@ export function OpenPlex({
       <Snackbar
         open={open}
         autoHideDuration={600000}
+        slotProps={{
+          clickAwayListener: {
+            onClickAway: (event) => {
+              // Prevent's default 'onClickAway' behavior.
+              // @ts-expect-error this isn't correctly typed in MUI
+              event.defaultMuiPrevented = true;
+            },
+          },
+        }}
         onClose={handleClose}
         message="Searching plex..."
         action={action}
