@@ -11,7 +11,7 @@ import type {
   TorrentFile,
   SeriesResponse,
   EpisodeResponse,
-} from './streaming';
+} from './ParentComponent';
 import { getMessage, shouldCollapse } from './utils';
 import { server } from './msw';
 

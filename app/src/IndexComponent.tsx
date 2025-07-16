@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-import type { IndexResponse, Torrents } from './streaming';
+import type { IndexResponse, Torrents } from './ParentComponent';
 import { TVShows, Movies } from './render';
 import { DisplayError, SearchBox, RouteTitle } from './components';
 

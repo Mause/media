@@ -27,7 +27,7 @@ import type {
   SeriesResponse,
   Torrents,
   EpisodeResponse,
-} from './streaming';
+} from './ParentComponent';
 import { ContextMenu, Loading, MLink } from './components';
 import type { paths } from './schema';
 

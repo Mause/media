@@ -7,7 +7,7 @@ import * as _ from 'lodash-es';
 
 import * as qs from '../qs';
 import { subscribe, getToken } from '../utils';
-import type { Torrents } from '../streaming';
+import type { Torrents } from '../ParentComponent';
 import type { components } from '../schema';
 import { DisplayError, MLink, DisplayTorrent, Loading } from '../components';
 import { MonitorAddComponent } from '../MonitorComponent';

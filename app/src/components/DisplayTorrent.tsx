@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
 
-import type { Torrents } from '../streaming';
+import type { Torrents } from '../ParentComponent';
 import type { DownloadState } from '../DownloadComponent';
 import type { ITorrent } from '../select/OptionsComponent';
 

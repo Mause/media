@@ -9,7 +9,7 @@ import {
   Loading,
 } from '../components';
 import type { DownloadCall } from '../DownloadComponent';
-import type { Torrents } from '../streaming';
+import type { Torrents } from '../ParentComponent';
 import type { paths } from '../schema';
 import type { GetResponse } from '../utils';
 import type { ManualAddComponentState } from '../ManualAddComponent';

@@ -16,7 +16,7 @@ import {
   matchRoutes,
 } from 'react-router-dom';
 
-import App from './App';
+import { ParentComponent } from './ParentComponent';
 
 const theme = createTheme();
 
@@ -70,7 +70,7 @@ const rootEl = (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <HelmetProvider>
-          <App />
+          <ParentComponent />
         </HelmetProvider>
       </ThemeProvider>
     </StyledEngineProvider>
