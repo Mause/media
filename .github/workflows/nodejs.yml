@@ -25,5 +25,7 @@ jobs:
           cache: yarn
       - run: yarn
       - run: yarn build
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - run: yarn tsc
       - run: yarn test
