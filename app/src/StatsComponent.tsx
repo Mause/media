@@ -1,7 +1,7 @@
-import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 
-import { RouteTitle } from './components';
+import { Loading, RouteTitle  } from './components';
+
 
 export type StatsResponse = {
   user: string;
@@ -14,7 +14,7 @@ export type StatsResponse = {
 export function StatsComponent() {
   const { data: stats } = useSWR<StatsResponse[]>('stats');
 
-  if (!stats) return <ReactLoading type="balls" color="#000" />;
+  if (!stats) return <Loading loading />;
 
   return (
     <RouteTitle title="Stats">

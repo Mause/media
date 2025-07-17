@@ -1,8 +1,7 @@
-import ReactLoading from 'react-loading';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import { DisplayError, MLink, SearchBox, RouteTitle } from './components';
+import { DisplayError, MLink, SearchBox, RouteTitle, Loading  } from './components';
 import type { components, paths } from './schema';
 import type { GetResponse } from './utils';
 
@@ -24,7 +23,7 @@ export function SearchComponent() {
     <RouteTitle title="Search">
       <SearchBox />
       {error && <DisplayError error={error} />}
-      {isValidating && <ReactLoading type="balls" color="#000" />}
+      <Loading loading={isValidating} />
       <ul>
         {results?.map((result) => (
           <li key={result.tmdb_id}>

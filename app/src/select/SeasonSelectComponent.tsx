@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom';
-import ReactLoading from 'react-loading';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import useSWR from 'swr';
@@ -8,7 +7,7 @@ import * as _ from 'lodash-es';
 import * as qs from '../qs';
 import type { components } from '../schema';
 import { useLocation } from '../utils';
-import { MLink, RouteTitle } from '../components';
+import { MLink, RouteTitle, Loading } from '../components';
 
 export type Season = components['schemas']['TvSeasonResponse'];
 export type EpisodeResponse = components['schemas']['Episode'];
@@ -51,7 +50,7 @@ export function SeasonSelectComponent() {
         </Typography>
       </Breadcrumbs>
       {!tv ? (
-        <ReactLoading type="balls" color="#000000" />
+        <Loading loading />
       ) : (
         <ul>
           {_.range(1, tv.number_of_seasons + 1).map((i) => (

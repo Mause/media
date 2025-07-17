@@ -1,5 +1,4 @@
 import useSWR from 'swr';
-import ReactLoading from 'react-loading';
 import { Navigate, useNavigate } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import Axios from 'axios';
@@ -11,7 +10,7 @@ import type { Auth0ContextInterface, User } from '@auth0/auth0-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import useSWRMutation from 'swr/mutation';
 
-import { ContextMenu, DisplayError, RouteTitle } from './components';
+import { ContextMenu, DisplayError, RouteTitle, Loading } from './components';
 import type { components, paths } from './schema';
 import { getPrefix, getToken } from './utils';
 
@@ -85,7 +84,7 @@ export function MonitorComponent() {
           })}
         </ul>
       ) : (
-        <ReactLoading color="#000000" />
+        <Loading loading />
       )}
     </RouteTitle>
   );
@@ -109,7 +108,7 @@ export function MonitorAddComponent({
   if (error) {
     return <DisplayError error={error} />;
   } else if (isMutating) {
-    return <ReactLoading color="#000000" />;
+    return <Loading loading />;
   } else if (data) {
     return <Navigate to="/monitor" />;
   } else {

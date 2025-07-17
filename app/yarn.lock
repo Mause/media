@@ -2824,7 +2824,6 @@ __metadata:
     react-collapsible: "npm:^2.8.1"
     react-dom: "npm:^19.0.0"
     react-error-boundary: "npm:^6.0.0"
-    react-loading: "npm:^2.0.3"
     react-promise-suspense: "npm:^0.3.4"
     react-router-dom: "npm:^7.7.0"
     react-use-websocket: "npm:^4.13.0"
@@ -5750,16 +5749,6 @@ __metadata:
   version: 19.1.0
   resolution: "react-is@npm:19.1.0"
   checksum: 10/4aceca94492032a19411138bf68c6ca7dce4abee7ae6c7f23db9291d2dff14d6a643717b176ef9a151e8cdf6a2b71fdbc59fd998328e086a6f752512304a252b
-  languageName: node
-  linkType: hard
-
-"react-loading@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "react-loading@npm:2.0.3"
-  peerDependencies:
-    prop-types: ^15.6.0
-    react: ">=0.14.0"
-  checksum: 10/8282131bc653bb844bc7b581a0fd375dce4c823c7dbfa79eae74a1d7c489072cb6ad5b8de90f05d0752f3d8b0a10dffc2cef293411219cf87677c7880e0ca9fb
   languageName: node
   linkType: hard
 
