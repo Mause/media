@@ -10,8 +10,8 @@ async def search(movie_name: str, location: str, api_key: str) -> dict:
                 'location': 'Austin, Texas, United States',
                 'hl': 'en',
                 'gl': 'us',
-                'apiKey': api_key
-            }
+                'apiKey': api_key,
+            },
         )
         res.raise_for_status()
         return await res.json()
