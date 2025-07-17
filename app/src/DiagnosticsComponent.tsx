@@ -53,7 +53,7 @@ export function SimpleDiagnosticDisplay({
 }) {
   return (
     <li>
-      {component}: {isValidating && <ReactLoading type="balls" color="#000" />}
+      {component}: <Loading loading={isValidating} />
       <ul>
         {data?.map((item, i) => (
           <li key={i}>
