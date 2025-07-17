@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import * as _ from 'lodash-es';
@@ -35,7 +34,7 @@ function Websocket() {
   const { search } = useLocation();
   const query = new URLSearchParams(search.slice(1));
   const auth = useAuth0();
-  const token = 'Bearer ' + usePromise(() => getToken(auth), []);
+  const token = 'Bearer ' + use(getToken(auth));
 
   const initMessage = query.has('season')
     ? {
