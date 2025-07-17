@@ -1,4 +1,5 @@
 import aiohttp
+import geoip_api
 
 
 async def search(movie_name: str, location: str, api_key: str) -> dict:
@@ -15,3 +16,9 @@ async def search(movie_name: str, location: str, api_key: str) -> dict:
         )
         res.raise_for_status()
         return await res.json()
+
+
+def resolve_location(ip_address: str) -> str:
+    api = geoip_api.GeoIPLookup(download_if_missing=True)
+
+    return str(api.lookup(ip_address))

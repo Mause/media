@@ -8,6 +8,7 @@
     "torrentscsv",
     "nyaasi",
     "piratebay",
-    "jikan"
+    "jikan",
+    "client_ip"
   ]
 }

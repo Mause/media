@@ -2,9 +2,11 @@ import contextvars
 from collections.abc import Callable, Coroutine
 from datetime import datetime
 from os import getpid
+import logging
 from typing import Any, cast, overload
 
 from fastapi import APIRouter
+from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import HTTPException
 from fastapi.requests import Request
 from healthcheck import (
@@ -27,6 +29,7 @@ from .plex import get_plex
 from .singleton import get as _get
 from .transmission_proxy import transmission
 
+logger = logging.getLogger(__name__)
 router = APIRouter(tags=['diagnostics'])
 request_var = contextvars.ContextVar[Request]('request_var')
 
@@ -69,6 +72,7 @@ def build() -> Healthcheck:
         HealthcheckHTTPComponent('jikan'),
         lambda: check_http('https://api.jikan.moe/v4', 'GET'),
     )
+    add_component(HealthcheckInternalComponent('client_ip'), client_ip)
 
     return health
 
@@ -154,6 +158,37 @@ async def pool() -> HealthcheckCallbackResponse:
             'checkedout': pget('checkedout'),
         },
     )
+
+
+async def client_ip() -> HealthcheckCallbackResponse:
+    from .providers import serpapi
+
+    request = request_var.get()
+
+    ip_address = request.headers.get(
+        'x-forwarded-for', request.client.host if request.client else None
+    )
+
+    if not ip_address:
+        return HealthcheckCallbackResponse(
+            HealthcheckStatus.FAIL,
+            {'error': 'No IP address found in request headers'},
+        )
+
+    location = None
+    try:
+        location = await run_in_threadpool(
+            serpapi.resolve_location,
+            ip_address,
+        )
+    except Exception as e:
+        logger.exception('Error resolving location for IP %s: %s', ip_address, e)
+
+    return HealthcheckCallbackResponse(HealthcheckStatus.PASS, {
+        'x-forwarded-for': request.headers.get('x-forwarded-for', 'unknown'),
+        'remote_addr': request.client.host if request.client else 'unknown',
+        'location': location or 'unknown',
+    })
 
 
 async def transmission_connectivity() -> HealthcheckCallbackResponse:
