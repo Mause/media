@@ -1,7 +1,6 @@
 import useSWR from 'swr';
 
-import { Loading, RouteTitle  } from './components';
-
+import { Loading, RouteTitle } from './components';
 
 export type StatsResponse = {
   user: string;

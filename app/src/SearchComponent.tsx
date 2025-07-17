@@ -1,7 +1,13 @@
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import { DisplayError, MLink, SearchBox, RouteTitle, Loading  } from './components';
+import {
+  DisplayError,
+  MLink,
+  SearchBox,
+  RouteTitle,
+  Loading,
+} from './components';
 import type { components, paths } from './schema';
 import type { GetResponse } from './utils';
 
