@@ -7,7 +7,6 @@ import {
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
-import { HelmetProvider } from 'react-helmet-async';
 import * as Sentry from '@sentry/react';
 import {
   useLocation,
@@ -69,9 +68,7 @@ const rootEl = (
   >
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <HelmetProvider>
-          <ParentComponent />
-        </HelmetProvider>
+        <ParentComponent />
       </ThemeProvider>
     </StyledEngineProvider>
   </Auth0Provider>

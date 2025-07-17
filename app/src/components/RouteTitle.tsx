@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { Helmet } from 'react-helmet-async';
 
 export function RouteTitle({
   title,
@@ -10,9 +9,7 @@ export function RouteTitle({
 }) {
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
+      <title>{title}</title>
       {children}
     </>
   );

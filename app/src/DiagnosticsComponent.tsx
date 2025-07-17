@@ -1,11 +1,10 @@
-import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 import type { paths } from './schema';
 import type { GetResponse } from './utils';
-import { RouteTitle } from './components';
+import { RouteTitle, Loading } from './components';
 
 type DiagnosticsRoot = GetResponse<paths['/api/diagnostics']>;
 type HealthcheckResponse = GetResponse<
@@ -54,7 +53,7 @@ export function SimpleDiagnosticDisplay({
 }) {
   return (
     <li>
-      {component}: {isValidating && <ReactLoading type="balls" color="#000" />}
+      {component}: <Loading loading={isValidating} />
       <ul>
         {data?.map((item, i) => (
           <li key={i}>
@@ -96,7 +95,7 @@ export function DiagnosticsComponent() {
     <RouteTitle title="Diagnostics">
       <h3>Diagnostics: Media {data?.version}</h3>
 
-      {isValidating && <ReactLoading type="balls" color="#000" />}
+      <Loading loading={isValidating} />
 
       {error && (
         <pre>
