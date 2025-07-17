@@ -1,8 +1,8 @@
 import contextvars
+import logging
 from collections.abc import Callable, Coroutine
 from datetime import datetime
 from os import getpid
-import logging
 from typing import Any, cast, overload
 
 from fastapi import APIRouter
@@ -184,11 +184,14 @@ async def client_ip() -> HealthcheckCallbackResponse:
     except Exception as e:
         logger.exception('Error resolving location for IP %s: %s', ip_address, e)
 
-    return HealthcheckCallbackResponse(HealthcheckStatus.PASS, {
-        'x-forwarded-for': request.headers.get('x-forwarded-for', 'unknown'),
-        'remote_addr': request.client.host if request.client else 'unknown',
-        'location': location or 'unknown',
-    })
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {
+            'x-forwarded-for': request.headers.get('x-forwarded-for', 'unknown'),
+            'remote_addr': request.client.host if request.client else 'unknown',
+            'location': location or 'unknown',
+        },
+    )
 
 
 async def transmission_connectivity() -> HealthcheckCallbackResponse:
