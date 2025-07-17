@@ -178,11 +178,13 @@ async def client_ip() -> HealthcheckCallbackResponse:
         )
 
     location = None
+    age = None
     try:
         location = await run_in_threadpool(
             serpapi.resolve_location,
             ip_address,
         )
+        age = await run_in_threadpool(serpapi.get_age)
     except Exception as e:
         logger.exception('Error resolving location for IP %s: %s', ip_address, e)
 
@@ -192,6 +194,7 @@ async def client_ip() -> HealthcheckCallbackResponse:
             'x-forwarded-for': request.headers.get('x-forwarded-for', 'unknown'),
             'remote_addr': request.client.host if request.client else 'unknown',
             'location': location or 'unknown',
+            'age': age or 'unknown',
         },
     )
 
