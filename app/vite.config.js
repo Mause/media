@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
@@ -10,6 +11,10 @@ export default defineConfig({
     react(),
     gitpodWorkspace && basicSsl(),
     bundlesize({ limits: [{ name: 'assets/index-*.js', limit: '832.5 kB' }] }),
+    sentryVitePlugin({
+      org: 'elliana-may',
+      project: 'media',
+    }),
   ],
   envPrefix: 'REACT_APP_',
   build: {
