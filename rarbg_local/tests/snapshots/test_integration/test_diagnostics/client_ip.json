@@ -5,7 +5,7 @@
     "status": "pass",
     "output": {
       "x-forwarded-for": "1.2.3.4",
-      "remote_addr": "unknown",
+      "remote_addr": "1.2.3.4",
       "location": {
         "code": "AU",
         "country": "Australia",
