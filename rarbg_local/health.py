@@ -172,7 +172,9 @@ async def client_ip() -> HealthcheckCallbackResponse:
     if not ip_address:
         return HealthcheckCallbackResponse(
             HealthcheckStatus.FAIL,
-            {'error': 'No IP address found in request headers'},
+            {  # type: ignore[arg-type]
+                'error': 'No IP address found in request headers'
+            },
         )
 
     location = None
@@ -186,7 +188,7 @@ async def client_ip() -> HealthcheckCallbackResponse:
 
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,
-        {
+        {  # type: ignore[arg-type]
             'x-forwarded-for': request.headers.get('x-forwarded-for', 'unknown'),
             'remote_addr': request.client.host if request.client else 'unknown',
             'location': location or 'unknown',
