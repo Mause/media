@@ -10,7 +10,7 @@ import {
 } from '@mui/material/styles';
 import { HelmetProvider } from 'react-helmet-async';
 
-import { SwrConfigWrapper } from './streaming';
+import { SwrConfigWrapper } from './components';
 import { server } from './msw';
 
 const theme = createTheme();

@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 
-import * as qs from './qs';
+import * as qs from '../qs';
 
 export function SearchBox() {
   function search(event: FormEvent<HTMLFormElement>) {

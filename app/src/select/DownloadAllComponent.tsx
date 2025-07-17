@@ -1,13 +1,15 @@
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import { Loading } from '../render';
-import { MLink } from '../MLink';
+import {
+  MLink,
+  DisplayError,
+  DisplayTorrent,
+  RouteTitle,
+  Loading,
+} from '../components';
 import type { DownloadCall } from '../DownloadComponent';
-import type { Torrents } from '../streaming';
-import { DisplayError } from '../DisplayError';
-import { DisplayTorrent } from '../DisplayTorrent';
-import { RouteTitle } from '../RouteTitle';
+import type { Torrents } from '../ParentComponent';
 import type { paths } from '../schema';
 import type { GetResponse } from '../utils';
 import type { ManualAddComponentState } from '../ManualAddComponent';

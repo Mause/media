@@ -1,6 +1,6 @@
 import type { RouteObject } from 'react-router-dom';
 
-import { ParentComponentInt } from './streaming';
+import { ParentComponentInt } from './ParentComponent';
 
 export default [
   {

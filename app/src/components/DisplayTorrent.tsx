@@ -1,9 +1,10 @@
 import * as _ from 'lodash-es';
 
-import type { Torrents } from './streaming';
-import type { DownloadState } from './DownloadComponent';
+import type { Torrents } from '../ParentComponent';
+import type { DownloadState } from '../DownloadComponent';
+import type { ITorrent } from '../select/OptionsComponent';
+
 import { MLink } from './MLink';
-import type { ITorrent } from './select/OptionsComponent';
 
 function getHash(magnet: string) {
   const u = new URL(magnet);

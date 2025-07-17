@@ -7,13 +7,10 @@ import * as _ from 'lodash-es';
 
 import * as qs from '../qs';
 import { subscribe, getToken } from '../utils';
-import type { Torrents } from '../streaming';
-import { Loading } from '../render';
+import type { Torrents } from '../ParentComponent';
 import type { components } from '../schema';
-import { DisplayError } from '../DisplayError';
+import { DisplayError, MLink, DisplayTorrent, Loading } from '../components';
 import { MonitorAddComponent } from '../MonitorComponent';
-import { MLink } from '../MLink';
-import { DisplayTorrent } from '../DisplayTorrent';
 import type { ManualAddComponentState } from '../ManualAddComponent';
 
 import { Shared } from './SeasonSelectComponent';
