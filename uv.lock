@@ -1218,7 +1218,7 @@ requires-dist = [
     { name = "fastapi-oidc", specifier = ">=0.0.10" },
     { name = "fastapi-utils", specifier = "==0.8.0" },
     { name = "fuzzywuzzy", extras = ["speedup"], specifier = "==0.18.0" },
-    { name = "geoip-py" },
+    { name = "geoip-py", specifier = ">=1.0.2" },
     { name = "gunicorn" },
     { name = "logfire", extras = ["fastapi", "aiohttp", "sqlalchemy", "requests"], specifier = ">=3.18.0" },
     { name = "lxml" },
