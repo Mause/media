@@ -44,6 +44,7 @@ dependencies = [
     "psycopg[c,pool]>=3.2.9; 'android' in platform_release",
     "psycopg[binary,pool]>=3.2.9; 'android' not in platform_release",
     "geoip-py",
+    "uvicorn-worker>=0.3.0",
 ]
 
 [dependency-groups]
