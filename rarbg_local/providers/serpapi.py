@@ -18,7 +18,7 @@ async def search(movie_name: str, location: str, api_key: str) -> dict:
         return await res.json()
 
 
-def resolve_location(ip_address: str) -> str:
+def resolve_location(ip_address: str) -> dict:
     api = geoip_api.GeoIPLookup(download_if_missing=True)
 
-    return str(api.lookup(ip_address))
+    return api.lookup(ip_address)
