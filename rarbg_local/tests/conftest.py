@@ -71,7 +71,12 @@ def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClie
         return res
 
     fastapi_app.dependency_overrides[get_current_user] = gcu
-    return TestClient(fastapi_app)
+    return TestClient(
+        fastapi_app,
+        scope={
+            'client': (b'1.2.3.4', 9000),
+        },
+    )
 
 
 @pytest_asyncio.fixture

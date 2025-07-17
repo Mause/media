@@ -108,7 +108,9 @@ async def test_diagnostics(
     snapshot.assert_match(root.model_dump_json(indent=2), 'healthcheck.json')
 
     for component in root.checks:
-        r = await test_client.get(f'/api/diagnostics/{component}')
+        r = await test_client.get(
+            f'/api/diagnostics/{component}', headers={'x-forwarded-for': '1.2.3.4'}
+        )
         r.raise_for_status()
         results = r.json()
         for check in results:
