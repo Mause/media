@@ -168,6 +168,8 @@ async def client_ip() -> HealthcheckCallbackResponse:
     ip_address = request.headers.get(
         'x-forwarded-for', request.client.host if request.client else None
     )
+    if ', ' in ip_address:
+        ip_address = ip_address.split(', ')[0]
 
     if not ip_address:
         return HealthcheckCallbackResponse(
