@@ -9,6 +9,8 @@ import {
   createTheme,
 } from '@mui/material/styles';
 
+import { Loading } from './components/Loading';
+
 const theme = createTheme();
 
 const clientId = import.meta.env.REACT_APP_AUTH0_CLIENT_ID;
@@ -18,6 +20,10 @@ if (!(clientId && audience)) {
   console.error(
     'Missing Auth0 client ID or audience. Please check your environment variables.',
   );
+}
+
+export function HydrateFallback() {
+  return <Loading loading />;
 }
 
 export function Layout({ children }: { children: ReactNode }) {
