@@ -42,8 +42,8 @@
     "uritemplate": "^0.3.4"
   },
   "scripts": {
-    "start": "vite",
-    "build": "vite build",
+    "start": "react-router dev",
+    "build": "react-router build",
     "test": "vitest",
     "format": "yarn prettier -w src",
     "bundlestats": "yarn dlx vite-bundle-visualizer -o stats.html",
