@@ -86,7 +86,7 @@ export function SimpleDiagnosticDisplay({
   );
 }
 
-export function DiagnosticsComponent() {
+export default function DiagnosticsComponent() {
   const { error, data, isValidating } = useSWR<DiagnosticsRoot, Error>(
     'diagnostics',
   );
