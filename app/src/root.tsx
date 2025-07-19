@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Scripts, Outlet } from 'react-router-dom';
+import { Scripts, Outlet, useLoaderData } from 'react-router-dom';
 import { StrictMode } from 'react';
 import './index.css';
 import { Auth0Provider } from '@auth0/auth0-react';
@@ -26,7 +26,16 @@ export function HydrateFallback() {
   return <Loading loading />;
 }
 
+export function clientLoader() {
+  return { origin: window.location.origin };
+}
+
+export function loader({ request }: { request: Request }) {
+  return { origin: new URL(request.url).origin };
+}
+
 export function Layout({ children }: { children: ReactNode }) {
+  const { origin } = useLoaderData<typeof loader>();
   return (
     <html lang="en">
       <head>
@@ -48,7 +57,7 @@ export function Layout({ children }: { children: ReactNode }) {
             clientId={clientId!}
             authorizationParams={{
               audience: audience!,
-              //   redirect_uri: window.location.origin,
+              redirect_uri: origin,
             }}
             useRefreshTokensFallback={true}
             useRefreshTokens={true}
