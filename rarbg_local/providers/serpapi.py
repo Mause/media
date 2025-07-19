@@ -4,6 +4,7 @@ from typing import Annotated, Any
 import aiohttp
 import geoip2.database
 import geoip_api
+from geoip2.models import City
 from geoip_api.core.lookup import get_database_path
 from pydantic import BaseModel, GetCoreSchemaHandler, ValidatorFunctionWrapHandler
 from pydantic_core import CoreSchema, core_schema
@@ -69,10 +70,11 @@ async def search(movie_name: str, location: str, iso_code: str, api_key: str) ->
         return await res.json()
 
 
-def resolve_location(ip_address: str) -> dict:
+def resolve_location(ip_address: str) -> City:
     api = geoip_api.GeoIPLookup(download_if_missing=True)
 
-    return api.lookup(ip_address)
+    with geoip2.database.Reader(api.city_db_path) as city_reader:
+        return city_reader.city(ip_address)
 
 
 def get_age() -> datetime:
