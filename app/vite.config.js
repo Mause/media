@@ -9,7 +9,7 @@ const gitpodWorkspace = process.env.GITPOD_WORKSPACE_URL;
 export default defineConfig({
   plugins: [
     reactRouter(),
-    gitpodWorkspace && basicSsl(),
+    !gitpodWorkspace && basicSsl(),
     // bundlesize({ limits: [{ name: 'assets/index-*.js', limit: '832.5 kB' }] }),
     sentryVitePlugin({
       org: 'elliana-may',
