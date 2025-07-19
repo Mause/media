@@ -66,8 +66,9 @@ async def search(movie_name: str, location: str, iso_code: str, api_key: str) ->
                 'api_key': api_key,
             },
         )
+        js = await res.json()
         res.raise_for_status()
-        return await res.json()
+        return js
 
 
 def resolve_location(ip_address: str) -> City:
