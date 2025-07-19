@@ -14,11 +14,11 @@ import { ContextMenu, DisplayError, RouteTitle, Loading } from './components';
 import type { components, paths } from './schema';
 import { getPrefix, getToken } from './utils';
 
-type Monitor = components['schemas']['MonitorGet'];
+export type Monitor = components['schemas']['MonitorGet'];
 type MonitorPost = components['schemas']['MonitorPost'];
 type MediaType = components['schemas']['MonitorMediaType'];
 
-export function MonitorComponent() {
+export default function MonitorComponent() {
   const auth = useAuth0();
   const { data } = useSWR<Monitor[]>('monitor');
   const navigate = useNavigate();
@@ -137,5 +137,3 @@ function mutationFetcher<T, R>(
     return res.data as R;
   };
 }
-
-export type { Monitor };

@@ -37,7 +37,7 @@ export function Shared() {
   );
 }
 
-export function SeasonSelectComponent() {
+export default function SeasonSelectComponent() {
   const { tmdb_id } = useParams<{ tmdb_id: string }>();
   const { data: tv } = useSWR<TV>(`tv/${tmdb_id}`);
 

@@ -29,7 +29,7 @@ export interface ManualAddComponentState {
   tmdb_id: `${string}`;
 }
 
-export function ManualAddComponent() {
+export default function ManualAddComponent() {
   function onSubmit(event: FormEvent) {
     event.preventDefault();
     setSubmitted(true);

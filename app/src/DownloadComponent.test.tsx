@@ -5,7 +5,7 @@ import { act } from 'react';
 
 import { renderWithSWR, waitForRequests } from './test.utils';
 import type { DownloadCall, DownloadState } from './DownloadComponent';
-import { DownloadComponent } from './DownloadComponent';
+import DownloadComponent from './DownloadComponent';
 import { server } from './msw';
 import type { paths } from './schema';
 

@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 
 import { renderWithSWR, waitForRequests } from './test.utils';
 import type { Configuration, DiscoverResponse } from './DiscoveryComponent';
-import { DiscoveryComponent } from './DiscoveryComponent';
+import DiscoveryComponent from './DiscoveryComponent';
 import { server } from './msw';
 
 test('DiscoveryComponent', async () => {

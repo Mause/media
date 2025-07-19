@@ -4,7 +4,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
 
 import { renderWithSWR } from './test.utils';
-import { Storybook } from './Storybook';
+import Storybook from './Storybook';
 import { server } from './msw';
 
 describe('Storybook', () => {

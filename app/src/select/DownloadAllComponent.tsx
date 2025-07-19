@@ -22,7 +22,7 @@ type DownloadAllResponse = GetResponse<
 >;
 type MapType = DownloadAllResponse['complete'];
 
-export function DownloadAllComponent() {
+export default function DownloadAllComponent() {
   const { tmdb_id, season: season_s } = useParams<{
     tmdb_id: string;
     season: string;

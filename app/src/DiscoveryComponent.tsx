@@ -30,7 +30,7 @@ function getYear(release_date: string | null | undefined): string | number {
   }
 }
 
-export function DiscoveryComponent() {
+export default function DiscoveryComponent() {
   const { data, isValidating, error } = useSWR<DiscoverResponse, Error>(
     'discover',
   );

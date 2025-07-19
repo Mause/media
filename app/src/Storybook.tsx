@@ -77,7 +77,7 @@ function CustomTabPanel(props: TabPanelProps) {
   );
 }
 
-export function Storybook() {
+export default function Storybook() {
   const [percentDone, setPercentDone] = useState(0.5);
   useEffect(() => {
     const interval = setInterval(() => {

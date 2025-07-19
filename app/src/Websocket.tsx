@@ -29,7 +29,7 @@ function useMessages<T>(initMessage: object) {
   return { messages, readyState };
 }
 
-function Websocket() {
+export default function Websocket() {
   const { tmdbId } = useParams<{ tmdbId: string }>();
   const { search } = useLocation();
   const query = new URLSearchParams(search.slice(1));
@@ -96,5 +96,3 @@ function Websocket() {
     </RouteTitle>
   );
 }
-
-export { Websocket };

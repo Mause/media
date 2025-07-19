@@ -71,7 +71,7 @@ const Login = () => {
   }
 };
 
-export function ParentComponentInt() {
+export default function ParentComponentInt() {
   useProfiler('ParentComponentInt');
 
   const auth = useAuth0();
@@ -159,6 +159,7 @@ export function ParentComponentInt() {
   );
 }
 
+// TODO: remove me
 export function ParentComponent() {
   // Call this AFTER Sentry.init()
   const sentryCreateBrowserRouter =

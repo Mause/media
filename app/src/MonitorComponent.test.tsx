@@ -4,7 +4,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 
-import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
+import MonitorComponent, { MonitorAddComponent } from './MonitorComponent';
 import { renderWithSWR, waitForRequests } from './test.utils';
 import { server } from './msw';
 import type { GetResponse } from './utils';

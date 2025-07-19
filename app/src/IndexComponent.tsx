@@ -7,7 +7,7 @@ import { DisplayError, SearchBox, RouteTitle } from './components';
 const CFG = {
   refreshInterval: 10000,
 };
-function IndexComponent() {
+export default function IndexComponent() {
   const { data: state, isValidating: loadingState } = useSWR<IndexResponse>(
     'index',
     CFG,
@@ -31,5 +31,3 @@ function IndexComponent() {
     </RouteTitle>
   );
 }
-
-export { IndexComponent };

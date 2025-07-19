@@ -21,7 +21,7 @@ function useDelete(path: string) {
   return done;
 }
 
-export function MonitorDeleteComponent() {
+export default function MonitorDeleteComponent() {
   const { id } = useParams<{ id: string }>();
 
   const done = useDelete(`monitor/${id}`);
