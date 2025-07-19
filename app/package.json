@@ -39,7 +39,8 @@
     "swr": "^2.0.0",
     "typescript": "^5",
     "typescript-string-operations": "^1.6.1",
-    "uritemplate": "^0.3.4"
+    "uritemplate": "^0.3.4",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "scripts": {
     "start": "react-router dev",
