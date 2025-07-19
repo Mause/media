@@ -12,7 +12,7 @@ async def search(movie_name: str, location: str, api_key: str) -> dict:
             'https://serpapi.com/search.json',
             params={
                 'q': f'{movie_name} show times',
-                'location': 'Austin, Texas, United States',
+                'location': location,
                 'hl': 'en',
                 'gl': 'us',
                 'apiKey': api_key,
