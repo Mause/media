@@ -15,7 +15,7 @@ async def search(movie_name: str, location: str, iso_code: str, api_key: str) ->
                 'location': location,
                 'hl': 'en',
                 'gl': iso_code,
-                'apiKey': api_key,
+                'api_key': api_key,
             },
         )
         res.raise_for_status()
