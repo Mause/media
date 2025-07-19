@@ -6,7 +6,7 @@ import geoip_api
 from geoip_api.core.lookup import get_database_path
 
 
-async def search(movie_name: str, location: str, api_key: str) -> dict:
+async def search(movie_name: str, location: str, iso_code: str, api_key: str) -> dict:
     async with aiohttp.ClientSession() as session:
         res = await session.get(
             'https://serpapi.com/search.json',
@@ -14,7 +14,7 @@ async def search(movie_name: str, location: str, api_key: str) -> dict:
                 'q': f'{movie_name} show times',
                 'location': location,
                 'hl': 'en',
-                'gl': 'us',
+                'gl': iso_code,
                 'apiKey': api_key,
             },
         )
