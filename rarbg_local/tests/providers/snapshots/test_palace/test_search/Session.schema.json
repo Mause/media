@@ -1,0 +1,103 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "date": {
+      "format": "date-time",
+      "title": "Date",
+      "type": "string"
+    },
+    "sessionInfo": {
+      "items": {
+        "enum": [
+          "Hearing Impaired",
+          "Closed Captioning Available",
+          "All seats recline",
+          "No Free Tickets",
+          "Audio Description Session"
+        ],
+        "type": "string"
+      },
+      "title": "Sessioninfo",
+      "type": "array"
+    },
+    "noFreeTickets": {
+      "title": "Nofreetickets",
+      "type": "boolean"
+    },
+    "audioDescription": {
+      "title": "Audiodescription",
+      "type": "boolean"
+    },
+    "closeCaption": {
+      "title": "Closecaption",
+      "type": "boolean"
+    },
+    "displayAttributeColour": {
+      "anyOf": [
+        {
+          "format": "color",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Displayattributecolour"
+    },
+    "displayAttributeText": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Displayattributetext"
+    },
+    "isPlatinum": {
+      "title": "Isplatinum",
+      "type": "boolean"
+    },
+    "saleStatus": {
+      "anyOf": [
+        {
+          "const": "Selling Fast",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Salestatus"
+    },
+    "sessionId": {
+      "title": "Sessionid",
+      "type": "string"
+    },
+    "cinemaId": {
+      "title": "Cinemaid",
+      "type": "string"
+    },
+    "isSpecialEvent": {
+      "title": "Isspecialevent",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "date",
+    "sessionInfo",
+    "noFreeTickets",
+    "audioDescription",
+    "closeCaption",
+    "displayAttributeColour",
+    "displayAttributeText",
+    "isPlatinum",
+    "saleStatus",
+    "sessionId",
+    "cinemaId",
+    "isSpecialEvent"
+  ],
+  "title": "Session",
+  "type": "object"
+}
