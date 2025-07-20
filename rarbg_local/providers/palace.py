@@ -13,6 +13,7 @@ from pydantic.alias_generators import to_camel
 from pydantic_core import CoreSchema, core_schema
 from pydantic_extra_types.color import Color
 from pydantic_extra_types.coordinate import Latitude, Longitude
+from rich import print
 
 
 class HumanTimeDelta:
@@ -185,3 +186,37 @@ async def get_sessions(
     )
     res.raise_for_status()
     return Page[Movie].model_validate(await res.json())
+
+
+async def main() -> None:
+    session = aiohttp.ClientSession(
+        base_url="https://prod-api.palace-cinemas.workers.dev",
+    )
+
+    async with session:
+        session_date_items = await get_sessions_date_items(
+            session,
+            FilterArgs(
+                selected_dates=[date.today() + timedelta(days=i) for i in range(7)],
+            ),
+        )
+
+        cinemas = await get_cinemas(session)
+        print(cinemas)
+        ids = [c.cinema_id for c in cinemas]
+        assert session_date_items[0:2]
+        sessions = await get_sessions(
+            session,
+            filter_args=FilterArgs(
+                selected_cinema_ids=ids,
+                selected_dates=session_date_items[0:2],
+                # selected_movie_slug='f1-the-movie',
+            ),
+        )
+        print(sessions)
+
+
+if __name__ == '__main__':
+    import uvloop
+
+    uvloop.run(main())
