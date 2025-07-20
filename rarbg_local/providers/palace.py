@@ -1,3 +1,14 @@
+'''
+https://prod-api.palace-cinemas.workers.dev/banner?displayLocation=restOfSite&locality=melbourne
+https://prod-api.palace-cinemas.workers.dev/cinemas
+https://prod-api.palace-cinemas.workers.dev/cinemas?platinum=true
+https://prod-api.palace-cinemas.workers.dev/engagement
+https://prod-api.palace-cinemas.workers.dev/menu
+https://prod-api.palace-cinemas.workers.dev/movies/now/trending?locality=melbourne
+https://prod-api.palace-cinemas.workers.dev/sessions/combo-box-items
+https://prod-api.palace-cinemas.workers.dev/sessions/date-items
+'''
+
 from datetime import date, datetime, timedelta
 from typing import Annotated, Any, Literal
 
