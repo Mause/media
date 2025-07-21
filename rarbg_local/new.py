@@ -1,8 +1,11 @@
 import logging
 import os
 import traceback
+from asyncio import wait_for
 from collections.abc import AsyncGenerator, Callable, Coroutine
+from contextvars import ContextVar
 from functools import wraps
+from logging import Handler
 from typing import (
     Annotated,
     Any,
@@ -10,7 +13,6 @@ from typing import (
     Union,
     cast,
 )
-from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -54,6 +56,8 @@ from .models import (
     MediaType,
     MovieDetailsSchema,
     MovieResponse,
+    PlexMedia,
+    PlexResponse,
     ProviderSource,
     SearchResponse,
     StatsResponse,
@@ -73,6 +77,10 @@ from .providers.abc import (
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import (
+    Configuration,
+    Discover,
+    ThingType,
+    get_configuration,
     get_movie,
     get_movie_imdb_id,
     get_tv,
@@ -81,9 +89,16 @@ from .tmdb import (
     get_tv_imdb_id,
     search_themoviedb,
 )
-from .types import ImdbId, TmdbId
+from .tmdb import (
+    discover as tmdb_discover,
+)
+from .types import TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
+
+local_appender: ContextVar[list[logging.LogRecord]] = ContextVar[
+    list[logging.LogRecord]
+]('local_appender')
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -334,6 +349,72 @@ async def search(query: str) -> list[SearchResponse]:
     return await search_themoviedb(query)
 
 
+@api.get('/providers', name='get_providers')
+async def get_provider_list() -> list[ProviderSource]:
+    return [provider.type for provider in get_providers()]
+
+
+@api.get('/discover')
+async def discover() -> Discover:
+    return await tmdb_discover()
+
+
+@api.get('/tmdb/configuration')
+async def tmdb_configuration() -> Configuration:
+    return await get_configuration()
+
+
+class Appender(Handler):
+    def emit(self, record: logging.LogRecord) -> None:
+        appender = local_appender.get(None)
+        if appender is not None:
+            appender.append(record)
+
+
+logging.getLogger().addHandler(Appender())
+
+
+async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServer:
+    records: list[logging.LogRecord] = []
+    try:
+        token = local_appender.set(records)
+        return await wait_for(get_plex(request, settings), timeout=25)
+    except Exception as exc:
+        local_appender.reset(token)
+        logger.exception('Error getting plex server', exc_info=exc)
+        raise HTTPException(
+            500,
+            {
+                'error': 'Error getting plex server',
+                'details': str(exc),
+                'records': [record.getMessage() for record in records],
+            },
+        ) from exc
+
+
+@api.get('/plex/{thing_type}/{tmdb_id}')
+async def get_plex_imdb(
+    thing_type: ThingType,
+    tmdb_id: TmdbId,
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> dict[str, PlexResponse[PlexMedia] | None]:
+    plex = await gracefully_get_plex(request, settings)
+
+    dat = await get_imdb_in_plex(thing_type, tmdb_id, plex)
+    if not dat:
+        raise HTTPException(404, 'Not found in plex')
+    return {
+        key: PlexResponse[PlexMedia](
+            item=PlexMedia.model_validate(value),
+            server_id=plex.machineIdentifier,
+        )
+        if value
+        else None
+        for key, value in dat.items()
+    }
+
+
 tv_ns = APIRouter(tags=['tv'])
 
 
@@ -356,22 +437,6 @@ root = APIRouter()
 @singleton
 def get_static_files(settings: Settings = Depends(get_settings)) -> StaticFiles:
     return StaticFiles(directory=str(settings.static_resources_path))
-
-
-@root.get('/redirect/plex/{imdb_id}')
-def redirect_to_plex(
-    imdb_id: ImdbId, plex: Annotated[PlexServer, Depends(get_plex)]
-) -> RedirectResponse:
-    dat = get_imdb_in_plex(imdb_id, plex)
-    if not dat:
-        raise HTTPException(404, 'Not found in plex')
-
-    server_id = plex.machineIdentifier
-
-    return RedirectResponse(
-        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
-        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
-    )
 
 
 @root.get('/redirect/{type_}/{tmdb_id}')

@@ -3,12 +3,11 @@ import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
-  faSpinner,
   faCaretUp,
   faCaretDown,
   faCheckCircle,
@@ -16,44 +15,90 @@ import {
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
+import useSWRMutation from 'swr/mutation';
+import { useAuth0 } from '@auth0/auth0-react';
+import * as uritemplate from 'uritemplate';
 
-import { getPrefix, MLink } from './utils';
-import type { TV } from './SeasonSelectComponent';
+import type { GetResponse } from './utils';
+import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
+import type { TV } from './select/SeasonSelectComponent';
 import type {
   MovieResponse,
   SeriesResponse,
   Torrents,
   EpisodeResponse,
-} from './streaming';
-import ContextMenu from './ContextMenu';
+} from './ParentComponent';
+import { ContextMenu, Loading, MLink } from './components';
+import type { paths } from './schema';
 
-export function Loading({
-  loading,
-  large,
-}: {
-  loading: boolean;
-  large?: boolean;
-}) {
-  return loading ? (
-    <FontAwesomeIcon
-      spin={true}
-      icon={faSpinner}
-      size={large ? undefined : 'xs'}
-    />
-  ) : (
-    <></>
-  );
-}
-
-function OpenPlex({ download }: { download: { imdb_id: string } }) {
+function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   return (
     <MenuItem
       component="a"
-      href={`${getPrefix()}/redirect/plex/${download.imdb_id}`}
+      href={`https://www.imdb.com/title/${download.imdb_id}`}
       target="_blank"
     >
-      <span className="unselectable">Open in Plex</span>
+      Open in IMDB
     </MenuItem>
+  );
+}
+
+const path = '/api/plex/{thing_type}/{tmdb_id}' as const;
+type PlexResponse = GetResponse<paths[typeof path]>;
+
+function OpenPlex({
+  download,
+  type,
+}: {
+  download: { tmdb_id: number };
+  type: 'movie' | 'tv';
+}) {
+  const auth = useAuth0();
+  const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
+    uritemplate.parse(path).expand({
+      tmdb_id: download.tmdb_id,
+      thing_type: type,
+    } satisfies paths[typeof path]['get']['parameters']['path']),
+    async (key: string): Promise<PlexResponse> => {
+      const res = await fetch(key, {
+        headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
+      });
+      return (await res.json()) as PlexResponse;
+    },
+  );
+
+  if (data) {
+    const first = _.toPairs(data)
+      .map(([, v]) => v?.link)
+      .find((v) => v);
+    return <Navigate to={first!} />;
+  }
+
+  return (
+    <MenuItem
+      onClick={() => {
+        void trigger();
+      }}
+    >
+      <span className="unselectable">Open in Plex</span>
+      <Loading loading={isMutating} />
+    </MenuItem>
+  );
+}
+
+function RenderMovie({ movie }: { movie: MovieResponse }) {
+  return (
+    <>
+      <span>{movie.download.title}</span>
+      &nbsp;
+      <ContextMenu>
+        <OpenPlex download={movie.download} type="movie" />
+        <OpenIMDB download={movie.download} />
+        {movie.download.added_by ? (
+          <MenuItem>Added by: {movie.download.added_by.username}</MenuItem>
+        ) : null}
+      </ContextMenu>
+    </>
   );
 }
 
@@ -68,7 +113,8 @@ export function Movies({
 }) {
   const sortedMovies = _.groupBy(
     movies,
-    (movie) => !!(torrents && getProgress(movie, torrents)?.percentDone === 1),
+    (movie) =>
+      torrents !== undefined && getProgress(movie, torrents)?.percentDone === 1,
   );
 
   const head = (icon: IconDefinition) => (
@@ -100,7 +146,7 @@ export function Movies({
           <ul>
             {(sortedMovies.true || []).map((movie) => (
               <li key={movie.id}>
-                <span>{movie.download.title}</span>
+                <RenderMovie movie={movie} />
               </li>
             ))}
           </ul>
@@ -109,23 +155,7 @@ export function Movies({
       <ul>
         {(sortedMovies.false || []).map((movie) => (
           <li key={movie.id}>
-            <span>{movie.download.title}</span>
-            &nbsp;
-            <ContextMenu>
-              <OpenPlex download={movie.download} />
-              <MenuItem
-                component="a"
-                href={`https://www.imdb.com/title/${movie.download.imdb_id}`}
-                target="_blank"
-              >
-                Open in IMDB
-              </MenuItem>
-              {movie.download.added_by ? (
-                <MenuItem>
-                  Added by: {movie.download.added_by.username}
-                </MenuItem>
-              ) : null}
-            </ContextMenu>
+            <RenderMovie movie={movie} />
             &nbsp;
             <Progress torrents={torrents} item={movie} />
           </li>
@@ -170,13 +200,6 @@ export function Progress({
       />
     );
   }
-}
-
-export function getMarker(episode: {
-  season?: number;
-  episode?: number | null;
-}) {
-  return String.format('S{0:00}E{1:00}', episode.season, episode.episode);
 }
 
 function getProgress(
@@ -243,16 +266,8 @@ function Series({
         {serie.title}
         &nbsp;
         <ContextMenu>
-          {serie.imdb_id && (
-            <MenuItem
-              component="a"
-              href={`https://www.imdb.com/title/${serie.imdb_id}`}
-              target="_blank"
-            >
-              Open in IMDB
-            </MenuItem>
-          )}
-          <OpenPlex download={serie} />
+          {serie.imdb_id && <OpenIMDB download={serie} />}
+          <OpenPlex download={serie} type="tv" />
           <MenuItem
             onClick={() => void navigate(`/select/${serie.tmdb_id}/season`)}
           >
@@ -375,48 +390,4 @@ export function NextEpisodeAirs(props: {
       </MLink>
     </small>
   );
-}
-
-function getMessage(air_date: string) {
-  const today = Moment().startOf('day');
-  const tomorrow = today.add(1, 'day');
-  const yesterday = today.subtract(1, 'day');
-  const dt = Moment(air_date);
-  const dts = dt.format('DD/MM/YYYY');
-
-  let message;
-  if (today.isSame(dt)) {
-    message = 'airs today';
-  } else if (dt.isSame(yesterday)) {
-    message = 'aired yesterday';
-  } else if (dt.isSame(tomorrow)) {
-    message = 'airs tomorrow';
-  } else if (dt.isAfter(today)) {
-    message = 'airs on ' + dts;
-  } else {
-    message = 'aired on ' + dts;
-  }
-  return message;
-}
-
-export function shouldCollapse(
-  i: string,
-  data: TV | undefined,
-  episodes: EpisodeResponse[],
-): boolean {
-  let collapse = false;
-  if (data) {
-    const i_i = +i;
-    const seasonMeta = data.seasons.find((s) => s.season_number === i_i);
-    if (seasonMeta) {
-      const hasNext = true; // !!data.seasons[i_i + 1];
-
-      const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
-      const hasNumbers = _.map(episodes, 'episode');
-      const hasAllEpisodes =
-        _.difference(episodeNumbers, hasNumbers).length === 0;
-      collapse = hasNext && hasAllEpisodes;
-    }
-  }
-  return collapse;
 }

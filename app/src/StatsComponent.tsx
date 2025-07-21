@@ -1,5 +1,6 @@
-import ReactLoading from 'react-loading';
 import useSWR from 'swr';
+
+import { Loading, RouteTitle } from './components';
 
 export type StatsResponse = {
   user: string;
@@ -12,10 +13,10 @@ export type StatsResponse = {
 export function StatsComponent() {
   const { data: stats } = useSWR<StatsResponse[]>('stats');
 
-  if (!stats) return <ReactLoading type="balls" color="#000" />;
+  if (!stats) return <Loading loading />;
 
   return (
-    <div>
+    <RouteTitle title="Stats">
       {stats.map(({ user, values }) => (
         <div key={user}>
           <h3>{user}</h3>
@@ -25,6 +26,6 @@ export function StatsComponent() {
           <br />
         </div>
       ))}
-    </div>
+    </RouteTitle>
   );
 }

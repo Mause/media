@@ -1,0 +1,25 @@
+[
+  {
+    "component_name": "client_ip",
+    "component_type": "internal",
+    "status": "pass",
+    "output": {
+      "x-forwarded-for": "1.2.3.4",
+      "remote_addr": "1.2.3.4",
+      "location": {
+        "code": "AU",
+        "country": "Australia",
+        "continent": "Oceania",
+        "continent_code": "OC",
+        "city": null,
+        "lat": -33.494,
+        "lon": 143.2104,
+        "tz": "Australia/Sydney",
+        "currency": "AUD",
+        "isp": null,
+        "asn": null
+      },
+      "age": "2025-07-04T10:18:15Z"
+    }
+  }
+]

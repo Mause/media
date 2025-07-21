@@ -157,6 +157,74 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/providers': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Providers */
+    get: operations['get_providers'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/discover': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Discover */
+    get: operations['discover'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/tmdb/configuration': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Tmdb Configuration */
+    get: operations['tmdb_configuration'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/plex/{thing_type}/{tmdb_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Plex Imdb */
+    get: operations['get_plex_imdb'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/tv/{tmdb_id}': {
     parameters: {
       query?: never;
@@ -277,23 +345,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/redirect/plex/{imdb_id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** Redirect To Plex */
-    get: operations['redirect_to_plex'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/redirect/{type_}/{tmdb_id}/{season}/{episode}': {
     parameters: {
       query?: never;
@@ -338,6 +389,12 @@ export interface components {
      * @enum {string}
      */
     ComponentType: 'datastore' | 'internal' | 'http' | 'generic';
+    /** Configuration */
+    Configuration: {
+      images: components['schemas']['ImagesConfiguration'];
+      /** Change Keys */
+      change_keys: string[];
+    };
     /** CronResponse[MonitorGet] */
     CronResponse_MonitorGet_: {
       /** Success */
@@ -345,6 +402,39 @@ export interface components {
       /** Message */
       message: string;
       subject?: components['schemas']['MonitorGet'] | null;
+    };
+    /** DiagnosticsRoot */
+    DiagnosticsRoot: {
+      /** Version */
+      version: string;
+      /** Checks */
+      checks: string[];
+    };
+    /** Discover */
+    Discover: {
+      /** Page */
+      page: number;
+      /** Results */
+      results: components['schemas']['DiscoverMovie'][];
+      /** Total Pages */
+      total_pages: number;
+      /** Total Results */
+      total_results: number;
+    };
+    /** DiscoverMovie */
+    DiscoverMovie: {
+      /** Id */
+      id: number;
+      /** Title */
+      title: string;
+      /** Release Date */
+      release_date?: string | null;
+      /** Poster Path */
+      poster_path?: string | null;
+      /** Backdrop Path */
+      backdrop_path?: string | null;
+      /** Overview */
+      overview?: string | null;
     };
     /** DownloadAllResponse */
     DownloadAllResponse: {
@@ -457,6 +547,23 @@ export interface components {
       category: string;
       episode_info?: components['schemas']['EpisodeInfo'] | null;
     };
+    /** ImagesConfiguration */
+    ImagesConfiguration: {
+      /** Base Url */
+      base_url: string;
+      /** Secure Base Url */
+      secure_base_url: string;
+      /** Backdrop Sizes */
+      backdrop_sizes: string[];
+      /** Logo Sizes */
+      logo_sizes: string[];
+      /** Poster Sizes */
+      poster_sizes: string[];
+      /** Profile Sizes */
+      profile_sizes: string[];
+      /** Still Sizes */
+      still_sizes: string[];
+    };
     /** IndexResponse */
     IndexResponse: {
       /** Series */
@@ -530,6 +637,39 @@ export interface components {
       title: string;
       /** Imdb Id */
       imdb_id: string;
+    };
+    /** PlexMedia */
+    PlexMedia: {
+      /** Ratingkey */
+      ratingKey: number;
+      /** Title */
+      title: string;
+      /** Year */
+      year?: number | null;
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: 'movie' | 'show';
+      /** Guid */
+      guid?: string | null;
+      /** Summary */
+      summary?: string | null;
+      /** Thumb */
+      thumb?: string | null;
+      /** Art */
+      art?: string | null;
+    };
+    /** PlexResponse[PlexMedia] */
+    PlexResponse_PlexMedia_: {
+      /** Server Id */
+      server_id: string;
+      item: components['schemas']['PlexMedia'];
+      /**
+       * Link
+       * Format: uri
+       */
+      readonly link: string;
     };
     /**
      * ProviderSource
@@ -895,6 +1035,102 @@ export interface operations {
       };
     };
   };
+  get_providers: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProviderSource'][];
+        };
+      };
+    };
+  };
+  discover: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Discover'];
+        };
+      };
+    };
+  };
+  tmdb_configuration: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Configuration'];
+        };
+      };
+    };
+  };
+  get_plex_imdb: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        thing_type: 'movie' | 'tv';
+        tmdb_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            [key: string]:
+              | components['schemas']['PlexResponse_PlexMedia_']
+              | null;
+          };
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
   api_tv: {
     parameters: {
       query?: never;
@@ -1079,7 +1315,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': string[];
+          'application/json': components['schemas']['DiagnosticsRoot'];
         };
       };
     };
@@ -1102,37 +1338,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['HealthcheckResponses'];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['HTTPValidationError'];
-        };
-      };
-    };
-  };
-  redirect_to_plex: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        imdb_id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': unknown;
         };
       };
       /** @description Validation Error */

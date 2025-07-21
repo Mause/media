@@ -1,30 +1,28 @@
-import type { ReactElement } from 'react';
-import React, { useState, useEffect } from 'react';
+import { String } from 'typescript-string-operations';
+import { useState, useEffect } from 'react';
 import type { RawAxiosRequestHeaders } from 'axios';
 import Axios from 'axios';
-import MaterialLink from '@mui/material/Link';
-import { Link } from 'react-router-dom';
 import * as RRD from 'react-router-dom';
 // import axiosRetry from '@vtex/axios-concurrent-retry';
-import type { TypographyTypeMap } from '@mui/material';
 import type {
   Auth0ContextInterface,
   AuthenticationError,
 } from '@auth0/auth0-react';
 import { useAuth0 } from '@auth0/auth0-react';
+import moment from 'moment';
+import * as _ from 'lodash-es';
 
 import { FetchEventTarget } from './fetch_stream';
+import type { TV } from './select/SeasonSelectComponent';
+import type { EpisodeResponse } from './ParentComponent';
 
 // axiosRetry(Axios, { retries: 3 });
 
-export function MLink(
-  props: {
-    children: React.ReactNode;
-    color?: TypographyTypeMap['props']['color'];
-  } & Pick<Parameters<typeof Link>[0], 'to' | 'state'>,
-): ReactElement {
-  return <MaterialLink component={Link} {...props} underline="hover" />;
+export type GetResponse<T> = T extends {
+  get: { responses: { '200': { content: { 'application/json': unknown } } } };
 }
+  ? T['get']['responses']['200']['content']['application/json']
+  : never;
 
 export function subscribe<T>(
   path: string,
@@ -68,15 +66,17 @@ export function getPrefix() {
 
 export async function load<T>(
   path: string,
-  params?: string,
+  params?: object,
   headers?: RawAxiosRequestHeaders,
 ): Promise<T> {
-  const t = await Axios.get<T>(`${getPrefix()}/api/${path}`, {
+  const url = `${getPrefix()}/api/${path}`;
+  console.log('Loading', { url, params });
+  const t = await Axios.get<T>(url, {
     params,
     withCredentials: true,
     headers,
   });
-  return t && t.data;
+  return t?.data;
 }
 
 interface Res<T> {
@@ -141,20 +141,62 @@ export function usePost<T>(
   return result;
 }
 
-export function ExtMLink(props: { href: string; children: string }) {
-  return (
-    <MaterialLink
-      href={props.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      underline="hover"
-    >
-      {props.children}
-    </MaterialLink>
-  );
-}
-
 export function useLocation<T>() {
   const location = RRD.useLocation();
   return { ...location, state: location.state as T };
+}
+
+export function getMarker(episode: {
+  season?: number;
+  episode?: number | null;
+}) {
+  if (episode.episode) {
+    return String.format('S{0:00}E{1:00}', episode.season, episode.episode);
+  } else {
+    return String.format('S{0:00}', episode.season);
+  }
+}
+
+export function getMessage(air_date: string) {
+  const today = moment().startOf('day');
+  const tomorrow = today.clone().add(1, 'day');
+  const yesterday = today.clone().subtract(1, 'day');
+  const dt = moment(air_date);
+  const dts = dt.format('DD/MM/YYYY');
+
+  let message;
+  if (today.isSame(dt)) {
+    message = 'airs today';
+  } else if (dt.isSame(yesterday)) {
+    message = 'aired yesterday';
+  } else if (dt.isSame(tomorrow)) {
+    message = 'airs tomorrow';
+  } else if (dt.isAfter(today)) {
+    message = 'airs on ' + dts;
+  } else {
+    message = 'aired on ' + dts;
+  }
+  return message;
+}
+
+export function shouldCollapse(
+  i: string,
+  data: TV | undefined,
+  episodes: EpisodeResponse[],
+): boolean {
+  let collapse = false;
+  if (data) {
+    const i_i = +i;
+    const seasonMeta = data.seasons.find((s) => s.season_number === i_i);
+    if (seasonMeta) {
+      const hasNext = true; // !!data.seasons[i_i + 1];
+
+      const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
+      const hasNumbers = _.map(episodes, 'episode');
+      const hasAllEpisodes =
+        _.difference(episodeNumbers, hasNumbers).length === 0;
+      collapse = hasNext && hasAllEpisodes;
+    }
+  }
+  return collapse;
 }

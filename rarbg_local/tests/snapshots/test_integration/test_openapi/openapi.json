@@ -505,6 +505,167 @@
         }
       }
     },
+    "/api/providers": {
+      "get": {
+        "summary": "Get Providers",
+        "operationId": "get_providers",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderSource"
+                  },
+                  "type": "array",
+                  "title": "Response Get Providers Api Providers Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ]
+      }
+    },
+    "/api/discover": {
+      "get": {
+        "summary": "Discover",
+        "operationId": "discover",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Discover"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ]
+      }
+    },
+    "/api/tmdb/configuration": {
+      "get": {
+        "summary": "Tmdb Configuration",
+        "operationId": "tmdb_configuration",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Configuration"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ]
+      }
+    },
+    "/api/plex/{thing_type}/{tmdb_id}": {
+      "get": {
+        "summary": "Get Plex Imdb",
+        "operationId": "get_plex_imdb",
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "thing_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "movie",
+                "tv"
+              ],
+              "type": "string",
+              "title": "Thing Type"
+            }
+          },
+          {
+            "name": "tmdb_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Tmdb Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "title": "Response Get Plex Imdb Api Plex  Thing Type   Tmdb Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/tv/{tmdb_id}": {
       "get": {
         "tags": [
@@ -804,11 +965,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array",
-                  "title": "Response Diagnostics Api Diagnostics Get"
+                  "$ref": "#/components/schemas/DiagnosticsRoot"
                 }
               }
             }
@@ -862,43 +1019,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/HealthcheckResponses"
                 }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/redirect/plex/{imdb_id}": {
-      "get": {
-        "summary": "Redirect To Plex",
-        "operationId": "redirect_to_plex",
-        "parameters": [
-          {
-            "name": "imdb_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Imdb Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
               }
             }
           },
@@ -1083,6 +1203,26 @@
         "title": "ComponentType",
         "description": "Enum used to store the component types."
       },
+      "Configuration": {
+        "properties": {
+          "images": {
+            "$ref": "#/components/schemas/ImagesConfiguration"
+          },
+          "change_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Change Keys"
+          }
+        },
+        "type": "object",
+        "required": [
+          "images",
+          "change_keys"
+        ],
+        "title": "Configuration"
+      },
       "CronResponse_MonitorGet_": {
         "properties": {
           "success": {
@@ -1110,6 +1250,121 @@
           "message"
         ],
         "title": "CronResponse[MonitorGet]"
+      },
+      "DiagnosticsRoot": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "checks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Checks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "checks"
+        ],
+        "title": "DiagnosticsRoot"
+      },
+      "Discover": {
+        "properties": {
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverMovie"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "total_pages": {
+            "type": "integer",
+            "title": "Total Pages"
+          },
+          "total_results": {
+            "type": "integer",
+            "title": "Total Results"
+          }
+        },
+        "type": "object",
+        "required": [
+          "page",
+          "results",
+          "total_pages",
+          "total_results"
+        ],
+        "title": "Discover"
+      },
+      "DiscoverMovie": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "release_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Date"
+          },
+          "poster_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Poster Path"
+          },
+          "backdrop_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Backdrop Path"
+          },
+          "overview": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overview"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "DiscoverMovie"
       },
       "DownloadAllResponse": {
         "properties": {
@@ -1460,6 +1715,64 @@
         ],
         "title": "ITorrent"
       },
+      "ImagesConfiguration": {
+        "properties": {
+          "base_url": {
+            "type": "string",
+            "title": "Base Url"
+          },
+          "secure_base_url": {
+            "type": "string",
+            "title": "Secure Base Url"
+          },
+          "backdrop_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Backdrop Sizes"
+          },
+          "logo_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Logo Sizes"
+          },
+          "poster_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Poster Sizes"
+          },
+          "profile_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Profile Sizes"
+          },
+          "still_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Still Sizes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "base_url",
+          "secure_base_url",
+          "backdrop_sizes",
+          "logo_sizes",
+          "poster_sizes",
+          "profile_sizes",
+          "still_sizes"
+        ],
+        "title": "ImagesConfiguration"
+      },
       "IndexResponse": {
         "properties": {
           "series": {
@@ -1647,6 +1960,113 @@
         ],
         "title": "MovieResponse"
       },
+      "PlexMedia": {
+        "properties": {
+          "ratingKey": {
+            "type": "integer",
+            "title": "Ratingkey"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "movie",
+              "show"
+            ],
+            "title": "Type"
+          },
+          "guid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guid"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "thumb": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumb"
+          },
+          "art": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Art"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ratingKey",
+          "title",
+          "type"
+        ],
+        "title": "PlexMedia"
+      },
+      "PlexResponse_PlexMedia_": {
+        "properties": {
+          "server_id": {
+            "type": "string",
+            "title": "Server Id"
+          },
+          "item": {
+            "$ref": "#/components/schemas/PlexMedia"
+          },
+          "link": {
+            "type": "string",
+            "minLength": 1,
+            "format": "uri",
+            "title": "Link",
+            "readOnly": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "server_id",
+          "item",
+          "link"
+        ],
+        "title": "PlexResponse[PlexMedia]"
+      },
       "ProviderSource": {
         "type": "string",
         "enum": [
@@ -1719,6 +2139,7 @@
           },
           "imdb_id": {
             "type": "string",
+            "pattern": "^tt\\d+$",
             "title": "Imdb Id"
           },
           "tmdb_id": {

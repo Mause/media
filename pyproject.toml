@@ -9,10 +9,10 @@ requires-python = ">=3.12.0"
 dependencies = [
     "sqlalchemy[mypy]==2.0.41",
     "sqlalchemy-repr==0.1.0",
-    "aiohttp==3.12.13",
+    "aiohttp==3.12.14",
     "backoff==2.2.1",
-    "sentry-sdk==2.31.0",
-    "alembic==1.16.2",
+    "sentry-sdk==2.33.1",
+    "alembic==1.16.4",
     "plexapi==4.17.0",
     "fuzzywuzzy[speedup]==0.18.0",
     "cachetools==5.5.2",
@@ -20,7 +20,7 @@ dependencies = [
     "eventlet==0.40.1",
     "email-validator==2.2.0",
     "mause-rpc==0.0.18",
-    "fastapi==0.115.13",
+    "fastapi==0.116.1",
     "python-multipart==0.0.20",
     "aniso8601==10.0.1",
     "pytz==2025.2",
@@ -43,6 +43,8 @@ dependencies = [
     "logfire[fastapi,aiohttp,sqlalchemy,requests]>=3.18.0",
     "psycopg[c,pool]>=3.2.9; 'android' in platform_release",
     "psycopg[binary,pool]>=3.2.9; 'android' not in platform_release",
+    "geoip-py>=1.0.2",
+    "uvicorn-worker>=0.3.0",
 ]
 
 [dependency-groups]
@@ -56,12 +58,12 @@ dev = [
     "pre-commit>=4.2.0",
     "pytest-snapshot",
     "factory-boy==3.3.3",
-    "pytest-asyncio==1.0.0",
+    "pytest-asyncio==1.1.0",
     "async-asgi-testclient==1.4.11",
     "aioresponses==0.7.8",
     "pytest-sugar",
     "aiosqlite>=0.21.0",
-    "cryptography==45.0.4",
+    "cryptography==45.0.5",
     "types-tabulate>=0.9.0.20241207",
     "types-requests>=2.32.0.20250328",
     "types-lxml>=2025.3.30",
@@ -69,6 +71,7 @@ dev = [
     "types-cachetools>=5.5.0.20240820",
     "pytest-cov>=6.1.1",
     "pytest-resource-path>=1.4.0",
+    "pytest-alembic>=0.12.1",
 ]
 debug = ["pudb", "pdbpp"]
 cli = [
@@ -80,14 +83,17 @@ show-fixes = true
 
 [tool.ruff.format]
 quote-style = "preserve"
+docstring-code-format = true
+docstring-code-line-length = 20
 
 [tool.ruff.lint]
 select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 ignore = ["ANN401"]
 
 [tool.pytest.ini_options]
-addopts = "rarbg_local --driver chrome --html report.html --self-contained-html --cov-report html --cov"
-asyncio_default_fixture_loop_scope = "fixture"
+addopts = "--driver chrome --html report.html --self-contained-html --cov-report html --cov"
+testpaths = ["./rarbg_local/tests"]
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.mypy]
 plugins = "pydantic.mypy"

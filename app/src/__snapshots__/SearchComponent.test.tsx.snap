@@ -2,79 +2,76 @@
 
 exports[`SearchComponent 1`] = `
 <div>
-  <div>
-    <form>
-      <div
-        class="MuiFormControl-root css-4vvya4-MuiFormControl-root"
+  <form>
+    <div
+      class="MuiFormControl-root css-4vvya4-MuiFormControl-root"
+    >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root"
+        data-shrink="false"
+        for="outlined-adornment-search"
       >
-        <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root"
-          data-shrink="false"
-          for="outlined-adornment-search"
-        >
-          Search
-        </label>
+        Search
+      </label>
+      <div
+        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-adornedEnd css-jupps9-MuiInputBase-root-MuiOutlinedInput-root"
+      >
+        <input
+          aria-invalid="false"
+          class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall MuiInputBase-inputAdornedEnd css-13meb6w-MuiInputBase-input-MuiOutlinedInput-input"
+          id="outlined-adornment-search"
+          type="text"
+        />
         <div
-          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-adornedEnd css-jupps9-MuiInputBase-root-MuiOutlinedInput-root"
+          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-elo8k2-MuiInputAdornment-root"
         >
-          <input
-            aria-invalid="false"
-            class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall MuiInputBase-inputAdornedEnd css-13meb6w-MuiInputBase-input-MuiOutlinedInput-input"
-            id="outlined-adornment-search"
-            type="text"
-            value=""
-          />
-          <div
-            class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-elo8k2-MuiInputAdornment-root"
+          <button
+            aria-label="search"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1ysp02-MuiButtonBase-root-MuiIconButton-root"
+            tabindex="0"
+            type="submit"
           >
-            <button
-              aria-label="search"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1ysp02-MuiButtonBase-root-MuiIconButton-root"
-              tabindex="0"
-              type="submit"
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+              data-testid="SearchIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
-                data-testid="SearchIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
-                />
-              </svg>
-            </button>
-          </div>
-          <fieldset
-            aria-hidden="true"
-            class="MuiOutlinedInput-notchedOutline css-1ll44ll-MuiOutlinedInput-notchedOutline"
-          >
-            <legend
-              class="css-81qg8w"
-            >
-              <span>
-                Search
-              </span>
-            </legend>
-          </fieldset>
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"
+              />
+            </svg>
+          </button>
         </div>
-      </div>
-    </form>
-    <ul>
-      <li>
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
-          data-discover="true"
-          href="/select/10000/options"
+        <fieldset
+          aria-hidden="true"
+          class="MuiOutlinedInput-notchedOutline css-18p5xg2-MuiNotchedOutlined-root-MuiOutlinedInput-notchedOutline"
         >
-          Hello
-           (
-          2019
-          )
-        </a>
-      </li>
-    </ul>
-  </div>
+          <legend
+            class="css-1n64csd-MuiNotchedOutlined-root"
+          >
+            <span>
+              Search
+            </span>
+          </legend>
+        </fieldset>
+      </div>
+    </div>
+  </form>
+  <ul>
+    <li>
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+        data-discover="true"
+        href="/select/10000/options"
+      >
+        Hello
+         (
+        2019
+        )
+      </a>
+    </li>
+  </ul>
 </div>
 `;

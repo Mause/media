@@ -1,4 +1,3 @@
-import asyncio
 import json
 from collections.abc import AsyncGenerator, Generator
 from pathlib import Path
@@ -19,7 +18,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from ..auth import get_current_user
-from ..db import Base, Role, User, get_async_sessionmaker, get_db, get_session_local
+from ..db import (
+    Base,
+    Role,
+    User,
+    get_async_db,
+    get_async_sessionmaker,
+)
 from ..new import (
     Settings,
     create_app,
@@ -33,11 +38,6 @@ from .factories import session_var
 @fixture(scope="session")
 def event_loop_policy() -> uvloop.EventLoopPolicy:
     return uvloop.EventLoopPolicy()
-
-
-@fixture
-def _fixture_event_loop() -> asyncio.AbstractEventLoop:
-    return asyncio.new_event_loop()
 
 
 @fixture
@@ -64,38 +64,29 @@ def clear_cache() -> None:
 @fixture
 def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClient:
     async def gcu(
-        scopes: SecurityScopes, session: Annotated[AsyncSession, Depends(get_db)]
+        scopes: SecurityScopes, session: Annotated[AsyncSession, Depends(get_async_db)]
     ) -> User:
         res = (await session.execute(select(User))).scalars().first()
         assert res
         return res
 
     fastapi_app.dependency_overrides[get_current_user] = gcu
-    return TestClient(fastapi_app)
-
-
-@pytest_asyncio.fixture
-async def user(session: AsyncSession) -> User:
-    u = User(username='python', password='', email='python@python.org')
-    u.roles = [Role(name='Member')]
-    session.add(u)
-    await session.commit()
-    return u
-
-
-@pytest_asyncio.fixture
-async def session(
-    fastapi_app: FastAPI,
-    _function_event_loop: asyncio.AbstractEventLoop,
-) -> Generator[Session, None, None]:
-    Session = _function_event_loop.run_until_complete(
-        get(fastapi_app, get_session_local)
+    return TestClient(
+        fastapi_app,
+        scope={
+            'client': (b'1.2.3.4', 9000),
+        },
     )
 
-    with Session() as session:
-        Base.metadata.create_all(session.bind)
-        session_var.set(session)
-        yield session
+
+@pytest_asyncio.fixture
+async def user(async_session: AsyncSession) -> User:
+    u = User(username='python', password='', email='python@python.org')
+    u.roles = [Role(name='Member')]
+    async_session.add(u)
+    await async_session.commit()
+    await async_session.refresh(u)
+    return u
 
 
 @pytest_asyncio.fixture
@@ -106,6 +97,7 @@ async def async_session(
 
     async with Session() as session:
         await session.run_sync(lambda s: Base.metadata.create_all(s.bind))
+        session_var.set(session.sync_session)
         yield session
 
 

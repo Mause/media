@@ -1,68 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { Breadcrumbs, Typography, Alert } from '@mui/material';
+import { Alert, Breadcrumbs, Typography } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 
-import * as qs from './qs';
-import { subscribe, MLink, getToken } from './utils';
-import type { Torrents } from './streaming';
-import { Loading } from './render';
+import * as qs from '../qs';
+import { subscribe, getToken } from '../utils';
+import type { Torrents } from '../ParentComponent';
+import type { components } from '../schema';
+import { DisplayError, MLink, DisplayTorrent, Loading } from '../components';
+import { MonitorAddComponent } from '../MonitorComponent';
+import type { ManualAddComponentState } from '../ManualAddComponent';
+
 import { Shared } from './SeasonSelectComponent';
-import type { DownloadState } from './DownloadComponent';
-import { DisplayError } from './IndexComponent';
-import type { components } from './schema';
-import { MonitorAddComponent } from './MonitorComponent';
 
 export type ITorrent = components['schemas']['ITorrent'];
 type ProviderSource = components['schemas']['ProviderSource'];
-
-function getHash(magnet: string) {
-  const u = new URL(magnet);
-  return _.last(u.searchParams.get('xt')!.split(':'));
-}
-
-export function DisplayTorrent({
-  torrent,
-  torrents,
-  tmdb_id,
-  season,
-  episode,
-}: {
-  season?: number;
-  episode?: number | null;
-  tmdb_id: string;
-  torrent: ITorrent;
-  torrents?: Torrents;
-}) {
-  const state: DownloadState = {
-    downloads: [
-      {
-        tmdb_id: parseInt(tmdb_id),
-        magnet: torrent.download,
-        season: season,
-        episode: episode,
-      },
-    ],
-  };
-  const url = { to: '/download', state };
-  return (
-    <span>
-      <strong title={torrent.source}>
-        {torrent.source.substring(0, 1).toUpperCase()}
-      </strong>
-      &nbsp;
-      <MLink {...url}>{torrent.title}</MLink>
-      &nbsp;
-      <small>{torrent.seeders}</small>
-      &nbsp;
-      {torrents && getHash(torrent.download)! in torrents && (
-        <small>downloaded</small>
-      )}
-    </span>
-  );
-}
 
 const ranking = [
   'Movies/XVID',
@@ -136,7 +90,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
     header = (
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
-        <Typography color="textPrimary">{meta && meta.title}</Typography>
+        <Typography color="textPrimary">{meta?.title}</Typography>
       </Breadcrumbs>
     );
   } else {
@@ -145,7 +99,7 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       <Breadcrumbs aria-label="breadcrumb">
         <Shared />
         <MLink color="inherit" to={url}>
-          {meta && meta.title}
+          {meta?.title}
         </MLink>
         <MLink color="inherit" to={`${url}/${season}`}>
           Season {season}
@@ -185,7 +139,16 @@ function OptionsComponent({ type }: { type: 'movie' | 'series' }) {
       )}
       <ul>
         <li>
-          <MLink to="/manual" state={{ tmdb_id, season, episode }}>
+          <MLink
+            to="/manual"
+            state={
+              {
+                tmdb_id: tmdb_id!,
+                season,
+                episode,
+              } satisfies ManualAddComponentState
+            }
+          >
             Add manually
           </MLink>
         </li>

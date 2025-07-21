@@ -2,12 +2,13 @@ import { act } from 'react';
 import { screen } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import * as _ from 'lodash-es';
+import { http, HttpResponse } from 'msw';
+
+import { renderWithSWR, waitForRequests } from '../test.utils';
+import { server } from '../msw';
 
 import type { ITorrent } from './OptionsComponent';
-import { OptionsComponent } from './OptionsComponent';
-import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
-
-usesMoxios();
+import { MovieOptionsComponent } from './MovieOptionsComponent';
 
 const sources: ES[] = [];
 type CB = (event: { data: string }) => void;
@@ -31,16 +32,19 @@ Object.defineProperty(window, 'EventSource', { value: ES });
 
 describe('OptionsComponent', () => {
   it.skip('failure', async () => {
+    server.use(
+      http.get('movie/1', () => HttpResponse.json({ title: 'Hello World' })),
+    );
+
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
-          <OptionsComponent type="movie" />
+          <MovieOptionsComponent />
         </Route>
       </MemoryRouter>,
     );
 
-    await mock('movie/1', { title: 'Hello World' });
-    await wait();
+    await waitForRequests();
 
     expect(container).toMatchSnapshot();
 
@@ -62,17 +66,22 @@ describe('OptionsComponent', () => {
 
     expect(container).toMatchSnapshot();
   });
-  it.skip('success', () => {
+  it.skip('success', async () => {
+    server.use(
+      http.get('/api/movie/1', () =>
+        HttpResponse.json({ title: 'Hello World' }),
+      ),
+    );
+
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/select/1/options']}>
         <Route path="/select/:tmdb_id/options">
-          <OptionsComponent type="movie" />
+          <MovieOptionsComponent />
         </Route>
       </MemoryRouter>,
     );
-    act(() => {
-      void mock('movie/1', { title: 'Hello World' });
-    });
+
+    await waitForRequests();
 
     expect(container).toMatchSnapshot();
 

@@ -1,21 +1,8 @@
-import type { FormEvent } from 'react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
-import {
-  Alert,
-  FormControl,
-  OutlinedInput,
-  IconButton,
-  InputLabel,
-  InputAdornment,
-} from '@mui/material';
-import Search from '@mui/icons-material/Search';
-import * as _ from 'lodash-es';
 
-import * as qs from './qs';
-import type { IndexResponse, Torrents } from './streaming';
+import type { IndexResponse, Torrents } from './ParentComponent';
 import { TVShows, Movies } from './render';
+import { DisplayError, SearchBox, RouteTitle } from './components';
 
 const CFG = {
   refreshInterval: 10000,
@@ -36,61 +23,12 @@ function IndexComponent() {
   const ostate = state || { series: [], movies: [] };
 
   return (
-    <div>
+    <RouteTitle title="Media">
       <SearchBox />
       {error && <DisplayError error={error} />}
       <Movies torrents={torrents} movies={ostate.movies} loading={loading} />
       <TVShows torrents={torrents} series={ostate.series} loading={loading} />
-    </div>
-  );
-}
-
-export function DisplayError(props: { error: Error; message?: string }) {
-  const message =
-    _.get(props.error, 'response.data.message') ||
-    (props.message || 'Unable to connect to transmission') +
-      ': ' +
-      props.error.toString();
-
-  return (
-    <div>
-      <br />
-      <Alert color="warning">
-        <span data-testid="errorMessage">{message}</span>
-      </Alert>
-    </div>
-  );
-}
-
-export function SearchBox() {
-  function search(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    void navigate({ pathname: '/search', search: qs.stringify({ query }) });
-  }
-
-  const [query, setQuery] = useState('');
-  const navigate = useNavigate();
-
-  return (
-    <form onSubmit={search}>
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-search">Search</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-search"
-          type="text"
-          size="small"
-          onChange={(e) => setQuery(e.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton aria-label="search" type="submit" edge="end">
-                <Search />
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Search"
-        />
-      </FormControl>
-    </form>
+    </RouteTitle>
   );
 }
 

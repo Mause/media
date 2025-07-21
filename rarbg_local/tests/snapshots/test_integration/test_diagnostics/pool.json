@@ -7,8 +7,8 @@
       "worker_id": 1,
       "size": 5,
       "checkedin": 1,
-      "overflow": -4,
-      "checkedout": 0
+      "overflow": -2,
+      "checkedout": 2
     }
   }
 ]

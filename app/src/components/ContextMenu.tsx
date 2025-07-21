@@ -4,7 +4,7 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
-export default function ContextMenu({ children }: { children: ReactNode }) {
+export function ContextMenu({ children }: { children: ReactNode }) {
   const [contextMenu, setContextMenu] = useState<{
     mouseX: number;
     mouseY: number;

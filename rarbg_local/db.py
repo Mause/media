@@ -427,23 +427,6 @@ async def get_async_engine(
 
 
 @singleton
-def get_session_local(
-    engine: Annotated[AsyncEngine, Depends(get_async_engine)],
-) -> async_sessionmaker:
-    return async_sessionmaker(autocommit=False, autoflush=True, bind=engine)
-
-
-async def get_db(
-    session_local: Annotated[async_sessionmaker, Depends(get_session_local)],
-) -> AsyncGenerator[AsyncSession, None]:
-    sl = session_local()
-    try:
-        yield sl
-    finally:
-        await sl.close()
-
-
-@singleton
 def get_async_sessionmaker(
     engine: Annotated[AsyncEngine, Depends(get_async_engine)],
 ) -> async_sessionmaker:

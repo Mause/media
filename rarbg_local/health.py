@@ -1,10 +1,12 @@
 import contextvars
+import logging
 from collections.abc import Callable, Coroutine
 from datetime import datetime
 from os import getpid
 from typing import Any, cast, overload
 
 from fastapi import APIRouter
+from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import HTTPException
 from fastapi.requests import Request
 from healthcheck import (
@@ -21,11 +23,13 @@ from plexapi.server import PlexServer
 from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
 
+from .config import commit
 from .db import get_async_sessionmaker
 from .plex import get_plex
 from .singleton import get as _get
 from .transmission_proxy import transmission
 
+logger = logging.getLogger(__name__)
 router = APIRouter(tags=['diagnostics'])
 request_var = contextvars.ContextVar[Request]('request_var')
 
@@ -68,13 +72,21 @@ def build() -> Healthcheck:
         HealthcheckHTTPComponent('jikan'),
         lambda: check_http('https://api.jikan.moe/v4', 'GET'),
     )
+    add_component(HealthcheckInternalComponent('client_ip'), client_ip)
 
     return health
 
 
+class DiagnosticsRoot(BaseModel):
+    version: str
+    checks: list[str]
+
+
 @router.get('')
-async def diagnostics() -> list[str]:
-    return [comp.name for comp in build().components]
+async def diagnostics() -> DiagnosticsRoot:
+    return DiagnosticsRoot(
+        version=commit or 'dev', checks=[comp.name for comp in build().components]
+    )
 
 
 class HealthcheckResponse(BaseModel):
@@ -144,6 +156,47 @@ async def pool() -> HealthcheckCallbackResponse:
             'checkedin': pget('checkedin'),
             'overflow': pget('overflow'),
             'checkedout': pget('checkedout'),
+        },
+    )
+
+
+async def client_ip() -> HealthcheckCallbackResponse:
+    from .providers import serpapi
+
+    request = request_var.get()
+
+    ip_address = request.headers.get(
+        'x-forwarded-for', request.client.host if request.client else None
+    )
+    if ip_address and ', ' in ip_address:
+        ip_address = ip_address.split(', ')[0]
+
+    if not ip_address:
+        return HealthcheckCallbackResponse(
+            HealthcheckStatus.FAIL,
+            {  # type: ignore[arg-type]
+                'error': 'No IP address found in request headers'
+            },
+        )
+
+    location = None
+    age = None
+    try:
+        location = await run_in_threadpool(
+            serpapi.resolve_location,
+            ip_address,
+        )
+        age = await run_in_threadpool(serpapi.get_age)
+    except Exception as e:
+        logger.exception('Error resolving location for IP %s: %s', ip_address, e)
+
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {  # type: ignore[arg-type]
+            'x-forwarded-for': request.headers.get('x-forwarded-for', 'unknown'),
+            'remote_addr': request.client.host if request.client else 'unknown',
+            'location': location or 'unknown',
+            'age': age or 'unknown',
         },
     )
 

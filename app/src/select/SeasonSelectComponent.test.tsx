@@ -1,14 +1,13 @@
 import { screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { http, HttpResponse } from 'msw';
+
+import { renderWithSWR, waitForRequests } from '../test.utils';
+import { server } from '../msw';
 
 import type { Season, TV } from './SeasonSelectComponent';
-import {
-  EpisodeSelectComponent,
-  SeasonSelectComponent,
-} from './SeasonSelectComponent';
-import { mock, usesMoxios, wait, renderWithSWR } from './test.utils';
-
-usesMoxios();
+import { SeasonSelectComponent } from './SeasonSelectComponent';
+import { EpisodeSelectComponent } from './EpisodeSelectComponent';
 
 test('SeasonSelectComponent  render', async () => {
   const { container } = renderWithSWR(
@@ -22,18 +21,22 @@ test('SeasonSelectComponent  render', async () => {
     </MemoryRouter>,
   );
 
-  await mock<TV>('/api/tv/1', {
-    title: 'Hello',
-    number_of_seasons: 1,
-    imdb_id: null,
-    seasons: [
-      {
-        season_number: 1,
-        episode_count: 1,
-      },
-    ],
-  });
-  await wait();
+  server.use(
+    http.get('/api/tv/1', () =>
+      HttpResponse.json({
+        title: 'Hello',
+        number_of_seasons: 1,
+        imdb_id: null,
+        seasons: [
+          {
+            season_number: 1,
+            episode_count: 1,
+          },
+        ],
+      } satisfies TV),
+    ),
+  );
+  await waitForRequests();
 
   expect(screen.getByTestId('title').textContent).toEqual('Hello');
   expect(container).toMatchSnapshot();
@@ -51,16 +54,20 @@ test('EpisodeSelectComponent render', async () => {
     </MemoryRouter>,
   );
 
-  await mock<Season>('/api/tv/1/season/1', {
-    episodes: [
-      {
-        episode_number: 1,
-        id: 1,
-        name: 'Episode 1',
-      },
-    ],
-  });
-  await wait();
+  server.use(
+    http.get('/api/tv/1/season/1', () =>
+      HttpResponse.json({
+        episodes: [
+          {
+            episode_number: 1,
+            id: 1,
+            name: 'Episode 1',
+          },
+        ],
+      } satisfies Season),
+    ),
+  );
+  await waitForRequests();
 
   expect(screen.getByTestId('title').textContent).toEqual('Season 1');
   expect(container).toMatchSnapshot();

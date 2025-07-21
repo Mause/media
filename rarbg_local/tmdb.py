@@ -75,8 +75,12 @@ class SearchBaseResponse(BaseModel):
         media_type: Literal['person']
         id: TmdbId
 
+    class CollectionSearch(BaseModel):
+        media_type: Literal['collection']
+
     results: Annotated[
-        list[TvSearch | MovieSearch | PersonSearch], Field(default_factory=list)
+        list[TvSearch | MovieSearch | PersonSearch | CollectionSearch],
+        Field(default_factory=list),
     ]
 
 
@@ -136,7 +140,29 @@ async def get_tv_imdb_id(tv_id: TmdbId) -> ImdbId:
 
 
 class ExternalIds(BaseModel):
+    id: TmdbId
     imdb_id: ImdbId
+
+
+class TvExternalIds(ExternalIds):
+    freebase_mid: str | None = None
+    freebase_id: str | None = None
+    tvdb_id: int | None = None
+    tvrage_id: int | None = None
+
+
+class MovieExternalIds(ExternalIds):
+    pass
+
+
+@cached(LRUCache(360))
+async def get_external_ids(
+    type: ThingType, id: TmdbId
+) -> MovieExternalIds | TvExternalIds:
+    return await get_json(
+        f'{type}/{id}/external_ids',
+        MovieExternalIds if type == 'movie' else TvExternalIds,
+    )
 
 
 @cached(LRUCache(360))
@@ -149,9 +175,8 @@ async def get_tv_episode_imdb_id(tmdb_id: TmdbId, season: int, episode: int) -> 
     ).imdb_id
 
 
-@cached(LRUCache(360))
 async def get_imdb_id(type: ThingType, id: TmdbId) -> ImdbId:
-    return (await get_json(f'{type}/{id}/external_ids', ExternalIds)).imdb_id
+    return (await get_external_ids(type, id)).imdb_id
 
 
 @cached(TTLCache(256, 360))
@@ -169,7 +194,18 @@ class ReleaseType(Enum):
 
 
 class Discover(BaseModel):
-    pass
+    class DiscoverMovie(BaseModel):
+        id: TmdbId
+        title: str
+        release_date: datetime | None = None
+        poster_path: str | None = None
+        backdrop_path: str | None = None
+        overview: str | None = None
+
+    page: int
+    results: list[DiscoverMovie]
+    total_pages: int
+    total_results: int
 
 
 async def discover(
@@ -184,3 +220,21 @@ async def discover(
             'with_release_type': '|'.join(str(ReleaseType(i).value) for i in types),
         },
     )
+
+
+class Configuration(BaseModel):
+    class ImagesConfiguration(BaseModel):
+        base_url: str
+        secure_base_url: str
+        backdrop_sizes: list[str]
+        logo_sizes: list[str]
+        poster_sizes: list[str]
+        profile_sizes: list[str]
+        still_sizes: list[str]
+
+    images: ImagesConfiguration
+    change_keys: list[str]
+
+
+async def get_configuration() -> Configuration:
+    return await get_json('configuration', Configuration)

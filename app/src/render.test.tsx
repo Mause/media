@@ -1,24 +1,20 @@
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MockDate from 'mockdate';
+import { http, HttpResponse } from 'msw';
 
-import {
-  Movies,
-  TVShows,
-  Progress,
-  shouldCollapse,
-  NextEpisodeAirs,
-} from './render';
-import { usesMoxios, renderWithSWR, mock, wait } from './test.utils';
+import { Movies, TVShows, Progress, NextEpisodeAirs } from './render';
+import { renderWithSWR, waitForRequests } from './test.utils';
 import type {
   MovieResponse,
   Torrents,
   TorrentFile,
   SeriesResponse,
   EpisodeResponse,
-} from './streaming';
+} from './ParentComponent';
+import { getMessage, shouldCollapse } from './utils';
+import { server } from './msw';
 
-usesMoxios();
 beforeEach(() => MockDate.reset());
 
 test('Movies', () => {
@@ -47,6 +43,9 @@ test('Movies', () => {
 });
 
 test('TVShows', () => {
+  server.use(http.get('/api/tv/1/season/1', () => HttpResponse.json({})));
+  server.use(http.get('/api/tv/1', () => HttpResponse.json({})));
+
   const series: SeriesResponse[] = [
     {
       tmdb_id: 1,
@@ -134,6 +133,17 @@ describe('NextEpisodeAirs', () => {
     MockDate.set('2020-04-20');
     const tmdb_id = 10000;
     const season = '1';
+
+    server.use(
+      http.get(`/api/tv/${tmdb_id}/season/${season}`, () =>
+        HttpResponse.json({
+          episodes: [
+            { name: 'EP2', air_date: '2020-04-24', episode_number: 2 },
+          ],
+        }),
+      ),
+    );
+
     const { container } = renderWithSWR(
       <MemoryRouter>
         <NextEpisodeAirs
@@ -145,10 +155,7 @@ describe('NextEpisodeAirs', () => {
       </MemoryRouter>,
     );
 
-    await mock(`tv/${tmdb_id}/season/${season}`, {
-      episodes: [{ name: 'EP2', air_date: '2020-04-24', episode_number: 2 }],
-    });
-    await wait();
+    await waitForRequests();
 
     expect(container).toMatchSnapshot();
   });
@@ -200,5 +207,26 @@ describe('shouldCollapse', () => {
 
   it('true 2', () => {
     expect(shouldCollapse('1', tv, [episode, episode])).toBe(true);
+  });
+});
+
+describe('getMessage', () => {
+  beforeEach(() => {
+    MockDate.set('2020-01-03');
+  });
+  it('2020-01-01', () => {
+    expect(getMessage('2020-01-01')).toBe('aired on 01/01/2020');
+  });
+  it('2020-01-02', () => {
+    expect(getMessage('2020-01-02')).toBe('aired yesterday');
+  });
+  it('2020-01-03', () => {
+    expect(getMessage('2020-01-03')).toBe('airs today');
+  });
+  it('2020-01-04', () => {
+    expect(getMessage('2020-01-04')).toBe('airs tomorrow');
+  });
+  it('2020-01-05', () => {
+    expect(getMessage('2020-01-05')).toBe('airs on 05/01/2020');
   });
 });

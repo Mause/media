@@ -1,12 +1,19 @@
-import ReactLoading from 'react-loading';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import * as qs from './qs';
-import { SearchBox, DisplayError } from './IndexComponent';
-import { MLink } from './utils';
-import type { components } from './schema';
-export type SearchResult = components['schemas']['SearchResponse'];
+import {
+  DisplayError,
+  MLink,
+  SearchBox,
+  RouteTitle,
+  Loading,
+} from './components';
+import type { components, paths } from './schema';
+import type { GetResponse } from './utils';
+
+export type SearchResponse = GetResponse<paths['/api/search']>;
+export type TvResponse = components['schemas']['TvResponse'];
+export type MovieResponse = components['schemas']['MovieResponse'];
 
 export function SearchComponent() {
   const { search } = useLocation();
@@ -16,12 +23,13 @@ export function SearchComponent() {
     data: results,
     error,
     isValidating,
-  } = useSWR<SearchResult[], Error>('search?' + qs.stringify({ query }));
+  } = useSWR<SearchResponse, Error>(['search', { query }]);
+
   return (
-    <div>
+    <RouteTitle title="Search">
       <SearchBox />
       {error && <DisplayError error={error} />}
-      {isValidating && <ReactLoading type="balls" color="#000" />}
+      <Loading loading={isValidating} />
       <ul>
         {results?.map((result) => (
           <li key={result.tmdb_id}>
@@ -39,6 +47,6 @@ export function SearchComponent() {
         ))}
       </ul>
       {results && results.length === 0 ? 'No results' : null}
-    </div>
+    </RouteTitle>
   );
 }

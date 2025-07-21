@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import * as _ from 'lodash-es';
 
-import type { ITorrent } from './OptionsComponent';
-import { DisplayTorrent } from './OptionsComponent';
-import { getPrefix, getToken } from './utils';
-import { getMarker } from './render';
+import type { ITorrent } from './select/OptionsComponent';
+import { getMarker, getPrefix, getToken } from './utils';
+import { DisplayTorrent, RouteTitle } from './components';
 
 function useMessages<T>(initMessage: object) {
   const base = getPrefix();
@@ -36,7 +34,7 @@ function Websocket() {
   const { search } = useLocation();
   const query = new URLSearchParams(search.slice(1));
   const auth = useAuth0();
-  const token = 'Bearer ' + usePromise(() => getToken(auth), []);
+  const token = 'Bearer ' + use(getToken(auth));
 
   const initMessage = query.has('season')
     ? {
@@ -62,7 +60,7 @@ function Websocket() {
   ) as ITorrent[];
 
   return (
-    <div>
+    <RouteTitle title="Websocket">
       <p>{tmdbId}</p>
       <p>
         {query.has('season')
@@ -95,7 +93,7 @@ function Websocket() {
           </li>
         ))}
       </ul>
-    </div>
+    </RouteTitle>
   );
 }
 

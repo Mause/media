@@ -10,7 +10,7 @@ from fastapi.exceptions import HTTPException
 from requests.exceptions import ConnectionError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import make_transient
+from sqlalchemy.orm import joinedload, make_transient
 
 from .db import (
     Download,
@@ -116,7 +116,12 @@ async def add_single(
     already = (
         (
             await session.execute(
-                select(Download).filter_by(transmission_id=transmission_id)
+                select(Download)
+                .filter_by(transmission_id=transmission_id)
+                .options(
+                    joinedload(Download.episode),
+                    joinedload(Download.movie),
+                )
             )
         )
         .scalars()
@@ -124,29 +129,29 @@ async def add_single(
     )
 
     logger.info('does it already exist? %s', already)
-    if not already:
-        if is_tv:
-            precondition(season, 'Season must be provided for tv type')
-            return create_episode(
-                transmission_id=transmission_id,
-                imdb_id=imdb_id,
-                season=non_null(season),
-                episode=episode,
-                title=title,
-                tmdb_id=tmdb_id,
-                show_title=non_null(show_title),
-                added_by=added_by,
-            )
-        else:
-            return create_movie(
-                transmission_id=transmission_id,
-                imdb_id=imdb_id,
-                tmdb_id=tmdb_id,
-                title=title,
-                added_by=added_by,
-            )
+    if already:
+        return already.episode if is_tv else already.movie
 
-    return already.episode if is_tv else already.movie
+    if not is_tv:
+        return create_movie(
+            transmission_id=transmission_id,
+            imdb_id=imdb_id,
+            tmdb_id=tmdb_id,
+            title=title,
+            added_by=added_by,
+        )
+
+    precondition(season, 'Season must be provided for tv type')
+    return create_episode(
+        transmission_id=transmission_id,
+        imdb_id=imdb_id,
+        season=non_null(season),
+        episode=episode,
+        title=title,
+        tmdb_id=tmdb_id,
+        show_title=non_null(show_title),
+        added_by=added_by,
+    )
 
 
 def groupby[K, V](iterable: Iterable[V], key: Callable[[V], K]) -> dict[K, list[V]]:
