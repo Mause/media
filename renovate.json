@@ -5,6 +5,7 @@
     "group:sentry-javascriptMonorepo",
     "group:react-routerMonorepo"
   ],
+  "configMigration": true,
   "pre-commit": {
     "enabled": true
   }
