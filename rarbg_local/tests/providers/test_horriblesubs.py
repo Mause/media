@@ -1,6 +1,6 @@
 import json
-from pathlib import Path
 from collections.abc import Callable
+from pathlib import Path
 
 from aioresponses import aioresponses as Aioresponses
 from pytest import fixture, mark
