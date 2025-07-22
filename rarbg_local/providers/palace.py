@@ -4,7 +4,9 @@ https://prod-api.palace-cinemas.workers.dev/cinemas
 https://prod-api.palace-cinemas.workers.dev/cinemas?platinum=true
 https://prod-api.palace-cinemas.workers.dev/engagement
 https://prod-api.palace-cinemas.workers.dev/menu
+https://prod-api.palace-cinemas.workers.dev/movies?locality=melbourne
 https://prod-api.palace-cinemas.workers.dev/movies/now/trending?locality=melbourne
+https://prod-api.palace-cinemas.workers.dev/movies/the-phoenician-scheme?locality=melbourne&isPreviewMode=null
 https://prod-api.palace-cinemas.workers.dev/sessions/combo-box-items
 https://prod-api.palace-cinemas.workers.dev/sessions/date-items
 '''
