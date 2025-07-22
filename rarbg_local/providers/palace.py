@@ -87,7 +87,7 @@ class Session(Shared):
     display_attribute_colour: Color | None
     display_attribute_text: str | None
     is_platinum: bool
-    sale_status: Literal['Selling Fast'] | None
+    sale_status: Literal['Selling Fast', 'Sold Out'] | None
     session_id: str
     cinema_id: str
     is_special_event: bool
