@@ -95,9 +95,13 @@ async def main() -> None:
         movie_name=movie_name,
         location=', '.join(
             [
-                location.city.name,
-                location.subdivisions.most_specific.name,
-                location.country.name,
+                part
+                for part in (
+                    location.city.name,
+                    location.subdivisions.most_specific.name,
+                    location.country.name,
+                )
+                if part
             ]
         ),
         iso_code=location.country.iso_code or 'au',
