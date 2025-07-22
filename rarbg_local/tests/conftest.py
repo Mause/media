@@ -74,7 +74,7 @@ def test_client(fastapi_app: FastAPI, clear_cache: None, user: User) -> TestClie
     return TestClient(
         fastapi_app,
         scope={
-            'client': (b'1.2.3.4', 9000),
+            'client': ('1.2.3.4', 9000),
         },
     )
 
