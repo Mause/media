@@ -13,7 +13,7 @@ https://prod-api.palace-cinemas.workers.dev/sessions/date-items
 
 from collections.abc import AsyncGenerator
 from datetime import date, datetime, timedelta
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, NewType
 
 import aiohttp
 from pydantic import (
@@ -30,6 +30,8 @@ from pydantic_extra_types.coordinate import Latitude, Longitude
 from rich import print
 
 from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
+
+CinemaId = NewType('CinemaId', str)
 
 
 class HumanTimeDelta:
@@ -89,7 +91,7 @@ class Session(Shared):
     is_platinum: bool
     sale_status: Literal['Selling Fast', 'Sold Out'] | None
     session_id: str
-    cinema_id: str
+    cinema_id: CinemaId
     is_special_event: bool
 
 
@@ -110,7 +112,7 @@ class Movie(Shared):
 
 
 class Cinema(Shared):
-    cinema_id: str
+    cinema_id: CinemaId
     order: int | None
 
     short_name: str
@@ -123,7 +125,7 @@ class Cinema(Shared):
     card_image: str
     card_alt: str
 
-    nearby_cinema_ids: list[str] = []
+    nearby_cinema_ids: list[CinemaId] = []
 
     longitude: Longitude
     latitude: Latitude
@@ -154,7 +156,7 @@ def to_params(value: dict) -> dict:
 
 
 class FilterArgs(Shared):
-    selected_cinema_ids: list[str] = []
+    selected_cinema_ids: list[CinemaId] = []
     selected_dates: list[date] | None = None
     modern_view: bool = True
     movie_order_type: Literal['MOVIE_NAME'] = 'MOVIE_NAME'
