@@ -1,15 +1,14 @@
 import json
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Annotated, Any
 
 import aiohttp
-import geoip2.database
-import geoip_api
-from geoip2.models import City
-from geoip_api.core.lookup import get_database_path
+from fastapi import Request
 from pydantic import BaseModel, GetCoreSchemaHandler, ValidatorFunctionWrapHandler
 from pydantic_core import CoreSchema, core_schema
 from rich import print
+
+from .geolocate import resolve_location
 
 
 class HumanDate:
@@ -75,19 +74,6 @@ async def search(movie_name: str, location: str, iso_code: str, api_key: str) ->
         return js
 
 
-def resolve_location(ip_address: str) -> City:
-    api = geoip_api.GeoIPLookup(download_if_missing=True)
-
-    with geoip2.database.Reader(api.city_db_path) as city_reader:
-        return city_reader.city(ip_address)
-
-
-def get_age() -> datetime:
-    with geoip2.database.Reader(get_database_path()) as city_reader:
-        m = city_reader.metadata()
-        return datetime.fromtimestamp(m.build_epoch, timezone.utc)
-
-
 async def main() -> None:
     import os
 
@@ -101,7 +87,8 @@ async def main() -> None:
     dotenv.load_dotenv()
 
     ip_address = '203.12.14.33'
-    location = resolve_location(ip_address)
+    location = resolve_location(Request(scope={'client': (ip_address.encode(), 0)}))
+    assert location is not None, 'Could not resolve location'
 
     movie_name = 'The Phoenician Scheme'
     js = await search(
