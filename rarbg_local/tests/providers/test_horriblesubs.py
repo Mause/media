@@ -20,7 +20,7 @@ from ..factories import TvApiResponseFactory
 @fixture
 def load_html(resource_path: Path) -> Callable[[str], str]:
     def load_html(filename: str) -> str:
-        return (resource_path / filename).read_text()
+        return (resource_path / filename).resolve().read_text()
 
     return load_html
 
