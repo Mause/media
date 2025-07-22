@@ -13,6 +13,7 @@ https://prod-api.palace-cinemas.workers.dev/sessions/date-items
 
 from collections.abc import AsyncGenerator
 from datetime import date, datetime, timedelta
+from enum import Enum
 from typing import Annotated, Any, Literal, NewType
 
 import aiohttp
@@ -155,11 +156,17 @@ def to_params(value: dict) -> dict:
     return {k: single(v) for k, v in value.items() if v is not None}
 
 
+class MovieOrderType(Enum):
+    MOVIE_NAME = 'MOVIE_NAME'
+    RECOMMENDED = 'RECOMMENDED'
+    NEWEST_RELEASE = 'NEWEST_RELEASE'
+
+
 class FilterArgs(Shared):
     selected_cinema_ids: list[CinemaId] = []
     selected_dates: list[date] | None = None
     modern_view: bool = True
-    movie_order_type: Literal['MOVIE_NAME'] = 'MOVIE_NAME'
+    movie_order_type: MovieOrderType = MovieOrderType.MOVIE_NAME
     new_release: bool = False
     special_event: bool = False
     film_festival: bool = False
