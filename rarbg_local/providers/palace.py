@@ -186,6 +186,31 @@ async def get_sessions_date_items(
     return RootModel[list[date]].model_validate(await res.json()).root
 
 
+class ComboBoxItem(Shared):
+    movie_slug: str
+    title: str
+
+
+async def get_sessions_combo_box_items(
+    session: aiohttp.ClientSession, filter_args: FilterArgs
+) -> list[ComboBoxItem]:
+    res = await session.post(
+        "/sessions/combo-box-items", json=filter_args.model_dump(mode='json')
+    )
+    res.raise_for_status()
+    return RootModel[list[ComboBoxItem]].model_validate(await res.json()).root
+
+
+async def get_sessions_disabled_cinemas(
+    session: aiohttp.ClientSession, filter_args: FilterArgs
+) -> list[CinemaId]:
+    res = await session.post(
+        "/sessions/disabled-cinemas", json=filter_args.model_dump(mode='json')
+    )
+    res.raise_for_status()
+    return RootModel[list[CinemaId]].model_validate(await res.json()).root
+
+
 async def get_cinemas(session: aiohttp.ClientSession) -> list[Cinema]:
     res = await session.get(
         '/cinemas',
