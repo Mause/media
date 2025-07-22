@@ -1,8 +1,9 @@
 import json
 from pathlib import Path
+from typing import Callable
 
 from aioresponses import aioresponses as Aioresponses
-from pytest import mark
+from pytest import fixture, mark
 from pytest_snapshot.plugin import Snapshot
 
 from ...providers.horriblesubs import (
@@ -16,13 +17,17 @@ from ..conftest import add_json, themoviedb, tolist
 from ..factories import TvApiResponseFactory
 
 
-def load_html(filename: str) -> str:
-    with (Path(__file__).parent / 'resources' / filename).open('r') as fh:
-        return fh.read()
+@fixture
+def load_html(resource_path: Path) -> Callable[[str], str]:
+    def load_html(filename: str) -> str:
+        return (resource_path / filename).read_text()
+    return load_html
 
 
 @mark.asyncio
-async def test_parse(aioresponses: Aioresponses) -> None:
+async def test_parse(
+    aioresponses: Aioresponses, load_html: Callable[[str], str]
+) -> None:
     aioresponses.add(
         'https://horriblesubs.info/api.php?method=getlatest',
         'GET',
@@ -55,7 +60,7 @@ async def test_parse(aioresponses: Aioresponses) -> None:
 
 
 def mock(aioresponses: Aioresponses, url: str, html: str) -> None:
-    aioresponses.add(url + '&nextid=0', 'GET', body=load_html(html))
+    aioresponses.add(url + '&nextid=0', 'GET', body=html)
     aioresponses.add(
         url + '&nextid=1', 'GET', body='There are no batches for this show yet'
     )
@@ -66,11 +71,13 @@ def magnet_link(torrent_hash: str) -> str:
 
 
 @mark.asyncio
-async def test_get_downloads(aioresponses: Aioresponses) -> None:
+async def test_get_downloads(
+    aioresponses: Aioresponses, load_html: Callable[[str], str]
+) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=batch&showid=1',
-        'results.html',
+        load_html('results.html'),
     )
 
     batches = await tolist(get_downloads(1, HorriblesubsDownloadType.BATCH))
@@ -96,12 +103,12 @@ async def test_get_downloads(aioresponses: Aioresponses) -> None:
 
 @mark.asyncio
 async def test_get_downloads_single(
-    aioresponses: Aioresponses, snapshot: Snapshot
+    aioresponses: Aioresponses, snapshot: Snapshot, load_html: Callable[[str], str]
 ) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=1',
-        'show.html',
+        load_html('../show.html'),
     )
 
     magnets = await tolist(get_downloads(1, HorriblesubsDownloadType.SHOW))
@@ -110,11 +117,13 @@ async def test_get_downloads_single(
 
 
 @mark.asyncio
-async def test_provider(aioresponses: Aioresponses, snapshot: Snapshot) -> None:
+async def test_provider(
+    aioresponses: Aioresponses, snapshot: Snapshot, load_html: Callable[[str], str]
+) -> None:
     mock(
         aioresponses,
         'https://horriblesubs.info/api.php?method=getshows&type=show&showid=264',
-        'show.html',
+        load_html('../show.html'),
     )
     aioresponses.add(
         'https://horriblesubs.info/shows/', 'GET', body=load_html('shows.html')
