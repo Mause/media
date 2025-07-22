@@ -5,15 +5,15 @@ from aioresponses import aioresponses as Aioresponses
 from pytest import mark
 from pytest_snapshot.plugin import Snapshot
 
-from ..providers.horriblesubs import (
+from ...providers.horriblesubs import (
     HorriblesubsDownloadType,
     HorriblesubsProvider,
     get_downloads,
     get_latest,
 )
-from ..types import ImdbId, TmdbId
-from .conftest import add_json, themoviedb, tolist
-from .factories import TvApiResponseFactory
+from ...types import ImdbId, TmdbId
+from ..conftest import add_json, themoviedb, tolist
+from ..factories import TvApiResponseFactory
 
 
 def load_html(filename: str) -> str:
