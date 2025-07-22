@@ -161,7 +161,7 @@ async def pool() -> HealthcheckCallbackResponse:
 
 
 async def client_ip() -> HealthcheckCallbackResponse:
-    from .providers import serpapi
+    from .providers import geolocate
 
     request = request_var.get()
 
@@ -183,10 +183,10 @@ async def client_ip() -> HealthcheckCallbackResponse:
     age = None
     try:
         location = await run_in_threadpool(
-            serpapi.resolve_location,
-            ip_address,
+            geolocate.resolve_location,
+            request,
         )
-        age = await run_in_threadpool(serpapi.get_age)
+        age = await run_in_threadpool(geolocate.get_age)
     except Exception as e:
         logger.exception('Error resolving location for IP %s: %s', ip_address, e)
 
@@ -195,7 +195,7 @@ async def client_ip() -> HealthcheckCallbackResponse:
         {  # type: ignore[arg-type]
             'x-forwarded-for': request.headers.get('x-forwarded-for', 'unknown'),
             'remote_addr': request.client.host if request.client else 'unknown',
-            'location': location or 'unknown',
+            'location': location.to_dict() if location else 'unknown',
             'age': age or 'unknown',
         },
     )
