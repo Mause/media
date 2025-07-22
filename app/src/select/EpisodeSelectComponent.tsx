@@ -27,7 +27,7 @@ export function EpisodeSelectBreadcrumbs(props: {
   );
 }
 
-export function EpisodeSelectComponent() {
+export default function EpisodeSelectComponent() {
   const { tmdb_id, season: seasonNumber } = useParams<{
     tmdb_id: string;
     season: string;

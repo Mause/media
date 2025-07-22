@@ -3,7 +3,7 @@ import type { RouteObject } from 'react-router-dom';
 import { RouteTitle, MLink } from './components';
 import routes from './routes';
 
-export function SitemapRoot() {
+export default function SitemapRoot() {
   return (
     <RouteTitle title="Sitemap">
       <Sitemap routes={routes} />

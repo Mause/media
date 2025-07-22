@@ -10,7 +10,7 @@ export type StatsResponse = {
   };
 };
 
-export function StatsComponent() {
+export default function StatsComponent() {
   const { data: stats } = useSWR<StatsResponse[]>('stats');
 
   if (!stats) return <Loading loading />;

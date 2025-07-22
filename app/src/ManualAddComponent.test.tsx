@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 
 import { renderWithSWR, waitForRequests } from './test.utils';
 import type { ManualAddComponentState } from './ManualAddComponent';
-import { ManualAddComponent } from './ManualAddComponent';
+import ManualAddComponent from './ManualAddComponent';
 import { server } from './msw';
 
 it('works', async () => {

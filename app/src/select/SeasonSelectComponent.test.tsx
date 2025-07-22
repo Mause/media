@@ -6,8 +6,8 @@ import { renderWithSWR, waitForRequests } from '../test.utils';
 import { server } from '../msw';
 
 import type { Season, TV } from './SeasonSelectComponent';
-import { SeasonSelectComponent } from './SeasonSelectComponent';
-import { EpisodeSelectComponent } from './EpisodeSelectComponent';
+import SeasonSelectComponent from './SeasonSelectComponent';
+import EpisodeSelectComponent from './EpisodeSelectComponent';
 
 test('SeasonSelectComponent  render', async () => {
   const { container } = renderWithSWR(
