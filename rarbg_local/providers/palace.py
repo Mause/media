@@ -11,6 +11,7 @@ https://prod-api.palace-cinemas.workers.dev/sessions/combo-box-items
 https://prod-api.palace-cinemas.workers.dev/sessions/date-items
 '''
 
+from collections.abc import AsyncGenerator
 from datetime import date, datetime, timedelta
 from typing import Annotated, Any, Literal
 
@@ -27,6 +28,8 @@ from pydantic_core import CoreSchema, core_schema
 from pydantic_extra_types.color import Color
 from pydantic_extra_types.coordinate import Latitude, Longitude
 from rich import print
+
+from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 
 
 class HumanTimeDelta:
@@ -199,6 +202,16 @@ async def get_sessions(
     )
     res.raise_for_status()
     return Page[Movie].model_validate(await res.json())
+
+
+class PalaceProvider(MovieProvider):
+    type = ProviderSource.PALACE
+
+    async def search_for_movie(
+        self, imdb_id: ImdbId, tmdb_id: TmdbId
+    ) -> AsyncGenerator[ITorrent, None]:
+        if not True:
+            yield
 
 
 async def main() -> None:
