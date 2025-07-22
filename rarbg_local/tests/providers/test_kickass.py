@@ -1,11 +1,11 @@
 from aioresponses import aioresponses as Aioresponses
 from pytest import mark
 
-from ..models import EpisodeInfo, ITorrent, ProviderSource
-from ..providers.kickass import KickassProvider
-from ..types import ImdbId, TmdbId
-from .conftest import themoviedb, tolist
-from .factories import MovieResponseFactory, TvApiResponseFactory
+from ...models import EpisodeInfo, ITorrent, ProviderSource
+from ...providers.kickass import KickassProvider
+from ...types import ImdbId, TmdbId
+from ..conftest import themoviedb, tolist
+from ..factories import MovieResponseFactory, TvApiResponseFactory
 
 
 def make(title: str) -> str:
