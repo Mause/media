@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Callable
+from collections.abc import Callable
 
 from aioresponses import aioresponses as Aioresponses
 from pytest import fixture, mark
@@ -21,6 +21,7 @@ from ..factories import TvApiResponseFactory
 def load_html(resource_path: Path) -> Callable[[str], str]:
     def load_html(filename: str) -> str:
         return (resource_path / filename).read_text()
+
     return load_html
 
 
