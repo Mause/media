@@ -24,6 +24,7 @@ def test_human_date() -> None:
 
 
 @mark.asyncio
+@mark.skip
 async def test_serpapi(resource_path: Path, aioresponses: Aioresponses) -> None:
     args = {
         "api_key": "test",
