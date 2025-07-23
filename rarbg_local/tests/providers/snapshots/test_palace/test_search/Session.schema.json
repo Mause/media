@@ -62,7 +62,10 @@
     "saleStatus": {
       "anyOf": [
         {
-          "const": "Selling Fast",
+          "enum": [
+            "Selling Fast",
+            "Sold Out"
+          ],
           "type": "string"
         },
         {
