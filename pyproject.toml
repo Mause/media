@@ -46,6 +46,7 @@ dependencies = [
     "geoip-py>=1.0.2",
     "uvicorn-worker>=0.3.0",
     "pydantic-extra-types>=2.10.5",
+    "uritemplate>=4.2.0",
 ]
 
 [dependency-groups]

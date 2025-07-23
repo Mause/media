@@ -20,15 +20,17 @@ import aiohttp
 from pydantic import (
     BaseModel,
     ConfigDict,
+    Field,
     GetCoreSchemaHandler,
     RootModel,
     ValidatorFunctionWrapHandler,
 )
-from pydantic.alias_generators import to_camel
+from pydantic.alias_generators import to_camel, to_pascal
 from pydantic_core import CoreSchema, core_schema
 from pydantic_extra_types.color import Color
 from pydantic_extra_types.coordinate import Latitude, Longitude
 from rich import print
+from uritemplate import URITemplate
 
 from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 
@@ -96,18 +98,80 @@ class Session(Shared):
     is_special_event: bool
 
 
-class Movie(Shared):
-    language: str | None
-    now_showing_order: int | None
-    release_date_utc: datetime
-    genre_names: list[str]
-    run_time: Annotated[timedelta, HumanTimeDelta()]
-    synopsis: str | None
-    trailer_url: str
-    rating: str
-    title: str
+class BaseMovie(Shared):
     movie_id: str
+    title: str
     slug: str
+    trailer_url: str
+    synopsis: str | None
+    rating: str
+    release_date_utc: datetime
+
+
+class Review(Shared):
+    id: str
+    content: str
+    rating: str | None
+    reviewer: str
+
+
+class Person(Shared):
+    model_config = ConfigDict(alias_generator=to_pascal)
+    id: Annotated[str, Field(alias='ID')]
+    first_name: str
+    last_name: str
+    person_type: Literal['Director', 'Cast', 'Actor']
+    url_to_picture: str | None
+    url_to_details: str | None
+
+
+class ParticipatingCinema(Shared):
+    slug: str
+    title: str
+
+
+class AdditionalDetail(Shared):
+    root: int
+
+
+class SingleMovie(BaseMovie):
+    awards: list[int]
+    meta_title: str
+    meta_description: str | None
+    meta_json_ld: object
+    meta_image: str
+
+    logo_alt: str
+    logo_max_height: int | None
+    logo_max_width: int
+    logo_mobile_max_height: int
+    logo_top_mobile_spacing: int | None
+    logo: str
+
+    participating_cinemas: list[ParticipatingCinema]
+    media_inserts: list[int]
+    hero_image: str
+    hero_image_alt: str
+    reviews: list[Review]
+
+    accent_colour: Color
+    is_alt_content: bool
+    is_repertory: bool
+    is_arts_on_screen: bool
+    additional_detail: AdditionalDetail | None
+    short_synopsis: str
+    html_content: str | None
+    genre_name: list[str]
+    genre_id: list[str]
+    cast: list[Person]
+    run_time: Annotated[timedelta, HumanTimeDelta()]
+    language: str | None
+    director: list[Person]
+
+
+class Movie(BaseMovie):
+    now_showing_order: int | None
+    genre_names: list[str]
 
     sessions: list[Session]
 
@@ -218,6 +282,21 @@ async def get_cinemas(session: aiohttp.ClientSession) -> list[Cinema]:
     )
     res.raise_for_status()
     return RootModel[list[Cinema]].model_validate(await res.json()).root
+
+
+async def get_movie_by_slug(session: aiohttp.ClientSession, slug: str) -> SingleMovie:
+    res = await session.get(
+        URITemplate("/movies/{slug}").expand(slug=slug),
+        params={'locality': 'melbourne', 'isPreviewMode': 'null'},
+    )
+    res.raise_for_status()
+    return RootModel[SingleMovie].model_validate(await res.json()).root
+
+
+async def get_movie_by_id(session: aiohttp.ClientSession, ident: str) -> SingleMovie:
+    res = await session.get(URITemplate("/movies/byid/{ident}").expand(ident=ident))
+    res.raise_for_status()
+    return RootModel[SingleMovie].model_validate(await res.json()).root
 
 
 async def get_sessions(
