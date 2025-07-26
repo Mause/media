@@ -4,7 +4,7 @@ import { useSWRConfig } from 'swr';
 import { en_AU, Faker, en, base } from '@faker-js/faker';
 import { Box, Tab, Tabs } from '@mui/material';
 
-import { Progress } from './render';
+import { OpenPlex, Progress } from './render';
 import { ContextMenu, RouteTitle } from './components';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 import { PureDiscoveryComponent } from './DiscoveryComponent';
@@ -107,6 +107,7 @@ export function Storybook() {
             Hello
           </MenuItem>
           <MenuItem>World</MenuItem>
+          <OpenPlex download={{ tmdb_id: 0 }} type="movie" />
         </ContextMenu>
         <hr />
         <SimpleDiagnosticDisplay
