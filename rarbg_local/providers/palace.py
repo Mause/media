@@ -1,0 +1,282 @@
+'''
+https://prod-api.palace-cinemas.workers.dev/banner?displayLocation=restOfSite&locality=melbourne
+https://prod-api.palace-cinemas.workers.dev/cinemas
+https://prod-api.palace-cinemas.workers.dev/cinemas?platinum=true
+https://prod-api.palace-cinemas.workers.dev/engagement
+https://prod-api.palace-cinemas.workers.dev/menu
+https://prod-api.palace-cinemas.workers.dev/movies?locality=melbourne
+https://prod-api.palace-cinemas.workers.dev/movies/now/trending?locality=melbourne
+https://prod-api.palace-cinemas.workers.dev/movies/the-phoenician-scheme?locality=melbourne&isPreviewMode=null
+https://prod-api.palace-cinemas.workers.dev/sessions/combo-box-items
+https://prod-api.palace-cinemas.workers.dev/sessions/date-items
+'''
+
+from collections.abc import AsyncGenerator
+from datetime import date, datetime, timedelta
+from enum import Enum
+from typing import Annotated, Any, Literal, NewType
+
+import aiohttp
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    GetCoreSchemaHandler,
+    RootModel,
+    ValidatorFunctionWrapHandler,
+)
+from pydantic.alias_generators import to_camel
+from pydantic_core import CoreSchema, core_schema
+from pydantic_extra_types.color import Color
+from pydantic_extra_types.coordinate import Latitude, Longitude
+from rich import print
+
+from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
+
+CinemaId = NewType('CinemaId', str)
+
+
+class HumanTimeDelta:
+    def tz_constraint_validator(
+        self, value: str, handler: ValidatorFunctionWrapHandler
+    ) -> Any:
+        parts = value.split()
+        assert len(parts) == 2
+        assert parts[1] == 'MIN'
+        return handler(timedelta(minutes=int(parts[0])))
+
+    def __get_pydantic_core_schema__(
+        self,
+        source_type: Any,
+        handler: GetCoreSchemaHandler,
+    ) -> CoreSchema:
+        return core_schema.no_info_wrap_validator_function(
+            self.tz_constraint_validator,
+            handler(source_type),
+        )
+
+
+class Page[T](BaseModel):
+    data: list[T] = []
+    page: int = 1
+    items_per_page: int = 6
+    total_pages: int = 0
+    total_items: int = 0
+
+
+class Shared(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+        alias_generator=to_camel,
+        serialize_by_alias=True,
+        validate_by_name=True,
+        validate_by_alias=True,
+    )
+
+
+class Session(Shared):
+    date: datetime
+    session_info: list[
+        Literal[
+            'Hearing Impaired',
+            'Closed Captioning Available',
+            'All seats recline',
+            'No Free Tickets',
+            'Audio Description Session',
+        ]
+    ]
+    no_free_tickets: bool
+    audio_description: bool
+    close_caption: bool
+    display_attribute_colour: Color | None
+    display_attribute_text: str | None
+    is_platinum: bool
+    sale_status: Literal['Selling Fast', 'Sold Out'] | None
+    session_id: str
+    cinema_id: CinemaId
+    is_special_event: bool
+
+
+class Movie(Shared):
+    language: str | None
+    now_showing_order: int | None
+    release_date_utc: datetime
+    genre_names: list[str]
+    run_time: Annotated[timedelta, HumanTimeDelta()]
+    synopsis: str | None
+    trailer_url: str
+    rating: str
+    title: str
+    movie_id: str
+    slug: str
+
+    sessions: list[Session]
+
+
+class Cinema(Shared):
+    cinema_id: CinemaId
+    order: int | None
+
+    short_name: str
+    title: str
+
+    region: str
+    slug: str
+    movio_id: str
+
+    card_image: str
+    card_alt: str
+
+    nearby_cinema_ids: list[CinemaId] = []
+
+    longitude: Longitude
+    latitude: Latitude
+    locality: Literal[
+        'melbourne',
+        'sydney',
+        'canberra',
+        'brisbane',
+        'ballarat',
+        'byronBay',
+        'perth',
+    ]
+    locality_display_name: str
+    is_platinum: bool
+    street: str
+    city: str
+
+
+def to_params(value: dict) -> dict:
+    def single(v: Any) -> Any:
+        if isinstance(v, bool):
+            return 'true' if v else 'false'
+        elif isinstance(v, list):
+            return ','.join(v)
+        return v
+
+    return {k: single(v) for k, v in value.items() if v is not None}
+
+
+class MovieOrderType(Enum):
+    MOVIE_NAME = 'MOVIE_NAME'
+    RECOMMENDED = 'RECOMMENDED'
+    NEWEST_RELEASE = 'NEWEST_RELEASE'
+
+
+class FilterArgs(Shared):
+    selected_cinema_ids: list[CinemaId] = []
+    selected_dates: list[date] | None = None
+    modern_view: bool = True
+    movie_order_type: MovieOrderType = MovieOrderType.MOVIE_NAME
+    new_release: bool = False
+    special_event: bool = False
+    film_festival: bool = False
+    family: bool = False
+    retro: bool = False
+    art_to_screen: bool = False
+    selected_movie_slug: str | None = None
+
+
+async def get_sessions_date_items(
+    session: aiohttp.ClientSession, filter_args: FilterArgs
+) -> list[date]:
+    res = await session.post(
+        "/sessions/date-items", json=filter_args.model_dump(mode='json')
+    )
+    res.raise_for_status()
+    return RootModel[list[date]].model_validate(await res.json()).root
+
+
+class ComboBoxItem(Shared):
+    movie_slug: str
+    title: str
+
+
+async def get_sessions_combo_box_items(
+    session: aiohttp.ClientSession, filter_args: FilterArgs
+) -> list[ComboBoxItem]:
+    res = await session.post(
+        "/sessions/combo-box-items", json=filter_args.model_dump(mode='json')
+    )
+    res.raise_for_status()
+    return RootModel[list[ComboBoxItem]].model_validate(await res.json()).root
+
+
+async def get_sessions_disabled_cinemas(
+    session: aiohttp.ClientSession, filter_args: FilterArgs
+) -> list[CinemaId]:
+    res = await session.post(
+        "/sessions/disabled-cinemas", json=filter_args.model_dump(mode='json')
+    )
+    res.raise_for_status()
+    return RootModel[list[CinemaId]].model_validate(await res.json()).root
+
+
+async def get_cinemas(session: aiohttp.ClientSession) -> list[Cinema]:
+    res = await session.get(
+        '/cinemas',
+        params=to_params({'platinum': False}),
+    )
+    res.raise_for_status()
+    return RootModel[list[Cinema]].model_validate(await res.json()).root
+
+
+async def get_sessions(
+    session: aiohttp.ClientSession,
+    *,
+    filter_args: FilterArgs,
+) -> Page[Movie]:
+    res = await session.get(
+        '/sessions',
+        params=to_params(
+            {
+                'page': 1,
+                **filter_args.model_dump(mode='json'),
+            }
+        ),
+    )
+    res.raise_for_status()
+    return Page[Movie].model_validate(await res.json())
+
+
+class PalaceProvider(MovieProvider):
+    type = ProviderSource.PALACE
+
+    async def search_for_movie(
+        self, imdb_id: ImdbId, tmdb_id: TmdbId
+    ) -> AsyncGenerator[ITorrent, None]:
+        if not True:
+            yield
+
+
+async def main() -> None:
+    session = aiohttp.ClientSession(
+        base_url="https://prod-api.palace-cinemas.workers.dev",
+    )
+
+    async with session:
+        session_date_items = await get_sessions_date_items(
+            session,
+            FilterArgs(
+                selected_dates=[date.today() + timedelta(days=i) for i in range(7)],
+            ),
+        )
+
+        cinemas = await get_cinemas(session)
+        print(cinemas)
+        ids = [c.cinema_id for c in cinemas]
+        assert session_date_items[0:2]
+        sessions = await get_sessions(
+            session,
+            filter_args=FilterArgs(
+                selected_cinema_ids=ids,
+                selected_dates=session_date_items[0:2],
+                # selected_movie_slug='f1-the-movie',
+            ),
+        )
+        print(sessions)
+
+
+if __name__ == '__main__':
+    import uvloop
+
+    uvloop.run(main())
