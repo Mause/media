@@ -11,7 +11,7 @@ export default defineConfig({
   plugins: [
     spotlightSidecar(),
     react(),
-    gitpodWorkspace && basicSsl(),
+    !gitpodWorkspace && basicSsl(),
     bundlesize({ limits: [{ name: 'assets/index-*.js', limit: '832.5 kB' }] }),
     sentryVitePlugin({
       org: 'elliana-may',
