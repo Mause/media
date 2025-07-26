@@ -47,7 +47,7 @@ if (import.meta.env.NODE_ENV === 'production') {
     sendDefaultPii: true,
 
     // Enable logs to be sent to Sentry
-    _experiments: { enableLogs: true },
+    enableLogs: true,
     tracesSampleRate: 1.0,
   });
 }
