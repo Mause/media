@@ -2825,6 +2825,7 @@ __metadata:
     react-dom: "npm:^19.0.0"
     react-error-boundary: "npm:^6.0.0"
     react-promise-suspense: "npm:^0.3.4"
+    react-router: "npm:^7.7.0"
     react-router-dom: "npm:^7.7.0"
     react-use-websocket: "npm:^4.13.0"
     swr: "npm:^2.0.0"
@@ -5773,7 +5774,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:7.7.0":
+"react-router@npm:7.7.0, react-router@npm:^7.7.0":
   version: 7.7.0
   resolution: "react-router@npm:7.7.0"
   dependencies:
