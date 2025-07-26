@@ -8,6 +8,7 @@ from jose import constants, jwk
 from pytest import mark
 from pytest_snapshot.plugin import Snapshot
 from responses import RequestsMock
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..auth import AUTH0_DOMAIN, get_current_user, security
 from ..db import User
@@ -22,15 +23,18 @@ async def test_auth(
     fastapi_app: FastAPI,
     test_client: TestClient,
     snapshot: Snapshot,
+    session: AsyncSession,
 ) -> None:
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
     from jwt.api_jwt import PyJWT
 
+    # Arrange
     del fastapi_app.dependency_overrides[get_current_user]
-
     jwks_uri = 'https://mause.au.auth0.com/.well-known/jwks.json'
+    await session.refresh(user)
+
     add_json(
         responses,
         method='GET',
