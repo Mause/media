@@ -1,5 +1,4 @@
 import base64
-import json
 from collections.abc import AsyncGenerator
 from unittest.mock import MagicMock, patch
 
@@ -122,10 +121,8 @@ async def test_update_monitor(
     assert monitor.status
 
     message = aioresponses.requests['POST', URL('https://ntfy.sh')][0]
-    snapshot.assert_match(
-        json.dumps(
-            message.kwargs['json'],
-            indent=2,
-        ),
+    assert_match_json(
+        snapshot,
+        message.kwargs['json'],
         'message.json',
     )

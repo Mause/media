@@ -2,7 +2,7 @@ import json
 from collections.abc import AsyncGenerator, Generator
 from pathlib import Path
 from re import Pattern
-from typing import Annotated, Any, Protocol
+from typing import Annotated, Any, Protocol, runtime_checkable
 
 import pytest_asyncio
 import uvloop
@@ -176,10 +176,16 @@ async def tolist[T](a: AsyncGenerator[T, None]) -> list[T]:
     return lst
 
 
+@runtime_checkable
 class HasJson(Protocol):
     def json(self) -> dict | list:
         """Method to return JSON data."""
 
 
-def assert_match_json(snapshot: Snapshot, res: HasJson, name: str) -> None:
-    snapshot.assert_match(json.dumps(res.json(), indent=2), name)
+def assert_match_json(
+    snapshot: Snapshot, res: HasJson | dict | list, name: str
+) -> None:
+    snapshot.assert_match(
+        json.dumps(res.json() if isinstance(res, HasJson) else res, indent=2) + '\n',
+        name,
+    )
