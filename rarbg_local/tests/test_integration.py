@@ -119,7 +119,7 @@ async def test_diagnostics(
         if component == 'database':
             continue
 
-        snapshot.assert_match(json.dumps(results, indent=2), f'{component}.json')
+        assert_match_json(snapshot, results, f'{component}.json')
 
 
 def stub_movie_external_ids(aioresponses: Aioresponses) -> None:
@@ -640,7 +640,7 @@ async def test_openapi(test_client: TestClient, snapshot: Snapshot) -> None:
 
     data = r.json()
     data['info']['version'] = "0.1.0-dev"
-    snapshot.assert_match(json.dumps(data, indent=2), 'openapi.json')
+    assert_match_json(snapshot, data, 'openapi.json')
 
 
 def stub_tv_external_ids(
@@ -697,10 +697,7 @@ async def test_stream_rarbg(
 
     datum = sorted(datum, key=lambda item: item['seeders'])
 
-    snapshot.assert_match(
-        json.dumps(datum, indent=2),
-        'stream.json',
-    )
+    assert_match_json(snapshot, datum, 'stream.json')
 
 
 @mark.asyncio
@@ -741,17 +738,16 @@ async def test_stream(
 
     datum = sorted(datum, key=lambda item: item['seeders'])
 
-    snapshot.assert_match(
-        json.dumps(datum, indent=2),
+    assert_match_json(
+        snapshot,
+        datum,
         'stream.json',
     )
 
 
 @mark.asyncio
 async def test_schema(snapshot: Snapshot) -> None:
-    snapshot.assert_match(
-        json.dumps(SearchResponse.model_json_schema(), indent=2), 'schema.json'
-    )
+    assert_match_json(snapshot, SearchResponse.model_json_schema(), 'schema.json')
 
 
 @mark.skipif("not os.path.exists('app/build/index.html')")
@@ -989,7 +985,7 @@ async def test_websocket_error(test_client: TestClient, snapshot: Snapshot) -> N
     )
     await r.connect()
     await r.send_json({})
-    snapshot.assert_match(json.dumps(await r.receive_json(), indent=2), 'ws_error.json')
+    assert_match_json(snapshot, await r.receive_json(), 'ws_error.json')
 
 
 @mark.asyncio
@@ -1043,7 +1039,7 @@ async def test_websocket(
         }
     )
 
-    snapshot.assert_match(json.dumps(await r.receive_json(), indent=2), 'ws.json')
+    assert_match_json(snapshot, await r.receive_json(), 'ws.json')
 
     with raises(Exception) as e:
         await r.receive_json()
