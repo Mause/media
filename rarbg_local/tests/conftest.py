@@ -182,4 +182,4 @@ class HasJson(Protocol):
 
 
 def assert_match_json(snapshot: Snapshot, res: HasJson, name: str) -> None:
-    snapshot.assert_match(json.dumps(res.json(), indent=2), name)
+    snapshot.assert_match(json.dumps(res.json(), indent=2) + '\n', name)
