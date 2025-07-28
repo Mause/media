@@ -1,4 +1,3 @@
-import json
 from collections.abc import Callable
 from pathlib import Path
 
@@ -13,7 +12,7 @@ from ...providers.horriblesubs import (
     get_latest,
 )
 from ...types import ImdbId, TmdbId
-from ..conftest import add_json, themoviedb, tolist
+from ..conftest import add_json, assert_match_json, themoviedb, tolist
 from ..factories import TvApiResponseFactory
 
 
@@ -114,7 +113,7 @@ async def test_get_downloads_single(
 
     magnets = await tolist(get_downloads(1, HorriblesubsDownloadType.SHOW))
 
-    snapshot.assert_match(json.dumps(magnets, indent=2, default=repr), 'magnets.json')
+    assert_match_json(snapshot, magnets, 'magnets.json')
 
 
 @mark.asyncio
@@ -155,10 +154,10 @@ async def test_provider(
     )
 
     results = [
-        item.model_dump()
+        item.model_dump(mode='json')
         for item in await tolist(
             HorriblesubsProvider().search_for_tv(ImdbId('tt00000000'), TmdbId(1), 1, 2)
         )
     ]
 
-    snapshot.assert_match(json.dumps(results, indent=2, default=repr), 'results.json')
+    assert_match_json(snapshot, results, 'results.json')
