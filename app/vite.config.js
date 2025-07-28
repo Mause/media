@@ -3,13 +3,15 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import bundlesize from 'vite-plugin-bundlesize';
+import spotlightSidecar from '@spotlightjs/sidecar/vite-plugin';
 
 const gitpodWorkspace = process.env.GITPOD_WORKSPACE_URL;
 
 export default defineConfig({
   plugins: [
+    spotlightSidecar(),
     react(),
-    gitpodWorkspace && basicSsl(),
+    !gitpodWorkspace && basicSsl(),
     bundlesize({ limits: [{ name: 'assets/index-*.js', limit: '832.5 kB' }] }),
     sentryVitePlugin({
       org: 'elliana-may',
