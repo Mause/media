@@ -499,15 +499,15 @@ wheels = [
 
 [[package]]
 name = "eventlet"
-version = "0.40.1"
+version = "0.40.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dnspython" },
     { name = "greenlet" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/be/f4/2f6b925a342b33e39b9406812738090cdff61e7ea77c5fd6ca62ab77004d/eventlet-0.40.1.tar.gz", hash = "sha256:aee74de74ac6634a1dac1ed58dc93b5dc2abaef3c7b5e76fd7f195f1662f25ef", size = 565260, upload-time = "2025-06-24T07:45:15.747Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/a3/500893510ad316fc571d116d407ea17d6007a8ecdb0a456badb66eee42ae/eventlet-0.40.2.tar.gz", hash = "sha256:42636c277f761d026905cd0ba0a11edec7600001be401d6ae7e9546559c8d8b0", size = 565548, upload-time = "2025-07-22T14:49:54.317Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ac/67/9224faf0d1aca44c63e1b5de295b11fc6ba261fe45045d12bcf114afd617/eventlet-0.40.1-py3-none-any.whl", hash = "sha256:378f36ac9b3f4d28f2e921fd8897ebc9797d017e34b96c259ac87c032d1c1bf3", size = 364140, upload-time = "2025-06-24T07:45:13.724Z" },
+    { url = "https://files.pythonhosted.org/packages/b6/41/2e2d46f31ed22c1c147936145badb86e0e28ba7fe7d7a54aa69849a93a52/eventlet-0.40.2-py3-none-any.whl", hash = "sha256:590c67b982015bc6b753a5303f3ec7356bc7890a39efd65176179f0113f5d35e", size = 364228, upload-time = "2025-07-22T14:49:52.082Z" },
 ]
 
 [[package]]
@@ -1216,7 +1216,7 @@ requires-dist = [
     { name = "cachetools", specifier = "==5.5.2" },
     { name = "dnspython", specifier = ">=2.7.0" },
     { name = "email-validator", specifier = "==2.2.0" },
-    { name = "eventlet", specifier = "==0.40.1" },
+    { name = "eventlet", specifier = "==0.40.2" },
     { name = "fastapi", specifier = "==0.116.1" },
     { name = "fastapi-oidc", specifier = ">=0.0.10" },
     { name = "fastapi-utils", specifier = "==0.8.0" },
