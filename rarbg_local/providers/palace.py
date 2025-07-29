@@ -36,6 +36,8 @@ from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 
 CinemaId = NewType('CinemaId', str)
 SessionId = NewType('SessionId', str)
+MovieId = NewType('MovieId', str)
+MovieSlug = NewType('MovieSlug', str)
 
 
 class HumanTimeDelta:
@@ -101,9 +103,9 @@ class Session(Shared):
 
 
 class BaseMovie(Shared):
-    movie_id: str
+    movie_id: MovieId
     title: str
-    slug: str
+    slug: MovieSlug
     trailer_url: str
     synopsis: str | None
     rating: str
@@ -239,7 +241,7 @@ class FilterArgs(Shared):
     family: bool = False
     retro: bool = False
     art_to_screen: bool = False
-    selected_movie_slug: str | None = None
+    selected_movie_slug: MovieSlug | None = None
 
 
 async def get_sessions_date_items(
@@ -253,7 +255,7 @@ async def get_sessions_date_items(
 
 
 class ComboBoxItem(Shared):
-    movie_slug: str
+    movie_slug: MovieSlug
     title: str
 
 
@@ -286,7 +288,9 @@ async def get_cinemas(session: aiohttp.ClientSession) -> list[Cinema]:
     return RootModel[list[Cinema]].model_validate(await res.json()).root
 
 
-async def get_movie_by_slug(session: aiohttp.ClientSession, slug: str) -> SingleMovie:
+async def get_movie_by_slug(
+    session: aiohttp.ClientSession, slug: MovieSlug
+) -> SingleMovie:
     res = await session.get(
         URITemplate("/movies/{slug}").expand(slug=slug),
         params={'locality': 'melbourne', 'isPreviewMode': 'null'},
@@ -295,7 +299,9 @@ async def get_movie_by_slug(session: aiohttp.ClientSession, slug: str) -> Single
     return RootModel[SingleMovie].model_validate(await res.json()).root
 
 
-async def get_movie_by_id(session: aiohttp.ClientSession, ident: str) -> SingleMovie:
+async def get_movie_by_id(
+    session: aiohttp.ClientSession, ident: MovieId
+) -> SingleMovie:
     res = await session.get(URITemplate("/movies/byid/{ident}").expand(ident=ident))
     res.raise_for_status()
     return RootModel[SingleMovie].model_validate(await res.json()).root
