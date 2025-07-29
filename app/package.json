@@ -73,7 +73,7 @@
     "@types/lodash-es": "^4",
     "@types/node": "^24",
     "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react-dom": "^19.1.7",
     "@types/uritemplate": "^0",
     "@vitejs/plugin-basic-ssl": "^2.0.0",
     "@vitejs/plugin-react": "npm:@vitejs/plugin-react-oxc@^0.3.0",
