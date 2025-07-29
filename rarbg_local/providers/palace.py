@@ -35,6 +35,7 @@ from uritemplate import URITemplate
 from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 
 CinemaId = NewType('CinemaId', str)
+SessionId = NewType('SessionId', str)
 
 
 class HumanTimeDelta:
@@ -93,7 +94,7 @@ class Session(Shared):
     display_attribute_text: str | None
     is_platinum: bool
     sale_status: Literal['Selling Fast', 'Sold Out'] | None
-    session_id: str
+    session_id: SessionId
     cinema_id: CinemaId
     is_special_event: bool
 
