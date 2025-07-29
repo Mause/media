@@ -85,6 +85,7 @@ class Session(Shared):
             'All seats recline',
             'No Free Tickets',
             'Audio Description Session',
+            'Special Event',
         ]
     ]
     no_free_tickets: bool

@@ -13,7 +13,8 @@
           "Closed Captioning Available",
           "All seats recline",
           "No Free Tickets",
-          "Audio Description Session"
+          "Audio Description Session",
+          "Special Event"
         ],
         "type": "string"
       },
