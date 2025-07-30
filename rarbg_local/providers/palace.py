@@ -9,6 +9,23 @@ https://prod-api.palace-cinemas.workers.dev/movies/now/trending?locality=melbour
 https://prod-api.palace-cinemas.workers.dev/movies/the-phoenician-scheme?locality=melbourne&isPreviewMode=null
 https://prod-api.palace-cinemas.workers.dev/sessions/combo-box-items
 https://prod-api.palace-cinemas.workers.dev/sessions/date-items
+.get("/account/details", {
+.get("/account/details/navbar", {
+.get("/account/details/preferences", {
+.get("/account/options")
+.get("/account/rewards", {
+.get("/home-featured?locality=".concat(e))
+.get("/home?locality=".concat(t, "&isPreviewMode=").concat(n))
+.get("/media/".concat(e))
+.get("/menu", {
+.get("/movies?locality=".concat(e), {
+.get("/movies/byid/".concat(e))
+.get("/movies/now/trending?locality=".concat(e))
+.get("/popup/?locality=".concat(e))
+.get("/search?q=".concat(encodeURIComponent(e)))
+.get("/sessions/alert-banners?selectedCinemaIds=".concat(e.join(",")), {
+.get("/sessions/quickbook/".concat(e, "/").concat(t))
+.get("/sessions/quickbook/".concat(e))
 '''
 
 from collections.abc import AsyncGenerator
