@@ -1,5 +1,18 @@
 {
   "$defs": {
+    "AdditionalDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "root": {
+          "$ref": "#/$defs/Root"
+        }
+      },
+      "required": [
+        "root"
+      ],
+      "title": "AdditionalDetail",
+      "type": "object"
+    },
     "CinemasSearchResult": {
       "additionalProperties": false,
       "properties": {
@@ -29,8 +42,7 @@
           "type": "string"
         },
         "content": {
-          "title": "Content",
-          "type": "string"
+          "$ref": "#/$defs/AdditionalDetail"
         },
         "json_": {
           "name": "json",
@@ -72,8 +84,7 @@
           "type": "string"
         },
         "content": {
-          "title": "Content",
-          "type": "string"
+          "$ref": "#/$defs/AdditionalDetail"
         },
         "herotext": {
           "title": "Herotext",
@@ -143,6 +154,24 @@
       "title": "MovieSearchResult",
       "type": "object"
     },
+    "Node": {
+      "discriminator": {
+        "mapping": {
+          "paragraph": "#/$defs/Paragraph",
+          "text": "#/$defs/Text"
+        },
+        "propertyName": "type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Paragraph"
+        },
+        {
+          "$ref": "#/$defs/Text"
+        }
+      ],
+      "title": "Node"
+    },
     "OffersSearchResult": {
       "additionalProperties": false,
       "properties": {
@@ -203,6 +232,179 @@
         "content"
       ],
       "title": "OffersSearchResult",
+      "type": "object"
+    },
+    "Paragraph": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "type": {
+          "const": "paragraph",
+          "title": "Type",
+          "type": "string"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "const": "ltr",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Direction"
+        },
+        "children": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "title": "Children",
+          "type": "array"
+        },
+        "indent": {
+          "const": 0,
+          "title": "Indent",
+          "type": "integer"
+        },
+        "format": {
+          "title": "Format",
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "type",
+        "children",
+        "indent",
+        "format"
+      ],
+      "title": "Paragraph",
+      "type": "object"
+    },
+    "Root": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "root",
+          "title": "Type",
+          "type": "string"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "const": "ltr",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Direction"
+        },
+        "children": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Node"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Children"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "indent": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Indent"
+        },
+        "format": {
+          "const": "",
+          "title": "Format",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "direction",
+        "version",
+        "format"
+      ],
+      "title": "Root",
+      "type": "object"
+    },
+    "Text": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "text",
+          "title": "Type",
+          "type": "string"
+        },
+        "detail": {
+          "const": 0,
+          "title": "Detail",
+          "type": "integer"
+        },
+        "format": {
+          "enum": [
+            0,
+            2
+          ],
+          "title": "Format",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "mode": {
+          "const": "normal",
+          "title": "Mode",
+          "type": "string"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "style": {
+          "const": "",
+          "title": "Style",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "detail",
+        "format",
+        "text",
+        "mode",
+        "version",
+        "style"
+      ],
+      "title": "Text",
       "type": "object"
     }
   },

@@ -134,8 +134,40 @@ class ParticipatingCinema(Shared):
     title: str
 
 
+class Paragraph(Shared):
+    version: Literal[1]
+    type: Literal['paragraph']
+    direction: Literal['ltr'] | None = None
+    children: list['Node']
+    indent: Literal[0]
+    format: str
+
+
+class Text(Shared):
+    type: Literal['text']
+    detail: Literal[0]
+    format: Literal[0, 2]
+    text: str
+    mode: Literal['normal']
+    version: Literal[1]
+    style: Literal['']
+
+
+class Node(RootModel[Annotated[Paragraph | Text, Field(discriminator='type')]]):
+    pass
+
+
+class Root(Shared):
+    type: Literal['root']
+    direction: Literal['ltr'] | None
+    children: list[Node] | None = None
+    version: Literal[1]
+    indent: int | None = None
+    format: Literal['']
+
+
 class AdditionalDetail(Shared):
-    root: int
+    root: Root
 
 
 class SingleMovie(BaseMovie):
@@ -334,7 +366,7 @@ class EventSearchResult(BaseSearchResult):
     slug: str
     title: str
     filename: str
-    content: str
+    content: AdditionalDetail
     herotext: str
     caption: str
 
@@ -355,7 +387,7 @@ class CinemasSearchResult(BaseSearchResult):
     title: str
     filename: str
     caption: str
-    content: str
+    content: AdditionalDetail
     json_: Annotated[bool, Field(name='json')]
 
 
