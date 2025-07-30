@@ -1,0 +1,1260 @@
+[
+  {
+    "type": "movies",
+    "slug": "astor-the-last-tempation-of-christ",
+    "title": "Astor: The Last Tempation Of Christ",
+    "content": null,
+    "id": "HO00011341",
+    "caption": "M • 170 MIN"
+  },
+  {
+    "type": "movies",
+    "slug": "astor-the-elephant-man",
+    "title": "Astor: The Elephant Man",
+    "content": null,
+    "id": "HO00013220",
+    "caption": "M • 124 MIN"
+  },
+  {
+    "type": "movies",
+    "slug": "blackpink-world-tour-[born-pink]-in-cinemas",
+    "title": "BLACKPINK WORLD TOUR [BORN PINK] IN CINEMAS",
+    "content": "BLACKPINK’s BORN PINK tour that captivated the world comes to the big screen, celebrating the group’s 8th anniversary since their debut!\n\nDrawing an audience of 1.8 million and breaking global records for female group concert tours, experience the energy of the live performances in cinemas worldwide!\n\nFeaturing the iconic ‘Hanok’ set that has mesmerized fans and press worldwide, the film shows unprecedented production scale, presenting exclusively arranged versions of BLACKPINK’s hit songs unique to this concert and encompassing performances from Seoul’s Gocheok Dome alongside footage from further cities across the global tour.",
+    "id": "HO00018120",
+    "caption": "PG • 93 MIN"
+  },
+  {
+    "type": "cinemas",
+    "id": "600",
+    "slug": "palace-raine-square",
+    "title": "Palace Raine Square Perth",
+    "filename": "RaineSquare_1680x560.jpg",
+    "caption": "Top Level, Raine Square, 300 Murray St, Perth",
+    "content": {
+      "root": {
+        "type": "root",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Palace Cinemas Raine Square, Perth's premier cinema destination, opened in September 2018. This luxurious complex boasts nine traditional cinemas and four boutique Palace Platinum screens, all featuring handcrafted Spanish leather recliners. Watch the latest releases, attend special events and festivals, or simply unwind at one of the four on-site bars, including a rooftop terrace overlooking the vibrant cityscape.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Palace Cinemas is proud to offer $5 flat rate parking all weekend and after 4.30pm on weekdays (up to 4 hours) at Wilson Parking Raine Square and Wilson Parking Queen Street!",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "The cinema doors and phone lines are open 15 minutes prior to the first session of the day.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 2,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          }
+        ],
+        "direction": "ltr"
+      }
+    },
+    "json": true
+  },
+  {
+    "type": "cinemas",
+    "id": "300",
+    "slug": "the-kino-melbourne",
+    "title": "The Kino Cinema Melbourne",
+    "filename": "Kino_1680x560.jpg",
+    "caption": "The Kino, 45 Collins Street, Melbourne VIC",
+    "content": {
+      "root": {
+        "type": "root",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Upgrade your experience at The Kino with our newly installed ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "PREMIUM SEATS!",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": " These luxurious, fully reclining seats (complete with individual tables and footrests!) are exclusive to our VIP Back row in Cinema 1 and Cinema 2.  To book these seats, select the Premium Seat* ticket type when making your booking; only Premium Seats will be made available to select.  Limited in availability; book ahead to avoid disappointment!   ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Melbourne’s premiere metropolitan cinema is located at Collins Place in the city’s CBD. The Kino features seven screens, with a superb selection of local and international feature films, documentaries and mainstream titles. Kino offers a stylish café and bar area, ideal for post-film catch-ups, film festival soirées, or even hosting your own special events.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "The cinema doors and phone lines are open 15 minutes prior to the first session of the day.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 2,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "catch-ups",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          }
+        ],
+        "direction": "ltr"
+      }
+    },
+    "json": true
+  },
+  {
+    "type": "cinemas",
+    "id": "155",
+    "slug": "palace-cinema-como",
+    "title": "Palace Cinema Como",
+    "filename": "Como_1680x560.jpg",
+    "caption": "Level 1, The Como Centre, 299 Toorak Road, South Yarra VIC 3141",
+    "content": {
+      "root": {
+        "type": "root",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Palace Cinema Como offers an alternative to mainstream multiplex cinemas with a carefully curated program of high quality international and local art-house films, quality mainstream titles, operas and special events, as well as Palace’s trademark collection of international film festivals, bringing their local audience the best of contemporary and classic cinema from Italy, Spain, France, Britain, Latin America, Germany, and Scandinavia.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Cinema Como is thrilled to announce the return of Melbourne's most comfortable dine-in cinema experience, ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "Palace Platinum",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": " with our new  ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "Silent Ordering",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": " service. Find out more ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "type": "link",
+                "fields": {
+                  "doc": null,
+                  "url": "https://www.palacecinemas.com.au/cinemas/palace-cinema-como-platinum/",
+                  "newTab": false,
+                  "linkType": "custom"
+                },
+                "format": "",
+                "indent": 0,
+                "version": 1,
+                "children": [
+                  {
+                    "mode": "normal",
+                    "text": "HERE",
+                    "type": "text",
+                    "style": "",
+                    "detail": 0,
+                    "format": 0,
+                    "version": 1
+                  }
+                ],
+                "direction": "ltr"
+              },
+              {
+                "mode": "normal",
+                "text": ".",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "The cinema doors and phone lines are open 15 minutes prior to the first session of the day.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 2,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          }
+        ],
+        "direction": "ltr"
+      }
+    },
+    "json": true
+  },
+  {
+    "type": "cinemas",
+    "id": "180",
+    "slug": "the-astor-theatre",
+    "title": "The Astor Theatre",
+    "filename": "Astor_1680x560-1.jpg",
+    "caption": "1 Chapel St, St Kilda VIC 3182, Australia",
+    "content": {
+      "root": {
+        "type": "root",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "The last single-screen cinema of its kind in continuous operation in Melbourne, still standing since its grand opening in 1936, and one of only a few single-screen movie theatres from the 1930s in the world screening repertory movie programming. The Astor Theatre is a classic, single-screen cinema with stalls and a dress circle, with the magnificent auditorium having the same soft ambience you will enjoy in the foyers. Beautiful golden curtains cover the screen, which part majestically to begin the evening’s (or matinee’s) entertainment.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "There is nothing “old-fashioned” about The Astor’s facilities, however. The fully air-conditioned cinema boasts a state-of-the-art sound system and a giant screen. Long famous for presenting classics, cult favourites, and select new releases, The Astor projects a range of mediums, including 35mm prints and the now rare 70mm format (over three times the size of 35mm, with glorious detail and clarity). The Astor is also home to the Barco 4K Digital Projector, the highest-quality projector of its kind in Australia. When you see a film in 4K (up to four times the industry standard resolution!) or 2K format at The Astor, you are seeing a presentation that is unmatched.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "tag": "h3",
+            "type": "heading",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Overlook Café & Bar",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Inhabiting a space vacated recently by a launderette, Overlook takes its name from the iconic Overlook Hotel featured in Stephen King’s 1977 novel, The Shining. Visually brought to life in the 1980 film adaption by master filmmaker Stanley Kubrick, the Overlook Hotel represents an eerie link to a past that is deeply reflected in the grandiose art deco stylings of The Astor Theatre.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "We proudly showcase Overlook, the café and bar space next to the Astor Theatre. It’s the perfect complement for a pre-movie catch-up, post-film debriefs or an interlude between double features. The menu offers a curated selection of fine wines, craft beers and carefully considered cocktails.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          }
+        ],
+        "direction": "ltr"
+      }
+    },
+    "json": true
+  },
+  {
+    "type": "cinemas",
+    "id": "121",
+    "slug": "palace-barracks-brisbane",
+    "title": "Palace Barracks Brisbane",
+    "filename": "Barracks_1680x560.jpg",
+    "caption": "61 Petrie Terrace, QLD 4000, Australia",
+    "content": {
+      "root": {
+        "type": "root",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Screening the best in new releases, arthouse, retrospective and our renowned foreign language film festivals, Palace Barracks is an oasis for Brisbane cine-files.  Relax in the stylish mezzanine bar wtih sweeping city views before your movie and premium wines and local craft beers, charcuterie, cheese platters, or ST. ALi barista-made coffee.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "The cinema doors and phone lines are open 15 minutes prior to the first session of the day.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 2,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Parking Update: By popular demand, Secure Parking's payment system is reverting back to using Parking Tickets. Palace patrons will continue to receive 3 hours of free parking and a discounted rate after 3 hours. Please remember to bring your parking ticket with you to receive the validation at the box office. ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 2,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          }
+        ],
+        "direction": "ltr"
+      }
+    },
+    "json": true
+  },
+  {
+    "type": "events",
+    "slug": "members-first-look-offer-the-thread",
+    "title": "Movie Club First-Look Offer: THE THREAD",
+    "filename": "the-thread_poster_345x500.jpg",
+    "content": "A special invitation exclusive to Palace members",
+    "herotext": "A special discounted ticket invitation, exclusive to Palace members",
+    "caption": "Fri 22, Sat 23 & Sun 24 Aug (inclusive)"
+  },
+  {
+    "type": "events",
+    "slug": "new-york-times-best-films-of-the-21st-century",
+    "title": "New York Times Best Films of the 21st Century",
+    "filename": "20250710-campaign-top10films-ten-345x500.jpg",
+    "content": "",
+    "herotext": "",
+    "caption": "Saturday & Sundays at 4pm"
+  },
+  {
+    "type": "events",
+    "slug": "intrepid-travel-voucher-competition-hurtigruten-scandinavian-film-festival",
+    "title": "Win a $5,000 Travel Voucher Thanks to Intrepid Travel and The Hurtigruten Scandinavian Film Festival!",
+    "filename": "2505271315_Scandinavian Film Festival_Competition assets_345x500.jpg",
+    "content": "Experience the world of cinema—and then the world itself.",
+    "herotext": "Experience the world of cinema—and then the world itself.",
+    "caption": "July 11 - August 10"
+  },
+  {
+    "type": "events",
+    "slug": "members-first-look-offer-the-stolen-painting",
+    "title": "Movie Club First-Look Offer: THE STOLEN PAINTING",
+    "filename": "the-stolen-painting_400x570_web.jpg",
+    "content": "A special invitation exclusive to Palace members",
+    "herotext": "A special discounted ticket invitation, exclusive to Palace members",
+    "caption": "Thu 31 July"
+  },
+  {
+    "type": "events",
+    "slug": "national-theatre-live",
+    "title": "NATIONAL THEATRE LIVE",
+    "filename": "NTL INTER ALIA_1680x560.jpg",
+    "content": "The Best in British Theatre",
+    "herotext": "The Best in British Theatre!",
+    "caption": "All year long!"
+  },
+  {
+    "type": "events",
+    "slug": "the-last-showgirl--movie-club-preview-canberra",
+    "title": "THE LAST SHOWGIRL | Movie Club Preview",
+    "filename": "The Last Showgirl_1680x560.jpg",
+    "content": "A discounted Movie Club Preview!",
+    "herotext": "A discounted Movie Club Preview!",
+    "caption": "Thursday, January 30 | 6:30pm"
+  },
+  {
+    "type": "events",
+    "slug": "barracks-repertory-calendar",
+    "title": "Cine-Vault at The Barracks",
+    "filename": "Cine-Vault.jpg",
+    "content": "Hand-picked Classic & Cult Cinema Served Up Almost Every Night of the Week at the Barracks!",
+    "herotext": null,
+    "caption": "Every second day at 6:00pm"
+  },
+  {
+    "type": "events",
+    "slug": "fine-wine-preview-the-life-of-chuck",
+    "title": "Fine Wine Preview: The Life of Chuck",
+    "filename": "TheLifeOfChuck_KeyArtBanner_1680x560-1.jpg",
+    "content": "With a complimentary glass of wine on arrival!",
+    "herotext": "With a complimentary glass of wine on arrival!",
+    "caption": "Thursday, July 31 | 6:30pm"
+  },
+  {
+    "type": "events",
+    "slug": "win-a-fantastic-four-signed-poster",
+    "title": "Win a Fantastic Four Signed Poster thanks to Marvel!",
+    "filename": "FantasticFourTheFirstSteps_KeyArtBanner_1680x560.jpg",
+    "content": "Poster signed by Pedro Pascal, Vanessa Kirby, Joseph Quinn and Ebon Moss-Bachrach! ",
+    "herotext": "Poster signed by Pedro Pascal, Vanessa Kirby, Joseph Quinn and Ebon Moss-Bachrach! ",
+    "caption": "Competition Ends August 13"
+  },
+  {
+    "type": "offers",
+    "id": 3,
+    "slug": "cheap-tuesday-perth",
+    "title": "Cheap Tuesday Perth",
+    "caption": "$12 Movie Club | $14 General Admission",
+    "filename": "CheapDay_NoText_1680x560.jpg",
+    "json": true,
+    "content": {
+      "root": {
+        "type": "root",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "tag": "h2",
+            "type": "heading",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "OFFER INFORMATION",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "start",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Brighten up your Tuesday with the ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "BEST cinema discount-day",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": " in town, with the latest quality releases on screen with tickets only ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "$12* for all Palace Movie Club members",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": " and ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "$14* for regular patrons. ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "Available at Palace Raine Square!",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "start",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Not a member? You can now join our FREE or PAID tiers instantly! ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 2,
+                "version": 1
+              },
+              {
+                "type": "link",
+                "fields": {
+                  "doc": null,
+                  "url": "https://www.palacecinemas.com.au/palace-movie-club/",
+                  "newTab": false,
+                  "linkType": "custom"
+                },
+                "format": "",
+                "indent": 0,
+                "version": 1,
+                "children": [
+                  {
+                    "mode": "normal",
+                    "text": "Full details here",
+                    "type": "text",
+                    "style": "",
+                    "detail": 0,
+                    "format": 3,
+                    "version": 1
+                  }
+                ],
+                "direction": "ltr"
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "tag": "h6",
+            "type": "heading",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "*ONLINE BOOKING FEE APPLIES. NOT VALID FOR PLATINUM. NOT VALID ON PUBLIC HOLIDAYS OR FOR FILM FESTIVALS AND SPECIAL EVENT SCREENINGS. MOVIE CLUB MEMBERS MUST PRESENT THEIR VALID MEMBERSHIP.  ONLY VALID AT LISTED CINEMA LOCATIONS. PREMIUM CONCEPTS MAY INCUR ADDITIONAL FEES. TICKET PRICES ARE SUBJECT TO CHANGE.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          }
+        ],
+        "direction": "ltr"
+      }
+    }
+  },
+  {
+    "type": "offers",
+    "id": 11,
+    "slug": "senior-saver-discount-tuesdays",
+    "title": "Senior Saver Discount Tuesdays",
+    "caption": " $10 Golden Club Members | $12 for Senior Admissions ",
+    "filename": "SeniorSaver_NoText_1680x560.jpg",
+    "json": true,
+    "content": {
+      "root": {
+        "type": "root",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "tag": "h2",
+            "type": "heading",
+            "format": "start",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "JOIN US FOR OUR ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "SENIOR SAVER DISCOUNT TUESDAYS ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "AT SELECT ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "PALACE CINEMAS. ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Brighten up your Tuesday and join us for discounted ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "Golden Club",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": " and ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "Senior tickets ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "ALL day! With tickets for only ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "$10 for Golden Club Members",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": ", and ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "$12 for Senior Patrons",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": ", catch the latest in quality releases and top-tier cinema at the best price.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "When: ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "every Tuesday",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Tickets: ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "$10 Golden Club Member, $12 Senior Ticket",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "start",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Not a member? You can now join our FREE or PAID tiers instantly! ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 2,
+                "version": 1
+              },
+              {
+                "type": "link",
+                "fields": {
+                  "doc": null,
+                  "url": "https://www.palacecinemas.com.au/palace-movie-club/",
+                  "newTab": false,
+                  "linkType": "custom"
+                },
+                "format": "",
+                "indent": 0,
+                "version": 1,
+                "children": [
+                  {
+                    "mode": "normal",
+                    "text": "Full details here",
+                    "type": "text",
+                    "style": "",
+                    "detail": 0,
+                    "format": 3,
+                    "version": 1
+                  }
+                ],
+                "direction": "ltr"
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "tag": "h6",
+            "type": "heading",
+            "format": "start",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "*ONLINE BOOKING FEE APPLIES. NOT VALID FOR PLATINUM. NOT VALID ON PUBLIC HOLIDAYS OR FOR FILM FESTIVALS AND SPECIAL EVENT SCREENINGS. MOVIE CLUB MEMBERS MUST PRESENT THEIR VALID MEMBERSHIP. VALID SENIOR ID MUST BE PRESENTED WHEN REQUESTED.  ADDITIONAL SURCHARGES APPLY FOR DELUXE & UPGRADE SCREENINGS.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          }
+        ],
+        "direction": "ltr"
+      }
+    }
+  },
+  {
+    "type": "offers",
+    "id": 2,
+    "slug": "cheap-tuesday",
+    "title": "Cheap Tuesday Victoria",
+    "caption": "$10 Movie Club | $12 General Admission",
+    "filename": "CheapDay_NoText_1680x560.jpg",
+    "json": true,
+    "content": {
+      "root": {
+        "type": "root",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "tag": "h2",
+            "type": "heading",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "OFFER INFORMATION",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "start",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Brighten up your Tuesday with the ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "BEST cinema discount-day",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": " in town, with the latest quality releases on screen with tickets only ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "$10* for all Palace Movie Club members",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": " and ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "$12* for regular patrons. ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 1,
+                "version": 1
+              },
+              {
+                "mode": "normal",
+                "text": "Available at all Victorian Palace Cinema locations listed.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "start",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Not a member? You can now join our FREE or PAID tiers instantly! ",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 2,
+                "version": 1
+              },
+              {
+                "type": "link",
+                "fields": {
+                  "doc": null,
+                  "url": "https://www.palacecinemas.com.au/palace-movie-club/",
+                  "newTab": false,
+                  "linkType": "custom"
+                },
+                "format": "",
+                "indent": 0,
+                "version": 1,
+                "children": [
+                  {
+                    "mode": "normal",
+                    "text": "Full details here",
+                    "type": "text",
+                    "style": "",
+                    "detail": 0,
+                    "format": 3,
+                    "version": 1
+                  }
+                ],
+                "direction": "ltr"
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "tag": "h6",
+            "type": "heading",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "*ONLINE BOOKING FEE APPLIES. NOT VALID FOR PLATINUM. NOT VALID ON PUBLIC HOLIDAYS OR FOR FILM FESTIVALS AND SPECIAL EVENT SCREENINGS. MOVIE CLUB MEMBERS MUST PRESENT THEIR VALID MEMBERSHIP.  ONLY VALID AT LISTED CINEMA LOCATIONS. PREMIUM CONCEPTS MAY INCUR ADDITIONAL FEES. TICKET PRICES ARE SUBJECT TO CHANGE.",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 0,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [],
+            "direction": "ltr"
+          },
+          {
+            "type": "paragraph",
+            "format": "",
+            "indent": 0,
+            "version": 1,
+            "children": [
+              {
+                "mode": "normal",
+                "text": "Please note: The Kino is not a participating cinema, however The Kino offers discounted tickets on Mondays ($7 before 5pm/$10 after 5pm).",
+                "type": "text",
+                "style": "",
+                "detail": 0,
+                "format": 2,
+                "version": 1
+              }
+            ],
+            "direction": "ltr"
+          }
+        ],
+        "direction": "ltr"
+      }
+    }
+  }
+]

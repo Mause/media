@@ -1,0 +1,98 @@
+{
+  "$defs": {
+    "EventSearchResult": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "events",
+          "title": "Type",
+          "type": "string"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "content": {
+          "title": "Content",
+          "type": "string"
+        },
+        "herotext": {
+          "title": "Herotext",
+          "type": "string"
+        },
+        "caption": {
+          "title": "Caption",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "slug",
+        "title",
+        "filename",
+        "content",
+        "herotext",
+        "caption"
+      ],
+      "title": "EventSearchResult",
+      "type": "object"
+    },
+    "MovieSearchResult": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "movies",
+          "title": "Type",
+          "type": "string"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "content": {
+          "title": "Content",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "caption": {
+          "title": "Caption",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "slug",
+        "title",
+        "content",
+        "id",
+        "caption"
+      ],
+      "title": "MovieSearchResult",
+      "type": "object"
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/MovieSearchResult"
+    },
+    {
+      "$ref": "#/$defs/EventSearchResult"
+    }
+  ],
+  "title": "RootModel[Union[MovieSearchResult, EventSearchResult]]"
+}
