@@ -9,6 +9,23 @@ https://prod-api.palace-cinemas.workers.dev/movies/now/trending?locality=melbour
 https://prod-api.palace-cinemas.workers.dev/movies/the-phoenician-scheme?locality=melbourne&isPreviewMode=null
 https://prod-api.palace-cinemas.workers.dev/sessions/combo-box-items
 https://prod-api.palace-cinemas.workers.dev/sessions/date-items
+.get("/account/details", {
+.get("/account/details/navbar", {
+.get("/account/details/preferences", {
+.get("/account/options")
+.get("/account/rewards", {
+.get("/home-featured?locality=".concat(e))
+.get("/home?locality=".concat(t, "&isPreviewMode=").concat(n))
+.get("/media/".concat(e))
+.get("/menu", {
+.get("/movies?locality=".concat(e), {
+.get("/movies/byid/".concat(e))
+.get("/movies/now/trending?locality=".concat(e))
+.get("/popup/?locality=".concat(e))
+.get("/search?q=".concat(encodeURIComponent(e)))
+.get("/sessions/alert-banners?selectedCinemaIds=".concat(e.join(",")), {
+.get("/sessions/quickbook/".concat(e, "/").concat(t))
+.get("/sessions/quickbook/".concat(e))
 '''
 
 from collections.abc import AsyncGenerator
@@ -138,8 +155,65 @@ class ParticipatingCinema(Shared):
     title: str
 
 
+class Textual(Shared):
+    children: list['Node']
+    direction: Literal['ltr'] | None
+    format: Literal['', 'start']
+    indent: Literal[0]
+
+    version: Literal[1]
+
+
+class Paragraph(Textual):
+    type: Literal['paragraph']
+
+
+class Text(Shared):
+    type: Literal['text']
+
+    detail: Literal[0]
+    format: Literal[0, 1, 2, 3]
+    mode: Literal['normal']
+    style: Literal['']
+    text: str
+
+    version: Literal[1]
+
+
+class Heading(Textual):
+    type: Literal['heading']
+    tag: Literal['h2', 'h3', 'h6']
+
+
+class LinkFields(Shared):
+    new_tab: bool
+    link_type: Literal['custom']
+    doc: None
+    url: str
+
+
+class Link(Textual):
+    type: Literal['link']
+    fields: LinkFields
+
+
+class Node(
+    RootModel[Annotated[Paragraph | Text | Heading | Link, Field(discriminator='type')]]
+):
+    pass
+
+
+class Root(Shared):
+    type: Literal['root']
+    direction: Literal['ltr'] | None
+    children: list[Node] | None = None
+    version: Literal[1]
+    indent: int | None = None
+    format: Literal['']
+
+
 class AdditionalDetail(Shared):
-    root: int
+    root: Root
 
 
 class SingleMovie(BaseMovie):
@@ -373,6 +447,72 @@ async def get_sessions(
     return Page[Movie].model_validate(await res.json())
 
 
+class BaseSearchResult(Shared):
+    type: str
+
+
+class EventSearchResult(BaseSearchResult):
+    type: Literal["events"]
+    caption: str
+    content: AdditionalDetail | str
+    filename: str
+    herotext: str | None
+    slug: str
+    title: str
+
+
+class MovieSearchResult(BaseSearchResult):
+    type: Literal["movies"]
+    caption: str
+    content: str | None
+    id: MovieId
+    slug: str
+    title: str
+
+
+class CinemasSearchResult(BaseSearchResult):
+    type: Literal['cinemas']
+    caption: str
+    content: AdditionalDetail | str
+    filename: str
+    id: str
+    json_: Annotated[bool, Field(name='json', alias='json')]
+    slug: str
+    title: str
+
+
+class OffersSearchResult(BaseSearchResult):
+    type: Literal['offers']
+    caption: str
+    content: AdditionalDetail | str
+    filename: str
+    herotext: str | None = None
+    id: int
+    json_: Annotated[bool, Field(name='json', alias='json')]
+    slug: str
+    title: str
+
+
+class SearchResult(
+    RootModel[
+        Annotated[
+            MovieSearchResult
+            | EventSearchResult
+            | CinemasSearchResult
+            | OffersSearchResult,
+            Field(discriminator='type'),
+        ]
+    ]
+):
+    pass
+
+
+async def search(session: aiohttp.ClientSession, query: str) -> list[SearchResult]:
+    res = await session.get('/search', params={'q': query})
+    res.raise_for_status()
+    return RootModel[list[SearchResult]].model_validate(await res.json()).root
+
+
 class PalaceProvider(MovieProvider):
     type = ProviderSource.PALACE
 
@@ -411,6 +551,10 @@ async def main() -> None:
             ),
         )
         print(sessions)
+
+        for movie in sessions.data:
+            await get_movie_by_slug(session, movie.slug)
+            # await get_movie_by_id(session, movie_session.session_id)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,65 @@
+{
+  "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+      {
+        "type": "paragraph",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "mode": "normal",
+            "text": "Palace Cinemas Raine Square, Perth's premier cinema destination, opened in September 2018. This luxurious complex boasts nine traditional cinemas and four boutique Palace Platinum screens, all featuring handcrafted Spanish leather recliners. Watch the latest releases, attend special events and festivals, or simply unwind at one of the four on-site bars, including a rooftop terrace overlooking the vibrant cityscape.",
+            "type": "text",
+            "style": "",
+            "detail": 0,
+            "format": 0,
+            "version": 1
+          }
+        ],
+        "direction": "ltr"
+      },
+      {
+        "type": "paragraph",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "mode": "normal",
+            "text": "Palace Cinemas is proud to offer $5 flat rate parking all weekend and after 4.30pm on weekdays (up to 4 hours) at Wilson Parking Raine Square and Wilson Parking Queen Street!",
+            "type": "text",
+            "style": "",
+            "detail": 0,
+            "format": 0,
+            "version": 1
+          }
+        ],
+        "direction": "ltr"
+      },
+      {
+        "type": "paragraph",
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+          {
+            "mode": "normal",
+            "text": "The cinema doors and phone lines are open 15 minutes prior to the first session of the day.",
+            "type": "text",
+            "style": "",
+            "detail": 0,
+            "format": 2,
+            "version": 1
+          }
+        ],
+        "direction": "ltr"
+      }
+    ],
+    "direction": "ltr"
+  }
+}
