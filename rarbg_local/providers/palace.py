@@ -325,6 +325,43 @@ async def get_sessions(
     return Page[Movie].model_validate(await res.json())
 
 
+class BaseSearchResult(Shared):
+    type: str
+
+
+class EventSearchResult(BaseSearchResult):
+    type: Literal["events"]
+    slug: str
+    title: str
+    filename: str
+    content: str
+    herotext: str
+    caption: str
+
+
+class MovieSearchResult(BaseSearchResult):
+    type: Literal["movies"]
+    slug: str
+    title: str
+    content: str | None
+    id: MovieId
+    caption: str
+
+
+class SearchResult(
+    RootModel[
+        Annotated[MovieSearchResult | EventSearchResult, Field(discriminator='type')]
+    ]
+):
+    pass
+
+
+async def search(session: aiohttp.ClientSession, query: str) -> list[SearchResult]:
+    res = await session.get('/search', params={'q': query})
+    res.raise_for_status()
+    return RootModel[list[SearchResult]].model_validate(await res.json()).root
+
+
 class PalaceProvider(MovieProvider):
     type = ProviderSource.PALACE
 

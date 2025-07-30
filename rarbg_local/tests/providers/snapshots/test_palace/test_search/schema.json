@@ -62,8 +62,15 @@
           "type": "string"
         },
         "content": {
-          "title": "Content",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Content"
         },
         "id": {
           "title": "Id",
@@ -86,7 +93,14 @@
       "type": "object"
     }
   },
-  "anyOf": [
+  "discriminator": {
+    "mapping": {
+      "events": "#/$defs/EventSearchResult",
+      "movies": "#/$defs/MovieSearchResult"
+    },
+    "propertyName": "type"
+  },
+  "oneOf": [
     {
       "$ref": "#/$defs/MovieSearchResult"
     },
@@ -94,5 +108,5 @@
       "$ref": "#/$defs/EventSearchResult"
     }
   ],
-  "title": "RootModel[Union[MovieSearchResult, EventSearchResult]]"
+  "title": "RootModel[Annotated[Union[MovieSearchResult, EventSearchResult], FieldInfo(annotation=NoneType, required=True, discriminator='type')]]"
 }
