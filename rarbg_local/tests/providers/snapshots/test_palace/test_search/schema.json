@@ -42,9 +42,17 @@
           "type": "string"
         },
         "content": {
-          "$ref": "#/$defs/AdditionalDetail"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdditionalDetail"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Content"
         },
-        "json_": {
+        "json": {
           "name": "json",
           "title": "Json",
           "type": "boolean"
@@ -58,7 +66,7 @@
         "filename",
         "caption",
         "content",
-        "json_"
+        "json"
       ],
       "title": "CinemasSearchResult",
       "type": "object"
@@ -84,11 +92,26 @@
           "type": "string"
         },
         "content": {
-          "$ref": "#/$defs/AdditionalDetail"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdditionalDetail"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Content"
         },
         "herotext": {
-          "title": "Herotext",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Herotext"
         },
         "caption": {
           "title": "Caption",
@@ -105,6 +128,161 @@
         "caption"
       ],
       "title": "EventSearchResult",
+      "type": "object"
+    },
+    "Heading": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "heading",
+          "title": "Type",
+          "type": "string"
+        },
+        "tag": {
+          "enum": [
+            "h2",
+            "h3",
+            "h6"
+          ],
+          "title": "Tag",
+          "type": "string"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "const": "ltr",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Direction"
+        },
+        "children": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "title": "Children",
+          "type": "array"
+        },
+        "indent": {
+          "const": 0,
+          "title": "Indent",
+          "type": "integer"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "format": {
+          "enum": [
+            "",
+            "start"
+          ],
+          "title": "Format",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "tag",
+        "direction",
+        "children",
+        "indent",
+        "version",
+        "format"
+      ],
+      "title": "Heading",
+      "type": "object"
+    },
+    "Link": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "link",
+          "title": "Type",
+          "type": "string"
+        },
+        "format": {
+          "const": "",
+          "title": "Format",
+          "type": "string"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "const": "ltr",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Direction"
+        },
+        "children": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "title": "Children",
+          "type": "array"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "indent": {
+          "const": 0,
+          "title": "Indent",
+          "type": "integer"
+        },
+        "fields": {
+          "$ref": "#/$defs/LinkFields"
+        }
+      },
+      "required": [
+        "type",
+        "format",
+        "direction",
+        "children",
+        "version",
+        "indent",
+        "fields"
+      ],
+      "title": "Link",
+      "type": "object"
+    },
+    "LinkFields": {
+      "additionalProperties": false,
+      "properties": {
+        "newTab": {
+          "title": "Newtab",
+          "type": "boolean"
+        },
+        "linkType": {
+          "const": "custom",
+          "title": "Linktype",
+          "type": "string"
+        },
+        "doc": {
+          "title": "Doc",
+          "type": "null"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "newTab",
+        "linkType",
+        "doc",
+        "url"
+      ],
+      "title": "LinkFields",
       "type": "object"
     },
     "MovieSearchResult": {
@@ -157,6 +335,8 @@
     "Node": {
       "discriminator": {
         "mapping": {
+          "heading": "#/$defs/Heading",
+          "link": "#/$defs/Link",
           "paragraph": "#/$defs/Paragraph",
           "text": "#/$defs/Text"
         },
@@ -168,6 +348,12 @@
         },
         {
           "$ref": "#/$defs/Text"
+        },
+        {
+          "$ref": "#/$defs/Heading"
+        },
+        {
+          "$ref": "#/$defs/Link"
         }
       ],
       "title": "Node"
@@ -212,13 +398,21 @@
           "title": "Filename",
           "type": "string"
         },
-        "json_": {
+        "json": {
           "name": "json",
           "title": "Json",
           "type": "boolean"
         },
         "content": {
-          "$ref": "#/$defs/AdditionalDetail"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdditionalDetail"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Content"
         }
       },
       "required": [
@@ -228,7 +422,7 @@
         "title",
         "caption",
         "filename",
-        "json_",
+        "json",
         "content"
       ],
       "title": "OffersSearchResult",
@@ -273,6 +467,10 @@
           "type": "integer"
         },
         "format": {
+          "enum": [
+            "",
+            "start"
+          ],
           "title": "Format",
           "type": "string"
         }
@@ -370,7 +568,9 @@
         "format": {
           "enum": [
             0,
-            2
+            1,
+            2,
+            3
           ],
           "title": "Format",
           "type": "integer"

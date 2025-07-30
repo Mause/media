@@ -157,20 +157,51 @@ class Paragraph(Shared):
     direction: Literal['ltr'] | None = None
     children: list['Node']
     indent: Literal[0]
-    format: str
+    format: Literal['', 'start']
 
 
 class Text(Shared):
     type: Literal['text']
     detail: Literal[0]
-    format: Literal[0, 2]
+    format: Literal[0, 1, 2, 3]
     text: str
     mode: Literal['normal']
     version: Literal[1]
     style: Literal['']
 
 
-class Node(RootModel[Annotated[Paragraph | Text, Field(discriminator='type')]]):
+class Heading(Shared):
+    type: Literal['heading']
+    tag: Literal['h2', 'h3', 'h6']
+
+    direction: Literal['ltr'] | None
+    children: list['Node']
+    indent: Literal[0]
+    version: Literal[1]
+    format: Literal['', 'start']
+
+
+class LinkFields(Shared):
+    new_tab: bool
+    link_type: Literal['custom']
+    doc: None
+    url: str
+
+
+class Link(Shared):
+    type: Literal['link']
+
+    format: Literal['']
+    direction: Literal['ltr'] | None
+    children: list['Node']
+    version: Literal[1]
+    indent: Literal[0]
+    fields: LinkFields
+
+
+class Node(
+    RootModel[Annotated[Paragraph | Text | Heading | Link, Field(discriminator='type')]]
+):
     pass
 
 
@@ -383,8 +414,8 @@ class EventSearchResult(BaseSearchResult):
     slug: str
     title: str
     filename: str
-    content: AdditionalDetail
-    herotext: str
+    content: AdditionalDetail | str
+    herotext: str | None
     caption: str
 
 
@@ -404,8 +435,8 @@ class CinemasSearchResult(BaseSearchResult):
     title: str
     filename: str
     caption: str
-    content: AdditionalDetail
-    json_: Annotated[bool, Field(name='json')]
+    content: AdditionalDetail | str
+    json_: Annotated[bool, Field(name='json', alias='json')]
 
 
 class OffersSearchResult(BaseSearchResult):
@@ -416,8 +447,8 @@ class OffersSearchResult(BaseSearchResult):
     title: str
     caption: str
     filename: str
-    json_: Annotated[bool, Field(name='json')]
-    content: AdditionalDetail
+    json_: Annotated[bool, Field(name='json', alias='json')]
+    content: AdditionalDetail | str
 
 
 class SearchResult(
@@ -476,6 +507,10 @@ async def main() -> None:
             ),
         )
         print(sessions)
+
+        for movie in sessions.data:
+            await get_movie_by_slug(session, movie.slug)
+            # await get_movie_by_id(session, movie_session.session_id)
 
 
 if __name__ == '__main__':
