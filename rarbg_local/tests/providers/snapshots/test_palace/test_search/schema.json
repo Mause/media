@@ -1,5 +1,56 @@
 {
   "$defs": {
+    "CinemasSearchResult": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "cinemas",
+          "title": "Type",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "caption": {
+          "title": "Caption",
+          "type": "string"
+        },
+        "content": {
+          "title": "Content",
+          "type": "string"
+        },
+        "json_": {
+          "name": "json",
+          "title": "Json",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "slug",
+        "title",
+        "filename",
+        "caption",
+        "content",
+        "json_"
+      ],
+      "title": "CinemasSearchResult",
+      "type": "object"
+    },
     "EventSearchResult": {
       "additionalProperties": false,
       "properties": {
@@ -91,12 +142,76 @@
       ],
       "title": "MovieSearchResult",
       "type": "object"
+    },
+    "OffersSearchResult": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "offers",
+          "title": "Type",
+          "type": "string"
+        },
+        "herotext": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Herotext"
+        },
+        "id": {
+          "title": "Id",
+          "type": "integer"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "caption": {
+          "title": "Caption",
+          "type": "string"
+        },
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "json_": {
+          "name": "json",
+          "title": "Json",
+          "type": "boolean"
+        },
+        "content": {
+          "$ref": "#/$defs/AdditionalDetail"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "slug",
+        "title",
+        "caption",
+        "filename",
+        "json_",
+        "content"
+      ],
+      "title": "OffersSearchResult",
+      "type": "object"
     }
   },
   "discriminator": {
     "mapping": {
+      "cinemas": "#/$defs/CinemasSearchResult",
       "events": "#/$defs/EventSearchResult",
-      "movies": "#/$defs/MovieSearchResult"
+      "movies": "#/$defs/MovieSearchResult",
+      "offers": "#/$defs/OffersSearchResult"
     },
     "propertyName": "type"
   },
@@ -106,7 +221,13 @@
     },
     {
       "$ref": "#/$defs/EventSearchResult"
+    },
+    {
+      "$ref": "#/$defs/CinemasSearchResult"
+    },
+    {
+      "$ref": "#/$defs/OffersSearchResult"
     }
   ],
-  "title": "RootModel[Annotated[Union[MovieSearchResult, EventSearchResult], FieldInfo(annotation=NoneType, required=True, discriminator='type')]]"
+  "title": "SearchResult"
 }

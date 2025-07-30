@@ -348,9 +348,38 @@ class MovieSearchResult(BaseSearchResult):
     caption: str
 
 
+class CinemasSearchResult(BaseSearchResult):
+    type: Literal['cinemas']
+    id: str
+    slug: str
+    title: str
+    filename: str
+    caption: str
+    content: str
+    json_: Annotated[bool, Field(name='json')]
+
+
+class OffersSearchResult(BaseSearchResult):
+    type: Literal['offers']
+    herotext: str | None = None
+    id: int
+    slug: str
+    title: str
+    caption: str
+    filename: str
+    json_: Annotated[bool, Field(name='json')]
+    content: AdditionalDetail
+
+
 class SearchResult(
     RootModel[
-        Annotated[MovieSearchResult | EventSearchResult, Field(discriminator='type')]
+        Annotated[
+            MovieSearchResult
+            | EventSearchResult
+            | CinemasSearchResult
+            | OffersSearchResult,
+            Field(discriminator='type'),
+        ]
     ]
 ):
     pass
