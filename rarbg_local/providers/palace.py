@@ -151,34 +151,34 @@ class ParticipatingCinema(Shared):
     title: str
 
 
-class Paragraph(Shared):
-    version: Literal[1]
-    type: Literal['paragraph']
-    direction: Literal['ltr'] | None = None
+class Textual(Shared):
     children: list['Node']
-    indent: Literal[0]
+    direction: Literal['ltr'] | None
     format: Literal['', 'start']
+    indent: Literal[0]
+
+    version: Literal[1]
+
+
+class Paragraph(Textual):
+    type: Literal['paragraph']
 
 
 class Text(Shared):
     type: Literal['text']
+
     detail: Literal[0]
     format: Literal[0, 1, 2, 3]
-    text: str
     mode: Literal['normal']
-    version: Literal[1]
     style: Literal['']
+    text: str
+
+    version: Literal[1]
 
 
-class Heading(Shared):
+class Heading(Textual):
     type: Literal['heading']
     tag: Literal['h2', 'h3', 'h6']
-
-    direction: Literal['ltr'] | None
-    children: list['Node']
-    indent: Literal[0]
-    version: Literal[1]
-    format: Literal['', 'start']
 
 
 class LinkFields(Shared):
@@ -188,14 +188,8 @@ class LinkFields(Shared):
     url: str
 
 
-class Link(Shared):
+class Link(Textual):
     type: Literal['link']
-
-    format: Literal['']
-    direction: Literal['ltr'] | None
-    children: list['Node']
-    version: Literal[1]
-    indent: Literal[0]
     fields: LinkFields
 
 
@@ -411,44 +405,44 @@ class BaseSearchResult(Shared):
 
 class EventSearchResult(BaseSearchResult):
     type: Literal["events"]
+    caption: str
+    content: AdditionalDetail | str
+    filename: str
+    herotext: str | None
     slug: str
     title: str
-    filename: str
-    content: AdditionalDetail | str
-    herotext: str | None
-    caption: str
 
 
 class MovieSearchResult(BaseSearchResult):
     type: Literal["movies"]
-    slug: str
-    title: str
+    caption: str
     content: str | None
     id: MovieId
-    caption: str
+    slug: str
+    title: str
 
 
 class CinemasSearchResult(BaseSearchResult):
     type: Literal['cinemas']
-    id: str
-    slug: str
-    title: str
-    filename: str
     caption: str
     content: AdditionalDetail | str
+    filename: str
+    id: str
     json_: Annotated[bool, Field(name='json', alias='json')]
+    slug: str
+    title: str
 
 
 class OffersSearchResult(BaseSearchResult):
     type: Literal['offers']
+    caption: str
+    content: AdditionalDetail | str
+    filename: str
     herotext: str | None = None
     id: int
+    json_: Annotated[bool, Field(name='json', alias='json')]
     slug: str
     title: str
-    caption: str
-    filename: str
-    json_: Annotated[bool, Field(name='json', alias='json')]
-    content: AdditionalDetail | str
 
 
 class SearchResult(
