@@ -36,7 +36,7 @@ from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 
 CinemaId = NewType('CinemaId', str)
 SessionId = NewType('SessionId', str)
-MovieId = NewType('MovieId', str)
+MovieId = NewType('MovieId', str | int)
 MovieSlug = NewType('MovieSlug', str)
 
 
@@ -44,6 +44,10 @@ class HumanTimeDelta:
     def tz_constraint_validator(
         self, value: str, handler: ValidatorFunctionWrapHandler
     ) -> Any:
+        if not value:
+            return handler(value)
+        elif value == 'TBC':
+            return handler(value)
         parts = value.split()
         assert len(parts) == 2
         assert parts[1] == 'MIN'
@@ -307,6 +311,50 @@ async def get_movie_by_id(
     return RootModel[SingleMovie].model_validate(await res.json()).root
 
 
+class MovieMovie(Shared):
+    has_event: bool
+    coming_soon_order: int | None = None
+    coming_soon_sales_flag: bool | None = None
+
+    film_festival_order: int | None = None
+    festival_slugs: str | list[str]
+    is_festival: bool
+    is_external_festival: bool | None = False
+    festival_url: str | None = None
+
+    poster: str | None = None
+    published_screening_date: datetime | None = None
+    now_showing_order: int | None
+    movie_id: MovieId
+    title: str
+    slug: MovieSlug
+    release_date_utc: datetime
+    synopsis: str
+    status: Literal['COMING_SOON', 'FILM_FESTIVAL', 'NOW_SHOWING']
+    run_time: Annotated[timedelta | Literal['TBC'] | None, HumanTimeDelta()]
+    cast: list[Person]
+    genre_display_names: str
+
+    is_alt_content: bool = False
+    is_repertory: bool = False
+    is_arts_on_screen: bool = False
+    director: list[Person] | None
+    rating: Literal['CTC', 'G', 'PG', 'M', 'MA', 'MA15+', 'R18+'] | None
+    showing_at_cinema_ids: list[CinemaId] | None
+    trailer_url: str
+
+
+async def get_movies(
+    session: aiohttp.ClientSession,
+) -> list[MovieMovie]:
+    res = await session.get(
+        '/movies',
+        params=to_params({'locality': 'melbourne'}),
+    )
+    res.raise_for_status()
+    return RootModel[list[MovieMovie]].model_validate(await res.json()).root
+
+
 async def get_sessions(
     session: aiohttp.ClientSession,
     *,
@@ -341,6 +389,8 @@ async def main() -> None:
     )
 
     async with session:
+        await get_movies(session)
+
         session_date_items = await get_sessions_date_items(
             session,
             FilterArgs(
