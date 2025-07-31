@@ -484,6 +484,7 @@ class PalaceProvider(MovieProvider):
             if not results:
                 return
             movie = results[0]
+            assert isinstance(movie, MovieSearchResult)
 
             for sess in (
                 await get_sessions(session, FilterArgs(selected_movie_slug=movie.slug))
