@@ -484,10 +484,14 @@ class PalaceProvider(MovieProvider):
         )
 
 
-async def main() -> None:
-    session = aiohttp.ClientSession(
+def get_session() -> aiohttp.ClientSession:
+    return aiohttp.ClientSession(
         base_url=BASE_URL,
     )
+
+
+async def main() -> None:
+    session = get_session()
 
     async with session:
         session_date_items = await get_sessions_date_items(
