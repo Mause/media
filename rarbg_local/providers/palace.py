@@ -254,6 +254,16 @@ class Movie(BaseMovie):
     sessions: list[Session]
 
 
+class Locality(Enum):
+    MELBOURNE = 'melbourne'
+    SYDNEY = 'sydney'
+    CANBERRA = 'canberra'
+    BRISBANE = 'brisbane'
+    BALLARAT = 'ballarat'
+    BYRON_BAY = 'byronBay'
+    PERTH = 'perth'
+
+
 class Cinema(Shared):
     cinema_id: CinemaId
     order: int | None
@@ -272,15 +282,7 @@ class Cinema(Shared):
 
     longitude: Longitude
     latitude: Latitude
-    locality: Literal[
-        'melbourne',
-        'sydney',
-        'canberra',
-        'brisbane',
-        'ballarat',
-        'byronBay',
-        'perth',
-    ]
+    locality: Locality
     locality_display_name: str
     is_platinum: bool
     street: str
