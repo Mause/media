@@ -482,12 +482,22 @@ class OffersSearchResult(BaseSearchResult):
     title: str
 
 
+class FestivalsSearchResult(BaseSearchResult):
+    type: Literal['festivals']
+    slug: str
+    title: str
+    filename: str
+    caption: str
+    content: str
+
+
 class SearchResult(
     RootModel[
         Annotated[
             MovieSearchResult
             | EventSearchResult
             | CinemasSearchResult
+            | FestivalsSearchResult
             | OffersSearchResult,
             Field(discriminator='type'),
         ]
