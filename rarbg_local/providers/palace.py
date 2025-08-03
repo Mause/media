@@ -196,8 +196,41 @@ class Link(Textual):
     fields: LinkFields
 
 
+class Ident(Shared):
+    id: int
+
+
+class LinkHref(Shared):
+    href: str
+
+
+class EmbeddedLink(Shared):
+    type: Literal['custom']
+    new_tab: bool
+    url: str
+
+
+class UploadFields(Shared):
+    enable_link: bool
+    link: EmbeddedLink
+
+
+class Upload(Shared):
+    type: Literal['upload']
+    fields: UploadFields
+    relation_to: Literal['media']
+    value: Ident
+
+    version: Literal[1]
+    format: Literal['']
+
+
 class Node(
-    RootModel[Annotated[Paragraph | Text | Heading | Link, Field(discriminator='type')]]
+    RootModel[
+        Annotated[
+            Paragraph | Text | Heading | Link | Upload, Field(discriminator='type')
+        ]
+    ]
 ):
     pass
 
