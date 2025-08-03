@@ -391,13 +391,13 @@ async def get_sessions_disabled_cinemas(
     return RootModel[list[CinemaId]].model_validate(await res.json()).root
 
 
-async def get_cinemas(session: aiohttp.ClientSession) -> list[Cinema]:
-    res = await session.get(
-        '/cinemas',
-        params=to_params({'platinum': False}),
-    )
+async def get_cinemas(
+    session: aiohttp.ClientSession, locality: Locality | None = None
+) -> list[Cinema]:
+    res = await session.get('/cinemas')
     res.raise_for_status()
-    return RootModel[list[Cinema]].model_validate(await res.json()).root
+    root = RootModel[list[Cinema]].model_validate(await res.json()).root
+    return [c for c in root if c.locality == locality] if locality else root
 
 
 async def get_movie_by_slug(
