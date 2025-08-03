@@ -50,6 +50,7 @@ from pydantic_extra_types.coordinate import Latitude, Longitude
 from rich import print
 from uritemplate import URITemplate
 
+from ..tmdb import get_movie
 from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 
 CinemaId = NewType('CinemaId', str)
@@ -387,7 +388,6 @@ async def get_movie_by_id(
 
 async def get_sessions(
     session: aiohttp.ClientSession,
-    *,
     filter_args: FilterArgs,
 ) -> Page[Movie]:
     res = await session.get(
@@ -475,8 +475,29 @@ class PalaceProvider(MovieProvider):
     async def search_for_movie(
         self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
-        if not True:
-            yield
+        details = await get_movie(tmdb_id)
+
+        async with get_session() as session:
+            results = [
+                result
+                for result in await search(session, details.title)
+                if isinstance(result, MovieSearchResult)
+            ]
+            if not results:
+                return
+            movie = results[0]
+            assert isinstance(movie, MovieSearchResult)
+
+            for sess in (
+                await get_sessions(session, FilterArgs(selected_movie_slug=movie.slug))
+            ).data:
+                yield ITorrent(
+                    source=ProviderSource.PALACE,
+                    title=sess.title,
+                    seeders=-1,
+                    download='',
+                    category=sess.category,
+                )
 
     async def health(self) -> HealthcheckCallbackResponse:
         return await self.check_http(
@@ -492,6 +513,9 @@ def get_session() -> aiohttp.ClientSession:
 
 async def main() -> None:
     session = get_session()
+
+    async for res in PalaceProvider().search_for_movie(ImdbId('tt10676052'), TmdbId(0)):
+        print(res)
 
     async with session:
         session_date_items = await get_sessions_date_items(
