@@ -34,6 +34,7 @@ from enum import Enum
 from typing import Annotated, Any, Literal, NewType
 
 import aiohttp
+from healthcheck import HealthcheckCallbackResponse
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -55,6 +56,7 @@ CinemaId = NewType('CinemaId', str)
 SessionId = NewType('SessionId', str)
 MovieId = NewType('MovieId', str)
 MovieSlug = NewType('MovieSlug', str)
+BASE_URL = "https://prod-api.palace-cinemas.workers.dev"
 
 
 class HumanTimeDelta:
@@ -476,10 +478,15 @@ class PalaceProvider(MovieProvider):
         if not True:
             yield
 
+    async def health(self) -> HealthcheckCallbackResponse:
+        return await self.check_http(
+            BASE_URL + '/cinemas',
+        )
+
 
 async def main() -> None:
     session = aiohttp.ClientSession(
-        base_url="https://prod-api.palace-cinemas.workers.dev",
+        base_url=BASE_URL,
     )
 
     async with session:
