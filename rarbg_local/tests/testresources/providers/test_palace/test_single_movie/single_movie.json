@@ -1,0 +1,211 @@
+{
+  "movieId": "HO00018759",
+  "title": "Elio",
+  "slug": "elio",
+  "trailerUrl": "https://www.youtube.com/watch?v=3pFbVejD3s0",
+  "director": [
+    {
+      "ID": "0000002444",
+      "LastName": "Molina",
+      "FirstName": "Adrian",
+      "PersonType": "Director",
+      "UrlToDetails": "",
+      "UrlToPicture": ""
+    },
+    {
+      "ID": "HO00002967",
+      "LastName": "Shi",
+      "FirstName": "Domee",
+      "PersonType": "Director",
+      "UrlToDetails": null,
+      "UrlToPicture": null
+    },
+    {
+      "ID": "HO00004551",
+      "LastName": "Sharafian",
+      "FirstName": "Madeline",
+      "PersonType": "Director",
+      "UrlToDetails": null,
+      "UrlToPicture": null
+    }
+  ],
+  "cast": [
+    {
+      "ID": "0000001256",
+      "LastName": "Saldana",
+      "FirstName": "Zoe",
+      "PersonType": "Actor",
+      "UrlToDetails": "",
+      "UrlToPicture": ""
+    },
+    {
+      "ID": "0000003325",
+      "LastName": "Garrett",
+      "FirstName": "Brad",
+      "PersonType": "Actor",
+      "UrlToDetails": "",
+      "UrlToPicture": ""
+    },
+    {
+      "ID": "HO00001116",
+      "LastName": "Jamil",
+      "FirstName": "Jameela",
+      "PersonType": "Actor",
+      "UrlToDetails": null,
+      "UrlToPicture": null
+    },
+    {
+      "ID": "HO00004550",
+      "LastName": "Kibreab",
+      "FirstName": "Yonas",
+      "PersonType": "Actor",
+      "UrlToDetails": null,
+      "UrlToPicture": null
+    }
+  ],
+  "genreId": ["HO00000002", "0000000001", "HO00000003"],
+  "genreName": ["Adventure", "Family", "Animated"],
+  "runTime": "98 MIN",
+  "language": null,
+  "rating": "PG",
+  "htmlContent": null,
+  "synopsis": "From the studio that brought us timeless tales of friendship, courage, and finding your place in the world comes a brand-new cosmic odyssey that speaks straight to the heart. Disney and Pixar\u2019s ELIO is a vibrant, interstellar coming-of-age story about feeling like an outsider\u2014and realising that sometimes, the very things that set us apart are what make us extraordinary.\n\nFor centuries, people have called out to the universe looking for answers\u2014in Disney and Pixar\u2019s all-new movie ELIO, the universe calls back! The original feature film introduces Elio, an underdog with an active imagination who finds himself inadvertently beamed up to the Communiverse, an interplanetary organization with representatives from galaxies far and wide. \n\nMistakenly identified as Earth\u2019s ambassador to the rest of the universe, and completely unprepared for that kind of pressure, Elio must form new bonds with eccentric alien lifeforms, survive a series of formidable trials and somehow discover who he is truly meant to be. \n\nWith heart, humour and that unmistakable Pixar magic, Elio is a celebration of belonging in the unlikeliest of places. A big-screen adventure for the whole family.\n",
+  "shortSynopsis": "For centuries, people have called out to the universe looking for answers\u2014in Disney and Pixar\u2019s all-new movie \u201cElio,\u201d the universe calls back! ",
+  "additionalDetail": {
+    "root": {
+      "type": "root",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+        {
+          "type": "paragraph",
+          "format": "",
+          "indent": 0,
+          "version": 1,
+          "children": [],
+          "direction": null
+        },
+        {
+          "type": "upload",
+          "value": {
+            "id": 3593
+          },
+          "fields": {
+            "link": {
+              "url": "https://www.palacecinemas.com.au/offers/family-ticket-pass-vic-nsw-byr-wa",
+              "type": "custom",
+              "newTab": true
+            },
+            "enableLink": true
+          },
+          "format": "",
+          "version": 1,
+          "relationTo": "media"
+        },
+        {
+          "type": "paragraph",
+          "format": "",
+          "indent": 0,
+          "version": 1,
+          "children": [],
+          "direction": null
+        }
+      ],
+      "direction": null
+    }
+  },
+  "isRepertory": false,
+  "isArtsOnScreen": false,
+  "isAltContent": false,
+  "releaseDateUtc": "2025-06-19T00:00:00.000Z",
+  "accentColour": "#ec9a68",
+  "logo": "Elio_FilmLogo_1000x528.png",
+  "logoAlt": "Elio",
+  "logoMaxHeight": "200",
+  "logoMaxWidth": "600",
+  "logoMobileMaxHeight": "120",
+  "logoTopMobileSpacing": null,
+  "heroImage": "Elio_KeyArtBanner_1680x560 FLIPPED.jpg",
+  "heroImageAlt": "Elio",
+  "participatingCinemas": [
+    {
+      "title": "Palace Penny Lane Cinema",
+      "slug": "palace-penny-lane"
+    },
+    {
+      "title": "Palace Balwyn Cinema",
+      "slug": "palace-balwyn"
+    },
+    {
+      "title": "Pentridge Cinema",
+      "slug": "pentridge-cinema"
+    },
+    {
+      "title": "Palace Church Street (FKA Dendy Brighton)",
+      "slug": "palace-church-street"
+    },
+    {
+      "title": "Palace Cinema Como",
+      "slug": "palace-cinema-como"
+    },
+    {
+      "title": "Palace Westgarth Cinema",
+      "slug": "palace-westgarth"
+    },
+    {
+      "title": "Palace Regent Cinema Ballarat",
+      "slug": "regent-ballarat"
+    },
+    {
+      "title": "Palace Central Cinema Sydney",
+      "slug": "palace-central-sydney"
+    },
+    {
+      "title": "Palace Norton Street Cinema",
+      "slug": "palace-norton-street"
+    },
+    {
+      "title": "Palace James St Cinema",
+      "slug": "palace-james-st"
+    },
+    {
+      "title": "Ballina Fair Cinemas",
+      "slug": "ballina-fair-cinemas"
+    },
+    {
+      "title": "Palace Byron Bay Cinema",
+      "slug": "palace-byron-bay"
+    },
+    {
+      "title": "Palace Raine Square Perth",
+      "slug": "palace-raine-square"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "685264d432614c8a2b90a729",
+      "content": "Pixar Proves They\u2019re Still Incredible at Creating Bold, Inventive, and Original Stories.",
+      "rating": null,
+      "reviewer": "Collider"
+    },
+    {
+      "id": "685265f532614c8a2b90a72b",
+      "content": "It\u2019s Pixar at its very best: weird, wonderful, and emotional storytelling about our very humanity through grandiose, high-concept animated adventures.",
+      "rating": null,
+      "reviewer": "The Hollywood News"
+    },
+    {
+      "id": "6852650b32614c8a2b90a72a",
+      "content": "Elio is a precious tale of friendship and family ties.",
+      "rating": null,
+      "reviewer": "Mashable"
+    }
+  ],
+  "awards": [],
+  "mediaInserts": [],
+  "metaDescription": "Disney and Pixar\u2019s new out-of-this-world animation ELIO is a funny, heartwarming, and visually stunning adventure. Coming to Palace Cinemas on June 19.",
+  "metaTitle": "Elio | Palace Cinemas ",
+  "metaImage": "Elio_1680x560.jpg",
+  "metaJsonLd": null
+}

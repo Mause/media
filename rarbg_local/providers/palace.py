@@ -34,6 +34,7 @@ from enum import Enum
 from typing import Annotated, Any, Literal, NewType
 
 import aiohttp
+from healthcheck import HealthcheckCallbackResponse
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -49,12 +50,14 @@ from pydantic_extra_types.coordinate import Latitude, Longitude
 from rich import print
 from uritemplate import URITemplate
 
+from ..tmdb import get_movie
 from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 
 CinemaId = NewType('CinemaId', str)
 SessionId = NewType('SessionId', str)
 MovieId = NewType('MovieId', str | int)
 MovieSlug = NewType('MovieSlug', str)
+BASE_URL = "https://prod-api.palace-cinemas.workers.dev"
 
 
 class HumanTimeDelta:
@@ -197,8 +200,41 @@ class Link(Textual):
     fields: LinkFields
 
 
+class Ident(Shared):
+    id: int
+
+
+class LinkHref(Shared):
+    href: str
+
+
+class EmbeddedLink(Shared):
+    type: Literal['custom']
+    new_tab: bool
+    url: str
+
+
+class UploadFields(Shared):
+    enable_link: bool
+    link: EmbeddedLink
+
+
+class Upload(Shared):
+    type: Literal['upload']
+    fields: UploadFields
+    relation_to: Literal['media']
+    value: Ident
+
+    version: Literal[1]
+    format: Literal['']
+
+
 class Node(
-    RootModel[Annotated[Paragraph | Text | Heading | Link, Field(discriminator='type')]]
+    RootModel[
+        Annotated[
+            Paragraph | Text | Heading | Link | Upload, Field(discriminator='type')
+        ]
+    ]
 ):
     pass
 
@@ -258,6 +294,16 @@ class Movie(BaseMovie):
     sessions: list[Session]
 
 
+class Locality(Enum):
+    MELBOURNE = 'melbourne'
+    SYDNEY = 'sydney'
+    CANBERRA = 'canberra'
+    BRISBANE = 'brisbane'
+    BALLARAT = 'ballarat'
+    BYRON_BAY = 'byronBay'
+    PERTH = 'perth'
+
+
 class Cinema(Shared):
     cinema_id: CinemaId
     order: int | None
@@ -276,15 +322,7 @@ class Cinema(Shared):
 
     longitude: Longitude
     latitude: Latitude
-    locality: Literal[
-        'melbourne',
-        'sydney',
-        'canberra',
-        'brisbane',
-        'ballarat',
-        'byronBay',
-        'perth',
-    ]
+    locality: Locality
     locality_display_name: str
     is_platinum: bool
     street: str
@@ -357,13 +395,13 @@ async def get_sessions_disabled_cinemas(
     return RootModel[list[CinemaId]].model_validate(await res.json()).root
 
 
-async def get_cinemas(session: aiohttp.ClientSession) -> list[Cinema]:
-    res = await session.get(
-        '/cinemas',
-        params=to_params({'platinum': False}),
-    )
+async def get_cinemas(
+    session: aiohttp.ClientSession, locality: Locality | None = None
+) -> list[Cinema]:
+    res = await session.get('/cinemas')
     res.raise_for_status()
-    return RootModel[list[Cinema]].model_validate(await res.json()).root
+    root = RootModel[list[Cinema]].model_validate(await res.json()).root
+    return [c for c in root if c.locality == locality] if locality else root
 
 
 async def get_movie_by_slug(
@@ -431,7 +469,6 @@ async def get_movies(
 
 async def get_sessions(
     session: aiohttp.ClientSession,
-    *,
     filter_args: FilterArgs,
 ) -> Page[Movie]:
     res = await session.get(
@@ -493,12 +530,22 @@ class OffersSearchResult(BaseSearchResult):
     title: str
 
 
+class FestivalsSearchResult(BaseSearchResult):
+    type: Literal['festivals']
+    slug: str
+    title: str
+    filename: str
+    caption: str
+    content: str
+
+
 class SearchResult(
     RootModel[
         Annotated[
             MovieSearchResult
             | EventSearchResult
             | CinemasSearchResult
+            | FestivalsSearchResult
             | OffersSearchResult,
             Field(discriminator='type'),
         ]
@@ -519,14 +566,47 @@ class PalaceProvider(MovieProvider):
     async def search_for_movie(
         self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
-        if not True:
-            yield
+        details = await get_movie(tmdb_id)
+
+        async with get_session() as session:
+            results = [
+                result
+                for result in await search(session, details.title)
+                if isinstance(result, MovieSearchResult)
+            ]
+            if not results:
+                return
+            movie = results[0]
+            assert isinstance(movie, MovieSearchResult)
+
+            for sess in (
+                await get_sessions(session, FilterArgs(selected_movie_slug=movie.slug))
+            ).data:
+                yield ITorrent(
+                    source=ProviderSource.PALACE,
+                    title=sess.title,
+                    seeders=-1,
+                    download='',
+                    category=sess.category,
+                )
+
+    async def health(self) -> HealthcheckCallbackResponse:
+        return await self.check_http(
+            BASE_URL + '/cinemas',
+        )
+
+
+def get_session() -> aiohttp.ClientSession:
+    return aiohttp.ClientSession(
+        base_url=BASE_URL,
+    )
 
 
 async def main() -> None:
-    session = aiohttp.ClientSession(
-        base_url="https://prod-api.palace-cinemas.workers.dev",
-    )
+    session = get_session()
+
+    async for res in PalaceProvider().search_for_movie(ImdbId('tt10676052'), TmdbId(0)):
+        print(res)
 
     async with session:
         await get_movies(session)
