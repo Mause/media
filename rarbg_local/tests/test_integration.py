@@ -73,8 +73,10 @@ def add_torrent() -> Generator[MagicMock, None, None]:
 
 @patch('rarbg_local.plex.MyPlexAccount')
 @patch('rarbg_local.health.transmission')
+@patch('rarbg_local.providers.geolocate.get_age')
 @mark.asyncio
 async def test_diagnostics(
+    get_age: MagicMock,
     transmission: MagicMock,
     my_plex_account: MagicMock,
     test_client: TestClient,
@@ -84,6 +86,7 @@ async def test_diagnostics(
     monkeypatch: MonkeyPatch,
 ) -> None:
     monkeypatch.setattr('rarbg_local.health.getpid', lambda: 1)
+    get_age.return_value = "2025-08-01T05:21:31Z"
 
     # aioresponses.add('https://horriblesubs.info', 'HEAD')
     # aioresponses.add('https://torrentapi.org', 'HEAD')
