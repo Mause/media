@@ -76,7 +76,7 @@
     "@types/react-dom": "^19.0.0",
     "@types/uritemplate": "^0",
     "@vitejs/plugin-basic-ssl": "^2.0.0",
-    "@vitejs/plugin-react": "npm:@vitejs/plugin-react-oxc@^0.3.0",
+    "@vitejs/plugin-react": "npm:@vitejs/plugin-react-oxc@^0.4.0",
     "@vitest/ui": "^3.2.1",
     "colors.css": "^3.0.0",
     "eslint": "^9",

@@ -1444,10 +1444,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rolldown/pluginutils@npm:1.0.0-beta.27":
-  version: 1.0.0-beta.27
-  resolution: "@rolldown/pluginutils@npm:1.0.0-beta.27"
-  checksum: 10/4f7da788d88b33d029d5acf84c63be27c62d7c53017476f2e3026172cf94062cb399cd15194c89574578f192016bbcb1e040ce6811b3bb9ec4d4faa2ad386459
+"@rolldown/pluginutils@npm:1.0.0-beta.30":
+  version: 1.0.0-beta.30
+  resolution: "@rolldown/pluginutils@npm:1.0.0-beta.30"
+  checksum: 10/2016282c4b3116d5ad1184d36fd6c080d9e1c243265c51761d8c14c00ab128dbc70cfbccbab76184ed881b4947196459b37c9ae6abed742eed9fe51d988fabce
   languageName: node
   linkType: hard
 
@@ -2485,14 +2485,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:@vitejs/plugin-react-oxc@^0.3.0":
-  version: 0.3.0
-  resolution: "@vitejs/plugin-react-oxc@npm:0.3.0"
+"@vitejs/plugin-react@npm:@vitejs/plugin-react-oxc@^0.4.0":
+  version: 0.4.0
+  resolution: "@vitejs/plugin-react-oxc@npm:0.4.0"
   dependencies:
-    "@rolldown/pluginutils": "npm:1.0.0-beta.27"
+    "@rolldown/pluginutils": "npm:1.0.0-beta.30"
   peerDependencies:
     vite: ^6.3.0 || ^7.0.0
-  checksum: 10/fa88147dad21d49433e55cdd7f0246e77842b8b2c41825bfe2b245821a62cae7e2d521d0c72c63a2a5dcc23c25a57303db1868964fa6d8c66771c5890e83bf08
+  checksum: 10/95b97882d8694d25fc1f0e817d4b1cab6edcdfcc8a8017021f4a4066e9993b69f738a47d2f4d3025018d057a78c7aeac4f76199182495b544dc1fc194212e114
   languageName: node
   linkType: hard
 
@@ -2800,7 +2800,7 @@ __metadata:
     "@types/uritemplate": "npm:^0"
     "@use-it/interval": "npm:^1.0.0"
     "@vitejs/plugin-basic-ssl": "npm:^2.0.0"
-    "@vitejs/plugin-react": "npm:@vitejs/plugin-react-oxc@^0.3.0"
+    "@vitejs/plugin-react": "npm:@vitejs/plugin-react-oxc@^0.4.0"
     "@vitest/ui": "npm:^3.2.1"
     "@vtex/axios-concurrent-retry": "npm:^4.0.11"
     axios: "npm:^1.11.0"
