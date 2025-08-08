@@ -1158,6 +1158,7 @@ dependencies = [
     { name = "python-healthchecklib" },
     { name = "python-multipart" },
     { name = "pytz" },
+    { name = "rustimport" },
     { name = "sentry-sdk" },
     { name = "sqlalchemy", extra = ["mypy"] },
     { name = "sqlalchemy-repr" },
@@ -1237,6 +1238,7 @@ requires-dist = [
     { name = "python-healthchecklib", specifier = ">=0.1.1" },
     { name = "python-multipart", specifier = "==0.0.20" },
     { name = "pytz", specifier = "==2025.2" },
+    { name = "rustimport", specifier = ">=1.7.1" },
     { name = "sentry-sdk", specifier = "==2.34.1" },
     { name = "sqlalchemy", extras = ["mypy"], specifier = "==2.0.43" },
     { name = "sqlalchemy-repr", specifier = "==0.1.0" },
@@ -2346,6 +2348,18 @@ wheels = [
 ]
 
 [[package]]
+name = "rustimport"
+version = "1.7.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "toml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/aa/73/0d45f0803e1f80f0f2fc672c120a74ad2b482a35eff67d327599fbc53856/rustimport-1.7.1.tar.gz", hash = "sha256:0917231d9ef6615868389a4dd8ebdac3155eef769a2d61b39b419ff70ce195f1", size = 33209, upload-time = "2025-05-09T13:50:46.143Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/84/11/85280938aeefcd5cc55dd0d938cf0cdf6451280d5a1cce4da23f2e43d6c9/rustimport-1.7.1-py3-none-any.whl", hash = "sha256:b124205779e781da262bc66c5f19b9da34f9744217aa69485f6e2b6cec9eca7e", size = 30114, upload-time = "2025-05-09T13:50:44.422Z" },
+]
+
+[[package]]
 name = "selenium"
 version = "4.31.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2482,6 +2496,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f8/b6/8e2aaa8aeb570b5cc955cd913b083d96c5447bbe27eaf330dfd7cc8e3329/termcolor-3.0.1.tar.gz", hash = "sha256:a6abd5c6e1284cea2934443ba806e70e5ec8fd2449021be55c280f8a3731b611", size = 12935, upload-time = "2025-04-02T10:02:25.243Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a6/7e/a574ccd49ad07e8b117407bac361f1e096b01f1b620365daf60ff702c936/termcolor-3.0.1-py3-none-any.whl", hash = "sha256:da1ed4ec8a5dc5b2e17476d859febdb3cccb612be1c36e64511a6f2485c10c69", size = 7157, upload-time = "2025-04-02T10:02:24.088Z" },
+]
+
+[[package]]
+name = "toml"
+version = "0.10.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f", size = 22253, upload-time = "2020-11-01T01:40:22.204Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b", size = 16588, upload-time = "2020-11-01T01:40:20.672Z" },
 ]
 
 [[package]]
