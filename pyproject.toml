@@ -50,7 +50,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest",
-    "responses==0.25.7",
+    "responses==0.25.8",
     "lxml",
     "pytest-html>=3.1.1",
     "pytest-selenium>=3.0.0",
