@@ -1,5 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTicketAlt, faTv } from '@fortawesome/free-solid-svg-icons';
 
 import {
   DisplayError,
@@ -41,6 +43,10 @@ export function SearchComponent() {
               }
               state={{ query }}
             >
+              <FontAwesomeIcon
+                icon={result.type === 'movie' ? faTicketAlt : faTv}
+              />
+              &nbsp;
               {result.title} ({result.year ? result.year : 'Unknown year'})
             </MLink>
           </li>
