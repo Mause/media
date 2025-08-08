@@ -3,8 +3,8 @@ name = "attractive"
 version = "0.1.0"
 edition = "2024"
 
-# You can safely remove the code below to let rustimport define your pyo3 configuration 
-# automatically. It's still possible to add other configuration or dependencies, or overwrite 
+# You can safely remove the code below to let rustimport define your pyo3 configuration
+# automatically. It's still possible to add other configuration or dependencies, or overwrite
 # specific parts here. rustimport will merge your Cargo.toml file into it's generated default
 # configuration.
 [lib]
