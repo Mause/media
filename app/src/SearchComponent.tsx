@@ -45,6 +45,7 @@ export function SearchComponent() {
             >
               <FontAwesomeIcon
                 icon={result.type === 'movie' ? faTicketAlt : faTv}
+                aria-label={result.type === 'movie' ? 'Movie' : 'TV Show'}
               />
               &nbsp;
               {result.title} ({result.year ? result.year : 'Unknown year'})

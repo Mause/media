@@ -68,6 +68,7 @@ exports[`SearchComponent 1`] = `
       >
         <svg
           aria-hidden="true"
+          aria-label="Movie"
           class="svg-inline--fa fa-ticket-simple "
           data-icon="ticket-simple"
           data-prefix="fas"
