@@ -15,8 +15,28 @@ struct PyMovie {
     rating: f32,
 }
 
+#[pyclass]
+struct PyL33TMovie {
+    name: String,
+}
+
 #[pyfunction]
-async fn get_version(term: String) -> Result<Vec<PyMovie>, PyErr> {
+async fn search_leetx(term: String) -> Result<Vec<PyL33TMovie>, PyErr> {
+    Ok(torrent_search::search_l337x(term)
+        .await
+        .map(|list| {
+            list
+                .into_iter()
+                .map(|movie| PyL33TMovie {
+                    name: movie.name,
+                })
+                .collect::<Vec<PyL33TMovie>>()
+        })
+        .unwrap())
+}
+
+#[pyfunction]
+async fn search_yts(term: String) -> Result<Vec<PyMovie>, PyErr> {
     Ok(yts_api::ListMovies::new()
         .query_term(&term)
         .execute()
