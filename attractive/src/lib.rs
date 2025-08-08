@@ -16,9 +16,9 @@ struct PyMovie {
 }
 
 #[pyfunction]
-async fn get_version(term: &str) -> Result<Vec<PyMovie>, PyErr> {
+async fn get_version(term: String) -> Result<Vec<PyMovie>, PyErr> {
     Ok(yts_api::ListMovies::new()
-        .query_term(term)
+        .query_term(&term)
         .execute()
         .await
         .map(|list| {
