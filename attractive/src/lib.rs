@@ -54,3 +54,12 @@ async fn search_yts(term: String) -> Result<Vec<PyMovie>, PyErr> {
         })
         .unwrap())
 }
+
+#[pymodule]
+fn attractive(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(search_yts, m)?)?;
+    m.add_function(wrap_pyfunction!(search_leetx, m)?)?;
+    m.add_class::<PyMovie>()?;
+    m.add_class::<PyL33TMovie>()?;
+    Ok(())
+}
