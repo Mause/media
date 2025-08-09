@@ -19,6 +19,13 @@ name = "attractive"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { version = "0.23.4", features = ["extension-module", "experimental-async"] }
+pyo3 = { version = "0.25.0", features = ["experimental-async"] }
+pyo3-async-runtimes = { version = "0.25.0", features = [
+  "attributes",
+  "testing",
+  "tokio",
+  "tokio-runtime",
+] }
+tokio = "1.47.1"
 torrent_search = "0.3"
 yts-api = "0.4"

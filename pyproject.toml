@@ -73,6 +73,7 @@ dev = [
     "pytest-cov>=6.1.1",
     "pytest-resource-path>=1.4.0",
     "pytest-alembic>=0.12.1",
+    "maturin[patchelf]>=1.9.3",
 ]
 debug = ["pudb", "pdbpp"]
 cli = [
