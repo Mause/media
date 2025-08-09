@@ -13,6 +13,7 @@ dependencies = [
   "alembic==1.17.1",
   "aniso8601==10.0.1",
   "asyncache==0.3.1",
+  "attractive",
   "backoff==2.2.1",
   "beautifulsoup4>=4.13.4",
   "cachetools==5.5.2",
@@ -122,3 +123,11 @@ docstring-code-line-length = 20
 [tool.ruff.lint]
 select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 ignore = ["ANN401"]
+
+[tool.uv.workspace]
+members = [
+  "attractive",
+]
+
+[tool.uv.sources]
+attractive = { workspace = true }
