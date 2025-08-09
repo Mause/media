@@ -70,7 +70,7 @@ pub fn search_yts(py: Python, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
 }
 
 #[pymodule]
-pub fn attractive(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
+fn attractive(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(search_yts, m)?)?;
     m.add_function(wrap_pyfunction!(search_leetx, m)?)?;
     m.add_class::<PyMovie>()?;

@@ -46,6 +46,7 @@ dependencies = [
     "geoip-py>=1.0.2",
     "uvicorn-worker>=0.3.0",
     "rustimport>=1.7.1",
+    "attractive",
 ]
 
 [dependency-groups]
@@ -120,3 +121,11 @@ module = [
     "rarbg_local.jikan",
 ]
 disallow_untyped_defs = true
+
+[tool.uv.workspace]
+members = [
+    "attractive",
+]
+
+[tool.uv.sources]
+attractive = { workspace = true }

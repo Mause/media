@@ -1,9 +1,15 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12.0"
 resolution-markers = [
     "'android' in platform_release",
     "'android' not in platform_release",
+]
+
+[manifest]
+members = [
+    "attractive",
+    "media",
 ]
 
 [[package]]
@@ -202,6 +208,10 @@ sdist = { url = "https://files.pythonhosted.org/packages/49/cf/17f8a6b6b97f77b59
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2f/94/51927deb4f40872361ec4f5534f68f7a9ce81c4ef20bf5cd765307f4c15d/asyncache-0.3.1-py3-none-any.whl", hash = "sha256:ef20a1024d265090dd1e0785c961cf98b9c32cc7d9478973dcf25ac1b80011f5", size = 3722, upload-time = "2022-11-15T10:06:45.546Z" },
 ]
+
+[[package]]
+name = "attractive"
+source = { editable = "attractive" }
 
 [[package]]
 name = "attrs"
@@ -1157,6 +1167,7 @@ dependencies = [
     { name = "alembic" },
     { name = "aniso8601" },
     { name = "asyncache" },
+    { name = "attractive" },
     { name = "backoff" },
     { name = "beautifulsoup4" },
     { name = "cachetools" },
@@ -1239,6 +1250,7 @@ requires-dist = [
     { name = "alembic", specifier = "==1.16.4" },
     { name = "aniso8601", specifier = "==10.0.1" },
     { name = "asyncache", specifier = "==0.3.1" },
+    { name = "attractive", editable = "attractive" },
     { name = "backoff", specifier = "==2.2.1" },
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "cachetools", specifier = "==5.5.2" },
