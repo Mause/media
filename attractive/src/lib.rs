@@ -14,7 +14,7 @@ struct PyMovie {
 #[pymethods]
 impl PyMovie {
     fn __repr__(&self) -> String {
-        format!("{:?}", self)
+        format!("{self:?}")
     }
 }
 
@@ -55,7 +55,7 @@ pub fn search_yts(py: Python, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
         .await
         .map(|list| {
             let vec = list.movies.iter().filter(|movie| movie.imdb_code == term).collect::<Vec<&Movie>>();
-            vec.get(0)
+            vec.first()
                 .map(|movie| movie.torrents.iter()
                 .map(|movie| PyMovie {
                     hash: movie.hash.clone(),
