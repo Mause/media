@@ -9,6 +9,7 @@ struct ITorrent {
     seeders: u32,
     leechers: i32,
     title: String,
+    category: String,
 }
 
 #[pymethods]
@@ -30,6 +31,7 @@ pub(crate) fn search_leetx(py: Python, term: String) -> Result<Bound<'_, PyAny>,
                     leechers: movie.leeches.unwrap_or(0) as i32,
                     seeders: movie.seeders.unwrap_or(0),
                     magnet: movie.magnet.unwrap_or("".to_string()),
+                    category: "Unknown".to_string(),
                 })
                 .collect::<Vec<ITorrent>>()
         })
@@ -54,6 +56,7 @@ pub fn search_yts(py: Python, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
                     seeders: torrent.seeds,
                     leechers: -1, // movie.peers - movie.seeds,
                     title: format!("{} {}", movie.title, torrent.quality),
+                    category: format!("{} {}", torrent._type, torrent.quality),
                 })
                 .collect::<Vec<ITorrent>>())
         })
