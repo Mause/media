@@ -80,7 +80,7 @@ debug = ["pudb", "pdbpp"]
 cli = [
     "rich>=14.0.0",
 ]
-ty = ['ty']
+ty = ['ty>=0.0.1a17']
 
 [tool.ruff]
 show-fixes = true
