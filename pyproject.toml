@@ -72,6 +72,7 @@ dev = [
     "pytest-cov>=6.1.1",
     "pytest-resource-path>=1.4.0",
     "pytest-alembic>=0.12.1",
+    "pytest-testmon>=2.1.3",
 ]
 debug = ["pudb", "pdbpp"]
 cli = [
@@ -92,7 +93,7 @@ select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 ignore = ["ANN401"]
 
 [tool.pytest.ini_options]
-addopts = "--driver chrome --html report.html --self-contained-html --cov-report html --cov"
+addopts = "--driver chrome --html report.html --self-contained-html --cov-report html --cov --testmon"
 testpaths = ["./rarbg_local/tests"]
 asyncio_default_fixture_loop_scope = "function"
 
