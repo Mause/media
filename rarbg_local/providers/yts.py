@@ -16,7 +16,7 @@ class YtsProvider(MovieProvider):
         imdb_id: ImdbId,
         tmdb_id: TmdbId,
     ) -> AsyncGenerator[ITorrent, None]:
-        for torrent in await search_yts(tmdb_id):
+        for torrent in await search_yts(imdb_id):
             yield ITorrent(
                 seeders=torrent.seeders,
                 source=ProviderSource.YTS,
