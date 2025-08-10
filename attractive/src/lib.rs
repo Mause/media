@@ -7,7 +7,7 @@ use yts_api::Movie;
 struct PyMovie {
     hash: String,
     seeders: u32,
-    leachers: u32,
+    leechers: u32,
     name: String,
 }
 
@@ -22,7 +22,7 @@ impl PyMovie {
 struct PyL33TMovie {
     pub name: String,
     seeders: Option<u32>,
-    leeches: Option<u32>,
+    leechers: Option<u32>,
     magnet: Option<String>,
 }
 
@@ -35,7 +35,7 @@ pub(crate) fn search_leetx(py: Python, term: String) -> Result<Bound<'_, PyAny>,
                 list.into_iter()
                 .map(|movie| PyL33TMovie {
                     name: movie.name,
-                    leeches: movie.leeches.ok(),
+                    leechers: movie.leeches.ok(),
                     seeders: movie.seeders.ok(),
                     magnet: movie.magnet.ok()
                 })
@@ -60,7 +60,7 @@ pub fn search_yts(py: Python, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
                 .map(|movie| PyMovie {
                     hash: movie.hash.clone(),
                     seeders: movie.seeds,
-                    leachers: movie.peers - movie.seeds,
+                    leechers: movie.peers - movie.seeds,
                     name: movie.quality.clone()
                 })
                 .collect::<Vec<PyMovie>>())
