@@ -5,7 +5,7 @@ use yts_api::Movie;
 #[pyclass(get_all)]
 #[derive(Debug)]
 struct ITorrent {
-    hash: String,
+    magnet: String,
     seeders: u32,
     leechers: i32,
     name: String,
@@ -29,7 +29,7 @@ pub(crate) fn search_leetx(py: Python, term: String) -> Result<Bound<'_, PyAny>,
                     name: movie.name,
                     leechers: movie.leeches.unwrap_or(0) as i32,
                     seeders: movie.seeders.unwrap_or(0),
-                    hash: movie.magnet.unwrap_or("".to_string()),
+                    magnet: movie.magnet.unwrap_or("".to_string()),
                 })
                 .collect::<Vec<ITorrent>>()
         })
@@ -50,7 +50,7 @@ pub fn search_yts(py: Python, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
             vec.first()
                 .map(|movie| movie.torrents.iter()
                 .map(|movie| ITorrent {
-                    hash: movie.hash.clone(),
+                    magnet: format!("magnet:{}", torrent.hash),
                     seeders: movie.seeds,
                     leechers: -1, // movie.peers - movie.seeds,
                     name: movie.quality.clone()
