@@ -125,9 +125,7 @@ select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 ignore = ["ANN401"]
 
 [tool.uv.workspace]
-members = [
-  "attractive",
-]
+members = ["attractive"]
 
 [tool.uv.sources]
 attractive = { workspace = true }

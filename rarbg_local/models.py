@@ -12,17 +12,18 @@ class Orm(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-MagnetUri = Annotated[str, StringConstraints(pattern=r'^magnet:')]
+MagnetUri = Annotated[str, StringConstraints(pattern=r"^magnet:")]
 
 
 class ProviderSource(Enum):
-    KICKASS = 'kickass'
-    HORRIBLESUBS = 'horriblesubs'
-    RARBG = 'rarbg'
-    TORRENTS_CSV = 'torrentscsv'
-    NYAA_SI = 'nyaasi'
-    PIRATEBAY = 'piratebay'
-    LUNA = 'luna'
+    KICKASS = "kickass"
+    HORRIBLESUBS = "horriblesubs"
+    RARBG = "rarbg"
+    TORRENTS_CSV = "torrentscsv"
+    NYAA_SI = "nyaasi"
+    PIRATEBAY = "piratebay"
+    YTS = "yts"
+    LUNA = "luna"
 
 
 class EpisodeInfo(BaseModel):
@@ -150,8 +151,8 @@ class TvApiResponse(TvBaseResponse):
 
 
 class MediaType(Enum):
-    SERIES = 'series'
-    MOVIE = 'movie'
+    SERIES = "series"
+    MOVIE = "movie"
 
 
 class SearchResponse(BaseModel):
@@ -190,7 +191,7 @@ class HasRatingKey(BaseModel):
 class PlexMedia(Orm, HasRatingKey):
     title: str
     year: int | None = None
-    type: Literal['movie', 'show']
+    type: Literal["movie", "show"]
     guid: str | None = None
     summary: str | None = None
     thumb: str | None = None
