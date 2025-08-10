@@ -8,7 +8,7 @@ struct ITorrent {
     magnet: String,
     seeders: u32,
     leechers: i32,
-    name: String,
+    title: String,
 }
 
 #[pymethods]
@@ -26,7 +26,7 @@ pub(crate) fn search_leetx(py: Python, term: String) -> Result<Bound<'_, PyAny>,
         .map(|list| {
                 list.into_iter()
                 .map(|movie| ITorrent {
-                    name: movie.name,
+                    title: movie.name,
                     leechers: movie.leeches.unwrap_or(0) as i32,
                     seeders: movie.seeders.unwrap_or(0),
                     magnet: movie.magnet.unwrap_or("".to_string()),
@@ -49,11 +49,11 @@ pub fn search_yts(py: Python, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
             let vec = list.movies.iter().filter(|movie| movie.imdb_code == term).collect::<Vec<&Movie>>();
             vec.first()
                 .map(|movie| movie.torrents.iter()
-                .map(|movie| ITorrent {
+                .map(|torrent| ITorrent {
                     magnet: format!("magnet:{}", torrent.hash),
-                    seeders: movie.seeds,
+                    seeders: torrent.seeds,
                     leechers: -1, // movie.peers - movie.seeds,
-                    name: movie.quality.clone()
+                    title: format!("{} {}", movie.title, torrent.quality),
                 })
                 .collect::<Vec<ITorrent>>())
         })
