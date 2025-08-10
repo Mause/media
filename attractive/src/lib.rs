@@ -4,26 +4,18 @@ use yts_api::Movie;
 
 #[pyclass(get_all)]
 #[derive(Debug)]
-struct PyMovie {
+struct ITorrent {
     hash: String,
     seeders: u32,
-    leechers: u32,
+    leechers: i32,
     name: String,
 }
 
 #[pymethods]
-impl PyMovie {
+impl ITorrent {
     fn __repr__(&self) -> String {
         format!("{self:?}")
     }
-}
-
-#[pyclass(get_all)]
-struct PyL33TMovie {
-    pub name: String,
-    seeders: Option<u32>,
-    leechers: Option<u32>,
-    magnet: Option<String>,
 }
 
 #[pyfunction]
@@ -33,13 +25,13 @@ pub(crate) fn search_leetx(py: Python, term: String) -> Result<Bound<'_, PyAny>,
         .await
         .map(|list| {
                 list.into_iter()
-                .map(|movie| PyL33TMovie {
+                .map(|movie| ITorrent {
                     name: movie.name,
-                    leechers: movie.leeches.ok(),
-                    seeders: movie.seeders.ok(),
-                    magnet: movie.magnet.ok()
+                    leechers: movie.leeches.unwrap_or(0) as i32,
+                    seeders: movie.seeders.unwrap_or(0),
+                    hash: movie.magnet.unwrap_or("".to_string()),
                 })
-                .collect::<Vec<PyL33TMovie>>()
+                .collect::<Vec<ITorrent>>()
         })
             .map_err(|e| pyo3::exceptions::PyValueError::new_err(format!("Error: {e}")))
     })
@@ -57,13 +49,13 @@ pub fn search_yts(py: Python, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
             let vec = list.movies.iter().filter(|movie| movie.imdb_code == term).collect::<Vec<&Movie>>();
             vec.first()
                 .map(|movie| movie.torrents.iter()
-                .map(|movie| PyMovie {
+                .map(|movie| ITorrent {
                     hash: movie.hash.clone(),
                     seeders: movie.seeds,
-                    leechers: movie.peers - movie.seeds,
+                    leechers: -1, // movie.peers - movie.seeds,
                     name: movie.quality.clone()
                 })
-                .collect::<Vec<PyMovie>>())
+                .collect::<Vec<ITorrent>>())
         })
             .map_err(|e| pyo3::exceptions::PyValueError::new_err(format!("Error: {e}")))
     })
@@ -73,7 +65,6 @@ pub fn search_yts(py: Python, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
 fn attractive(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(search_yts, m)?)?;
     m.add_function(wrap_pyfunction!(search_leetx, m)?)?;
-    m.add_class::<PyMovie>()?;
-    m.add_class::<PyL33TMovie>()?;
+    m.add_class::<ITorrent>()?;
     Ok(())
 }
