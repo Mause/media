@@ -35,7 +35,7 @@
     "react-router": "^7.7.0",
     "react-router-dom": "^7.7.0",
     "react-use-websocket": "^4.13.0",
-    "swr": "^2.0.0",
+    "swr": "^2.3.6",
     "typescript": "^5",
     "typescript-string-operations": "^1.6.1",
     "uritemplate": "^0.3.4"

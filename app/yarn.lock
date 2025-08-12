@@ -2911,7 +2911,7 @@ __metadata:
     react-router: "npm:^7.7.0"
     react-router-dom: "npm:^7.7.0"
     react-use-websocket: "npm:^4.13.0"
-    swr: "npm:^2.0.0"
+    swr: "npm:^2.3.6"
     typescript: "npm:^5"
     typescript-eslint: "npm:^8.37.0"
     typescript-string-operations: "npm:^1.6.1"
@@ -6510,15 +6510,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:^2.0.0":
-  version: 2.3.5
-  resolution: "swr@npm:2.3.5"
+"swr@npm:^2.3.6":
+  version: 2.3.6
+  resolution: "swr@npm:2.3.6"
   dependencies:
     dequal: "npm:^2.0.3"
     use-sync-external-store: "npm:^1.4.0"
   peerDependencies:
     react: ^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10/69e8ed61bc2aa326a0cfffa1ca213aa2d61158691e25ec7571259188fdf27087f6a69e94f715847e75178f9573b96250d237daf7e1e91b151755e6e0d69c900c
+  checksum: 10/9948b2d92827c6118b6a66d067fbfd311950d6456180fa7be8ec59aab58634da3d2ba117535ca793c801cf0d676a392c5e48c46f5baf7050b813943d93344388
   languageName: node
   linkType: hard
 
