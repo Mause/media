@@ -681,7 +681,8 @@ export interface components {
       | 'rarbg'
       | 'torrentscsv'
       | 'nyaasi'
-      | 'piratebay';
+      | 'piratebay'
+      | 'palace';
     /** SearchResponse */
     SearchResponse: {
       /** Title */
