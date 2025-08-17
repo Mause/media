@@ -2908,7 +2908,7 @@ __metadata:
     react-dom: "npm:^19.0.0"
     react-error-boundary: "npm:^6.0.0"
     react-promise-suspense: "npm:^0.3.4"
-    react-router: "npm:^7.7.0"
+    react-router: "npm:^7.8.1"
     react-router-dom: "npm:^7.7.0"
     react-use-websocket: "npm:^4.13.0"
     swr: "npm:^2.0.0"
@@ -5845,7 +5845,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:7.8.0, react-router@npm:^7.7.0":
+"react-router@npm:7.8.0":
   version: 7.8.0
   resolution: "react-router@npm:7.8.0"
   dependencies:
@@ -5858,6 +5858,22 @@ __metadata:
     react-dom:
       optional: true
   checksum: 10/bb46458bd15f73749a82d8ba0818d9ea98088378d569fd500aa4477cd08c1e359241b97de579f29e8bc78f8b81c76f660255b27a6249c305e4c66399f073e4df
+  languageName: node
+  linkType: hard
+
+"react-router@npm:^7.8.1":
+  version: 7.8.1
+  resolution: "react-router@npm:7.8.1"
+  dependencies:
+    cookie: "npm:^1.0.1"
+    set-cookie-parser: "npm:^2.6.0"
+  peerDependencies:
+    react: ">=18"
+    react-dom: ">=18"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+  checksum: 10/70ccac82d7e63f7775ea8b13fd48d20b34f078850e80bbf6dfd5a4985c33b41f11c72e23bfdfe90fb073fd08fa2d99205ee6abe123525f2b74addd3454f88423
   languageName: node
   linkType: hard
 
