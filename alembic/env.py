@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 import sqlite3
@@ -9,11 +10,12 @@ from typing import Any, cast
 import backoff
 import sqlalchemy.pool.base
 from sqlalchemy import (
-    engine_from_config,
     event,
     pool,
 )
+from sqlalchemy.engine import Connection
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
@@ -84,7 +86,7 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-def run_migrations_online() -> None:
+async def run_async_migrations() -> None:
     """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine
@@ -92,7 +94,7 @@ def run_migrations_online() -> None:
 
     """
 
-    connectable = engine_from_config(
+    connectable = async_engine_from_config(
         alembic_config,
         prefix='sqlalchemy.',
         poolclass=pool.NullPool,
@@ -116,13 +118,13 @@ def run_migrations_online() -> None:
             )
             dbapi_con.execute('pragma foreign_keys=ON')
 
+        retrying_connect = connectable.connect
+    else:
         retrying_connect = backoff.on_exception(
             backoff.expo, OperationalError, max_time=60
         )(connectable.connect)
-    else:
-        retrying_connect = connectable.connect
 
-    with retrying_connect() as connection:
+    def do_run_migrations(connection: Connection) -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
@@ -132,6 +134,17 @@ def run_migrations_online() -> None:
 
         with context.begin_transaction():
             context.run_migrations()
+
+    async with retrying_connect() as connection:
+        await connection.run_sync(do_run_migrations)
+
+    await connectable.dispose()
+
+
+def run_migrations_online() -> None:
+    """Run migrations in 'online' mode."""
+
+    asyncio.run(run_async_migrations())
 
 
 if context.is_offline_mode():
