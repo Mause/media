@@ -9,6 +9,11 @@ import type { ITorrent } from './select/OptionsComponent';
 import { getMarker, getPrefix, getToken } from './utils';
 import { DisplayTorrent, RouteTitle } from './components';
 
+function get(query: URLSearchParams, key: string): number | undefined {
+  const value = query.get(key);
+  return value ? parseInt(value, 10) : undefined;
+}
+
 function useMessages<T>(initMessage: object) {
   const base = getPrefix();
   const url = `${base}/ws`;
@@ -90,7 +95,12 @@ function Websocket() {
         </ul>
         {_.uniqBy(downloads, 'download').map((message) => (
           <li key={message.download}>
-            <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
+            <DisplayTorrent
+              torrent={message}
+              tmdb_id={String(tmdbId)}
+              season={get(query, 'season')}
+              episode={get(query, 'episode')}
+            />
           </li>
         ))}
       </ul>
