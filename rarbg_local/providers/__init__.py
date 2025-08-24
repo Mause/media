@@ -15,11 +15,11 @@ logger = logging.getLogger(__name__)
 def get_providers() -> list[Provider]:
     # from .horriblesubs import HorriblesubsProvider
     # from .kickass import KickassProvider
+    # from .rarbg import RarbgProvider
     from .nyaasi import NyaaProvider
     from .piratebay import PirateBayProvider
-
-    # from .rarbg import RarbgProvider
     from .torrents_csv import TorrentsCsvProvider
+    from .yts import YtsProvider
 
     return [
         # HorriblesubsProvider(),
@@ -28,6 +28,7 @@ def get_providers() -> list[Provider]:
         TorrentsCsvProvider(),
         NyaaProvider(),
         PirateBayProvider(),
+        YtsProvider(),
     ]
 
 
