@@ -1,0 +1,1289 @@
+{
+  "props": {
+    "pageProps": {
+      "initialCinemaStore": {
+        "selectedCinemaIds": [],
+        "locality": "melbourne"
+      },
+      "layoutProps": {
+        "banner": {
+          "desktopAlt": "Pride \u0026 Prejudice [20th Anniversary]",
+          "desktopImage": "Anniversary-PrideAndPrejudice-DesktopHeader-1680x120.jpg",
+          "mobileAlt": "Pride \u0026 Prejudice [20th Anniversary]",
+          "mobileImage": "Anniversary-PrideAndPrejudice-480x75.jpg",
+          "link": "https://www.palacecinemas.com.au/movies/pride-and-prejudice-20th-anniversary",
+          "bannerId": 468
+        },
+        "menu": [
+          {
+            "title": "Quick Links",
+            "items": [
+              {
+                "label": "Sessions",
+                "href": "/session-times",
+                "footer": null,
+                "megaMenu": null,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Movies",
+                "href": "/movies",
+                "footer": null,
+                "megaMenu": null,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Events",
+                "href": "/events",
+                "footer": null,
+                "megaMenu": null,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Festivals",
+                "href": "/festivals",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "FAQs",
+                "href": "/faqs",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Cinemas",
+                "href": "/cinemas",
+                "footer": false,
+                "megaMenu": false,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Home Cinema",
+                "href": "https://homecinema.palacecinemas.com.au/",
+                "footer": false,
+                "megaMenu": false,
+                "sideMenu": false,
+                "isExternal": null
+              },
+              {
+                "label": "Platinum",
+                "href": "/platinum",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Movie Club",
+                "href": "/movie-club",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Offers",
+                "href": "/offers",
+                "footer": null,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Functions",
+                "href": "/functions",
+                "footer": null,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Our Story",
+                "href": "/our-story",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Contact Us",
+                "href": "/contact-us",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Careers",
+                "href": "/careers",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Advertising \u0026 Sponsorship",
+                "href": "/advertising-sponsorship",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Classifications",
+                "href": "/classifications",
+                "footer": true,
+                "megaMenu": false,
+                "sideMenu": false,
+                "isExternal": null
+              },
+              {
+                "label": "Audio Description \u0026 Closed Caption",
+                "href": "/audio-description-closed-caption",
+                "footer": true,
+                "megaMenu": false,
+                "sideMenu": false,
+                "isExternal": null
+              },
+              {
+                "label": "Retrieve Your Booking",
+                "href": "/self-service-booking",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Ticket Swaps",
+                "href": "/swap",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              }
+            ]
+          },
+          {
+            "title": "Functions",
+            "items": [
+              {
+                "label": "Private Screenings",
+                "href": "/functions/private-screenings",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true
+              },
+              {
+                "label": " Group Bookings ",
+                "href": "/functions/group-bookings",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true
+              },
+              {
+                "label": " Fundraising Events ",
+                "href": "/functions/fundraising-events",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true
+              },
+              {
+                "label": " Corporate Occasions ",
+                "href": "/functions/corporate-occasions",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true
+              },
+              {
+                "label": "Children's Parties",
+                "href": "/functions/childrens-parties",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true
+              },
+              {
+                "label": "School \u0026 Holiday Programs ",
+                "href": "/functions/school-holiday-programs",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true
+              },
+              {
+                "label": "Big Screen Gaming",
+                "href": "/functions/big-screen-gaming",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true
+              }
+            ]
+          },
+          {
+            "title": "Shop",
+            "items": [
+              {
+                "label": "Gift Cards",
+                "href": "https://memberships.palacecinemas.com.au/gift-card-purchase/",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": true
+              },
+              {
+                "label": "Wine Glasses",
+                "href": "https://www.palacecinemas.com.au/shop?product-category=Wine%20Glasses",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": null
+              },
+              {
+                "label": "Corporate Sales - New!",
+                "href": "https://memberships.palacecinemas.com.au/corporate",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true,
+                "isExternal": true
+              },
+              {
+                "label": "Film Box Sets",
+                "href": "/shop?product-category=Film%20Box%20Sets",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true
+              },
+              {
+                "label": "Palace Films DVD",
+                "href": "/shop?product-category=Palace%20Films%20DVD",
+                "footer": true,
+                "megaMenu": true,
+                "sideMenu": true
+              }
+            ]
+          }
+        ],
+        "locality": "melbourne"
+      },
+      "movie": {
+        "movieId": "HO00018771",
+        "title": "The Phoenician Scheme",
+        "slug": "the-phoenician-scheme",
+        "trailerUrl": "https://www.youtube.com/watch?v=q8Kv231YBns\u0026ab_channel=UniversalPicturesAustralia",
+        "director": [
+          {
+            "ID": "1",
+            "FirstName": "Wes",
+            "LastName": "Anderson",
+            "PersonType": "Director",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          }
+        ],
+        "cast": [
+          {
+            "ID": "0000000017",
+            "LastName": "Hanks",
+            "FirstName": "Tom",
+            "PersonType": "Actor",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          },
+          {
+            "ID": "0000000153",
+            "LastName": "Cranston",
+            "FirstName": "Bryan",
+            "PersonType": "Actor",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          },
+          {
+            "ID": "0000000205",
+            "LastName": "Cumberbatch",
+            "FirstName": "Benedict",
+            "PersonType": "Actor",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          },
+          {
+            "ID": "0000001029",
+            "LastName": "Amalric",
+            "FirstName": "Mathieu",
+            "PersonType": "Actor",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          },
+          {
+            "ID": "0000001197",
+            "LastName": "Cera",
+            "FirstName": "Michael",
+            "PersonType": "Actor",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          },
+          {
+            "ID": "0000001269",
+            "LastName": "Johansson",
+            "FirstName": "Scarlett",
+            "PersonType": "Actor",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          },
+          {
+            "ID": "0000001610",
+            "LastName": "Ahmed",
+            "FirstName": "Riz",
+            "PersonType": "Actor",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          },
+          {
+            "ID": "0000003071",
+            "LastName": "Del Toro",
+            "FirstName": "Benicio",
+            "PersonType": "Actor",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          },
+          {
+            "ID": "0000004032",
+            "LastName": "Friend",
+            "FirstName": "Rupert",
+            "PersonType": "Actor",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          },
+          {
+            "ID": "0000005791",
+            "LastName": "Wright",
+            "FirstName": "Jeffrey",
+            "PersonType": "Actor",
+            "UrlToDetails": "",
+            "UrlToPicture": ""
+          },
+          {
+            "ID": "0000011520",
+            "LastName": "Threapleton",
+            "FirstName": "Mia",
+            "PersonType": "Actor",
+            "UrlToDetails": null,
+            "UrlToPicture": null
+          },
+          {
+            "ID": "HO00001037",
+            "LastName": "Ayoade",
+            "FirstName": "Richard",
+            "PersonType": "Actor",
+            "UrlToDetails": null,
+            "UrlToPicture": null
+          },
+          {
+            "ID": "HO00002173",
+            "LastName": "Davis",
+            "FirstName": "Hope",
+            "PersonType": "Actor",
+            "UrlToDetails": null,
+            "UrlToPicture": null
+          }
+        ],
+        "genreId": ["HO00000006", "HO00000009"],
+        "genreName": ["Comedy", "Drama"],
+        "runTime": "101 MIN",
+        "language": null,
+        "rating": "M",
+        "htmlContent": null,
+        "synopsis": "Oscar-winning auteur, Wes Anderson, is back with the stylish, star-studded espionage black comedy, THE PHOENICIAN SCHEME; penned by Anderson and dreamed up alongside frequent co-writer and collaborator Roman Coppola (Moonrise Kingdom, Isle of Dogs, The Darjeeling Limited).\n\nPromising Anderson’s signature visual style and distinctive storytelling, the oddball journey is an absurdist and action-packed tale of espionage following a complex father-daughter relationship within a family business.\n\nOscar winner Benicio del Toro (Traffic) stars as a derring-do millionaire called Zsa-zsa Korda, who has survived six plane crashes and fathered nine sons and one daughter, a nun called Liesel (Mia Threapleton). With tutor Bjorn Lund (Michael Cera), they embark on a quest to secure the future of Korda’s business ventures, and soon become the target of scheming tycoons, foreign terrorists and determined assassins.\n\nPremiering at the 2025 Cannes Film Festival, Anderson’s thirteenth film boasts a stacked A-list ensemble cast of longtime Anderson favourites and several newcomers, including, Tom Hanks, Scarlett Johansson, Rupert Friend, Richard Ayoade, Bryan Cranston, Riz Ahmed, Mathieu Amalric, Jeffrey Wright, Hope Davis, and a generously hairy Benedict Cumberbatch.",
+        "shortSynopsis": "Wes Anderson's star-studded espionage black comedy, THE PHOENICIAN SCHEME. The story of a family and a family business, starring Benicio del Toro.",
+        "additionalDetail": null,
+        "isRepertory": false,
+        "isArtsOnScreen": false,
+        "isAltContent": false,
+        "releaseDateUtc": "2025-05-29T00:00:00.000Z",
+        "accentColour": "#725692",
+        "logo": "ThePhoenecianScheme_FilmLogo_1000x253.png",
+        "logoAlt": "The Phoenician Scheme",
+        "logoMaxHeight": null,
+        "logoMaxWidth": "600",
+        "logoMobileMaxHeight": "75",
+        "logoTopMobileSpacing": null,
+        "heroImage": "ThePhoenecianScheme_KeyArtBanner_1680x560 FLIPPED.jpg",
+        "heroImageAlt": "The Phoenician Scheme",
+        "participatingCinemas": [
+          {
+            "title": "Palace Balwyn Cinema",
+            "slug": "palace-balwyn"
+          },
+          {
+            "title": "Palace Brighton Bay Cinema",
+            "slug": "cinemaspalace-brighton-bay"
+          },
+          {
+            "title": "Palace Cinema Como",
+            "slug": "palace-cinema-como"
+          },
+          {
+            "title": "Palace Penny Lane Cinema",
+            "slug": "palace-penny-lane"
+          },
+          {
+            "title": "Palace Westgarth Cinema",
+            "slug": "palace-westgarth"
+          },
+          {
+            "title": "Pentridge Cinema",
+            "slug": "pentridge-cinema"
+          },
+          {
+            "title": "The Kino Cinema Melbourne",
+            "slug": "the-kino-melbourne"
+          },
+          {
+            "title": "Palace Regent Cinema Ballarat",
+            "slug": "regent-ballarat"
+          },
+          {
+            "title": "Palace Central Cinema Sydney",
+            "slug": "palace-central-sydney"
+          },
+          {
+            "title": "Palace Norton Street Cinema",
+            "slug": "palace-norton-street"
+          },
+          {
+            "title": "Palace Barracks Brisbane",
+            "slug": "palace-barracks-brisbane"
+          },
+          {
+            "title": "Palace James St Cinema",
+            "slug": "palace-james-st"
+          },
+          {
+            "title": "Palace Byron Bay Cinema",
+            "slug": "palace-byron-bay"
+          },
+          {
+            "title": "Palace Electric Cinema Canberra",
+            "slug": "palace-electric-cinema"
+          },
+          {
+            "title": "Palace Raine Square Perth",
+            "slug": "palace-raine-square"
+          }
+        ],
+        "reviews": [],
+        "awards": [],
+        "mediaInserts": [],
+        "metaDescription": "Wes Anderson is back with the stylish, star-studded espionage comedy, THE PHOENICIAN SCHEME. Book tickets now at Palace Cinemas.",
+        "metaTitle": "The Phoenician Scheme | Palace Cinemas ",
+        "metaImage": "ThePheonicianScheme_1680x560Banner.jpg",
+        "metaJsonLd": {
+          "url": "https://www.palacecinemas.com.au/movies/the-phoenician-scheme",
+          "name": "The Phoenician Scheme",
+          "@type": "Movie",
+          "actor": [
+            {
+              "name": "Benicio Del Toro",
+              "@type": "Person"
+            },
+            {
+              "name": "Michael Cera",
+              "@type": "Person"
+            },
+            {
+              "name": "Bill Murray",
+              "@type": "Person"
+            },
+            {
+              "name": "Tilda Swinton",
+              "@type": "Person"
+            },
+            {
+              "name": "Jeff Goldblum",
+              "@type": "Person"
+            }
+          ],
+          "genre": ["Comedy", "Drama", "Espionage"],
+          "image": "https://www.palacecinemas.com.au/poster/HO00018771",
+          "trailer": {
+            "name": "The Phoenician Scheme - Official Trailer",
+            "@type": "VideoObject",
+            "embedUrl": "https://www.youtube.com/embed/GEuMnPl2WI4?si=r4bJPPeYvaLY34-R",
+            "uploadDate": "2025-04-07T12:00:00+10:00",
+            "description": "Watch the trailer for Wes Anderson's The Phoenician Scheme – a star-studded espionage comedy.",
+            "thumbnailUrl": "https://i3.ytimg.com/vi/GEuMnPl2WI4/maxresdefault.jpg"
+          },
+          "@context": "https://schema.org",
+          "director": {
+            "name": "Wes Anderson",
+            "@type": "Person"
+          },
+          "duration": "PT1H1M",
+          "description": "Wes Anderson is back with the stylish, star-studded espionage comedy, THE PHOENICIAN SCHEME.",
+          "contentRating": "CTC",
+          "datePublished": "2025-05-29"
+        }
+      },
+      "isPreviewMode": null,
+      "sessions": [
+        {
+          "movieId": "HO00018771",
+          "slug": "the-phoenician-scheme",
+          "title": "The Phoenician Scheme",
+          "trailerUrl": "https://www.youtube.com/watch?v=q8Kv231YBns\u0026ab_channel=UniversalPicturesAustralia",
+          "rating": "M",
+          "synopsis": "Oscar-winning auteur, Wes Anderson, is back with the stylish, star-studded espionage black comedy, THE PHOENICIAN SCHEME; penned by Anderson and dreamed up alongside frequent co-writer and collaborator Roman Coppola (Moonrise Kingdom, Isle of Dogs, The Darjeeling Limited).\n\nPromising Anderson’s signature visual style and distinctive storytelling, the oddball journey is an absurdist and action-packed tale of espionage following a complex father-daughter relationship within a family business.\n\nOscar winner Benicio del Toro (Traffic) stars as a derring-do millionaire called Zsa-zsa Korda, who has survived six plane crashes and fathered nine sons and one daughter, a nun called Liesel (Mia Threapleton). With tutor Bjorn Lund (Michael Cera), they embark on a quest to secure the future of Korda’s business ventures, and soon become the target of scheming tycoons, foreign terrorists and determined assassins.\n\nPremiering at the 2025 Cannes Film Festival, Anderson’s thirteenth film boasts a stacked A-list ensemble cast of longtime Anderson favourites and several newcomers, including, Tom Hanks, Scarlett Johansson, Rupert Friend, Richard Ayoade, Bryan Cranston, Riz Ahmed, Mathieu Amalric, Jeffrey Wright, Hope Davis, and a generously hairy Benedict Cumberbatch.",
+          "genreNames": ["Comedy", "Drama"],
+          "releaseDateUtc": "2025-05-29T00:00:00.000Z",
+          "sessions": [
+            {
+              "date": "2025-07-22T18:10:00.000Z",
+              "sessionId": "189933",
+              "cinemaId": "159",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": true,
+              "noFreeTickets": false,
+              "sessionInfo": ["Audio Description Session", "Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-22T20:30:00.000Z",
+              "sessionId": "338640",
+              "cinemaId": "129",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-22T20:45:00.000Z",
+              "sessionId": "249871",
+              "cinemaId": "171",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": ["Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-22T20:45:00.000Z",
+              "sessionId": "299234",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-23T10:40:00.000Z",
+              "sessionId": "263089",
+              "cinemaId": "121",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-23T10:45:00.000Z",
+              "sessionId": "156927",
+              "cinemaId": "200",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": true,
+              "noFreeTickets": false,
+              "sessionInfo": ["Audio Description Session", "Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-23T11:00:00.000Z",
+              "sessionId": "249881",
+              "cinemaId": "171",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": ["Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-23T15:30:00.000Z",
+              "sessionId": "299407",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-23T20:30:00.000Z",
+              "sessionId": "338641",
+              "cinemaId": "129",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-23T20:40:00.000Z",
+              "sessionId": "249902",
+              "cinemaId": "171",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": ["Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-23T20:45:00.000Z",
+              "sessionId": "299424",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-24T11:20:00.000Z",
+              "sessionId": "299500",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-24T13:40:00.000Z",
+              "sessionId": "259157",
+              "cinemaId": "300",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": true,
+              "noFreeTickets": false,
+              "sessionInfo": ["Audio Description Session"]
+            },
+            {
+              "date": "2025-07-24T15:40:00.000Z",
+              "sessionId": "249967",
+              "cinemaId": "171",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-24T20:40:00.000Z",
+              "sessionId": "189963",
+              "cinemaId": "159",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": ["Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-24T20:45:00.000Z",
+              "sessionId": "299504",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-24T20:45:00.000Z",
+              "sessionId": "338868",
+              "cinemaId": "129",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": null,
+              "audioDescription": null,
+              "noFreeTickets": null,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-25T11:10:00.000Z",
+              "sessionId": "299671",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-25T13:00:00.000Z",
+              "sessionId": "259186",
+              "cinemaId": "300",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": true,
+              "noFreeTickets": false,
+              "sessionInfo": ["Audio Description Session"]
+            },
+            {
+              "date": "2025-07-25T20:30:00.000Z",
+              "sessionId": "299683",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-25T20:45:00.000Z",
+              "sessionId": "189970",
+              "cinemaId": "159",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": ["Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-25T20:45:00.000Z",
+              "sessionId": "338838",
+              "cinemaId": "129",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": null,
+              "audioDescription": null,
+              "noFreeTickets": null,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-26T11:20:00.000Z",
+              "sessionId": "299493",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-26T15:50:00.000Z",
+              "sessionId": "250052",
+              "cinemaId": "171",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-26T20:40:00.000Z",
+              "sessionId": "189979",
+              "cinemaId": "159",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": ["Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-26T20:45:00.000Z",
+              "sessionId": "299474",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-26T20:45:00.000Z",
+              "sessionId": "338809",
+              "cinemaId": "129",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": null,
+              "audioDescription": null,
+              "noFreeTickets": null,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-27T10:45:00.000Z",
+              "sessionId": "299642",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-27T20:40:00.000Z",
+              "sessionId": "299641",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-27T20:45:00.000Z",
+              "sessionId": "189984",
+              "cinemaId": "159",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": true,
+              "audioDescription": true,
+              "noFreeTickets": false,
+              "sessionInfo": [
+                "Audio Description Session",
+                "Closed Captioning Available",
+                "Hearing Impaired"
+              ]
+            },
+            {
+              "date": "2025-07-27T20:45:00.000Z",
+              "sessionId": "338766",
+              "cinemaId": "129",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": null,
+              "audioDescription": null,
+              "noFreeTickets": null,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-28T11:00:00.000Z",
+              "sessionId": "299587",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-28T13:00:00.000Z",
+              "sessionId": "190067",
+              "cinemaId": "159",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": ["Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-28T13:30:00.000Z",
+              "sessionId": "259277",
+              "cinemaId": "300",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": true,
+              "noFreeTickets": false,
+              "sessionInfo": ["Audio Description Session"]
+            },
+            {
+              "date": "2025-07-28T15:45:00.000Z",
+              "sessionId": "250100",
+              "cinemaId": "171",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-28T20:30:00.000Z",
+              "sessionId": "299599",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-28T20:45:00.000Z",
+              "sessionId": "338736",
+              "cinemaId": "129",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": null,
+              "audioDescription": null,
+              "noFreeTickets": null,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-29T11:20:00.000Z",
+              "sessionId": "299544",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-29T13:00:00.000Z",
+              "sessionId": "190070",
+              "cinemaId": "159",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": true,
+              "audioDescription": true,
+              "noFreeTickets": false,
+              "sessionInfo": [
+                "Audio Description Session",
+                "Closed Captioning Available",
+                "Hearing Impaired"
+              ]
+            },
+            {
+              "date": "2025-07-29T13:30:00.000Z",
+              "sessionId": "259311",
+              "cinemaId": "300",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": true,
+              "noFreeTickets": false,
+              "sessionInfo": ["Audio Description Session"]
+            },
+            {
+              "date": "2025-07-29T15:40:00.000Z",
+              "sessionId": "250133",
+              "cinemaId": "171",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-29T20:40:00.000Z",
+              "sessionId": "189997",
+              "cinemaId": "159",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": ["Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-29T20:45:00.000Z",
+              "sessionId": "299548",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-29T20:45:00.000Z",
+              "sessionId": "338704",
+              "cinemaId": "129",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": null,
+              "audioDescription": null,
+              "noFreeTickets": null,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-30T11:00:00.000Z",
+              "sessionId": "299713",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-30T13:00:00.000Z",
+              "sessionId": "190091",
+              "cinemaId": "159",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": true,
+              "audioDescription": true,
+              "noFreeTickets": false,
+              "sessionInfo": [
+                "Audio Description Session",
+                "Closed Captioning Available",
+                "Hearing Impaired"
+              ]
+            },
+            {
+              "date": "2025-07-30T13:30:00.000Z",
+              "sessionId": "259336",
+              "cinemaId": "300",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": true,
+              "noFreeTickets": false,
+              "sessionInfo": ["Audio Description Session"]
+            },
+            {
+              "date": "2025-07-30T15:40:00.000Z",
+              "sessionId": "250169",
+              "cinemaId": "171",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-30T20:40:00.000Z",
+              "sessionId": "190002",
+              "cinemaId": "159",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": ["Hearing Impaired"]
+            },
+            {
+              "date": "2025-07-30T20:45:00.000Z",
+              "sessionId": "338659",
+              "cinemaId": "129",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": null,
+              "audioDescription": null,
+              "noFreeTickets": null,
+              "sessionInfo": []
+            },
+            {
+              "date": "2025-07-30T21:00:00.000Z",
+              "sessionId": "299721",
+              "cinemaId": "120",
+              "isSpecialEvent": false,
+              "isPlatinum": false,
+              "displayAttributeText": null,
+              "displayAttributeColour": null,
+              "saleStatus": null,
+              "closeCaption": false,
+              "audioDescription": false,
+              "noFreeTickets": false,
+              "sessionInfo": []
+            }
+          ],
+          "runTime": "101 MIN",
+          "nowShowingOrder": 171
+        }
+      ],
+      "_sentryTraceData": "7d3d5822d9d34e0692263f718881e36a-a7f50e758606ea01-1",
+      "_sentryBaggage": "sentry-environment=production,sentry-release=K1Q-qqNvX7peM4azrbOaE,sentry-public_key=7852819b84981cff861371981065cf89,sentry-trace_id=7d3d5822d9d34e0692263f718881e36a"
+    },
+    "__N_SSP": true
+  },
+  "page": "/movies/[slug]",
+  "query": {
+    "slug": "the-phoenician-scheme"
+  },
+  "buildId": "K1Q-qqNvX7peM4azrbOaE",
+  "isFallback": false,
+  "gssp": true,
+  "scriptLoader": []
+}
