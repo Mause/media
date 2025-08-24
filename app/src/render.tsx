@@ -28,20 +28,8 @@ import type {
   Torrents,
   EpisodeResponse,
 } from './ParentComponent';
-import { ContextMenu, Loading, MLink } from './components';
+import { OpenIMDB, ContextMenu, Loading, MLink } from './components';
 import type { paths } from './schema';
-
-function OpenIMDB({ download }: { download: { imdb_id: string } }) {
-  return (
-    <MenuItem
-      component="a"
-      href={`https://www.imdb.com/title/${download.imdb_id}`}
-      target="_blank"
-    >
-      Open in IMDB
-    </MenuItem>
-  );
-}
 
 const path = '/api/plex/{thing_type}/{tmdb_id}' as const;
 type PlexResponse = GetResponse<paths[typeof path]>;
