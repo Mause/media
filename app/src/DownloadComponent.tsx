@@ -24,10 +24,10 @@ export function DownloadComponent() {
   console.log({ done, error });
 
   let res: ReactNode;
-  if (done) {
-    res = <Navigate to="/" />;
-  } else if (error) {
+  if (error) {
     res = <DisplayError error={error} />;
+  } else if (done) {
+    res = <Navigate to="/" />;
   } else {
     res = <Loading loading />;
   }
