@@ -42,6 +42,8 @@ class Session(Base):
         alias_generator=mk("Session_"),
     )
     index: int
+    movie_code: str
+    url: Annotated[str, Field(alias='Session_URL')]
 
 
 class Schedule(Base):
@@ -73,12 +75,14 @@ class LunaProvider(MovieProvider):
         )
         if not movie:
             return
-        for item in schedule.sessions:
+        for session in schedule.sessions:
+            if session.movie_code != movie.code:
+                continue
             yield ITorrent(
-                title=f"{movie.name} - Session {item.index}",
+                title=f"{movie.name} - Session {session.index}",
                 source=ProviderSource.LUNA,
                 seeders=1,
-                download=item.url,
+                download=session.url,
                 category="Movie",
             )
 
