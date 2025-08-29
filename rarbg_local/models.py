@@ -34,7 +34,7 @@ class ITorrent(BaseModel):
     source: ProviderSource
     title: str
     seeders: int
-    download: MagnetUri
+    download: MagnetUri | AnyUrl
     category: str
     episode_info: EpisodeInfo | None = None
 
