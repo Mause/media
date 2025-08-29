@@ -1,12 +1,16 @@
 import json
-from typing import Annotated, AsyncGenerator, Callable
+from datetime import datetime, timezone
+from os.path import exists
+from typing import Annotated, AsyncGenerator, Callable, Generator
 
 import aiohttp
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, PlainSerializer
+from pydantic.types import AwareDatetime
 
 from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 
+fmt = "%Y%m%dT%H%M%S"
 url = "http://luna-leederville.3cx.com.au:4025/VenueSchedule.json"
 
 
@@ -37,6 +41,13 @@ class Movie(Base):
     code: str
 
 
+WeirdDateTime = Annotated[
+    AwareDatetime,
+    BeforeValidator(lambda x: datetime.strptime(x, fmt).astimezone(tz=timezone.utc)),
+    PlainSerializer(lambda x: x.strftime(fmt)),
+]
+
+
 class Session(Base):
     model_config = ConfigDict(
         alias_generator=mk("Session_"),
@@ -44,6 +55,8 @@ class Session(Base):
     index: int
     movie_code: str
     url: Annotated[str, Field(alias='Session_URL')]
+    date_time: WeirdDateTime
+    end_time: WeirdDateTime
 
 
 class Schedule(Base):
@@ -51,13 +64,15 @@ class Schedule(Base):
     movies: list[Movie]
 
 
-async def get_venue_schedule() -> Schedule:
+async def get_raw() -> dict:
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             response.raise_for_status()
-            return Schedule.model_validate(
-                await response.json(content_type=None, encoding='utf-16-le')
-            )
+            return await response.json(content_type=None, encoding='utf-16-le')
+
+
+async def get_venue_schedule() -> Schedule:
+    return Schedule.model_validate(await get_raw())
 
 
 class LunaProvider(MovieProvider):
@@ -65,6 +80,12 @@ class LunaProvider(MovieProvider):
         self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
         schedule = await get_venue_schedule()
+        for item in self.process(schedule, imdb_id, tmdb_id):
+            yield item
+
+    def process(
+        self, schedule: Schedule, imdb_id: ImdbId, tmdb_id: TmdbId
+    ) -> Generator[ITorrent, None, None]:
         movie = next(
             (
                 m
@@ -92,13 +113,23 @@ class LunaProvider(MovieProvider):
 
 
 async def main() -> None:
-    with open('luna_venue_schedule.json', 'r') as f:
-        Schedule.model_validate_json(f.read())
+    filename = 'luna_venue_schedule.json'
 
-    schedule = await get_venue_schedule()
+    if exists(filename):
+        with open(filename, 'r') as f:
+            schedule = Schedule.model_validate_json(f.read())
+            prov = LunaProvider()
+            breakpoint()
+            for torrent in prov.process(
+                schedule, imdb_id='tt31176520', tmdb_id='648878'
+            ):
+                print(torrent)
 
-    with open('luna_venue_schedule.json', 'w') as f:
-        json.dump(schedule, f, indent=2)
+    else:
+        schedule = await get_raw()
+
+        with open(filename, 'w') as f:
+            json.dump(schedule, f, indent=2)
 
 
 if __name__ == "__main__":
