@@ -49,10 +49,13 @@ class Schedule(Base):
     movies: list[Movie]
 
 
-async def get_venue_schedule() -> dict:
+async def get_venue_schedule() -> Schedule:
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
-            return await response.json(content_type=None, encoding='utf-16-le')
+            response.raise_for_status()
+            return Schedule.model_validate(
+                await response.json(content_type=None, encoding='utf-16-le')
+            )
 
 
 class LunaProvider(MovieProvider):
@@ -60,13 +63,22 @@ class LunaProvider(MovieProvider):
         self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
         schedule = await get_venue_schedule()
-        for item in schedule['Items']:
-            title = item['Title']
+        movie = next(
+            (
+                m
+                for m in schedule.movies
+                if m.imdb_id == imdb_id or m.tmdb_id == tmdb_id
+            ),
+            None,
+        )
+        if not movie:
+            return
+        for item in schedule.sessions:
             yield ITorrent(
-                title=title,
+                title=f"{movie.name} - Session {item.index}",
                 source=ProviderSource.LUNA,
                 seeders=1,
-                download=f"http://luna-leederville.3cx.com.au:4025/Download/{item['Id']}",
+                download=item.url,
                 category="Movie",
             )
 
