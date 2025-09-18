@@ -1949,7 +1949,15 @@
             "title": "Title"
           },
           "imdb_id": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^tt\\d+$"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Imdb Id"
           }
         },
@@ -2215,7 +2223,8 @@
           "imdb_id": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+		"pattern": "^tt\\d+$"
               },
               {
                 "type": "null"
