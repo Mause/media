@@ -2224,7 +2224,7 @@
             "anyOf": [
               {
                 "type": "string",
-		"pattern": "^tt\\d+$"
+                "pattern": "^tt\\d+$"
               },
               {
                 "type": "null"
