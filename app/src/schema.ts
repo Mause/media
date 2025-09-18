@@ -636,7 +636,7 @@ export interface components {
       /** Title */
       title: string;
       /** Imdb Id */
-      imdb_id: string;
+      imdb_id: string | null;
     };
     /** PlexMedia */
     PlexMedia: {
