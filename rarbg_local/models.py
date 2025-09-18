@@ -140,7 +140,7 @@ class TvBaseResponse(BaseModel):
 
 
 class TvResponse(TvBaseResponse):
-    imdb_id: str | None
+    imdb_id: ImdbId | None
     title: str
 
 
@@ -166,7 +166,7 @@ class DownloadResponse(Orm):
 
 class MovieResponse(BaseModel):
     title: str
-    imdb_id: str
+    imdb_id: ImdbId | None
 
 
 class InnerTorrent(BaseModel):
