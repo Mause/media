@@ -1,7 +1,4 @@
 {
   "editor.formatOnSave": true,
-  "editor.tabSize": 2,
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
-  "C_Cpp.errorSquiggles": "Disabled",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "editor.tabSize": 2
 }
