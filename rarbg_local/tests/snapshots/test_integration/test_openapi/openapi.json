@@ -2083,7 +2083,8 @@
           "rarbg",
           "torrentscsv",
           "nyaasi",
-          "piratebay"
+          "piratebay",
+          "palace"
         ],
         "title": "ProviderSource"
       },
