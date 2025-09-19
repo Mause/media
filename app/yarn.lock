@@ -357,6 +357,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.28.3":
+  version: 7.28.4
+  resolution: "@babel/runtime@npm:7.28.4"
+  checksum: 10/6c9a70452322ea80b3c9b2a412bcf60771819213a67576c8cec41e88a95bb7bf01fc983754cda35dc19603eef52df22203ccbf7777b9d6316932f9fb77c25163
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.27.1":
   version: 7.27.1
   resolution: "@babel/template@npm:7.27.1"
@@ -1241,18 +1248,18 @@ __metadata:
   linkType: hard
 
 "@mui/icons-material@npm:^7":
-  version: 7.3.1
-  resolution: "@mui/icons-material@npm:7.3.1"
+  version: 7.3.2
+  resolution: "@mui/icons-material@npm:7.3.2"
   dependencies:
-    "@babel/runtime": "npm:^7.28.2"
+    "@babel/runtime": "npm:^7.28.3"
   peerDependencies:
-    "@mui/material": ^7.3.1
+    "@mui/material": ^7.3.2
     "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/807b51f3457e173fd5b1d0e6b926afb6c63d7261a1ac6c662036558731970e65da0aac6e7deb33b2a09107f7e7440bccf0c8d7d37bcfea77d2b1e8b14937180c
+  checksum: 10/a85acb7ba171e92c776c2c7c9d1d398a255f337e00dc4c98bbbac9586645a307bd44256e415cb3b8a70bed36f6a8c3f333fa8b2945bcc3ac5a15e18c0306ae3e
   languageName: node
   linkType: hard
 
