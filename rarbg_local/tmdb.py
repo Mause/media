@@ -141,7 +141,7 @@ async def get_tv_imdb_id(tv_id: TmdbId) -> ImdbId:
 
 class ExternalIds(BaseModel):
     id: TmdbId
-    imdb_id: ImdbId
+    imdb_id: ImdbId | None
 
 
 class TvExternalIds(ExternalIds):
