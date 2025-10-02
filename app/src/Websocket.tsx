@@ -68,8 +68,7 @@ function Websocket() {
   return (
     <RouteTitle title="Websocket">
       <p>
-        {tmdbId}
-        {' '}-{' '}
+        {tmdbId} -{' '}
         {query.has('season')
           ? getMarker({
               season: parseInt(query.get('season')!, 10),
@@ -77,9 +76,8 @@ function Websocket() {
                 ? parseInt(query.get('episode')!, 10)
                 : undefined,
             })
-          : 'No season'}
-        {' '}-{' '}
-        {readyState === ReadyState.CONNECTING && 'Connecting...'}
+          : 'No season'}{' '}
+        - {readyState === ReadyState.CONNECTING && 'Connecting...'}
         {readyState === ReadyState.OPEN && 'Connected'}
         {readyState === ReadyState.CLOSING && 'Disconnecting...'}
         {readyState === ReadyState.CLOSED && 'Disconnected'}
