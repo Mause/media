@@ -91,7 +91,7 @@ function Websocket() {
             </li>
           ))}
         </ul>
-        {_.uniqBy(downloads, 'download').map((message) => (
+        {_.sortBy(_.uniqBy(downloads, 'download'), 'seeders').map((message) => (
           <li key={message.download}>
             <DisplayTorrent
               torrent={message}
