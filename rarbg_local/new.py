@@ -530,7 +530,7 @@ def create_app() -> FastAPI:
         dependencies=[security],
     )
     app.include_router(root, prefix='')
-    app.openapi = lambda: custom_openapi(app)
+    app.openapi = lambda: custom_openapi(app)  # type: ignore[method-assign]
 
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:
