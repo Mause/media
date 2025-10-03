@@ -5,6 +5,15 @@
     {
       "type": "missing",
       "loc": [
+        "request_type"
+      ],
+      "msg": "Field required",
+      "input": {},
+      "url": "https://errors.pydantic.dev/2.11/v/missing"
+    },
+    {
+      "type": "missing",
+      "loc": [
         "authorization"
       ],
       "msg": "Field required",
