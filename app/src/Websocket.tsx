@@ -7,14 +7,18 @@ import * as _ from 'lodash-es';
 
 import type { ITorrent } from './select/OptionsComponent';
 import { getMarker, getPrefix, getToken } from './utils';
+import type { components } from './schema';
 import { DisplayTorrent, RouteTitle } from './components';
+
+type BaseRequest = components['schemas']['BaseRequest'];
+type StreamArgs = components['schemas']['StreamArgs'];
 
 function get(query: URLSearchParams, key: string): number | undefined {
   const value = query.get(key);
   return value ? parseInt(value, 10) : undefined;
 }
 
-function useMessages<T>(initMessage: object) {
+function useMessages<T>(initMessage: BaseRequest) {
   const base = getPrefix();
   const url = `${base}/ws`;
 
@@ -36,25 +40,32 @@ function useMessages<T>(initMessage: object) {
 }
 
 function Websocket() {
-  const { tmdbId } = useParams<{ tmdbId: string }>();
+  const { tmdbId: tmdbIdS } = useParams<{ tmdbId: string }>();
   const { search } = useLocation();
   const query = new URLSearchParams(search.slice(1));
   const auth = useAuth0();
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
+  const tmdbId = parseInt(tmdbIdS!, 10);
 
-  const initMessage = query.has('season')
-    ? {
-        type: 'series',
-        tmdb_id: tmdbId,
-        season: query.get('season'),
-        episode: query.get('episode'),
-        authorization: token,
-      }
-    : {
-        type: 'movie',
-        tmdb_id: tmdbId,
-        authorization: token,
-      };
+  const initMessage = (
+    query.has('season')
+      ? {
+          request_type: 'stream',
+          type: 'series',
+          tmdb_id: tmdbId,
+          season: get(query, 'season') || null,
+          episode: get(query, 'episode') || null,
+          authorization: token,
+        }
+      : {
+          request_type: 'stream',
+          type: 'movie',
+          tmdb_id: tmdbId,
+          authorization: token,
+          season: null,
+          episode: null,
+        }
+  ) satisfies StreamArgs;
 
   const { messages, readyState } = useMessages<
     { error: string; type: string } | ITorrent
@@ -96,8 +107,8 @@ function Websocket() {
             <DisplayTorrent
               torrent={message}
               tmdb_id={String(tmdbId)}
-              season={get(query, 'season')}
-              episode={get(query, 'episode')}
+              season={get(query, 'season') || undefined}
+              episode={get(query, 'episode') || undefined}
             />
           </li>
         ))}
