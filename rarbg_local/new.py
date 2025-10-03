@@ -16,6 +16,7 @@ from typing import (
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
@@ -477,6 +478,27 @@ api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
 
 
+def get_extra_schemas() -> dict:
+    from .websocket import StreamArgs, BaseRequest
+    return {'StreamArgs': StreamArgs.model_schema(), 'BaseRequest': BaseRequest.model_schema()}
+
+
+def custom_openapi(app):
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Media",
+        version=app.version,
+        routes=app.routes,
+    )
+    new_schemas = openapi_schema["components"]["schemas"]
+    new_schemas.update(get_extra_schemas())
+    openapi_schema["components"]["schemas"] = new_schemas
+    
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         servers=[
@@ -504,6 +526,7 @@ def create_app() -> FastAPI:
         dependencies=[security],
     )
     app.include_router(root, prefix='')
+    app.openapi = lambda: custom_openapi(app)
 
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:
