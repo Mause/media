@@ -1036,6 +1036,7 @@ async def test_websocket(
     await r.connect()
     await r.send_json(
         {
+            'request_type': 'stream',
             'tmdb_id': 1,
             'type': 'movie',
             'authorization': 'token',
