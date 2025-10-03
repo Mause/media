@@ -491,13 +491,13 @@ def custom_openapi(app: FastAPI) -> dict:
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
-        title="Media",
+        title=app.title,
         version=app.version,
+        description=app.description,
+        servers=app.servers,
         routes=app.routes,
     )
-    new_schemas = openapi_schema["components"]["schemas"]
-    new_schemas.update(get_extra_schemas())
-    openapi_schema["components"]["schemas"] = new_schemas
+    openapi_schema["components"]["schemas"].update(get_extra_schemas())
 
     app.openapi_schema = openapi_schema
     return app.openapi_schema
