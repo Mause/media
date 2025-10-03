@@ -62,7 +62,7 @@ async def _stream(
             yield item
 
 
-async def authenticate(websocket: WebSocket) -> User:
+async def authenticate(websocket: WebSocket, request: StreamArgs) -> User:
     def fake(user: Annotated[User, security]) -> User:
         return user
 
@@ -99,7 +99,7 @@ async def authenticate(websocket: WebSocket) -> User:
 
 async def close(websocket: WebSocket, e: Exception) -> None:
     name = type(e).__name__
-    message = {'error': str(e), 'type': name}
+    message: dict[str, object] = {'error': str(e), 'type': name}
     if isinstance(e, ValidationError):
         message['errors'] = e.errors()
     await websocket.send_json(message)
@@ -118,7 +118,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
 
     logger.info('Got request: %s', request)
 
-    user = await authenticate(websocket)
+    user = await authenticate(websocket, request)
 
     async for item in _stream(
         type=request.type,
