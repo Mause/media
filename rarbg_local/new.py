@@ -480,10 +480,14 @@ api.include_router(health, prefix='/diagnostics')
 
 def get_extra_schemas() -> dict:
     from .websocket import StreamArgs, BaseRequest
-    return {'StreamArgs': StreamArgs.model_schema(), 'BaseRequest': BaseRequest.model_schema()}
+
+    return {
+        'StreamArgs': StreamArgs.model_json_schema(),
+        'BaseRequest': BaseRequest.model_json_schema()
+    }
 
 
-def custom_openapi(app):
+def custom_openapi(app: FastAPI) -> dict:
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
