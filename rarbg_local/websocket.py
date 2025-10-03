@@ -97,7 +97,7 @@ async def authenticate(websocket: WebSocket) -> User:
     return user
 
 
-async def close(websocket:WebSocket, e: Exception)->None:
+async def close(websocket: WebSocket, e: Exception) -> None:
     name = type(e).__name__
     message = {'error': str(e), 'type': name}
     if isinstance(e, ValidationError):
