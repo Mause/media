@@ -62,23 +62,9 @@ async def _stream(
             yield item
 
 
-@websocket_ns.websocket("/ws")
-async def websocket_stream(websocket: WebSocket) -> None:
+async def authenticate(websocket: WebSocket) -> User:
     def fake(user: Annotated[User, security]) -> User:
         return user
-
-    logger.info('Got websocket connection')
-    await websocket.accept()
-
-    try:
-        request = StreamArgs.model_validate(await websocket.receive_json())
-    except ValidationError as e:
-        await websocket.send_json(
-            {'error': str(e), 'type': type(e).__name__, 'errors': e.errors()}
-        )
-        await websocket.close(reason=type(e).__name__)
-        return
-    logger.info('Got request: %s', request)
 
     try:
         user = await get(
@@ -103,11 +89,36 @@ async def websocket_stream(websocket: WebSocket) -> None:
         )
     except Exception as e:
         logger.exception('Unable to authenticate websocket request')
-        await websocket.send_json({'error': str(e), 'type': type(e).__name__})
-        await websocket.close(reason=type(e).__name__)
+        await close(websocket, e)
         raise
 
     logger.info('Authed user: %s', user)
+
+    return user
+
+
+async def close(websocket:WebSocket, e: Exception)->None:
+    name = type(e).__name__
+    message = {'error': str(e), 'type': name}
+    if isinstance(e, ValidationError):
+        message['errors'] = e.errors()
+    await websocket.send_json(message)
+    await websocket.close(reason=name)
+
+
+@websocket_ns.websocket("/ws")
+async def websocket_stream(websocket: WebSocket) -> None:
+    logger.info('Got websocket connection')
+    await websocket.accept()
+
+    try:
+        request = StreamArgs.model_validate(await websocket.receive_json())
+    except ValidationError as e:
+        return await close(websocket, e)
+
+    logger.info('Got request: %s', request)
+
+    user = await authenticate(websocket)
 
     async for item in _stream(
         type=request.type,
