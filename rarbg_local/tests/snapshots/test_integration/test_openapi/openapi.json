@@ -2312,6 +2312,85 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "StreamArgs": {
+        "properties": {
+          "request_type": {
+            "const": "stream",
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          },
+          "type": {
+            "enum": [
+              "series",
+              "movie"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "season": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Season"
+          },
+          "episode": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Episode"
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization",
+          "type",
+          "tmdb_id"
+        ],
+        "title": "StreamArgs",
+        "type": "object"
+      },
+      "BaseRequest": {
+        "properties": {
+          "request_type": {
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization"
+        ],
+        "title": "BaseRequest",
+        "type": "object"
       }
     },
     "securitySchemes": {
