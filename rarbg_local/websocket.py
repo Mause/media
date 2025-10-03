@@ -32,8 +32,13 @@ websocket_ns = APIRouter()
 StreamType = Literal['series', 'movie']
 
 
-class StreamArgs(BaseModel):
+class BaseRequest(BaseModel):
+    request_type: str
     authorization: SecretStr
+
+
+class StreamArgs(BaseRequest):
+    request_type: Literal['stream']
 
     type: StreamType
     tmdb_id: TmdbId
@@ -62,7 +67,7 @@ async def _stream(
             yield item
 
 
-async def authenticate(websocket: WebSocket, request: StreamArgs) -> User:
+async def authenticate(websocket: WebSocket, request: BaseRequest) -> User:
     def fake(user: Annotated[User, security]) -> User:
         return user
 
@@ -118,15 +123,22 @@ async def websocket_stream(websocket: WebSocket) -> None:
 
     logger.info('Got request: %s', request)
 
-    user = await authenticate(websocket, request)
+    await authenticate(websocket, request)
 
-    async for item in _stream(
-        type=request.type,
-        tmdb_id=request.tmdb_id,
-        season=request.season,
-        episode=request.episode,
-    ):
-        await websocket.send_json(item.model_dump(mode='json'))
+    message = 'No message provided'
 
-    logger.info('Finished streaming')
-    await websocket.close(reason='Finished streaming')
+    if request.request_type == 'stream':
+        async for item in _stream(
+            type=request.type,
+            tmdb_id=request.tmdb_id,
+            season=request.season,
+            episode=request.episode,
+        ):
+            await websocket.send_json(item.model_dump(mode='json'))
+
+        message = 'Finished streaming'
+    else:
+        return await close(websocket, Exception('No such method'))
+
+    logger.info(message)
+    await websocket.close(reason=message)
