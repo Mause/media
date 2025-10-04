@@ -6,7 +6,7 @@ from async_asgi_testclient import TestClient
 from fastapi import Depends, FastAPI
 from fastapi.security import OpenIdConnect, SecurityScopes
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
-from pytest import mark, raises
+from pytest import fixture, mark, raises
 from pytest_snapshot.plugin import Snapshot
 
 from ..auth import User, get_current_user
@@ -31,6 +31,19 @@ async def test_websocket_error(test_client: TestClient, snapshot: Snapshot) -> N
     assert_match_json(snapshot, await r.receive_json(), 'ws_error.json')
 
 
+@fixture
+def mock_current_user(fastapi_app: FastAPI) -> None:
+    async def gcu(
+        header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
+        scopes: SecurityScopes,
+    ) -> User:
+        assert scopes.scopes == ['openid']
+        assert header == 'token'
+        return UserFactory.create()
+
+    fastapi_app.dependency_overrides[get_current_user] = gcu
+
+
 @mark.asyncio
 @patch('rarbg_local.websocket.get_movie_imdb_id')
 @patch('rarbg_local.providers.get_providers')
@@ -38,8 +51,8 @@ async def test_websocket(
     get_providers: MagicMock,
     get_movie_imdb_id: MagicMock,
     test_client: TestClient,
-    fastapi_app: FastAPI,
     snapshot: Snapshot,
+    mock_current_user: None,
 ) -> None:
     class FakeProvider(MovieProvider):
         async def search_for_movie(
@@ -56,15 +69,6 @@ async def test_websocket(
         async def health(self) -> HealthcheckCallbackResponse:
             return HealthcheckCallbackResponse(HealthcheckStatus.PASS, 'all good')
 
-    async def gcu(
-        header: Annotated[str, Depends(OpenIdConnect(openIdConnectUrl='https://test'))],
-        scopes: SecurityScopes,
-    ) -> User:
-        assert scopes.scopes == ['openid']
-        assert header == 'token'
-        return UserFactory.create()
-
-    fastapi_app.dependency_overrides[get_current_user] = gcu
     get_movie_imdb_id.return_value = 'tt0000000'
     get_providers.return_value = [
         FakeProvider(),
