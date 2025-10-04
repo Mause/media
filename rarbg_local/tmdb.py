@@ -141,7 +141,7 @@ async def get_tv_imdb_id(tv_id: TmdbId) -> ImdbId:
 
 class ExternalIds(BaseModel):
     id: TmdbId
-    imdb_id: ImdbId
+    imdb_id: ImdbId | None
 
 
 class TvExternalIds(ExternalIds):
@@ -166,7 +166,9 @@ async def get_external_ids(
 
 
 @cached(LRUCache(360))
-async def get_tv_episode_imdb_id(tmdb_id: TmdbId, season: int, episode: int) -> ImdbId:
+async def get_tv_episode_imdb_id(
+    tmdb_id: TmdbId, season: int, episode: int
+) -> ImdbId | None:
     return (
         await get_json(
             f'tv/{tmdb_id}/season/{season}/episode/{episode}/external_ids',
