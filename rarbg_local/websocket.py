@@ -82,6 +82,25 @@ async def _stream(
             yield item
 
 
+def make_request(websocket: WebSocket, request: BaseRequest) -> Request:
+    return Request(
+        scope=ChainMap(
+            {
+                'type': 'http',
+                'headers': [
+                    (
+                        b"authorization",
+                        (request.authorization.get_secret_value()).encode(),
+                    ),
+                ],
+            },
+            websocket.scope,
+        ),
+        receive=websocket.receive,
+        send=websocket.send,
+    )
+
+
 async def authenticate(websocket: WebSocket, request: BaseRequest) -> User:
     def fake(user: Annotated[User, security]) -> User:
         return user
@@ -90,22 +109,7 @@ async def authenticate(websocket: WebSocket, request: BaseRequest) -> User:
         user = await get(
             websocket.app,
             fake,
-            Request(
-                scope=ChainMap(
-                    {
-                        'type': 'http',
-                        'headers': [
-                            (
-                                b"authorization",
-                                (request.authorization.get_secret_value()).encode(),
-                            ),
-                        ],
-                    },
-                    websocket.scope,
-                ),
-                receive=websocket.receive,
-                send=websocket.send,
-            ),
+            make_request(websocket, request),
         )
     except Exception as e:
         logger.exception('Unable to authenticate websocket request')
