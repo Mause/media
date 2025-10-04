@@ -479,12 +479,19 @@ api.include_router(health, prefix='/diagnostics')
 
 
 def get_extra_schemas() -> dict:
-    from .websocket import BaseRequest, StreamArgs
+    from fastapi.openapi.constants import REF_TEMPLATE
+    from pydantic.json_schema import models_json_schema
 
-    return {
-        'StreamArgs': StreamArgs.model_json_schema(),
-        'BaseRequest': BaseRequest.model_json_schema(),
-    }
+    from .websocket import BaseRequest, Reqs
+
+    _, res = models_json_schema(
+        models=[
+            (cast(type[BaseModel], model), 'serialization')
+            for model in [Reqs, BaseRequest]
+        ],
+        ref_template=REF_TEMPLATE,
+    )
+    return res['$defs']
 
 
 def custom_openapi(app: FastAPI) -> dict:

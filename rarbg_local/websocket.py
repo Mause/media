@@ -1,11 +1,11 @@
 import logging
 from collections import ChainMap
 from collections.abc import AsyncGenerator
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Union
 
 from fastapi import APIRouter, WebSocket
 from fastapi.requests import Request
-from pydantic import BaseModel, SecretStr, ValidationError
+from pydantic import BaseModel, Field, RootModel, SecretStr, ValidationError
 
 from .auth import security
 from .db import (
@@ -44,6 +44,21 @@ class StreamArgs(BaseRequest):
     tmdb_id: TmdbId
     season: int | None = None
     episode: int | None = None
+
+
+class PingArgs(BaseRequest):
+    request_type: Literal['ping']
+
+
+class Reqs(
+    RootModel[
+        Annotated[
+            Union[StreamArgs, PingArgs],
+            Field(discriminator='request_type'),
+        ]
+    ]
+):
+    pass
 
 
 async def _stream(
@@ -122,7 +137,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
     await websocket.accept()
 
     try:
-        request = StreamArgs.model_validate(await websocket.receive_json())
+        request = Reqs.model_validate(await websocket.receive_json()).root
     except ValidationError as e:
         return await close(websocket, e)
 
@@ -142,6 +157,8 @@ async def websocket_stream(websocket: WebSocket) -> None:
             await websocket.send_json(item.model_dump(mode='json'))
 
         message = 'Finished streaming'
+    elif request.request_type == 'ping':
+        message = 'Pong'
     else:
         return await close(websocket, Exception('No such method'))
 
