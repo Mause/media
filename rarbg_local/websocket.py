@@ -106,7 +106,12 @@ async def close(websocket: WebSocket, e: Exception) -> None:
     name = type(e).__name__
     message: dict[str, object] = {'error': str(e), 'type': name}
     if isinstance(e, ValidationError):
-        message['errors'] = e.errors()
+        message.update(
+            {
+                'error': f'{e.error_count()} validation errors for {e.title}',
+                'errors': e.errors(),
+            }
+        )
     await websocket.send_json(message)
     await websocket.close(reason=name)
 
