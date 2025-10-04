@@ -763,6 +763,46 @@ export interface components {
       /** Error Type */
       type: string;
     };
+    /** StreamArgs */
+    StreamArgs: {
+      /**
+       * Request Type
+       * @constant
+       */
+      request_type: 'stream';
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: 'series' | 'movie';
+      /** Tmdb Id */
+      tmdb_id: number;
+      /**
+       * Season
+       * @default null
+       */
+      season: number | null;
+      /**
+       * Episode
+       * @default null
+       */
+      episode: number | null;
+    };
+    /** BaseRequest */
+    BaseRequest: {
+      /** Request Type */
+      request_type: string;
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+    };
   };
   responses: never;
   parameters: never;

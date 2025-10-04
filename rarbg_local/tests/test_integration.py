@@ -987,7 +987,11 @@ async def test_websocket_error(test_client: TestClient, snapshot: Snapshot) -> N
         '/ws',
     )
     await r.connect()
-    await r.send_json({})
+    await r.send_json(
+        {
+            'request_type': 'stream',
+        }
+    )
     assert_match_json(snapshot, await r.receive_json(), 'ws_error.json')
 
 
@@ -1036,6 +1040,7 @@ async def test_websocket(
     await r.connect()
     await r.send_json(
         {
+            'request_type': 'stream',
             'tmdb_id': 1,
             'type': 'movie',
             'authorization': 'token',
