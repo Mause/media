@@ -18,10 +18,7 @@ from .providers import (
     search_for_tv,
 )
 from .singleton import get
-from .tmdb import (
-    get_movie_imdb_id,
-    get_tv_imdb_id,
-)
+from .tmdb import ThingType, get_movie_imdb_id, get_tv_imdb_id
 from .types import TmdbId
 from .utils import Message, non_null
 
@@ -54,6 +51,7 @@ class PingArgs(BaseRequest):
 class PlexArgs(BaseRequest):
     request_type: Literal['plex']
     tmdb_id: TmdbId
+    media_type: ThingType
 
 
 class Reqs(
@@ -176,7 +174,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
     elif request.request_type == 'plex':
         plex = await get(websocket.app, get_plex, make_request(websocket, request))
         # plex = await gracefully_get_plex(request, settings)
-        dat = await get_imdb_in_plex('movie', request.tmdb_id, plex)
+        dat = await get_imdb_in_plex(request.media_type, request.tmdb_id, plex)
 
         if not dat:
             return await close(websocket, Exception('Not found in plex'))

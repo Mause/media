@@ -61,11 +61,8 @@ function OpenPlex({
     request_type: 'plex',
     authorization: token,
     tmdb_id: download.tmdb_id,
-    // thing_type: type,
+    media_type: type,
   });
-  if (type == 'tv') {
-    console.warn(`${type} not supported here yet`);
-  }
 
   if (message) {
     const first = _.toPairs(message)
