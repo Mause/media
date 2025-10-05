@@ -6,7 +6,6 @@ import Collapsible from 'react-collapsible';
 import { Navigate, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { ReadyState } from 'react-use-websocket';
 import {
   faSearch,
   faCaretUp,
@@ -20,7 +19,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import usePromise from 'react-promise-suspense';
 
 import { useMessage } from './components/websocket';
-import type { GetResponse } from './utils';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
 import type { TV } from './select/SeasonSelectComponent';
 import type {
@@ -30,7 +28,7 @@ import type {
   EpisodeResponse,
 } from './ParentComponent';
 import { ContextMenu, Loading, MLink } from './components';
-import type { paths, components } from './schema';
+import type { components } from './schema';
 
 function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   return (
@@ -44,8 +42,7 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   );
 }
 
-type path = '/api/plex/{thing_type}/{tmdb_id}';
-type PlexResponse = GetResponse<paths[path]>;
+type PlexRootResponse = components['schemas']['PlexRootResponse'];
 type PlexArgs = components['schemas']['PlexArgs'];
 
 function OpenPlex({
@@ -59,7 +56,7 @@ function OpenPlex({
   const token = usePromise(() => getToken(auth), []);
   const { message, trigger, readyState } = useMessage<
     PlexArgs,
-    Record<string, PlexResponse>
+    PlexRootResponse
   >({
     request_type: 'plex',
     authorization: token,
@@ -74,7 +71,7 @@ function OpenPlex({
     const first = _.toPairs(message)
       .map(([, v]) => v?.link)
       .find((v) => v);
-    return <Navigate to={first!.link} />;
+    return <Navigate to={first!} />;
   }
 
   return (
