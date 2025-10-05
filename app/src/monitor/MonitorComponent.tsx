@@ -10,9 +10,9 @@ import type { Auth0ContextInterface, User } from '@auth0/auth0-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import useSWRMutation from 'swr/mutation';
 
-import { ContextMenu, DisplayError, RouteTitle, Loading } from './components';
-import type { components, paths } from './schema';
-import { getPrefix, getToken } from './utils';
+import { ContextMenu, DisplayError, RouteTitle, Loading } from '../components';
+import type { components, paths } from '../schema';
+import { getPrefix, getToken } from '../utils';
 
 type Monitor = components['schemas']['MonitorGet'];
 type MonitorPost = components['schemas']['MonitorPost'];
