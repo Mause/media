@@ -1,7 +1,6 @@
 import { useParams, useLocation } from 'react-router-dom';
 import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
-import { ReadyState } from 'react-use-websocket';
 import * as _ from 'lodash-es';
 
 import type { ITorrent } from './select/OptionsComponent';
