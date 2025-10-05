@@ -815,6 +815,11 @@ export interface components {
       authorization: string;
       /** Tmdb Id */
       tmdb_id: number;
+      /**
+       * Media Type
+       * @enum {string}
+       */
+      media_type: 'movie' | 'tv';
     };
     /** PlexRootResponse */
     PlexRootResponse: {

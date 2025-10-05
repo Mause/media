@@ -54,24 +54,22 @@ function OpenPlex({
 }) {
   const auth = useAuth0();
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
-  const { message, trigger, readyState } = useMessage<
+  const { message, trigger, readyState, state } = useMessage<
     PlexArgs,
     PlexRootResponse
   >({
     request_type: 'plex',
     authorization: token,
     tmdb_id: download.tmdb_id,
-    // thing_type: type,
+    media_type: type,
   });
-  if (type == 'tv') {
-    console.warn(`${type} not supported here yet`);
-  }
 
   if (message) {
     const first = _.toPairs(message)
       .map(([, v]) => v?.link)
       .find((v) => v);
-    return <Navigate to={first!} />;
+    window.open(first, '_blank', 'noopener,noreferrrer');
+    return <Navigate to="/" />;
   }
 
   return (
@@ -82,6 +80,7 @@ function OpenPlex({
     >
       <span className="unselectable">Open in Plex</span>
       {readyStateToString(readyState)}
+      {state}
     </MenuItem>
   );
 }
