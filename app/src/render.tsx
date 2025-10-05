@@ -68,7 +68,8 @@ function OpenPlex({
     const first = _.toPairs(message)
       .map(([, v]) => v?.link)
       .find((v) => v);
-    return <Navigate to={first!} />;
+    window.open(first, '_blank', 'noopener,noreferrrer');
+    return <Navigate to="/" />;
   }
 
   return (
