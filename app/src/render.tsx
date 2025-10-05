@@ -54,7 +54,7 @@ function OpenPlex({
 }) {
   const auth = useAuth0();
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
-  const { message, trigger, readyState } = useMessage<
+  const { message, trigger, readyState, state } = useMessage<
     PlexArgs,
     PlexRootResponse
   >({
@@ -80,6 +80,7 @@ function OpenPlex({
     >
       <span className="unselectable">Open in Plex</span>
       {readyStateToString(readyState)}
+      {state}
     </MenuItem>
   );
 }
