@@ -1,20 +1,23 @@
 from collections.abc import AsyncGenerator
 from typing import Annotated
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, seal
 
+from aioresponses import aioresponses as AioResponses
 from async_asgi_testclient import TestClient
 from fastapi import Depends, FastAPI
 from fastapi.security import OpenIdConnect, SecurityScopes
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
-from pytest import fixture, mark, raises
+from pydantic import SecretStr
+from pytest import MonkeyPatch, fixture, mark, raises
 from pytest_snapshot.plugin import Snapshot
 
 from ..auth import User, get_current_user
 from ..providers import MovieProvider
 from ..providers.abc import ITorrent, ProviderSource
+from ..tmdb import ExternalIds
 from ..types import ImdbId, TmdbId
-from ..websocket import BaseRequest, StreamArgs
-from .conftest import assert_match_json
+from ..websocket import BaseRequest, PlexArgs, StreamArgs
+from .conftest import add_json, assert_match_json
 from .factories import UserFactory
 
 
@@ -108,3 +111,41 @@ def fix_auth(mod: BaseRequest) -> dict:
     d = mod.model_dump()
     d['authorization'] = d['authorization'].get_secret_value()
     return d
+
+
+@mark.asyncio
+async def test_websocket_plex(
+    test_client: TestClient,
+    snapshot: Snapshot,
+    mock_current_user: None,
+    monkeypatch: MonkeyPatch,
+    aioresponses: AioResponses,
+) -> None:
+    add_json(
+        aioresponses,
+        method='GET',
+        url='https://api.themoviedb.org/3/movie/1/external_ids',
+        json_body=ExternalIds(id=0, imdb_id='tt000000').model_dump(mode='json'),
+    )
+
+    plex = MagicMock(name='plex')
+    section = plex.library.section()
+    section.getGuid.return_value = 'gotcha'
+    matches = section.search.return_value[0].matches.return_value
+    matches.__bool__.return_value = True
+    matches[0].guid = 'moi'
+    matches[0].__bool__.return_value = True
+    section.agent = 'agent'
+    seal(plex)
+    monkeypatch.setattr('rarbg_local.websocket.get_plex', lambda: plex)
+
+    r = test_client.websocket_connect(
+        '/ws',
+    )
+    await r.connect()
+    await r.send_json(
+        fix_auth(
+            PlexArgs(request_type='plex', tmdb_id=1, authorization=SecretStr('token'))
+        )
+    )
+    assert_match_json(snapshot, await r.receive_json(), 'plex.json')

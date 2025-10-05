@@ -12,6 +12,7 @@ from .db import (
     User,
 )
 from .models import ITorrent
+from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     search_for_movie,
     search_for_tv,
@@ -50,10 +51,15 @@ class PingArgs(BaseRequest):
     request_type: Literal['ping']
 
 
+class PlexArgs(BaseRequest):
+    request_type: Literal['plex']
+    tmdb_id: TmdbId
+
+
 class Reqs(
     RootModel[
         Annotated[
-            Union[StreamArgs, PingArgs],
+            Union[StreamArgs, PingArgs, PlexArgs],
             Field(discriminator='request_type'),
         ]
     ]
@@ -163,6 +169,13 @@ async def websocket_stream(websocket: WebSocket) -> None:
         message = 'Finished streaming'
     elif request.request_type == 'ping':
         message = 'Pong'
+    elif request.request_type == 'plex':
+        plex = await get(websocket.app, get_plex, make_request(websocket, request))
+        imdb = await get_imdb_in_plex('movie', request.tmdb_id, plex)
+
+        await websocket.send_json(imdb)
+
+        message = 'Plex complete'
     else:
         return await close(websocket, Exception('No such method'))
 

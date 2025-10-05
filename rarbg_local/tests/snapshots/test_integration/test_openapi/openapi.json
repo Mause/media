@@ -2354,10 +2354,37 @@
         "title": "PingArgs",
         "type": "object"
       },
+      "PlexArgs": {
+        "properties": {
+          "request_type": {
+            "const": "plex",
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          },
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization",
+          "tmdb_id"
+        ],
+        "title": "PlexArgs",
+        "type": "object"
+      },
       "Reqs": {
         "discriminator": {
           "mapping": {
             "ping": "#/components/schemas/PingArgs",
+            "plex": "#/components/schemas/PlexArgs",
             "stream": "#/components/schemas/StreamArgs"
           },
           "propertyName": "request_type"
@@ -2368,6 +2395,9 @@
           },
           {
             "$ref": "#/components/schemas/PingArgs"
+          },
+          {
+            "$ref": "#/components/schemas/PlexArgs"
           }
         ],
         "title": "Reqs"
