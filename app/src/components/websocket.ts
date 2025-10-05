@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import useWebSocket from 'react-use-websocket';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 import { getPrefix } from '../utils';
 import type { components } from '../schema';
@@ -47,4 +47,21 @@ export function useMessage<REQ extends BaseRequest, T>(request: REQ) {
   }, [lastJsonMessage]);
 
   return { message, trigger, readyState };
+}
+
+export function readyStateToString(readyState: ReadyState) {
+  switch (readyState) {
+    case ReadyState.CONNECTING:
+      return 'Connecting...';
+    case ReadyState.OPEN:
+      return 'Connected';
+    case ReadyState.CLOSING:
+      return 'Disconnecting...';
+    case ReadyState.CLOSED:
+      return 'Disconnected';
+    case ReadyState.UNINSTANTIATED:
+      return 'Uninstantiated';
+    default:
+      return 'Unknown';
+  }
 }

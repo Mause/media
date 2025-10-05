@@ -8,7 +8,7 @@ import type { ITorrent } from './select/OptionsComponent';
 import { getMarker, getToken } from './utils';
 import type { components } from './schema';
 import { DisplayTorrent, RouteTitle } from './components';
-import { useMessages } from './components/websocket';
+import { useMessages, readyStateToString } from './components/websocket';
 
 type StreamArgs = components['schemas']['StreamArgs'];
 
@@ -66,11 +66,7 @@ function Websocket() {
                 : undefined,
             })
           : 'No season'}{' '}
-        - {readyState === ReadyState.CONNECTING && 'Connecting...'}
-        {readyState === ReadyState.OPEN && 'Connected'}
-        {readyState === ReadyState.CLOSING && 'Disconnecting...'}
-        {readyState === ReadyState.CLOSED && 'Disconnected'}
-        {readyState === ReadyState.UNINSTANTIATED && 'Uninstantiated'}
+        - {readyStateToString(readyState)}
       </p>
       <ul>
         <ul>
