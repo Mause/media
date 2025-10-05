@@ -768,7 +768,7 @@ def add_xml(responses: RequestsMock, method: str, url: str, body: '_Element') ->
 
 
 @mark.asyncio
-@patch('rarbg_local.new.get_plex')
+@patch('rarbg_local.plex.get_plex')
 async def test_plex_error(
     get_plex: MagicMock, test_client: TestClient, snapshot: Snapshot
 ) -> None:

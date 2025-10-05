@@ -1,6 +1,6 @@
 from collections.abc import AsyncGenerator
 from typing import Annotated
-from unittest.mock import MagicMock, patch, seal
+from unittest.mock import AsyncMock, MagicMock, patch, seal
 
 from aioresponses import aioresponses as AioResponses
 from async_asgi_testclient import TestClient
@@ -142,7 +142,9 @@ async def test_websocket_plex(
     matches[0].__bool__.return_value = True
     section.agent = 'agent'
     seal(plex)
-    monkeypatch.setattr('rarbg_local.websocket.get_plex', lambda: plex)
+    monkeypatch.setattr(
+        'rarbg_local.websocket.gracefully_get_plex', AsyncMock(return_value=plex)
+    )
 
     r = test_client.websocket_connect(
         '/ws',
