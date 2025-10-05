@@ -35,7 +35,6 @@ from .db import (
     safe_delete,
 )
 from .health import router as health
-from .local_appender import local_appender
 from .main import (
     add_single,
     extract_marker,
