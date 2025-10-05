@@ -1,7 +1,6 @@
 import logging
 import os
 import traceback
-from asyncio import wait_for
 from collections.abc import AsyncGenerator, Callable, Coroutine
 from functools import wraps
 from typing import (
@@ -18,7 +17,6 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
-from plexapi.server import PlexServer
 from pydantic import BaseModel
 from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
@@ -37,7 +35,6 @@ from .db import (
     safe_delete,
 )
 from .health import router as health
-from .local_appender import local_appender
 from .main import (
     add_single,
     extract_marker,
@@ -65,7 +62,7 @@ from .models import (
     TvSeasonResponse,
 )
 from .monitor import monitor_ns
-from .plex import get_imdb_in_plex, get_plex
+from .plex import get_imdb_in_plex, gracefully_get_plex
 from .providers import (
     get_providers,
     search_for_tv,
@@ -358,24 +355,6 @@ async def discover() -> Discover:
 @api.get('/tmdb/configuration')
 async def tmdb_configuration() -> Configuration:
     return await get_configuration()
-
-
-async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServer:
-    records: list[logging.LogRecord] = []
-    try:
-        token = local_appender.set(records)
-        return await wait_for(get_plex(request, settings), timeout=25)
-    except Exception as exc:
-        local_appender.reset(token)
-        logger.exception('Error getting plex server', exc_info=exc)
-        raise HTTPException(
-            500,
-            {
-                'error': 'Error getting plex server',
-                'details': str(exc),
-                'records': [record.getMessage() for record in records],
-            },
-        ) from exc
 
 
 @api.get('/plex/{thing_type}/{tmdb_id}')
