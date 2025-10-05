@@ -1,17 +1,18 @@
 import logging
 from collections import ChainMap
 from collections.abc import AsyncGenerator
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Union
 
 from fastapi import APIRouter, WebSocket
 from fastapi.requests import Request
-from pydantic import BaseModel, SecretStr, ValidationError
+from pydantic import BaseModel, Field, RootModel, SecretStr, ValidationError
 
 from .auth import security
 from .db import (
     User,
 )
 from .models import ITorrent
+from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     search_for_movie,
     search_for_tv,
@@ -32,13 +33,38 @@ websocket_ns = APIRouter()
 StreamType = Literal['series', 'movie']
 
 
-class StreamArgs(BaseModel):
+class BaseRequest(BaseModel):
+    request_type: str
     authorization: SecretStr
+
+
+class StreamArgs(BaseRequest):
+    request_type: Literal['stream']
 
     type: StreamType
     tmdb_id: TmdbId
     season: int | None = None
     episode: int | None = None
+
+
+class PingArgs(BaseRequest):
+    request_type: Literal['ping']
+
+
+class PlexArgs(BaseRequest):
+    request_type: Literal['plex']
+    tmdb_id: TmdbId
+
+
+class Reqs(
+    RootModel[
+        Annotated[
+            Union[StreamArgs, PingArgs, PlexArgs],
+            Field(discriminator='request_type'),
+        ]
+    ]
+):
+    pass
 
 
 async def _stream(
@@ -62,60 +88,96 @@ async def _stream(
             yield item
 
 
-@websocket_ns.websocket("/ws")
-async def websocket_stream(websocket: WebSocket) -> None:
+def make_request(websocket: WebSocket, request: BaseRequest) -> Request:
+    return Request(
+        scope=ChainMap(
+            {
+                'type': 'http',
+                'headers': [
+                    (
+                        b"authorization",
+                        (request.authorization.get_secret_value()).encode(),
+                    ),
+                ],
+            },
+            websocket.scope,
+        ),
+        receive=websocket.receive,
+        send=websocket.send,
+    )
+
+
+async def authenticate(websocket: WebSocket, request: BaseRequest) -> User:
     def fake(user: Annotated[User, security]) -> User:
         return user
-
-    logger.info('Got websocket connection')
-    await websocket.accept()
-
-    try:
-        request = StreamArgs.model_validate(await websocket.receive_json())
-    except ValidationError as e:
-        await websocket.send_json(
-            {'error': str(e), 'type': type(e).__name__, 'errors': e.errors()}
-        )
-        await websocket.close(reason=type(e).__name__)
-        return
-    logger.info('Got request: %s', request)
 
     try:
         user = await get(
             websocket.app,
             fake,
-            Request(
-                scope=ChainMap(
-                    {
-                        'type': 'http',
-                        'headers': [
-                            (
-                                b"authorization",
-                                (request.authorization.get_secret_value()).encode(),
-                            ),
-                        ],
-                    },
-                    websocket.scope,
-                ),
-                receive=websocket.receive,
-                send=websocket.send,
-            ),
+            make_request(websocket, request),
         )
     except Exception as e:
         logger.exception('Unable to authenticate websocket request')
-        await websocket.send_json({'error': str(e), 'type': type(e).__name__})
-        await websocket.close(reason=type(e).__name__)
+        await close(websocket, e)
         raise
 
     logger.info('Authed user: %s', user)
 
-    async for item in _stream(
-        type=request.type,
-        tmdb_id=request.tmdb_id,
-        season=request.season,
-        episode=request.episode,
-    ):
-        await websocket.send_json(item.model_dump(mode='json'))
+    return user
 
-    logger.info('Finished streaming')
-    await websocket.close(reason='Finished streaming')
+
+async def close(websocket: WebSocket, e: Exception) -> None:
+    name = type(e).__name__
+    message: dict[str, object] = {'error': str(e), 'type': name}
+    if isinstance(e, ValidationError):
+        message.update(
+            {
+                'error': f'{e.error_count()} validation errors for {e.title}',
+                'errors': e.errors(),
+            }
+        )
+    await websocket.send_json(message)
+    await websocket.close(reason=name)
+
+
+@websocket_ns.websocket("/ws")
+async def websocket_stream(websocket: WebSocket) -> None:
+    logger.info('Got websocket connection')
+    await websocket.accept()
+
+    try:
+        request = Reqs.model_validate(await websocket.receive_json()).root
+    except ValidationError as e:
+        return await close(websocket, e)
+
+    logger.info('Got request: %s', request)
+
+    await authenticate(websocket, request)
+
+    message = 'No message provided'
+
+    if request.request_type == 'stream':
+        async for item in _stream(
+            type=request.type,
+            tmdb_id=request.tmdb_id,
+            season=request.season,
+            episode=request.episode,
+        ):
+            await websocket.send_json(item.model_dump(mode='json'))
+
+        message = 'Finished streaming'
+    elif request.request_type == 'ping':
+        message = 'Pong'
+    elif request.request_type == 'plex':
+        plex = await get(websocket.app, get_plex, make_request(websocket, request))
+        imdb = await get_imdb_in_plex('movie', request.tmdb_id, plex)
+
+        await websocket.send_json(imdb)
+
+        message = 'Plex complete'
+    else:
+        return await close(websocket, Exception('No such method'))
+
+    logger.info(message)
+    await websocket.close(reason=message)

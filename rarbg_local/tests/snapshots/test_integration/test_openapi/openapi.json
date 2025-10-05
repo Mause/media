@@ -2312,6 +2312,154 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "BaseRequest": {
+        "properties": {
+          "request_type": {
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization"
+        ],
+        "title": "BaseRequest",
+        "type": "object"
+      },
+      "PingArgs": {
+        "properties": {
+          "request_type": {
+            "const": "ping",
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization"
+        ],
+        "title": "PingArgs",
+        "type": "object"
+      },
+      "PlexArgs": {
+        "properties": {
+          "request_type": {
+            "const": "plex",
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          },
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization",
+          "tmdb_id"
+        ],
+        "title": "PlexArgs",
+        "type": "object"
+      },
+      "Reqs": {
+        "discriminator": {
+          "mapping": {
+            "ping": "#/components/schemas/PingArgs",
+            "plex": "#/components/schemas/PlexArgs",
+            "stream": "#/components/schemas/StreamArgs"
+          },
+          "propertyName": "request_type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/StreamArgs"
+          },
+          {
+            "$ref": "#/components/schemas/PingArgs"
+          },
+          {
+            "$ref": "#/components/schemas/PlexArgs"
+          }
+        ],
+        "title": "Reqs"
+      },
+      "StreamArgs": {
+        "properties": {
+          "request_type": {
+            "const": "stream",
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          },
+          "type": {
+            "enum": [
+              "series",
+              "movie"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "season": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Season"
+          },
+          "episode": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Episode"
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization",
+          "type",
+          "tmdb_id"
+        ],
+        "title": "StreamArgs",
+        "type": "object"
       }
     },
     "securitySchemes": {

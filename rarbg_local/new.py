@@ -16,6 +16,7 @@ from typing import (
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
@@ -477,6 +478,38 @@ api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
 
 
+def get_extra_schemas() -> dict:
+    from fastapi.openapi.constants import REF_TEMPLATE
+    from pydantic.json_schema import models_json_schema
+
+    from .websocket import BaseRequest, Reqs
+
+    _, res = models_json_schema(
+        models=[
+            (cast(type[BaseModel], model), 'serialization')
+            for model in [Reqs, BaseRequest]
+        ],
+        ref_template=REF_TEMPLATE,
+    )
+    return res['$defs']
+
+
+def custom_openapi(app: FastAPI) -> dict:
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        servers=app.servers,
+        routes=app.routes,
+    )
+    openapi_schema["components"]["schemas"].update(get_extra_schemas())
+
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         servers=[
@@ -504,6 +537,7 @@ def create_app() -> FastAPI:
         dependencies=[security],
     )
     app.include_router(root, prefix='')
+    app.openapi = lambda: custom_openapi(app)  # type: ignore[method-assign]
 
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:
