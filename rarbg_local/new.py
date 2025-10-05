@@ -95,7 +95,7 @@ from .tmdb import (
 )
 from .types import TmdbId
 from .utils import Message, non_null
-from .websocket import websocket_ns
+from .websocket import PlexRootResponse, websocket_ns
 
 local_appender: ContextVar[list[logging.LogRecord]] = ContextVar[
     list[logging.LogRecord]
@@ -487,7 +487,7 @@ def get_extra_schemas() -> dict:
     _, res = models_json_schema(
         models=[
             (cast(type[BaseModel], model), 'serialization')
-            for model in [Reqs, BaseRequest]
+            for model in [Reqs, BaseRequest, PlexRootResponse]
         ],
         ref_template=REF_TEMPLATE,
     )

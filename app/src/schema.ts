@@ -644,21 +644,36 @@ export interface components {
       ratingKey: number;
       /** Title */
       title: string;
-      /** Year */
-      year?: number | null;
+      /**
+       * Year
+       * @default null
+       */
+      year: number | null;
       /**
        * Type
        * @enum {string}
        */
       type: 'movie' | 'show';
-      /** Guid */
-      guid?: string | null;
-      /** Summary */
-      summary?: string | null;
-      /** Thumb */
-      thumb?: string | null;
-      /** Art */
-      art?: string | null;
+      /**
+       * Guid
+       * @default null
+       */
+      guid: string | null;
+      /**
+       * Summary
+       * @default null
+       */
+      summary: string | null;
+      /**
+       * Thumb
+       * @default null
+       */
+      thumb: string | null;
+      /**
+       * Art
+       * @default null
+       */
+      art: string | null;
     };
     /** PlexResponse[PlexMedia] */
     PlexResponse_PlexMedia_: {
@@ -800,6 +815,10 @@ export interface components {
       authorization: string;
       /** Tmdb Id */
       tmdb_id: number;
+    };
+    /** PlexRootResponse */
+    PlexRootResponse: {
+      [key: string]: components['schemas']['PlexResponse_PlexMedia_'];
     };
     /** Reqs */
     Reqs:

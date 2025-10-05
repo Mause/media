@@ -7,6 +7,7 @@ from async_asgi_testclient import TestClient
 from fastapi import Depends, FastAPI
 from fastapi.security import OpenIdConnect, SecurityScopes
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
+from plexapi.video import Video
 from pydantic import SecretStr
 from pytest import MonkeyPatch, fixture, mark, raises
 from pytest_snapshot.plugin import Snapshot
@@ -129,8 +130,12 @@ async def test_websocket_plex(
     )
 
     plex = MagicMock(name='plex')
+    plex.machineIdentifier = 'machine_id'
     section = plex.library.section()
-    section.getGuid.return_value = 'gotcha'
+    section.getGuid.return_value = MagicMock(
+        spec=Video, type='movie', ratingKey=1, title='Movie'
+    )
+
     matches = section.search.return_value[0].matches.return_value
     matches.__bool__.return_value = True
     matches[0].guid = 'moi'

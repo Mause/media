@@ -1971,12 +1971,12 @@
       "PlexMedia": {
         "properties": {
           "ratingKey": {
-            "type": "integer",
-            "title": "Ratingkey"
+            "title": "Ratingkey",
+            "type": "integer"
           },
           "title": {
-            "type": "string",
-            "title": "Title"
+            "title": "Title",
+            "type": "string"
           },
           "year": {
             "anyOf": [
@@ -1987,15 +1987,16 @@
                 "type": "null"
               }
             ],
+            "default": null,
             "title": "Year"
           },
           "type": {
-            "type": "string",
             "enum": [
               "movie",
               "show"
             ],
-            "title": "Type"
+            "title": "Type",
+            "type": "string"
           },
           "guid": {
             "anyOf": [
@@ -2006,6 +2007,7 @@
                 "type": "null"
               }
             ],
+            "default": null,
             "title": "Guid"
           },
           "summary": {
@@ -2017,6 +2019,7 @@
                 "type": "null"
               }
             ],
+            "default": null,
             "title": "Summary"
           },
           "thumb": {
@@ -2028,6 +2031,7 @@
                 "type": "null"
               }
             ],
+            "default": null,
             "title": "Thumb"
           },
           "art": {
@@ -2039,41 +2043,42 @@
                 "type": "null"
               }
             ],
+            "default": null,
             "title": "Art"
           }
         },
-        "type": "object",
         "required": [
           "ratingKey",
           "title",
           "type"
         ],
-        "title": "PlexMedia"
+        "title": "PlexMedia",
+        "type": "object"
       },
       "PlexResponse_PlexMedia_": {
         "properties": {
           "server_id": {
-            "type": "string",
-            "title": "Server Id"
+            "title": "Server Id",
+            "type": "string"
           },
           "item": {
             "$ref": "#/components/schemas/PlexMedia"
           },
           "link": {
-            "type": "string",
-            "minLength": 1,
             "format": "uri",
+            "minLength": 1,
+            "readOnly": true,
             "title": "Link",
-            "readOnly": true
+            "type": "string"
           }
         },
-        "type": "object",
         "required": [
           "server_id",
           "item",
           "link"
         ],
-        "title": "PlexResponse[PlexMedia]"
+        "title": "PlexResponse[PlexMedia]",
+        "type": "object"
       },
       "ProviderSource": {
         "type": "string",
@@ -2378,6 +2383,13 @@
           "tmdb_id"
         ],
         "title": "PlexArgs",
+        "type": "object"
+      },
+      "PlexRootResponse": {
+        "additionalProperties": {
+          "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+        },
+        "title": "PlexRootResponse",
         "type": "object"
       },
       "Reqs": {
