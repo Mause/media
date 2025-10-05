@@ -1,4 +1,30 @@
 {
-  "tmdb://1": "gotcha",
-  "imdb://tt000000": "gotcha"
+  "tmdb://1": {
+    "server_id": "machine_id",
+    "item": {
+      "ratingKey": 1,
+      "title": "Movie",
+      "year": null,
+      "type": "movie",
+      "guid": null,
+      "summary": null,
+      "thumb": null,
+      "art": null
+    },
+    "link": "https://app.plex.tv/desktop#!/server/machine_id/details?key=%252Flibrary%252Fmetadata%252F1"
+  },
+  "imdb://tt000000": {
+    "server_id": "machine_id",
+    "item": {
+      "ratingKey": 1,
+      "title": "Movie",
+      "year": null,
+      "type": "movie",
+      "guid": null,
+      "summary": null,
+      "thumb": null,
+      "art": null
+    },
+    "link": "https://app.plex.tv/desktop#!/server/machine_id/details?key=%252Flibrary%252Fmetadata%252F1"
+  }
 }
