@@ -53,7 +53,7 @@ function OpenPlex({
   type: 'movie' | 'tv';
 }) {
   const auth = useAuth0();
-  const token = usePromise(() => getToken(auth), []);
+  const token = 'Bearer ' + usePromise(() => getToken(auth), []);
   const { message, trigger, readyState } = useMessage<
     PlexArgs,
     PlexRootResponse
