@@ -10,7 +10,7 @@ import { subscribe, getToken } from '../utils';
 import type { Torrents } from '../ParentComponent';
 import type { components } from '../schema';
 import { DisplayError, MLink, DisplayTorrent, Loading } from '../components';
-import { MonitorAddComponent } from '../MonitorComponent';
+import { MonitorAddComponent } from '../monitor/MonitorComponent';
 import type { ManualAddComponentState } from '../ManualAddComponent';
 
 import { Shared } from './SeasonSelectComponent';

@@ -141,7 +141,7 @@ export default [
         path: '/monitor/delete/:id',
         lazy: async () => {
           const { MonitorDeleteComponent } = await import(
-            './MonitorDeleteComponent'
+            './monitor/MonitorDeleteComponent'
           );
           return {
             Component: MonitorDeleteComponent,
@@ -151,7 +151,9 @@ export default [
       {
         path: '/monitor',
         lazy: async () => {
-          const { MonitorComponent } = await import('./MonitorComponent');
+          const { MonitorComponent } = await import(
+            './monitor/MonitorComponent'
+          );
           return {
             Component: MonitorComponent,
           };

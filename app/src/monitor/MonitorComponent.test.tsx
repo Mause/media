@@ -4,11 +4,12 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 
+import { renderWithSWR, waitForRequests } from '../test.utils';
+import { server } from '../msw';
+import type { GetResponse } from '../utils';
+import type { paths } from '../schema';
+
 import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
-import { renderWithSWR, waitForRequests } from './test.utils';
-import { server } from './msw';
-import type { GetResponse } from './utils';
-import type { paths } from './schema';
 
 type MonitorResponse = GetResponse<paths['/api/monitor']>;
 
