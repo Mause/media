@@ -763,11 +763,54 @@ export interface components {
       /** Error Type */
       type: string;
     };
+    /** BaseRequest */
+    BaseRequest: {
+      /** Request Type */
+      request_type: string;
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+    };
+    /** PingArgs */
+    PingArgs: {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      request_type: 'ping';
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+    };
+    /** PlexArgs */
+    PlexArgs: {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      request_type: 'plex';
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+      /** Tmdb Id */
+      tmdb_id: number;
+    };
+    /** Reqs */
+    Reqs:
+      | components['schemas']['StreamArgs']
+      | components['schemas']['PingArgs']
+      | components['schemas']['PlexArgs'];
     /** StreamArgs */
     StreamArgs: {
       /**
-       * Request Type
-       * @constant
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
        */
       request_type: 'stream';
       /**
@@ -792,16 +835,6 @@ export interface components {
        * @default null
        */
       episode: number | null;
-    };
-    /** BaseRequest */
-    BaseRequest: {
-      /** Request Type */
-      request_type: string;
-      /**
-       * Authorization
-       * Format: password
-       */
-      authorization: string;
     };
   };
   responses: never;
