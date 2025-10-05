@@ -1,9 +1,13 @@
 import MenuItem from '@mui/material/MenuItem';
+import type { SnackbarCloseReason } from '@mui/material/Snackbar';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -17,6 +21,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
 import useSWRMutation from 'swr/mutation';
 import { useAuth0 } from '@auth0/auth0-react';
+import type { SyntheticEvent, ReactElement } from 'react';
+import { useState } from 'react';
 import * as uritemplate from 'uritemplate';
 
 import type { GetResponse } from './utils';
@@ -46,7 +52,7 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
 const path = '/api/plex/{thing_type}/{tmdb_id}' as const;
 type PlexResponse = GetResponse<paths[typeof path]>;
 
-function OpenPlex({
+export function OpenPlex({
   download,
   type,
 }: {
@@ -54,7 +60,8 @@ function OpenPlex({
   type: 'movie' | 'tv';
 }) {
   const auth = useAuth0();
-  const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
+  // TODO: error handling
+  const { data, trigger } = useSWRMutation<PlexResponse>(
     uritemplate.parse(path).expand({
       tmdb_id: download.tmdb_id,
       thing_type: type,
@@ -66,23 +73,73 @@ function OpenPlex({
       return (await res.json()) as PlexResponse;
     },
   );
+  const [open, setOpen] = useState(false);
 
+  const handleClose = (
+    event: SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  let action: ReactElement | null = null;
   if (data) {
+    setOpen(false);
     const first = _.toPairs(data)
       .map(([, v]) => v?.link)
       .find((v) => v);
-    return <Navigate to={first!} />;
+
+    action = (
+      <>
+        Opening plex...
+        <IconButton
+          size="small"
+          aria-label="close"
+          color="inherit"
+          component="a"
+          href={first}
+          target="_blank"
+          onClick={() => {
+            setOpen(false);
+          }}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </>
+    );
   }
 
   return (
-    <MenuItem
-      onClick={() => {
-        void trigger();
-      }}
-    >
-      <span className="unselectable">Open in Plex</span>
-      <Loading loading={isMutating} />
-    </MenuItem>
+    <>
+      <Snackbar
+        open={open}
+        autoHideDuration={600000}
+        slotProps={{
+          clickAwayListener: {
+            onClickAway: (event) => {
+              // Prevent's default 'onClickAway' behavior.
+              // @ts-expect-error this isn't correctly typed in MUI
+              event.defaultMuiPrevented = true;
+            },
+          },
+        }}
+        onClose={handleClose}
+        message="Searching plex..."
+        action={action}
+      />
+      <MenuItem
+        onClick={() => {
+          setOpen(true);
+          void trigger();
+        }}
+      >
+        <span className="unselectable">Open in Plex</span>
+      </MenuItem>
+    </>
   );
 }
 
