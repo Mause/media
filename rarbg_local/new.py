@@ -2,9 +2,7 @@ import logging
 import os
 import traceback
 from collections.abc import AsyncGenerator, Callable, Coroutine
-from contextvars import ContextVar
 from functools import wraps
-from logging import Handler
 from typing import (
     Annotated,
     Any,
@@ -37,6 +35,7 @@ from .db import (
     safe_delete,
 )
 from .health import router as health
+from .local_appender import local_appender
 from .main import (
     add_single,
     extract_marker,
@@ -94,10 +93,6 @@ from .tmdb import (
 from .types import TmdbId
 from .utils import Message, non_null
 from .websocket import PlexRootResponse, websocket_ns
-
-local_appender: ContextVar[list[logging.LogRecord]] = ContextVar[
-    list[logging.LogRecord]
-]('local_appender')
 
 api = APIRouter()
 logger = logging.getLogger(__name__)

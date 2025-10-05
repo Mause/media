@@ -18,7 +18,7 @@ import * as _ from 'lodash-es';
 import { useAuth0 } from '@auth0/auth0-react';
 import usePromise from 'react-promise-suspense';
 
-import { useMessage } from './components/websocket';
+import { useMessage, readyStateToString } from './components/websocket';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
 import type { TV } from './select/SeasonSelectComponent';
 import type {
@@ -53,25 +53,23 @@ function OpenPlex({
   type: 'movie' | 'tv';
 }) {
   const auth = useAuth0();
-  const token = usePromise(() => getToken(auth), []);
-  const { message, trigger, readyState } = useMessage<
+  const token = 'Bearer ' + usePromise(() => getToken(auth), []);
+  const { message, trigger, readyState, state } = useMessage<
     PlexArgs,
     PlexRootResponse
   >({
     request_type: 'plex',
     authorization: token,
     tmdb_id: download.tmdb_id,
-    // thing_type: type,
+    media_type: type,
   });
-  if (type == 'tv') {
-    console.warn(`${type} not supported here yet`);
-  }
 
   if (message) {
     const first = _.toPairs(message)
       .map(([, v]) => v?.link)
       .find((v) => v);
-    return <Navigate to={first!} />;
+    window.open(first, '_blank', 'noopener,noreferrrer');
+    return <Navigate to="/" />;
   }
 
   return (
@@ -81,7 +79,8 @@ function OpenPlex({
       }}
     >
       <span className="unselectable">Open in Plex</span>
-      {readyState}
+      {readyStateToString(readyState)}
+      {state}
     </MenuItem>
   );
 }

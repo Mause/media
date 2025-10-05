@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import useWebSocket from 'react-use-websocket';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 import { getPrefix } from '../utils';
 import type { components } from '../schema';
@@ -30,10 +30,12 @@ export function useMessages<T>(initMessage: BaseRequest) {
 export function useMessage<REQ extends BaseRequest, T>(request: REQ) {
   const base = getPrefix();
   const url = `${base}/ws`;
+  const [state, setState] = useState<string>('idle');
 
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
   const trigger = useMemo(
     () => () => {
+      setState('sending');
       sendJsonMessage(request);
     },
     [sendJsonMessage, request],
@@ -42,9 +44,27 @@ export function useMessage<REQ extends BaseRequest, T>(request: REQ) {
   const [message, setMessage] = useState<T | null>(null);
   useEffect(() => {
     if (lastJsonMessage) {
+      setState('received');
       setMessage(lastJsonMessage as T);
     }
   }, [lastJsonMessage]);
 
-  return { message, trigger, readyState };
+  return { message, trigger, state, readyState };
+}
+
+export function readyStateToString(readyState: ReadyState) {
+  switch (readyState) {
+    case ReadyState.CONNECTING:
+      return 'Connecting...';
+    case ReadyState.OPEN:
+      return 'Connected';
+    case ReadyState.CLOSING:
+      return 'Disconnecting...';
+    case ReadyState.CLOSED:
+      return 'Disconnected';
+    case ReadyState.UNINSTANTIATED:
+      return 'Uninstantiated';
+    default:
+      return 'Unknown';
+  }
 }
