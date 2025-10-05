@@ -150,7 +150,12 @@ async def test_websocket_plex(
     await r.connect()
     await r.send_json(
         fix_auth(
-            PlexArgs(request_type='plex', tmdb_id=1, authorization=SecretStr('token'))
+            PlexArgs(
+                request_type='plex',
+                tmdb_id=1,
+                media_type='movie',
+                authorization=SecretStr('token'),
+            )
         )
     )
     assert_match_json(snapshot, await r.receive_json(), 'plex.json')

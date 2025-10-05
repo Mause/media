@@ -2375,12 +2375,21 @@
           "tmdb_id": {
             "title": "Tmdb Id",
             "type": "integer"
+          },
+          "media_type": {
+            "enum": [
+              "movie",
+              "tv"
+            ],
+            "title": "Media Type",
+            "type": "string"
           }
         },
         "required": [
           "request_type",
           "authorization",
-          "tmdb_id"
+          "tmdb_id",
+          "media_type"
         ],
         "title": "PlexArgs",
         "type": "object"
