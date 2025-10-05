@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import useWebSocket from 'react-use-websocket';
 
 import { getPrefix } from '../utils';
@@ -25,4 +25,26 @@ export function useMessages<T>(initMessage: BaseRequest) {
   }, [lastJsonMessage]);
 
   return { messages, readyState };
+}
+
+export function useMessage<REQ extends BaseRequest, T>(request: REQ) {
+  const base = getPrefix();
+  const url = `${base}/ws`;
+
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
+  const trigger = useMemo(
+    () => () => {
+      sendJsonMessage(request);
+    },
+    [sendJsonMessage, request],
+  );
+
+  const [message, setMessage] = useState<T | null>(null);
+  useEffect(() => {
+    if (lastJsonMessage) {
+      setMessage(lastJsonMessage as T);
+    }
+  }, [lastJsonMessage]);
+
+  return { message, trigger, readyState };
 }

@@ -11,7 +11,7 @@ from .auth import security
 from .db import (
     User,
 )
-from .models import ITorrent
+from .models import ITorrent, PlexMedia, PlexResponse
 from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     search_for_movie,
@@ -171,9 +171,23 @@ async def websocket_stream(websocket: WebSocket) -> None:
         message = 'Pong'
     elif request.request_type == 'plex':
         plex = await get(websocket.app, get_plex, make_request(websocket, request))
-        imdb = await get_imdb_in_plex('movie', request.tmdb_id, plex)
+        # plex = await gracefully_get_plex(request, settings)
+        dat = await get_imdb_in_plex('movie', request.tmdb_id, plex)
 
-        await websocket.send_json(imdb)
+        if not dat:
+            return await close(websocket, Exception('Not found in plex'))
+
+        await websocket.send_json(
+            {
+                key: PlexResponse[PlexMedia](
+                    item=PlexMedia.model_validate(value),
+                    server_id=plex.machineIdentifier,
+                )
+                if value
+                else None
+                for key, value in dat.items()
+            }
+        )
 
         message = 'Plex complete'
     else:
