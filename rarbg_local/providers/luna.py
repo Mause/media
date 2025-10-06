@@ -1,8 +1,8 @@
 import json
+from collections.abc import AsyncGenerator, Callable, Generator
 from datetime import datetime, timezone
 from os.path import exists
 from typing import Annotated
-from collections.abc import AsyncGenerator, Callable, Generator
 
 import aiohttp
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
