@@ -1,4 +1,5 @@
 import json
+import logging
 from collections.abc import AsyncGenerator, Callable, Generator
 from datetime import datetime, timezone
 from os.path import exists
@@ -11,6 +12,7 @@ from pydantic.types import AwareDatetime
 
 from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 
+logger = logging.getLogger(__name__)
 fmt = "%Y%m%dT%H%M%S"
 url = "http://luna-leederville.3cx.com.au:4025/VenueSchedule.json"
 
@@ -123,7 +125,7 @@ async def main() -> None:
             for torrent in prov.process(
                 schedule, imdb_id=ImdbId('tt31176520'), tmdb_id=TmdbId(648878)
             ):
-                print(torrent)
+                logger.info('Luna: %s', torrent)
 
     else:
         raw_schedule = await get_raw()
