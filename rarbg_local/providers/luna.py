@@ -1,7 +1,8 @@
 import json
 from datetime import datetime, timezone
 from os.path import exists
-from typing import Annotated, AsyncGenerator, Callable, Generator
+from typing import Annotated
+from collections.abc import AsyncGenerator, Callable, Generator
 
 import aiohttp
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
@@ -116,7 +117,7 @@ async def main() -> None:
     filename = 'luna_venue_schedule.json'
 
     if exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             schedule = Schedule.model_validate_json(f.read())
             prov = LunaProvider()
             breakpoint()
