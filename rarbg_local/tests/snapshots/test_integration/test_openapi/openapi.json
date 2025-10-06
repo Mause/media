@@ -1971,12 +1971,12 @@
       "PlexMedia": {
         "properties": {
           "ratingKey": {
-            "type": "integer",
-            "title": "Ratingkey"
+            "title": "Ratingkey",
+            "type": "integer"
           },
           "title": {
-            "type": "string",
-            "title": "Title"
+            "title": "Title",
+            "type": "string"
           },
           "year": {
             "anyOf": [
@@ -1987,15 +1987,16 @@
                 "type": "null"
               }
             ],
+            "default": null,
             "title": "Year"
           },
           "type": {
-            "type": "string",
             "enum": [
               "movie",
               "show"
             ],
-            "title": "Type"
+            "title": "Type",
+            "type": "string"
           },
           "guid": {
             "anyOf": [
@@ -2006,6 +2007,7 @@
                 "type": "null"
               }
             ],
+            "default": null,
             "title": "Guid"
           },
           "summary": {
@@ -2017,6 +2019,7 @@
                 "type": "null"
               }
             ],
+            "default": null,
             "title": "Summary"
           },
           "thumb": {
@@ -2028,6 +2031,7 @@
                 "type": "null"
               }
             ],
+            "default": null,
             "title": "Thumb"
           },
           "art": {
@@ -2039,41 +2043,42 @@
                 "type": "null"
               }
             ],
+            "default": null,
             "title": "Art"
           }
         },
-        "type": "object",
         "required": [
           "ratingKey",
           "title",
           "type"
         ],
-        "title": "PlexMedia"
+        "title": "PlexMedia",
+        "type": "object"
       },
       "PlexResponse_PlexMedia_": {
         "properties": {
           "server_id": {
-            "type": "string",
-            "title": "Server Id"
+            "title": "Server Id",
+            "type": "string"
           },
           "item": {
             "$ref": "#/components/schemas/PlexMedia"
           },
           "link": {
-            "type": "string",
-            "minLength": 1,
             "format": "uri",
+            "minLength": 1,
+            "readOnly": true,
             "title": "Link",
-            "readOnly": true
+            "type": "string"
           }
         },
-        "type": "object",
         "required": [
           "server_id",
           "item",
           "link"
         ],
-        "title": "PlexResponse[PlexMedia]"
+        "title": "PlexResponse[PlexMedia]",
+        "type": "object"
       },
       "ProviderSource": {
         "type": "string",
@@ -2312,6 +2317,170 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "BaseRequest": {
+        "properties": {
+          "request_type": {
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization"
+        ],
+        "title": "BaseRequest",
+        "type": "object"
+      },
+      "PingArgs": {
+        "properties": {
+          "request_type": {
+            "const": "ping",
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization"
+        ],
+        "title": "PingArgs",
+        "type": "object"
+      },
+      "PlexArgs": {
+        "properties": {
+          "request_type": {
+            "const": "plex",
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          },
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "media_type": {
+            "enum": [
+              "movie",
+              "tv"
+            ],
+            "title": "Media Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization",
+          "tmdb_id",
+          "media_type"
+        ],
+        "title": "PlexArgs",
+        "type": "object"
+      },
+      "PlexRootResponse": {
+        "additionalProperties": {
+          "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+        },
+        "title": "PlexRootResponse",
+        "type": "object"
+      },
+      "Reqs": {
+        "discriminator": {
+          "mapping": {
+            "ping": "#/components/schemas/PingArgs",
+            "plex": "#/components/schemas/PlexArgs",
+            "stream": "#/components/schemas/StreamArgs"
+          },
+          "propertyName": "request_type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/StreamArgs"
+          },
+          {
+            "$ref": "#/components/schemas/PingArgs"
+          },
+          {
+            "$ref": "#/components/schemas/PlexArgs"
+          }
+        ],
+        "title": "Reqs"
+      },
+      "StreamArgs": {
+        "properties": {
+          "request_type": {
+            "const": "stream",
+            "title": "Request Type",
+            "type": "string"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          },
+          "type": {
+            "enum": [
+              "series",
+              "movie"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "season": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Season"
+          },
+          "episode": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Episode"
+          }
+        },
+        "required": [
+          "request_type",
+          "authorization",
+          "type",
+          "tmdb_id"
+        ],
+        "title": "StreamArgs",
+        "type": "object"
       }
     },
     "securitySchemes": {

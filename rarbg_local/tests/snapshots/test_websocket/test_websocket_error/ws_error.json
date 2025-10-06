@@ -1,0 +1,42 @@
+{
+  "error": "3 validation errors for Reqs",
+  "type": "ValidationError",
+  "errors": [
+    {
+      "type": "missing",
+      "loc": [
+        "stream",
+        "authorization"
+      ],
+      "msg": "Field required",
+      "input": {
+        "request_type": "stream"
+      },
+      "url": "https://errors.pydantic.dev/2.11/v/missing"
+    },
+    {
+      "type": "missing",
+      "loc": [
+        "stream",
+        "type"
+      ],
+      "msg": "Field required",
+      "input": {
+        "request_type": "stream"
+      },
+      "url": "https://errors.pydantic.dev/2.11/v/missing"
+    },
+    {
+      "type": "missing",
+      "loc": [
+        "stream",
+        "tmdb_id"
+      ],
+      "msg": "Field required",
+      "input": {
+        "request_type": "stream"
+      },
+      "url": "https://errors.pydantic.dev/2.11/v/missing"
+    }
+  ]
+}

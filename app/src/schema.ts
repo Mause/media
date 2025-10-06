@@ -644,21 +644,36 @@ export interface components {
       ratingKey: number;
       /** Title */
       title: string;
-      /** Year */
-      year?: number | null;
+      /**
+       * Year
+       * @default null
+       */
+      year: number | null;
       /**
        * Type
        * @enum {string}
        */
       type: 'movie' | 'show';
-      /** Guid */
-      guid?: string | null;
-      /** Summary */
-      summary?: string | null;
-      /** Thumb */
-      thumb?: string | null;
-      /** Art */
-      art?: string | null;
+      /**
+       * Guid
+       * @default null
+       */
+      guid: string | null;
+      /**
+       * Summary
+       * @default null
+       */
+      summary: string | null;
+      /**
+       * Thumb
+       * @default null
+       */
+      thumb: string | null;
+      /**
+       * Art
+       * @default null
+       */
+      art: string | null;
     };
     /** PlexResponse[PlexMedia] */
     PlexResponse_PlexMedia_: {
@@ -762,6 +777,88 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+    };
+    /** BaseRequest */
+    BaseRequest: {
+      /** Request Type */
+      request_type: string;
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+    };
+    /** PingArgs */
+    PingArgs: {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      request_type: 'ping';
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+    };
+    /** PlexArgs */
+    PlexArgs: {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      request_type: 'plex';
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+      /** Tmdb Id */
+      tmdb_id: number;
+      /**
+       * Media Type
+       * @enum {string}
+       */
+      media_type: 'movie' | 'tv';
+    };
+    /** PlexRootResponse */
+    PlexRootResponse: {
+      [key: string]: components['schemas']['PlexResponse_PlexMedia_'];
+    };
+    /** Reqs */
+    Reqs:
+      | components['schemas']['StreamArgs']
+      | components['schemas']['PingArgs']
+      | components['schemas']['PlexArgs'];
+    /** StreamArgs */
+    StreamArgs: {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      request_type: 'stream';
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: 'series' | 'movie';
+      /** Tmdb Id */
+      tmdb_id: number;
+      /**
+       * Season
+       * @default null
+       */
+      season: number | null;
+      /**
+       * Episode
+       * @default null
+       */
+      episode: number | null;
     };
   };
   responses: never;
