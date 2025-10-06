@@ -25,8 +25,8 @@ def mk(prefix: str) -> Callable[[str], str]:
 class Base(BaseModel):
     model_config = ConfigDict(
         alias_generator=mk(''),
-        populate_by_name=True,
-        populate_by_alias=True,
+        validate_by_name=True,
+        validate_by_alias=True,
     )
 
 
