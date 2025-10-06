@@ -11,7 +11,7 @@ from typing import (
     cast,
 )
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, WebSocket
+from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.requests import Request
