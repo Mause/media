@@ -5,6 +5,7 @@ from datetime import datetime
 from os import getpid
 from typing import Any, cast, overload
 
+from aiocache import Cache
 from fastapi import APIRouter
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import HTTPException
@@ -64,6 +65,7 @@ def build() -> Healthcheck:
         HealthcheckInternalComponent('transmission'), transmission_connectivity
     )
     add_component(HealthcheckHTTPComponent('plex'), plex_connectivity)
+    add_component(HealthcheckDatastoreComponent('cache'), check_cache)
 
     for provider in get_providers():
         add_component(HealthcheckHTTPComponent(provider.type.value), provider.health)
@@ -214,3 +216,14 @@ async def transmission_connectivity() -> HealthcheckCallbackResponse:
 async def plex_connectivity() -> HealthcheckCallbackResponse:
     plex: PlexServer = await get(get_plex)
     return HealthcheckCallbackResponse(HealthcheckStatus.PASS, plex._baseurl)
+
+
+async def get_cache() -> Cache:
+    return Cache(Cache.REDIS)
+
+
+async def check_cache() -> HealthcheckCallbackResponse:
+    cache = await get(get_cache)
+    await cache.set('key', 'value')
+    await cache.get('key')
+    return HealthcheckCallbackResponse(HealthcheckStatus.PASS, {'backend': cache})
