@@ -476,20 +476,12 @@ def custom_openapi(app: FastAPI) -> dict:
     return app.openapi_schema
 
 
-class StoreRequest:
-    def __init__(self, app: ASGIApp) -> None:
-        self.app = app
-
-    async def __call__(self, scope: dict, receive: Callable, send: Callable) -> None:
-        token = request_var.set(
-            Request(scope, receive, send)
-            if scope['type'] == 'http'
-            else WebSocket(scope, receive, send)
-        )
-        try:
-            await self.app(scope, receive, send)
-        finally:
-            request_var.reset(token)
+async def store_request(request: Request, call_next: ASGIApp) -> Response:
+    token = request_var.set(request)
+    try:
+        return await call_next(request)
+    finally:
+        request_var.reset(token)
 
 
 def create_app() -> FastAPI:
@@ -520,7 +512,8 @@ def create_app() -> FastAPI:
     )
     app.include_router(root, prefix='')
     app.openapi = lambda: custom_openapi(app)  # type: ignore[method-assign]
-    app.add_middleware(StoreRequest)
+    app.middleware('http')(store_request)
+    app.middleware('websocket')(store_request)
 
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:
