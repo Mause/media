@@ -120,9 +120,8 @@ async def main() -> None:
         with open(filename) as f:
             schedule = Schedule.model_validate_json(f.read())
             prov = LunaProvider()
-            breakpoint()
             for torrent in prov.process(
-                schedule, imdb_id='tt31176520', tmdb_id='648878'
+                schedule, imdb_id=ImdbId('tt31176520'), tmdb_id=TmdbId(648878)
             ):
                 print(torrent)
 
