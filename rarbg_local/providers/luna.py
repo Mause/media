@@ -126,10 +126,10 @@ async def main() -> None:
                 print(torrent)
 
     else:
-        schedule = await get_raw()
+        raw_schedule = await get_raw()
 
         with open(filename, 'w') as f:
-            json.dump(schedule, f, indent=2)
+            json.dump(raw_schedule, f, indent=2)
 
 
 if __name__ == "__main__":
