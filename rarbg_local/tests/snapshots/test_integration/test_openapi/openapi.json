@@ -1686,8 +1686,17 @@
             "title": "Seeders"
           },
           "download": {
-            "type": "string",
-            "pattern": "^magnet:",
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^magnet:"
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "format": "uri"
+              }
+            ],
             "title": "Download"
           },
           "category": {
