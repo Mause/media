@@ -104,17 +104,13 @@ class HealthcheckResponses(RootModel[list[HealthcheckResponse]]):
 
 
 @router.get('/{component_name}')
-async def component_diagnostics(
-    request: Request, component_name: str
-) -> HealthcheckResponses:
+async def component_diagnostics(component_name: str) -> HealthcheckResponses:
     health = build()
     component = next(
         (comp for comp in health.components if comp.name == component_name), None
     )
     if component is None:
         raise HTTPException(404, ({'error': 'Component not found'}))
-
-    request_var.set(request)
 
     return HealthcheckResponses.model_validate(await component.run())
 

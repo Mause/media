@@ -21,6 +21,7 @@ from pydantic import BaseModel
 from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
+from starlette.applications import ASGIApp
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -34,6 +35,7 @@ from .db import (
     get_movies,
     safe_delete,
 )
+from .health import request_var
 from .health import router as health
 from .main import (
     add_single,
@@ -474,6 +476,18 @@ def custom_openapi(app: FastAPI) -> dict:
     return app.openapi_schema
 
 
+class StoreRequest:
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: dict, receive: Callable, send: Callable) -> None:
+        token = request_var.set(Request(scope, receive, send))
+        try:
+            await self.app(scope, receive, send)
+        finally:
+            request_var.reset(token)
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         servers=[
@@ -502,6 +516,7 @@ def create_app() -> FastAPI:
     )
     app.include_router(root, prefix='')
     app.openapi = lambda: custom_openapi(app)  # type: ignore[method-assign]
+    app.add_middleware(StoreRequest)
 
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:
