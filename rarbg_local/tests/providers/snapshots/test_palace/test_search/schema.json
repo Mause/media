@@ -1,0 +1,638 @@
+{
+  "$defs": {
+    "AdditionalDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "root": {
+          "$ref": "#/$defs/Root"
+        }
+      },
+      "required": [
+        "root"
+      ],
+      "title": "AdditionalDetail",
+      "type": "object"
+    },
+    "CinemasSearchResult": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "cinemas",
+          "title": "Type",
+          "type": "string"
+        },
+        "caption": {
+          "title": "Caption",
+          "type": "string"
+        },
+        "content": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdditionalDetail"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Content"
+        },
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "json": {
+          "name": "json",
+          "title": "Json",
+          "type": "boolean"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "caption",
+        "content",
+        "filename",
+        "id",
+        "json",
+        "slug",
+        "title"
+      ],
+      "title": "CinemasSearchResult",
+      "type": "object"
+    },
+    "EventSearchResult": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "events",
+          "title": "Type",
+          "type": "string"
+        },
+        "caption": {
+          "title": "Caption",
+          "type": "string"
+        },
+        "content": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdditionalDetail"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Content"
+        },
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "herotext": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Herotext"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "caption",
+        "content",
+        "filename",
+        "herotext",
+        "slug",
+        "title"
+      ],
+      "title": "EventSearchResult",
+      "type": "object"
+    },
+    "Heading": {
+      "additionalProperties": false,
+      "properties": {
+        "children": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "title": "Children",
+          "type": "array"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "const": "ltr",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Direction"
+        },
+        "format": {
+          "enum": [
+            "",
+            "start"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "indent": {
+          "const": 0,
+          "title": "Indent",
+          "type": "integer"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "type": {
+          "const": "heading",
+          "title": "Type",
+          "type": "string"
+        },
+        "tag": {
+          "enum": [
+            "h2",
+            "h3",
+            "h6"
+          ],
+          "title": "Tag",
+          "type": "string"
+        }
+      },
+      "required": [
+        "children",
+        "direction",
+        "format",
+        "indent",
+        "version",
+        "type",
+        "tag"
+      ],
+      "title": "Heading",
+      "type": "object"
+    },
+    "Link": {
+      "additionalProperties": false,
+      "properties": {
+        "children": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "title": "Children",
+          "type": "array"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "const": "ltr",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Direction"
+        },
+        "format": {
+          "enum": [
+            "",
+            "start"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "indent": {
+          "const": 0,
+          "title": "Indent",
+          "type": "integer"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "type": {
+          "const": "link",
+          "title": "Type",
+          "type": "string"
+        },
+        "fields": {
+          "$ref": "#/$defs/LinkFields"
+        }
+      },
+      "required": [
+        "children",
+        "direction",
+        "format",
+        "indent",
+        "version",
+        "type",
+        "fields"
+      ],
+      "title": "Link",
+      "type": "object"
+    },
+    "LinkFields": {
+      "additionalProperties": false,
+      "properties": {
+        "newTab": {
+          "title": "Newtab",
+          "type": "boolean"
+        },
+        "linkType": {
+          "const": "custom",
+          "title": "Linktype",
+          "type": "string"
+        },
+        "doc": {
+          "title": "Doc",
+          "type": "null"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "newTab",
+        "linkType",
+        "doc",
+        "url"
+      ],
+      "title": "LinkFields",
+      "type": "object"
+    },
+    "MovieSearchResult": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "movies",
+          "title": "Type",
+          "type": "string"
+        },
+        "caption": {
+          "title": "Caption",
+          "type": "string"
+        },
+        "content": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Content"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "caption",
+        "content",
+        "id",
+        "slug",
+        "title"
+      ],
+      "title": "MovieSearchResult",
+      "type": "object"
+    },
+    "Node": {
+      "discriminator": {
+        "mapping": {
+          "heading": "#/$defs/Heading",
+          "link": "#/$defs/Link",
+          "paragraph": "#/$defs/Paragraph",
+          "text": "#/$defs/Text"
+        },
+        "propertyName": "type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Paragraph"
+        },
+        {
+          "$ref": "#/$defs/Text"
+        },
+        {
+          "$ref": "#/$defs/Heading"
+        },
+        {
+          "$ref": "#/$defs/Link"
+        }
+      ],
+      "title": "Node"
+    },
+    "OffersSearchResult": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "offers",
+          "title": "Type",
+          "type": "string"
+        },
+        "caption": {
+          "title": "Caption",
+          "type": "string"
+        },
+        "content": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdditionalDetail"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Content"
+        },
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "herotext": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Herotext"
+        },
+        "id": {
+          "title": "Id",
+          "type": "integer"
+        },
+        "json": {
+          "name": "json",
+          "title": "Json",
+          "type": "boolean"
+        },
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "caption",
+        "content",
+        "filename",
+        "id",
+        "json",
+        "slug",
+        "title"
+      ],
+      "title": "OffersSearchResult",
+      "type": "object"
+    },
+    "Paragraph": {
+      "additionalProperties": false,
+      "properties": {
+        "children": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "title": "Children",
+          "type": "array"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "const": "ltr",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Direction"
+        },
+        "format": {
+          "enum": [
+            "",
+            "start"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "indent": {
+          "const": 0,
+          "title": "Indent",
+          "type": "integer"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "type": {
+          "const": "paragraph",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "children",
+        "direction",
+        "format",
+        "indent",
+        "version",
+        "type"
+      ],
+      "title": "Paragraph",
+      "type": "object"
+    },
+    "Root": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "root",
+          "title": "Type",
+          "type": "string"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "const": "ltr",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Direction"
+        },
+        "children": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Node"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Children"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "indent": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Indent"
+        },
+        "format": {
+          "const": "",
+          "title": "Format",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "direction",
+        "version",
+        "format"
+      ],
+      "title": "Root",
+      "type": "object"
+    },
+    "Text": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "text",
+          "title": "Type",
+          "type": "string"
+        },
+        "detail": {
+          "const": 0,
+          "title": "Detail",
+          "type": "integer"
+        },
+        "format": {
+          "enum": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "title": "Format",
+          "type": "integer"
+        },
+        "mode": {
+          "const": "normal",
+          "title": "Mode",
+          "type": "string"
+        },
+        "style": {
+          "const": "",
+          "title": "Style",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "version": {
+          "const": 1,
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "type",
+        "detail",
+        "format",
+        "mode",
+        "style",
+        "text",
+        "version"
+      ],
+      "title": "Text",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "cinemas": "#/$defs/CinemasSearchResult",
+      "events": "#/$defs/EventSearchResult",
+      "movies": "#/$defs/MovieSearchResult",
+      "offers": "#/$defs/OffersSearchResult"
+    },
+    "propertyName": "type"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/MovieSearchResult"
+    },
+    {
+      "$ref": "#/$defs/EventSearchResult"
+    },
+    {
+      "$ref": "#/$defs/CinemasSearchResult"
+    },
+    {
+      "$ref": "#/$defs/OffersSearchResult"
+    }
+  ],
+  "title": "SearchResult"
+}
