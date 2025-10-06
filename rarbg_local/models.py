@@ -22,6 +22,7 @@ class ProviderSource(Enum):
     TORRENTS_CSV = 'torrentscsv'
     NYAA_SI = 'nyaasi'
     PIRATEBAY = 'piratebay'
+    YTS = 'yts'
 
 
 class EpisodeInfo(BaseModel):

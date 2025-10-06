@@ -696,7 +696,8 @@ export interface components {
       | 'rarbg'
       | 'torrentscsv'
       | 'nyaasi'
-      | 'piratebay';
+      | 'piratebay'
+      | 'yts';
     /** SearchResponse */
     SearchResponse: {
       /** Title */

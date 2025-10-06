@@ -45,6 +45,8 @@ dependencies = [
     "psycopg[binary,pool]>=3.2.9; 'android' not in platform_release",
     "geoip-py>=1.0.2",
     "uvicorn-worker>=0.3.0",
+    "rustimport>=1.7.1",
+    "attractive",
 ]
 
 [dependency-groups]
@@ -72,12 +74,13 @@ dev = [
     "pytest-cov>=6.1.1",
     "pytest-resource-path>=1.4.0",
     "pytest-alembic>=0.12.1",
+    "maturin[patchelf]>=1.9.3",
 ]
 debug = ["pudb", "pdbpp"]
 cli = [
     "rich>=14.0.0",
 ]
-ty = ['ty']
+ty = ['ty>=0.0.1a17']
 
 [tool.ruff]
 show-fixes = true
@@ -118,3 +121,11 @@ module = [
     "rarbg_local.jikan",
 ]
 disallow_untyped_defs = true
+
+[tool.uv.workspace]
+members = [
+    "attractive",
+]
+
+[tool.uv.sources]
+attractive = { workspace = true }
