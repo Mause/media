@@ -35,8 +35,8 @@ class Movie(Base):
         alias_generator=mk("Movie_"),
     )
     name: str
-    imdb_id: Annotated[str | None, Field(alias='Movie_IMDB_ID')]
-    tmdb_id: Annotated[str | None, Field(alias='Movie_TMDb_ID')]
+    imdb_id: Annotated[ImdbId | None, Field(alias='Movie_IMDB_ID')]
+    tmdb_id: Annotated[TmdbId | None, Field(alias='Movie_TMDb_ID')]
 
     url: Annotated[str, Field(alias='Movie_URL')]
     code: str
