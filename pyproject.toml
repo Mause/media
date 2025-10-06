@@ -45,6 +45,7 @@ dependencies = [
     "psycopg[binary,pool]>=3.2.9; 'android' not in platform_release",
     "geoip-py>=1.0.2",
     "uvicorn-worker>=0.3.0",
+    "aiocache[redis]>=0.12.3",
 ]
 
 [dependency-groups]
