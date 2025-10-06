@@ -5,10 +5,9 @@ from datetime import datetime
 from os import getpid
 from typing import Any, cast, overload
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, WebSocket
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import HTTPException
-from fastapi.requests import Request
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -31,7 +30,7 @@ from .transmission_proxy import transmission
 
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=['diagnostics'])
-request_var = contextvars.ContextVar[Request]('request_var')
+request_var = contextvars.ContextVar[Request | WebSocket]('request_var')
 
 
 @overload

@@ -11,7 +11,7 @@ from typing import (
     cast,
 )
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.requests import Request
@@ -481,10 +481,11 @@ class StoreRequest:
         self.app = app
 
     async def __call__(self, scope: dict, receive: Callable, send: Callable) -> None:
-        if scope['type'] != 'http':
-            await self.app(scope, receive, send)
-            return
-        token = request_var.set(Request(scope, receive, send))
+        token = request_var.set(
+            Request(scope, receive, send)
+            if scope['type'] == 'http'
+            else WebSocket(scope, receive, send)
+        )
         try:
             await self.app(scope, receive, send)
         finally:
