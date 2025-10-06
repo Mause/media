@@ -481,6 +481,9 @@ class StoreRequest:
         self.app = app
 
     async def __call__(self, scope: dict, receive: Callable, send: Callable) -> None:
+        if scope['type'] != 'http':
+            await self.app(scope, receive, send)
+            return
         token = request_var.set(Request(scope, receive, send))
         try:
             await self.app(scope, receive, send)
