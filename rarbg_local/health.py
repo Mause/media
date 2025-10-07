@@ -3,10 +3,10 @@ import logging
 from collections.abc import Callable, Coroutine
 from datetime import datetime
 from os import getpid
-from typing import Any, cast, overload
+from typing import Annotated, Any, cast, overload
 
 from aiocache import Cache
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import HTTPException
 from fastapi.requests import Request
@@ -27,6 +27,7 @@ from sqlalchemy.sql import text
 from .config import commit
 from .db import get_async_sessionmaker
 from .plex import get_plex
+from .settings import Settings, get_settings
 from .singleton import get as _get
 from .transmission_proxy import transmission
 
@@ -218,12 +219,12 @@ async def plex_connectivity() -> HealthcheckCallbackResponse:
     return HealthcheckCallbackResponse(HealthcheckStatus.PASS, plex._baseurl)
 
 
-async def get_cache() -> Cache:
-    return Cache(Cache.REDIS)
+async def get_cache(settings: Annotated[Settings, Depends(get_settings)]) -> Cache:
+    return Cache.from_url(settings.cache_url)
 
 
 async def check_cache() -> HealthcheckCallbackResponse:
     cache = await get(get_cache)
     await cache.set('key', 'value')
     await cache.get('key')
-    return HealthcheckCallbackResponse(HealthcheckStatus.PASS, {'backend': cache})
+    return HealthcheckCallbackResponse(HealthcheckStatus.PASS, str({'backend': cache}))

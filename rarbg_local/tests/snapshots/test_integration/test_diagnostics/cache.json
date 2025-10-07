@@ -1,0 +1,8 @@
+[
+  {
+    "component_name": "cache",
+    "component_type": "datastore",
+    "status": "pass",
+    "output": "{'backend': <aiocache.backends.memory.SimpleMemoryCache object at 0x7342f0f2c0>}"
+  }
+]
