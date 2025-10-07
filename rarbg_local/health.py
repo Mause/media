@@ -21,8 +21,8 @@ from plexapi.server import PlexServer
 from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
 
-from .config import commit
 from .cache import get_cache
+from .config import commit
 from .db import get_async_sessionmaker
 from .plex import get_plex
 from .singleton import get as _get
