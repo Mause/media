@@ -227,4 +227,18 @@ async def check_cache() -> HealthcheckCallbackResponse:
     cache = await get(get_cache)
     await cache.set('key', 'value')
     await cache.get('key')
-    return HealthcheckCallbackResponse(HealthcheckStatus.PASS, str({'backend': cache}))
+    if cache.NAME == 'redis':
+        info = {
+            k: v for k, v in (await cache.raw('info')).items() if k.startswith('redis_')
+        }
+    else:
+        info = {
+            'size': await cache.raw('__len__'),
+        }
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {  # type: ignore[arg-type]
+            'backend': cache.NAME,
+            'info': info,
+        },
+    )
