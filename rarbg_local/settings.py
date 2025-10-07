@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Annotated
 
-from pydantic import AnyUrl, SecretStr
+from pydantic import AnyUrl, Field, SecretStr
 from pydantic_settings import BaseSettings
 
 from .singleton import singleton
@@ -16,7 +16,9 @@ class Settings(BaseSettings):
     TODO: use this
     '''
     plex_token: SecretStr
-    cache_url: Annotated[str, AnyUrl] = 'memory://'
+    cache_url: Annotated[str, Field(AnyUrl, alias='REDISCLOUD_URL')] = (
+        'memory://'
+    )
 
 
 @singleton
