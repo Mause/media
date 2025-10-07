@@ -162,6 +162,7 @@ async def client_ip() -> HealthcheckCallbackResponse:
     from .providers import geolocate
 
     request = request_var.get()
+    assert isinstance(request, Request)
 
     ip_address = request.headers.get(
         'x-forwarded-for', request.client.host if request.client else None

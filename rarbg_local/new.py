@@ -21,7 +21,7 @@ from pydantic import BaseModel
 from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
-from starlette.applications import ASGIApp
+from starlette.middleware.base import RequestResponseEndpoint
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -476,7 +476,9 @@ def custom_openapi(app: FastAPI) -> dict:
     return app.openapi_schema
 
 
-async def store_request(request: Request, call_next: ASGIApp) -> Response:
+async def store_request(
+    request: Request, call_next: RequestResponseEndpoint
+) -> Response:
     token = request_var.set(request)
     try:
         return await call_next(request)
