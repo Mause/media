@@ -141,18 +141,18 @@ async def close(websocket: WebSocket, e: Exception) -> None:
     await websocket.close(reason=name)
 
 
-class PlexRootResponse(RootModel[dict[str, PlexResponse[PlexMedia]]]):
-    pass
-
-
 class SocketMessageType(str, Enum):
     PONG = 'pong'
     PLEX = 'plex'
 
 
-class SocketMessage[T, R](BaseModel):
+class SocketMessage[R](BaseModel):
     type: SocketMessageType
     data: R
+
+
+class PlexRootResponse(SocketMessage[dict[str, PlexResponse[PlexMedia]]]):
+    type: Literal[SocketMessageType.PLEX]
 
 
 @websocket_ns.websocket("/ws")
@@ -198,8 +198,9 @@ async def websocket_stream(websocket: WebSocket) -> None:
             return await close(websocket, Exception('Not found in plex'))
 
         await websocket.send_json(
-            PlexRootResponse.model_validate(
-                {
+            PlexRootResponse(
+                type=SocketMessageType.PLEX,
+                data={
                     key: PlexResponse[PlexMedia](
                         item=PlexMedia.model_validate(value),
                         server_id=plex.machineIdentifier,
@@ -207,7 +208,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
                     if value
                     else None
                     for key, value in dat.items()
-                }
+                },
             ).model_dump(mode='json')
         )
 

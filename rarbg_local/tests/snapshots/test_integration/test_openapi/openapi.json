@@ -2405,9 +2405,24 @@
         "type": "object"
       },
       "PlexRootResponse": {
-        "additionalProperties": {
-          "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+        "properties": {
+          "type": {
+            "const": "plex",
+            "title": "Type",
+            "type": "string"
+          },
+          "data": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+            },
+            "title": "Data",
+            "type": "object"
+          }
         },
+        "required": [
+          "type",
+          "data"
+        ],
         "title": "PlexRootResponse",
         "type": "object"
       },
