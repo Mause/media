@@ -1,0 +1,14 @@
+[
+  {
+    "component_name": "providers",
+    "component_type": "internal",
+    "status": "pass",
+    "output": {
+      "providers": [
+        "torrentscsv",
+        "nyaasi",
+        "piratebay"
+      ]
+    }
+  }
+]
