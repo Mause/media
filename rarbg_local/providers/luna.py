@@ -96,6 +96,8 @@ async def get_venue_schedule() -> Schedule:
 
 
 class LunaProvider(MovieProvider):
+    type = ProviderSource.LUNA
+
     async def search_for_movie(
         self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
