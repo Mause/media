@@ -2,13 +2,15 @@ import inspect
 from asyncio import iscoroutinefunction
 from collections.abc import Callable
 from contextlib import AsyncExitStack
+from contextvars import ContextVar
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, WebSocket
 from fastapi.dependencies.utils import solve_dependencies
-from fastapi.requests import Request
 from fastapi.routing import get_dependant, run_endpoint_function
 from makefun import add_signature_parameters, create_function
+
+request_var = ContextVar[Request | WebSocket]('request_var')
 
 
 async def get[T](
@@ -68,3 +70,13 @@ def singleton(func: Callable):  # noqa: ANN201
     )
 
     return wrapper
+
+
+async def store_request(
+    request: Request, call_next: RequestResponseEndpoint
+) -> Response:
+    token = request_var.set(request)
+    try:
+        return await call_next(request)
+    finally:
+        request_var.reset(token)

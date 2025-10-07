@@ -35,7 +35,6 @@ from .db import (
     get_movies,
     safe_delete,
 )
-from .health import request_var
 from .health import router as health
 from .main import (
     add_single,
@@ -74,7 +73,7 @@ from .providers.abc import (
     TvProvider,
 )
 from .settings import Settings, get_settings
-from .singleton import singleton
+from .singleton import singleton, store_request
 from .tmdb import (
     Configuration,
     Discover,
@@ -474,16 +473,6 @@ def custom_openapi(app: FastAPI) -> dict:
 
     app.openapi_schema = openapi_schema
     return app.openapi_schema
-
-
-async def store_request(
-    request: Request, call_next: RequestResponseEndpoint
-) -> Response:
-    token = request_var.set(request)
-    try:
-        return await call_next(request)
-    finally:
-        request_var.reset(token)
 
 
 def create_app() -> FastAPI:

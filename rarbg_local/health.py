@@ -1,4 +1,3 @@
-import contextvars
 import logging
 from collections.abc import Callable, Coroutine
 from datetime import datetime
@@ -28,11 +27,11 @@ from .db import get_async_sessionmaker
 from .plex import get_plex
 from .settings import Settings, get_settings
 from .singleton import get as _get
+from .singleton import request_var
 from .transmission_proxy import transmission
 
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=['diagnostics'])
-request_var = contextvars.ContextVar[Request | WebSocket]('request_var')
 
 
 @overload
