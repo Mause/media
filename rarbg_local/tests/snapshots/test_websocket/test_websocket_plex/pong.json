@@ -1,0 +1,6 @@
+{
+  "type": "pong",
+  "data": {
+    "task_name": "gracefully_get_plex"
+  }
+}

@@ -1,10 +1,11 @@
 import logging
+from asyncio import create_task, sleep
 from collections import ChainMap
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Coroutine
+from enum import Enum
 from typing import Annotated, Literal, Union
 
-from fastapi import APIRouter, WebSocket
-from fastapi.requests import Request
+from fastapi import APIRouter, Request, WebSocket
 from pydantic import BaseModel, Field, RootModel, SecretStr, ValidationError
 
 from .auth import security
@@ -144,6 +145,16 @@ class PlexRootResponse(RootModel[dict[str, PlexResponse[PlexMedia]]]):
     pass
 
 
+class SocketMessageType(str, Enum):
+    PONG = 'pong'
+    PLEX = 'plex'
+
+
+class SocketMessage[T, R](BaseModel):
+    type: SocketMessageType
+    data: R
+
+
 @websocket_ns.websocket("/ws")
 async def websocket_stream(websocket: WebSocket) -> None:
     logger.info('Got websocket connection')
@@ -174,7 +185,13 @@ async def websocket_stream(websocket: WebSocket) -> None:
         message = 'Pong'
     elif request.request_type == 'plex':
         settings = await get(websocket.app, get_settings)
-        plex = await gracefully_get_plex(make_request(websocket, request), settings)
+
+        plex = await monitor(
+            gracefully_get_plex(make_request(websocket, request), settings),
+            'gracefully_get_plex',
+            websocket,
+        )
+
         dat = await get_imdb_in_plex(request.media_type, request.tmdb_id, plex)
 
         if not dat:
@@ -200,3 +217,19 @@ async def websocket_stream(websocket: WebSocket) -> None:
 
     logger.info(message)
     await websocket.close(reason=message)
+
+
+async def monitor[T](
+    coroutine: Coroutine[None, None, T], name: str, websocket: WebSocket
+) -> T:
+    task = create_task(coroutine, name=name)
+
+    while True:
+        if task.done():
+            return task.result()
+        await sleep(0)
+        await websocket.send_json(
+            SocketMessage(
+                type=SocketMessageType.PONG, data={'task_name': task.get_name()}
+            ).model_dump(mode='json')
+        )
