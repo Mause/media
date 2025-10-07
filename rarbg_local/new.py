@@ -21,7 +21,6 @@ from pydantic import BaseModel
 from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
-from starlette.middleware.base import RequestResponseEndpoint
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
