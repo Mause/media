@@ -4,8 +4,7 @@ from datetime import datetime
 from os import getpid
 from typing import Annotated, Any, cast, overload
 
-from aiocache import Cache
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import HTTPException
 from healthcheck import (
@@ -212,10 +211,6 @@ async def transmission_connectivity() -> HealthcheckCallbackResponse:
 async def plex_connectivity() -> HealthcheckCallbackResponse:
     plex: PlexServer = await get(get_plex)
     return HealthcheckCallbackResponse(HealthcheckStatus.PASS, plex._baseurl)
-
-
-async def get_cache(settings: Annotated[Settings, Depends(get_settings)]) -> Cache:
-    return Cache.from_url(settings.cache_url)
 
 
 async def check_cache() -> HealthcheckCallbackResponse:
