@@ -6,14 +6,13 @@ from os.path import exists
 from typing import Annotated
 
 import aiohttp
-from fastapi import Depends
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, PlainSerializer
 from pydantic.types import AwareDatetime
 
-from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 from ..cache import get_cache
 from ..singleton import get, request_var
+from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
 
 logger = logging.getLogger(__name__)
 fmt = "%Y%m%dT%H%M%S"
@@ -86,7 +85,7 @@ async def get_venue_schedule() -> Schedule:
     luna = await cache.get(LUNA_SCHEDULE)
     if luna:
         return Schedule.model_validate(luna)
-    
+
     luna = await get_raw()
     await cache.set(LUNA_SCHEDULE, luna, ttl=360)
     return Schedule.model_validate(luna)
