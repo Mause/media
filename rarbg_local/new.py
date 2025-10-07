@@ -72,7 +72,7 @@ from .providers.abc import (
     TvProvider,
 )
 from .settings import Settings, get_settings
-from .singleton import singleton
+from .singleton import singleton, store_request
 from .tmdb import (
     Configuration,
     Discover,
@@ -502,6 +502,8 @@ def create_app() -> FastAPI:
     )
     app.include_router(root, prefix='')
     app.openapi = lambda: custom_openapi(app)  # type: ignore[method-assign]
+    app.middleware('http')(store_request)
+    app.middleware('websocket')(store_request)
 
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:
