@@ -12,9 +12,6 @@ class Settings(BaseSettings):
     database_url: Annotated[str, SecretStr] = f"sqlite:///{root}/db.db"
     static_resources_path: Path = root / 'app/build'
     transmission_url: Annotated[str, AnyUrl] = 'http://localhost:9091'
-    '''
-    TODO: use this
-    '''
     plex_token: SecretStr
     cache_url: Annotated[str, Field(Secret[AnyUrl], alias='REDISCLOUD_URL')] = (
         'memory://'
