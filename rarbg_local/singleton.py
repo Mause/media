@@ -5,10 +5,11 @@ from contextlib import AsyncExitStack
 from contextvars import ContextVar
 from typing import Any
 
-from fastapi import FastAPI, Request, WebSocket
+from fastapi import FastAPI, Request, Response, WebSocket
 from fastapi.dependencies.utils import solve_dependencies
 from fastapi.routing import get_dependant, run_endpoint_function
 from makefun import add_signature_parameters, create_function
+from starlette.middleware.base import RequestResponseEndpoint
 
 request_var = ContextVar[Request | WebSocket]('request_var')
 
