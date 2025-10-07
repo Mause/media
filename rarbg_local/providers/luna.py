@@ -6,6 +6,7 @@ from os.path import exists
 from typing import Annotated
 
 import aiohttp
+from aiocache import Cache
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, PlainSerializer
 from pydantic.types import AwareDatetime
@@ -79,8 +80,9 @@ async def get_raw() -> dict:
 
 async def get_venue_schedule() -> Schedule:
     request = request_var.get()
+    assert request
 
-    cache = await get(request.app, get_cache, request)
+    cache = await get[Cache](request.app, get_cache, request)
 
     luna = await cache.get(LUNA_SCHEDULE)
     if luna:
