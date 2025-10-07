@@ -3,9 +3,10 @@ import logging
 from collections.abc import AsyncGenerator, Callable, Generator
 from datetime import datetime, timezone
 from os.path import exists
-from typing import Annotated
+from typing import Annotated, cast
 
 import aiohttp
+from fastapi import Request
 from aiocache import Cache
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, PlainSerializer
@@ -80,7 +81,7 @@ async def get_raw() -> dict:
 
 async def get_venue_schedule() -> Schedule:
     request = request_var.get()
-    assert request is not None
+    assert isinstance(request, Request)
 
     cache = cast(Cache, await get(request.app, get_cache, request))
     assert isinstance(cache, Cache)
