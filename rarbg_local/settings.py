@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     TODO: use this
     '''
     plex_token: SecretStr
+    cache_url: Annotated[str, AnyUrl] = 'memory://'
 
 
 @singleton

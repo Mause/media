@@ -3,9 +3,10 @@ import logging
 from collections.abc import Callable, Coroutine
 from datetime import datetime
 from os import getpid
-from typing import Any, cast, overload
+from typing import Annotated, Any, cast, overload
 
-from fastapi import APIRouter, Request, WebSocket
+from fastapi import APIRouter, Depends, Request, WebSocket
+from aiocache import Cache
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import HTTPException
 from healthcheck import (
@@ -25,6 +26,7 @@ from sqlalchemy.sql import text
 from .config import commit
 from .db import get_async_sessionmaker
 from .plex import get_plex
+from .settings import Settings, get_settings
 from .singleton import get as _get
 from .transmission_proxy import transmission
 
@@ -63,6 +65,7 @@ def build() -> Healthcheck:
         HealthcheckInternalComponent('transmission'), transmission_connectivity
     )
     add_component(HealthcheckHTTPComponent('plex'), plex_connectivity)
+    add_component(HealthcheckDatastoreComponent('cache'), check_cache)
 
     for provider in get_providers():
         add_component(HealthcheckHTTPComponent(provider.type.value), provider.health)
@@ -209,3 +212,28 @@ async def transmission_connectivity() -> HealthcheckCallbackResponse:
 async def plex_connectivity() -> HealthcheckCallbackResponse:
     plex: PlexServer = await get(get_plex)
     return HealthcheckCallbackResponse(HealthcheckStatus.PASS, plex._baseurl)
+
+
+async def get_cache(settings: Annotated[Settings, Depends(get_settings)]) -> Cache:
+    return Cache.from_url(settings.cache_url)
+
+
+async def check_cache() -> HealthcheckCallbackResponse:
+    cache = await get(get_cache)
+    await cache.set('key', 'value')
+    await cache.get('key')
+    if cache.NAME == 'redis':
+        info = {
+            k: v for k, v in (await cache.raw('info')).items() if k.startswith('redis_')
+        }
+    else:
+        info = {
+            'size': await cache.raw('__len__'),
+        }
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {  # type: ignore[arg-type]
+            'backend': cache.NAME,
+            'info': info,
+        },
+    )
