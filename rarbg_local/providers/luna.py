@@ -6,15 +6,19 @@ from os.path import exists
 from typing import Annotated
 
 import aiohttp
+from fastapi import Depends
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, PlainSerializer
 from pydantic.types import AwareDatetime
 
 from .abc import ImdbId, ITorrent, MovieProvider, ProviderSource, TmdbId
+from ..cache import get_cache
+from ..singleton import get, request_var
 
 logger = logging.getLogger(__name__)
 fmt = "%Y%m%dT%H%M%S"
 url = "http://luna-leederville.3cx.com.au:4025/VenueSchedule.json"
+LUNA_SCHEDULE = 'luna-schedule'
 
 
 def mk(prefix: str) -> Callable[[str], str]:
@@ -75,7 +79,17 @@ async def get_raw() -> dict:
 
 
 async def get_venue_schedule() -> Schedule:
-    return Schedule.model_validate(await get_raw())
+    request = request_var.get()
+
+    cache = await get(request.app, get_cache, request)
+
+    luna = await cache.get(LUNA_SCHEDULE)
+    if luna:
+        return Schedule.model_validate(luna)
+    
+    luna = await get_raw()
+    await cache.set(LUNA_SCHEDULE, luna, ttl=360)
+    return Schedule.model_validate(luna)
 
 
 class LunaProvider(MovieProvider):
