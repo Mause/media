@@ -80,9 +80,10 @@ async def get_raw() -> dict:
 
 async def get_venue_schedule() -> Schedule:
     request = request_var.get()
-    assert request
+    assert request is not None
 
-    cache = await get[Cache](request.app, get_cache, request)
+    cache = cast(Cache, await get(request.app, get_cache, request))
+    assert isinstance(cache, Cache)
 
     luna = await cache.get(LUNA_SCHEDULE)
     if luna:
