@@ -2448,6 +2448,30 @@
         ],
         "title": "Reqs"
       },
+      "SocketMessage": {
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/SocketMessageType"
+          },
+          "data": {
+            "title": "Data"
+          }
+        },
+        "required": [
+          "type",
+          "data"
+        ],
+        "title": "SocketMessage",
+        "type": "object"
+      },
+      "SocketMessageType": {
+        "enum": [
+          "pong",
+          "plex"
+        ],
+        "title": "SocketMessageType",
+        "type": "string"
+      },
       "StreamArgs": {
         "properties": {
           "request_type": {

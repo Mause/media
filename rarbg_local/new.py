@@ -91,7 +91,7 @@ from .tmdb import (
 )
 from .types import TmdbId
 from .utils import Message, non_null
-from .websocket import PlexRootResponse, websocket_ns
+from .websocket import websocket_ns
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -446,12 +446,22 @@ def get_extra_schemas() -> dict:
     from fastapi.openapi.constants import REF_TEMPLATE
     from pydantic.json_schema import models_json_schema
 
-    from .websocket import BaseRequest, Reqs
+    from .websocket import (
+        BaseRequest,
+        PlexRootResponse,
+        Reqs,
+        SocketMessage,
+    )
 
     _, res = models_json_schema(
         models=[
             (cast(type[BaseModel], model), 'serialization')
-            for model in [Reqs, BaseRequest, PlexRootResponse]
+            for model in [
+                Reqs,
+                BaseRequest,
+                PlexRootResponse,
+                SocketMessage,
+            ]
         ],
         ref_template=REF_TEMPLATE,
     )
