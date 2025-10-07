@@ -72,7 +72,7 @@ from .providers.abc import (
     TvProvider,
 )
 from .settings import Settings, get_settings
-from .singleton import singleton
+from .singleton import singleton, store_request
 from .tmdb import (
     Configuration,
     Discover,
@@ -91,7 +91,7 @@ from .tmdb import (
 )
 from .types import TmdbId
 from .utils import Message, non_null
-from .websocket import PlexRootResponse, websocket_ns
+from .websocket import websocket_ns
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -446,12 +446,22 @@ def get_extra_schemas() -> dict:
     from fastapi.openapi.constants import REF_TEMPLATE
     from pydantic.json_schema import models_json_schema
 
-    from .websocket import BaseRequest, Reqs
+    from .websocket import (
+        BaseRequest,
+        PlexRootResponse,
+        Reqs,
+        SocketMessage,
+    )
 
     _, res = models_json_schema(
         models=[
             (cast(type[BaseModel], model), 'serialization')
-            for model in [Reqs, BaseRequest, PlexRootResponse]
+            for model in [
+                Reqs,
+                BaseRequest,
+                PlexRootResponse,
+                SocketMessage,
+            ]
         ],
         ref_template=REF_TEMPLATE,
     )
@@ -502,6 +512,8 @@ def create_app() -> FastAPI:
     )
     app.include_router(root, prefix='')
     app.openapi = lambda: custom_openapi(app)  # type: ignore[method-assign]
+    app.middleware('http')(store_request)
+    app.middleware('websocket')(store_request)
 
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:

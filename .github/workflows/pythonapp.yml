@@ -40,7 +40,7 @@ jobs:
         uses: liskin/gh-problem-matcher-wrap@v3
         with:
           linters: pytest
-          run: uv run pytest -vv
+          run: uv run pytest -v
         env:
           CLOUDAMQP_URL: 'https://hello'
           TMDB_API_KEY: word

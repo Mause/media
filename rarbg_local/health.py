@@ -1,14 +1,12 @@
-import contextvars
 import logging
 from collections.abc import Callable, Coroutine
 from datetime import datetime
 from os import getpid
 from typing import Any, cast, overload
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import HTTPException
-from fastapi.requests import Request
 from healthcheck import (
     Healthcheck,
     HealthcheckCallbackResponse,
@@ -23,15 +21,16 @@ from plexapi.server import PlexServer
 from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
 
+from .cache import get_cache
 from .config import commit
 from .db import get_async_sessionmaker
 from .plex import get_plex
 from .singleton import get as _get
+from .singleton import request_var
 from .transmission_proxy import transmission
 
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=['diagnostics'])
-request_var = contextvars.ContextVar[Request]('request_var')
 
 
 @overload
@@ -64,6 +63,7 @@ def build() -> Healthcheck:
         HealthcheckInternalComponent('transmission'), transmission_connectivity
     )
     add_component(HealthcheckHTTPComponent('plex'), plex_connectivity)
+    add_component(HealthcheckDatastoreComponent('cache'), check_cache)
 
     for provider in get_providers():
         add_component(HealthcheckHTTPComponent(provider.type.value), provider.health)
@@ -104,17 +104,13 @@ class HealthcheckResponses(RootModel[list[HealthcheckResponse]]):
 
 
 @router.get('/{component_name}')
-async def component_diagnostics(
-    request: Request, component_name: str
-) -> HealthcheckResponses:
+async def component_diagnostics(component_name: str) -> HealthcheckResponses:
     health = build()
     component = next(
         (comp for comp in health.components if comp.name == component_name), None
     )
     if component is None:
         raise HTTPException(404, ({'error': 'Component not found'}))
-
-    request_var.set(request)
 
     return HealthcheckResponses.model_validate(await component.run())
 
@@ -164,6 +160,7 @@ async def client_ip() -> HealthcheckCallbackResponse:
     from .providers import geolocate
 
     request = request_var.get()
+    assert isinstance(request, Request)
 
     ip_address = request.headers.get(
         'x-forwarded-for', request.client.host if request.client else None
@@ -214,3 +211,24 @@ async def transmission_connectivity() -> HealthcheckCallbackResponse:
 async def plex_connectivity() -> HealthcheckCallbackResponse:
     plex: PlexServer = await get(get_plex)
     return HealthcheckCallbackResponse(HealthcheckStatus.PASS, plex._baseurl)
+
+
+async def check_cache() -> HealthcheckCallbackResponse:
+    cache = await get(get_cache)
+    await cache.set('key', 'value')
+    await cache.get('key')
+    if cache.NAME == 'redis':
+        info = {
+            k: v for k, v in (await cache.raw('info')).items() if k.startswith('redis_')
+        }
+    else:
+        info = {
+            'size': await cache.raw('__len__'),
+        }
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {  # type: ignore[arg-type]
+            'backend': cache.NAME,
+            'info': info,
+        },
+    )

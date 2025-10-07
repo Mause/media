@@ -65,7 +65,7 @@ function OpenPlex({
   });
 
   if (message) {
-    const first = _.toPairs(message)
+    const first = _.toPairs(message.data)
       .map(([, v]) => v?.link)
       .find((v) => v);
     window.open(first, '_blank', 'noopener,noreferrrer');

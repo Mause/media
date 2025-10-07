@@ -160,4 +160,14 @@ async def test_websocket_plex(
             )
         )
     )
+
+    assert_match_json(snapshot, await r.receive_json(), 'pong.json')
     assert_match_json(snapshot, await r.receive_json(), 'plex.json')
+    with raises(Exception) as e:
+        await r.receive_json()
+
+    assert e.value.args[0] == {
+        'type': 'websocket.close',
+        'code': 1000,
+        'reason': 'Plex complete',
+    }

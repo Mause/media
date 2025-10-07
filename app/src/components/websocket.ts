@@ -5,6 +5,7 @@ import { getPrefix } from '../utils';
 import type { components } from '../schema';
 
 type BaseRequest = components['schemas']['BaseRequest'];
+type SocketMessage = components['schemas']['SocketMessage'];
 
 export function useMessages<T>(initMessage: BaseRequest) {
   const base = getPrefix();
@@ -27,7 +28,9 @@ export function useMessages<T>(initMessage: BaseRequest) {
   return { messages, readyState };
 }
 
-export function useMessage<REQ extends BaseRequest, T>(request: REQ) {
+export function useMessage<REQ extends BaseRequest, T extends SocketMessage>(
+  request: REQ,
+) {
   const base = getPrefix();
   const url = `${base}/ws`;
   const [state, setState] = useState<string>('idle');
@@ -44,8 +47,12 @@ export function useMessage<REQ extends BaseRequest, T>(request: REQ) {
   const [message, setMessage] = useState<T | null>(null);
   useEffect(() => {
     if (lastJsonMessage) {
-      setState('received');
-      setMessage(lastJsonMessage as T);
+      if ((lastJsonMessage as T).type === request.request_type) {
+        setState('received');
+        setMessage(lastJsonMessage as T);
+      } else {
+        console.log('Unexpected message', lastJsonMessage);
+      }
     }
   }, [lastJsonMessage]);
 

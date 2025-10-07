@@ -696,7 +696,8 @@ export interface components {
       | 'rarbg'
       | 'torrentscsv'
       | 'nyaasi'
-      | 'piratebay';
+      | 'piratebay'
+      | 'luna';
     /** SearchResponse */
     SearchResponse: {
       /** Title */
@@ -823,13 +824,32 @@ export interface components {
     };
     /** PlexRootResponse */
     PlexRootResponse: {
-      [key: string]: components['schemas']['PlexResponse_PlexMedia_'];
+      /**
+       * Type
+       * @constant
+       */
+      type: 'plex';
+      /** Data */
+      data: {
+        [key: string]: components['schemas']['PlexResponse_PlexMedia_'];
+      };
     };
     /** Reqs */
     Reqs:
       | components['schemas']['StreamArgs']
       | components['schemas']['PingArgs']
       | components['schemas']['PlexArgs'];
+    /** SocketMessage */
+    SocketMessage: {
+      type: components['schemas']['SocketMessageType'];
+      /** Data */
+      data: unknown;
+    };
+    /**
+     * SocketMessageType
+     * @enum {string}
+     */
+    SocketMessageType: 'pong' | 'plex';
     /** StreamArgs */
     StreamArgs: {
       /**
