@@ -2,7 +2,7 @@ import logging
 from typing import Annotated
 
 from aiocache import Cache
-from fastapi import Depends,
+from fastapi import Depends
 
 from .settings import Settings, get_settings
 
