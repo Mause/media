@@ -6,7 +6,7 @@ from os.path import exists
 from typing import Annotated, cast
 
 import aiohttp
-from aiocache import Cache
+from aiocache.base import BaseCache
 from fastapi import Request
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, PlainSerializer
@@ -83,8 +83,8 @@ async def get_venue_schedule() -> Schedule:
     request = request_var.get()
     assert isinstance(request, Request)
 
-    cache = cast(Cache, await get(request.app, get_cache, request))
-    assert isinstance(cache, Cache)
+    cache = cast(BaseCache, await get(request.app, get_cache, request))
+    assert isinstance(cache, BaseCache), cache
 
     luna = await cache.get(LUNA_SCHEDULE)
     if luna:
