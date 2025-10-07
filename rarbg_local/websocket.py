@@ -1,26 +1,26 @@
 import logging
+from asyncio import create_task, sleep
 from collections import ChainMap
-from collections.abc import AsyncGenerator
-from typing import Annotated, Literal
+from collections.abc import AsyncGenerator, Coroutine
+from enum import Enum
+from typing import Annotated, Literal, Union
 
-from fastapi import APIRouter, WebSocket
-from fastapi.requests import Request
-from pydantic import BaseModel, SecretStr, ValidationError
+from fastapi import APIRouter, Request, WebSocket
+from pydantic import BaseModel, Field, RootModel, SecretStr, ValidationError
 
 from .auth import security
 from .db import (
     User,
 )
-from .models import ITorrent
+from .models import ITorrent, PlexMedia, PlexResponse
+from .plex import get_imdb_in_plex, gracefully_get_plex
 from .providers import (
     search_for_movie,
     search_for_tv,
 )
+from .settings import get_settings
 from .singleton import get
-from .tmdb import (
-    get_movie_imdb_id,
-    get_tv_imdb_id,
-)
+from .tmdb import ThingType, get_movie_imdb_id, get_tv_imdb_id
 from .types import TmdbId
 from .utils import Message, non_null
 
@@ -32,13 +32,39 @@ websocket_ns = APIRouter()
 StreamType = Literal['series', 'movie']
 
 
-class StreamArgs(BaseModel):
+class BaseRequest(BaseModel):
+    request_type: str
     authorization: SecretStr
+
+
+class StreamArgs(BaseRequest):
+    request_type: Literal['stream']
 
     type: StreamType
     tmdb_id: TmdbId
     season: int | None = None
     episode: int | None = None
+
+
+class PingArgs(BaseRequest):
+    request_type: Literal['ping']
+
+
+class PlexArgs(BaseRequest):
+    request_type: Literal['plex']
+    tmdb_id: TmdbId
+    media_type: ThingType
+
+
+class Reqs(
+    RootModel[
+        Annotated[
+            Union[StreamArgs, PingArgs, PlexArgs],
+            Field(discriminator='request_type'),
+        ]
+    ]
+):
+    pass
 
 
 async def _stream(
@@ -62,60 +88,149 @@ async def _stream(
             yield item
 
 
-@websocket_ns.websocket("/ws")
-async def websocket_stream(websocket: WebSocket) -> None:
+def make_request(websocket: WebSocket, request: BaseRequest) -> Request:
+    return Request(
+        scope=ChainMap(
+            {
+                'type': 'http',
+                'headers': [
+                    (
+                        b"authorization",
+                        (request.authorization.get_secret_value()).encode(),
+                    ),
+                ],
+            },
+            websocket.scope,
+        ),
+        receive=websocket.receive,
+        send=websocket.send,
+    )
+
+
+async def authenticate(websocket: WebSocket, request: BaseRequest) -> User:
     def fake(user: Annotated[User, security]) -> User:
         return user
-
-    logger.info('Got websocket connection')
-    await websocket.accept()
-
-    try:
-        request = StreamArgs.model_validate(await websocket.receive_json())
-    except ValidationError as e:
-        await websocket.send_json(
-            {'error': str(e), 'type': type(e).__name__, 'errors': e.errors()}
-        )
-        await websocket.close(reason=type(e).__name__)
-        return
-    logger.info('Got request: %s', request)
 
     try:
         user = await get(
             websocket.app,
             fake,
-            Request(
-                scope=ChainMap(
-                    {
-                        'type': 'http',
-                        'headers': [
-                            (
-                                b"authorization",
-                                (request.authorization.get_secret_value()).encode(),
-                            ),
-                        ],
-                    },
-                    websocket.scope,
-                ),
-                receive=websocket.receive,
-                send=websocket.send,
-            ),
+            make_request(websocket, request),
         )
     except Exception as e:
         logger.exception('Unable to authenticate websocket request')
-        await websocket.send_json({'error': str(e), 'type': type(e).__name__})
-        await websocket.close(reason=type(e).__name__)
+        await close(websocket, e)
         raise
 
     logger.info('Authed user: %s', user)
 
-    async for item in _stream(
-        type=request.type,
-        tmdb_id=request.tmdb_id,
-        season=request.season,
-        episode=request.episode,
-    ):
-        await websocket.send_json(item.model_dump(mode='json'))
+    return user
 
-    logger.info('Finished streaming')
-    await websocket.close(reason='Finished streaming')
+
+async def close(websocket: WebSocket, e: Exception) -> None:
+    name = type(e).__name__
+    message: dict[str, object] = {'error': str(e), 'type': name}
+    if isinstance(e, ValidationError):
+        message.update(
+            {
+                'error': f'{e.error_count()} validation errors for {e.title}',
+                'errors': e.errors(),
+            }
+        )
+    await websocket.send_json(message)
+    await websocket.close(reason=name)
+
+
+class SocketMessageType(str, Enum):
+    PONG = 'pong'
+    PLEX = 'plex'
+
+
+class SocketMessage[R](BaseModel):
+    type: SocketMessageType
+    data: R
+
+
+class PlexRootResponse(SocketMessage[dict[str, PlexResponse[PlexMedia]]]):
+    type: Literal[SocketMessageType.PLEX]
+
+
+@websocket_ns.websocket("/ws")
+async def websocket_stream(websocket: WebSocket) -> None:
+    logger.info('Got websocket connection')
+    await websocket.accept()
+
+    try:
+        request = Reqs.model_validate(await websocket.receive_json()).root
+    except ValidationError as e:
+        return await close(websocket, e)
+
+    logger.info('Got request: %s', request)
+
+    await authenticate(websocket, request)
+
+    message = 'No message provided'
+
+    if request.request_type == 'stream':
+        async for item in _stream(
+            type=request.type,
+            tmdb_id=request.tmdb_id,
+            season=request.season,
+            episode=request.episode,
+        ):
+            await websocket.send_json(item.model_dump(mode='json'))
+
+        message = 'Finished streaming'
+    elif request.request_type == 'ping':
+        message = 'Pong'
+    elif request.request_type == 'plex':
+        settings = await get(websocket.app, get_settings)
+
+        plex = await monitor(
+            gracefully_get_plex(make_request(websocket, request), settings),
+            'gracefully_get_plex',
+            websocket,
+        )
+
+        dat = await get_imdb_in_plex(request.media_type, request.tmdb_id, plex)
+
+        if not dat:
+            return await close(websocket, Exception('Not found in plex'))
+
+        await websocket.send_json(
+            PlexRootResponse(
+                type=SocketMessageType.PLEX,
+                data={
+                    key: PlexResponse[PlexMedia](
+                        item=PlexMedia.model_validate(value),
+                        server_id=plex.machineIdentifier,
+                    )
+                    if value
+                    else None
+                    for key, value in dat.items()
+                },
+            ).model_dump(mode='json')
+        )
+
+        message = 'Plex complete'
+    else:
+        return await close(websocket, Exception('No such method'))
+
+    logger.info(message)
+    await websocket.close(reason=message)
+
+
+async def monitor[T](
+    coroutine: Coroutine[None, None, T], name: str, websocket: WebSocket
+) -> T:
+    task = create_task(coroutine, name=name)
+
+    while True:
+        if task.done():
+            return task.result()
+        await sleep(0)
+        await websocket.send_json(
+            SocketMessage(
+                type=SocketMessageType.PONG, data={'task_name': task.get_name()}
+            ).model_dump(mode='json')
+        )

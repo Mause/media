@@ -12,12 +12,13 @@ parentGuid="com.plexapp.agents.thetvdb://70327/1?lang=en"
 grandparentGuid="com.plexapp.agents.thetvdb://70327?lang=en"
 """
 
-from asyncio import gather
+import logging
+from asyncio import gather, wait_for
 from collections.abc import Callable, Sequence
 from typing import Annotated
 from urllib.parse import urlencode
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from plexapi.myplex import MyPlexAccount
 from plexapi.server import PlexServer
@@ -25,10 +26,13 @@ from plexapi.video import Video
 from sentry_sdk import trace
 from yarl import URL
 
+from .local_appender import local_appender
 from .settings import Settings, get_settings
 from .singleton import singleton
 from .tmdb import ThingType, get_external_ids
 from .types import ImdbId, TmdbId
+
+logger = logging.getLogger(__name__)
 
 
 @singleton
@@ -38,6 +42,24 @@ def get_plex(settings: Annotated[Settings, Depends(get_settings)]) -> PlexServer
     novell = trace(acct.resource)('Novell')
     novell.connections = [c for c in novell.connections if not c.local]
     return trace(novell.connect)(ssl=True)
+
+
+async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServer:
+    records: list[logging.LogRecord] = []
+    try:
+        token = local_appender.set(records)
+        return await wait_for(get_plex(request, settings), timeout=25)
+    except Exception as exc:
+        local_appender.reset(token)
+        logger.exception('Error getting plex server', exc_info=exc)
+        raise HTTPException(
+            500,
+            {
+                'error': 'Error getting plex server',
+                'details': str(exc),
+                'records': [record.getMessage() for record in records],
+            },
+        ) from exc
 
 
 def build_agent_guid(scheme: str, id: ImdbId | TmdbId) -> str:

@@ -1,11 +1,8 @@
 import logging
 import os
 import traceback
-from asyncio import wait_for
 from collections.abc import AsyncGenerator, Callable, Coroutine
-from contextvars import ContextVar
 from functools import wraps
-from logging import Handler
 from typing import (
     Annotated,
     Any,
@@ -16,10 +13,10 @@ from typing import (
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
-from plexapi.server import PlexServer
 from pydantic import BaseModel
 from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
@@ -65,7 +62,7 @@ from .models import (
     TvSeasonResponse,
 )
 from .monitor import monitor_ns
-from .plex import get_imdb_in_plex, get_plex
+from .plex import get_imdb_in_plex, gracefully_get_plex
 from .providers import (
     get_providers,
     search_for_tv,
@@ -75,7 +72,7 @@ from .providers.abc import (
     TvProvider,
 )
 from .settings import Settings, get_settings
-from .singleton import singleton
+from .singleton import singleton, store_request
 from .tmdb import (
     Configuration,
     Discover,
@@ -95,10 +92,6 @@ from .tmdb import (
 from .types import TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
-
-local_appender: ContextVar[list[logging.LogRecord]] = ContextVar[
-    list[logging.LogRecord]
-]('local_appender')
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -364,34 +357,6 @@ async def tmdb_configuration() -> Configuration:
     return await get_configuration()
 
 
-class Appender(Handler):
-    def emit(self, record: logging.LogRecord) -> None:
-        appender = local_appender.get(None)
-        if appender is not None:
-            appender.append(record)
-
-
-logging.getLogger().addHandler(Appender())
-
-
-async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServer:
-    records: list[logging.LogRecord] = []
-    try:
-        token = local_appender.set(records)
-        return await wait_for(get_plex(request, settings), timeout=25)
-    except Exception as exc:
-        local_appender.reset(token)
-        logger.exception('Error getting plex server', exc_info=exc)
-        raise HTTPException(
-            500,
-            {
-                'error': 'Error getting plex server',
-                'details': str(exc),
-                'records': [record.getMessage() for record in records],
-            },
-        ) from exc
-
-
 @api.get('/plex/{thing_type}/{tmdb_id}')
 async def get_plex_imdb(
     thing_type: ThingType,
@@ -477,6 +442,48 @@ api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
 
 
+def get_extra_schemas() -> dict:
+    from fastapi.openapi.constants import REF_TEMPLATE
+    from pydantic.json_schema import models_json_schema
+
+    from .websocket import (
+        BaseRequest,
+        PlexRootResponse,
+        Reqs,
+        SocketMessage,
+    )
+
+    _, res = models_json_schema(
+        models=[
+            (cast(type[BaseModel], model), 'serialization')
+            for model in [
+                Reqs,
+                BaseRequest,
+                PlexRootResponse,
+                SocketMessage,
+            ]
+        ],
+        ref_template=REF_TEMPLATE,
+    )
+    return res['$defs']
+
+
+def custom_openapi(app: FastAPI) -> dict:
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        servers=app.servers,
+        routes=app.routes,
+    )
+    openapi_schema["components"]["schemas"].update(get_extra_schemas())
+
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         servers=[
@@ -504,6 +511,9 @@ def create_app() -> FastAPI:
         dependencies=[security],
     )
     app.include_router(root, prefix='')
+    app.openapi = lambda: custom_openapi(app)  # type: ignore[method-assign]
+    app.middleware('http')(store_request)
+    app.middleware('websocket')(store_request)
 
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:

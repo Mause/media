@@ -15,11 +15,10 @@ import {
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
-import useSWRMutation from 'swr/mutation';
 import { useAuth0 } from '@auth0/auth0-react';
-import * as uritemplate from 'uritemplate';
+import usePromise from 'react-promise-suspense';
 
-import type { GetResponse } from './utils';
+import { useMessage, readyStateToString } from './components/websocket';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
 import type { TV } from './select/SeasonSelectComponent';
 import type {
@@ -29,7 +28,7 @@ import type {
   EpisodeResponse,
 } from './ParentComponent';
 import { ContextMenu, Loading, MLink } from './components';
-import type { paths } from './schema';
+import type { components } from './schema';
 
 function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   return (
@@ -43,8 +42,8 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   );
 }
 
-const path = '/api/plex/{thing_type}/{tmdb_id}' as const;
-type PlexResponse = GetResponse<paths[typeof path]>;
+type PlexRootResponse = components['schemas']['PlexRootResponse'];
+type PlexArgs = components['schemas']['PlexArgs'];
 
 function OpenPlex({
   download,
@@ -54,34 +53,34 @@ function OpenPlex({
   type: 'movie' | 'tv';
 }) {
   const auth = useAuth0();
-  const { data, trigger, isMutating } = useSWRMutation<PlexResponse>(
-    uritemplate.parse(path).expand({
-      tmdb_id: download.tmdb_id,
-      thing_type: type,
-    } satisfies paths[typeof path]['get']['parameters']['path']),
-    async (key: string): Promise<PlexResponse> => {
-      const res = await fetch(key, {
-        headers: { Authorization: 'Bearer ' + (await getToken(auth)) },
-      });
-      return (await res.json()) as PlexResponse;
-    },
-  );
+  const token = 'Bearer ' + usePromise(() => getToken(auth), []);
+  const { message, trigger, readyState, state } = useMessage<
+    PlexArgs,
+    PlexRootResponse
+  >({
+    request_type: 'plex',
+    authorization: token,
+    tmdb_id: download.tmdb_id,
+    media_type: type,
+  });
 
-  if (data) {
-    const first = _.toPairs(data)
+  if (message) {
+    const first = _.toPairs(message.data)
       .map(([, v]) => v?.link)
       .find((v) => v);
-    return <Navigate to={first!} />;
+    window.open(first, '_blank', 'noopener,noreferrrer');
+    return <Navigate to="/" />;
   }
 
   return (
     <MenuItem
       onClick={() => {
-        void trigger();
+        trigger();
       }}
     >
       <span className="unselectable">Open in Plex</span>
-      <Loading loading={isMutating} />
+      {readyStateToString(readyState)}
+      {state}
     </MenuItem>
   );
 }
