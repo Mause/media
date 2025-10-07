@@ -2,10 +2,9 @@ import logging
 from collections.abc import Callable, Coroutine
 from datetime import datetime
 from os import getpid
-from typing import Annotated, Any, cast, overload
+from typing import Any, cast, overload
 
-from aiocache import Cache
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import HTTPException
 from healthcheck import (
@@ -22,10 +21,10 @@ from plexapi.server import PlexServer
 from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
 
+from .cache import get_cache
 from .config import commit
 from .db import get_async_sessionmaker
 from .plex import get_plex
-from .settings import Settings, get_settings
 from .singleton import get as _get
 from .singleton import request_var
 from .transmission_proxy import transmission
@@ -212,10 +211,6 @@ async def transmission_connectivity() -> HealthcheckCallbackResponse:
 async def plex_connectivity() -> HealthcheckCallbackResponse:
     plex: PlexServer = await get(get_plex)
     return HealthcheckCallbackResponse(HealthcheckStatus.PASS, plex._baseurl)
-
-
-async def get_cache(settings: Annotated[Settings, Depends(get_settings)]) -> Cache:
-    return Cache.from_url(settings.cache_url)
 
 
 async def check_cache() -> HealthcheckCallbackResponse:
