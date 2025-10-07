@@ -2405,9 +2405,24 @@
         "type": "object"
       },
       "PlexRootResponse": {
-        "additionalProperties": {
-          "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+        "properties": {
+          "type": {
+            "const": "plex",
+            "title": "Type",
+            "type": "string"
+          },
+          "data": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+            },
+            "title": "Data",
+            "type": "object"
+          }
         },
+        "required": [
+          "type",
+          "data"
+        ],
         "title": "PlexRootResponse",
         "type": "object"
       },
@@ -2432,6 +2447,30 @@
           }
         ],
         "title": "Reqs"
+      },
+      "SocketMessage": {
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/SocketMessageType"
+          },
+          "data": {
+            "title": "Data"
+          }
+        },
+        "required": [
+          "type",
+          "data"
+        ],
+        "title": "SocketMessage",
+        "type": "object"
+      },
+      "SocketMessageType": {
+        "enum": [
+          "pong",
+          "plex"
+        ],
+        "title": "SocketMessageType",
+        "type": "string"
       },
       "StreamArgs": {
         "properties": {
