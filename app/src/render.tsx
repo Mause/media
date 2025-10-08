@@ -78,7 +78,7 @@ function OpenPlex({
   });
 
   if (message) {
-    const first = _.toPairs(message.data).find((v) => v);
+    const first = _.values(message.data).find((v) => v)!;
     return <OpenNewWindow link={first.link} label={first.item.title} />;
   }
 
