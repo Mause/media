@@ -1,9 +1,10 @@
+import { useEffect } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -45,6 +46,18 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
 type PlexRootResponse = components['schemas']['PlexRootResponse'];
 type PlexArgs = components['schemas']['PlexArgs'];
 
+function OpenNewWindow({ link, label }: { link: string; label: string }) {
+  useEffect(() => {
+    window.open(link, '_blank', 'noopener,noreferrrer');
+  }, [link]);
+
+  return (
+    <div>
+      Opening <a href={link}>{label}</a>
+    </div>
+  );
+}
+
 function OpenPlex({
   download,
   type,
@@ -65,11 +78,8 @@ function OpenPlex({
   });
 
   if (message) {
-    const first = _.toPairs(message.data)
-      .map(([, v]) => v?.link)
-      .find((v) => v);
-    window.open(first, '_blank', 'noopener,noreferrrer');
-    return <Navigate to="/" />;
+    const first = _.values(message.data).find((v) => v)!;
+    return <OpenNewWindow link={first.link} label={first.item.title} />;
   }
 
   return (
