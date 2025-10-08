@@ -2445,21 +2445,21 @@
             "title": "Jsonrpc",
             "type": "string"
           },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
           "data": {
             "additionalProperties": {
               "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
             },
             "title": "Data",
             "type": "object"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
           }
         },
         "required": [
-          "data",
-          "id"
+          "id",
+          "data"
         ],
         "title": "PlexRootResponse",
         "type": "object"
@@ -2494,17 +2494,17 @@
             "title": "Jsonrpc",
             "type": "string"
           },
-          "data": {
-            "title": "Data"
-          },
           "id": {
             "title": "Id",
             "type": "integer"
+          },
+          "data": {
+            "title": "Data"
           }
         },
         "required": [
-          "data",
-          "id"
+          "id",
+          "data"
         ],
         "title": "SocketMessage",
         "type": "object"

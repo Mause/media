@@ -151,8 +151,8 @@ class SocketMessageType(str, Enum):
 
 class SocketMessage[R](BaseModel):
     jsonrpc: Literal['2.0'] = '2.0'
-    data: R
     id: int
+    data: R
 
 
 class PlexRootResponse(SocketMessage[dict[str, PlexResponse[PlexMedia]]]):
