@@ -4,7 +4,7 @@ import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
