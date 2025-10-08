@@ -6,6 +6,7 @@ from aioresponses import aioresponses as AioResponses
 from async_asgi_testclient import TestClient
 from fastapi import Depends, FastAPI
 from fastapi.security import OpenIdConnect, SecurityScopes
+from freezegun import freeze_time
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from plexapi.video import Video
 from pydantic import SecretStr
@@ -115,6 +116,7 @@ def fix_auth(mod: BaseRequest) -> dict:
 
 
 @mark.asyncio
+@freeze_time("2012-01-14")
 async def test_websocket_plex(
     test_client: TestClient,
     snapshot: Snapshot,

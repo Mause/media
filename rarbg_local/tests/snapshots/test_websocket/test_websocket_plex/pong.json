@@ -1,6 +1,7 @@
 {
   "type": "pong",
   "data": {
-    "task_name": "gracefully_get_plex"
+    "task_name": "gracefully_get_plex",
+    "runtime_seconds": 0.0
   }
 }
