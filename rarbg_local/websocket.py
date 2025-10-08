@@ -6,7 +6,7 @@ from collections.abc import AsyncGenerator, Coroutine
 from enum import Enum
 from typing import Annotated, Literal, Union
 
-from fastapi import APIRouter, Request, WebSocket
+from fastapi import APIRouter, HTTPException, Request, WebSocket
 from pydantic import BaseModel, Field, RootModel, SecretStr, ValidationError
 
 from .auth import security
@@ -187,11 +187,14 @@ async def websocket_stream(websocket: WebSocket) -> None:
     elif request.request_type == 'plex':
         settings = await get(websocket.app, get_settings)
 
-        plex = await monitor(
-            gracefully_get_plex(make_request(websocket, request), settings),
-            'gracefully_get_plex',
-            websocket,
-        )
+        try:
+            plex = await monitor(
+                gracefully_get_plex(make_request(websocket, request), settings),
+                'gracefully_get_plex',
+                websocket,
+            )
+        except HTTPException as e:
+            return await close(websocket, e)
 
         dat = await get_imdb_in_plex(request.media_type, request.tmdb_id, plex)
 
