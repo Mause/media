@@ -781,8 +781,16 @@ export interface components {
     };
     /** BaseRequest */
     BaseRequest: {
-      /** Request Type */
-      request_type: string;
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /** Method */
+      method: string;
       /**
        * Authorization
        * Format: password
@@ -792,10 +800,18 @@ export interface components {
     /** PingArgs */
     PingArgs: {
       /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /**
        * @description discriminator enum property added by openapi-typescript
        * @enum {string}
        */
-      request_type: 'ping';
+      method: 'ping';
       /**
        * Authorization
        * Format: password
@@ -805,10 +821,18 @@ export interface components {
     /** PlexArgs */
     PlexArgs: {
       /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /**
        * @description discriminator enum property added by openapi-typescript
        * @enum {string}
        */
-      request_type: 'plex';
+      method: 'plex';
       /**
        * Authorization
        * Format: password
@@ -825,14 +849,17 @@ export interface components {
     /** PlexRootResponse */
     PlexRootResponse: {
       /**
-       * Type
+       * Jsonrpc
+       * @default 2.0
        * @constant
        */
-      type: 'plex';
+      jsonrpc: '2.0';
       /** Data */
       data: {
         [key: string]: components['schemas']['PlexResponse_PlexMedia_'];
       };
+      /** Id */
+      id: number;
     };
     /** Reqs */
     Reqs:
@@ -841,22 +868,32 @@ export interface components {
       | components['schemas']['PlexArgs'];
     /** SocketMessage */
     SocketMessage: {
-      type: components['schemas']['SocketMessageType'];
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
       /** Data */
       data: unknown;
+      /** Id */
+      id: number;
     };
-    /**
-     * SocketMessageType
-     * @enum {string}
-     */
-    SocketMessageType: 'pong' | 'plex';
     /** StreamArgs */
     StreamArgs: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
       /**
        * @description discriminator enum property added by openapi-typescript
        * @enum {string}
        */
-      request_type: 'stream';
+      method: 'stream';
       /**
        * Authorization
        * Format: password
