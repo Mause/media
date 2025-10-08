@@ -45,12 +45,16 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
 type PlexRootResponse = components['schemas']['PlexRootResponse'];
 type PlexArgs = components['schemas']['PlexArgs'];
 
-function OpenNewWindow({ link, label }: { link: string, label: string }) {
+function OpenNewWindow({ link, label }: { link: string; label: string }) {
   useEffect(() => {
     window.open(link, '_blank', 'noopener,noreferrrer');
   }, [link]);
 
-  return <div>Opening <a href={link}>{label}</a></div>
+  return (
+    <div>
+      Opening <a href={link}>{label}</a>
+    </div>
+  );
 }
 
 function OpenPlex({
