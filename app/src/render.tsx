@@ -71,7 +71,7 @@ function OpenPlex({
     PlexArgs,
     PlexRootResponse
   >({
-    request_type: 'plex',
+    method: 'plex',
     authorization: token,
     tmdb_id: download.tmdb_id,
     media_type: type,

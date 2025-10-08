@@ -27,7 +27,7 @@ function Websocket() {
   const initMessage = (
     query.has('season')
       ? {
-          request_type: 'stream',
+          method: 'stream',
           type: 'series',
           tmdb_id: tmdbId,
           season: get(query, 'season') || null,
@@ -35,7 +35,7 @@ function Websocket() {
           authorization: token,
         }
       : {
-          request_type: 'stream',
+          method: 'stream',
           type: 'movie',
           tmdb_id: tmdbId,
           authorization: token,
