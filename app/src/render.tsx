@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
@@ -78,7 +79,7 @@ function OpenPlex({
 
   if (message) {
     const first = _.toPairs(message.data).find((v) => v);
-    return <OpenNewWindow link={v.link} label={v.name} />;
+    return <OpenNewWindow link={first.link} label={first.item.title} />;
   }
 
   return (
