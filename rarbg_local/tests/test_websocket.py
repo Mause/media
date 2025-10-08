@@ -86,13 +86,12 @@ async def test_websocket(
     await r.connect()
     await r.send_json(
         fix_auth(
-            StreamArgs.model_validate(
-                {
-                    'method': 'stream',
-                    'tmdb_id': 1,
-                    'type': 'movie',
-                    'authorization': 'token',
-                }
+            StreamArgs(
+                method='stream',
+                id=1,
+                tmdb_id=1,
+                type='movie',
+                authorization=SecretStr('token'),
             )
         )
     )
@@ -156,6 +155,7 @@ async def test_websocket_plex(
         fix_auth(
             PlexArgs(
                 method='plex',
+                id=1,
                 tmdb_id=1,
                 media_type='movie',
                 authorization=SecretStr('token'),

@@ -854,12 +854,12 @@ export interface components {
        * @constant
        */
       jsonrpc: '2.0';
+      /** Id */
+      id: number;
       /** Data */
       data: {
         [key: string]: components['schemas']['PlexResponse_PlexMedia_'];
       };
-      /** Id */
-      id: number;
     };
     /** Reqs */
     Reqs:
@@ -874,10 +874,10 @@ export interface components {
        * @constant
        */
       jsonrpc: '2.0';
-      /** Data */
-      data: unknown;
       /** Id */
       id: number;
+      /** Data */
+      data: unknown;
     };
     /** StreamArgs */
     StreamArgs: {

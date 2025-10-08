@@ -1,5 +1,6 @@
 {
-  "type": "plex",
+  "jsonrpc": "2.0",
+  "id": 1,
   "data": {
     "tmdb://1": {
       "server_id": "machine_id",
