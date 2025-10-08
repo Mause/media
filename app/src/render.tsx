@@ -45,6 +45,14 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
 type PlexRootResponse = components['schemas']['PlexRootResponse'];
 type PlexArgs = components['schemas']['PlexArgs'];
 
+function OpenNewWindow({ link, label }: { link: string, label: string }) {
+  useEffect(() => {
+    window.open(link, '_blank', 'noopener,noreferrrer');
+  }, [link]);
+
+  return <div>Opening <a href={link}>{label}</a></div>
+}
+
 function OpenPlex({
   download,
   type,
@@ -65,11 +73,8 @@ function OpenPlex({
   });
 
   if (message) {
-    const first = _.toPairs(message.data)
-      .map(([, v]) => v?.link)
-      .find((v) => v);
-    window.open(first, '_blank', 'noopener,noreferrrer');
-    return <Navigate to="/" />;
+    const first = _.toPairs(message.data).find((v) => v);
+    return <OpenNewWindow link={v.link} label={v.name} />;
   }
 
   return (
