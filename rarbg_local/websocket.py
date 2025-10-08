@@ -1,4 +1,5 @@
 import logging
+import time
 from asyncio import create_task, sleep
 from collections import ChainMap
 from collections.abc import AsyncGenerator, Coroutine
@@ -223,14 +224,19 @@ async def websocket_stream(websocket: WebSocket) -> None:
 async def monitor[T](
     coroutine: Coroutine[None, None, T], name: str, websocket: WebSocket
 ) -> T:
+    start = time.monotonic()
     task = create_task(coroutine, name=name)
 
     while True:
         if task.done():
             return task.result()
-        await sleep(0)
+        await sleep(1)
         await websocket.send_json(
             SocketMessage(
-                type=SocketMessageType.PONG, data={'task_name': task.get_name()}
+                type=SocketMessageType.PONG,
+                data={
+                    'task_name': task.get_name(),
+                    'runtime_seconds': time.monotonic() - start,
+                },
             ).model_dump(mode='json')
         )
