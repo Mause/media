@@ -2968,7 +2968,7 @@ __metadata:
   resolution: "app@workspace:."
   dependencies:
     "@auth0/auth0-react": "npm:^2.0.0"
-    "@babel/runtime": "npm:^7.28.2"
+    "@babel/runtime": "npm:^7.28.4"
     "@csstools/normalize.css": "npm:^12.0.0"
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.1"
