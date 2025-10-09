@@ -19,7 +19,7 @@ import * as _ from 'lodash-es';
 import { useAuth0 } from '@auth0/auth0-react';
 import usePromise from 'react-promise-suspense';
 
-import { useMessage, readyStateToString } from './components/websocket';
+import { useMessage, readyStateToString, nextId } from './components/websocket';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
 import type { TV } from './select/SeasonSelectComponent';
 import type {
@@ -72,6 +72,8 @@ function OpenPlex({
     PlexRootResponse
   >({
     method: 'plex',
+    jsonrpc: '2.0',
+    id: nextId(),
     authorization: token,
     tmdb_id: download.tmdb_id,
     media_type: type,

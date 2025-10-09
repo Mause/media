@@ -47,7 +47,7 @@ export function useMessage<REQ extends BaseRequest, T extends SocketMessage>(
   const [message, setMessage] = useState<T | null>(null);
   useEffect(() => {
     if (lastJsonMessage) {
-      if ((lastJsonMessage as T).type === request.request_type) {
+      if ((lastJsonMessage as T).id === request.id) {
         setState('received');
         setMessage(lastJsonMessage as T);
       } else {
@@ -74,4 +74,9 @@ export function readyStateToString(readyState: ReadyState) {
     default:
       return 'Unknown';
   }
+}
+
+let id = 0;
+export function nextId(): number {
+  return id++;
 }
