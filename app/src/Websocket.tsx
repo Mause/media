@@ -7,7 +7,11 @@ import type { ITorrent } from './select/OptionsComponent';
 import { getMarker, getToken } from './utils';
 import type { components } from './schema';
 import { DisplayTorrent, RouteTitle } from './components';
-import { useMessages, readyStateToString } from './components/websocket';
+import {
+  useMessages,
+  readyStateToString,
+  nextId,
+} from './components/websocket';
 
 type StreamArgs = components['schemas']['StreamArgs'];
 
@@ -27,6 +31,8 @@ function Websocket() {
   const initMessage = (
     query.has('season')
       ? {
+          jsonrpc: '2.0',
+          id: nextId(),
           method: 'stream',
           type: 'series',
           tmdb_id: tmdbId,
@@ -35,6 +41,8 @@ function Websocket() {
           authorization: token,
         }
       : {
+          jsonrpc: '2.0',
+          id: nextId(),
           method: 'stream',
           type: 'movie',
           tmdb_id: tmdbId,
