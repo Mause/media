@@ -1,9 +1,9 @@
 import inspect
 from asyncio import iscoroutinefunction
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from contextlib import AsyncExitStack
 from contextvars import ContextVar
-from typing import Any, Awaitable
+from typing import Any
 
 from fastapi import FastAPI, Request, Response, WebSocket
 from fastapi.dependencies.utils import solve_dependencies
