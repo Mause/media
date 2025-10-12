@@ -2362,78 +2362,6 @@
         "title": "BaseRequest",
         "type": "object"
       },
-      "BaseRequest_Literal__plex___PlexArgs_": {
-        "properties": {
-          "jsonrpc": {
-            "const": "2.0",
-            "default": "2.0",
-            "title": "Jsonrpc",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "method": {
-            "const": "plex",
-            "title": "Method",
-            "type": "string"
-          },
-          "args": {
-            "$ref": "#/components/schemas/PlexArgs"
-          },
-          "authorization": {
-            "format": "password",
-            "title": "Authorization",
-            "type": "string",
-            "writeOnly": true
-          }
-        },
-        "required": [
-          "id",
-          "method",
-          "args",
-          "authorization"
-        ],
-        "title": "BaseRequest[Literal['plex'], PlexArgs]",
-        "type": "object"
-      },
-      "BaseRequest_Literal__stream___StreamArgs_": {
-        "properties": {
-          "jsonrpc": {
-            "const": "2.0",
-            "default": "2.0",
-            "title": "Jsonrpc",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "method": {
-            "const": "stream",
-            "title": "Method",
-            "type": "string"
-          },
-          "args": {
-            "$ref": "#/components/schemas/StreamArgs"
-          },
-          "authorization": {
-            "format": "password",
-            "title": "Authorization",
-            "type": "string",
-            "writeOnly": true
-          }
-        },
-        "required": [
-          "id",
-          "method",
-          "args",
-          "authorization"
-        ],
-        "title": "BaseRequest[Literal['stream'], StreamArgs]",
-        "type": "object"
-      },
       "PingRequest": {
         "properties": {
           "jsonrpc": {
@@ -2494,8 +2422,40 @@
         "type": "object"
       },
       "PlexRequest": {
-        "$ref": "#/components/schemas/BaseRequest_Literal__plex___PlexArgs_",
-        "title": "PlexRequest"
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "method": {
+            "const": "plex",
+            "title": "Method",
+            "type": "string"
+          },
+          "args": {
+            "$ref": "#/components/schemas/PlexArgs"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "args",
+          "authorization"
+        ],
+        "title": "PlexRequest",
+        "type": "object"
       },
       "PlexRootResponse": {
         "properties": {
@@ -2616,8 +2576,40 @@
         "type": "object"
       },
       "StreamRequest": {
-        "$ref": "#/components/schemas/BaseRequest_Literal__stream___StreamArgs_",
-        "title": "StreamRequest"
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "method": {
+            "const": "stream",
+            "title": "Method",
+            "type": "string"
+          },
+          "args": {
+            "$ref": "#/components/schemas/StreamArgs"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "args",
+          "authorization"
+        ],
+        "title": "StreamRequest",
+        "type": "object"
       }
     },
     "securitySchemes": {

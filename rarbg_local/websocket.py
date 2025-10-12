@@ -48,7 +48,7 @@ class StreamArgs(BaseModel):
     episode: int | None = None
 
 
-class StreamRequest(RootModel[BaseRequest[Literal['stream'], StreamArgs]]):
+class StreamRequest(BaseRequest[Literal['stream'], StreamArgs]):
     pass
 
 
@@ -61,7 +61,7 @@ class PlexArgs(BaseModel):
     media_type: ThingType
 
 
-class PlexRequest(RootModel[BaseRequest[Literal['plex'], PlexArgs]]):
+class PlexRequest(BaseRequest[Literal['plex'], PlexArgs]):
     pass
 
 
@@ -171,7 +171,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
     await websocket.accept()
 
     try:
-        request = Reqs.model_validate(await websocket.receive_json()).root.root
+        request = Reqs.model_validate(await websocket.receive_json()).root
     except ValidationError as e:
         return await close(websocket, e)
 
