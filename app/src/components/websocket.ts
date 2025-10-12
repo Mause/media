@@ -6,6 +6,7 @@ import type { components } from '../schema';
 
 type BaseRequest = components['schemas']['BaseRequest'];
 type SuccessResult = components['schemas']['SuccessResult'];
+type ErrorResult = components['schemas']['ErrorResult'];
 
 export function useMessages<T>(initMessage: BaseRequest) {
   const base = getPrefix();
@@ -46,8 +47,12 @@ export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(req
   useEffect(() => {
     if (lastJsonMessage) {
       if ((lastJsonMessage as T).id === request.id) {
-        setState('received');
-        setMessage(lastJsonMessage as T);
+        if ('error' in (lastJsonMessage as ErrorResult)) {
+          setState('error');
+        } else {
+          setState('received');
+          setMessage(lastJsonMessage as T);
+        }
       } else {
         console.log('Unexpected message', lastJsonMessage);
       }
