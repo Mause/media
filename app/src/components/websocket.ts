@@ -29,7 +29,9 @@ export function useMessages<T>(initMessage: BaseRequest) {
   return { messages, readyState };
 }
 
-export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(request: REQ) {
+export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
+  request: REQ,
+) {
   const base = getPrefix();
   const url = `${base}/ws`;
   const [state, setState] = useState<string>('idle');
