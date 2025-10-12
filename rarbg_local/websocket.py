@@ -3,7 +3,6 @@ import time
 from asyncio import create_task, sleep
 from collections import ChainMap
 from collections.abc import AsyncGenerator, Coroutine
-from enum import Enum
 from typing import Annotated, Literal, Union
 
 from fastapi import APIRouter, HTTPException, Request, WebSocket
