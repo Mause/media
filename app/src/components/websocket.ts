@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import * as Sentry from '@sentry/react';
 
 import { getPrefix } from '../utils';
 import type { components } from '../schema';
@@ -50,7 +51,12 @@ export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
     if (lastJsonMessage) {
       if ((lastJsonMessage as T).id === request.id) {
         if ('error' in (lastJsonMessage as ErrorResult)) {
+          const error = (lastJsonMessage as ErrorResult).error;
           setState('error');
+          console.error('Error message', error);
+          Sentry.captureException(new Error(error.message), {
+            extra: error,
+          });
         } else {
           setState('received');
           setMessage(lastJsonMessage as T);

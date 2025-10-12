@@ -2362,6 +2362,19 @@
         "title": "BaseRequest",
         "type": "object"
       },
+      "Error": {
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "Error",
+        "type": "object"
+      },
       "ErrorResult": {
         "properties": {
           "jsonrpc": {
@@ -2375,9 +2388,7 @@
             "type": "integer"
           },
           "error": {
-            "additionalProperties": true,
-            "title": "Error",
-            "type": "object"
+            "$ref": "#/components/schemas/Error"
           }
         },
         "required": [
