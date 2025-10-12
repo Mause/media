@@ -3,7 +3,7 @@ from asyncio import iscoroutinefunction
 from collections.abc import Callable
 from contextlib import AsyncExitStack
 from contextvars import ContextVar
-from typing import Any
+from typing import Any, Awaitable
 
 from fastapi import FastAPI, Request, Response, WebSocket
 from fastapi.dependencies.utils import solve_dependencies
@@ -42,6 +42,13 @@ async def get[T](
     )
 
 
+def async_value[T](value: T) -> Callable[[], Awaitable[T]]:
+    async def _inner() -> T:
+        return value
+
+    return _inner
+
+
 def singleton(func: Callable):  # noqa: ANN201
     async def wrapper(request: Request, **kwargs: Any) -> Any:
         app = request.app
@@ -54,7 +61,7 @@ def singleton(func: Callable):  # noqa: ANN201
                 is_coroutine=iscoroutinefunction(func),
             )
 
-            app.dependency_overrides[wrapper] = lambda: value
+            app.dependency_overrides[wrapper] = async_value(value)
         else:
             value = value()
 
