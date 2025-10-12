@@ -253,7 +253,7 @@ async def plex_method(
     await websocket.send_json(
         PlexRootResponse(
             id=plex_request.id,
-            data={
+            result={
                 key: PlexResponse[PlexMedia](
                     item=PlexMedia.model_validate(value),
                     server_id=plex.machineIdentifier,
