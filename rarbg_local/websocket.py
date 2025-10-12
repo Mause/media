@@ -181,7 +181,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
 
     message = 'No message provided'
 
-    if request.method == 'stream':
+    if isinstance(request, StreamRequest):
         async for item in _stream(
             type=request.type,
             tmdb_id=request.tmdb_id,
@@ -191,9 +191,9 @@ async def websocket_stream(websocket: WebSocket) -> None:
             await websocket.send_json(item.model_dump(mode='json'))
 
         message = 'Finished streaming'
-    elif request.method == 'ping':
+    elif isinstance(request, PingRequest):
         message = 'Pong'
-    elif request.method == 'plex':
+    elif isinstance(request, PlexRequest):
         settings = await get(websocket.app, get_settings)
 
         try:
