@@ -194,43 +194,13 @@ async def websocket_stream(websocket: WebSocket) -> None:
     elif isinstance(request, PingRequest):
         message = 'Pong'
     elif isinstance(request, PlexRequest):
-        settings = await get(websocket.app, get_settings)
-
-        try:
-            plex = await monitor(
-                gracefully_get_plex(make_request(websocket, request), settings),
-                'gracefully_get_plex',
-                websocket,
-            )
-        except HTTPException as e:
-            return await close(websocket, e)
-
-        dat = await get_imdb_in_plex(request.media_type, request.tmdb_id, plex)
-
-        if not dat:
-            return await close(websocket, Exception('Not found in plex'))
-
-        await websocket.send_json(
-            PlexRootResponse(
-                id=request.id,
-                data={
-                    key: PlexResponse[PlexMedia](
-                        item=PlexMedia.model_validate(value),
-                        server_id=plex.machineIdentifier,
-                    )
-                    if value
-                    else None
-                    for key, value in dat.items()
-                },
-            ).model_dump(mode='json')
-        )
-
-        message = 'Plex complete'
+        message = await plex_method(websocket, request)
     else:
         return await close(websocket, Exception('No such method'))
 
-    logger.info(message)
-    await websocket.close(reason=message)
+    if message:
+        logger.info(message)
+        await websocket.close(reason=message)
 
 
 async def monitor[T](
@@ -252,3 +222,42 @@ async def monitor[T](
                 },
             ).model_dump(mode='json')
         )
+
+
+async def plex_method(
+    websocket: WebSocket,
+    plex_request: PlexRequest,
+) -> None | str:
+    args = plex_request.args
+    settings = await get(websocket.app, get_settings)
+
+    try:
+        plex = await monitor(
+            gracefully_get_plex(make_request(websocket, plex_request), settings),
+            'gracefully_get_plex',
+            websocket,
+        )
+    except HTTPException as e:
+        return await close(websocket, e)
+
+    dat = await get_imdb_in_plex(args.media_type, args.tmdb_id, plex)
+
+    if not dat:
+        return await close(websocket, Exception('Not found in plex'))
+
+    await websocket.send_json(
+        PlexRootResponse(
+            id=plex_request.id,
+            data={
+                key: PlexResponse[PlexMedia](
+                    item=PlexMedia.model_validate(value),
+                    server_id=plex.machineIdentifier,
+                )
+                if value
+                else None
+                for key, value in dat.items()
+            },
+        ).model_dump(mode='json')
+    )
+
+    return 'Plex complete'
