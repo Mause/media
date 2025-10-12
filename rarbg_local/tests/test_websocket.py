@@ -18,7 +18,7 @@ from ..providers import MovieProvider
 from ..providers.abc import ITorrent, ProviderSource
 from ..tmdb import ExternalIds
 from ..types import ImdbId, TmdbId
-from ..websocket import BaseRequest, PlexArgs, StreamArgs
+from ..websocket import BaseRequest, PlexArgs, PlexRequest, StreamArgs, StreamRequest
 from .conftest import add_json, assert_match_json
 from .factories import UserFactory
 
@@ -86,11 +86,13 @@ async def test_websocket(
     await r.connect()
     await r.send_json(
         fix_auth(
-            StreamArgs(
+            StreamRequest(
                 method='stream',
                 id=1,
-                tmdb_id=1,
-                type='movie',
+                args=StreamArgs(
+                    tmdb_id=1,
+                    type='movie',
+                ),
                 authorization=SecretStr('token'),
             )
         )
@@ -153,11 +155,13 @@ async def test_websocket_plex(
     await r.connect()
     await r.send_json(
         fix_auth(
-            PlexArgs(
+            PlexRequest(
                 method='plex',
                 id=1,
-                tmdb_id=1,
-                media_type='movie',
+                args=PlexArgs(
+                    tmdb_id=1,
+                    media_type='movie',
+                ),
                 authorization=SecretStr('token'),
             )
         )

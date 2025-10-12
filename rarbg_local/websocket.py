@@ -33,36 +33,42 @@ websocket_ns = APIRouter()
 StreamType = Literal['series', 'movie']
 
 
-class BaseRequest(BaseModel):
+class BaseRequest[M, ARGS](BaseModel):
     jsonrpc: Literal['2.0'] = '2.0'
     id: int
-    method: str
+    method: M
+    args: ARGS
     authorization: SecretStr
 
 
-class StreamArgs(BaseRequest):
-    method: Literal['stream']
-
+class StreamArgs(BaseModel):
     type: StreamType
     tmdb_id: TmdbId
     season: int | None = None
     episode: int | None = None
 
 
-class PingArgs(BaseRequest):
-    method: Literal['ping']
+class StreamRequest(RootModel[BaseRequest[Literal['stream'], StreamArgs]]):
+    pass
 
 
-class PlexArgs(BaseRequest):
-    method: Literal['plex']
+class PingRequest(BaseRequest[Literal['ping'], None]):
+    pass
+
+
+class PlexArgs(BaseModel):
     tmdb_id: TmdbId
     media_type: ThingType
+
+
+class PlexRequest(RootModel[BaseRequest[Literal['plex'], PlexArgs]]):
+    pass
 
 
 class Reqs(
     RootModel[
         Annotated[
-            Union[StreamArgs, PingArgs, PlexArgs],
+            Union[StreamRequest, PingRequest, PlexRequest],
             Field(discriminator='method'),
         ]
     ]
@@ -165,7 +171,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
     await websocket.accept()
 
     try:
-        request = Reqs.model_validate(await websocket.receive_json()).root
+        request = Reqs.model_validate(await websocket.receive_json()).root.root
     except ValidationError as e:
         return await close(websocket, e)
 

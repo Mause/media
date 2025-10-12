@@ -2341,8 +2341,10 @@
             "type": "integer"
           },
           "method": {
-            "title": "Method",
-            "type": "string"
+            "title": "Method"
+          },
+          "args": {
+            "title": "Args"
           },
           "authorization": {
             "format": "password",
@@ -2354,44 +2356,13 @@
         "required": [
           "id",
           "method",
+          "args",
           "authorization"
         ],
         "title": "BaseRequest",
         "type": "object"
       },
-      "PingArgs": {
-        "properties": {
-          "jsonrpc": {
-            "const": "2.0",
-            "default": "2.0",
-            "title": "Jsonrpc",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "method": {
-            "const": "ping",
-            "title": "Method",
-            "type": "string"
-          },
-          "authorization": {
-            "format": "password",
-            "title": "Authorization",
-            "type": "string",
-            "writeOnly": true
-          }
-        },
-        "required": [
-          "id",
-          "method",
-          "authorization"
-        ],
-        "title": "PingArgs",
-        "type": "object"
-      },
-      "PlexArgs": {
+      "BaseRequest_Literal__plex___PlexArgs_": {
         "properties": {
           "jsonrpc": {
             "const": "2.0",
@@ -2408,12 +2379,100 @@
             "title": "Method",
             "type": "string"
           },
+          "args": {
+            "$ref": "#/components/schemas/PlexArgs"
+          },
           "authorization": {
             "format": "password",
             "title": "Authorization",
             "type": "string",
             "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "args",
+          "authorization"
+        ],
+        "title": "BaseRequest[Literal['plex'], PlexArgs]",
+        "type": "object"
+      },
+      "BaseRequest_Literal__stream___StreamArgs_": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
           },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "method": {
+            "const": "stream",
+            "title": "Method",
+            "type": "string"
+          },
+          "args": {
+            "$ref": "#/components/schemas/StreamArgs"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "args",
+          "authorization"
+        ],
+        "title": "BaseRequest[Literal['stream'], StreamArgs]",
+        "type": "object"
+      },
+      "PingRequest": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "method": {
+            "const": "ping",
+            "title": "Method",
+            "type": "string"
+          },
+          "args": {
+            "title": "Args",
+            "type": "null"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "args",
+          "authorization"
+        ],
+        "title": "PingRequest",
+        "type": "object"
+      },
+      "PlexArgs": {
+        "properties": {
           "tmdb_id": {
             "title": "Tmdb Id",
             "type": "integer"
@@ -2428,14 +2487,15 @@
           }
         },
         "required": [
-          "id",
-          "method",
-          "authorization",
           "tmdb_id",
           "media_type"
         ],
         "title": "PlexArgs",
         "type": "object"
+      },
+      "PlexRequest": {
+        "$ref": "#/components/schemas/BaseRequest_Literal__plex___PlexArgs_",
+        "title": "PlexRequest"
       },
       "PlexRootResponse": {
         "properties": {
@@ -2467,21 +2527,21 @@
       "Reqs": {
         "discriminator": {
           "mapping": {
-            "ping": "#/components/schemas/PingArgs",
-            "plex": "#/components/schemas/PlexArgs",
-            "stream": "#/components/schemas/StreamArgs"
+            "ping": "#/components/schemas/PingRequest",
+            "plex": "#/components/schemas/PlexRequest",
+            "stream": "#/components/schemas/StreamRequest"
           },
           "propertyName": "method"
         },
         "oneOf": [
           {
-            "$ref": "#/components/schemas/StreamArgs"
+            "$ref": "#/components/schemas/StreamRequest"
           },
           {
-            "$ref": "#/components/schemas/PingArgs"
+            "$ref": "#/components/schemas/PingRequest"
           },
           {
-            "$ref": "#/components/schemas/PlexArgs"
+            "$ref": "#/components/schemas/PlexRequest"
           }
         ],
         "title": "Reqs"
@@ -2511,27 +2571,6 @@
       },
       "StreamArgs": {
         "properties": {
-          "jsonrpc": {
-            "const": "2.0",
-            "default": "2.0",
-            "title": "Jsonrpc",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "method": {
-            "const": "stream",
-            "title": "Method",
-            "type": "string"
-          },
-          "authorization": {
-            "format": "password",
-            "title": "Authorization",
-            "type": "string",
-            "writeOnly": true
-          },
           "type": {
             "enum": [
               "series",
@@ -2570,14 +2609,15 @@
           }
         },
         "required": [
-          "id",
-          "method",
-          "authorization",
           "type",
           "tmdb_id"
         ],
         "title": "StreamArgs",
         "type": "object"
+      },
+      "StreamRequest": {
+        "$ref": "#/components/schemas/BaseRequest_Literal__stream___StreamArgs_",
+        "title": "StreamRequest"
       }
     },
     "securitySchemes": {
