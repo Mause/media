@@ -173,13 +173,14 @@ async def websocket_stream(websocket: WebSocket) -> None:
     try:
         request = Reqs.model_validate(await websocket.receive_json()).root
     except ValidationError as e:
-        return await close(websocket, e)
+        await close(websocket, e)
+        return
 
     logger.info('Got request: %s', request)
 
     await authenticate(websocket, request)
 
-    message = 'No message provided'
+    message: str | None = 'No message provided'
 
     if isinstance(request, StreamRequest):
         args = request.args
@@ -197,7 +198,8 @@ async def websocket_stream(websocket: WebSocket) -> None:
     elif isinstance(request, PlexRequest):
         message = await plex_method(websocket, request)
     else:
-        return await close(websocket, Exception('No such method'))
+        await close(websocket, Exception('No such method'))
+        return
 
     if message:
         logger.info(message)
@@ -239,12 +241,14 @@ async def plex_method(
             websocket,
         )
     except HTTPException as e:
-        return await close(websocket, e)
+        await close(websocket, e)
+        return None
 
     dat = await get_imdb_in_plex(args.media_type, args.tmdb_id, plex)
 
     if not dat:
-        return await close(websocket, Exception('Not found in plex'))
+        await close(websocket, Exception('Not found in plex'))
+        return None
 
     await websocket.send_json(
         PlexRootResponse(
