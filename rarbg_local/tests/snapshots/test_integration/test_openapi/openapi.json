@@ -2469,17 +2469,17 @@
             "title": "Id",
             "type": "integer"
           },
-          "data": {
+          "result": {
             "additionalProperties": {
               "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
             },
-            "title": "Data",
+            "title": "Result",
             "type": "object"
           }
         },
         "required": [
           "id",
-          "data"
+          "result"
         ],
         "title": "PlexRootResponse",
         "type": "object"
@@ -2518,13 +2518,13 @@
             "title": "Id",
             "type": "integer"
           },
-          "data": {
-            "title": "Data"
+          "result": {
+            "title": "Result"
           }
         },
         "required": [
           "id",
-          "data"
+          "result"
         ],
         "title": "SocketMessage",
         "type": "object"

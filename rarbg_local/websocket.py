@@ -158,7 +158,7 @@ class SocketMessageType(str, Enum):
 class SocketMessage[R](BaseModel):
     jsonrpc: Literal['2.0'] = '2.0'
     id: int
-    data: R
+    result: R
 
 
 class PlexRootResponse(SocketMessage[dict[str, PlexResponse[PlexMedia]]]):
@@ -217,7 +217,7 @@ async def monitor[T](
         await websocket.send_json(
             SocketMessage(
                 id=-1,
-                data={
+                result={
                     'task_name': task.get_name(),
                     'runtime_seconds': time.monotonic() - start,
                 },
