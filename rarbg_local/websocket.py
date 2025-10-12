@@ -182,11 +182,12 @@ async def websocket_stream(websocket: WebSocket) -> None:
     message = 'No message provided'
 
     if isinstance(request, StreamRequest):
+        args = request.args
         async for item in _stream(
-            type=request.type,
-            tmdb_id=request.tmdb_id,
-            season=request.season,
-            episode=request.episode,
+            type=args.type,
+            tmdb_id=args.tmdb_id,
+            season=args.season,
+            episode=args.episode,
         ):
             await websocket.send_json(item.model_dump(mode='json'))
 
