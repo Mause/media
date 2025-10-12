@@ -790,15 +790,17 @@ export interface components {
       /** Id */
       id: number;
       /** Method */
-      method: string;
+      method: unknown;
+      /** Args */
+      args: unknown;
       /**
        * Authorization
        * Format: password
        */
       authorization: string;
     };
-    /** PingArgs */
-    PingArgs: {
+    /** PingRequest */
+    PingRequest: {
       /**
        * Jsonrpc
        * @default 2.0
@@ -812,6 +814,8 @@ export interface components {
        * @enum {string}
        */
       method: 'ping';
+      /** Args */
+      args: null;
       /**
        * Authorization
        * Format: password
@@ -820,6 +824,16 @@ export interface components {
     };
     /** PlexArgs */
     PlexArgs: {
+      /** Tmdb Id */
+      tmdb_id: number;
+      /**
+       * Media Type
+       * @enum {string}
+       */
+      media_type: 'movie' | 'tv';
+    };
+    /** PlexRequest */
+    PlexRequest: {
       /**
        * Jsonrpc
        * @default 2.0
@@ -833,18 +847,12 @@ export interface components {
        * @enum {string}
        */
       method: 'plex';
+      args: components['schemas']['PlexArgs'];
       /**
        * Authorization
        * Format: password
        */
       authorization: string;
-      /** Tmdb Id */
-      tmdb_id: number;
-      /**
-       * Media Type
-       * @enum {string}
-       */
-      media_type: 'movie' | 'tv';
     };
     /** PlexRootResponse */
     PlexRootResponse: {
@@ -863,9 +871,9 @@ export interface components {
     };
     /** Reqs */
     Reqs:
-      | components['schemas']['StreamArgs']
-      | components['schemas']['PingArgs']
-      | components['schemas']['PlexArgs'];
+      | components['schemas']['StreamRequest']
+      | components['schemas']['PingRequest']
+      | components['schemas']['PlexRequest'];
     /** SocketMessage */
     SocketMessage: {
       /**
@@ -881,24 +889,6 @@ export interface components {
     };
     /** StreamArgs */
     StreamArgs: {
-      /**
-       * Jsonrpc
-       * @default 2.0
-       * @constant
-       */
-      jsonrpc: '2.0';
-      /** Id */
-      id: number;
-      /**
-       * @description discriminator enum property added by openapi-typescript
-       * @enum {string}
-       */
-      method: 'stream';
-      /**
-       * Authorization
-       * Format: password
-       */
-      authorization: string;
       /**
        * Type
        * @enum {string}
@@ -916,6 +906,28 @@ export interface components {
        * @default null
        */
       episode: number | null;
+    };
+    /** StreamRequest */
+    StreamRequest: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      method: 'stream';
+      args: components['schemas']['StreamArgs'];
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
     };
   };
   responses: never;
