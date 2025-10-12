@@ -150,18 +150,19 @@ async def close(websocket: WebSocket, e: Exception) -> None:
     await websocket.close(reason=name)
 
 
-class SocketMessageType(str, Enum):
-    PONG = 'pong'
-    PLEX = 'plex'
-
-
-class SocketMessage[R](BaseModel):
+class SuccessResult[R](BaseModel):
     jsonrpc: Literal['2.0'] = '2.0'
     id: int
     result: R
 
 
-class PlexRootResponse(SocketMessage[dict[str, PlexResponse[PlexMedia]]]):
+class ErrorResult(BaseModel):
+    jsonrpc: Literal['2.0'] = '2.0'
+    id: int
+    error: dict[str, object]
+
+
+class PlexRootResponse(SuccessResult[dict[str, PlexResponse[PlexMedia]]]):
     pass
 
 
@@ -217,7 +218,7 @@ async def monitor[T](
             return task.result()
         await sleep(1)
         await websocket.send_json(
-            SocketMessage(
+            SuccessResult(
                 id=-1,
                 result={
                     'task_name': task.get_name(),

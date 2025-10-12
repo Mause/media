@@ -799,6 +799,21 @@ export interface components {
        */
       authorization: string;
     };
+    /** ErrorResult */
+    ErrorResult: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /** Error */
+      error: {
+        [key: string]: unknown;
+      };
+    };
     /** PingRequest */
     PingRequest: {
       /**
@@ -874,19 +889,6 @@ export interface components {
       | components['schemas']['StreamRequest']
       | components['schemas']['PingRequest']
       | components['schemas']['PlexRequest'];
-    /** SocketMessage */
-    SocketMessage: {
-      /**
-       * Jsonrpc
-       * @default 2.0
-       * @constant
-       */
-      jsonrpc: '2.0';
-      /** Id */
-      id: number;
-      /** Result */
-      result: unknown;
-    };
     /** StreamArgs */
     StreamArgs: {
       /**
@@ -928,6 +930,19 @@ export interface components {
        * Format: password
        */
       authorization: string;
+    };
+    /** SuccessResult */
+    SuccessResult: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /** Result */
+      result: unknown;
     };
   };
   responses: never;

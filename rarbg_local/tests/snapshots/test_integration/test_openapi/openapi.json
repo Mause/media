@@ -2362,6 +2362,31 @@
         "title": "BaseRequest",
         "type": "object"
       },
+      "ErrorResult": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "error": {
+            "additionalProperties": true,
+            "title": "Error",
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "error"
+        ],
+        "title": "ErrorResult",
+        "type": "object"
+      },
       "PingRequest": {
         "properties": {
           "jsonrpc": {
@@ -2506,29 +2531,6 @@
         ],
         "title": "Reqs"
       },
-      "SocketMessage": {
-        "properties": {
-          "jsonrpc": {
-            "const": "2.0",
-            "default": "2.0",
-            "title": "Jsonrpc",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "result": {
-            "title": "Result"
-          }
-        },
-        "required": [
-          "id",
-          "result"
-        ],
-        "title": "SocketMessage",
-        "type": "object"
-      },
       "StreamArgs": {
         "properties": {
           "type": {
@@ -2609,6 +2611,29 @@
           "authorization"
         ],
         "title": "StreamRequest",
+        "type": "object"
+      },
+      "SuccessResult": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "result": {
+            "title": "Result"
+          }
+        },
+        "required": [
+          "id",
+          "result"
+        ],
+        "title": "SuccessResult",
         "type": "object"
       }
     },

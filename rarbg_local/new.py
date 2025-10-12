@@ -448,9 +448,10 @@ def get_extra_schemas() -> dict:
 
     from .websocket import (
         BaseRequest,
+        ErrorResult,
         PlexRootResponse,
         Reqs,
-        SocketMessage,
+        SuccessResult,
     )
 
     _, res = models_json_schema(
@@ -460,7 +461,8 @@ def get_extra_schemas() -> dict:
                 Reqs,
                 BaseRequest,
                 PlexRootResponse,
-                SocketMessage,
+                SuccessResult,
+                ErrorResult,
             ]
         ],
         ref_template=REF_TEMPLATE,
