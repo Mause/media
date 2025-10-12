@@ -13,7 +13,8 @@ import {
   nextId,
 } from './components/websocket';
 
-type StreamArgs = components['schemas']['StreamArgs'];
+type StreamRequest = components['schemas']['StreamRequest'];
+type StreamArgs = StreamRequest['args'];
 
 function get(query: URLSearchParams, key: string): number | undefined {
   const value = query.get(key);
@@ -31,30 +32,30 @@ function Websocket() {
   const initMessage = (
     query.has('season')
       ? {
-          jsonrpc: '2.0',
-          id: nextId(),
-          method: 'stream',
           type: 'series',
           tmdb_id: tmdbId,
           season: get(query, 'season') || null,
           episode: get(query, 'episode') || null,
-          authorization: token,
         }
       : {
-          jsonrpc: '2.0',
-          id: nextId(),
-          method: 'stream',
           type: 'movie',
           tmdb_id: tmdbId,
-          authorization: token,
           season: null,
           episode: null,
         }
   ) satisfies StreamArgs;
 
+  const rq = {
+    jsonrpc: '2.0',
+    id: nextId(),
+    method: 'stream',
+    authorization: token,
+    args: initMessage,
+  } satisfies StreamRequest;
+
   const { messages, readyState } = useMessages<
     { error: string; type: string } | ITorrent
-  >(initMessage);
+  >(rq);
 
   const errors = messages.filter((message) => 'error' in message);
   const downloads = messages.filter(

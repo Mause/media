@@ -44,7 +44,7 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
 }
 
 type PlexRootResponse = components['schemas']['PlexRootResponse'];
-type PlexArgs = components['schemas']['PlexArgs'];
+type PlexRequest = components['schemas']['PlexRequest'];
 
 function OpenNewWindow({ link, label }: { link: string; label: string }) {
   useEffect(() => {
@@ -68,19 +68,21 @@ function OpenPlex({
   const auth = useAuth0();
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
   const { message, trigger, readyState, state } = useMessage<
-    PlexArgs,
+    PlexRequest,
     PlexRootResponse
   >({
     method: 'plex',
     jsonrpc: '2.0',
     id: nextId(),
     authorization: token,
-    tmdb_id: download.tmdb_id,
-    media_type: type,
+    args: {
+      tmdb_id: download.tmdb_id,
+      media_type: type,
+    },
   });
 
   if (message) {
-    const first = _.values(message.data).find((v) => v)!;
+    const first = _.values(message.result).find((v) => v)!;
     return <OpenNewWindow link={first.link} label={first.item.title} />;
   }
 

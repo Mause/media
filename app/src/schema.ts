@@ -864,8 +864,8 @@ export interface components {
       jsonrpc: '2.0';
       /** Id */
       id: number;
-      /** Data */
-      data: {
+      /** Result */
+      result: {
         [key: string]: components['schemas']['PlexResponse_PlexMedia_'];
       };
     };
@@ -884,8 +884,8 @@ export interface components {
       jsonrpc: '2.0';
       /** Id */
       id: number;
-      /** Data */
-      data: unknown;
+      /** Result */
+      result: unknown;
     };
     /** StreamArgs */
     StreamArgs: {
