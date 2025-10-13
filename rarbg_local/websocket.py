@@ -6,7 +6,7 @@ from collections.abc import AsyncGenerator, Coroutine
 from typing import Annotated, Literal, Union
 
 from fastapi import APIRouter, HTTPException, Request, WebSocket
-from pydantic import BaseModel, Field, RootModel, SecretStr, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, RootModel, SecretStr, ValidationError
 
 from .auth import security
 from .db import (
@@ -127,7 +127,7 @@ async def authenticate(websocket: WebSocket, request: BaseRequest) -> User:
         )
     except Exception as e:
         logger.exception('Unable to authenticate websocket request')
-        await close(websocket, e)
+        await close(request, websocket, e)
         raise
 
     logger.info('Authed user: %s', user)
@@ -135,17 +135,23 @@ async def authenticate(websocket: WebSocket, request: BaseRequest) -> User:
     return user
 
 
-async def close(websocket: WebSocket, e: Exception) -> None:
+async def close(
+    request: BaseRequest | None, websocket: WebSocket, e: Exception
+) -> None:
     name = type(e).__name__
-    message: dict[str, object] = {'error': str(e), 'type': name}
+    message: dict[str, object] = {'message': str(e), 'type': name}
     if isinstance(e, ValidationError):
         message.update(
             {
-                'error': f'{e.error_count()} validation errors for {e.title}',
+                'message': f'{e.error_count()} validation errors for {e.title}',
                 'errors': e.errors(),
             }
         )
-    await websocket.send_json(message)
+    await websocket.send_json(
+        ErrorResult.model_validate(
+            {'id': request.id if request else -1, 'error': message}
+        ).model_dump(mode='json')
+    )
     await websocket.close(reason=name)
 
 
@@ -156,6 +162,7 @@ class SuccessResult[R](BaseModel):
 
 
 class ErrorInternal(BaseModel):
+    model_config = ConfigDict(extra='allow')
     message: str
 
 
@@ -177,7 +184,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
     try:
         request = Reqs.model_validate(await websocket.receive_json()).root
     except ValidationError as e:
-        await close(websocket, e)
+        await close(None, websocket, e)
         return
 
     logger.info('Got request: %s', request)
@@ -202,7 +209,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
     elif isinstance(request, PlexRequest):
         message = await plex_method(websocket, request)
     else:
-        await close(websocket, Exception('No such method'))
+        await close(request, websocket, Exception('No such method'))
         return
 
     if message:
@@ -245,13 +252,13 @@ async def plex_method(
             websocket,
         )
     except HTTPException as e:
-        await close(websocket, e)
+        await close(plex_request, websocket, e)
         return None
 
     dat = await get_imdb_in_plex(args.media_type, args.tmdb_id, plex)
 
     if not dat:
-        await close(websocket, Exception('Not found in plex'))
+        await close(plex_request, websocket, Exception('Not found in plex'))
         return None
 
     await websocket.send_json(

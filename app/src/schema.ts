@@ -803,6 +803,8 @@ export interface components {
     ErrorInternal: {
       /** Message */
       message: string;
+    } & {
+      [key: string]: unknown;
     };
     /** ErrorResult */
     ErrorResult: {
