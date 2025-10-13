@@ -791,8 +791,8 @@ export interface components {
       id: number;
       /** Method */
       method: unknown;
-      /** Args */
-      args: unknown;
+      /** Params */
+      params: unknown;
       /**
        * Authorization
        * Format: password
@@ -831,8 +831,8 @@ export interface components {
        * @enum {string}
        */
       method: 'ping';
-      /** Args */
-      args: null;
+      /** Params */
+      params: null;
       /**
        * Authorization
        * Format: password
@@ -864,7 +864,7 @@ export interface components {
        * @enum {string}
        */
       method: 'plex';
-      args: components['schemas']['PlexArgs'];
+      params: components['schemas']['PlexArgs'];
       /**
        * Authorization
        * Format: password
@@ -926,7 +926,7 @@ export interface components {
        * @enum {string}
        */
       method: 'stream';
-      args: components['schemas']['StreamArgs'];
+      params: components['schemas']['StreamArgs'];
       /**
        * Authorization
        * Format: password

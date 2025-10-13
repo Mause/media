@@ -89,7 +89,7 @@ async def test_websocket(
             StreamRequest(
                 method='stream',
                 id=1,
-                args=StreamArgs(
+                params=StreamArgs(
                     tmdb_id=1,
                     type='movie',
                 ),
@@ -158,7 +158,7 @@ async def test_websocket_plex(
             PlexRequest(
                 method='plex',
                 id=1,
-                args=PlexArgs(
+                params=PlexArgs(
                     tmdb_id=1,
                     media_type='movie',
                 ),

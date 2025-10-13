@@ -36,7 +36,7 @@ class BaseRequest[M, ARGS](BaseModel):
     jsonrpc: Literal['2.0'] = '2.0'
     id: int
     method: M
-    args: ARGS
+    params: ARGS
     authorization: SecretStr
 
 
@@ -187,7 +187,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
     message: str | None = 'No message provided'
 
     if isinstance(request, StreamRequest):
-        args = request.args
+        args = request.params
         async for item in _stream(
             type=args.type,
             tmdb_id=args.tmdb_id,
@@ -235,7 +235,7 @@ async def plex_method(
     websocket: WebSocket,
     plex_request: PlexRequest,
 ) -> None | str:
-    args = plex_request.args
+    args = plex_request.params
     settings = await get(websocket.app, get_settings)
 
     try:
