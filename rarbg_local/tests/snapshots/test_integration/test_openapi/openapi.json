@@ -2363,6 +2363,7 @@
         "type": "object"
       },
       "ErrorInternal": {
+        "additionalProperties": true,
         "properties": {
           "message": {
             "title": "Message",
