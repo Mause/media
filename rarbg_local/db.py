@@ -20,7 +20,7 @@ from sqlalchemy import (
     event,
 )
 from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
-from sqlalchemy.engine import URL, Engine, make_url, CursorResult
+from sqlalchemy.engine import URL, CursorResult, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
