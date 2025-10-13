@@ -3,7 +3,6 @@ import time
 from asyncio import create_task, sleep
 from collections import ChainMap
 from collections.abc import AsyncGenerator, Coroutine
-from enum import Enum
 from typing import Annotated, Literal, Union
 
 from fastapi import APIRouter, HTTPException, Request, WebSocket
@@ -33,36 +32,42 @@ websocket_ns = APIRouter()
 StreamType = Literal['series', 'movie']
 
 
-class BaseRequest(BaseModel):
+class BaseRequest[M, ARGS](BaseModel):
     jsonrpc: Literal['2.0'] = '2.0'
     id: int
-    method: str
+    method: M
+    args: ARGS
     authorization: SecretStr
 
 
-class StreamArgs(BaseRequest):
-    method: Literal['stream']
-
+class StreamArgs(BaseModel):
     type: StreamType
     tmdb_id: TmdbId
     season: int | None = None
     episode: int | None = None
 
 
-class PingArgs(BaseRequest):
-    method: Literal['ping']
+class StreamRequest(BaseRequest[Literal['stream'], StreamArgs]):
+    pass
 
 
-class PlexArgs(BaseRequest):
-    method: Literal['plex']
+class PingRequest(BaseRequest[Literal['ping'], None]):
+    pass
+
+
+class PlexArgs(BaseModel):
     tmdb_id: TmdbId
     media_type: ThingType
+
+
+class PlexRequest(BaseRequest[Literal['plex'], PlexArgs]):
+    pass
 
 
 class Reqs(
     RootModel[
         Annotated[
-            Union[StreamArgs, PingArgs, PlexArgs],
+            Union[StreamRequest, PingRequest, PlexRequest],
             Field(discriminator='method'),
         ]
     ]
@@ -144,18 +149,23 @@ async def close(websocket: WebSocket, e: Exception) -> None:
     await websocket.close(reason=name)
 
 
-class SocketMessageType(str, Enum):
-    PONG = 'pong'
-    PLEX = 'plex'
-
-
-class SocketMessage[R](BaseModel):
+class SuccessResult[R](BaseModel):
     jsonrpc: Literal['2.0'] = '2.0'
     id: int
-    data: R
+    result: R
 
 
-class PlexRootResponse(SocketMessage[dict[str, PlexResponse[PlexMedia]]]):
+class ErrorInternal(BaseModel):
+    message: str
+
+
+class ErrorResult(BaseModel):
+    jsonrpc: Literal['2.0'] = '2.0'
+    id: int
+    error: ErrorInternal
+
+
+class PlexRootResponse(SuccessResult[dict[str, PlexResponse[PlexMedia]]]):
     pass
 
 
@@ -167,64 +177,37 @@ async def websocket_stream(websocket: WebSocket) -> None:
     try:
         request = Reqs.model_validate(await websocket.receive_json()).root
     except ValidationError as e:
-        return await close(websocket, e)
+        await close(websocket, e)
+        return
 
     logger.info('Got request: %s', request)
 
     await authenticate(websocket, request)
 
-    message = 'No message provided'
+    message: str | None = 'No message provided'
 
-    if request.method == 'stream':
+    if isinstance(request, StreamRequest):
+        args = request.args
         async for item in _stream(
-            type=request.type,
-            tmdb_id=request.tmdb_id,
-            season=request.season,
-            episode=request.episode,
+            type=args.type,
+            tmdb_id=args.tmdb_id,
+            season=args.season,
+            episode=args.episode,
         ):
             await websocket.send_json(item.model_dump(mode='json'))
 
         message = 'Finished streaming'
-    elif request.method == 'ping':
+    elif isinstance(request, PingRequest):
         message = 'Pong'
-    elif request.method == 'plex':
-        settings = await get(websocket.app, get_settings)
-
-        try:
-            plex = await monitor(
-                gracefully_get_plex(make_request(websocket, request), settings),
-                'gracefully_get_plex',
-                websocket,
-            )
-        except HTTPException as e:
-            return await close(websocket, e)
-
-        dat = await get_imdb_in_plex(request.media_type, request.tmdb_id, plex)
-
-        if not dat:
-            return await close(websocket, Exception('Not found in plex'))
-
-        await websocket.send_json(
-            PlexRootResponse(
-                id=request.id,
-                data={
-                    key: PlexResponse[PlexMedia](
-                        item=PlexMedia.model_validate(value),
-                        server_id=plex.machineIdentifier,
-                    )
-                    if value
-                    else None
-                    for key, value in dat.items()
-                },
-            ).model_dump(mode='json')
-        )
-
-        message = 'Plex complete'
+    elif isinstance(request, PlexRequest):
+        message = await plex_method(websocket, request)
     else:
-        return await close(websocket, Exception('No such method'))
+        await close(websocket, Exception('No such method'))
+        return
 
-    logger.info(message)
-    await websocket.close(reason=message)
+    if message:
+        logger.info(message)
+        await websocket.close(reason=message)
 
 
 async def monitor[T](
@@ -238,11 +221,52 @@ async def monitor[T](
             return task.result()
         await sleep(1)
         await websocket.send_json(
-            SocketMessage(
+            SuccessResult(
                 id=-1,
-                data={
+                result={
                     'task_name': task.get_name(),
                     'runtime_seconds': time.monotonic() - start,
                 },
             ).model_dump(mode='json')
         )
+
+
+async def plex_method(
+    websocket: WebSocket,
+    plex_request: PlexRequest,
+) -> None | str:
+    args = plex_request.args
+    settings = await get(websocket.app, get_settings)
+
+    try:
+        plex = await monitor(
+            gracefully_get_plex(make_request(websocket, plex_request), settings),
+            'gracefully_get_plex',
+            websocket,
+        )
+    except HTTPException as e:
+        await close(websocket, e)
+        return None
+
+    dat = await get_imdb_in_plex(args.media_type, args.tmdb_id, plex)
+
+    if not dat:
+        await close(websocket, Exception('Not found in plex'))
+        return None
+
+    await websocket.send_json(
+        PlexRootResponse(
+            id=plex_request.id,
+            result={
+                key: PlexResponse[PlexMedia](
+                    item=PlexMedia.model_validate(value),
+                    server_id=plex.machineIdentifier,
+                )
+                if value
+                else None
+                for key, value in dat.items()
+            },
+        ).model_dump(mode='json')
+    )
+
+    return 'Plex complete'

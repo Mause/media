@@ -2341,8 +2341,10 @@
             "type": "integer"
           },
           "method": {
-            "title": "Method",
-            "type": "string"
+            "title": "Method"
+          },
+          "args": {
+            "title": "Args"
           },
           "authorization": {
             "format": "password",
@@ -2354,12 +2356,49 @@
         "required": [
           "id",
           "method",
+          "args",
           "authorization"
         ],
         "title": "BaseRequest",
         "type": "object"
       },
-      "PingArgs": {
+      "ErrorInternal": {
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "ErrorInternal",
+        "type": "object"
+      },
+      "ErrorResult": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorInternal"
+          }
+        },
+        "required": [
+          "id",
+          "error"
+        ],
+        "title": "ErrorResult",
+        "type": "object"
+      },
+      "PingRequest": {
         "properties": {
           "jsonrpc": {
             "const": "2.0",
@@ -2376,6 +2415,10 @@
             "title": "Method",
             "type": "string"
           },
+          "args": {
+            "title": "Args",
+            "type": "null"
+          },
           "authorization": {
             "format": "password",
             "title": "Authorization",
@@ -2386,12 +2429,35 @@
         "required": [
           "id",
           "method",
+          "args",
           "authorization"
         ],
-        "title": "PingArgs",
+        "title": "PingRequest",
         "type": "object"
       },
       "PlexArgs": {
+        "properties": {
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "media_type": {
+            "enum": [
+              "movie",
+              "tv"
+            ],
+            "title": "Media Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tmdb_id",
+          "media_type"
+        ],
+        "title": "PlexArgs",
+        "type": "object"
+      },
+      "PlexRequest": {
         "properties": {
           "jsonrpc": {
             "const": "2.0",
@@ -2408,33 +2474,23 @@
             "title": "Method",
             "type": "string"
           },
+          "args": {
+            "$ref": "#/components/schemas/PlexArgs"
+          },
           "authorization": {
             "format": "password",
             "title": "Authorization",
             "type": "string",
             "writeOnly": true
-          },
-          "tmdb_id": {
-            "title": "Tmdb Id",
-            "type": "integer"
-          },
-          "media_type": {
-            "enum": [
-              "movie",
-              "tv"
-            ],
-            "title": "Media Type",
-            "type": "string"
           }
         },
         "required": [
           "id",
           "method",
-          "authorization",
-          "tmdb_id",
-          "media_type"
+          "args",
+          "authorization"
         ],
-        "title": "PlexArgs",
+        "title": "PlexRequest",
         "type": "object"
       },
       "PlexRootResponse": {
@@ -2449,17 +2505,17 @@
             "title": "Id",
             "type": "integer"
           },
-          "data": {
+          "result": {
             "additionalProperties": {
               "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
             },
-            "title": "Data",
+            "title": "Result",
             "type": "object"
           }
         },
         "required": [
           "id",
-          "data"
+          "result"
         ],
         "title": "PlexRootResponse",
         "type": "object"
@@ -2467,71 +2523,27 @@
       "Reqs": {
         "discriminator": {
           "mapping": {
-            "ping": "#/components/schemas/PingArgs",
-            "plex": "#/components/schemas/PlexArgs",
-            "stream": "#/components/schemas/StreamArgs"
+            "ping": "#/components/schemas/PingRequest",
+            "plex": "#/components/schemas/PlexRequest",
+            "stream": "#/components/schemas/StreamRequest"
           },
           "propertyName": "method"
         },
         "oneOf": [
           {
-            "$ref": "#/components/schemas/StreamArgs"
+            "$ref": "#/components/schemas/StreamRequest"
           },
           {
-            "$ref": "#/components/schemas/PingArgs"
+            "$ref": "#/components/schemas/PingRequest"
           },
           {
-            "$ref": "#/components/schemas/PlexArgs"
+            "$ref": "#/components/schemas/PlexRequest"
           }
         ],
         "title": "Reqs"
       },
-      "SocketMessage": {
-        "properties": {
-          "jsonrpc": {
-            "const": "2.0",
-            "default": "2.0",
-            "title": "Jsonrpc",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "data": {
-            "title": "Data"
-          }
-        },
-        "required": [
-          "id",
-          "data"
-        ],
-        "title": "SocketMessage",
-        "type": "object"
-      },
       "StreamArgs": {
         "properties": {
-          "jsonrpc": {
-            "const": "2.0",
-            "default": "2.0",
-            "title": "Jsonrpc",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "integer"
-          },
-          "method": {
-            "const": "stream",
-            "title": "Method",
-            "type": "string"
-          },
-          "authorization": {
-            "format": "password",
-            "title": "Authorization",
-            "type": "string",
-            "writeOnly": true
-          },
           "type": {
             "enum": [
               "series",
@@ -2570,13 +2582,69 @@
           }
         },
         "required": [
-          "id",
-          "method",
-          "authorization",
           "type",
           "tmdb_id"
         ],
         "title": "StreamArgs",
+        "type": "object"
+      },
+      "StreamRequest": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "method": {
+            "const": "stream",
+            "title": "Method",
+            "type": "string"
+          },
+          "args": {
+            "$ref": "#/components/schemas/StreamArgs"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "args",
+          "authorization"
+        ],
+        "title": "StreamRequest",
+        "type": "object"
+      },
+      "SuccessResult": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "result": {
+            "title": "Result"
+          }
+        },
+        "required": [
+          "id",
+          "result"
+        ],
+        "title": "SuccessResult",
         "type": "object"
       }
     },

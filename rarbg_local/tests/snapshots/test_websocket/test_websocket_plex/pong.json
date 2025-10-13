@@ -1,7 +1,7 @@
 {
   "jsonrpc": "2.0",
   "id": -1,
-  "data": {
+  "result": {
     "task_name": "gracefully_get_plex",
     "runtime_seconds": 0.0
   }
