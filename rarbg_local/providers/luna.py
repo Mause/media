@@ -130,8 +130,15 @@ class LunaProvider(MovieProvider):
             )
 
     async def health(self) -> HealthcheckCallbackResponse:
-        await get_venue_schedule()
-        return HealthcheckCallbackResponse(HealthcheckStatus.PASS, "OK")
+        request = request_var.get()
+        assert isinstance(request, Request)
+        cache = cast(BaseCache, await get(self.app, get_cache, request))
+        return HealthcheckCallbackResponse(
+            HealthcheckStatus.PASS,
+            {  # type: ignore[arg-type]
+                'cache_present': await cache.exists(LUNA_SCHEDULE)
+            },
+        )
 
 
 async def main() -> None:
