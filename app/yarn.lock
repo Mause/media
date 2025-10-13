@@ -5383,8 +5383,8 @@ __metadata:
   linkType: hard
 
 "msw@npm:^2.11.3":
-  version: 2.11.4
-  resolution: "msw@npm:2.11.4"
+  version: 2.11.5
+  resolution: "msw@npm:2.11.5"
   dependencies:
     "@inquirer/confirm": "npm:^5.0.0"
     "@mswjs/interceptors": "npm:^0.39.1"
@@ -5411,7 +5411,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10/247292340cef62fc92b70fe8e3b33d7fb8bb81b56cc79cc749f96f72ee734af938e6a296044ba3deb57dce9014f31743d03d8794a5b752e0a2048b6ac9f28dbe
+  checksum: 10/9d8addec5e8725ec8744c3cd0b10f82dcac34278b6537bcb63346870043112f02c5b41eef9276cf4d82d8dadd272d22e9978a6c25ada2dd1fc268af4ec62a65f
   languageName: node
   linkType: hard
 
