@@ -7,9 +7,14 @@ import type { ITorrent } from './select/OptionsComponent';
 import { getMarker, getToken } from './utils';
 import type { components } from './schema';
 import { DisplayTorrent, RouteTitle } from './components';
-import { useMessages, readyStateToString } from './components/websocket';
+import {
+  useMessages,
+  readyStateToString,
+  nextId,
+} from './components/websocket';
 
-type StreamArgs = components['schemas']['StreamArgs'];
+type StreamRequest = components['schemas']['StreamRequest'];
+type StreamArgs = StreamRequest['args'];
 
 function get(query: URLSearchParams, key: string): number | undefined {
   const value = query.get(key);
@@ -27,26 +32,30 @@ function Websocket() {
   const initMessage = (
     query.has('season')
       ? {
-          request_type: 'stream',
           type: 'series',
           tmdb_id: tmdbId,
           season: get(query, 'season') || null,
           episode: get(query, 'episode') || null,
-          authorization: token,
         }
       : {
-          request_type: 'stream',
           type: 'movie',
           tmdb_id: tmdbId,
-          authorization: token,
           season: null,
           episode: null,
         }
   ) satisfies StreamArgs;
 
+  const rq = {
+    jsonrpc: '2.0',
+    id: nextId(),
+    method: 'stream',
+    authorization: token,
+    args: initMessage,
+  } satisfies StreamRequest;
+
   const { messages, readyState } = useMessages<
     { error: string; type: string } | ITorrent
-  >(initMessage);
+  >(rq);
 
   const errors = messages.filter((message) => 'error' in message);
   const downloads = messages.filter(

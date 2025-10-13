@@ -87,7 +87,7 @@
     "jiti": "^2.4.2",
     "jsdom": "^26.1.0",
     "mockdate": "^3.0.2",
-    "msw": "^2.10.5",
+    "msw": "^2.11.3",
     "prettier": "3.6.2",
     "typescript-eslint": "^8.37.0",
     "vite": "npm:rolldown-vite@latest",
@@ -96,10 +96,12 @@
   },
   "prettier": {
     "singleQuote": true,
+    "tabWidth": 2,
+    "useTabs": false,
     "trailingComma": "all"
   },
   "workspaces": [
     "client"
   ],
-  "packageManager": "yarn@4.10.1"
+  "packageManager": "yarn@4.10.3"
 }

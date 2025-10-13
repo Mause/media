@@ -13,7 +13,7 @@ dependencies = [
     "backoff==2.2.1",
     "sentry-sdk==2.34.1",
     "alembic==1.16.5",
-    "plexapi==4.17.0",
+    "plexapi==4.17.1",
     "fuzzywuzzy[speedup]==0.18.0",
     "cachetools==5.5.2",
     "lxml",
@@ -73,6 +73,7 @@ dev = [
     "pytest-cov>=6.1.1",
     "pytest-resource-path>=1.4.0",
     "pytest-alembic>=0.12.1",
+    "freezegun>=1.5.5",
 ]
 debug = ["pudb", "pdbpp"]
 cli = [

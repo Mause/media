@@ -1,6 +1,6 @@
 import inspect
 from asyncio import iscoroutinefunction
-from collections.abc import Callable, Coroutine
+from collections.abc import Awaitable, Callable
 from contextlib import AsyncExitStack
 from contextvars import ContextVar
 from typing import Any
@@ -42,11 +42,11 @@ async def get[T](
     )
 
 
-def async_identity[T](value: T) -> Callable[[], Coroutine[None, None, T]]:
-    async def _internal() -> T:
+def async_value[T](value: T) -> Callable[[], Awaitable[T]]:
+    async def _inner() -> T:
         return value
 
-    return _internal
+    return _inner
 
 
 def singleton(func: Callable):  # noqa: ANN201
@@ -61,7 +61,7 @@ def singleton(func: Callable):  # noqa: ANN201
                 is_coroutine=iscoroutinefunction(func),
             )
 
-            app.dependency_overrides[wrapper] = async_identity(value)
+            app.dependency_overrides[wrapper] = async_value(value)
         else:
             value = value()
 

@@ -781,21 +781,58 @@ export interface components {
     };
     /** BaseRequest */
     BaseRequest: {
-      /** Request Type */
-      request_type: string;
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /** Method */
+      method: unknown;
+      /** Args */
+      args: unknown;
       /**
        * Authorization
        * Format: password
        */
       authorization: string;
     };
-    /** PingArgs */
-    PingArgs: {
+    /** ErrorInternal */
+    ErrorInternal: {
+      /** Message */
+      message: string;
+    };
+    /** ErrorResult */
+    ErrorResult: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      error: components['schemas']['ErrorInternal'];
+    };
+    /** PingRequest */
+    PingRequest: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
       /**
        * @description discriminator enum property added by openapi-typescript
        * @enum {string}
        */
-      request_type: 'ping';
+      method: 'ping';
+      /** Args */
+      args: null;
       /**
        * Authorization
        * Format: password
@@ -804,16 +841,6 @@ export interface components {
     };
     /** PlexArgs */
     PlexArgs: {
-      /**
-       * @description discriminator enum property added by openapi-typescript
-       * @enum {string}
-       */
-      request_type: 'plex';
-      /**
-       * Authorization
-       * Format: password
-       */
-      authorization: string;
       /** Tmdb Id */
       tmdb_id: number;
       /**
@@ -822,46 +849,50 @@ export interface components {
        */
       media_type: 'movie' | 'tv';
     };
-    /** PlexRootResponse */
-    PlexRootResponse: {
+    /** PlexRequest */
+    PlexRequest: {
       /**
-       * Type
+       * Jsonrpc
+       * @default 2.0
        * @constant
        */
-      type: 'plex';
-      /** Data */
-      data: {
-        [key: string]: components['schemas']['PlexResponse_PlexMedia_'];
-      };
-    };
-    /** Reqs */
-    Reqs:
-      | components['schemas']['StreamArgs']
-      | components['schemas']['PingArgs']
-      | components['schemas']['PlexArgs'];
-    /** SocketMessage */
-    SocketMessage: {
-      type: components['schemas']['SocketMessageType'];
-      /** Data */
-      data: unknown;
-    };
-    /**
-     * SocketMessageType
-     * @enum {string}
-     */
-    SocketMessageType: 'pong' | 'plex';
-    /** StreamArgs */
-    StreamArgs: {
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
       /**
        * @description discriminator enum property added by openapi-typescript
        * @enum {string}
        */
-      request_type: 'stream';
+      method: 'plex';
+      args: components['schemas']['PlexArgs'];
       /**
        * Authorization
        * Format: password
        */
       authorization: string;
+    };
+    /** PlexRootResponse */
+    PlexRootResponse: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /** Result */
+      result: {
+        [key: string]: components['schemas']['PlexResponse_PlexMedia_'];
+      };
+    };
+    /** Reqs */
+    Reqs:
+      | components['schemas']['StreamRequest']
+      | components['schemas']['PingRequest']
+      | components['schemas']['PlexRequest'];
+    /** StreamArgs */
+    StreamArgs: {
       /**
        * Type
        * @enum {string}
@@ -879,6 +910,41 @@ export interface components {
        * @default null
        */
       episode: number | null;
+    };
+    /** StreamRequest */
+    StreamRequest: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      method: 'stream';
+      args: components['schemas']['StreamArgs'];
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+    };
+    /** SuccessResult */
+    SuccessResult: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /** Result */
+      result: unknown;
     };
   };
   responses: never;

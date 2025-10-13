@@ -1,9 +1,10 @@
+import { useEffect } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -18,7 +19,7 @@ import * as _ from 'lodash-es';
 import { useAuth0 } from '@auth0/auth0-react';
 import usePromise from 'react-promise-suspense';
 
-import { useMessage, readyStateToString } from './components/websocket';
+import { useMessage, readyStateToString, nextId } from './components/websocket';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
 import type { TV } from './select/SeasonSelectComponent';
 import type {
@@ -43,7 +44,19 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
 }
 
 type PlexRootResponse = components['schemas']['PlexRootResponse'];
-type PlexArgs = components['schemas']['PlexArgs'];
+type PlexRequest = components['schemas']['PlexRequest'];
+
+function OpenNewWindow({ link, label }: { link: string; label: string }) {
+  useEffect(() => {
+    window.open(link, '_blank', 'noopener,noreferrrer');
+  }, [link]);
+
+  return (
+    <div>
+      Opening <a href={link}>{label}</a>
+    </div>
+  );
+}
 
 function OpenPlex({
   download,
@@ -55,21 +68,22 @@ function OpenPlex({
   const auth = useAuth0();
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
   const { message, trigger, readyState, state } = useMessage<
-    PlexArgs,
+    PlexRequest,
     PlexRootResponse
   >({
-    request_type: 'plex',
+    method: 'plex',
+    jsonrpc: '2.0',
+    id: nextId(),
     authorization: token,
-    tmdb_id: download.tmdb_id,
-    media_type: type,
+    args: {
+      tmdb_id: download.tmdb_id,
+      media_type: type,
+    },
   });
 
   if (message) {
-    const first = _.toPairs(message.data)
-      .map(([, v]) => v?.link)
-      .find((v) => v);
-    window.open(first, '_blank', 'noopener,noreferrrer');
-    return <Navigate to="/" />;
+    const first = _.values(message.result).find((v) => v)!;
+    return <OpenNewWindow link={first.link} label={first.item.title} />;
   }
 
   return (

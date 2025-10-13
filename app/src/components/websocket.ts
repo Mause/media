@@ -1,11 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import * as Sentry from '@sentry/react';
 
 import { getPrefix } from '../utils';
 import type { components } from '../schema';
 
 type BaseRequest = components['schemas']['BaseRequest'];
-type SocketMessage = components['schemas']['SocketMessage'];
+type SuccessResult = components['schemas']['SuccessResult'];
+type ErrorResult = components['schemas']['ErrorResult'];
 
 export function useMessages<T>(initMessage: BaseRequest) {
   const base = getPrefix();
@@ -28,7 +30,7 @@ export function useMessages<T>(initMessage: BaseRequest) {
   return { messages, readyState };
 }
 
-export function useMessage<REQ extends BaseRequest, T extends SocketMessage>(
+export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
   request: REQ,
 ) {
   const base = getPrefix();
@@ -47,9 +49,18 @@ export function useMessage<REQ extends BaseRequest, T extends SocketMessage>(
   const [message, setMessage] = useState<T | null>(null);
   useEffect(() => {
     if (lastJsonMessage) {
-      if ((lastJsonMessage as T).type === request.request_type) {
-        setState('received');
-        setMessage(lastJsonMessage as T);
+      if ((lastJsonMessage as T).id === request.id) {
+        if ('error' in (lastJsonMessage as ErrorResult)) {
+          const error = (lastJsonMessage as ErrorResult).error;
+          setState('error');
+          console.error('Error message', error);
+          Sentry.captureException(new Error(error.message), {
+            extra: error,
+          });
+        } else {
+          setState('received');
+          setMessage(lastJsonMessage as T);
+        }
       } else {
         console.log('Unexpected message', lastJsonMessage);
       }
@@ -74,4 +85,9 @@ export function readyStateToString(readyState: ReadyState) {
     default:
       return 'Unknown';
   }
+}
+
+let id = 0;
+export function nextId(): number {
+  return id++;
 }

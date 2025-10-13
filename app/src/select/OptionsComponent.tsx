@@ -260,7 +260,9 @@ function useSubscribes<T>(url: string): {
     loading: providers.filter((t) => t.loading).map((t) => t.name),
     errors: Object.fromEntries(
       providers.filter((t) => t.error).map((t, i) => [p[i], t.error]),
-    ) as { [key: string]: Error },
+    ) as {
+      [key: string]: Error;
+    },
   };
 }
 

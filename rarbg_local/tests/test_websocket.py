@@ -6,6 +6,7 @@ from aioresponses import aioresponses as AioResponses
 from async_asgi_testclient import TestClient
 from fastapi import Depends, FastAPI
 from fastapi.security import OpenIdConnect, SecurityScopes
+from freezegun import freeze_time
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from plexapi.video import Video
 from pydantic import SecretStr
@@ -17,7 +18,7 @@ from ..providers import MovieProvider
 from ..providers.abc import ITorrent, ProviderSource
 from ..tmdb import ExternalIds
 from ..types import ImdbId, TmdbId
-from ..websocket import BaseRequest, PlexArgs, StreamArgs
+from ..websocket import BaseRequest, PlexArgs, PlexRequest, StreamArgs, StreamRequest
 from .conftest import add_json, assert_match_json
 from .factories import UserFactory
 
@@ -30,7 +31,7 @@ async def test_websocket_error(test_client: TestClient, snapshot: Snapshot) -> N
     await r.connect()
     await r.send_json(
         {
-            'request_type': 'stream',
+            'method': 'stream',
         }
     )
     assert_match_json(snapshot, await r.receive_json(), 'ws_error.json')
@@ -85,13 +86,14 @@ async def test_websocket(
     await r.connect()
     await r.send_json(
         fix_auth(
-            StreamArgs.model_validate(
-                {
-                    'request_type': 'stream',
-                    'tmdb_id': 1,
-                    'type': 'movie',
-                    'authorization': 'token',
-                }
+            StreamRequest(
+                method='stream',
+                id=1,
+                args=StreamArgs(
+                    tmdb_id=1,
+                    type='movie',
+                ),
+                authorization=SecretStr('token'),
             )
         )
     )
@@ -115,6 +117,7 @@ def fix_auth(mod: BaseRequest) -> dict:
 
 
 @mark.asyncio
+@freeze_time("2012-01-14")
 async def test_websocket_plex(
     test_client: TestClient,
     snapshot: Snapshot,
@@ -152,10 +155,13 @@ async def test_websocket_plex(
     await r.connect()
     await r.send_json(
         fix_auth(
-            PlexArgs(
-                request_type='plex',
-                tmdb_id=1,
-                media_type='movie',
+            PlexRequest(
+                method='plex',
+                id=1,
+                args=PlexArgs(
+                    tmdb_id=1,
+                    media_type='movie',
+                ),
                 authorization=SecretStr('token'),
             )
         )

@@ -624,6 +624,18 @@ wheels = [
 ]
 
 [[package]]
+name = "freezegun"
+version = "1.5.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "python-dateutil" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/95/dd/23e2f4e357f8fd3bdff613c1fe4466d21bfb00a6177f238079b17f7b1c84/freezegun-1.5.5.tar.gz", hash = "sha256:ac7742a6cc6c25a2c35e9292dfd554b897b517d2dec26891a2e8debf205cb94a", size = 35914, upload-time = "2025-08-09T10:39:08.338Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5e/2e/b41d8a1a917d6581fc27a35d05561037b048e47df50f27f8ac9c7e27a710/freezegun-1.5.5-py3-none-any.whl", hash = "sha256:cd557f4a75cf074e84bc374249b9dd491eaeacd61376b9eb3c423282211619d2", size = 19266, upload-time = "2025-08-09T10:39:06.636Z" },
+]
+
+[[package]]
 name = "frozenlist"
 version = "1.6.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1195,6 +1207,7 @@ dev = [
     { name = "async-asgi-testclient" },
     { name = "cryptography" },
     { name = "factory-boy" },
+    { name = "freezegun" },
     { name = "lxml" },
     { name = "pre-commit" },
     { name = "pytest" },
@@ -1244,7 +1257,7 @@ requires-dist = [
     { name = "makefun", specifier = "==1.16.0" },
     { name = "mause-rpc", specifier = "==0.0.18" },
     { name = "nyaapy", specifier = ">=0.7" },
-    { name = "plexapi", specifier = "==4.17.0" },
+    { name = "plexapi", specifier = "==4.17.1" },
     { name = "psycopg", extras = ["binary", "pool"], marker = "'android' not in platform_release", specifier = ">=3.2.9" },
     { name = "psycopg", extras = ["c", "pool"], marker = "'android' in platform_release", specifier = ">=3.2.9" },
     { name = "pydantic", specifier = ">=2.11.4" },
@@ -1273,6 +1286,7 @@ dev = [
     { name = "async-asgi-testclient", specifier = "==1.4.11" },
     { name = "cryptography", specifier = "==45.0.6" },
     { name = "factory-boy", specifier = "==3.3.3" },
+    { name = "freezegun", specifier = ">=1.5.5" },
     { name = "lxml" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pytest" },
@@ -1642,14 +1656,14 @@ wheels = [
 
 [[package]]
 name = "plexapi"
-version = "4.17.0"
+version = "4.17.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/94/79/129a01479ae08d934782a4ae2ece5bb1eee7e9576c14cf41b467a403dcb6/plexapi-4.17.0.tar.gz", hash = "sha256:065ff984a9500e049a9cc30927ab3245e518e39edc2f4058e31528be1a0a2aef", size = 154599, upload-time = "2025-04-19T02:24:08.532Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2a/02/1bebd67c3cd94a45f6c3520da971791b66457535c9771d8e0068746d7bc2/plexapi-4.17.1.tar.gz", hash = "sha256:1e5bfb486bb150e058a80ff4fb9aff9e3efce644c56d52bb5297272e005d8241", size = 154746, upload-time = "2025-08-26T00:11:02.819Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/24/42/400828990b1884bb3d18d6cdbd1c26f91f1ca256619d057bd5f5d8a9ec7b/plexapi-4.17.0-py3-none-any.whl", hash = "sha256:cf42a990205c0327a2ab1d2871087a91b50596e6e960b99a185bf657525e6938", size = 166667, upload-time = "2025-04-19T02:24:06.899Z" },
+    { url = "https://files.pythonhosted.org/packages/c3/1c/9fdaa0e1f797dde3c3cb56d7b222109009f70380e7f49fc0ff42d5705409/plexapi-4.17.1-py3-none-any.whl", hash = "sha256:9d51adb112a2b0b7aa91a928c8b5c0dfffc0d51108cea67d86fea08cee06c998", size = 166861, upload-time = "2025-08-26T00:11:00.89Z" },
 ]
 
 [[package]]
@@ -2160,6 +2174,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/65/52/d756c9704a80119f2e8a84e418290f8bd1b7e1415c3417a1b9c13fcd2a87/pytest_variables-3.1.0.tar.gz", hash = "sha256:4719b07f0f6e5d07829b19284a99d9159543a2e0336311f7bc4ee3b1617f595d", size = 7420, upload-time = "2024-02-01T15:55:20.122Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/4b/fe/30dbeccfeafa242b3c9577db059019022cd96db20942c4a74ef9361c5b3c/pytest_variables-3.1.0-py3-none-any.whl", hash = "sha256:4c864d2b7093f9053a2bed61e4b1d027bb26456924e637fcef2d1455d32732b1", size = 6070, upload-time = "2024-02-01T15:55:18.342Z" },
+]
+
+[[package]]
+name = "python-dateutil"
+version = "2.9.0.post0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/66/c0/0c8b6ad9f17a802ee498c46e004a0eb49bc148f2fd230864601a86dcf6db/python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3", size = 342432, upload-time = "2024-03-01T18:36:20.211Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427", size = 229892, upload-time = "2024-03-01T18:36:18.57Z" },
 ]
 
 [[package]]
