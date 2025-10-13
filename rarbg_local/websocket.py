@@ -34,12 +34,14 @@ StreamType = Literal['series', 'movie']
 
 
 class BaseRequest(BaseModel):
-    request_type: str
+    jsonrpc: Literal['2.0'] = '2.0'
+    id: int
+    method: str
     authorization: SecretStr
 
 
 class StreamArgs(BaseRequest):
-    request_type: Literal['stream']
+    method: Literal['stream']
 
     type: StreamType
     tmdb_id: TmdbId
@@ -48,11 +50,11 @@ class StreamArgs(BaseRequest):
 
 
 class PingArgs(BaseRequest):
-    request_type: Literal['ping']
+    method: Literal['ping']
 
 
 class PlexArgs(BaseRequest):
-    request_type: Literal['plex']
+    method: Literal['plex']
     tmdb_id: TmdbId
     media_type: ThingType
 
@@ -61,7 +63,7 @@ class Reqs(
     RootModel[
         Annotated[
             Union[StreamArgs, PingArgs, PlexArgs],
-            Field(discriminator='request_type'),
+            Field(discriminator='method'),
         ]
     ]
 ):
@@ -148,12 +150,13 @@ class SocketMessageType(str, Enum):
 
 
 class SocketMessage[R](BaseModel):
-    type: SocketMessageType
+    jsonrpc: Literal['2.0'] = '2.0'
+    id: int
     data: R
 
 
 class PlexRootResponse(SocketMessage[dict[str, PlexResponse[PlexMedia]]]):
-    type: Literal[SocketMessageType.PLEX]
+    pass
 
 
 @websocket_ns.websocket("/ws")
@@ -172,7 +175,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
 
     message = 'No message provided'
 
-    if request.request_type == 'stream':
+    if request.method == 'stream':
         async for item in _stream(
             type=request.type,
             tmdb_id=request.tmdb_id,
@@ -182,9 +185,9 @@ async def websocket_stream(websocket: WebSocket) -> None:
             await websocket.send_json(item.model_dump(mode='json'))
 
         message = 'Finished streaming'
-    elif request.request_type == 'ping':
+    elif request.method == 'ping':
         message = 'Pong'
-    elif request.request_type == 'plex':
+    elif request.method == 'plex':
         settings = await get(websocket.app, get_settings)
 
         try:
@@ -203,7 +206,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
 
         await websocket.send_json(
             PlexRootResponse(
-                type=SocketMessageType.PLEX,
+                id=request.id,
                 data={
                     key: PlexResponse[PlexMedia](
                         item=PlexMedia.model_validate(value),
@@ -236,7 +239,7 @@ async def monitor[T](
         await sleep(1)
         await websocket.send_json(
             SocketMessage(
-                type=SocketMessageType.PONG,
+                id=-1,
                 data={
                     'task_name': task.get_name(),
                     'runtime_seconds': time.monotonic() - start,
