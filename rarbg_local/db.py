@@ -443,5 +443,5 @@ async def get_async_db(
 
 async def safe_delete[T](session: AsyncSession, entity: type[T], id: int) -> None:
     query = await session.execute(delete(entity).filter_by(id=id))
-    precondition(cast(CursorResult, count).rowcount > 0, 'Nothing to delete')
+    precondition(cast(CursorResult, query).rowcount > 0, 'Nothing to delete')
     await session.commit()
