@@ -14,7 +14,7 @@ import {
 } from './components/websocket';
 
 type StreamRequest = components['schemas']['StreamRequest'];
-type StreamArgs = StreamRequest['args'];
+type StreamArgs = StreamRequest['params'];
 
 function get(query: URLSearchParams, key: string): number | undefined {
   const value = query.get(key);
@@ -50,7 +50,7 @@ function Websocket() {
     id: nextId(),
     method: 'stream',
     authorization: token,
-    args: initMessage,
+    params: initMessage,
   } satisfies StreamRequest;
 
   const { messages, readyState } = useMessages<

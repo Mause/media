@@ -18,7 +18,7 @@
       "type": "missing",
       "loc": [
         "stream",
-        "args"
+        "params"
       ],
       "msg": "Field required",
       "input": {

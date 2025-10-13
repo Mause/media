@@ -75,7 +75,7 @@ function OpenPlex({
     jsonrpc: '2.0',
     id: nextId(),
     authorization: token,
-    args: {
+    params: {
       tmdb_id: download.tmdb_id,
       media_type: type,
     },

@@ -2343,8 +2343,8 @@
           "method": {
             "title": "Method"
           },
-          "args": {
-            "title": "Args"
+          "params": {
+            "title": "Params"
           },
           "authorization": {
             "format": "password",
@@ -2356,7 +2356,7 @@
         "required": [
           "id",
           "method",
-          "args",
+          "params",
           "authorization"
         ],
         "title": "BaseRequest",
@@ -2415,8 +2415,8 @@
             "title": "Method",
             "type": "string"
           },
-          "args": {
-            "title": "Args",
+          "params": {
+            "title": "Params",
             "type": "null"
           },
           "authorization": {
@@ -2429,7 +2429,7 @@
         "required": [
           "id",
           "method",
-          "args",
+          "params",
           "authorization"
         ],
         "title": "PingRequest",
@@ -2474,7 +2474,7 @@
             "title": "Method",
             "type": "string"
           },
-          "args": {
+          "params": {
             "$ref": "#/components/schemas/PlexArgs"
           },
           "authorization": {
@@ -2487,7 +2487,7 @@
         "required": [
           "id",
           "method",
-          "args",
+          "params",
           "authorization"
         ],
         "title": "PlexRequest",
@@ -2605,7 +2605,7 @@
             "title": "Method",
             "type": "string"
           },
-          "args": {
+          "params": {
             "$ref": "#/components/schemas/StreamArgs"
           },
           "authorization": {
@@ -2618,7 +2618,7 @@
         "required": [
           "id",
           "method",
-          "args",
+          "params",
           "authorization"
         ],
         "title": "StreamRequest",
