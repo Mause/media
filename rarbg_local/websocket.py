@@ -155,14 +155,14 @@ class SuccessResult[R](BaseModel):
     result: R
 
 
-class Error(BaseModel):
+class ErrorInternal(BaseModel):
     message: str
 
 
 class ErrorResult(BaseModel):
     jsonrpc: Literal['2.0'] = '2.0'
     id: int
-    error: Error
+    error: ErrorInternal
 
 
 class PlexRootResponse(SuccessResult[dict[str, PlexResponse[PlexMedia]]]):

@@ -799,6 +799,11 @@ export interface components {
        */
       authorization: string;
     };
+    /** ErrorInternal */
+    ErrorInternal: {
+      /** Message */
+      message: string;
+    };
     /** ErrorResult */
     ErrorResult: {
       /**
@@ -809,10 +814,7 @@ export interface components {
       jsonrpc: '2.0';
       /** Id */
       id: number;
-      /** Error */
-      error: {
-        [key: string]: unknown;
-      };
+      error: components['schemas']['ErrorInternal'];
     };
     /** PingRequest */
     PingRequest: {

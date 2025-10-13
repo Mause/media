@@ -2362,7 +2362,7 @@
         "title": "BaseRequest",
         "type": "object"
       },
-      "Error": {
+      "ErrorInternal": {
         "properties": {
           "message": {
             "title": "Message",
@@ -2372,7 +2372,7 @@
         "required": [
           "message"
         ],
-        "title": "Error",
+        "title": "ErrorInternal",
         "type": "object"
       },
       "ErrorResult": {
@@ -2388,7 +2388,7 @@
             "type": "integer"
           },
           "error": {
-            "$ref": "#/components/schemas/Error"
+            "$ref": "#/components/schemas/ErrorInternal"
           }
         },
         "required": [
