@@ -801,10 +801,17 @@ export interface components {
     };
     /** ErrorInternal */
     ErrorInternal: {
+      /** Code */
+      code: number;
       /** Message */
       message: string;
-    } & {
-      [key: string]: unknown;
+      /**
+       * Data
+       * @default null
+       */
+      data: {
+        [key: string]: unknown;
+      } | null;
     };
     /** ErrorResult */
     ErrorResult: {

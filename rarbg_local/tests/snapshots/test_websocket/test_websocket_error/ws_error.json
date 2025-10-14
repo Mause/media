@@ -2,45 +2,48 @@
   "jsonrpc": "2.0",
   "id": -1,
   "error": {
+    "code": 1,
     "message": "3 validation errors for Reqs",
-    "type": "ValidationError",
-    "errors": [
-      {
-        "type": "missing",
-        "loc": [
-          "stream",
-          "id"
-        ],
-        "msg": "Field required",
-        "input": {
-          "method": "stream"
+    "data": {
+      "type": "ValidationError",
+      "errors": [
+        {
+          "type": "missing",
+          "loc": [
+            "stream",
+            "id"
+          ],
+          "msg": "Field required",
+          "input": {
+            "method": "stream"
+          },
+          "url": "https://errors.pydantic.dev/2.11/v/missing"
         },
-        "url": "https://errors.pydantic.dev/2.11/v/missing"
-      },
-      {
-        "type": "missing",
-        "loc": [
-          "stream",
-          "params"
-        ],
-        "msg": "Field required",
-        "input": {
-          "method": "stream"
+        {
+          "type": "missing",
+          "loc": [
+            "stream",
+            "params"
+          ],
+          "msg": "Field required",
+          "input": {
+            "method": "stream"
+          },
+          "url": "https://errors.pydantic.dev/2.11/v/missing"
         },
-        "url": "https://errors.pydantic.dev/2.11/v/missing"
-      },
-      {
-        "type": "missing",
-        "loc": [
-          "stream",
-          "authorization"
-        ],
-        "msg": "Field required",
-        "input": {
-          "method": "stream"
-        },
-        "url": "https://errors.pydantic.dev/2.11/v/missing"
-      }
-    ]
+        {
+          "type": "missing",
+          "loc": [
+            "stream",
+            "authorization"
+          ],
+          "msg": "Field required",
+          "input": {
+            "method": "stream"
+          },
+          "url": "https://errors.pydantic.dev/2.11/v/missing"
+        }
+      ]
+    }
   }
 }
