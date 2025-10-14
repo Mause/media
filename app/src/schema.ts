@@ -799,12 +799,23 @@ export interface components {
        */
       authorization: string;
     };
+    /**
+     * ErrorCodes
+     * @enum {integer}
+     */
+    ErrorCodes: -32700 | -32600 | -32601 | -32602 | -32603;
     /** ErrorInternal */
     ErrorInternal: {
+      code: components['schemas']['ErrorCodes'];
       /** Message */
       message: string;
-    } & {
-      [key: string]: unknown;
+      /**
+       * Data
+       * @default null
+       */
+      data: {
+        [key: string]: unknown;
+      } | null;
     };
     /** ErrorResult */
     ErrorResult: {

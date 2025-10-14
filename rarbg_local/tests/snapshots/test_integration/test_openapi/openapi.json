@@ -2362,15 +2362,42 @@
         "title": "BaseRequest",
         "type": "object"
       },
+      "ErrorCodes": {
+        "enum": [
+          -32700,
+          -32600,
+          -32601,
+          -32602,
+          -32603
+        ],
+        "title": "ErrorCodes",
+        "type": "integer"
+      },
       "ErrorInternal": {
-        "additionalProperties": true,
         "properties": {
+          "code": {
+            "$ref": "#/components/schemas/ErrorCodes"
+          },
           "message": {
             "title": "Message",
             "type": "string"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Data"
           }
         },
         "required": [
+          "code",
           "message"
         ],
         "title": "ErrorInternal",

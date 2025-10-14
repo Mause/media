@@ -3,10 +3,11 @@ import time
 from asyncio import create_task, sleep
 from collections import ChainMap
 from collections.abc import AsyncGenerator, Coroutine
+from enum import IntEnum
 from typing import Annotated, Literal, Union
 
 from fastapi import APIRouter, HTTPException, Request, WebSocket
-from pydantic import BaseModel, ConfigDict, Field, RootModel, SecretStr, ValidationError
+from pydantic import BaseModel, Field, RootModel, SecretStr, ValidationError
 
 from .auth import security
 from .db import (
@@ -139,17 +140,21 @@ async def close(
     request: BaseRequest | None, websocket: WebSocket, e: Exception
 ) -> None:
     name = type(e).__name__
-    message: dict[str, object] = {'message': str(e), 'type': name}
+    message = str(e)
+    data: dict[str, object] = {'type': name}
     if isinstance(e, ValidationError):
-        message.update(
-            {
-                'message': f'{e.error_count()} validation errors for {e.title}',
-                'errors': e.errors(),
-            }
-        )
+        message = f'{e.error_count()} validation errors for {e.title}'
+        data['errors'] = e.errors()
     await websocket.send_json(
         ErrorResult.model_validate(
-            {'id': request.id if request else -1, 'error': message}
+            {
+                'id': request.id if request else -1,
+                'error': {
+                    'message': message,
+                    'code': ErrorCodes.INVALID_PARAMS,
+                    'data': data,
+                },
+            }
         ).model_dump(mode='json')
     )
     await websocket.close(reason=name)
@@ -161,9 +166,18 @@ class SuccessResult[R](BaseModel):
     result: R
 
 
+class ErrorCodes(IntEnum):
+    PARSE_ERROR = -32700
+    INVALID_REQUEST = -32600
+    METHOD_NOT_FOUND = -32601
+    INVALID_PARAMS = -32602
+    INTERNAL_ERROR = -32603
+
+
 class ErrorInternal(BaseModel):
-    model_config = ConfigDict(extra='allow')
+    code: ErrorCodes
     message: str
+    data: dict[str, object] | None = None
 
 
 class ErrorResult(BaseModel):
