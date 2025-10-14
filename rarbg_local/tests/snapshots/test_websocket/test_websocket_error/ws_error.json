@@ -2,7 +2,7 @@
   "jsonrpc": "2.0",
   "id": -1,
   "error": {
-    "code": 1,
+    "code": -32602,
     "message": "3 validation errors for Reqs",
     "data": {
       "type": "ValidationError",

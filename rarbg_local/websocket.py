@@ -3,6 +3,7 @@ import time
 from asyncio import create_task, sleep
 from collections import ChainMap
 from collections.abc import AsyncGenerator, Coroutine
+from enum import IntEnum
 from typing import Annotated, Literal, Union
 
 from fastapi import APIRouter, HTTPException, Request, WebSocket
@@ -148,7 +149,11 @@ async def close(
         ErrorResult.model_validate(
             {
                 'id': request.id if request else -1,
-                'error': {'message': message, 'code': 1, 'data': data},
+                'error': {
+                    'message': message,
+                    'code': ErrorCodes.INVALID_PARAMS,
+                    'data': data,
+                },
             }
         ).model_dump(mode='json')
     )
@@ -161,8 +166,16 @@ class SuccessResult[R](BaseModel):
     result: R
 
 
+class ErrorCodes(IntEnum):
+    PARSE_ERROR = -32700
+    INVALID_REQUEST = -32600
+    METHOD_NOT_FOUND = -32601
+    INVALID_PARAMS = -32602
+    INTERNAL_ERROR = -32603
+
+
 class ErrorInternal(BaseModel):
-    code: int
+    code: ErrorCodes
     message: str
     data: dict[str, object] | None = None
 

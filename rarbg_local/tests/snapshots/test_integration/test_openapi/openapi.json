@@ -2362,11 +2362,21 @@
         "title": "BaseRequest",
         "type": "object"
       },
+      "ErrorCodes": {
+        "enum": [
+          -32700,
+          -32600,
+          -32601,
+          -32602,
+          -32603
+        ],
+        "title": "ErrorCodes",
+        "type": "integer"
+      },
       "ErrorInternal": {
         "properties": {
           "code": {
-            "title": "Code",
-            "type": "integer"
+            "$ref": "#/components/schemas/ErrorCodes"
           },
           "message": {
             "title": "Message",
