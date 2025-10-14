@@ -799,10 +799,14 @@ export interface components {
        */
       authorization: string;
     };
+    /**
+     * ErrorCodes
+     * @enum {integer}
+     */
+    ErrorCodes: -32700 | -32600 | -32601 | -32602 | -32603;
     /** ErrorInternal */
     ErrorInternal: {
-      /** Code */
-      code: number;
+      code: components['schemas']['ErrorCodes'];
       /** Message */
       message: string;
       /**
