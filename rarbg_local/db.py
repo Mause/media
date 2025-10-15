@@ -20,7 +20,7 @@ from sqlalchemy import (
     event,
 )
 from sqlalchemy.dialects.sqlite.aiosqlite import AsyncAdapt_aiosqlite_connection
-from sqlalchemy.engine import URL, Engine, make_url
+from sqlalchemy.engine import URL, CursorResult, Engine, make_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -443,5 +443,5 @@ async def get_async_db(
 
 async def safe_delete[T](session: AsyncSession, entity: type[T], id: int) -> None:
     query = await session.execute(delete(entity).filter_by(id=id))
-    precondition(query.rowcount > 0, 'Nothing to delete')
+    precondition(cast(CursorResult, query).rowcount > 0, 'Nothing to delete')
     await session.commit()
