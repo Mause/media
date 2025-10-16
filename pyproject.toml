@@ -18,7 +18,7 @@ dependencies = [
     "cachetools==5.5.2",
     "lxml",
     "eventlet==0.40.3",
-    "email-validator==2.2.0",
+    "email-validator==2.3.0",
     "mause-rpc==0.0.18",
     "fastapi==0.116.1",
     "python-multipart==0.0.20",
