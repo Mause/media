@@ -36,25 +36,25 @@ __metadata:
   linkType: hard
 
 "@auth0/auth0-react@npm:^2.0.0":
-  version: 2.6.0
-  resolution: "@auth0/auth0-react@npm:2.6.0"
+  version: 2.7.0
+  resolution: "@auth0/auth0-react@npm:2.7.0"
   dependencies:
-    "@auth0/auth0-spa-js": "npm:^2.5.0"
+    "@auth0/auth0-spa-js": "npm:^2.6.0"
   peerDependencies:
     react: ^16.11.0 || ^17 || ^18 || ^19
     react-dom: ^16.11.0 || ^17 || ^18 || ^19
-  checksum: 10/9f823c1b32f3eeb8033bd3610bade7b1b37d0f59becb163eee3bc2d0a2b67aed9db28ee0f5a055dc01c5426ff2300a9bf58e9bc341be6988c925b8e9b511b4c7
+  checksum: 10/20ab904fcf9c486962565b0087762d4fe46718e4fd36f58c07ba3e0bf3fb4417f40bc63a17151b697369e6209b3763fcb503b8f4dfd2d89ac300c0e1c41e1b4d
   languageName: node
   linkType: hard
 
-"@auth0/auth0-spa-js@npm:^2.5.0":
-  version: 2.5.0
-  resolution: "@auth0/auth0-spa-js@npm:2.5.0"
+"@auth0/auth0-spa-js@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "@auth0/auth0-spa-js@npm:2.6.0"
   dependencies:
     browser-tabs-lock: "npm:^1.2.15"
     dpop: "npm:^2.1.1"
     es-cookie: "npm:~1.3.2"
-  checksum: 10/81a0556eb271f6e03ac4fe554ff69acb11c9781552ac1acc7e52aead7b59980d9b1c65322afcab15ca8da14240ab70bb8f76380a745d30142abfa31f09767e08
+  checksum: 10/3aacb4c53c8aa6ee31ad19c86b1d9d24494da4be3c6126d0cfa03c07ab457de64e4de9b2e4018642aed39cd5a5b28c4e9b589d2180835433d7d96598a7887e4f
   languageName: node
   linkType: hard
 
