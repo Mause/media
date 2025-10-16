@@ -12,7 +12,7 @@ dependencies = [
     "aiohttp==3.12.15",
     "backoff==2.2.1",
     "sentry-sdk==2.42.0",
-    "alembic==1.16.5",
+    "alembic==1.17.0",
     "plexapi==4.17.1",
     "fuzzywuzzy[speedup]==0.18.0",
     "cachetools==5.5.2",
