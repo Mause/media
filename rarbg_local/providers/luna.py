@@ -132,7 +132,7 @@ class LunaProvider(MovieProvider):
     async def health(self) -> HealthcheckCallbackResponse:
         request = request_var.get()
         assert isinstance(request, Request)
-        cache = cast(BaseCache, await get(self.app, get_cache, request))
+        cache = cast(BaseCache, await get(request.app, get_cache, request))
         return HealthcheckCallbackResponse(
             HealthcheckStatus.PASS,
             {  # type: ignore[arg-type]
