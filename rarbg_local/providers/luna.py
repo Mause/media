@@ -6,7 +6,7 @@ from os.path import exists
 from typing import Annotated, cast
 
 import aiohttp
-from aiocache import Cache
+from aiocache.base import BaseCache
 from fastapi import Request
 from healthcheck import HealthcheckCallbackResponse, HealthcheckStatus
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, PlainSerializer
@@ -83,8 +83,8 @@ async def get_venue_schedule() -> Schedule:
     request = request_var.get()
     assert isinstance(request, Request)
 
-    cache = cast(Cache, await get(request.app, get_cache, request))
-    assert isinstance(cache, Cache)
+    cache = cast(BaseCache, await get(request.app, get_cache, request))
+    assert isinstance(cache, BaseCache), cache
 
     luna = await cache.get(LUNA_SCHEDULE)
     if luna:
@@ -96,6 +96,8 @@ async def get_venue_schedule() -> Schedule:
 
 
 class LunaProvider(MovieProvider):
+    type = ProviderSource.LUNA
+
     async def search_for_movie(
         self, imdb_id: ImdbId, tmdb_id: TmdbId
     ) -> AsyncGenerator[ITorrent, None]:
@@ -128,8 +130,15 @@ class LunaProvider(MovieProvider):
             )
 
     async def health(self) -> HealthcheckCallbackResponse:
-        await get_venue_schedule()
-        return HealthcheckCallbackResponse(HealthcheckStatus.PASS, "OK")
+        request = request_var.get()
+        assert isinstance(request, Request)
+        cache = cast(BaseCache, await get(request.app, get_cache, request))
+        return HealthcheckCallbackResponse(
+            HealthcheckStatus.PASS,
+            {  # type: ignore[arg-type]
+                'cache_present': await cache.exists(LUNA_SCHEDULE)
+            },
+        )
 
 
 async def main() -> None:
