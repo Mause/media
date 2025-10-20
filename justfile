@@ -9,3 +9,7 @@ pull-config:
 snapshot:
 	pytest --snapshot-update
 	cd app && yarn generate:static
+
+typecheck:
+	mypy rarbg_local
+	cd app && yarn tsc

@@ -3,6 +3,7 @@ import time
 from asyncio import create_task, sleep
 from collections import ChainMap
 from collections.abc import AsyncGenerator, Coroutine
+from enum import IntEnum
 from typing import Annotated, Literal, Union
 
 from fastapi import APIRouter, HTTPException, Request, WebSocket
@@ -36,7 +37,7 @@ class BaseRequest[M, ARGS](BaseModel):
     jsonrpc: Literal['2.0'] = '2.0'
     id: int
     method: M
-    args: ARGS
+    params: ARGS
     authorization: SecretStr
 
 
@@ -127,7 +128,7 @@ async def authenticate(websocket: WebSocket, request: BaseRequest) -> User:
         )
     except Exception as e:
         logger.exception('Unable to authenticate websocket request')
-        await close(websocket, e)
+        await close(request, websocket, e)
         raise
 
     logger.info('Authed user: %s', user)
@@ -135,17 +136,27 @@ async def authenticate(websocket: WebSocket, request: BaseRequest) -> User:
     return user
 
 
-async def close(websocket: WebSocket, e: Exception) -> None:
+async def close(
+    request: BaseRequest | None, websocket: WebSocket, e: Exception
+) -> None:
     name = type(e).__name__
-    message: dict[str, object] = {'error': str(e), 'type': name}
+    message = str(e)
+    data: dict[str, object] = {'type': name}
     if isinstance(e, ValidationError):
-        message.update(
+        message = f'{e.error_count()} validation errors for {e.title}'
+        data['errors'] = e.errors()
+    await websocket.send_json(
+        ErrorResult.model_validate(
             {
-                'error': f'{e.error_count()} validation errors for {e.title}',
-                'errors': e.errors(),
+                'id': request.id if request else -1,
+                'error': {
+                    'message': message,
+                    'code': ErrorCodes.INVALID_PARAMS,
+                    'data': data,
+                },
             }
-        )
-    await websocket.send_json(message)
+        ).model_dump(mode='json')
+    )
     await websocket.close(reason=name)
 
 
@@ -155,8 +166,18 @@ class SuccessResult[R](BaseModel):
     result: R
 
 
+class ErrorCodes(IntEnum):
+    PARSE_ERROR = -32700
+    INVALID_REQUEST = -32600
+    METHOD_NOT_FOUND = -32601
+    INVALID_PARAMS = -32602
+    INTERNAL_ERROR = -32603
+
+
 class ErrorInternal(BaseModel):
+    code: ErrorCodes
     message: str
+    data: dict[str, object] | None = None
 
 
 class ErrorResult(BaseModel):
@@ -177,7 +198,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
     try:
         request = Reqs.model_validate(await websocket.receive_json()).root
     except ValidationError as e:
-        await close(websocket, e)
+        await close(None, websocket, e)
         return
 
     logger.info('Got request: %s', request)
@@ -187,7 +208,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
     message: str | None = 'No message provided'
 
     if isinstance(request, StreamRequest):
-        args = request.args
+        args = request.params
         async for item in _stream(
             type=args.type,
             tmdb_id=args.tmdb_id,
@@ -202,7 +223,7 @@ async def websocket_stream(websocket: WebSocket) -> None:
     elif isinstance(request, PlexRequest):
         message = await plex_method(websocket, request)
     else:
-        await close(websocket, Exception('No such method'))
+        await close(request, websocket, Exception('No such method'))
         return
 
     if message:
@@ -235,7 +256,7 @@ async def plex_method(
     websocket: WebSocket,
     plex_request: PlexRequest,
 ) -> None | str:
-    args = plex_request.args
+    args = plex_request.params
     settings = await get(websocket.app, get_settings)
 
     try:
@@ -245,13 +266,13 @@ async def plex_method(
             websocket,
         )
     except HTTPException as e:
-        await close(websocket, e)
+        await close(plex_request, websocket, e)
         return None
 
     dat = await get_imdb_in_plex(args.media_type, args.tmdb_id, plex)
 
     if not dat:
-        await close(websocket, Exception('Not found in plex'))
+        await close(plex_request, websocket, Exception('Not found in plex'))
         return None
 
     await websocket.send_json(

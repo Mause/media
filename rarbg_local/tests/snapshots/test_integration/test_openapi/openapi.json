@@ -2343,8 +2343,8 @@
           "method": {
             "title": "Method"
           },
-          "args": {
-            "title": "Args"
+          "params": {
+            "title": "Params"
           },
           "authorization": {
             "format": "password",
@@ -2356,20 +2356,48 @@
         "required": [
           "id",
           "method",
-          "args",
+          "params",
           "authorization"
         ],
         "title": "BaseRequest",
         "type": "object"
       },
+      "ErrorCodes": {
+        "enum": [
+          -32700,
+          -32600,
+          -32601,
+          -32602,
+          -32603
+        ],
+        "title": "ErrorCodes",
+        "type": "integer"
+      },
       "ErrorInternal": {
         "properties": {
+          "code": {
+            "$ref": "#/components/schemas/ErrorCodes"
+          },
           "message": {
             "title": "Message",
             "type": "string"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Data"
           }
         },
         "required": [
+          "code",
           "message"
         ],
         "title": "ErrorInternal",
@@ -2415,8 +2443,8 @@
             "title": "Method",
             "type": "string"
           },
-          "args": {
-            "title": "Args",
+          "params": {
+            "title": "Params",
             "type": "null"
           },
           "authorization": {
@@ -2429,7 +2457,7 @@
         "required": [
           "id",
           "method",
-          "args",
+          "params",
           "authorization"
         ],
         "title": "PingRequest",
@@ -2474,7 +2502,7 @@
             "title": "Method",
             "type": "string"
           },
-          "args": {
+          "params": {
             "$ref": "#/components/schemas/PlexArgs"
           },
           "authorization": {
@@ -2487,7 +2515,7 @@
         "required": [
           "id",
           "method",
-          "args",
+          "params",
           "authorization"
         ],
         "title": "PlexRequest",
@@ -2605,7 +2633,7 @@
             "title": "Method",
             "type": "string"
           },
-          "args": {
+          "params": {
             "$ref": "#/components/schemas/StreamArgs"
           },
           "authorization": {
@@ -2618,7 +2646,7 @@
         "required": [
           "id",
           "method",
-          "args",
+          "params",
           "authorization"
         ],
         "title": "StreamRequest",

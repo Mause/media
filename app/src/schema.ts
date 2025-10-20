@@ -791,18 +791,31 @@ export interface components {
       id: number;
       /** Method */
       method: unknown;
-      /** Args */
-      args: unknown;
+      /** Params */
+      params: unknown;
       /**
        * Authorization
        * Format: password
        */
       authorization: string;
     };
+    /**
+     * ErrorCodes
+     * @enum {integer}
+     */
+    ErrorCodes: -32700 | -32600 | -32601 | -32602 | -32603;
     /** ErrorInternal */
     ErrorInternal: {
+      code: components['schemas']['ErrorCodes'];
       /** Message */
       message: string;
+      /**
+       * Data
+       * @default null
+       */
+      data: {
+        [key: string]: unknown;
+      } | null;
     };
     /** ErrorResult */
     ErrorResult: {
@@ -831,8 +844,8 @@ export interface components {
        * @enum {string}
        */
       method: 'ping';
-      /** Args */
-      args: null;
+      /** Params */
+      params: null;
       /**
        * Authorization
        * Format: password
@@ -864,7 +877,7 @@ export interface components {
        * @enum {string}
        */
       method: 'plex';
-      args: components['schemas']['PlexArgs'];
+      params: components['schemas']['PlexArgs'];
       /**
        * Authorization
        * Format: password
@@ -926,7 +939,7 @@ export interface components {
        * @enum {string}
        */
       method: 'stream';
-      args: components['schemas']['StreamArgs'];
+      params: components['schemas']['StreamArgs'];
       /**
        * Authorization
        * Format: password
