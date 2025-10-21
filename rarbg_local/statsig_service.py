@@ -1,7 +1,7 @@
 import json
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from statsig_python_core import Statsig, StatsigOptions, StatsigUser
 
 from .settings import Settings, get_settings
