@@ -19,7 +19,7 @@ dependencies = [
   "dnspython>=2.7.0",
   "email-validator==2.3.0",
   "eventlet==0.40.3",
-  "fastapi==0.116.1",
+  "fastapi==0.119.1",
   "fastapi-oidc>=0.0.10",
   "fastapi-utils==0.8.0",
   "fuzzywuzzy[speedup]==0.18.0",

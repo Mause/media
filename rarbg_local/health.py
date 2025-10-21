@@ -2,7 +2,7 @@ import logging
 from collections.abc import Callable, Coroutine
 from datetime import datetime
 from os import getpid
-from typing import Any, cast, overload
+from typing import TYPE_CHECKING, Any, cast, overload
 
 from fastapi import APIRouter, Request
 from fastapi.concurrency import run_in_threadpool
@@ -20,7 +20,6 @@ from healthcheck.models import ComponentType
 from plexapi.server import PlexServer
 from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
-from statsig_python_core import Statsig
 
 from .cache import get_cache
 from .config import commit
@@ -30,6 +29,9 @@ from .singleton import get as _get
 from .singleton import request_var
 from .statsig_service import get_statig
 from .transmission_proxy import transmission
+
+if TYPE_CHECKING:
+    from statsig_python_core import Statsig
 
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=['diagnostics'])
