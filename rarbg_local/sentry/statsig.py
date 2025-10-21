@@ -9,7 +9,7 @@ from statsig_python_core import (
     StatsigBasePy,
     StatsigUser,
 )
-from statsig_python_core import __version__ as STATSIG_VERSION
+from statsig_python_core.version import __version__ as STATSIG_VERSION
 
 
 class StatsigIntegration(Integration):
