@@ -13,12 +13,12 @@ from statsig_python_core import (
 
 
 class StatsigIntegration(Integration):
-    identifier = "statsig"
+    identifier = "statsig-python-core"
 
     @staticmethod
     def setup_once() -> None:
         ver = parse_version(version("statsig-python-core"))
-        _check_minimum_version(StatsigIntegration, ver, "statsig")
+        _check_minimum_version(StatsigIntegration, ver, "statsig-python-core")
 
         # Wrap and patch evaluation method(s) in the statsig module
         old_check_gate = Statsig.check_gate
