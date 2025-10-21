@@ -224,6 +224,7 @@ async def api_select(tmdb_id: TmdbId, season: int) -> DownloadAllResponse:
 async def download_post(
     things: list[DownloadPost],
     added_by: Annotated[User, security],
+    statsig: Annotated[Statsig, Depends(get_statsig)],
 ) -> list[MovieDetails | EpisodeDetails]:
     results: list[MovieDetails | EpisodeDetails] = []
 
@@ -259,6 +260,12 @@ async def download_post(
             show_title = None
             title = (await get_movie(thing.tmdb_id)).title
             subpath = 'movies'
+
+        statsig.log_event(
+            user=added_by,
+            event_name="add_download",
+            value=thing.magnet,
+        )
 
         results.append(
             await add_single(
