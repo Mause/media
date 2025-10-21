@@ -27,7 +27,7 @@ from .db import get_async_sessionmaker
 from .plex import get_plex
 from .singleton import get as _get
 from .singleton import request_var
-from .statsig_service import get_statig
+from .statsig_service import get_statsig
 from .transmission_proxy import transmission
 
 if TYPE_CHECKING:
@@ -206,7 +206,7 @@ async def client_ip() -> HealthcheckCallbackResponse:
 
 
 async def statsig() -> HealthcheckCallbackResponse:
-    statsig: Statsig = await get(get_statig)
+    statsig: Statsig = await get(get_statsig)
 
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,

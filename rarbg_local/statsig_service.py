@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from statsig_python_core import Statsig
 
 
-async def get_statig(
+async def get_statsig(
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> 'Statsig':
     from statsig_python_core import Statsig, StatsigOptions
@@ -37,7 +37,7 @@ async def statsig_bootstrap(
     request: Request,
     email: str,
     user_id: str,
-    statsig: Annotated['Statsig', Depends(get_statig)],
+    statsig: Annotated['Statsig', Depends(get_statsig)],
 ) -> StatsigBootstrapResponse:
     from statsig_python_core import StatsigUser
 
