@@ -17,7 +17,7 @@
           "input": {
             "method": "stream"
           },
-          "url": "https://errors.pydantic.dev/2.11/v/missing"
+          "url": "https://errors.pydantic.dev/2.12/v/missing"
         },
         {
           "type": "missing",
@@ -29,7 +29,7 @@
           "input": {
             "method": "stream"
           },
-          "url": "https://errors.pydantic.dev/2.11/v/missing"
+          "url": "https://errors.pydantic.dev/2.12/v/missing"
         },
         {
           "type": "missing",
@@ -41,7 +41,7 @@
           "input": {
             "method": "stream"
           },
-          "url": "https://errors.pydantic.dev/2.11/v/missing"
+          "url": "https://errors.pydantic.dev/2.12/v/missing"
         }
       ]
     }
