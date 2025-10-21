@@ -30,7 +30,7 @@ class StatsigIntegration(Integration):
             gate: str,
             options: FeatureGateEvaluationOptions | None = None,
         ) -> bool:
-            enabled = old_check_gate(user, gate, options)
+            enabled = old_check_gate(self, user, gate, options)
             add_feature_flag(gate, enabled)
             return enabled
 
