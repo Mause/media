@@ -2,84 +2,111 @@
 name = "media"
 version = "0.1.0"
 description = ""
-authors = [{ name = "Elliana May", email = "me@mause.me" }]
-license = "MIT"
 requires-python = ">=3.12.0"
-
+license = "MIT"
+authors = [{ name = "Elliana May", email = "me@mause.me" }]
 dependencies = [
-    "sqlalchemy[mypy]==2.0.44",
-    "sqlalchemy-repr==0.1.0",
-    "aiohttp==3.12.15",
-    "backoff==2.2.1",
-    "sentry-sdk==2.42.0",
-    "alembic==1.17.0",
-    "plexapi==4.17.1",
-    "fuzzywuzzy[speedup]==0.18.0",
-    "cachetools==5.5.2",
-    "lxml",
-    "eventlet==0.40.3",
-    "email-validator==2.3.0",
-    "mause-rpc==0.0.18",
-    "fastapi==0.116.1",
-    "python-multipart==0.0.20",
-    "aniso8601==10.0.1",
-    "pytz==2025.2",
-    "uvicorn[standard]",
-    "aiofiles==24.1.0",
-    "fastapi-utils==0.8.0",
-    "asyncache==0.3.1",
-    "makefun==1.16.0",
-    "gunicorn",
-    "nyaapy>=0.7",
-    "python-healthchecklib>=0.1.1",
-    "beautifulsoup4>=4.13.4",
-    "dnspython>=2.7.0",
-    "pydantic-settings>=2.9.1",
-    "pydantic>=2.11.4",
-    "typing-inspect>=0.9.0",
-    "fastapi-oidc>=0.0.10",
-    "pyjwt>=2.10.1",
-    "aiontfy>=0.5.3",
-    "logfire[fastapi,aiohttp,sqlalchemy,requests]>=3.18.0",
-    "psycopg[c,pool]>=3.2.9; 'android' in platform_release",
-    "psycopg[binary,pool]>=3.2.9; 'android' not in platform_release",
-    "geoip-py>=1.0.2",
-    "uvicorn-worker>=0.3.0",
-    "aiocache[redis]>=0.12.3",
+  "aiocache[redis]>=0.12.3",
+  "aiofiles==24.1.0",
+  "aiohttp==3.12.15",
+  "aiontfy>=0.5.3",
+  "alembic==1.17.0",
+  "aniso8601==10.0.1",
+  "asyncache==0.3.1",
+  "backoff==2.2.1",
+  "beautifulsoup4>=4.13.4",
+  "cachetools==5.5.2",
+  "dnspython>=2.7.0",
+  "email-validator==2.3.0",
+  "eventlet==0.40.3",
+  "fastapi==0.116.1",
+  "fastapi-oidc>=0.0.10",
+  "fastapi-utils==0.8.0",
+  "fuzzywuzzy[speedup]==0.18.0",
+  "geoip-py>=1.0.2",
+  "gunicorn",
+  "logfire[fastapi,aiohttp,sqlalchemy,requests]>=3.18.0",
+  "lxml",
+  "makefun==1.16.0",
+  "mause-rpc==0.0.18",
+  "nyaapy>=0.7",
+  "plexapi==4.17.1",
+  "psycopg[binary,pool]>=3.2.9; 'android' not in platform_release",
+  "psycopg[c,pool]>=3.2.9; 'android' in platform_release",
+  "pydantic>=2.11.4",
+  "pydantic-settings>=2.9.1",
+  "pyjwt>=2.10.1",
+  "python-healthchecklib>=0.1.1",
+  "python-multipart==0.0.20",
+  "pytz==2025.2",
+  "sentry-sdk==2.42.0",
+  "sqlalchemy-repr==0.1.0",
+  "sqlalchemy[mypy]==2.0.44",
+  "typing-inspect>=0.9.0",
+  "uvicorn-worker>=0.3.0",
+  "uvicorn[standard]",
 ]
 
 [dependency-groups]
 dev = [
-    "pytest",
-    "responses==0.25.8",
-    "lxml",
-    "pytest-html>=3.1.1",
-    "pytest-selenium>=3.0.0",
-    "webdriver-manager==4.0.2",
-    "pre-commit>=4.2.0",
-    "pytest-snapshot",
-    "factory-boy==3.3.3",
-    "pytest-asyncio==1.2.0",
-    "async-asgi-testclient==1.4.11",
-    "aioresponses==0.7.8",
-    "pytest-sugar",
-    "aiosqlite>=0.21.0",
-    "cryptography==45.0.6",
-    "types-tabulate>=0.9.0.20241207",
-    "types-requests>=2.32.0.20250328",
-    "types-lxml>=2025.3.30",
-    "types-selenium>=3.141.9",
-    "types-cachetools>=5.5.0.20240820",
-    "pytest-cov>=6.1.1",
-    "pytest-resource-path>=1.4.0",
-    "pytest-alembic>=0.12.1",
-    "freezegun>=1.5.5",
+  "aioresponses==0.7.8",
+  "aiosqlite>=0.21.0",
+  "async-asgi-testclient==1.4.11",
+  "cryptography==45.0.6",
+  "factory-boy==3.3.3",
+  "freezegun>=1.5.5",
+  "lxml",
+  "pre-commit>=4.2.0",
+  "pytest",
+  "pytest-alembic>=0.12.1",
+  "pytest-asyncio==1.2.0",
+  "pytest-cov>=6.1.1",
+  "pytest-html>=3.1.1",
+  "pytest-resource-path>=1.4.0",
+  "pytest-selenium>=3.0.0",
+  "pytest-snapshot",
+  "pytest-sugar",
+  "responses==0.25.8",
+  "types-cachetools>=5.5.0.20240820",
+  "types-lxml>=2025.3.30",
+  "types-requests>=2.32.0.20250328",
+  "types-selenium>=3.141.9",
+  "types-tabulate>=0.9.0.20241207",
+  "webdriver-manager==4.0.2",
 ]
-debug = ["pudb", "pdbpp"]
 cli = [
-    "rich>=14.0.0",
+  "rich>=14.0.0",
 ]
-ty = ['ty']
+debug = ["pdbpp", "pudb"]
+ty = ["ty"]
+
+[tool.mypy]
+plugins = "pydantic.mypy"
+ignore_missing_imports = true
+mypy_path = "stubs"
+disallow_untyped_defs = false
+strict_equality = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = [
+  "rarbg_local.utils",
+  "rarbg_local.tmdb",
+  "rarbg_local.providers",
+  "rarbg_local.providers.abc",
+  "rarbg_local.providers.torrents_csv",
+  "rarbg_local.providers.horriblesubs",
+  "rarbg_local.providers.nyaasi",
+  "rarbg_local.providers.piratebay",
+  "rarbg_local.new",
+  "rarbg_local.jikan",
+]
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+addopts = "--driver chrome --html report.html --self-contained-html --cov-report html --cov"
+testpaths = ["./rarbg_local/tests"]
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff]
 show-fixes = true
@@ -92,31 +119,3 @@ docstring-code-line-length = 20
 [tool.ruff.lint]
 select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 ignore = ["ANN401"]
-
-[tool.pytest.ini_options]
-addopts = "--driver chrome --html report.html --self-contained-html --cov-report html --cov"
-testpaths = ["./rarbg_local/tests"]
-asyncio_default_fixture_loop_scope = "function"
-
-[tool.mypy]
-plugins = "pydantic.mypy"
-ignore_missing_imports = true
-mypy_path = "stubs"
-disallow_untyped_defs = false
-strict_equality = true
-warn_unused_configs = true
-
-[[tool.mypy.overrides]]
-module = [
-    "rarbg_local.utils",
-    "rarbg_local.tmdb",
-    "rarbg_local.providers",
-    "rarbg_local.providers.abc",
-    "rarbg_local.providers.torrents_csv",
-    "rarbg_local.providers.horriblesubs",
-    "rarbg_local.providers.nyaasi",
-    "rarbg_local.providers.piratebay",
-    "rarbg_local.new",
-    "rarbg_local.jikan",
-]
-disallow_untyped_defs = true
