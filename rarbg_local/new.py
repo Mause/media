@@ -4,6 +4,7 @@ import traceback
 from collections.abc import AsyncGenerator, Callable, Coroutine
 from functools import wraps
 from typing import (
+    TYPE_CHECKING,
     Annotated,
     Any,
     Literal,
@@ -93,6 +94,9 @@ from .tmdb import (
 from .types import TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
+
+if TYPE_CHECKING:
+    from statsig_python_core import Statsig
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -224,7 +228,7 @@ async def api_select(tmdb_id: TmdbId, season: int) -> DownloadAllResponse:
 async def download_post(
     things: list[DownloadPost],
     added_by: Annotated[User, security],
-    statsig: Annotated[Statsig, Depends(get_statsig)],
+    statsig: Annotated['Statsig', Depends(get_statsig)],
 ) -> list[MovieDetails | EpisodeDetails]:
     results: list[MovieDetails | EpisodeDetails] = []
 
