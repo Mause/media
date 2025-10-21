@@ -32,7 +32,7 @@ async def statsig_bootstrap(
     user = StatsigUser(
         user_id=user_id,
         email=email,
-        ip=request.remote_addr,
+        ip=request.client.host if request.client else None,
         user_agent=request.headers.get('User-Agent'),
     )
 
