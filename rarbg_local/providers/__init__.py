@@ -8,29 +8,37 @@ from ..types import ImdbId, TmdbId
 from ..utils import Message, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
 
+if TYPE_CHECKING:
+    from statsig_python_core import Statsig
+
 type ProviderType[T] = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
 
 
-def get_providers() -> list[Provider]:
+def get_providers(statsig: 'Statsig') -> list[Provider]:
     # from .horriblesubs import HorriblesubsProvider
     # from .kickass import KickassProvider
-    # from .luna import LunaProvider
+    from .luna import LunaProvider
     from .nyaasi import NyaaProvider
     from .piratebay import PirateBayProvider
 
     # from .rarbg import RarbgProvider
     from .torrents_csv import TorrentsCsvProvider
 
-    return [
+    providers = [
         # HorriblesubsProvider(),
         # RarbgProvider(),
         # KickassProvider(),
         TorrentsCsvProvider(),
         NyaaProvider(),
         PirateBayProvider(),
-        # LunaProvider(),
     ]
+
+    if statsig.check_gate('luna'):
+        providers.append(LunaProvider())
+
+    return providers
+        
 
 
 async def search_for_tv(
