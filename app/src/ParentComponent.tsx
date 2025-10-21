@@ -23,9 +23,10 @@ import routes from './routes';
 export type TorrentFile = components['schemas']['InnerTorrentFile'];
 export type Torrents = { [key: string]: components['schemas']['InnerTorrent'] };
 export type IndexResponse = components['schemas']['IndexResponse'];
-export type MovieResponse = components['schemas']['MovieDetailsSchema'];
-export type SeriesResponse = components['schemas']['SeriesDetails'];
-export type EpisodeResponse = components['schemas']['EpisodeDetailsSchema'];
+export type MovieResponse = components['schemas']['MovieDetailsSchema-Output'];
+export type SeriesResponse = components['schemas']['SeriesDetails-Output'];
+export type EpisodeResponse =
+  components['schemas']['EpisodeDetailsSchema-Output'];
 
 function reportError(error: Error, info: ErrorInfo) {
   Sentry.withScope((scope) => {

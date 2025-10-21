@@ -413,7 +413,15 @@ export interface components {
       change_keys: string[];
     };
     /** CronResponse[MonitorGet] */
-    CronResponse_MonitorGet_: {
+    'CronResponse_MonitorGet_-Input': {
+      /** Success */
+      success: boolean;
+      /** Message */
+      message: string;
+      subject?: components['schemas']['MonitorGet'] | null;
+    };
+    /** CronResponse[MonitorGet] */
+    'CronResponse_MonitorGet_-Output': {
       /** Success */
       success: boolean;
       /** Message */
@@ -506,7 +514,19 @@ export interface components {
       air_date?: string | null;
     };
     /** EpisodeDetailsSchema */
-    EpisodeDetailsSchema: {
+    'EpisodeDetailsSchema-Input': {
+      /** Id */
+      id: number;
+      download: components['schemas']['DownloadSchema'];
+      /** Show Title */
+      show_title: string;
+      /** Season */
+      season: number;
+      /** Episode */
+      episode: number | null;
+    };
+    /** EpisodeDetailsSchema */
+    'EpisodeDetailsSchema-Output': {
       /** Id */
       id: number;
       download: components['schemas']['DownloadSchema'];
@@ -584,9 +604,9 @@ export interface components {
     /** IndexResponse */
     IndexResponse: {
       /** Series */
-      series: components['schemas']['SeriesDetails'][];
+      series: components['schemas']['SeriesDetails-Output'][];
       /** Movies */
-      movies: components['schemas']['MovieDetailsSchema'][];
+      movies: components['schemas']['MovieDetailsSchema-Output'][];
     };
     /** InnerTorrent */
     InnerTorrent: {
@@ -643,7 +663,13 @@ export interface components {
       type: components['schemas']['MonitorMediaType'];
     };
     /** MovieDetailsSchema */
-    MovieDetailsSchema: {
+    'MovieDetailsSchema-Input': {
+      /** Id */
+      id: number;
+      download: components['schemas']['DownloadSchema'];
+    };
+    /** MovieDetailsSchema */
+    'MovieDetailsSchema-Output': {
       /** Id */
       id: number;
       download: components['schemas']['DownloadSchema'];
@@ -693,7 +719,13 @@ export interface components {
       art: string | null;
     };
     /** PlexResponse[PlexMedia] */
-    PlexResponse_PlexMedia_: {
+    'PlexResponse_PlexMedia_-Input': {
+      /** Server Id */
+      server_id: string;
+      item: components['schemas']['PlexMedia'];
+    };
+    /** PlexResponse[PlexMedia] */
+    'PlexResponse_PlexMedia_-Output': {
       /** Server Id */
       server_id: string;
       item: components['schemas']['PlexMedia'];
@@ -733,7 +765,7 @@ export interface components {
       season_number: number;
     };
     /** SeriesDetails */
-    SeriesDetails: {
+    'SeriesDetails-Input': {
       /** Title */
       title: string;
       /** Imdb Id */
@@ -742,7 +774,20 @@ export interface components {
       tmdb_id: number;
       /** Seasons */
       seasons: {
-        [key: string]: components['schemas']['EpisodeDetailsSchema'][];
+        [key: string]: components['schemas']['EpisodeDetailsSchema-Input'][];
+      };
+    };
+    /** SeriesDetails */
+    'SeriesDetails-Output': {
+      /** Title */
+      title: string;
+      /** Imdb Id */
+      imdb_id: string;
+      /** Tmdb Id */
+      tmdb_id: number;
+      /** Seasons */
+      seasons: {
+        [key: string]: components['schemas']['EpisodeDetailsSchema-Output'][];
       };
     };
     /** Stats */
@@ -909,6 +954,17 @@ export interface components {
        * Format: password
        */
       authorization: string;
+    };
+    /** PlexResponse[PlexMedia] */
+    PlexResponse_PlexMedia_: {
+      /** Server Id */
+      server_id: string;
+      item: components['schemas']['PlexMedia'];
+      /**
+       * Link
+       * Format: uri
+       */
+      readonly link: string;
     };
     /** PlexRootResponse */
     PlexRootResponse: {
@@ -1117,8 +1173,8 @@ export interface operations {
         };
         content: {
           'application/json': (
-            | components['schemas']['MovieDetailsSchema']
-            | components['schemas']['EpisodeDetailsSchema']
+            | components['schemas']['MovieDetailsSchema-Output']
+            | components['schemas']['EpisodeDetailsSchema-Output']
           )[];
         };
       };
@@ -1337,7 +1393,7 @@ export interface operations {
         content: {
           'application/json': {
             [key: string]:
-              | components['schemas']['PlexResponse_PlexMedia_']
+              | components['schemas']['PlexResponse_PlexMedia_-Output']
               | null;
           };
         };
@@ -1549,7 +1605,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['CronResponse_MonitorGet_'][];
+          'application/json': components['schemas']['CronResponse_MonitorGet_-Output'][];
         };
       };
     };
