@@ -73,6 +73,7 @@ from .providers.abc import (
 )
 from .settings import Settings, get_settings
 from .singleton import singleton, store_request
+from .statsig_service import router as statsig_router
 from .tmdb import (
     Configuration,
     Discover,
@@ -437,6 +438,7 @@ async def static(
 
 
 root.include_router(websocket_ns)
+api.include_router(statsig_router, prefix='/statsig')
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')

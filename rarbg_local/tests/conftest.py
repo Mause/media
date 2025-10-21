@@ -10,6 +10,7 @@ from aioresponses import aioresponses as Aioresponses
 from async_asgi_testclient import TestClient
 from fastapi import Depends, FastAPI
 from fastapi.security import SecurityScopes
+from pydantic import SecretStr
 from pytest import fixture
 from pytest_snapshot.plugin import Snapshot
 from responses import RequestsMock
@@ -51,7 +52,8 @@ def fastapi_app(tmp_path: Path) -> FastAPI:
                 database=str(tmp_path / 'test.db'),
             )
         ),
-        plex_token='plex_token',
+        plex_token=SecretStr('plex_token'),
+        statsig_key=SecretStr('statsig_key'),
     )
     return app
 

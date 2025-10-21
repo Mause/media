@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     cache_url: Annotated[str, Field(Secret[AnyUrl], alias='REDISCLOUD_URL')] = (
         'memory://'
     )
+    statsig_key: SecretStr
 
 
 @singleton

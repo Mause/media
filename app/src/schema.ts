@@ -225,6 +225,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/statsig/statsig-bootstrap': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Statsig Bootstrap */
+    post: operations['statsig_bootstrap'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/tv/{tmdb_id}': {
     parameters: {
       query?: never;
@@ -746,6 +763,15 @@ export interface components {
       /** User */
       user: string;
       values: components['schemas']['Stats'];
+    };
+    /** StatsigBootstrapResponse */
+    StatsigBootstrapResponse: {
+      /** Statsig Values */
+      statsig_values:
+        | {
+            [key: string]: unknown;
+          }
+        | unknown[];
     };
     /** TvResponse */
     TvResponse: {
@@ -1314,6 +1340,38 @@ export interface operations {
               | components['schemas']['PlexResponse_PlexMedia_']
               | null;
           };
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  statsig_bootstrap: {
+    parameters: {
+      query: {
+        email: string;
+        user_id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StatsigBootstrapResponse'];
         };
       };
       /** @description Validation Error */
