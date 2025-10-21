@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 if sentry_dsn := os.environ.get('SENTRY_DSN'):
     import sentry_sdk
     from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+
     from .sentry.statsig import StatsigIntegration
 
     logger.info('Configuring Sentry')
