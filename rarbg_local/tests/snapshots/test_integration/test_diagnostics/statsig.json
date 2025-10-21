@@ -1,3 +1,10 @@
-{
-  "is_initialized": true
-}
+[
+  {
+    "component_name": "statsig",
+    "component_type": "internal",
+    "status": "pass",
+    "output": {
+      "initialized": true
+    }
+  }
+]
