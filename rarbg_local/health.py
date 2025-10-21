@@ -20,6 +20,7 @@ from healthcheck.models import ComponentType
 from plexapi.server import PlexServer
 from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
+from statsig_python_core import Statsig
 
 from .cache import get_cache
 from .config import commit
@@ -27,6 +28,7 @@ from .db import get_async_sessionmaker
 from .plex import get_plex
 from .singleton import get as _get
 from .singleton import request_var
+from .statsig_service import get_statig
 from .transmission_proxy import transmission
 
 logger = logging.getLogger(__name__)
@@ -75,6 +77,7 @@ def build() -> Healthcheck:
         lambda: check_http('https://api.jikan.moe/v4', 'GET'),
     )
     add_component(HealthcheckInternalComponent('client_ip'), client_ip)
+    add_component(HealthcheckInternalComponent('statsig'), statsig)
 
     return health
 
@@ -196,6 +199,17 @@ async def client_ip() -> HealthcheckCallbackResponse:
             'remote_addr': request.client.host if request.client else 'unknown',
             'location': location.to_dict() if location else 'unknown',
             'age': age or 'unknown',
+        },
+    )
+
+
+async def statsig() -> HealthcheckCallbackResponse:
+    statsig: Statsig = await get(get_statig)
+
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {  # type: ignore[arg-type]
+            'initialized': statsig.is_initialized(),
         },
     )
 

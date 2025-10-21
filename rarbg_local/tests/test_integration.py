@@ -105,7 +105,9 @@ async def test_diagnostics(
     )
     assert r.status_code == 200
     root = DiagnosticsRoot.model_validate(r.json())
-    snapshot.assert_match(root.model_dump_json(indent=2), 'healthcheck.json')
+    snapshot.assert_match(
+        root.model_dump_json(indent=2).strip() + '\n', 'healthcheck.json'
+    )
 
     for component in root.checks:
         r = await test_client.get(
