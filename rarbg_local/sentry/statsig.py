@@ -20,7 +20,7 @@ class StatsigIntegration(Integration):
 
         @wraps(old_check_gate)
         def sentry_check_gate(
-            self: StatSig,
+            self: Statsig,
             user: StatsigUser,
             gate: str,
             options: FeatureGateEvaluationOptions | None = None,
