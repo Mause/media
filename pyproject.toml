@@ -59,7 +59,7 @@ dev = [
   "pre-commit>=4.2.0",
   "pytest",
   "pytest-alembic>=0.12.1",
-  "pytest-asyncio==1.1.0",
+  "pytest-asyncio==1.2.0",
   "pytest-cov>=6.1.1",
   "pytest-html>=3.1.1",
   "pytest-resource-path>=1.4.0",
@@ -119,4 +119,3 @@ docstring-code-line-length = 20
 [tool.ruff.lint]
 select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 ignore = ["ANN401"]
-
