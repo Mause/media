@@ -59,7 +59,7 @@ dev = [
     "pre-commit>=4.2.0",
     "pytest-snapshot",
     "factory-boy==3.3.3",
-    "pytest-asyncio==1.1.0",
+    "pytest-asyncio==1.2.0",
     "async-asgi-testclient==1.4.11",
     "aioresponses==0.7.8",
     "pytest-sugar",
