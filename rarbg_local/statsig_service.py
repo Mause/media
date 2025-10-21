@@ -2,6 +2,7 @@ import json
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
+from pydantic import BaseModel
 from statsig_python_core import Statsig, StatsigOptions, StatsigUser
 
 from .settings import Settings, get_settings
@@ -21,13 +22,17 @@ async def get_statig(
     return statsig
 
 
+class StatsigBootstrapResponse(BaseModel):
+    statsig_values: dict | list
+
+
 @router.post('/statsig-bootstrap')
 async def statsig_bootstrap(
     request: Request,
     email: str,
     user_id: str,
     statsig: Annotated[Statsig, Depends(get_statig)],
-):
+) -> StatsigBootstrapResponse:
     # Create a user object from the request
     user = StatsigUser(
         user_id=user_id,
@@ -45,4 +50,4 @@ async def statsig_bootstrap(
     statsig_values = json.loads(response_data)
 
     # Return the values to the client
-    return {'statsigValues': statsig_values}
+    return StatsigBootstrapResponse(statsig_values=statsig_values)
