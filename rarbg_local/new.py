@@ -74,7 +74,8 @@ from .providers.abc import (
 )
 from .settings import Settings, get_settings
 from .singleton import singleton, store_request
-from .statsig_service import router as statsig_router, get_statsig
+from .statsig_service import get_statsig
+from .statsig_service import router as statsig_router
 from .tmdb import (
     Configuration,
     Discover,
