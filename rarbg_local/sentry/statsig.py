@@ -1,4 +1,5 @@
 from functools import wraps
+from importlib.metadata import version
 
 from sentry_sdk.feature_flags import add_feature_flag
 from sentry_sdk.integrations import Integration, _check_minimum_version
@@ -9,7 +10,6 @@ from statsig_python_core import (
     StatsigBasePy,
     StatsigUser,
 )
-from statsig_python_core.version import __version__ as STATSIG_VERSION
 
 
 class StatsigIntegration(Integration):
@@ -17,8 +17,8 @@ class StatsigIntegration(Integration):
 
     @staticmethod
     def setup_once() -> None:
-        version = parse_version(STATSIG_VERSION)
-        _check_minimum_version(StatsigIntegration, version, "statsig")
+        ver = parse_version(version("statsig-python-core"))
+        _check_minimum_version(StatsigIntegration, ver, "statsig")
 
         # Wrap and patch evaluation method(s) in the statsig module
         old_check_gate = Statsig.check_gate
