@@ -13,10 +13,12 @@ router = APIRouter()
 async def get_statig(
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> Statsig:
+    key = settings.statsig_key.get_secret_value()
     options = StatsigOptions()
     options.environment = "development"
+    options.local_mode = key == "statsig_key"
 
-    statsig = Statsig(settings.statsig_key.get_secret_value(), options)
+    statsig = Statsig(key, options)
     statsig.initialize().wait()
 
     return statsig
