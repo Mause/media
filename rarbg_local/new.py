@@ -89,6 +89,7 @@ from .tmdb import (
 from .tmdb import (
     discover as tmdb_discover,
 )
+from .statsig_service import app as statsig_router
 from .types import TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
@@ -437,6 +438,7 @@ async def static(
 
 
 root.include_router(websocket_ns)
+api.include_router(statsig_router, prefix='/statsig')
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
