@@ -275,10 +275,10 @@
                   "items": {
                     "anyOf": [
                       {
-                        "$ref": "#/components/schemas/MovieDetailsSchema"
+                        "$ref": "#/components/schemas/MovieDetailsSchema-Output"
                       },
                       {
-                        "$ref": "#/components/schemas/EpisodeDetailsSchema"
+                        "$ref": "#/components/schemas/EpisodeDetailsSchema-Output"
                       }
                     ]
                   },
@@ -641,7 +641,7 @@
                   "additionalProperties": {
                     "anyOf": [
                       {
-                        "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+                        "$ref": "#/components/schemas/PlexResponse_PlexMedia_-Output"
                       },
                       {
                         "type": "null"
@@ -989,7 +989,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "$ref": "#/components/schemas/CronResponse_MonitorGet_"
+                    "$ref": "#/components/schemas/CronResponse_MonitorGet_-Output"
                   },
                   "type": "array",
                   "title": "Response Monitor Cron Api Monitor Cron Post"
@@ -1281,7 +1281,35 @@
         ],
         "title": "Configuration"
       },
-      "CronResponse_MonitorGet_": {
+      "CronResponse_MonitorGet_-Input": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MonitorGet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "message"
+        ],
+        "title": "CronResponse[MonitorGet]"
+      },
+      "CronResponse_MonitorGet_-Output": {
         "properties": {
           "success": {
             "type": "boolean",
@@ -1606,7 +1634,46 @@
         ],
         "title": "Episode"
       },
-      "EpisodeDetailsSchema": {
+      "EpisodeDetailsSchema-Input": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "download": {
+            "$ref": "#/components/schemas/DownloadSchema"
+          },
+          "show_title": {
+            "type": "string",
+            "title": "Show Title"
+          },
+          "season": {
+            "type": "integer",
+            "title": "Season"
+          },
+          "episode": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Episode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "download",
+          "show_title",
+          "season",
+          "episode"
+        ],
+        "title": "EpisodeDetailsSchema"
+      },
+      "EpisodeDetailsSchema-Output": {
         "properties": {
           "id": {
             "type": "integer",
@@ -1844,14 +1911,14 @@
         "properties": {
           "series": {
             "items": {
-              "$ref": "#/components/schemas/SeriesDetails"
+              "$ref": "#/components/schemas/SeriesDetails-Output"
             },
             "type": "array",
             "title": "Series"
           },
           "movies": {
             "items": {
-              "$ref": "#/components/schemas/MovieDetailsSchema"
+              "$ref": "#/components/schemas/MovieDetailsSchema-Output"
             },
             "type": "array",
             "title": "Movies"
@@ -1992,7 +2059,24 @@
         ],
         "title": "MonitorPost"
       },
-      "MovieDetailsSchema": {
+      "MovieDetailsSchema-Input": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "download": {
+            "$ref": "#/components/schemas/DownloadSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "download"
+        ],
+        "title": "MovieDetailsSchema"
+      },
+      "MovieDetailsSchema-Output": {
         "properties": {
           "id": {
             "type": "integer",
@@ -2122,30 +2206,47 @@
         "title": "PlexMedia",
         "type": "object"
       },
-      "PlexResponse_PlexMedia_": {
+      "PlexResponse_PlexMedia_-Input": {
         "properties": {
           "server_id": {
-            "title": "Server Id",
-            "type": "string"
+            "type": "string",
+            "title": "Server Id"
+          },
+          "item": {
+            "$ref": "#/components/schemas/PlexMedia"
+          }
+        },
+        "type": "object",
+        "required": [
+          "server_id",
+          "item"
+        ],
+        "title": "PlexResponse[PlexMedia]"
+      },
+      "PlexResponse_PlexMedia_-Output": {
+        "properties": {
+          "server_id": {
+            "type": "string",
+            "title": "Server Id"
           },
           "item": {
             "$ref": "#/components/schemas/PlexMedia"
           },
           "link": {
-            "format": "uri",
+            "type": "string",
             "minLength": 1,
-            "readOnly": true,
+            "format": "uri",
             "title": "Link",
-            "type": "string"
+            "readOnly": true
           }
         },
+        "type": "object",
         "required": [
           "server_id",
           "item",
           "link"
         ],
-        "title": "PlexResponse[PlexMedia]",
-        "type": "object"
+        "title": "PlexResponse[PlexMedia]"
       },
       "ProviderSource": {
         "type": "string",
@@ -2212,7 +2313,7 @@
         ],
         "title": "SeasonMeta"
       },
-      "SeriesDetails": {
+      "SeriesDetails-Input": {
         "properties": {
           "title": {
             "type": "string",
@@ -2230,7 +2331,42 @@
           "seasons": {
             "additionalProperties": {
               "items": {
-                "$ref": "#/components/schemas/EpisodeDetailsSchema"
+                "$ref": "#/components/schemas/EpisodeDetailsSchema-Input"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Seasons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "imdb_id",
+          "tmdb_id",
+          "seasons"
+        ],
+        "title": "SeriesDetails"
+      },
+      "SeriesDetails-Output": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "imdb_id": {
+            "type": "string",
+            "pattern": "^tt\\d+$",
+            "title": "Imdb Id"
+          },
+          "tmdb_id": {
+            "type": "integer",
+            "title": "Tmdb Id"
+          },
+          "seasons": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/EpisodeDetailsSchema-Output"
               },
               "type": "array"
             },
@@ -2599,6 +2735,31 @@
           "authorization"
         ],
         "title": "PlexRequest",
+        "type": "object"
+      },
+      "PlexResponse_PlexMedia_": {
+        "properties": {
+          "server_id": {
+            "title": "Server Id",
+            "type": "string"
+          },
+          "item": {
+            "$ref": "#/components/schemas/PlexMedia"
+          },
+          "link": {
+            "format": "uri",
+            "minLength": 1,
+            "readOnly": true,
+            "title": "Link",
+            "type": "string"
+          }
+        },
+        "required": [
+          "server_id",
+          "item",
+          "link"
+        ],
+        "title": "PlexResponse[PlexMedia]",
         "type": "object"
       },
       "PlexRootResponse": {
