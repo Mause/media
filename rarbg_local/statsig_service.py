@@ -14,7 +14,9 @@ async def get_statig(
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> Statsig:
     key = settings.statsig_key.get_secret_value()
-    options = StatsigOptions(environment="development", local_mode=key == "statsig_key")
+    options = StatsigOptions(
+        environment="development", disable_network=key == "statsig_key"
+    )
 
     statsig = Statsig(key, options)
     statsig.initialize().wait()
