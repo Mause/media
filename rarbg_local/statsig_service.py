@@ -1,18 +1,22 @@
 import json
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
-from statsig_python_core import Statsig, StatsigOptions, StatsigUser
 
 from .settings import Settings, get_settings
 
 router = APIRouter()
 
+if TYPE_CHECKING:
+    from statsig_python_core import Statsig
+
 
 async def get_statig(
     settings: Annotated[Settings, Depends(get_settings)],
-) -> Statsig:
+) -> 'Statsig':
+    from statsig_python_core import Statsig, StatsigOptions
+
     key = settings.statsig_key.get_secret_value()
     options = StatsigOptions(
         environment="development", disable_network=key == "statsig_key"
@@ -33,8 +37,10 @@ async def statsig_bootstrap(
     request: Request,
     email: str,
     user_id: str,
-    statsig: Annotated[Statsig, Depends(get_statig)],
+    statsig: Annotated['Statsig', Depends(get_statig)],
 ) -> StatsigBootstrapResponse:
+    from statsig_python_core import StatsigUser
+
     # Create a user object from the request
     user = StatsigUser(
         user_id=user_id,
