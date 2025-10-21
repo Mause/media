@@ -1,8 +1,8 @@
+import json
 from typing import Annotated
 
-import json
-from statsig_python_core import Statsig, StatsigUser, StatsigOptions
-from fastapi import Depends, APIRouter
+from fastapi import APIRouter, Depends
+from statsig_python_core import Statsig, StatsigOptions, StatsigUser
 
 from .settings import Settings, get_settings
 
@@ -23,28 +23,26 @@ async def get_statig(
 
 @router.post('/statsig-bootstrap')
 async def statsig_bootstrap(
-        request: Request,
-        email: str,
-        user_id: str,
-        statsig: Annotated[Statsig, Depends(get_statig)]
-    ):
+    request: Request,
+    email: str,
+    user_id: str,
+    statsig: Annotated[Statsig, Depends(get_statig)],
+):
     # Create a user object from the request
     user = StatsigUser(
         user_id=user_id,
         email=email,
         ip=request.remote_addr,
-        user_agent=request.headers.get('User-Agent')
+        user_agent=request.headers.get('User-Agent'),
     )
-    
+
     # Generate the client initialize response
     response_data = statsig.get_client_initialize_response(
-        user,
-        hash='djb2',
-        client_sdk_key='client-sdk-key'
+        user, hash='djb2', client_sdk_key='client-sdk-key'
     )
-    
+
     # Parse the JSON response
     statsig_values = json.loads(response_data)
-    
+
     # Return the values to the client
     return {'statsigValues': statsig_values}
