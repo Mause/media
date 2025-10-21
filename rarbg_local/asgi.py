@@ -14,11 +14,13 @@ if sentry_dsn := os.environ.get('SENTRY_DSN'):
     import sentry_sdk
     from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
+    from .sentry.statsig import StatsigIntegration
+
     logger.info('Configuring Sentry')
 
     sentry_sdk.init(
         dsn=sentry_dsn,
-        integrations=[SqlalchemyIntegration()],
+        integrations=[SqlalchemyIntegration(), StatsigIntegration()],
         release=commit,
         # Add data like request headers and IP for users, if applicable;
         send_default_pii=True,
