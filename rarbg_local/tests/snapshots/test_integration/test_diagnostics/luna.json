@@ -1,0 +1,10 @@
+[
+  {
+    "component_name": "luna",
+    "component_type": "http",
+    "status": "pass",
+    "output": {
+      "cache_present": false
+    }
+  }
+]

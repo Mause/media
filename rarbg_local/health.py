@@ -68,6 +68,8 @@ def build() -> Healthcheck:
     for provider in get_providers():
         add_component(HealthcheckHTTPComponent(provider.type.value), provider.health)
 
+    add_component(HealthcheckInternalComponent('providers'), check_providers)
+
     add_component(
         HealthcheckHTTPComponent('jikan'),
         lambda: check_http('https://api.jikan.moe/v4', 'GET'),
@@ -230,5 +232,16 @@ async def check_cache() -> HealthcheckCallbackResponse:
         {  # type: ignore[arg-type]
             'backend': cache.NAME,
             'info': info,
+        },
+    )
+
+
+async def check_providers() -> HealthcheckCallbackResponse:
+    from .providers import get_providers
+
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {  # type: ignore[arg-type]
+            'providers': [provider.type.value for provider in get_providers()],
         },
     )
