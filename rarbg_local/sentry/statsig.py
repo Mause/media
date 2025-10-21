@@ -1,15 +1,14 @@
 from functools import wraps
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from sentry_sdk.feature_flags import add_feature_flag
-from sentry_sdk.integrations import Integration, DidNotEnable, _check_minimum_version
+from sentry_sdk.integrations import Integration, _check_minimum_version
 from sentry_sdk.utils import parse_version
-
 from statsig_python_core import statsig as statsig_module
 from statsig_python_core.version import __version__ as STATSIG_VERSION
 
 if TYPE_CHECKING:
-    from statsig.statsig_user import StatsigUser
+    pass
 
 
 class StatsigIntegration(Integration):
