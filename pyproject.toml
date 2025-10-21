@@ -120,3 +120,13 @@ module = [
     "rarbg_local.jikan",
 ]
 disallow_untyped_defs = true
+
+[tool.alembic]
+script_location = "%(here)s/alembic"
+prepend_sys_path = ["."]
+
+[[tool.alembic.post_write_hooks]]
+name = "ruff"
+type = "module"
+module = "ruff"
+options = "check --fix REVISION_SCRIPT_FILENAME"
