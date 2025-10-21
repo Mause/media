@@ -1,6 +1,8 @@
+from typing import Annotated
+
 from statsig_python_core import Statsig, StatsigOptions
 
-from .settings import get_settings
+from .settings import Settings, get_settings
 
 
 async def statig_service(
