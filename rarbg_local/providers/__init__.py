@@ -1,7 +1,7 @@
 import logging
 from asyncio import Future, Queue
 from collections.abc import Callable, Coroutine, Iterable
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from ..models import ITorrent
 from ..types import ImdbId, TmdbId
@@ -25,7 +25,7 @@ def get_providers(statsig: 'Statsig') -> list[Provider]:
     # from .rarbg import RarbgProvider
     from .torrents_csv import TorrentsCsvProvider
 
-    providers = [
+    providers: list[Provider] = [
         # HorriblesubsProvider(),
         # RarbgProvider(),
         # KickassProvider(),
@@ -34,7 +34,7 @@ def get_providers(statsig: 'Statsig') -> list[Provider]:
         PirateBayProvider(),
     ]
 
-    if statsig.check_gate('luna'):
+    if statsig.check_gate(None, 'luna'):
         providers.append(LunaProvider())
 
     return providers
