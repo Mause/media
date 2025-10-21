@@ -3,7 +3,12 @@ from functools import wraps
 from sentry_sdk.feature_flags import add_feature_flag
 from sentry_sdk.integrations import Integration, _check_minimum_version
 from sentry_sdk.utils import parse_version
-from statsig_python_core import FeatureGateEvaluationOptions, Statsig, StatsigBasePy, StatsigUser
+from statsig_python_core import (
+    FeatureGateEvaluationOptions,
+    Statsig,
+    StatsigBasePy,
+    StatsigUser,
+)
 from statsig_python_core.version import __version__ as STATSIG_VERSION
 
 
