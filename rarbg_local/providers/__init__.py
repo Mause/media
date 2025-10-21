@@ -38,7 +38,6 @@ def get_providers(statsig: 'Statsig') -> list[Provider]:
         providers.append(LunaProvider())
 
     return providers
-        
 
 
 async def search_for_tv(
