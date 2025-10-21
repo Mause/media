@@ -21,13 +21,12 @@ class StatsigIntegration(Integration):
         _check_minimum_version(StatsigIntegration, version, "statsig")
 
         # Wrap and patch evaluation method(s) in the statsig module
-        old_check_gate = statsig_module.check_gate
+        old_check_gate = statsig_module.Statsig.check_gate
 
         @wraps(old_check_gate)
-        def sentry_check_gate(user, gate, *args, **kwargs):
-            # type: (StatsigUser, str, *Any, **Any) -> Any
+        def sentry_check_gate(user: statsig_module.StatsigUser, gate: str, *args, **kwargs):
             enabled = old_check_gate(user, gate, *args, **kwargs)
             add_feature_flag(gate, enabled)
             return enabled
 
-        statsig_module.check_gate = sentry_check_gate
+        statsig_module.Statsig.check_gate = sentry_check_gate
