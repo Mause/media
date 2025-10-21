@@ -75,6 +75,7 @@ def build() -> Healthcheck:
         lambda: check_http('https://api.jikan.moe/v4', 'GET'),
     )
     add_component(HealthcheckInternalComponent('client_ip'), client_ip)
+    add_component(HealthcheckInternalComponent('statsig'), statsig)
 
     return health
 
@@ -196,6 +197,17 @@ async def client_ip() -> HealthcheckCallbackResponse:
             'remote_addr': request.client.host if request.client else 'unknown',
             'location': location.to_dict() if location else 'unknown',
             'age': age or 'unknown',
+        },
+    )
+
+
+async def statsig() -> HealthcheckCallbackResponse:
+    statsig: Statsig = await get(get_statig)
+
+    return HealthcheckCallbackResponse(
+        HealthcheckStatus.PASS,
+        {  # type: ignore[arg-type]
+            'initialized': statsig.is_initialized(),
         },
     )
 
