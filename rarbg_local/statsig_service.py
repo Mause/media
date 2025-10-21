@@ -1,5 +1,6 @@
 from typing import Annotated
 
+from fastapi import Depends
 from statsig_python_core import Statsig, StatsigOptions
 
 from .settings import Settings, get_settings
