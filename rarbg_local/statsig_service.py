@@ -11,7 +11,7 @@ async def statig_service(
     options = StatsigOptions()
     options.environment = "development"
 
-    statsig = Statsig(settings.statsig_key, options)
+    statsig = Statsig(settings.statsig_key.get_secret_value(), options)
     statsig.initialize().wait()
 
     return statsig
