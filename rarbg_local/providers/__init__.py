@@ -29,7 +29,7 @@ def get_providers() -> list[Provider]:
         TorrentsCsvProvider(),
         NyaaProvider(),
         PirateBayProvider(),
-        LunaProvider(),
+        # LunaProvider(),
     ]
 
 
