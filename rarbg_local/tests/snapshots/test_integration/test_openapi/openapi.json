@@ -666,6 +666,64 @@
         }
       }
     },
+    "/api/statsig/statsig-bootstrap": {
+      "post": {
+        "summary": "Statsig Bootstrap",
+        "operationId": "statsig_bootstrap",
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Email"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsigBootstrapResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/tv/{tmdb_id}": {
       "get": {
         "tags": [
@@ -2221,6 +2279,28 @@
           "values"
         ],
         "title": "StatsResponse"
+      },
+      "StatsigBootstrapResponse": {
+        "properties": {
+          "statsig_values": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "items": {},
+                "type": "array"
+              }
+            ],
+            "title": "Statsig Values"
+          }
+        },
+        "type": "object",
+        "required": [
+          "statsig_values"
+        ],
+        "title": "StatsigBootstrapResponse"
       },
       "TvResponse": {
         "properties": {
