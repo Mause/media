@@ -20,6 +20,7 @@ from healthcheck.models import ComponentType
 from plexapi.server import PlexServer
 from pydantic import BaseModel, RootModel
 from sqlalchemy.sql import text
+from statsig_python_core import Statsig
 
 from .cache import get_cache
 from .config import commit
@@ -27,6 +28,7 @@ from .db import get_async_sessionmaker
 from .plex import get_plex
 from .singleton import get as _get
 from .singleton import request_var
+from .statsig_service import get_statig
 from .transmission_proxy import transmission
 
 logger = logging.getLogger(__name__)
