@@ -34,4 +34,4 @@ class StatsigIntegration(Integration):
             add_feature_flag(gate, enabled)
             return enabled
 
-        Statsig.check_gate = sentry_check_gate  # type: ignore[method-assign]
+        Statsig.check_gate = sentry_check_gate  # type: ignore[method-assign, assignment]
