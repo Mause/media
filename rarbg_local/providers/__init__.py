@@ -3,11 +3,11 @@ from asyncio import Future, Queue
 from collections.abc import Callable, Coroutine, Iterable
 from typing import TYPE_CHECKING, Any
 
-from .auth import get_current_user
 from ..models import ITorrent
 from ..types import ImdbId, TmdbId
 from ..utils import Message, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
+from .auth import get_current_user
 from .health import get
 from .statsig_service import get_statsig
 
