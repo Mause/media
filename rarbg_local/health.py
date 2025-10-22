@@ -49,7 +49,7 @@ async def get(dependent):
     return await _get(request_var.get().app, dependent, request_var.get())
 
 
-def build() -> Healthcheck:
+async def build() -> Healthcheck:
     def add_component(
         decl: HealthcheckComponentInterface,
         check: Callable[[], Coroutine[Any, Any, HealthcheckCallbackResponse]],
@@ -69,7 +69,7 @@ def build() -> Healthcheck:
     add_component(HealthcheckHTTPComponent('plex'), plex_connectivity)
     add_component(HealthcheckDatastoreComponent('cache'), check_cache)
 
-    for provider in get_providers():
+    for provider in await get_providers():
         add_component(HealthcheckHTTPComponent(provider.type.value), provider.health)
 
     add_component(HealthcheckInternalComponent('providers'), check_providers)
@@ -92,7 +92,7 @@ class DiagnosticsRoot(BaseModel):
 @router.get('')
 async def diagnostics() -> DiagnosticsRoot:
     return DiagnosticsRoot(
-        version=commit or 'dev', checks=[comp.name for comp in build().components]
+        version=commit or 'dev', checks=[comp.name for comp in await build()).components]
     )
 
 
@@ -112,7 +112,7 @@ class HealthcheckResponses(RootModel[list[HealthcheckResponse]]):
 
 @router.get('/{component_name}')
 async def component_diagnostics(component_name: str) -> HealthcheckResponses:
-    health = build()
+    health = await build()
     component = next(
         (comp for comp in health.components if comp.name == component_name), None
     )
@@ -258,6 +258,6 @@ async def check_providers() -> HealthcheckCallbackResponse:
     return HealthcheckCallbackResponse(
         HealthcheckStatus.PASS,
         {  # type: ignore[arg-type]
-            'providers': [provider.type.value for provider in get_providers()],
+            'providers': [provider.type.value for provider in await get_providers()],
         },
     )
