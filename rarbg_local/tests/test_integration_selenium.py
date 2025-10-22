@@ -7,6 +7,7 @@ from urllib.parse import urlencode, urlparse
 
 from fastapi import FastAPI
 from pytest import fixture, mark
+from pydantic import SecretStr
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -62,6 +63,8 @@ def app(mock_transmission: LiveServer) -> FastAPI:
     app.dependency_overrides[get_settings] = lambda: Settings(
         database_url='sqlite:///:memory:',
         transmission_url=mock_transmission.url('/transmission/rpc'),
+        plex_token=SecretStr('plex_token'),
+        statsig_key=SecretStr('statsig_key'),
     )
     return app
 
