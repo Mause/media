@@ -92,7 +92,7 @@ class DiagnosticsRoot(BaseModel):
 @router.get('')
 async def diagnostics() -> DiagnosticsRoot:
     return DiagnosticsRoot(
-        version=commit or 'dev', checks=[comp.name for comp in await build()).components]
+        version=commit or 'dev', checks=[comp.name for comp in (await build()).components]
     )
 
 
