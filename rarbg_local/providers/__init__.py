@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 
 
 async def get_providers() -> list[Provider]:
+    from statsig_python_core import StatsigUser
+
     # from .horriblesubs import HorriblesubsProvider
     # from .kickass import KickassProvider
     from .luna import LunaProvider
