@@ -68,7 +68,7 @@ function OpenPlex({
   type: 'movie' | 'tv';
 }) {
   const auth = useAuth0();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
   const { message, trigger, readyState, state } = useMessage<
     PlexRequest,
@@ -91,7 +91,7 @@ function OpenPlex({
 
   return (
     <>
-      <Dialog onClose={handleClose} open={open}>
+      <Dialog open={open}>
         <DialogTitle>Set backup account</DialogTitle>
         {readyStateToString(readyState)}
         {state}
