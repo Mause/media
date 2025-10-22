@@ -3,10 +3,13 @@ from asyncio import Future, Queue
 from collections.abc import Callable, Coroutine, Iterable
 from typing import TYPE_CHECKING, Any
 
+from .auth import get_current_user
 from ..models import ITorrent
 from ..types import ImdbId, TmdbId
 from ..utils import Message, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
+from .health import get
+from .statsig_service import get_statsig
 
 if TYPE_CHECKING:
     from statsig_python_core import Statsig
@@ -15,7 +18,7 @@ type ProviderType[T] = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
 
 
-def get_providers(statsig: 'Statsig') -> list[Provider]:
+def get_providers() -> list[Provider]:
     # from .horriblesubs import HorriblesubsProvider
     # from .kickass import KickassProvider
     from .luna import LunaProvider
@@ -33,6 +36,9 @@ def get_providers(statsig: 'Statsig') -> list[Provider]:
         NyaaProvider(),
         PirateBayProvider(),
     ]
+
+    statsig: 'Statsig' = await get(get_statsig)
+    user: User = await get(get_current_user)
 
     if statsig.check_gate(None, 'luna'):
         providers.append(LunaProvider())
