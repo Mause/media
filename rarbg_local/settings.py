@@ -21,4 +21,4 @@ class Settings(BaseSettings):
 
 @singleton
 async def get_settings() -> Settings:
-    return Settings()
+    return Settings()  # type: error[missing-argument]
