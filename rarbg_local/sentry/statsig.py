@@ -19,7 +19,7 @@ class StatsigIntegration(Integration):
     identifier = "statsig-python-core"
 
     @classmethod
-    def setup_once() -> None:
+    def setup_once(cls) -> None:
         ver = parse_version(version(cls.identifier))
         _check_minimum_version(StatsigIntegration, ver, cls.identifier)
 
