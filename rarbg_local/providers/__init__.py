@@ -64,7 +64,7 @@ async def search_for_tv(
 
     return await spin_up_workers(
         worker,
-        [provider for provider in get_providers() if isinstance(provider, TvProvider)],
+        [provider for provider in await get_providers() if isinstance(provider, TvProvider)],
     )
 
 
@@ -84,7 +84,7 @@ async def search_for_movie(
         worker,
         [
             provider
-            for provider in get_providers()
+            for provider in await get_providers()
             if isinstance(provider, MovieProvider)
         ],
     )
