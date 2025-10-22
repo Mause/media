@@ -7,7 +7,7 @@ from ..models import ITorrent
 from ..types import ImdbId, TmdbId
 from ..utils import Message, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
-from .auth import get_current_user
+from .auth import User, get_current_user
 from .health import get
 from .statsig_service import get_statsig
 
@@ -18,7 +18,7 @@ type ProviderType[T] = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
 
 
-def get_providers() -> list[Provider]:
+async def get_providers() -> list[Provider]:
     # from .horriblesubs import HorriblesubsProvider
     # from .kickass import KickassProvider
     from .luna import LunaProvider
@@ -40,7 +40,7 @@ def get_providers() -> list[Provider]:
     statsig: 'Statsig' = await get(get_statsig)
     user: User = await get(get_current_user)
 
-    if statsig.check_gate(None, 'luna'):
+    if statsig.check_gate(StatsigUser(user.name), 'luna'):
         providers.append(LunaProvider())
 
     return providers
