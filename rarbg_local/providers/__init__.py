@@ -64,7 +64,11 @@ async def search_for_tv(
 
     return await spin_up_workers(
         worker,
-        [provider for provider in await get_providers() if isinstance(provider, TvProvider)],
+        [
+            provider
+            for provider in await get_providers()
+            if isinstance(provider, TvProvider)
+        ],
     )
 
 
