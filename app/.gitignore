@@ -21,3 +21,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .yarn
+
+bundlemeta.json
+stats.html
+
+# Sentry Config File
+.env.sentry-build-plugin

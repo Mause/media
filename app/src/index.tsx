@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import { StrictMode, useEffect } from 'react';
 import './index.css';
 import { createRoot } from 'react-dom/client';
 import { Auth0Provider } from '@auth0/auth0-react';
@@ -7,9 +7,15 @@ import {
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
-import { HelmetProvider } from 'react-helmet-async';
+import * as Sentry from '@sentry/react';
+import {
+  useLocation,
+  useNavigationType,
+  createRoutesFromChildren,
+  matchRoutes,
+} from 'react-router-dom';
 
-import App from './App';
+import { ParentComponent } from './ParentComponent';
 
 const theme = createTheme();
 
@@ -20,6 +26,30 @@ if (!(clientId && audience)) {
   console.error(
     'Missing Auth0 client ID or audience. Please check your environment variables.',
   );
+}
+if (import.meta.env.NODE_ENV === 'production') {
+  Sentry.init({
+    dsn: 'https://8b67269f943a4e3793144fdc31258b46@sentry.io/1869914',
+    release: import.meta.env.REACT_APP_HEROKU_SLUG_COMMIT,
+    environment: 'development',
+    integrations: [
+      Sentry.reactRouterV7BrowserTracingIntegration({
+        trackFetchStreamPerformance: true,
+        useEffect,
+        useLocation,
+        useNavigationType,
+        createRoutesFromChildren,
+        matchRoutes,
+      }),
+    ],
+    // Adds request headers and IP for users, for more info visit:
+    // https://docs.sentry.io/platforms/javascript/guides/react/configuration/options/#sendDefaultPii
+    sendDefaultPii: true,
+
+    // Enable logs to be sent to Sentry
+    enableLogs: true,
+    tracesSampleRate: 1.0,
+  });
 }
 
 const container = document.getElementById('root');
@@ -38,9 +68,7 @@ const rootEl = (
   >
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <HelmetProvider>
-          <App />
-        </HelmetProvider>
+        <ParentComponent />
       </ThemeProvider>
     </StyledEngineProvider>
   </Auth0Provider>

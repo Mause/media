@@ -1,5 +1,5 @@
+import { useEffect } from 'react';
 import MenuItem from '@mui/material/MenuItem';
-import _ from 'lodash';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
@@ -9,51 +9,109 @@ import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
-  faSpinner,
   faCaretUp,
   faCaretDown,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
+import * as _ from 'lodash-es';
+import { useAuth0 } from '@auth0/auth0-react';
+import usePromise from 'react-promise-suspense';
 
-import { getPrefix, MLink } from './utils';
-import { TV } from './SeasonSelectComponent';
-import {
+import { useMessage, readyStateToString, nextId } from './components/websocket';
+import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
+import type { TV } from './select/SeasonSelectComponent';
+import type {
   MovieResponse,
   SeriesResponse,
   Torrents,
   EpisodeResponse,
-} from './streaming';
-import ContextMenu from './ContextMenu';
+} from './ParentComponent';
+import { ContextMenu, Loading, MLink } from './components';
+import type { components } from './schema';
 
-export function Loading({
-  loading,
-  large,
-}: {
-  loading: boolean;
-  large?: boolean;
-}) {
-  return loading ? (
-    <FontAwesomeIcon
-      spin={true}
-      icon={faSpinner}
-      size={large ? undefined : 'xs'}
-    />
-  ) : (
-    <></>
-  );
-}
-
-function OpenPlex({ download }: { download: { imdb_id: string } }) {
+function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   return (
     <MenuItem
       component="a"
-      href={`${getPrefix()}/redirect/plex/${download.imdb_id}`}
+      href={`https://www.imdb.com/title/${download.imdb_id}`}
       target="_blank"
     >
-      <span className="unselectable">Open in Plex</span>
+      Open in IMDB
     </MenuItem>
+  );
+}
+
+type PlexRootResponse = components['schemas']['PlexRootResponse'];
+type PlexRequest = components['schemas']['PlexRequest'];
+
+function OpenNewWindow({ link, label }: { link: string; label: string }) {
+  useEffect(() => {
+    window.open(link, '_blank', 'noopener,noreferrrer');
+  }, [link]);
+
+  return (
+    <div>
+      Opening <a href={link}>{label}</a>
+    </div>
+  );
+}
+
+function OpenPlex({
+  download,
+  type,
+}: {
+  download: { tmdb_id: number };
+  type: 'movie' | 'tv';
+}) {
+  const auth = useAuth0();
+  const token = 'Bearer ' + usePromise(() => getToken(auth), []);
+  const { message, trigger, readyState, state } = useMessage<
+    PlexRequest,
+    PlexRootResponse
+  >({
+    method: 'plex',
+    jsonrpc: '2.0',
+    id: nextId(),
+    authorization: token,
+    params: {
+      tmdb_id: download.tmdb_id,
+      media_type: type,
+    },
+  });
+
+  if (message) {
+    const first = _.values(message.result).find((v) => v)!;
+    return <OpenNewWindow link={first.link} label={first.item.title} />;
+  }
+
+  return (
+    <MenuItem
+      onClick={() => {
+        trigger();
+      }}
+    >
+      <span className="unselectable">Open in Plex</span>
+      {readyStateToString(readyState)}
+      {state}
+    </MenuItem>
+  );
+}
+
+function RenderMovie({ movie }: { movie: MovieResponse }) {
+  return (
+    <>
+      <span>{movie.download.title}</span>
+      &nbsp;
+      <ContextMenu>
+        <OpenPlex download={movie.download} type="movie" />
+        <OpenIMDB download={movie.download} />
+        {movie.download.added_by ? (
+          <MenuItem>Added by: {movie.download.added_by.username}</MenuItem>
+        ) : null}
+      </ContextMenu>
+    </>
   );
 }
 
@@ -68,7 +126,8 @@ export function Movies({
 }) {
   const sortedMovies = _.groupBy(
     movies,
-    (movie) => !!(torrents && getProgress(movie, torrents)?.percentDone === 1),
+    (movie) =>
+      torrents !== undefined && getProgress(movie, torrents)?.percentDone === 1,
   );
 
   const head = (icon: IconDefinition) => (
@@ -100,7 +159,7 @@ export function Movies({
           <ul>
             {(sortedMovies.true || []).map((movie) => (
               <li key={movie.id}>
-                <span>{movie.download.title}</span>
+                <RenderMovie movie={movie} />
               </li>
             ))}
           </ul>
@@ -109,23 +168,7 @@ export function Movies({
       <ul>
         {(sortedMovies.false || []).map((movie) => (
           <li key={movie.id}>
-            <span>{movie.download.title}</span>
-            &nbsp;
-            <ContextMenu>
-              <OpenPlex download={movie.download} />
-              <MenuItem
-                component="a"
-                href={`https://www.imdb.com/title/${movie.download.imdb_id}`}
-                target="_blank"
-              >
-                Open in IMDB
-              </MenuItem>
-              {movie.download.added_by ? (
-                <MenuItem>
-                  Added by: {movie.download.added_by.username}
-                </MenuItem>
-              ) : null}
-            </ContextMenu>
+            <RenderMovie movie={movie} />
             &nbsp;
             <Progress torrents={torrents} item={movie} />
           </li>
@@ -170,13 +213,6 @@ export function Progress({
       />
     );
   }
-}
-
-export function getMarker(episode: {
-  season?: number;
-  episode?: number | null;
-}) {
-  return String.format('S{0:00}E{1:00}', episode.season, episode.episode);
 }
 
 function getProgress(
@@ -243,16 +279,8 @@ function Series({
         {serie.title}
         &nbsp;
         <ContextMenu>
-          {serie.imdb_id && (
-            <MenuItem
-              component="a"
-              href={`https://www.imdb.com/title/${serie.imdb_id}`}
-              target="_blank"
-            >
-              Open in IMDB
-            </MenuItem>
-          )}
-          <OpenPlex download={serie} />
+          {serie.imdb_id && <OpenIMDB download={serie} />}
+          <OpenPlex download={serie} type="tv" />
           <MenuItem
             onClick={() => void navigate(`/select/${serie.tmdb_id}/season`)}
           >
@@ -260,7 +288,7 @@ function Series({
           </MenuItem>
         </ContextMenu>
       </h3>
-      {_.sortBy(_.toPairs(serie.seasons), ([key]) => parseInt(key)).map(
+      {_.sortBy(Object.entries(serie.seasons), ([key]) => parseInt(key)).map(
         ([i, season]) => (
           <Season
             key={i}
@@ -375,48 +403,4 @@ export function NextEpisodeAirs(props: {
       </MLink>
     </small>
   );
-}
-
-function getMessage(air_date: string) {
-  const today = Moment().startOf('day');
-  const tomorrow = today.add(1, 'day');
-  const yesterday = today.subtract(1, 'day');
-  const dt = Moment(air_date);
-  const dts = dt.format('DD/MM/YYYY');
-
-  let message;
-  if (today.isSame(dt)) {
-    message = 'airs today';
-  } else if (dt.isSame(yesterday)) {
-    message = 'aired yesterday';
-  } else if (dt.isSame(tomorrow)) {
-    message = 'airs tomorrow';
-  } else if (dt.isAfter(today)) {
-    message = 'airs on ' + dts;
-  } else {
-    message = 'aired on ' + dts;
-  }
-  return message;
-}
-
-export function shouldCollapse(
-  i: string,
-  data: TV | undefined,
-  episodes: EpisodeResponse[],
-): boolean {
-  let collapse = false;
-  if (data) {
-    const i_i = +i;
-    const seasonMeta = data.seasons.find((s) => s.season_number === i_i);
-    if (seasonMeta) {
-      const hasNext = true; // !!data.seasons[i_i + 1];
-
-      const episodeNumbers = _.range(1, seasonMeta.episode_count + 1);
-      const hasNumbers = _.map(episodes, 'episode');
-      const hasAllEpisodes =
-        _.difference(episodeNumbers, hasNumbers).length === 0;
-      collapse = hasNext && hasAllEpisodes;
-    }
-  }
-  return collapse;
 }

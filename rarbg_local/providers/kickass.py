@@ -5,7 +5,8 @@ from collections.abc import AsyncGenerator
 from typing import Any
 
 from aiohttp import ClientSession
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString, PageElement, Tag
+from healthcheck import HealthcheckCallbackResponse
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_movie, get_tv
@@ -16,7 +17,8 @@ logger = logging.getLogger(__name__)
 ROOT = 'https://katcr.co'
 
 
-def is_node(node):
+def is_node(node: PageElement | Tag | NavigableString | None) -> Tag:
+    assert isinstance(node, (Tag))
     return node
 
 
@@ -39,17 +41,22 @@ async def fetch(url: str) -> AsyncGenerator[dict[str, Any], None]:
         tbody = is_node(table.find('tbody'))
 
         for row in tbody.find_all('tr'):
-            magnet = row.find('a', href=lambda href: href.startswith("magnet:")).attrs[
-                'href'
-            ]
-            title = row.find('a', {'class': 'torrents_table__torrent_title'}).text
+            row = is_node(row)
+            magnet = is_node(
+                (row).find('a', href=lambda href: href.startswith("magnet:"))
+            ).attrs['href']
+            title = is_node(
+                row.find('a', {'class': 'torrents_table__torrent_title'})
+            ).text
 
             yield {
                 'title': title.strip(),
                 'magnet': magnet,
                 'resolution': resolution,
                 'seeders': int(
-                    row.find('td', {'data-title': "Seed"}).text.replace(',', '')
+                    is_node(row.find('td', {'data-title': "Seed"})).text.replace(
+                        ',', ''
+                    )
                 ),
             }
 
@@ -79,11 +86,13 @@ async def search_for_tv(
             yield item
 
 
-def base(name: str, imdb_id: ImdbId):
+def base(name: str, imdb_id: ImdbId) -> Any:
     return fetch(f'/name/{tokenise(name)}/i{imdb_id.lstrip("t")}')
 
 
-async def search_for_movie(imdb_id: ImdbId, tmdb_id: TmdbId):
+async def search_for_movie(
+    imdb_id: ImdbId, tmdb_id: TmdbId
+) -> AsyncGenerator[dict, None]:
     name = (await get_movie(tmdb_id)).title
 
     async for item in base(name, imdb_id):
@@ -125,5 +134,5 @@ class KickassProvider(TvProvider, MovieProvider):
                 category=movie_convert(item['resolution']),
             )
 
-    async def health(self):
+    async def health(self) -> HealthcheckCallbackResponse:
         return await self.check_http(ROOT)

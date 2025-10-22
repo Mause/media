@@ -1,0 +1,13 @@
+[
+  {
+    "component_name": "cache",
+    "component_type": "datastore",
+    "status": "pass",
+    "output": {
+      "backend": "memory",
+      "info": {
+        "size": 1
+      }
+    }
+  }
+]

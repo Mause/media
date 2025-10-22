@@ -1,0 +1,9 @@
+{
+  "detail": {
+    "error": "Error getting plex server",
+    "details": "Plex is down",
+    "records": [
+      "Plex is down"
+    ]
+  }
+}

@@ -17,19 +17,13 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     conn = op.get_bind()
-    if get_driver() == 'sqlite':
-        conn.connection.driver_connection.create_collation(
-            "en_AU", lambda a, b: 0 if a.lower() == b.lower() else -1
-        )
-    else:
+    if get_driver() != 'sqlite':
         conn.execute(sa.text("CREATE COLLATION \"en_AU\" (LOCALE = 'en_AU.utf8')"))
 
 
-def downgrade():
+def downgrade() -> None:
     conn = op.get_bind()
-    if get_driver() == 'sqlite':
-        conn.connection.driver_connection.drop_collation("en_AU")
-    else:
+    if get_driver() != 'sqlite':
         conn.execute(sa.text("DROP COLLATION IF EXISTS \"en_AU\""))

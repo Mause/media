@@ -1,0 +1,77 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MonitorComponent > add 1`] = `
+<div>
+  <div>
+    Monitor
+  </div>
+</div>
+`;
+
+exports[`MonitorComponent > view 1`] = `
+<div>
+  <h3>
+    Monitored Media
+  </h3>
+  <button
+    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-1blvszr-MuiButtonBase-root-MuiButton-root"
+    tabindex="0"
+    type="button"
+  >
+    <span
+      class="MuiButton-loadingWrapper"
+      style="display: contents;"
+    />
+    Recheck
+  </button>
+  <ul>
+    <li>
+      <svg
+        aria-hidden="true"
+        class="svg-inline--fa fa-ticket-simple "
+        data-icon="ticket-simple"
+        data-prefix="fas"
+        role="img"
+        viewBox="0 0 576 512"
+      >
+        <path
+          d="M0 128C0 92.7 28.7 64 64 64l448 0c35.3 0 64 28.7 64 64l0 64c0 8.8-7.4 15.7-15.7 18.6-18.8 6.5-32.3 24.4-32.3 45.4s13.5 38.9 32.3 45.4c8.3 2.9 15.7 9.8 15.7 18.6l0 64c0 35.3-28.7 64-64 64L64 448c-35.3 0-64-28.7-64-64l0-64C0 311.2 7.4 304.3 15.7 301.4 34.5 294.9 48 277 48 256s-13.5-38.9-32.3-45.4C7.4 207.7 0 200.8 0 192l0-64z"
+          fill="currentColor"
+        />
+      </svg>
+       
+      Hello World
+       
+      <svg
+        aria-hidden="true"
+        class="svg-inline--fa fa-circle red"
+        data-icon="circle"
+        data-prefix="fas"
+        role="img"
+        viewBox="0 0 512 512"
+      >
+        <path
+          d="M0 256a256 256 0 1 1 512 0 256 256 0 1 1 -512 0z"
+          fill="currentColor"
+        />
+      </svg>
+       
+      <svg
+        aria-hidden="true"
+        class="svg-inline--fa fa-list "
+        data-icon="list"
+        data-prefix="fas"
+        data-testid="context-menu-open"
+        role="img"
+        style="cursor: context-menu;"
+        viewBox="0 0 512 512"
+      >
+        <path
+          d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
+          fill="currentColor"
+        />
+      </svg>
+    </li>
+  </ul>
+</div>
+`;

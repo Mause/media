@@ -1,0 +1,74 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`works 1`] = `
+<div>
+  <form
+    class="ManualAddComponent-root css-5obgt4"
+  >
+    <h3>
+       
+      S01
+    </h3>
+    <div
+      class="MuiFormControl-root MuiTextField-root css-1xp5r68-MuiFormControl-root-MuiTextField-root"
+    >
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl css-5h82ro-MuiInputBase-root-MuiInput-root"
+      >
+        <input
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input css-1yrc8ca-MuiInputBase-input-MuiInput-input"
+          id="«r1»"
+          pattern="^magnet:.*"
+          placeholder="magnet:..."
+          type="text"
+        />
+      </div>
+    </div>
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-1blvszr-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
+      type="submit"
+    >
+      Download
+    </button>
+  </form>
+</div>
+`;
+
+exports[`works 2`] = `
+<div>
+  <form
+    class="ManualAddComponent-root css-5obgt4"
+  >
+    <h3>
+      Test TV Show
+       
+      S01
+    </h3>
+    <div
+      class="MuiFormControl-root MuiTextField-root css-1xp5r68-MuiFormControl-root-MuiTextField-root"
+    >
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl css-5h82ro-MuiInputBase-root-MuiInput-root"
+      >
+        <input
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input css-1yrc8ca-MuiInputBase-input-MuiInput-input"
+          id="«r1»"
+          pattern="^magnet:.*"
+          placeholder="magnet:..."
+          type="text"
+        />
+      </div>
+    </div>
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-1blvszr-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
+      type="submit"
+    >
+      Download
+    </button>
+  </form>
+</div>
+`;

@@ -1,13 +1,18 @@
-import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
-import { components } from './schema';
+import type { paths } from './schema';
+import type { GetResponse } from './utils';
+import { RouteTitle, Loading } from './components';
 
-type HealthcheckResponse = components['schemas']['HealthcheckResponse'];
+type DiagnosticsRoot = GetResponse<paths['/api/diagnostics']>;
+type HealthcheckResponse = GetResponse<
+  paths['/api/diagnostics/{component_name}']
+>;
+type Healthcheck = HealthcheckResponse[0];
 
-function getColour(status?: HealthcheckResponse['status']) {
+function getColour(status?: Healthcheck['status']) {
   switch (status) {
     case 'pass':
       return 'green';
@@ -21,7 +26,7 @@ function getColour(status?: HealthcheckResponse['status']) {
 }
 
 function SingleDiagnostic({ component }: { component: string }) {
-  const { error, data, isValidating } = useSWR<HealthcheckResponse[], Error>(
+  const { error, data, isValidating } = useSWR<HealthcheckResponse, Error>(
     `diagnostics/${component}`,
   );
 
@@ -42,36 +47,35 @@ export function SimpleDiagnosticDisplay({
   isValidating,
 }: {
   component: string;
-  data?: HealthcheckResponse[];
+  data?: HealthcheckResponse;
   error: unknown;
   isValidating: boolean;
 }) {
   return (
     <li>
-      {component}: {isValidating && <ReactLoading type="balls" color="#000" />}
+      {component}: <Loading loading={isValidating} />
       <ul>
-        {data &&
-          data.map((item, i) => (
-            <li key={i}>
-              <FontAwesomeIcon
-                icon={faCircle}
-                className={getColour(item.status)}
-              />
-              <pre>
-                <code>
-                  {JSON.stringify(
-                    {
-                      component_type: item.component_type,
-                      time: item.time,
-                      output: item.output,
-                    },
-                    null,
-                    2,
-                  )}
-                </code>
-              </pre>
-            </li>
-          ))}
+        {data?.map((item, i) => (
+          <li key={i}>
+            <FontAwesomeIcon
+              icon={faCircle}
+              className={getColour(item.status)}
+            />
+            <pre>
+              <code>
+                {JSON.stringify(
+                  {
+                    component_type: item.component_type,
+                    time: item.time,
+                    output: item.output,
+                  },
+                  null,
+                  2,
+                )}
+              </code>
+            </pre>
+          </li>
+        ))}
       </ul>
       {error ? (
         <pre>
@@ -83,11 +87,15 @@ export function SimpleDiagnosticDisplay({
 }
 
 export function DiagnosticsComponent() {
-  const { error, data, isValidating } = useSWR<string[], Error>('diagnostics');
+  const { error, data, isValidating } = useSWR<DiagnosticsRoot, Error>(
+    'diagnostics',
+  );
 
   return (
-    <div>
-      {isValidating && <ReactLoading type="balls" color="#000" />}
+    <RouteTitle title="Diagnostics">
+      <h3>Diagnostics: Media {data?.version}</h3>
+
+      <Loading loading={isValidating} />
 
       {error && (
         <pre>
@@ -96,13 +104,12 @@ export function DiagnosticsComponent() {
       )}
 
       <ul>
-        {data &&
-          data.map((component) => (
-            <li key={component}>
-              <SingleDiagnostic component={component} />
-            </li>
-          ))}
+        {data?.checks.map((component) => (
+          <li key={component}>
+            <SingleDiagnostic component={component} />
+          </li>
+        ))}
       </ul>
-    </div>
+    </RouteTitle>
   );
 }

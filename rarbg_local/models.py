@@ -1,18 +1,17 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Annotated, TypeVar
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, StringConstraints
+from pydantic import AnyUrl, BaseModel, ConfigDict, StringConstraints, computed_field
 
 from .db import MonitorMediaType
-from .types import TmdbId
+from .types import ImdbId, TmdbId
 
 
 class Orm(BaseModel):
-    model_config = {'from_attributes': True}
+    model_config = ConfigDict(from_attributes=True)
 
 
-T = TypeVar('T')
 MagnetUri = Annotated[str, StringConstraints(pattern=r'^magnet:')]
 
 
@@ -23,6 +22,7 @@ class ProviderSource(Enum):
     TORRENTS_CSV = 'torrentscsv'
     NYAA_SI = 'nyaasi'
     PIRATEBAY = 'piratebay'
+    LUNA = 'luna'
 
 
 class EpisodeInfo(BaseModel):
@@ -34,7 +34,7 @@ class ITorrent(BaseModel):
     source: ProviderSource
     title: str
     seeders: int
-    download: MagnetUri
+    download: MagnetUri | AnyUrl
     category: str
     episode_info: EpisodeInfo | None = None
 
@@ -65,8 +65,8 @@ class EpisodeDetailsSchema(Orm):
 
 class SeriesDetails(Orm):
     title: str
-    imdb_id: str
-    tmdb_id: int
+    imdb_id: ImdbId
+    tmdb_id: TmdbId
     seasons: dict[str, list[EpisodeDetailsSchema]]
 
 
@@ -141,7 +141,7 @@ class TvBaseResponse(BaseModel):
 
 
 class TvResponse(TvBaseResponse):
-    imdb_id: str | None
+    imdb_id: ImdbId | None
     title: str
 
 
@@ -167,7 +167,7 @@ class DownloadResponse(Orm):
 
 class MovieResponse(BaseModel):
     title: str
-    imdb_id: str
+    imdb_id: ImdbId | None
 
 
 class InnerTorrent(BaseModel):
@@ -181,3 +181,28 @@ class InnerTorrent(BaseModel):
     id: int
     percentDone: float
     files: list[InnerTorrentFile]
+
+
+class HasRatingKey(BaseModel):
+    ratingKey: int
+
+
+class PlexMedia(Orm, HasRatingKey):
+    title: str
+    year: int | None = None
+    type: Literal['movie', 'show']
+    guid: str | None = None
+    summary: str | None = None
+    thumb: str | None = None
+    art: str | None = None
+
+
+class PlexResponse[T: HasRatingKey](Orm):
+    server_id: str
+    item: T
+
+    @computed_field
+    def link(self) -> AnyUrl:
+        from .plex import make_plex_url
+
+        return AnyUrl(make_plex_url(self.server_id, self.item.ratingKey))

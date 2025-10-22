@@ -5,14 +5,16 @@ import logging
 
 import requests
 
+logger = logging.getLogger(__name__)
 
-def follow():
+
+def follow() -> None:
     with open('promotion.json') as fh:
         promotion = json.load(fh)
 
     r = requests.get(promotion['build']['output_stream_url'], stream=True)
     for line in r.raw:
-        logging.info(line.decode())
+        logger.info(line.decode())
 
 
 if __name__ == "__main__":

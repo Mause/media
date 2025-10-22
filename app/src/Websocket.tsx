@@ -1,60 +1,61 @@
-import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import _ from 'lodash';
-import qs from 'qs';
 import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
+import * as _ from 'lodash-es';
 
-import { DisplayTorrent, ITorrent } from './OptionsComponent';
-import { getPrefix, getToken } from './utils';
-import { getMarker } from './render';
+import type { ITorrent } from './select/OptionsComponent';
+import { getMarker, getToken } from './utils';
+import type { components } from './schema';
+import { DisplayTorrent, RouteTitle } from './components';
+import {
+  useMessages,
+  readyStateToString,
+  nextId,
+} from './components/websocket';
 
-function useMessages<T>(initMessage: object) {
-  const base = getPrefix();
-  const url = `${base}/ws`;
+type StreamRequest = components['schemas']['StreamRequest'];
+type StreamArgs = StreamRequest['params'];
 
-  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
-
-  useEffect(() => {
-    sendJsonMessage(initMessage);
-  }, [sendJsonMessage, initMessage]);
-
-  const [messages, setMessages] = useState<T[]>([]);
-
-  useEffect(() => {
-    if (lastJsonMessage) {
-      setMessages((messages) => messages.concat([lastJsonMessage as T]));
-    }
-  }, [lastJsonMessage]);
-
-  return { messages, readyState };
+function get(query: URLSearchParams, key: string): number | undefined {
+  const value = query.get(key);
+  return value ? parseInt(value, 10) : undefined;
 }
 
 function Websocket() {
-  const { tmdbId } = useParams<{ tmdbId: string }>();
+  const { tmdbId: tmdbIdS } = useParams<{ tmdbId: string }>();
   const { search } = useLocation();
-  const query = qs.parse(search.slice(1));
+  const query = new URLSearchParams(search.slice(1));
   const auth = useAuth0();
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
+  const tmdbId = parseInt(tmdbIdS!, 10);
 
-  const initMessage = query.season
-    ? {
-        type: 'series',
-        tmdb_id: tmdbId,
-        season: query.season,
-        episode: query.episode,
-        authorization: token,
-      }
-    : {
-        type: 'movie',
-        tmdb_id: tmdbId,
-        authorization: token,
-      };
+  const initMessage = (
+    query.has('season')
+      ? {
+          type: 'series',
+          tmdb_id: tmdbId,
+          season: get(query, 'season') || null,
+          episode: get(query, 'episode') || null,
+        }
+      : {
+          type: 'movie',
+          tmdb_id: tmdbId,
+          season: null,
+          episode: null,
+        }
+  ) satisfies StreamArgs;
+
+  const rq = {
+    jsonrpc: '2.0',
+    id: nextId(),
+    method: 'stream',
+    authorization: token,
+    params: initMessage,
+  } satisfies StreamRequest;
 
   const { messages, readyState } = useMessages<
     { error: string; type: string } | ITorrent
-  >(initMessage);
+  >(rq);
 
   const errors = messages.filter((message) => 'error' in message);
   const downloads = messages.filter(
@@ -62,15 +63,18 @@ function Websocket() {
   ) as ITorrent[];
 
   return (
-    <div>
-      <p>{tmdbId}</p>
-      <p>{getMarker(query)}</p>
+    <RouteTitle title="Websocket">
       <p>
-        {readyState === ReadyState.CONNECTING && 'Connecting...'}
-        {readyState === ReadyState.OPEN && 'Connected'}
-        {readyState === ReadyState.CLOSING && 'Disconnecting...'}
-        {readyState === ReadyState.CLOSED && 'Disconnected'}
-        {readyState === ReadyState.UNINSTANTIATED && 'Uninstantiated'}
+        {tmdbId} -{' '}
+        {query.has('season')
+          ? getMarker({
+              season: parseInt(query.get('season')!, 10),
+              episode: query.has('episode')
+                ? parseInt(query.get('episode')!, 10)
+                : undefined,
+            })
+          : 'No season'}{' '}
+        - {readyStateToString(readyState)}
       </p>
       <ul>
         <ul>
@@ -80,13 +84,18 @@ function Websocket() {
             </li>
           ))}
         </ul>
-        {_.uniqBy(downloads, 'download').map((message) => (
+        {_.sortBy(_.uniqBy(downloads, 'download'), 'seeders').map((message) => (
           <li key={message.download}>
-            <DisplayTorrent torrent={message} tmdb_id={String(tmdbId)} />
+            <DisplayTorrent
+              torrent={message}
+              tmdb_id={String(tmdbId)}
+              season={get(query, 'season') || undefined}
+              episode={get(query, 'episode') || undefined}
+            />
           </li>
         ))}
       </ul>
-    </div>
+    </RouteTitle>
   );
 }
 

@@ -17,15 +17,16 @@ jobs:
       UV_PYTHON: ${{ matrix.python-version }}
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
           cache-dependency-glob: 'uv.lock'
+          version: 'latest'
       - name: Install dependencies
         run: |
           uv sync --dev --locked
@@ -36,8 +37,10 @@ jobs:
           run: uv run mypy --show-column-numbers rarbg_local
       - run: uv run alembic upgrade head --sql
       - name: Test with pytest
-        run: |
-          uv run pytest -vv
+        uses: liskin/gh-problem-matcher-wrap@v3
+        with:
+          linters: pytest
+          run: uv run pytest -v
         env:
           CLOUDAMQP_URL: 'https://hello'
           TMDB_API_KEY: word
@@ -54,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: corepack enable
       - uses: actions/setup-node@v4
         with:
@@ -62,5 +65,5 @@ jobs:
           cache: 'yarn'
       - run: yarn
         working-directory: app/
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
       - uses: pre-commit/action@v3.0.1

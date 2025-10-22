@@ -1,0 +1,271 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DownloadAllComponent 1`] = `
+<div>
+  <nav
+    aria-label="breadcrumb"
+    class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
+  >
+    <ol
+      class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
+    >
+      <li
+        class="MuiBreadcrumbs-li"
+      >
+        <nav
+          class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
+        >
+          <ol
+            class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
+          >
+            <li
+              class="MuiBreadcrumbs-li"
+            >
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+                data-discover="true"
+                href="/"
+              >
+                Home
+              </a>
+            </li>
+            <li
+              aria-hidden="true"
+              class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
+            >
+              /
+            </li>
+            <li
+              class="MuiBreadcrumbs-li"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body1 css-rizt0-MuiTypography-root"
+              >
+                Search Results
+              </p>
+            </li>
+          </ol>
+        </nav>
+      </li>
+      <li
+        aria-hidden="true"
+        class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
+      >
+        /
+      </li>
+      <li
+        class="MuiBreadcrumbs-li"
+      >
+        <a
+          aria-current="page"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root active"
+          data-discover="true"
+          href="/select/1/season"
+        />
+      </li>
+      <li
+        aria-hidden="true"
+        class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
+      >
+        /
+      </li>
+      <li
+        class="MuiBreadcrumbs-li"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1bgbmvw-MuiTypography-root"
+          data-testid="title"
+        >
+          Season 
+          1
+        </p>
+      </li>
+    </ol>
+  </nav>
+  <svg
+    aria-hidden="true"
+    class="svg-inline--fa fa-spinner fa-spin fa-xs "
+    data-icon="spinner"
+    data-prefix="fas"
+    role="img"
+    viewBox="0 0 512 512"
+  >
+    <path
+      d="M208 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm0 416a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM48 208a48 48 0 1 1 0 96 48 48 0 1 1 0-96zm368 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM75 369.1A48 48 0 1 1 142.9 437 48 48 0 1 1 75 369.1zM75 75A48 48 0 1 1 142.9 142.9 48 48 0 1 1 75 75zM437 369.1A48 48 0 1 1 369.1 437 48 48 0 1 1 437 369.1z"
+      fill="currentColor"
+    />
+  </svg>
+  <div>
+    <h3>
+      Packs
+    </h3>
+    <ul />
+  </div>
+  <div>
+    <h3>
+      Complete Sets
+    </h3>
+    <ul />
+  </div>
+  <div>
+    <h3>
+      Incomplete Sets
+    </h3>
+    <ul />
+  </div>
+  <ul>
+    <li>
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+        data-discover="true"
+        href="/manual"
+      >
+        Add manually
+      </a>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`DownloadAllComponent 2`] = `
+<div>
+  <nav
+    aria-label="breadcrumb"
+    class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
+  >
+    <ol
+      class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
+    >
+      <li
+        class="MuiBreadcrumbs-li"
+      >
+        <nav
+          class="MuiTypography-root MuiTypography-body1 MuiBreadcrumbs-root css-5cvx94-MuiTypography-root-MuiBreadcrumbs-root"
+        >
+          <ol
+            class="MuiBreadcrumbs-ol css-1uwp4ue-MuiBreadcrumbs-ol"
+          >
+            <li
+              class="MuiBreadcrumbs-li"
+            >
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root"
+                data-discover="true"
+                href="/"
+              >
+                Home
+              </a>
+            </li>
+            <li
+              aria-hidden="true"
+              class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
+            >
+              /
+            </li>
+            <li
+              class="MuiBreadcrumbs-li"
+            >
+              <p
+                class="MuiTypography-root MuiTypography-body1 css-rizt0-MuiTypography-root"
+              >
+                Search Results
+              </p>
+            </li>
+          </ol>
+        </nav>
+      </li>
+      <li
+        aria-hidden="true"
+        class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
+      >
+        /
+      </li>
+      <li
+        class="MuiBreadcrumbs-li"
+      >
+        <a
+          aria-current="page"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-nv1n36-MuiTypography-root-MuiLink-root active"
+          data-discover="true"
+          href="/select/1/season"
+        />
+      </li>
+      <li
+        aria-hidden="true"
+        class="MuiBreadcrumbs-separator css-jhr02i-MuiBreadcrumbs-separator"
+      >
+        /
+      </li>
+      <li
+        class="MuiBreadcrumbs-li"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1bgbmvw-MuiTypography-root"
+          data-testid="title"
+        >
+          Season 
+          1
+        </p>
+      </li>
+    </ol>
+  </nav>
+  <div>
+    <h3>
+      Packs
+    </h3>
+    <ul>
+      <li>
+        <span>
+          <strong
+            title="horriblesubs"
+          >
+            H
+          </strong>
+           
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+            data-discover="true"
+            href="/download"
+          >
+            Hello World
+          </a>
+           
+          <small>
+            5
+          </small>
+           
+        </span>
+      </li>
+    </ul>
+  </div>
+  <div>
+    <h3>
+      Complete Sets
+    </h3>
+    <ul />
+    <p>
+      No results found
+    </p>
+  </div>
+  <div>
+    <h3>
+      Incomplete Sets
+    </h3>
+    <ul />
+    <p>
+      No results found
+    </p>
+  </div>
+  <ul>
+    <li>
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-73o1y3-MuiTypography-root-MuiLink-root"
+        data-discover="true"
+        href="/manual"
+      >
+        Add manually
+      </a>
+    </li>
+  </ul>
+</div>
+`;

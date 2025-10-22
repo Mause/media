@@ -1,0 +1,24 @@
+[
+  {
+    "tmdb_id": 5,
+    "type": "MOVIE",
+    "id": 1,
+    "title": "Hello World",
+    "added_by": {
+      "username": "python",
+      "first_name": ""
+    },
+    "status": false
+  },
+  {
+    "tmdb_id": 5,
+    "type": "TV",
+    "id": 2,
+    "title": "Hello World",
+    "added_by": {
+      "username": "python",
+      "first_name": ""
+    },
+    "status": false
+  }
+]

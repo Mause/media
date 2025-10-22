@@ -20,11 +20,9 @@ exports[`Movies 1`] = `
           data-icon="list"
           data-prefix="fas"
           data-testid="context-menu-open"
-          focusable="false"
           role="img"
           style="cursor: context-menu;"
           viewBox="0 0 512 512"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
@@ -53,13 +51,11 @@ exports[`NextEpisodeAirs > works 1`] = `
         class="svg-inline--fa fa-magnifying-glass "
         data-icon="magnifying-glass"
         data-prefix="fas"
-        focusable="false"
         role="img"
         viewBox="0 0 512 512"
-        xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+          d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376C296.3 401.1 253.9 416 208 416 93.1 416 0 322.9 0 208S93.1 0 208 0 416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
           fill="currentColor"
         />
       </svg>
@@ -116,13 +112,11 @@ exports[`Progress > simple 2`] = `
     class="svg-inline--fa fa-circle-check "
     data-icon="circle-check"
     data-prefix="fas"
-    focusable="false"
     role="img"
     viewBox="0 0 512 512"
-    xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"
+      d="M256 512a256 256 0 1 0 0-512 256 256 0 1 0 0 512zm84.4-299.3l-80 128c-4.2 6.7-11.4 10.9-19.3 11.3s-15.5-3.2-20.2-9.6l-48-64c-8-10.6-5.8-25.6 4.8-33.6s25.6-5.8 33.6 4.8l27 36 61.4-98.3c7-11.2 21.8-14.7 33.1-7.6s14.7 21.8 7.6 33.1z"
       fill="currentColor"
     />
   </svg>
@@ -166,11 +160,9 @@ exports[`TVShows 1`] = `
             data-icon="list"
             data-prefix="fas"
             data-testid="context-menu-open"
-            focusable="false"
             role="img"
             style="cursor: context-menu;"
             viewBox="0 0 512 512"
-            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
@@ -204,13 +196,11 @@ exports[`TVShows 1`] = `
                   class="svg-inline--fa fa-magnifying-glass "
                   data-icon="magnifying-glass"
                   data-prefix="fas"
-                  focusable="false"
                   role="img"
                   viewBox="0 0 512 512"
-                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376C296.3 401.1 253.9 416 208 416 93.1 416 0 322.9 0 208S93.1 0 208 0 416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
                     fill="currentColor"
                   />
                 </svg>
@@ -221,22 +211,20 @@ exports[`TVShows 1`] = `
                 class="svg-inline--fa fa-caret-up fa-2x "
                 data-icon="caret-up"
                 data-prefix="fas"
-                focusable="false"
                 role="img"
-                style="transform-origin: 0.3125em 0.625em; cursor: pointer;"
-                viewBox="0 0 320 512"
-                xmlns="http://www.w3.org/2000/svg"
+                style="transform-origin: 0.375em 0.625em; cursor: pointer;"
+                viewBox="0 0 384 512"
               >
                 <g
-                  transform="translate(160 256)"
+                  transform="translate(192 256)"
                 >
                   <g
                     transform="translate(0, 64)  scale(1, 1)  rotate(0 0 0)"
                   >
                     <path
-                      d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8l256 0c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z"
+                      d="M32 352c-12.9 0-24.6-7.8-29.6-19.8S.2 306.5 9.4 297.4l160-160c12.5-12.5 32.8-12.5 45.3 0l160 160c9.2 9.2 11.9 22.9 6.9 34.9S364.9 352 352 352L32 352z"
                       fill="currentColor"
-                      transform="translate(-160 -256)"
+                      transform="translate(-192 -256)"
                     />
                   </g>
                 </g>

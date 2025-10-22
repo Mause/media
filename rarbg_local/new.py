@@ -4,26 +4,24 @@ import traceback
 from collections.abc import AsyncGenerator, Callable, Coroutine
 from functools import wraps
 from typing import (
+    TYPE_CHECKING,
     Annotated,
     Any,
     Literal,
-    ParamSpec,
-    TypeVar,
     Union,
     cast,
 )
-from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi_utils.openapi import simplify_operation_ids
-from plexapi.server import PlexServer
 from pydantic import BaseModel
 from sqlalchemy import Row, func
+from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
-from sqlalchemy.orm.session import Session, object_session
 from starlette.staticfiles import StaticFiles
 
 from .auth import security
@@ -33,7 +31,7 @@ from .db import (
     EpisodeDetails,
     MovieDetails,
     User,
-    get_db,
+    get_async_db,
     get_movies,
     safe_delete,
 )
@@ -56,6 +54,8 @@ from .models import (
     MediaType,
     MovieDetailsSchema,
     MovieResponse,
+    PlexMedia,
+    PlexResponse,
     ProviderSource,
     SearchResponse,
     StatsResponse,
@@ -63,7 +63,7 @@ from .models import (
     TvSeasonResponse,
 )
 from .monitor import monitor_ns
-from .plex import get_imdb_in_plex, get_plex
+from .plex import get_imdb_in_plex, gracefully_get_plex
 from .providers import (
     get_providers,
     search_for_tv,
@@ -73,8 +73,14 @@ from .providers.abc import (
     TvProvider,
 )
 from .settings import Settings, get_settings
-from .singleton import singleton
+from .singleton import singleton, store_request
+from .statsig_service import get_statsig
+from .statsig_service import router as statsig_router
 from .tmdb import (
+    Configuration,
+    Discover,
+    ThingType,
+    get_configuration,
     get_movie,
     get_movie_imdb_id,
     get_tv,
@@ -83,15 +89,19 @@ from .tmdb import (
     get_tv_imdb_id,
     search_themoviedb,
 )
-from .types import ImdbId, TmdbId
+from .tmdb import (
+    discover as tmdb_discover,
+)
+from .types import TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
+
+if TYPE_CHECKING:
+    from statsig_python_core import Statsig
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
 logging.getLogger('backoff').handlers.clear()
-T = TypeVar('T')
-P = ParamSpec('P')
 
 
 def generate_plain_text(exc: BaseException) -> str:
@@ -100,15 +110,17 @@ def generate_plain_text(exc: BaseException) -> str:
 
 
 @api.get('/delete/{type}/{id}')
-async def delete(type: MediaType, id: int, session: Session = Depends(get_db)) -> dict:
-    safe_delete(
+async def delete(
+    type: MediaType, id: int, session: Annotated[AsyncSession, Depends(get_async_db)]
+) -> dict:
+    await safe_delete(
         session, EpisodeDetails if type == MediaType.SERIES else MovieDetails, id
     )
 
     return {}
 
 
-def eventstream(
+def eventstream[**P](
     func: Callable[P, AsyncGenerator[BaseModel, None]],
 ) -> Callable[P, Coroutine[Any, Any, StreamingResponse]]:
     @wraps(func)
@@ -134,14 +146,23 @@ StreamType = Literal['series', 'movie']
     response_class=StreamingResponse,
     responses={200: {"model": ITorrent, "content": {'text/event-stream': {}}}},
 )
-@eventstream
-async def stream(  # type: ignore[no-untyped-def]
+async def stream(
     type: StreamType,
     tmdb_id: TmdbId,
     source: ProviderSource,
     season: int | None = None,
     episode: int | None = None,
-):
+) -> StreamingResponse:
+    return await eventstream(stream_impl)(type, tmdb_id, source, season, episode)
+
+
+async def stream_impl(
+    type: StreamType,
+    tmdb_id: TmdbId,
+    source: ProviderSource,
+    season: int | None = None,
+    episode: int | None = None,
+) -> AsyncGenerator[ITorrent, None]:
     provider = next(
         (provider for provider in get_providers() if provider.type == source),
         None,
@@ -208,12 +229,13 @@ async def api_select(tmdb_id: TmdbId, season: int) -> DownloadAllResponse:
 async def download_post(
     things: list[DownloadPost],
     added_by: Annotated[User, security],
+    statsig: Annotated['Statsig', Depends(get_statsig)],
 ) -> list[MovieDetails | EpisodeDetails]:
     results: list[MovieDetails | EpisodeDetails] = []
 
     # work around a fastapi bug
     # see for more details https://github.com/fastapi/fastapi/discussions/6024
-    session = non_null(object_session(added_by))
+    session = non_null(async_object_session(added_by))
 
     for thing in things:
         is_tv = thing.season is not None
@@ -244,8 +266,14 @@ async def download_post(
             title = (await get_movie(thing.tmdb_id)).title
             subpath = 'movies'
 
+        statsig.log_event(
+            user=added_by,
+            event_name="add_download",
+            value=thing.magnet,
+        )
+
         results.append(
-            add_single(
+            await add_single(
                 session=session,
                 magnet=thing.magnet,
                 imdb_id=(
@@ -266,24 +294,33 @@ async def download_post(
         )
 
     session.add_all(results)
-    session.commit()
+    await session.commit()
+
+    for res in results:
+        # TODO: can we do this one call, or in the commit?
+        await session.refresh(res, attribute_names=['download'])
+        await session.refresh(res.download, attribute_names=['added_by'])
 
     return results
 
 
 @api.get('/index')
-async def index(session: Session = Depends(get_db)) -> IndexResponse:
+async def index(
+    session: Annotated[AsyncSession, Depends(get_async_db)],
+) -> IndexResponse:
     return IndexResponse(
-        series=await resolve_series(session), movies=get_movies(session)
+        series=await resolve_series(session), movies=await get_movies(session)
     )
 
 
 @api.get('/stats')
-async def stats(session: Session = Depends(get_db)) -> list[StatsResponse]:
-    def process(
+async def stats(
+    session: Annotated[AsyncSession, Depends(get_async_db)],
+) -> list[StatsResponse]:
+    async def process(
         added_by_id: int, values: list[Row[tuple[int, str, int]]]
     ) -> StatsResponse:
-        user = session.get(User, added_by_id)
+        user = await session.get(User, added_by_id)
         if not user:
             raise Exception()
 
@@ -293,10 +330,12 @@ async def stats(session: Session = Depends(get_db)) -> list[StatsResponse]:
         )
 
     keys = Download.added_by_id, Download.type
-    query = session.execute(select(*keys, func.count(name='count')).group_by(*keys))
+    query = await session.execute(
+        select(*keys, func.count(name='count')).group_by(*keys)
+    )
 
     return [
-        process(added_by_id, values)
+        await process(added_by_id, values)
         for added_by_id, values in groupby(query, lambda row: row.added_by_id).items()
     ]
 
@@ -314,6 +353,44 @@ async def torrents() -> dict[str, InnerTorrent]:
 @api.get('/search')
 async def search(query: str) -> list[SearchResponse]:
     return await search_themoviedb(query)
+
+
+@api.get('/providers', name='get_providers')
+async def get_provider_list() -> list[ProviderSource]:
+    return [provider.type for provider in get_providers()]
+
+
+@api.get('/discover')
+async def discover() -> Discover:
+    return await tmdb_discover()
+
+
+@api.get('/tmdb/configuration')
+async def tmdb_configuration() -> Configuration:
+    return await get_configuration()
+
+
+@api.get('/plex/{thing_type}/{tmdb_id}')
+async def get_plex_imdb(
+    thing_type: ThingType,
+    tmdb_id: TmdbId,
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> dict[str, PlexResponse[PlexMedia] | None]:
+    plex = await gracefully_get_plex(request, settings)
+
+    dat = await get_imdb_in_plex(thing_type, tmdb_id, plex)
+    if not dat:
+        raise HTTPException(404, 'Not found in plex')
+    return {
+        key: PlexResponse[PlexMedia](
+            item=PlexMedia.model_validate(value),
+            server_id=plex.machineIdentifier,
+        )
+        if value
+        else None
+        for key, value in dat.items()
+    }
 
 
 tv_ns = APIRouter(tags=['tv'])
@@ -338,22 +415,6 @@ root = APIRouter()
 @singleton
 def get_static_files(settings: Settings = Depends(get_settings)) -> StaticFiles:
     return StaticFiles(directory=str(settings.static_resources_path))
-
-
-@root.get('/redirect/plex/{imdb_id}')
-def redirect_to_plex(
-    imdb_id: ImdbId, plex: Annotated[PlexServer, Depends(get_plex)]
-) -> RedirectResponse:
-    dat = get_imdb_in_plex(imdb_id, plex)
-    if not dat:
-        raise HTTPException(404, 'Not found in plex')
-
-    server_id = plex.machineIdentifier
-
-    return RedirectResponse(
-        f'https://app.plex.tv/desktop#!/server/{server_id}/details?'
-        + urlencode({'key': f'/library/metadata/{dat.ratingKey}'})
-    )
 
 
 @root.get('/redirect/{type_}/{tmdb_id}')
@@ -389,9 +450,54 @@ async def static(
 
 
 root.include_router(websocket_ns)
+api.include_router(statsig_router, prefix='/statsig')
 api.include_router(tv_ns, prefix='/tv')
 api.include_router(monitor_ns, prefix='/monitor')
 api.include_router(health, prefix='/diagnostics')
+
+
+def get_extra_schemas() -> dict:
+    from fastapi.openapi.constants import REF_TEMPLATE
+    from pydantic.json_schema import models_json_schema
+
+    from .websocket import (
+        BaseRequest,
+        ErrorResult,
+        PlexRootResponse,
+        Reqs,
+        SuccessResult,
+    )
+
+    _, res = models_json_schema(
+        models=[
+            (cast(type[BaseModel], model), 'serialization')
+            for model in [
+                Reqs,
+                BaseRequest,
+                PlexRootResponse,
+                SuccessResult,
+                ErrorResult,
+            ]
+        ],
+        ref_template=REF_TEMPLATE,
+    )
+    return res['$defs']
+
+
+def custom_openapi(app: FastAPI) -> dict:
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        servers=app.servers,
+        routes=app.routes,
+    )
+    openapi_schema["components"]["schemas"].update(get_extra_schemas())
+
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
 
 
 def create_app() -> FastAPI:
@@ -421,6 +527,9 @@ def create_app() -> FastAPI:
         dependencies=[security],
     )
     app.include_router(root, prefix='')
+    app.openapi = lambda: custom_openapi(app)  # type: ignore[method-assign]
+    app.middleware('http')(store_request)
+    app.middleware('websocket')(store_request)
 
     origins = []
     if 'FRONTEND_DOMAIN' in os.environ:

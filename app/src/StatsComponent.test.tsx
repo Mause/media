@@ -1,15 +1,21 @@
-import { StatsComponent, StatsResponse } from './StatsComponent';
-import { mock, usesMoxios, renderWithSWR, wait } from './test.utils';
+import { http, HttpResponse } from 'msw';
 
-usesMoxios();
+import type { StatsResponse } from './StatsComponent';
+import { StatsComponent } from './StatsComponent';
+import { renderWithSWR, waitForRequests } from './test.utils';
+import { server } from './msw';
 
 test('render', async () => {
   const { container } = renderWithSWR(<StatsComponent />);
 
-  await mock<StatsResponse[]>('/api/stats', [
-    { user: 'Mause', values: { episode: 1, movie: 1 } },
-  ]);
-  await wait();
+  server.use(
+    http.get('/api/stats', () =>
+      HttpResponse.json([
+        { user: 'Mause', values: { episode: 1, movie: 1 } },
+      ] satisfies StatsResponse[]),
+    ),
+  );
+  await waitForRequests();
 
   expect(container).toMatchSnapshot();
 });

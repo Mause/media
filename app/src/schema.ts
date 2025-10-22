@@ -157,6 +157,91 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/providers': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Providers */
+    get: operations['get_providers'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/discover': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Discover */
+    get: operations['discover'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/tmdb/configuration': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Tmdb Configuration */
+    get: operations['tmdb_configuration'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/plex/{thing_type}/{tmdb_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Plex Imdb */
+    get: operations['get_plex_imdb'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/statsig/statsig-bootstrap': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Statsig Bootstrap */
+    post: operations['statsig_bootstrap'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/tv/{tmdb_id}': {
     parameters: {
       query?: never;
@@ -277,23 +362,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/redirect/plex/{imdb_id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** Redirect To Plex */
-    get: operations['redirect_to_plex'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/redirect/{type_}/{tmdb_id}/{season}/{episode}': {
     parameters: {
       query?: never;
@@ -338,13 +406,60 @@ export interface components {
      * @enum {string}
      */
     ComponentType: 'datastore' | 'internal' | 'http' | 'generic';
+    /** Configuration */
+    Configuration: {
+      images: components['schemas']['ImagesConfiguration'];
+      /** Change Keys */
+      change_keys: string[];
+    };
     /** CronResponse[MonitorGet] */
-    CronResponse_MonitorGet_: {
+    'CronResponse_MonitorGet_-Input': {
       /** Success */
       success: boolean;
       /** Message */
       message: string;
       subject?: components['schemas']['MonitorGet'] | null;
+    };
+    /** CronResponse[MonitorGet] */
+    'CronResponse_MonitorGet_-Output': {
+      /** Success */
+      success: boolean;
+      /** Message */
+      message: string;
+      subject?: components['schemas']['MonitorGet'] | null;
+    };
+    /** DiagnosticsRoot */
+    DiagnosticsRoot: {
+      /** Version */
+      version: string;
+      /** Checks */
+      checks: string[];
+    };
+    /** Discover */
+    Discover: {
+      /** Page */
+      page: number;
+      /** Results */
+      results: components['schemas']['DiscoverMovie'][];
+      /** Total Pages */
+      total_pages: number;
+      /** Total Results */
+      total_results: number;
+    };
+    /** DiscoverMovie */
+    DiscoverMovie: {
+      /** Id */
+      id: number;
+      /** Title */
+      title: string;
+      /** Release Date */
+      release_date?: string | null;
+      /** Poster Path */
+      poster_path?: string | null;
+      /** Backdrop Path */
+      backdrop_path?: string | null;
+      /** Overview */
+      overview?: string | null;
     };
     /** DownloadAllResponse */
     DownloadAllResponse: {
@@ -399,7 +514,19 @@ export interface components {
       air_date?: string | null;
     };
     /** EpisodeDetailsSchema */
-    EpisodeDetailsSchema: {
+    'EpisodeDetailsSchema-Input': {
+      /** Id */
+      id: number;
+      download: components['schemas']['DownloadSchema'];
+      /** Show Title */
+      show_title: string;
+      /** Season */
+      season: number;
+      /** Episode */
+      episode: number | null;
+    };
+    /** EpisodeDetailsSchema */
+    'EpisodeDetailsSchema-Output': {
       /** Id */
       id: number;
       download: components['schemas']['DownloadSchema'];
@@ -436,6 +563,8 @@ export interface components {
       /** Output */
       output: unknown;
     };
+    /** HealthcheckResponses */
+    HealthcheckResponses: components['schemas']['HealthcheckResponse'][];
     /**
      * HealthcheckStatus
      * @description Enum used to store the possible service and component health status.
@@ -455,12 +584,29 @@ export interface components {
       category: string;
       episode_info?: components['schemas']['EpisodeInfo'] | null;
     };
+    /** ImagesConfiguration */
+    ImagesConfiguration: {
+      /** Base Url */
+      base_url: string;
+      /** Secure Base Url */
+      secure_base_url: string;
+      /** Backdrop Sizes */
+      backdrop_sizes: string[];
+      /** Logo Sizes */
+      logo_sizes: string[];
+      /** Poster Sizes */
+      poster_sizes: string[];
+      /** Profile Sizes */
+      profile_sizes: string[];
+      /** Still Sizes */
+      still_sizes: string[];
+    };
     /** IndexResponse */
     IndexResponse: {
       /** Series */
-      series: components['schemas']['SeriesDetails'][];
+      series: components['schemas']['SeriesDetails-Output'][];
       /** Movies */
-      movies: components['schemas']['MovieDetailsSchema'][];
+      movies: components['schemas']['MovieDetailsSchema-Output'][];
     };
     /** InnerTorrent */
     InnerTorrent: {
@@ -517,7 +663,13 @@ export interface components {
       type: components['schemas']['MonitorMediaType'];
     };
     /** MovieDetailsSchema */
-    MovieDetailsSchema: {
+    'MovieDetailsSchema-Input': {
+      /** Id */
+      id: number;
+      download: components['schemas']['DownloadSchema'];
+    };
+    /** MovieDetailsSchema */
+    'MovieDetailsSchema-Output': {
       /** Id */
       id: number;
       download: components['schemas']['DownloadSchema'];
@@ -527,7 +679,61 @@ export interface components {
       /** Title */
       title: string;
       /** Imdb Id */
-      imdb_id: string;
+      imdb_id: string | null;
+    };
+    /** PlexMedia */
+    PlexMedia: {
+      /** Ratingkey */
+      ratingKey: number;
+      /** Title */
+      title: string;
+      /**
+       * Year
+       * @default null
+       */
+      year: number | null;
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: 'movie' | 'show';
+      /**
+       * Guid
+       * @default null
+       */
+      guid: string | null;
+      /**
+       * Summary
+       * @default null
+       */
+      summary: string | null;
+      /**
+       * Thumb
+       * @default null
+       */
+      thumb: string | null;
+      /**
+       * Art
+       * @default null
+       */
+      art: string | null;
+    };
+    /** PlexResponse[PlexMedia] */
+    'PlexResponse_PlexMedia_-Input': {
+      /** Server Id */
+      server_id: string;
+      item: components['schemas']['PlexMedia'];
+    };
+    /** PlexResponse[PlexMedia] */
+    'PlexResponse_PlexMedia_-Output': {
+      /** Server Id */
+      server_id: string;
+      item: components['schemas']['PlexMedia'];
+      /**
+       * Link
+       * Format: uri
+       */
+      readonly link: string;
     };
     /**
      * ProviderSource
@@ -539,7 +745,8 @@ export interface components {
       | 'rarbg'
       | 'torrentscsv'
       | 'nyaasi'
-      | 'piratebay';
+      | 'piratebay'
+      | 'luna';
     /** SearchResponse */
     SearchResponse: {
       /** Title */
@@ -558,7 +765,7 @@ export interface components {
       season_number: number;
     };
     /** SeriesDetails */
-    SeriesDetails: {
+    'SeriesDetails-Input': {
       /** Title */
       title: string;
       /** Imdb Id */
@@ -567,7 +774,20 @@ export interface components {
       tmdb_id: number;
       /** Seasons */
       seasons: {
-        [key: string]: components['schemas']['EpisodeDetailsSchema'][];
+        [key: string]: components['schemas']['EpisodeDetailsSchema-Input'][];
+      };
+    };
+    /** SeriesDetails */
+    'SeriesDetails-Output': {
+      /** Title */
+      title: string;
+      /** Imdb Id */
+      imdb_id: string;
+      /** Tmdb Id */
+      tmdb_id: number;
+      /** Seasons */
+      seasons: {
+        [key: string]: components['schemas']['EpisodeDetailsSchema-Output'][];
       };
     };
     /** Stats */
@@ -588,6 +808,15 @@ export interface components {
       /** User */
       user: string;
       values: components['schemas']['Stats'];
+    };
+    /** StatsigBootstrapResponse */
+    StatsigBootstrapResponse: {
+      /** Statsig Values */
+      statsig_values:
+        | {
+            [key: string]: unknown;
+          }
+        | unknown[];
     };
     /** TvResponse */
     TvResponse: {
@@ -620,6 +849,197 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+    };
+    /** BaseRequest */
+    BaseRequest: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /** Method */
+      method: unknown;
+      /** Params */
+      params: unknown;
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+    };
+    /**
+     * ErrorCodes
+     * @enum {integer}
+     */
+    ErrorCodes: -32700 | -32600 | -32601 | -32602 | -32603;
+    /** ErrorInternal */
+    ErrorInternal: {
+      code: components['schemas']['ErrorCodes'];
+      /** Message */
+      message: string;
+      /**
+       * Data
+       * @default null
+       */
+      data: {
+        [key: string]: unknown;
+      } | null;
+    };
+    /** ErrorResult */
+    ErrorResult: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      error: components['schemas']['ErrorInternal'];
+    };
+    /** PingRequest */
+    PingRequest: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      method: 'ping';
+      /** Params */
+      params: null;
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+    };
+    /** PlexArgs */
+    PlexArgs: {
+      /** Tmdb Id */
+      tmdb_id: number;
+      /**
+       * Media Type
+       * @enum {string}
+       */
+      media_type: 'movie' | 'tv';
+    };
+    /** PlexRequest */
+    PlexRequest: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      method: 'plex';
+      params: components['schemas']['PlexArgs'];
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+    };
+    /** PlexResponse[PlexMedia] */
+    PlexResponse_PlexMedia_: {
+      /** Server Id */
+      server_id: string;
+      item: components['schemas']['PlexMedia'];
+      /**
+       * Link
+       * Format: uri
+       */
+      readonly link: string;
+    };
+    /** PlexRootResponse */
+    PlexRootResponse: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /** Result */
+      result: {
+        [key: string]: components['schemas']['PlexResponse_PlexMedia_'];
+      };
+    };
+    /** Reqs */
+    Reqs:
+      | components['schemas']['StreamRequest']
+      | components['schemas']['PingRequest']
+      | components['schemas']['PlexRequest'];
+    /** StreamArgs */
+    StreamArgs: {
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: 'series' | 'movie';
+      /** Tmdb Id */
+      tmdb_id: number;
+      /**
+       * Season
+       * @default null
+       */
+      season: number | null;
+      /**
+       * Episode
+       * @default null
+       */
+      episode: number | null;
+    };
+    /** StreamRequest */
+    StreamRequest: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      method: 'stream';
+      params: components['schemas']['StreamArgs'];
+      /**
+       * Authorization
+       * Format: password
+       */
+      authorization: string;
+    };
+    /** SuccessResult */
+    SuccessResult: {
+      /**
+       * Jsonrpc
+       * @default 2.0
+       * @constant
+       */
+      jsonrpc: '2.0';
+      /** Id */
+      id: number;
+      /** Result */
+      result: unknown;
     };
   };
   responses: never;
@@ -753,8 +1173,8 @@ export interface operations {
         };
         content: {
           'application/json': (
-            | components['schemas']['MovieDetailsSchema']
-            | components['schemas']['EpisodeDetailsSchema']
+            | components['schemas']['MovieDetailsSchema-Output']
+            | components['schemas']['EpisodeDetailsSchema-Output']
           )[];
         };
       };
@@ -880,6 +1300,134 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['SearchResponse'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_providers: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProviderSource'][];
+        };
+      };
+    };
+  };
+  discover: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Discover'];
+        };
+      };
+    };
+  };
+  tmdb_configuration: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Configuration'];
+        };
+      };
+    };
+  };
+  get_plex_imdb: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        thing_type: 'movie' | 'tv';
+        tmdb_id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            [key: string]:
+              | components['schemas']['PlexResponse_PlexMedia_-Output']
+              | null;
+          };
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  statsig_bootstrap: {
+    parameters: {
+      query: {
+        email: string;
+        user_id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StatsigBootstrapResponse'];
         };
       };
       /** @description Validation Error */
@@ -1026,7 +1574,9 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': unknown;
+          'application/json': {
+            [key: string]: unknown;
+          };
         };
       };
       /** @description Validation Error */
@@ -1055,7 +1605,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['CronResponse_MonitorGet_'][];
+          'application/json': components['schemas']['CronResponse_MonitorGet_-Output'][];
         };
       };
     };
@@ -1075,7 +1625,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': string[];
+          'application/json': components['schemas']['DiagnosticsRoot'];
         };
       };
     };
@@ -1097,38 +1647,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['HealthcheckResponse'][];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['HTTPValidationError'];
-        };
-      };
-    };
-  };
-  redirect_to_plex: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        imdb_id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': unknown;
+          'application/json': components['schemas']['HealthcheckResponses'];
         };
       };
       /** @description Validation Error */

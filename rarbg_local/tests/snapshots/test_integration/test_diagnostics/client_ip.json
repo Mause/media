@@ -1,0 +1,66 @@
+[
+  {
+    "component_name": "client_ip",
+    "component_type": "internal",
+    "status": "pass",
+    "output": {
+      "x-forwarded-for": "1.2.3.4",
+      "remote_addr": "1.2.3.4",
+      "location": {
+        "continent": {
+          "code": "OC",
+          "geoname_id": 6255151,
+          "names": {
+            "de": "Ozeanien",
+            "en": "Oceania",
+            "es": "Ocean\u00eda",
+            "fr": "Oc\u00e9anie",
+            "ja": "\u30aa\u30bb\u30a2\u30cb\u30a2",
+            "pt-BR": "Oceania",
+            "ru": "\u041e\u043a\u0435\u0430\u043d\u0438\u044f",
+            "zh-CN": "\u5927\u6d0b\u6d32"
+          }
+        },
+        "country": {
+          "geoname_id": 2077456,
+          "iso_code": "AU",
+          "names": {
+            "de": "Australien",
+            "en": "Australia",
+            "es": "Australia",
+            "fr": "Australie",
+            "ja": "\u30aa\u30fc\u30b9\u30c8\u30e9\u30ea\u30a2",
+            "pt-BR": "Austr\u00e1lia",
+            "ru": "\u0410\u0432\u0441\u0442\u0440\u0430\u043b\u0438\u044f",
+            "zh-CN": "\u6fb3\u5927\u5229\u4e9a"
+          }
+        },
+        "registered_country": {
+          "geoname_id": 2077456,
+          "iso_code": "AU",
+          "names": {
+            "de": "Australien",
+            "en": "Australia",
+            "es": "Australia",
+            "fr": "Australie",
+            "ja": "\u30aa\u30fc\u30b9\u30c8\u30e9\u30ea\u30a2",
+            "pt-BR": "Austr\u00e1lia",
+            "ru": "\u0410\u0432\u0441\u0442\u0440\u0430\u043b\u0438\u044f",
+            "zh-CN": "\u6fb3\u5927\u5229\u4e9a"
+          }
+        },
+        "traits": {
+          "ip_address": "1.2.3.4",
+          "network": "1.2.3.0/24"
+        },
+        "location": {
+          "accuracy_radius": 1000,
+          "latitude": -33.494,
+          "longitude": 143.2104,
+          "time_zone": "Australia/Sydney"
+        }
+      },
+      "age": "2025-08-01T05:21:31Z"
+    }
+  }
+]

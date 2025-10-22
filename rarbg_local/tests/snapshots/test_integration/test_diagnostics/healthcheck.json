@@ -1,9 +1,17 @@
-[
-  "database",
-  "pool",
-  "transmission",
-  "torrentscsv",
-  "nyaasi",
-  "piratebay",
-  "jikan"
-]
+{
+  "version": "dev",
+  "checks": [
+    "database",
+    "pool",
+    "transmission",
+    "plex",
+    "cache",
+    "torrentscsv",
+    "nyaasi",
+    "piratebay",
+    "providers",
+    "jikan",
+    "client_ip",
+    "statsig"
+  ]
+}

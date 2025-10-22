@@ -275,10 +275,10 @@
                   "items": {
                     "anyOf": [
                       {
-                        "$ref": "#/components/schemas/MovieDetailsSchema"
+                        "$ref": "#/components/schemas/MovieDetailsSchema-Output"
                       },
                       {
-                        "$ref": "#/components/schemas/EpisodeDetailsSchema"
+                        "$ref": "#/components/schemas/EpisodeDetailsSchema-Output"
                       }
                     ]
                   },
@@ -488,6 +488,225 @@
                     "$ref": "#/components/schemas/SearchResponse"
                   },
                   "title": "Response Search Api Search Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/providers": {
+      "get": {
+        "summary": "Get Providers",
+        "operationId": "get_providers",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderSource"
+                  },
+                  "type": "array",
+                  "title": "Response Get Providers Api Providers Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ]
+      }
+    },
+    "/api/discover": {
+      "get": {
+        "summary": "Discover",
+        "operationId": "discover",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Discover"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ]
+      }
+    },
+    "/api/tmdb/configuration": {
+      "get": {
+        "summary": "Tmdb Configuration",
+        "operationId": "tmdb_configuration",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Configuration"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ]
+      }
+    },
+    "/api/plex/{thing_type}/{tmdb_id}": {
+      "get": {
+        "summary": "Get Plex Imdb",
+        "operationId": "get_plex_imdb",
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "thing_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "movie",
+                "tv"
+              ],
+              "type": "string",
+              "title": "Thing Type"
+            }
+          },
+          {
+            "name": "tmdb_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Tmdb Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/PlexResponse_PlexMedia_-Output"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "title": "Response Get Plex Imdb Api Plex  Thing Type   Tmdb Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statsig/statsig-bootstrap": {
+      "post": {
+        "summary": "Statsig Bootstrap",
+        "operationId": "statsig_bootstrap",
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid"
+            ]
+          },
+          {
+            "HTTPBasic": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Email"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsigBootstrapResponse"
                 }
               }
             }
@@ -735,7 +954,11 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Monitor Delete Api Monitor  Monitor Id  Delete"
+                }
               }
             }
           },
@@ -766,7 +989,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "$ref": "#/components/schemas/CronResponse_MonitorGet_"
+                    "$ref": "#/components/schemas/CronResponse_MonitorGet_-Output"
                   },
                   "type": "array",
                   "title": "Response Monitor Cron Api Monitor Cron Post"
@@ -800,11 +1023,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array",
-                  "title": "Response Diagnostics Api Diagnostics Get"
+                  "$ref": "#/components/schemas/DiagnosticsRoot"
                 }
               }
             }
@@ -856,49 +1075,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/HealthcheckResponse"
-                  },
-                  "title": "Response Component Diagnostics Api Diagnostics  Component Name  Get"
+                  "$ref": "#/components/schemas/HealthcheckResponses"
                 }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/redirect/plex/{imdb_id}": {
-      "get": {
-        "summary": "Redirect To Plex",
-        "operationId": "redirect_to_plex",
-        "parameters": [
-          {
-            "name": "imdb_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Imdb Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
               }
             }
           },
@@ -1083,7 +1261,27 @@
         "title": "ComponentType",
         "description": "Enum used to store the component types."
       },
-      "CronResponse_MonitorGet_": {
+      "Configuration": {
+        "properties": {
+          "images": {
+            "$ref": "#/components/schemas/ImagesConfiguration"
+          },
+          "change_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Change Keys"
+          }
+        },
+        "type": "object",
+        "required": [
+          "images",
+          "change_keys"
+        ],
+        "title": "Configuration"
+      },
+      "CronResponse_MonitorGet_-Input": {
         "properties": {
           "success": {
             "type": "boolean",
@@ -1110,6 +1308,149 @@
           "message"
         ],
         "title": "CronResponse[MonitorGet]"
+      },
+      "CronResponse_MonitorGet_-Output": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MonitorGet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "message"
+        ],
+        "title": "CronResponse[MonitorGet]"
+      },
+      "DiagnosticsRoot": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "checks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Checks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "checks"
+        ],
+        "title": "DiagnosticsRoot"
+      },
+      "Discover": {
+        "properties": {
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoverMovie"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "total_pages": {
+            "type": "integer",
+            "title": "Total Pages"
+          },
+          "total_results": {
+            "type": "integer",
+            "title": "Total Results"
+          }
+        },
+        "type": "object",
+        "required": [
+          "page",
+          "results",
+          "total_pages",
+          "total_results"
+        ],
+        "title": "Discover"
+      },
+      "DiscoverMovie": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "release_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Date"
+          },
+          "poster_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Poster Path"
+          },
+          "backdrop_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Backdrop Path"
+          },
+          "overview": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overview"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "DiscoverMovie"
       },
       "DownloadAllResponse": {
         "properties": {
@@ -1293,7 +1634,46 @@
         ],
         "title": "Episode"
       },
-      "EpisodeDetailsSchema": {
+      "EpisodeDetailsSchema-Input": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "download": {
+            "$ref": "#/components/schemas/DownloadSchema"
+          },
+          "show_title": {
+            "type": "string",
+            "title": "Show Title"
+          },
+          "season": {
+            "type": "integer",
+            "title": "Season"
+          },
+          "episode": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Episode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "download",
+          "show_title",
+          "season",
+          "episode"
+        ],
+        "title": "EpisodeDetailsSchema"
+      },
+      "EpisodeDetailsSchema-Output": {
         "properties": {
           "id": {
             "type": "integer",
@@ -1400,6 +1780,13 @@
         ],
         "title": "HealthcheckResponse"
       },
+      "HealthcheckResponses": {
+        "items": {
+          "$ref": "#/components/schemas/HealthcheckResponse"
+        },
+        "type": "array",
+        "title": "HealthcheckResponses"
+      },
       "HealthcheckStatus": {
         "type": "string",
         "enum": [
@@ -1424,8 +1811,17 @@
             "title": "Seeders"
           },
           "download": {
-            "type": "string",
-            "pattern": "^magnet:",
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^magnet:"
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "format": "uri"
+              }
+            ],
             "title": "Download"
           },
           "category": {
@@ -1453,18 +1849,76 @@
         ],
         "title": "ITorrent"
       },
+      "ImagesConfiguration": {
+        "properties": {
+          "base_url": {
+            "type": "string",
+            "title": "Base Url"
+          },
+          "secure_base_url": {
+            "type": "string",
+            "title": "Secure Base Url"
+          },
+          "backdrop_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Backdrop Sizes"
+          },
+          "logo_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Logo Sizes"
+          },
+          "poster_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Poster Sizes"
+          },
+          "profile_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Profile Sizes"
+          },
+          "still_sizes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Still Sizes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "base_url",
+          "secure_base_url",
+          "backdrop_sizes",
+          "logo_sizes",
+          "poster_sizes",
+          "profile_sizes",
+          "still_sizes"
+        ],
+        "title": "ImagesConfiguration"
+      },
       "IndexResponse": {
         "properties": {
           "series": {
             "items": {
-              "$ref": "#/components/schemas/SeriesDetails"
+              "$ref": "#/components/schemas/SeriesDetails-Output"
             },
             "type": "array",
             "title": "Series"
           },
           "movies": {
             "items": {
-              "$ref": "#/components/schemas/MovieDetailsSchema"
+              "$ref": "#/components/schemas/MovieDetailsSchema-Output"
             },
             "type": "array",
             "title": "Movies"
@@ -1605,7 +2059,24 @@
         ],
         "title": "MonitorPost"
       },
-      "MovieDetailsSchema": {
+      "MovieDetailsSchema-Input": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "download": {
+            "$ref": "#/components/schemas/DownloadSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "download"
+        ],
+        "title": "MovieDetailsSchema"
+      },
+      "MovieDetailsSchema-Output": {
         "properties": {
           "id": {
             "type": "integer",
@@ -1629,7 +2100,15 @@
             "title": "Title"
           },
           "imdb_id": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^tt\\d+$"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Imdb Id"
           }
         },
@@ -1640,6 +2119,135 @@
         ],
         "title": "MovieResponse"
       },
+      "PlexMedia": {
+        "properties": {
+          "ratingKey": {
+            "title": "Ratingkey",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Year"
+          },
+          "type": {
+            "enum": [
+              "movie",
+              "show"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "guid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Guid"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Summary"
+          },
+          "thumb": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Thumb"
+          },
+          "art": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Art"
+          }
+        },
+        "required": [
+          "ratingKey",
+          "title",
+          "type"
+        ],
+        "title": "PlexMedia",
+        "type": "object"
+      },
+      "PlexResponse_PlexMedia_-Input": {
+        "properties": {
+          "server_id": {
+            "type": "string",
+            "title": "Server Id"
+          },
+          "item": {
+            "$ref": "#/components/schemas/PlexMedia"
+          }
+        },
+        "type": "object",
+        "required": [
+          "server_id",
+          "item"
+        ],
+        "title": "PlexResponse[PlexMedia]"
+      },
+      "PlexResponse_PlexMedia_-Output": {
+        "properties": {
+          "server_id": {
+            "type": "string",
+            "title": "Server Id"
+          },
+          "item": {
+            "$ref": "#/components/schemas/PlexMedia"
+          },
+          "link": {
+            "type": "string",
+            "minLength": 1,
+            "format": "uri",
+            "title": "Link",
+            "readOnly": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "server_id",
+          "item",
+          "link"
+        ],
+        "title": "PlexResponse[PlexMedia]"
+      },
       "ProviderSource": {
         "type": "string",
         "enum": [
@@ -1648,7 +2256,8 @@
           "rarbg",
           "torrentscsv",
           "nyaasi",
-          "piratebay"
+          "piratebay",
+          "luna"
         ],
         "title": "ProviderSource"
       },
@@ -1704,7 +2313,7 @@
         ],
         "title": "SeasonMeta"
       },
-      "SeriesDetails": {
+      "SeriesDetails-Input": {
         "properties": {
           "title": {
             "type": "string",
@@ -1712,6 +2321,7 @@
           },
           "imdb_id": {
             "type": "string",
+            "pattern": "^tt\\d+$",
             "title": "Imdb Id"
           },
           "tmdb_id": {
@@ -1721,7 +2331,42 @@
           "seasons": {
             "additionalProperties": {
               "items": {
-                "$ref": "#/components/schemas/EpisodeDetailsSchema"
+                "$ref": "#/components/schemas/EpisodeDetailsSchema-Input"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Seasons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "imdb_id",
+          "tmdb_id",
+          "seasons"
+        ],
+        "title": "SeriesDetails"
+      },
+      "SeriesDetails-Output": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "imdb_id": {
+            "type": "string",
+            "pattern": "^tt\\d+$",
+            "title": "Imdb Id"
+          },
+          "tmdb_id": {
+            "type": "integer",
+            "title": "Tmdb Id"
+          },
+          "seasons": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/EpisodeDetailsSchema-Output"
               },
               "type": "array"
             },
@@ -1771,6 +2416,28 @@
         ],
         "title": "StatsResponse"
       },
+      "StatsigBootstrapResponse": {
+        "properties": {
+          "statsig_values": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "items": {},
+                "type": "array"
+              }
+            ],
+            "title": "Statsig Values"
+          }
+        },
+        "type": "object",
+        "required": [
+          "statsig_values"
+        ],
+        "title": "StatsigBootstrapResponse"
+      },
       "TvResponse": {
         "properties": {
           "number_of_seasons": {
@@ -1787,7 +2454,8 @@
           "imdb_id": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "pattern": "^tt\\d+$"
               },
               {
                 "type": "null"
@@ -1875,6 +2543,378 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "BaseRequest": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "method": {
+            "title": "Method"
+          },
+          "params": {
+            "title": "Params"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "params",
+          "authorization"
+        ],
+        "title": "BaseRequest",
+        "type": "object"
+      },
+      "ErrorCodes": {
+        "enum": [
+          -32700,
+          -32600,
+          -32601,
+          -32602,
+          -32603
+        ],
+        "title": "ErrorCodes",
+        "type": "integer"
+      },
+      "ErrorInternal": {
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/ErrorCodes"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Data"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorInternal",
+        "type": "object"
+      },
+      "ErrorResult": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorInternal"
+          }
+        },
+        "required": [
+          "id",
+          "error"
+        ],
+        "title": "ErrorResult",
+        "type": "object"
+      },
+      "PingRequest": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "method": {
+            "const": "ping",
+            "title": "Method",
+            "type": "string"
+          },
+          "params": {
+            "title": "Params",
+            "type": "null"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "params",
+          "authorization"
+        ],
+        "title": "PingRequest",
+        "type": "object"
+      },
+      "PlexArgs": {
+        "properties": {
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "media_type": {
+            "enum": [
+              "movie",
+              "tv"
+            ],
+            "title": "Media Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tmdb_id",
+          "media_type"
+        ],
+        "title": "PlexArgs",
+        "type": "object"
+      },
+      "PlexRequest": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "method": {
+            "const": "plex",
+            "title": "Method",
+            "type": "string"
+          },
+          "params": {
+            "$ref": "#/components/schemas/PlexArgs"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "params",
+          "authorization"
+        ],
+        "title": "PlexRequest",
+        "type": "object"
+      },
+      "PlexResponse_PlexMedia_": {
+        "properties": {
+          "server_id": {
+            "title": "Server Id",
+            "type": "string"
+          },
+          "item": {
+            "$ref": "#/components/schemas/PlexMedia"
+          },
+          "link": {
+            "format": "uri",
+            "minLength": 1,
+            "readOnly": true,
+            "title": "Link",
+            "type": "string"
+          }
+        },
+        "required": [
+          "server_id",
+          "item",
+          "link"
+        ],
+        "title": "PlexResponse[PlexMedia]",
+        "type": "object"
+      },
+      "PlexRootResponse": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "result": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PlexResponse_PlexMedia_"
+            },
+            "title": "Result",
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "result"
+        ],
+        "title": "PlexRootResponse",
+        "type": "object"
+      },
+      "Reqs": {
+        "discriminator": {
+          "mapping": {
+            "ping": "#/components/schemas/PingRequest",
+            "plex": "#/components/schemas/PlexRequest",
+            "stream": "#/components/schemas/StreamRequest"
+          },
+          "propertyName": "method"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/StreamRequest"
+          },
+          {
+            "$ref": "#/components/schemas/PingRequest"
+          },
+          {
+            "$ref": "#/components/schemas/PlexRequest"
+          }
+        ],
+        "title": "Reqs"
+      },
+      "StreamArgs": {
+        "properties": {
+          "type": {
+            "enum": [
+              "series",
+              "movie"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "tmdb_id": {
+            "title": "Tmdb Id",
+            "type": "integer"
+          },
+          "season": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Season"
+          },
+          "episode": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Episode"
+          }
+        },
+        "required": [
+          "type",
+          "tmdb_id"
+        ],
+        "title": "StreamArgs",
+        "type": "object"
+      },
+      "StreamRequest": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "method": {
+            "const": "stream",
+            "title": "Method",
+            "type": "string"
+          },
+          "params": {
+            "$ref": "#/components/schemas/StreamArgs"
+          },
+          "authorization": {
+            "format": "password",
+            "title": "Authorization",
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "params",
+          "authorization"
+        ],
+        "title": "StreamRequest",
+        "type": "object"
+      },
+      "SuccessResult": {
+        "properties": {
+          "jsonrpc": {
+            "const": "2.0",
+            "default": "2.0",
+            "title": "Jsonrpc",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "result": {
+            "title": "Result"
+          }
+        },
+        "required": [
+          "id",
+          "result"
+        ],
+        "title": "SuccessResult",
+        "type": "object"
       }
     },
     "securitySchemes": {
