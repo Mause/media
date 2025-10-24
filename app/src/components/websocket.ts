@@ -37,7 +37,7 @@ export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
   const url = `${base}/ws`;
   const [state, setState] = useState<string>('idle');
   const [responseError, setResponseError] = useState<
-    ErrorResponse['error'] | null
+    ErrorResult['error'] | null
   >(null);
 
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
