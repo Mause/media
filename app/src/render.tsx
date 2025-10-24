@@ -98,7 +98,8 @@ function OpenPlex({
         <DialogTitle>Search plex for media...</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {readyStateToString(readyState)}<br />
+            {readyStateToString(readyState)}
+            <br />
             {state}
           </DialogContentText>
         </DialogContent>
