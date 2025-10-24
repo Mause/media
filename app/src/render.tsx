@@ -92,7 +92,7 @@ function OpenPlex({
   return (
     <>
       <Dialog open={open}>
-        <DialogTitle>Set backup account</DialogTitle>
+        <DialogTitle>Search plex for media...</DialogTitle>
         {readyStateToString(readyState)}
         {state}
       </Dialog>
