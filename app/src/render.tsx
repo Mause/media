@@ -18,6 +18,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
 import { useAuth0 } from '@auth0/auth0-react';
 import usePromise from 'react-promise-suspense';
+import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
