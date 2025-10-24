@@ -36,7 +36,9 @@ export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
   const base = getPrefix();
   const url = `${base}/ws`;
   const [state, setState] = useState<string>('idle');
-  const [responseError, setResponseError] = useState<ErrorResponse['error'] | null>(null);
+  const [responseError, setResponseError] = useState<
+    ErrorResponse['error'] | null
+  >(null);
 
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
   const trigger = useMemo(
