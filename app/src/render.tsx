@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
@@ -18,6 +18,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
 import { useAuth0 } from '@auth0/auth0-react';
 import usePromise from 'react-promise-suspense';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
 
 import { useMessage, readyStateToString, nextId } from './components/websocket';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
@@ -66,6 +68,7 @@ function OpenPlex({
   type: 'movie' | 'tv';
 }) {
   const auth = useAuth0();
+  const [open, setOpen] = useState(false);
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
   const { message, trigger, readyState, state } = useMessage<
     PlexRequest,
@@ -87,15 +90,21 @@ function OpenPlex({
   }
 
   return (
-    <MenuItem
-      onClick={() => {
-        trigger();
-      }}
-    >
-      <span className="unselectable">Open in Plex</span>
-      {readyStateToString(readyState)}
-      {state}
-    </MenuItem>
+    <>
+      <Dialog open={open}>
+        <DialogTitle>Search plex for media...</DialogTitle>
+        {readyStateToString(readyState)}
+        {state}
+      </Dialog>
+      <MenuItem
+        onClick={() => {
+          setOpen(true);
+          trigger();
+        }}
+      >
+        <span className="unselectable">Open in Plex</span>
+      </MenuItem>
+    </>
   );
 }
 
