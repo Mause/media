@@ -1,36 +1,51 @@
 import logging
 from asyncio import Future, Queue
 from collections.abc import Callable, Coroutine, Iterable
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+from ..auth import User, get_current_user
+from ..health import get
 from ..models import ITorrent
 from ..types import ImdbId, TmdbId
 from ..utils import Message, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
+from .statsig_service import get_statsig
+
+if TYPE_CHECKING:
+    from statsig_python_core import Statsig
 
 type ProviderType[T] = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
 
 
-def get_providers() -> list[Provider]:
+async def get_providers() -> list[Provider]:
+    from statsig_python_core import StatsigUser
+
     # from .horriblesubs import HorriblesubsProvider
     # from .kickass import KickassProvider
-    # from .luna import LunaProvider
+    from .luna import LunaProvider
     from .nyaasi import NyaaProvider
     from .piratebay import PirateBayProvider
 
     # from .rarbg import RarbgProvider
     from .torrents_csv import TorrentsCsvProvider
 
-    return [
+    providers: list[Provider] = [
         # HorriblesubsProvider(),
         # RarbgProvider(),
         # KickassProvider(),
         TorrentsCsvProvider(),
         NyaaProvider(),
         PirateBayProvider(),
-        # LunaProvider(),
     ]
+
+    statsig: 'Statsig' = await get(get_statsig)
+    user: User = await get(get_current_user)
+
+    if statsig.check_gate(StatsigUser(user.name), 'luna'):
+        providers.append(LunaProvider())
+
+    return providers
 
 
 async def search_for_tv(
@@ -49,7 +64,11 @@ async def search_for_tv(
 
     return await spin_up_workers(
         worker,
-        [provider for provider in get_providers() if isinstance(provider, TvProvider)],
+        [
+            provider
+            for provider in await get_providers()
+            if isinstance(provider, TvProvider)
+        ],
     )
 
 
@@ -69,7 +88,7 @@ async def search_for_movie(
         worker,
         [
             provider
-            for provider in get_providers()
+            for provider in await get_providers()
             if isinstance(provider, MovieProvider)
         ],
     )
