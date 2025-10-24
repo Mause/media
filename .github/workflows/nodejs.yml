@@ -29,3 +29,4 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - run: yarn tsc
       - run: yarn test
+      - run: yarn oxlint
