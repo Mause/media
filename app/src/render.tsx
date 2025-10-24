@@ -20,6 +20,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import usePromise from 'react-promise-suspense';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 import { useMessage, readyStateToString, nextId } from './components/websocket';
 import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
@@ -93,8 +96,15 @@ function OpenPlex({
     <>
       <Dialog open={open}>
         <DialogTitle>Search plex for media...</DialogTitle>
-        {readyStateToString(readyState)}
-        {state}
+        <DialogContent>
+          <DialogContentText>
+            {readyStateToString(readyState)}<br />
+            {state}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+        </DialogActions>
       </Dialog>
       <MenuItem
         onClick={() => {
