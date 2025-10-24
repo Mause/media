@@ -57,6 +57,7 @@ dev = [
   "factory-boy==3.3.3",
   "freezegun>=1.5.5",
   "lxml",
+  "pyleak>=0.1.11",
   "pre-commit>=4.2.0",
   "pytest",
   "pytest-alembic>=0.12.1",
