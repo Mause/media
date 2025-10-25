@@ -65,8 +65,8 @@ export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
           setState('received');
           setMessage(lastJsonMessage as T);
         }
-      } else if ((lastResponseMessage as T).id === -1) {
-        console.log('Got ping', lastJsonMessage);
+      } else if ((lastJsonMessage as T).id === -1) {
+        console.log('Got notification', lastJsonMessage);
       } else {
         console.error('Unexpected message', lastJsonMessage);
       }
