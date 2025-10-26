@@ -1,5 +1,5 @@
 import { OpenPlex, ContextMenu } from '.';
-import { describe, test } from 'vitest';
+import { vi, describe, test } from 'vitest';
 import { renderWithSWR } from '../test.utils';
 import userEvent from '@testing-library/user-event';
 import { act, screen } from '@testing-library/react';
@@ -8,6 +8,8 @@ import { http, HttpResponse } from 'msw';
 
 describe('OpenPlex', () => {
   test('should render without crashing', async () => {
+    vi.stubEnv('REACT_APP_API_PREFIX', 'http://localhost:3000');
+
     const { container } = renderWithSWR(
       <ContextMenu>
         <OpenPlex
