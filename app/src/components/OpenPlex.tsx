@@ -7,7 +7,6 @@ import { OpenNewWindow } from './OpenNewWindow';
 import type { components } from '../schema';
 import { getToken } from '../utils';
 import MenuItem from '@mui/material/MenuItem';
-// eslint-disable-next-line import-x/no-named-as-default
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
