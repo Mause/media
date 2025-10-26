@@ -91,6 +91,7 @@
     "mockdate": "^3.0.2",
     "msw": "^2.11.3",
     "oxlint": "^1.24.0",
+    "oxlint-tsgolint": "^0.3.0",
     "prettier": "3.6.2",
     "typescript-eslint": "^8.46.1",
     "vite": "npm:rolldown-vite@latest",
