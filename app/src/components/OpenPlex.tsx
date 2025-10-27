@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import _ from 'lodash-es';
+import * as _ from 'lodash-es';
 import usePromise from 'react-promise-suspense';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
