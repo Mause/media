@@ -1,7 +1,7 @@
-import { vi, describe, test } from 'vitest';
+import { it, vi, describe } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { act, screen } from '@testing-library/react';
-import { http, HttpResponse, ws } from 'msw';
+import { screen } from '@testing-library/react';
+import { ws } from 'msw';
 
 import { server } from '../msw';
 import { renderWithSWR } from '../test.utils';
@@ -15,7 +15,7 @@ describe('OpenPlex', () => {
 
     const chat = ws.link(`${base}/ws`);
     server.use(
-      chat.addEventListener('connection', async ({ client }) => {
+      chat.addEventListener('connection', ({ client }) => {
         client.addEventListener('message', (event) => {
           console.log('Intercepted message from the client', event);
         });
