@@ -29,7 +29,7 @@ export function OpenPlex({
   const auth = useAuth0();
   const [open, setOpen] = useState(false);
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
-  const { message, trigger, readyState, state } = useMessage<
+  const { message, trigger, readyState, state, error } = useMessage<
     PlexRequest,
     PlexRootResponse
   >({
@@ -57,6 +57,12 @@ export function OpenPlex({
             {readyStateToString(readyState)}
             <br />
             {state}
+            {error && (
+              <>
+                <br />
+                Error: ${error.message}
+              </>
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
