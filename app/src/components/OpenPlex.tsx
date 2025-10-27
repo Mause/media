@@ -2,10 +2,6 @@ import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import _ from 'lodash';
 import usePromise from 'react-promise-suspense';
-import { nextId, readyStateToString, useMessage } from './websocket';
-import { OpenNewWindow } from './OpenNewWindow';
-import type { components } from '../schema';
-import { getToken } from '../utils';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -13,6 +9,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+
+import { getToken } from '../utils';
+import type { components } from '../schema';
+
+import { OpenNewWindow } from './OpenNewWindow';
+import { nextId, readyStateToString, useMessage } from './websocket';
 
 type PlexRootResponse = components['schemas']['PlexRootResponse'];
 type PlexRequest = components['schemas']['PlexRequest'];

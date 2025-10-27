@@ -1,11 +1,12 @@
-import { OpenPlex, ContextMenu } from '.';
 import { vi, describe, test } from 'vitest';
-import { renderWithSWR } from '../test.utils';
 import userEvent from '@testing-library/user-event';
 import { act, screen } from '@testing-library/react';
+import { http, HttpResponse, ws  } from 'msw';
+
 import { server } from '../msw';
-import { http, HttpResponse } from 'msw';
-import { ws } from 'msw';
+import { renderWithSWR } from '../test.utils';
+
+import { OpenPlex, ContextMenu } from '.';
 
 describe('OpenPlex', () => {
   it('should render without crashing', async () => {

@@ -15,6 +15,7 @@ import {
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
+
 import { getMarker, getMessage, shouldCollapse } from './utils';
 import type { TV } from './select/SeasonSelectComponent';
 import type {
