@@ -8,8 +8,8 @@ import { http, HttpResponse } from 'msw';
 import { ws } from 'msw';
 
 describe('OpenPlex', () => {
-  test('should render without crashing', async () => {
-    const base = 'ws://localhost:1234';
+  it('should render without crashing', async () => {
+    const base = 'ws://fakedomain.com:1234';
     vi.stubEnv('REACT_APP_API_PREFIX', base);
 
     const chat = ws.link(`${base}/ws`);
