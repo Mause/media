@@ -27,5 +27,6 @@ jobs:
       - run: yarn build
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      - run: yarn tsc
+      # hack from https://christopher.xyz/2023/04/04/github-actions-problem-matchers.html
+      - run: yarn tsc | awk -v prefix="$PWD" '{print prefix "/" $0}'
       - run: yarn test
