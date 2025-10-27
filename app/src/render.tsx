@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { String } from 'typescript-string-operations';
 // eslint-disable-next-line import-x/no-named-as-default
@@ -16,17 +15,8 @@ import {
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import LinearProgress from '@mui/material/LinearProgress';
 import * as _ from 'lodash-es';
-import { useAuth0 } from '@auth0/auth0-react';
-import usePromise from 'react-promise-suspense';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 
-import { useMessage, readyStateToString, nextId } from './components/websocket';
-import { getMarker, getMessage, getToken, shouldCollapse } from './utils';
+import { getMarker, getMessage, shouldCollapse } from './utils';
 import type { TV } from './select/SeasonSelectComponent';
 import type {
   MovieResponse,
@@ -34,8 +24,7 @@ import type {
   Torrents,
   EpisodeResponse,
 } from './ParentComponent';
-import { ContextMenu, Loading, MLink } from './components';
-import type { components } from './schema';
+import { OpenPlex, ContextMenu, Loading, MLink } from './components';
 
 function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   return (
@@ -46,77 +35,6 @@ function OpenIMDB({ download }: { download: { imdb_id: string } }) {
     >
       Open in IMDB
     </MenuItem>
-  );
-}
-
-type PlexRootResponse = components['schemas']['PlexRootResponse'];
-type PlexRequest = components['schemas']['PlexRequest'];
-
-function OpenNewWindow({ link, label }: { link: string; label: string }) {
-  useEffect(() => {
-    window.open(link, '_blank', 'noopener,noreferrrer');
-  }, [link]);
-
-  return (
-    <div>
-      Opening <a href={link}>{label}</a>
-    </div>
-  );
-}
-
-function OpenPlex({
-  download,
-  type,
-}: {
-  download: { tmdb_id: number };
-  type: 'movie' | 'tv';
-}) {
-  const auth = useAuth0();
-  const [open, setOpen] = useState(false);
-  const token = 'Bearer ' + usePromise(() => getToken(auth), []);
-  const { message, trigger, readyState, state } = useMessage<
-    PlexRequest,
-    PlexRootResponse
-  >({
-    method: 'plex',
-    jsonrpc: '2.0',
-    id: nextId(),
-    authorization: token,
-    params: {
-      tmdb_id: download.tmdb_id,
-      media_type: type,
-    },
-  });
-
-  if (message) {
-    const first = _.values(message.result).find((v) => v)!;
-    return <OpenNewWindow link={first.link} label={first.item.title} />;
-  }
-
-  return (
-    <>
-      <Dialog open={open}>
-        <DialogTitle>Search plex for media...</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {readyStateToString(readyState)}
-            <br />
-            {state}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
-      <MenuItem
-        onClick={() => {
-          setOpen(true);
-          trigger();
-        }}
-      >
-        <span className="unselectable">Open in Plex</span>
-      </MenuItem>
-    </>
   );
 }
 
