@@ -207,6 +207,7 @@ exports[`OpenPlex > should render without crashing 3`] = `
             Connected
             <br />
             sending
+            <br />
           </p>
         </div>
         <div
