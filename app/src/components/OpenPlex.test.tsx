@@ -13,6 +13,13 @@ describe('OpenPlex', () => {
     vi.stubEnv('REACT_APP_API_PREFIX', base);
 
     const chat = ws.link(`${base}/ws`);
+    server.use(
+      chat.addEventListener('connection', async ({ client }) => {
+        client.addEventListener('message', (event) => {
+          console.log('Intercepted message from the client', event);
+        });
+      }),
+    );
 
     const { container } = renderWithSWR(
       <ContextMenu>
@@ -27,8 +34,6 @@ describe('OpenPlex', () => {
     expect(container).toMatchSnapshot();
 
     const events = userEvent.setup();
-
-    server.use(chat.addEventListener('connection', async ({ client }) => {}));
 
     // server.use(
     //   http.post('/api/monitor', async ({ request }) => {
