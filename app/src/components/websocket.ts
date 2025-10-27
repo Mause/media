@@ -35,7 +35,9 @@ export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
 ) {
   const base = getPrefix();
   const url = `${base}/ws`;
-  const [state, setState] = useState<string>('idle');
+  const [state, setState] = useState<'idle' | 'sending' | 'error' | 'received'>(
+    'idle',
+  );
   const [responseError, setResponseError] = useState<
     ErrorResult['error'] | null
   >(null);
