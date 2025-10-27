@@ -73,9 +73,7 @@ describe('MonitorComponent', () => {
       }),
     );
 
-    await act(async () => {
-      await events.click(await screen.findByText('Add to monitor'));
-    });
+    await events.click(await screen.findByText('Add to monitor'));
 
     expect(container).toMatchSnapshot();
   });
