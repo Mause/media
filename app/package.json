@@ -23,7 +23,7 @@
     "@sentry/vite-plugin": "^4.1.0",
     "@use-it/interval": "^1.0.0",
     "@vtex/axios-concurrent-retry": "^4.0.11",
-    "axios": "^1.11.0",
+    "axios": "^1.13.0",
     "lodash-es": "^4.17.21",
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
