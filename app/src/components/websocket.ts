@@ -42,7 +42,9 @@ export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
     ErrorResult['error'] | null
   >(null);
 
-  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url, { skipAssert: true });
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url, {
+    skipAssert: true,
+  });
   const trigger = useMemo(
     () => () => {
       setState('sending');
