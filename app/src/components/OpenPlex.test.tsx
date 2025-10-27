@@ -1,7 +1,7 @@
 import { vi, describe, test } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { act, screen } from '@testing-library/react';
-import { http, HttpResponse, ws  } from 'msw';
+import { http, HttpResponse, ws } from 'msw';
 
 import { server } from '../msw';
 import { renderWithSWR } from '../test.utils';
