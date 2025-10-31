@@ -129,7 +129,7 @@ const Example = () => {
       search={search}
       isOpen={open}
       page={page}
-      renderLink={({ href, children }) => <Link to={href!}>{children}</Link>}
+      renderLink={({ href, ...rest }) => <Link to={href!} {...rest} />}
     >
       <CommandPalette.Page id="root">
         {filteredItems.length ? (
