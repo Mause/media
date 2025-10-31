@@ -122,9 +122,10 @@ const Example = () => {
         )}
       </CommandPalette.Page>
 
+      {/* Projects page
       <CommandPalette.Page id="projects">
-        {/* Projects page */}
       </CommandPalette.Page>
+          */}
     </CommandPalette>
   );
 };
