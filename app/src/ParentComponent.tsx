@@ -57,22 +57,19 @@ const Example = () => {
             id: 'home',
             children: 'Home',
             icon: 'HomeIcon',
-            href='/'
-            },
+            href='/',
           },
           {
             id: 'monitors',
             children: 'Monitors',
             icon: 'EyeIcon',
-            href='/monitors'
-            },
+            href='/monitors',
           },
           {
             id: 'discover',
             children: 'Discover',
             icon: 'MagnifyingGlassIcon',
-            href='/discover'
-            },
+            href='/discover',
           },
           {
             id: 'settings',
