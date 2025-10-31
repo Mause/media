@@ -38,6 +38,7 @@ export type EpisodeResponse =
   components['schemas']['EpisodeDetailsSchema-Output'];
 
 const Example = () => {
+  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
   const [page, setPage] = useState<'root' | 'projects'>('root');
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState('');
@@ -55,8 +56,24 @@ const Example = () => {
             id: 'home',
             children: 'Home',
             icon: 'HomeIcon',
-            onClick: () => {
-              void navigate('/');
+            onClick: async () => {
+              await navigate('/');
+            },
+          },
+          {
+            id: 'monitors',
+            children: 'Monitors',
+            icon: 'Eye',
+            onClick: async () => {
+              await navigate('/monitors');
+            },
+          },
+          {
+            id: 'discover',
+            children: 'Discover',
+            icon: 'MagnifyingGlass',
+            onClick: async () => {
+              await navigate('/discover');
             },
           },
           {
@@ -65,6 +82,7 @@ const Example = () => {
             icon: 'CogIcon',
             href: '#',
           },
+          /*
           {
             id: 'projects',
             children: 'Projects',
@@ -74,6 +92,7 @@ const Example = () => {
               setPage('projects');
             },
           },
+          */
         ],
       },
       {
@@ -94,10 +113,14 @@ const Example = () => {
           },
           {
             id: 'log-out',
-            children: 'Log out',
+            children: isAuthenticated ? 'Logout' : 'Login',
             icon: 'ArrowRightOnRectangleIcon',
-            onClick: () => {
-              void navigate('/logout');
+            onClick: async () => {
+              if (isAuthenticated) {
+                await loginWithRedirect({});
+              } else {
+                await logout();
+              }
             },
           },
         ],
