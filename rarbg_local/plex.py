@@ -20,7 +20,7 @@ from urllib.parse import urlencode
 
 from fastapi import Depends, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
-from plexapi.myplex import MyPlexAccount
+from plexapi.myplex import MyPlexAccount, X_PLEX_ENABLE_FAST_CONNECT
 from plexapi.server import PlexServer
 from plexapi.video import Video
 from sentry_sdk import trace
@@ -38,6 +38,7 @@ logger = logging.getLogger(__name__)
 @singleton
 @trace
 def get_plex(settings: Annotated[Settings, Depends(get_settings)]) -> PlexServer:
+    assert X_PLEX_ENABLE_FAST_CONNECT
     acct = MyPlexAccount(token=settings.plex_token.get_secret_value())
     novell = trace(acct.resource)('Novell')
     novell.connections = [c for c in novell.connections if not c.local]
