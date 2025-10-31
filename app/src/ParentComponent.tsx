@@ -7,6 +7,7 @@ import {
   Outlet,
   useLocation,
   useMatches,
+  useNavigate,
 } from 'react-router-dom';
 import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -15,7 +16,7 @@ import { styled } from '@mui/material/styles';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
-import CommandPalette, { filterItems, getItemIndex } from 'react-cmdk';
+import CommandPalette, { filterItems, getItemIndex, useHandleOpenCommandPalette } from 'react-cmdk';
 import { useState } from 'react';
 
 import type { components } from './schema';
@@ -34,9 +35,12 @@ export type EpisodeResponse =
 
 const Example = () => {
   const [page, setPage] = useState<'root' | 'projects'>('root');
-  const [open, setOpen] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [search, setSearch] = useState('');
 
+  const navigate = useNavigate();
+  useHandleOpenCommandPalette(setIsOpen);
+  
   const filteredItems = filterItems(
     [
       {
@@ -47,7 +51,9 @@ const Example = () => {
             id: 'home',
             children: 'Home',
             icon: 'HomeIcon',
-            href: '#',
+            onClick: () => {
+              navigate('/');
+            },
           },
           {
             id: 'settings',
@@ -87,7 +93,7 @@ const Example = () => {
             children: 'Log out',
             icon: 'ArrowRightOnRectangleIcon',
             onClick: () => {
-              alert('Logging out...');
+              navigate('/logout');
             },
           },
         ],
