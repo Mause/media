@@ -39,11 +39,11 @@ export type EpisodeResponse =
 
 const Example = () => {
   const [page, setPage] = useState<'root' | 'projects'>('root');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState('');
 
   const navigate = useNavigate();
-  useHandleOpenCommandPalette(setIsOpen);
+  useHandleOpenCommandPalette(setOpen);
 
   const filteredItems = filterItems(
     [
@@ -56,7 +56,7 @@ const Example = () => {
             children: 'Home',
             icon: 'HomeIcon',
             onClick: () => {
-              navigate('/');
+              void navigate('/');
             },
           },
           {
@@ -97,7 +97,7 @@ const Example = () => {
             children: 'Log out',
             icon: 'ArrowRightOnRectangleIcon',
             onClick: () => {
-              navigate('/logout');
+              void navigate('/logout');
             },
           },
         ],
