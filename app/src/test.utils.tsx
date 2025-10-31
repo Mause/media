@@ -32,11 +32,22 @@ export function renderWithSWR(el: ReactElement) {
   );
 }
 
+const errorIn = (ms: number) =>
+  new Promise<Request>((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('Timed out waiting for requests'));
+    }, ms);
+  });
+export async function timeout<T>(ms: number, promise: Promise<T>) {
+  return await Promise.race([promise, errorIn(ms)]);
+}
+
 export async function waitForRequests(nRequests = 1): Promise<Request> {
   let remaining = nRequests;
   return await act<Request>(
     async () =>
-      await Promise.race([
+      await timeout<Request>(
+        1000,
         new Promise<Request>((resolve) => {
           const listener = ({ request }: { request: Request }) => {
             if (--remaining > 0) return;
@@ -45,11 +56,6 @@ export async function waitForRequests(nRequests = 1): Promise<Request> {
           };
           return server.events.on('request:end', listener);
         }),
-        new Promise<Request>((resolve, reject) => {
-          setTimeout(() => {
-            reject(new Error('Timed out waiting for requests'));
-          }, 1000);
-        }),
-      ]),
+      ),
   );
 }
