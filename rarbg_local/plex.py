@@ -20,7 +20,7 @@ from urllib.parse import urlencode
 
 from fastapi import Depends, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
-from plexapi.myplex import MyPlexAccount, X_PLEX_ENABLE_FAST_CONNECT
+from plexapi.myplex import X_PLEX_ENABLE_FAST_CONNECT, MyPlexAccount
 from plexapi.server import PlexServer
 from plexapi.video import Video
 from sentry_sdk import trace
