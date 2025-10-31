@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 import usePromise from 'react-promise-suspense';
@@ -32,16 +32,22 @@ export function OpenPlex({
   const { message, trigger, readyState, state, error } = useMessage<
     PlexRequest,
     PlexRootResponse
-  >({
-    method: 'plex',
-    jsonrpc: '2.0',
-    id: nextId(),
-    authorization: token,
-    params: {
-      tmdb_id: download.tmdb_id,
-      media_type: type,
-    },
-  });
+  >(
+    useMemo(
+      () => ({
+        method: 'plex',
+        jsonrpc: '2.0',
+        id: nextId(),
+        authorization: token,
+        params: {
+          tmdb_id: download.tmdb_id,
+          media_type: type,
+        },
+      }),
+
+      [download.tmdb_id, type, token],
+    ),
+  );
 
   if (message) {
     const first = _.values(message.result).find((v) => v)!;
