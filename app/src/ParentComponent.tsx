@@ -39,7 +39,7 @@ export type EpisodeResponse =
 
 const Example = () => {
   const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
-  const [page, /* setPage */] = useState<'root' | 'projects'>('root');
+  const [page /* setPage */] = useState<'root' | 'projects'>('root');
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState('');
 
