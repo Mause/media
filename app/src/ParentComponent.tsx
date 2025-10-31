@@ -63,14 +63,14 @@ const Example = () => {
           {
             id: 'monitors',
             children: 'Monitors',
-            icon: 'Eye',
+            icon: 'EyeIcon',
             href='/monitors'
             },
           },
           {
             id: 'discover',
             children: 'Discover',
-            icon: 'MagnifyingGlass',
+            icon: 'MagnifyingGlassIcon',
             href='/discover'
             },
           },
