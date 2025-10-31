@@ -39,7 +39,7 @@ export type EpisodeResponse =
 
 const Example = () => {
   const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
-  const [page, setPage] = useState<'root' | 'projects'>('root');
+  const [page, /* setPage */] = useState<'root' | 'projects'>('root');
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState('');
 
@@ -56,24 +56,24 @@ const Example = () => {
             id: 'home',
             children: 'Home',
             icon: 'HomeIcon',
-            onClick: async () => {
-              await navigate('/');
+            onClick: () => {
+              void navigate('/');
             },
           },
           {
             id: 'monitors',
             children: 'Monitors',
             icon: 'Eye',
-            onClick: async () => {
-              await navigate('/monitors');
+            onClick: () => {
+              void navigate('/monitors');
             },
           },
           {
             id: 'discover',
             children: 'Discover',
             icon: 'MagnifyingGlass',
-            onClick: async () => {
-              await navigate('/discover');
+            onClick: () => {
+              void navigate('/discover');
             },
           },
           {
@@ -115,11 +115,11 @@ const Example = () => {
             id: 'log-out',
             children: isAuthenticated ? 'Logout' : 'Login',
             icon: 'ArrowRightOnRectangleIcon',
-            onClick: async () => {
+            onClick: () => {
               if (isAuthenticated) {
-                await loginWithRedirect({});
+                void loginWithRedirect({});
               } else {
-                await logout();
+                void logout();
               }
             },
           },
