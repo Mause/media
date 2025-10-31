@@ -1,173 +1,52 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`OpenPlex > should render without crashing 1`] = `
-<body>
-  <div>
-    <svg
-      aria-hidden="true"
-      class="svg-inline--fa fa-list "
-      data-icon="list"
-      data-prefix="fas"
-      data-testid="context-menu-open"
-      role="img"
-      style="cursor: context-menu;"
-      viewBox="0 0 512 512"
-    >
-      <path
-        d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
-        fill="currentColor"
-      />
-    </svg>
-  </div>
-</body>
+<div>
+  <svg
+    aria-hidden="true"
+    class="svg-inline--fa fa-list "
+    data-icon="list"
+    data-prefix="fas"
+    data-testid="context-menu-open"
+    role="img"
+    style="cursor: context-menu;"
+    viewBox="0 0 512 512"
+  >
+    <path
+      d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
+      fill="currentColor"
+    />
+  </svg>
+</div>
 `;
 
 exports[`OpenPlex > should render without crashing 2`] = `
-<body
-  style="padding-right: 1024px; overflow: hidden;"
+<div
+  aria-hidden="true"
 >
-  <div
+  <svg
     aria-hidden="true"
+    class="svg-inline--fa fa-list "
+    data-icon="list"
+    data-prefix="fas"
+    data-testid="context-menu-open"
+    role="img"
+    style="cursor: context-menu;"
+    viewBox="0 0 512 512"
   >
-    <svg
-      aria-hidden="true"
-      class="svg-inline--fa fa-list "
-      data-icon="list"
-      data-prefix="fas"
-      data-testid="context-menu-open"
-      role="img"
-      style="cursor: context-menu;"
-      viewBox="0 0 512 512"
-    >
-      <path
-        d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
-        fill="currentColor"
-      />
-    </svg>
-  </div>
-  <div
-    class="MuiPopover-root MuiMenu-root MuiModal-root css-pa188r-MuiModal-root-MuiPopover-root-MuiMenu-root"
-    role="presentation"
-  >
-    <div
-      aria-hidden="true"
-      class="MuiBackdrop-root MuiBackdrop-invisible MuiModal-backdrop css-vl6bb4-MuiBackdrop-root-MuiModal-backdrop"
-      style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+    <path
+      d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
+      fill="currentColor"
     />
-    <div
-      data-testid="sentinelStart"
-      tabindex="0"
-    />
-    <div
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper MuiMenu-paper css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper"
-      style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; transition: opacity 0ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 0ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; top: 16px; left: 16px; transform-origin: -14px -22px;"
-      tabindex="-1"
-    >
-      <ul
-        class="MuiList-root MuiList-padding MuiMenu-list css-1toxriw-MuiList-root-MuiMenu-list"
-        role="menu"
-        tabindex="-1"
-      >
-        <li
-          class="MuiButtonBase-root MuiMenuItem-root MuiMenuItem-gutters MuiMenuItem-root MuiMenuItem-gutters css-1rju2q6-MuiButtonBase-root-MuiMenuItem-root"
-          role="menuitem"
-          tabindex="-1"
-        >
-          <span
-            class="unselectable"
-          >
-            Open in Plex
-          </span>
-        </li>
-      </ul>
-    </div>
-    <div
-      data-testid="sentinelEnd"
-      tabindex="0"
-    />
-  </div>
-</body>
+  </svg>
+</div>
 `;
 
 exports[`OpenPlex > should render without crashing 3`] = `
-<body
-  style="padding-right: 1024px; overflow: hidden;"
->
-  <div
-    aria-hidden="true"
-  >
-    <svg
-      aria-hidden="true"
-      class="svg-inline--fa fa-list "
-      data-icon="list"
-      data-prefix="fas"
-      data-testid="context-menu-open"
-      role="img"
-      style="cursor: context-menu;"
-      viewBox="0 0 512 512"
-    >
-      <path
-        d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
-        fill="currentColor"
-      />
-    </svg>
-  </div>
-  <div
-    aria-hidden="true"
-    class="MuiPopover-root MuiMenu-root MuiModal-root css-pa188r-MuiModal-root-MuiPopover-root-MuiMenu-root"
-    role="presentation"
-  >
-    <div
-      aria-hidden="true"
-      class="MuiBackdrop-root MuiBackdrop-invisible MuiModal-backdrop css-vl6bb4-MuiBackdrop-root-MuiModal-backdrop"
-      style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
-    />
-    <div
-      data-testid="sentinelStart"
-      tabindex="0"
-    />
-    <div
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper MuiMenu-paper css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper"
-      style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 1; transform: none; transition: opacity 0ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 0ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; top: 16px; left: 16px; transform-origin: -14px -22px;"
-      tabindex="-1"
-    >
-      <ul
-        class="MuiList-root MuiList-padding MuiMenu-list css-1toxriw-MuiList-root-MuiMenu-list"
-        role="menu"
-        tabindex="-1"
-      >
-        <li
-          class="MuiButtonBase-root MuiMenuItem-root MuiMenuItem-gutters MuiMenuItem-root MuiMenuItem-gutters css-1rju2q6-MuiButtonBase-root-MuiMenuItem-root"
-          role="menuitem"
-          tabindex="-1"
-        >
-          <span
-            class="unselectable"
-          >
-            Open in Plex
-          </span>
-          <span
-            class="MuiTouchRipple-root css-r3djoj-MuiTouchRipple-root"
-          >
-            <span
-              class="css-y4cjyz-MuiTouchRipple-ripple MuiTouchRipple-ripple MuiTouchRipple-rippleVisible"
-              style="width: 2.8284271247461903px; height: 2.8284271247461903px; top: -1.4142135623730951px; left: -1.4142135623730951px;"
-            >
-              <span
-                class="MuiTouchRipple-child MuiTouchRipple-childLeaving"
-              />
-            </span>
-          </span>
-        </li>
-      </ul>
-    </div>
-    <div
-      data-testid="sentinelEnd"
-      tabindex="0"
-    />
-  </div>
+[
   <div
     class="MuiDialog-root MuiModal-root css-1424xw8-MuiModal-root-MuiDialog-root"
+    data-testid="plex-dialog"
     role="presentation"
   >
     <div
@@ -226,6 +105,6 @@ exports[`OpenPlex > should render without crashing 3`] = `
       data-testid="sentinelEnd"
       tabindex="0"
     />
-  </div>
-</body>
+  </div>,
+]
 `;

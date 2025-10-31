@@ -56,7 +56,7 @@ export function OpenPlex({
 
   return (
     <>
-      <Dialog open={open}>
+      <Dialog open={open} data-testid="plex-dialog">
         <DialogTitle>Search plex for media...</DialogTitle>
         <DialogContent>
           <DialogContentText>
