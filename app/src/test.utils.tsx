@@ -32,12 +32,16 @@ export function renderWithSWR(el: ReactElement) {
   );
 }
 
-const errorIn = (ms: number) =>
-  new Promise<Request>((resolve, reject) => {
+const sleep = async (ms: number) =>
+  await new Promise<void>((resolve) => {
     setTimeout(() => {
-      reject(new Error('Timed out waiting for requests'));
+      resolve();
     }, ms);
   });
+const errorIn = async (ms: number) => {
+  await sleep(ms);
+  throw new Error('Timed out waiting for requests');
+};
 export async function timeout<T>(ms: number, promise: Promise<T>) {
   return await Promise.race([promise, errorIn(ms)]);
 }
