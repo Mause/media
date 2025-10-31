@@ -4,6 +4,7 @@ import type { ErrorInfo } from 'react';
 import {
   RouterProvider,
   createBrowserRouter,
+  Link,
   Outlet,
   useLocation,
   useMatches,
@@ -56,24 +57,21 @@ const Example = () => {
             id: 'home',
             children: 'Home',
             icon: 'HomeIcon',
-            onClick: () => {
-              void navigate('/');
+            href='/'
             },
           },
           {
             id: 'monitors',
             children: 'Monitors',
             icon: 'Eye',
-            onClick: () => {
-              void navigate('/monitors');
+            href='/monitors'
             },
           },
           {
             id: 'discover',
             children: 'Discover',
             icon: 'MagnifyingGlass',
-            onClick: () => {
-              void navigate('/discover');
+            href='/discover'
             },
           },
           {
@@ -136,6 +134,11 @@ const Example = () => {
       search={search}
       isOpen={open}
       page={page}
+      renderLink={({href, children}) => {
+        <Link to={href}>
+          {children}
+        </Link>
+      }}
     >
       <CommandPalette.Page id="root">
         {filteredItems.length ? (
