@@ -8,7 +8,6 @@ import {
   Outlet,
   useLocation,
   useMatches,
-  useNavigate,
 } from 'react-router-dom';
 import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -44,7 +43,6 @@ const Example = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState('');
 
-  const navigate = useNavigate();
   useHandleOpenCommandPalette(setOpen);
 
   const filteredItems = filterItems(
@@ -131,9 +129,9 @@ const Example = () => {
       search={search}
       isOpen={open}
       page={page}
-      renderLink={({ href, children }) => {
-        <Link to={href}>{children}</Link>;
-      }}
+      renderLink={({ href, children }) => 
+        <Link to={href}>{children}</Link>
+       }
     >
       <CommandPalette.Page id="root">
         {filteredItems.length ? (
