@@ -28,6 +28,7 @@
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
     "react": "^19.0.0",
+    "react-cmdk": "^1.3.9",
     "react-collapsible": "^2.8.1",
     "react-dom": "^19.0.0",
     "react-error-boundary": "^6.0.0",
