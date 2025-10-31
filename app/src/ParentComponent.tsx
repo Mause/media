@@ -16,7 +16,11 @@ import { styled } from '@mui/material/styles';
 import { useProfiler } from '@sentry/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
-import CommandPalette, { filterItems, getItemIndex, useHandleOpenCommandPalette } from 'react-cmdk';
+import CommandPalette, {
+  filterItems,
+  getItemIndex,
+  useHandleOpenCommandPalette,
+} from 'react-cmdk';
 import { useState } from 'react';
 
 import type { components } from './schema';
@@ -40,7 +44,7 @@ const Example = () => {
 
   const navigate = useNavigate();
   useHandleOpenCommandPalette(setIsOpen);
-  
+
   const filteredItems = filterItems(
     [
       {
