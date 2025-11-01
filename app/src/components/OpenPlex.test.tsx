@@ -56,7 +56,7 @@ describe('OpenPlex', () => {
     expect(container).toMatchSnapshot();
 
     await events.click(await screen.findByText('Open in Plex'));
-    const dialog = await screen.findAllByTestId('plex-dialog');
+    const dialog = await screen.findByTestId('plex-dialog');
     expect(dialog).toMatchSnapshot();
   });
 });
