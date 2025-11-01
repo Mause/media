@@ -66,7 +66,10 @@ export function OpenPlex({
             {error && (
               <>
                 <br />
-                Error: ${error.message}
+                Error:{' '}
+                <code>
+                  <pre>{JSON.stringify(error, null, 2)}</pre>
+                </code>
               </>
             )}
           </DialogContentText>
