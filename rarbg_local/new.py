@@ -164,7 +164,7 @@ async def stream_impl(
     episode: int | None = None,
 ) -> AsyncGenerator[ITorrent, None]:
     provider = next(
-        (provider for provider in get_providers() if provider.type == source),
+        (provider for provider in await get_providers() if provider.type == source),
         None,
     )
     if not provider:
@@ -357,7 +357,7 @@ async def search(query: str) -> list[SearchResponse]:
 
 @api.get('/providers', name='get_providers')
 async def get_provider_list() -> list[ProviderSource]:
-    return [provider.type for provider in get_providers()]
+    return [provider.type for provider in await get_providers()]
 
 
 @api.get('/discover')
