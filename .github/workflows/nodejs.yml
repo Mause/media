@@ -30,3 +30,4 @@ jobs:
       # hack from https://christopher.xyz/2023/04/04/github-actions-problem-matchers.html
       - run: yarn tsc | awk -v prefix="$PWD" '{print prefix "/" $0}'
       - run: yarn test
+      - run: yarn oxlint
