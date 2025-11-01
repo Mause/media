@@ -9,6 +9,7 @@ import { renderWithSWR, timeout } from '../test.utils';
 
 import { OpenPlex, ContextMenu } from '.';
 import { components } from '../schema';
+import { Lock } from './Lock';
 
 type PlexRootResponse = components['schemas']['PlexRootResponse'];
 type PlexRequest = components['schemas']['PlexRequest'];
@@ -18,10 +19,7 @@ describe('OpenPlex', () => {
     const base = 'ws://fakedomain.com:1234';
     vi.stubEnv('REACT_APP_API_PREFIX', base);
 
-    let resolve: () => void;
-    const promise = new Promise<void>((_resolve) => {
-      resolve = _resolve;
-    });
+    const lock = new Lock();
 
     const chat = ws.link(`${base}/ws`);
     server.use(
@@ -45,7 +43,7 @@ describe('OpenPlex', () => {
               },
             } satisfies PlexRootResponse),
           );
-          resolve();
+          lock.release();
         });
       }),
     );
@@ -88,7 +86,7 @@ describe('OpenPlex', () => {
     expect(dialog).toMatchSnapshot();
 
     await act(async () => {
-      await timeout(1000, promise);
+      await timeout(1000, lock.wait());
     });
     expect(dialog).toMatchSnapshot();
   });
