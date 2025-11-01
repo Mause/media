@@ -1,5 +1,4 @@
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { act } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
@@ -73,9 +72,9 @@ describe('MonitorComponent', () => {
       }),
     );
 
-    await act(async () => {
-      await events.click(await screen.findByText('Add to monitor'));
-    });
+    await events.click(await screen.findByText('Add to monitor'));
+
+    await waitForRequests();
 
     expect(container).toMatchSnapshot();
   });
