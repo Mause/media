@@ -22,7 +22,7 @@ describe('OpenPlex', () => {
       }),
     );
 
-    const { baseElement } = renderWithSWR(
+    const { container } = renderWithSWR(
       <ContextMenu>
         <OpenPlex
           download={{
@@ -32,7 +32,7 @@ describe('OpenPlex', () => {
         />
       </ContextMenu>,
     );
-    expect(baseElement).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 
     const events = userEvent.setup();
 
@@ -53,9 +53,10 @@ describe('OpenPlex', () => {
     // );
 
     await events.click(await screen.findByTestId('context-menu-open'));
-    expect(baseElement).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 
     await events.click(await screen.findByText('Open in Plex'));
-    expect(baseElement).toMatchSnapshot();
+    const dialog = await screen.findByTestId('plex-dialog');
+    expect(dialog).toMatchSnapshot();
   });
 });
