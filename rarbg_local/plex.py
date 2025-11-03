@@ -56,7 +56,8 @@ async def gracefully_get_plex(request: Request, settings: Settings) -> PlexServe
             500,
             {
                 'error': 'Error getting plex server',
-                'details': str(exc),
+                'details': repr(exc),
+                'type': exc.__class__.__name__,
                 'records': [record.getMessage() for record in records],
             },
         ) from exc
