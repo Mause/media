@@ -1,10 +1,9 @@
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { act } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 
-import { renderWithSWR, waitForRequests } from '../test.utils';
+import { RequestWaiter, renderWithSWR, waitForRequests } from '../test.utils';
 import { server } from '../msw';
 import type { GetResponse } from '../utils';
 import type { paths } from '../schema';
@@ -44,6 +43,8 @@ describe('MonitorComponent', () => {
   });
 
   it('add', async () => {
+    const requests = new RequestWaiter();
+
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/fake']}>
         <Routes>
@@ -73,9 +74,9 @@ describe('MonitorComponent', () => {
       }),
     );
 
-    await act(async () => {
-      await events.click(await screen.findByText('Add to monitor'));
-    });
+    await events.click(await screen.findByText('Add to monitor'));
+
+    await requests.waitFor();
 
     expect(container).toMatchSnapshot();
   });

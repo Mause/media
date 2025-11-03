@@ -8,6 +8,7 @@ import {
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
+import * as _ from 'lodash-es';
 
 import { SwrConfigWrapper } from './components';
 import { server } from './msw';
@@ -46,20 +47,37 @@ export async function timeout<T>(ms: number, promise: Promise<T>) {
   return await Promise.race([promise, errorIn(ms)]);
 }
 
+export class RequestWaiter {
+  requests: Request[];
+  listener: ({ request }: { request: Request }) => void;
+
+  constructor() {
+    this.requests = [];
+    this.listener = ({ request }: { request: Request }) => {
+      this.requests.push(request);
+    };
+    server.events.on('request:end', this.listener);
+  }
+
+  async waitFor({
+    nRequests = 1,
+    timeoutMs = 1000,
+  }: {
+    nRequests?: number;
+    timeoutMs?: number;
+  } = {}): Promise<Request> {
+    const internal = async () => {
+      while (this.requests.length < nRequests) {
+        await sleep(1);
+      }
+      server.events.removeListener('request:end', this.listener);
+    };
+    await act(() => timeout(timeoutMs, internal()));
+    return _.last(this.requests)!;
+  }
+}
+
 export async function waitForRequests(nRequests = 1): Promise<Request> {
-  let remaining = nRequests;
-  return await act<Request>(
-    async () =>
-      await timeout<Request>(
-        1000,
-        new Promise<Request>((resolve) => {
-          const listener = ({ request }: { request: Request }) => {
-            if (--remaining > 0) return;
-            server.events.removeListener('request:end', listener);
-            resolve(request);
-          };
-          return server.events.on('request:end', listener);
-        }),
-      ),
-  );
+  const waiter = new RequestWaiter();
+  return await waiter.waitFor({ nRequests });
 }
