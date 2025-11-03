@@ -12,6 +12,7 @@ parentGuid="com.plexapp.agents.thetvdb://70327/1?lang=en"
 grandparentGuid="com.plexapp.agents.thetvdb://70327?lang=en"
 """
 
+import os
 import logging
 from asyncio import gather, wait_for
 from collections.abc import Callable, Sequence
@@ -38,7 +39,7 @@ logger = logging.getLogger(__name__)
 @singleton
 @trace
 def get_plex(settings: Annotated[Settings, Depends(get_settings)]) -> PlexServer:
-    assert X_PLEX_ENABLE_FAST_CONNECT
+    assert 'PYTEST_CURRENT_TEST' in os.environ or X_PLEX_ENABLE_FAST_CONNECT
     acct = MyPlexAccount(token=settings.plex_token.get_secret_value())
     novell = trace(acct.resource)('Novell')
     novell.connections = [c for c in novell.connections if not c.local]
