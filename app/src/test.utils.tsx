@@ -61,7 +61,7 @@ export class RequestWaiter {
     nRequests: number;
     timeout: number;
   }) {
-    async function internal() {
+    const internal = async () => {
       while (this.requests.length < nRequests) {
         await sleep(1);
       }
