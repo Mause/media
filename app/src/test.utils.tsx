@@ -52,6 +52,7 @@ export class RequestWaiter {
 
   constructor() {
     this.requests = [];
+    this.listener = this.listener.bind(this);
     server.events.on('request:end', this.listener);
   }
 
