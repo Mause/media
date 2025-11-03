@@ -66,7 +66,7 @@ export class RequestWaiter {
         await sleep(1);
       }
       server.events.removeListener('request:end', listener);
-    }
+    };
     return await timeout(1000, internal());
   }
 }
