@@ -8,6 +8,7 @@ import {
   StyledEngineProvider,
   createTheme,
 } from '@mui/material/styles';
+import * as _ from 'lodash-es';
 
 import { SwrConfigWrapper } from './components';
 import { server } from './msw';
@@ -64,7 +65,7 @@ export class RequestWaiter {
   }: {
     nRequests?: number;
     timeoutMs?: number;
-  }) {
+  }): Promise<Request> {
     const internal = async () => {
       while (this.requests.length < nRequests) {
         await sleep(1);
@@ -72,10 +73,11 @@ export class RequestWaiter {
       server.events.removeListener('request:end', this.listener);
     };
     await timeout(timeoutMs, internal());
+    return _.last(this.requests);
   }
 }
 
 export async function waitForRequests(nRequests = 1): Promise<void> {
   const waiter = new RequestWaiter();
-  return await act(async () => waiter.waitFor({ nRequests }));
+  return await act<Request>(async () => waiter.waitFor({ nRequests }));
 }
