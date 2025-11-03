@@ -71,11 +71,11 @@ export class RequestWaiter {
       }
       server.events.removeListener('request:end', this.listener);
     };
-    return await timeout(timeoutMs, internal());
+    await timeout(timeoutMs, internal());
   }
 }
 
-export async function waitForRequests(nRequests = 1): Promise<Request> {
+export async function waitForRequests(nRequests = 1): Promise<void> {
   const waiter = new RequestWaiter();
-  return await act<Request>(async () => waiter.waitFor({ nRequests }));
+  return await act(async () => waiter.waitFor({ nRequests }));
 }
