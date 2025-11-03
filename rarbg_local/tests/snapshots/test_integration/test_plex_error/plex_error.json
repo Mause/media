@@ -1,7 +1,8 @@
 {
   "detail": {
     "error": "Error getting plex server",
-    "details": "Plex is down",
+    "details": "Exception('Plex is down')",
+    "type": "Exception",
     "records": [
       "Plex is down"
     ]
