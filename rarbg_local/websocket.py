@@ -261,10 +261,7 @@ async def plex_method(
 
     try:
         plex = await monitor(
-            get(
-                websocket.app,
-                get_plex,
-            ),
+            get_plex(make_request(websocket, plex_request), settings),
             'gracefully_get_plex',
             websocket,
         )
