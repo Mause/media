@@ -66,7 +66,7 @@ export class RequestWaiter {
   }: {
     nRequests?: number;
     timeoutMs?: number;
-  }): Promise<Request> {
+  } = {}): Promise<Request> {
     const internal = async () => {
       while (this.requests.length < nRequests) {
         await sleep(1);
