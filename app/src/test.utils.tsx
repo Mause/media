@@ -49,15 +49,14 @@ export async function timeout<T>(ms: number, promise: Promise<T>) {
 
 export class RequestWaiter {
   requests: Request[];
+  listener: ({ request }: { request: Request }) => void;
 
   constructor() {
     this.requests = [];
-    this.listener = this.listener.bind(this);
+    this.listener = ({ request }: { request: Request }) => {
+      this.requests.push(request);
+    };
     server.events.on('request:end', this.listener);
-  }
-
-  listener({ request }: { request: Request }) {
-    this.requests.push(request);
   }
 
   async waitFor({
