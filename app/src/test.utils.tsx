@@ -47,13 +47,17 @@ export async function timeout<T>(ms: number, promise: Promise<T>) {
 }
 
 export class RequestWaiter {
+  requests: never[];
+
   constructor() {
     this.requests = [];
-    const listener = ({ request }: { request: Request }) => {
-      this.requests.push(request);
-    };
-    server.events.on('request:end', listener);
+    server.events.on('request:end', this.listener);
   }
+
+  listener({ request }: { request: Request }) {
+    this.requests.push(request);
+  }
+
   async waitFor({
     nRequests = 1,
     timeout = 1000,
@@ -65,7 +69,7 @@ export class RequestWaiter {
       while (this.requests.length < nRequests) {
         await sleep(1);
       }
-      server.events.removeListener('request:end', listener);
+      server.events.removeListener('request:end', this.listener);
     };
     return await timeout(1000, internal());
   }
