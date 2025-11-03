@@ -62,8 +62,8 @@ export class RequestWaiter {
     nRequests = 1,
     timeout = 1000,
   }: {
-    nRequests: number;
-    timeout: number;
+    nRequests?: number;
+    timeoutMs?: number;
   }) {
     const internal = async () => {
       while (this.requests.length < nRequests) {
@@ -71,7 +71,7 @@ export class RequestWaiter {
       }
       server.events.removeListener('request:end', this.listener);
     };
-    return await timeout(1000, internal());
+    return await timeout(timeoutMs, internal());
   }
 }
 
