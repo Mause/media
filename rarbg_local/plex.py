@@ -12,8 +12,8 @@ parentGuid="com.plexapp.agents.thetvdb://70327/1?lang=en"
 grandparentGuid="com.plexapp.agents.thetvdb://70327?lang=en"
 """
 
-import os
 import logging
+import os
 from asyncio import gather, wait_for
 from collections.abc import Callable, Sequence
 from typing import Annotated
