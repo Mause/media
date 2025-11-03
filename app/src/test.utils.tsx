@@ -54,7 +54,13 @@ export class RequestWaiter {
     };
     server.events.on('request:end', listener);
   }
-  async waitFor({nRequests = 1, timeout = 1000} : {nRequests: number, timeout: number}) {
+  async waitFor({
+    nRequests = 1,
+    timeout = 1000,
+  }: {
+    nRequests: number;
+    timeout: number;
+  }) {
     async function internal() {
       while (this.requests.length < nRequests) {
         await sleep(1);
@@ -67,7 +73,5 @@ export class RequestWaiter {
 
 export async function waitForRequests(nRequests = 1): Promise<Request> {
   const waiter = new RequestWaiter();
-  return await act<Request>(
-    async () => waiter.waitFor({nRequests}),
-  );
+  return await act<Request>(async () => waiter.waitFor({ nRequests }));
 }
