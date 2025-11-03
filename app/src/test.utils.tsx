@@ -47,7 +47,7 @@ export async function timeout<T>(ms: number, promise: Promise<T>) {
 }
 
 export class RequestWaiter {
-  requests: never[];
+  requests: Request[];
 
   constructor() {
     this.requests = [];
@@ -60,7 +60,7 @@ export class RequestWaiter {
 
   async waitFor({
     nRequests = 1,
-    timeout = 1000,
+    timeoutMs = 1000,
   }: {
     nRequests?: number;
     timeoutMs?: number;
