@@ -46,20 +46,28 @@ export async function timeout<T>(ms: number, promise: Promise<T>) {
   return await Promise.race([promise, errorIn(ms)]);
 }
 
+export class RequestWaiter {
+  constructor() {
+    this.requests = [];
+    const listener = ({ request }: { request: Request }) => {
+      this.requests.push(request);
+    };
+    server.events.on('request:end', listener);
+  }
+  async waitFor({nRequests = 1, timeout = 1000} : {nRequests: number, timeout: number}) {
+    async function internal() {
+      while (this.requests.length < nRequests) {
+        await sleep(1);
+      }
+      server.events.removeListener('request:end', listener);
+    }
+    return await timeout(1000, internal());
+  }
+}
+
 export async function waitForRequests(nRequests = 1): Promise<Request> {
-  let remaining = nRequests;
+  const waiter = new RequestWaiter();
   return await act<Request>(
-    async () =>
-      await timeout<Request>(
-        1000,
-        new Promise<Request>((resolve) => {
-          const listener = ({ request }: { request: Request }) => {
-            if (--remaining > 0) return;
-            server.events.removeListener('request:end', listener);
-            resolve(request);
-          };
-          return server.events.on('request:end', listener);
-        }),
-      ),
+    async () => waiter.waitFor({nRequests}),
   );
 }
