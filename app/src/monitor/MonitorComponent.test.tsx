@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 
-import { renderWithSWR, waitForRequests } from '../test.utils';
+import { RequestWaiter, renderWithSWR, waitForRequests } from '../test.utils';
 import { server } from '../msw';
 import type { GetResponse } from '../utils';
 import type { paths } from '../schema';
@@ -76,7 +76,7 @@ describe('MonitorComponent', () => {
 
     await events.click(await screen.findByText('Add to monitor'));
 
-    await act(() => requests.waitFor());
+    await requests.waitFor();
 
     expect(container).toMatchSnapshot();
   });
