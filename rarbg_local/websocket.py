@@ -19,7 +19,6 @@ from .providers import (
     search_for_movie,
     search_for_tv,
 )
-from .settings import get_settings
 from .singleton import get
 from .tmdb import ThingType, get_movie_imdb_id, get_tv_imdb_id
 from .types import TmdbId
