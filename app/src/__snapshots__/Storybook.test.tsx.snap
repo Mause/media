@@ -44,14 +44,6 @@ exports[`Storybook > renders without crashing 1`] = `
                 class="MuiTouchRipple-child MuiTouchRipple-childLeaving"
               />
             </span>
-            <span
-              class="css-y4cjyz-MuiTouchRipple-ripple MuiTouchRipple-ripple MuiTouchRipple-rippleVisible MuiTouchRipple-ripplePulsate"
-              style="width: 1px; height: 1px; top: -0.5px; left: -0.5px;"
-            >
-              <span
-                class="MuiTouchRipple-child MuiTouchRipple-childLeaving MuiTouchRipple-childPulsate"
-              />
-            </span>
           </span>
         </button>
       </div>
