@@ -43,6 +43,8 @@ describe('MonitorComponent', () => {
   });
 
   it('add', async () => {
+    const requests = new RequestWaiter();
+
     const { container } = renderWithSWR(
       <MemoryRouter initialEntries={['/fake']}>
         <Routes>
@@ -74,7 +76,7 @@ describe('MonitorComponent', () => {
 
     await events.click(await screen.findByText('Add to monitor'));
 
-    await waitForRequests();
+    await act(() => requests.waitFor());
 
     expect(container).toMatchSnapshot();
   });
