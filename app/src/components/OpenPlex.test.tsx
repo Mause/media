@@ -6,10 +6,11 @@ import { act } from 'react';
 
 import { server } from '../msw';
 import { renderWithSWR, timeout } from '../test.utils';
+import type { components } from '../schema';
+
+import { Lock } from './Lock';
 
 import { OpenPlex, ContextMenu } from '.';
-import { components } from '../schema';
-import { Lock } from './Lock';
 
 type PlexRootResponse = components['schemas']['PlexRootResponse'];
 type PlexRequest = components['schemas']['PlexRequest'];
