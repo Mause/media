@@ -14,7 +14,7 @@ from .db import (
     User,
 )
 from .models import ITorrent, PlexMedia, PlexResponse
-from .plex import get_imdb_in_plex
+from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     search_for_movie,
     search_for_tv,
