@@ -2841,6 +2841,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vitest/pretty-format@npm:4.0.7":
+  version: 4.0.7
+  resolution: "@vitest/pretty-format@npm:4.0.7"
+  dependencies:
+    tinyrainbow: "npm:^3.0.3"
+  checksum: 10/c936c0d503c665bd9565348c52280f10c990da43504fa7da027521b298bab16a6c83866d0eb91c82d7c53ba4aa299042b34a94a6545f1b7b999bf40a1d8b9c13
+  languageName: node
+  linkType: hard
+
 "@vitest/runner@npm:4.0.3":
   version: 4.0.3
   resolution: "@vitest/runner@npm:4.0.3"
@@ -2869,11 +2878,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/ui@npm:^4.0.0":
-  version: 4.0.3
-  resolution: "@vitest/ui@npm:4.0.3"
+"@vitest/ui@npm:^4.0.7":
+  version: 4.0.7
+  resolution: "@vitest/ui@npm:4.0.7"
   dependencies:
-    "@vitest/utils": "npm:4.0.3"
+    "@vitest/utils": "npm:4.0.7"
     fflate: "npm:^0.8.2"
     flatted: "npm:^3.3.3"
     pathe: "npm:^2.0.3"
@@ -2881,8 +2890,8 @@ __metadata:
     tinyglobby: "npm:^0.2.15"
     tinyrainbow: "npm:^3.0.3"
   peerDependencies:
-    vitest: 4.0.3
-  checksum: 10/2688b8b3491ce12a40ef7b5206a80498b933571564f096c2a688f7046bb30469b5d05a4c6d53d2b50eccefc379a1f6ebebc01fc56a6732c19431f6d08c82b343
+    vitest: 4.0.7
+  checksum: 10/5cfa651a88df07a1c2dd8bea0eaf364038da0118b2f1e831ec1447eee7977e14a26c37c975e7b64f0003e0f4bd7046da6bdbaaee5e4cd1ad0d2da88bc04e02a0
   languageName: node
   linkType: hard
 
@@ -2893,6 +2902,16 @@ __metadata:
     "@vitest/pretty-format": "npm:4.0.3"
     tinyrainbow: "npm:^3.0.3"
   checksum: 10/d4ddb293e908d43b954c5e41f351a61f719e30e9ea058e47af5b18389d74cb073ea1638ab28dbbd5b365ed31a21577bb090b8a3594292c59df18798fd292f002
+  languageName: node
+  linkType: hard
+
+"@vitest/utils@npm:4.0.7":
+  version: 4.0.7
+  resolution: "@vitest/utils@npm:4.0.7"
+  dependencies:
+    "@vitest/pretty-format": "npm:4.0.7"
+    tinyrainbow: "npm:^3.0.3"
+  checksum: 10/82110c390309d3bac0ecf314f0428873db8d1df93e0a0bbc5214dca9ec820eb767666ccf2f66593d0b82bfe455ee9037727d2eb310fe24bacb3f71c45a107497
   languageName: node
   linkType: hard
 
@@ -3101,7 +3120,7 @@ __metadata:
     "@use-it/interval": "npm:^1.0.0"
     "@vitejs/plugin-basic-ssl": "npm:^2.0.0"
     "@vitejs/plugin-react": "npm:^5.0.0"
-    "@vitest/ui": "npm:^4.0.0"
+    "@vitest/ui": "npm:^4.0.7"
     "@vtex/axios-concurrent-retry": "npm:^4.0.11"
     axios: "npm:^1.13.1"
     colors.css: "npm:^3.0.0"
