@@ -93,10 +93,10 @@ const Example = () => {
         id: 'advanced',
         items: [
           {
-            id: 'developer-settings',
-            children: 'Developer settings',
+            id: 'diagnostics',
+            children: 'Diagnostics',
             icon: 'CodeBracketIcon',
-            href: '#',
+            href: '/diagnostics',
           },
           {
             id: 'privacy-policy',
@@ -129,7 +129,7 @@ const Example = () => {
       search={search}
       isOpen={open}
       page={page}
-      renderLink={({ href, ...rest }) => <Link to={href!} {...rest} />}
+      renderLink={({ href, ...rest }) => href.startswith('http') ? <a href={href} {...rest} /> : <Link to={href!} {...rest} />}
     >
       <CommandPalette.Page id="root">
         {filteredItems.length ? (
