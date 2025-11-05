@@ -130,7 +130,7 @@ const Example = () => {
       isOpen={open}
       page={page}
       renderLink={({ href, ...rest }) =>
-        href.startswith('http') ? (
+        href.startsWith('http') ? (
           <a href={href} {...rest} />
         ) : (
           <Link to={href!} {...rest} />
