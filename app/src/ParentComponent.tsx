@@ -129,7 +129,13 @@ const Example = () => {
       search={search}
       isOpen={open}
       page={page}
-      renderLink={({ href, ...rest }) => href.startswith('http') ? <a href={href} {...rest} /> : <Link to={href!} {...rest} />}
+      renderLink={({ href, ...rest }) =>
+        href.startswith('http') ? (
+          <a href={href} {...rest} />
+        ) : (
+          <Link to={href!} {...rest} />
+        )
+      }
     >
       <CommandPalette.Page id="root">
         {filteredItems.length ? (
