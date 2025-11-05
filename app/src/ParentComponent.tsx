@@ -46,8 +46,8 @@ const Example = () => {
   useHandleOpenCommandPalette(setOpen);
 
   const external = {
-    target: "_blank",
-    rel: "noopener noreferrer",
+    target: '_blank',
+    rel: 'noopener noreferrer',
   };
 
   const filteredItems = filterItems(
