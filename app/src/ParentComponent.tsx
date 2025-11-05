@@ -66,13 +66,13 @@ const Example = () => {
           {
             id: 'transmission',
             children: 'Transmission',
-            icon: 'Radar',
+            icon: 'RadioIcon',
             href: 'http://novell.mause.me:9091',
           },
           {
             id: 'plex',
             children: 'Plex',
-            icon: 'Play',
+            icon: 'PlayIcon',
             href: 'https://app.plex.tv',
           },
           {
@@ -145,7 +145,7 @@ const Example = () => {
       page={page}
       renderLink={({ href, ...rest }) =>
         href!.startsWith('http') ? (
-          <a href={href!} {...rest} />
+          <a href={href} {...rest} />
         ) : (
           <Link to={href!} {...rest} />
         )
