@@ -45,6 +45,11 @@ const Example = () => {
 
   useHandleOpenCommandPalette(setOpen);
 
+  const external = {
+    target: "_blank",
+    rel: "noopener noreferrer",
+  };
+
   const filteredItems = filterItems(
     [
       {
@@ -68,12 +73,14 @@ const Example = () => {
             children: 'Transmission',
             icon: 'RadioIcon',
             href: 'http://novell.mause.me:9091',
+            ...external,
           },
           {
             id: 'plex',
             children: 'Plex',
             icon: 'PlayIcon',
             href: 'https://app.plex.tv',
+            ...external,
           },
           {
             id: 'discover',
