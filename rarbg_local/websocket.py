@@ -6,7 +6,7 @@ from collections.abc import AsyncGenerator, Coroutine
 from enum import IntEnum
 from typing import Annotated, Literal, Union
 
-from fastapi import APIRouter, Request, WebSocket
+from fastapi import APIRouter, HTTPException, Request, WebSocket
 from pydantic import BaseModel, Field, RootModel, SecretStr, ValidationError
 
 from .auth import security
@@ -14,7 +14,7 @@ from .db import (
     User,
 )
 from .models import ITorrent, PlexMedia, PlexResponse
-from .plex import get_imdb_in_plex, get_plex
+from .plex import get_imdb_in_plex, gracefully_get_plex
 from .providers import (
     search_for_movie,
     search_for_tv,
@@ -261,11 +261,11 @@ async def plex_method(
 
     try:
         plex = await monitor(
-            get_plex(make_request(websocket, plex_request), settings),
+            gracefully_get_plex(make_request(websocket, plex_request), settings),
             'gracefully_get_plex',
             websocket,
         )
-    except Exception as e:
+    except HTTPException as e:
         await close(plex_request, websocket, e)
         return None
 

@@ -45,6 +45,11 @@ const Example = () => {
 
   useHandleOpenCommandPalette(setOpen);
 
+  const external = {
+    target: '_blank',
+    rel: 'noopener noreferrer',
+  };
+
   const filteredItems = filterItems(
     [
       {
@@ -64,18 +69,32 @@ const Example = () => {
             href: '/monitors',
           },
           {
+            id: 'transmission',
+            children: 'Transmission',
+            icon: 'RadioIcon',
+            href: 'http://novell.mause.me:9091',
+            ...external,
+          },
+          {
+            id: 'plex',
+            children: 'Plex',
+            icon: 'PlayIcon',
+            href: 'https://app.plex.tv',
+            ...external,
+          },
+          {
             id: 'discover',
             children: 'Discover',
             icon: 'MagnifyingGlassIcon',
             href: '/discover',
           },
+          /*
           {
             id: 'settings',
             children: 'Settings',
             icon: 'CogIcon',
             href: '#',
           },
-          /*
           {
             id: 'projects',
             children: 'Projects',
@@ -93,17 +112,19 @@ const Example = () => {
         id: 'advanced',
         items: [
           {
-            id: 'developer-settings',
-            children: 'Developer settings',
+            id: 'diagnostics',
+            children: 'Diagnostics',
             icon: 'CodeBracketIcon',
-            href: '#',
+            href: '/diagnostics',
           },
+          /*
           {
             id: 'privacy-policy',
             children: 'Privacy policy',
             icon: 'LifebuoyIcon',
             href: '#',
           },
+          */
           {
             id: 'log-out',
             children: isAuthenticated ? 'Logout' : 'Login',
@@ -129,7 +150,13 @@ const Example = () => {
       search={search}
       isOpen={open}
       page={page}
-      renderLink={({ href, ...rest }) => <Link to={href!} {...rest} />}
+      renderLink={({ href, ...rest }) =>
+        href!.startsWith('http') ? (
+          <a href={href} {...rest} />
+        ) : (
+          <Link to={href!} {...rest} />
+        )
+      }
     >
       <CommandPalette.Page id="root">
         {filteredItems.length ? (
