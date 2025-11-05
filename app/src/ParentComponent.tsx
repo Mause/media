@@ -64,18 +64,30 @@ const Example = () => {
             href: '/monitors',
           },
           {
+            id: 'transmission',
+            children: 'Transmission',
+            icon: 'Radar',
+            href: "http://novell.mause.me:9091",
+          },
+          {
+            id: 'plex',
+            children: 'Plex',
+            icon: 'Play',
+            href: "https://app.plex.tv",
+          },
+          {
             id: 'discover',
             children: 'Discover',
             icon: 'MagnifyingGlassIcon',
             href: '/discover',
           },
+          /*
           {
             id: 'settings',
             children: 'Settings',
             icon: 'CogIcon',
             href: '#',
           },
-          /*
           {
             id: 'projects',
             children: 'Projects',
@@ -98,12 +110,14 @@ const Example = () => {
             icon: 'CodeBracketIcon',
             href: '/diagnostics',
           },
+          /*
           {
             id: 'privacy-policy',
             children: 'Privacy policy',
             icon: 'LifebuoyIcon',
             href: '#',
           },
+          */
           {
             id: 'log-out',
             children: isAuthenticated ? 'Logout' : 'Login',
@@ -131,7 +145,7 @@ const Example = () => {
       page={page}
       renderLink={({ href, ...rest }) =>
         href.startsWith('http') ? (
-          <a href={href} {...rest} />
+          <a href={href!} {...rest} />
         ) : (
           <Link to={href!} {...rest} />
         )
