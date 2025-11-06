@@ -93,7 +93,7 @@
     "typescript-eslint": "^8.46.3",
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-bundlesize": "^0.2.0",
-    "vitest": "^4.0.0"
+    "vitest": "^4.0.7"
   },
   "prettier": {
     "singleQuote": true,
