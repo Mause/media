@@ -3108,7 +3108,7 @@ __metadata:
     lodash-es: "npm:^4.17.21"
     mockdate: "npm:^3.0.2"
     moment: "npm:^2.29.1"
-    msw: "npm:^2.11.3"
+    msw: "npm:^2.12.0"
     prettier: "npm:3.6.2"
     prop-types: "npm:^15.7.2"
     react: "npm:^19.0.0"
@@ -5715,9 +5715,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:^2.11.3":
-  version: 2.11.6
-  resolution: "msw@npm:2.11.6"
+"msw@npm:^2.12.0":
+  version: 2.12.0
+  resolution: "msw@npm:2.12.0"
   dependencies:
     "@inquirer/confirm": "npm:^5.0.0"
     "@mswjs/interceptors": "npm:^0.40.0"
@@ -5744,7 +5744,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10/3132d42229a5d9b558e3b2a112b9f8d20798f5e0a74998e432864ff35685a09f4f14a2c3f56f6a27da4fa37625162d010bfd79f81ab53b4c520cc67f2a2a6339
+  checksum: 10/aee1906ad57097b978d8581ccb7e001103de86983048923bc86b2962c9ba37874408c327b974d77d28ed18771ac5558b21f39a09d966a070ff371175c8b4595a
   languageName: node
   linkType: hard
 
