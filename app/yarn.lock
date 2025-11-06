@@ -1308,18 +1308,18 @@ __metadata:
   linkType: hard
 
 "@mui/icons-material@npm:^7":
-  version: 7.3.4
-  resolution: "@mui/icons-material@npm:7.3.4"
+  version: 7.3.5
+  resolution: "@mui/icons-material@npm:7.3.5"
   dependencies:
     "@babel/runtime": "npm:^7.28.4"
   peerDependencies:
-    "@mui/material": ^7.3.4
+    "@mui/material": ^7.3.5
     "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/0c41f27152f530b5eb9a93f614f3f86f14933bb2bc3e5e447def9258ab636d49dd5694c3c29910bb1c74fae4a813c26c6f9e426b6021222d9fe2a18c42210b96
+  checksum: 10/18386f9b9fd3b25a4614dd0fc92841dee9e427a3c75aee0d1e984a35aafabc8f04a4c95ae15719190ae2446e88530c033a3f98ec6f47191d882b4ea0aa4fa371
   languageName: node
   linkType: hard
 
