@@ -95,16 +95,16 @@ const Example = () => {
             icon: 'CogIcon',
             href: '#',
           },
+          */
           {
-            id: 'projects',
-            children: 'Projects',
-            icon: 'RectangleStackIcon',
+            id: 'search',
+            children: 'Search',
+            icon: 'MagnifyingGlassIcon',
             closeOnSelect: false,
             onClick: () => {
-              setPage('projects');
+              setPage('search');
             },
           },
-          */
         ],
       },
       {
@@ -176,10 +176,19 @@ const Example = () => {
         )}
       </CommandPalette.Page>
 
-      {/* Projects page
-      <CommandPalette.Page id="projects">
+      <CommandPalette.Page
+        searchPrefix={["General", "Search"]}
+        id="search"
+        onEscape={() => {
+          setPage("root");
+        }}
+      >
+        <CommandPalette.List heading="Positions">
+          <CommandPalette.ListItem index={0}>
+            Nothing here
+          </CommandPalette.ListItem>
+        </CommandPalette.List>
       </CommandPalette.Page>
-          */}
     </CommandPalette>
   );
 };
