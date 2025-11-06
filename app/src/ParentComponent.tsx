@@ -39,7 +39,7 @@ export type EpisodeResponse =
 
 const Example = () => {
   const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
-  const [page /* setPage */] = useState<'root' | 'projects'>('root');
+  const [page, setPage] = useState<'root' | 'search'>('root');
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState('');
 
@@ -95,16 +95,16 @@ const Example = () => {
             icon: 'CogIcon',
             href: '#',
           },
+          */
           {
-            id: 'projects',
-            children: 'Projects',
-            icon: 'RectangleStackIcon',
+            id: 'search',
+            children: 'Search',
+            icon: 'MagnifyingGlassIcon',
             closeOnSelect: false,
             onClick: () => {
-              setPage('projects');
+              setPage('search');
             },
           },
-          */
         ],
       },
       {
@@ -176,10 +176,19 @@ const Example = () => {
         )}
       </CommandPalette.Page>
 
-      {/* Projects page
-      <CommandPalette.Page id="projects">
+      <CommandPalette.Page
+        searchPrefix={['Search']}
+        id="search"
+        onEscape={() => {
+          setPage('root');
+        }}
+      >
+        <CommandPalette.List heading="Results">
+          <CommandPalette.ListItem index={0}>
+            Nothing here
+          </CommandPalette.ListItem>
+        </CommandPalette.List>
       </CommandPalette.Page>
-          */}
     </CommandPalette>
   );
 };
