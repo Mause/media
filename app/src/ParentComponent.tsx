@@ -177,13 +177,13 @@ const Example = () => {
       </CommandPalette.Page>
 
       <CommandPalette.Page
-        searchPrefix={['General', 'Search']}
+        searchPrefix={['Search']}
         id="search"
         onEscape={() => {
           setPage('root');
         }}
       >
-        <CommandPalette.List heading="Positions">
+        <CommandPalette.List heading="Results">
           <CommandPalette.ListItem index={0}>
             Nothing here
           </CommandPalette.ListItem>
