@@ -4,7 +4,6 @@ import type { ErrorInfo } from 'react';
 import {
   RouterProvider,
   createBrowserRouter,
-  Link,
   Outlet,
   useLocation,
   useMatches,
