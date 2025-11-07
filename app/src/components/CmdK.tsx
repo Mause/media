@@ -1,6 +1,4 @@
-import {
-  Link,
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 import CommandPalette, {
@@ -166,4 +164,4 @@ export function CmdK() {
       </CommandPalette.Page>
     </CommandPalette>
   );
-};
+}
