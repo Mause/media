@@ -75,7 +75,7 @@ const rootEl = (
 );
 root.render(<StrictMode>{rootEl}</StrictMode>);
 
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.NODE_ENV === 'development') {
   void import('@spotlightjs/spotlight').then((Spotlight) =>
     Spotlight.init({ injectImmediately: true }),
   );
