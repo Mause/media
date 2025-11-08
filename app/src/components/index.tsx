@@ -7,3 +7,4 @@ export { RouteTitle } from './RouteTitle';
 export { SwrConfigWrapper } from './SwrConfigWrapper';
 export { Loading } from './Loading';
 export { OpenPlex } from './OpenPlex';
+export { CmdK } from './CmdK';
