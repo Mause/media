@@ -3126,7 +3126,7 @@ __metadata:
     typescript-string-operations: "npm:^1.6.1"
     uritemplate: "npm:^0.3.4"
     vite: "npm:rolldown-vite@latest"
-    vite-plugin-bundlesize: "npm:^0.2.0"
+    vite-plugin-bundlesize: "npm:^0.3.0"
     vitest: "npm:^4.0.7"
   languageName: unknown
   linkType: soft
@@ -7535,18 +7535,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-bundlesize@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "vite-plugin-bundlesize@npm:0.2.0"
+"vite-plugin-bundlesize@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "vite-plugin-bundlesize@npm:0.3.0"
   dependencies:
-    picomatch: "npm:^4.0.2"
+    picomatch: "npm:^4.0.3"
     strip-ansi: "npm:^7.1.0"
     vlq: "npm:^2.0.4"
   peerDependencies:
-    vite: ">= 5.0.0"
+    vite: ">= 6.0.0"
   bin:
     bundlesize: bin/cli.js
-  checksum: 10/1152739e2ffc30d30ff12aa5f5d55dbc0146d1535e033c8f071b4cc3c43071e68277e0e31bd6c75b73901d73c7ebf7f330f04c7859d5fafddab369c1b927c84c
+  checksum: 10/27a24c95b315ff2e8cb5ad2b8ee4f5d09256049b92b6c6cc1aabf5e88184205c08512d9446b8c0aa3bf26ef4bd756a66a67a1a452c430ff74345a00b5812d787
   languageName: node
   linkType: hard
 
