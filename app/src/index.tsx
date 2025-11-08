@@ -74,3 +74,9 @@ const rootEl = (
   </Auth0Provider>
 );
 root.render(<StrictMode>{rootEl}</StrictMode>);
+
+if (import.meta.env.NODE_ENV === 'development') {
+  void import('@spotlightjs/spotlight').then((Spotlight) =>
+    Spotlight.init({ injectImmediately: true }),
+  );
+}
