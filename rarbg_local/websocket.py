@@ -14,12 +14,11 @@ from .db import (
     User,
 )
 from .models import ITorrent, PlexMedia, PlexResponse
-from .plex import get_imdb_in_plex, gracefully_get_plex
+from .plex import get_imdb_in_plex, get_plex
 from .providers import (
     search_for_movie,
     search_for_tv,
 )
-from .settings import get_settings
 from .singleton import get
 from .tmdb import ThingType, get_movie_imdb_id, get_tv_imdb_id
 from .types import TmdbId
@@ -257,11 +256,10 @@ async def plex_method(
     plex_request: PlexRequest,
 ) -> None | str:
     args = plex_request.params
-    settings = await get(websocket.app, get_settings)
 
     try:
         plex = await monitor(
-            gracefully_get_plex(make_request(websocket, plex_request), settings),
+            get_plex(make_request(websocket, plex_request)),
             'gracefully_get_plex',
             websocket,
         )

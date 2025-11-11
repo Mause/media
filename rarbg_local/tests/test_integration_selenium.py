@@ -6,8 +6,8 @@ from typing import Generator, Never, Optional
 from urllib.parse import urlencode, urlparse
 
 from fastapi import FastAPI
-from pytest import fixture, mark
 from pydantic import SecretStr
+from pytest import fixture, mark
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement

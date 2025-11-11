@@ -16,6 +16,7 @@ from pytest_snapshot.plugin import Snapshot
 from ..auth import User, get_current_user
 from ..providers import MovieProvider
 from ..providers.abc import ITorrent, ProviderSource
+from ..singleton import singleton
 from ..tmdb import ExternalIds
 from ..types import ImdbId, TmdbId
 from ..websocket import BaseRequest, PlexArgs, PlexRequest, StreamArgs, StreamRequest
@@ -146,7 +147,7 @@ async def test_websocket_plex(
     section.agent = 'agent'
     seal(plex)
     monkeypatch.setattr(
-        'rarbg_local.websocket.gracefully_get_plex', AsyncMock(return_value=plex)
+        'rarbg_local.websocket.get_plex', singleton(AsyncMock(return_value=plex))
     )
 
     r = test_client.websocket_connect(
