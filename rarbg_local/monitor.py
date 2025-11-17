@@ -10,6 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from requests.exceptions import HTTPError
 from sentry_sdk.crons import monitor
+from sentry_sdk.types import MonitorConfig
 from sqlalchemy import not_
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
@@ -111,8 +112,16 @@ class CronResponse[T](BaseModel):
     subject: T | None = None
 
 
+monitor_config: MonitorConfig = {
+    'schedule': '0 * * * *',  # every hour
+}
+
+
 @monitor_ns.post('/cron', status_code=201)
-@monitor(monitor_slug='monitor-cron')
+@monitor(
+    monitor_slug='monitor-cron',
+    monitor_config=monitor_config,
+)
 async def monitor_cron(
     request: Request,
     session: Annotated[AsyncSession, Depends(get_async_db)],
