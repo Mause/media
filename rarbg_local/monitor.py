@@ -113,7 +113,10 @@ class CronResponse[T](BaseModel):
 
 
 monitor_config: MonitorConfig = {
-    'schedule': '0 * * * *',  # every hour
+    'schedule': {
+        'type': 'crontab',
+        'value': '0 * * * *',  # every hour
+    }
 }
 
 
