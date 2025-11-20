@@ -1063,15 +1063,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/react-fontawesome@npm:^0.2.0":
-  version: 0.2.3
-  resolution: "@fortawesome/react-fontawesome@npm:0.2.3"
-  dependencies:
-    prop-types: "npm:^15.8.1"
+"@fortawesome/react-fontawesome@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@fortawesome/react-fontawesome@npm:3.1.0"
   peerDependencies:
-    "@fortawesome/fontawesome-svg-core": ~1 || ~6 || ~7
-    react: ^16.3 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10/cd0da6a27748c7c8efa22ea9b3449bc0d0fbd0010623d462771d17e77a915cd1abbc1b2b73663a1c888a0510bdde2eb483760b61e80780d8b684714d18728983
+    "@fortawesome/fontawesome-svg-core": ~6 || ~7
+    react: ^18.0.0 || ^19.0.0
+  checksum: 10/3f7f1f77210f5b677ee5c2b11f2eb9afc2974a7c923745ce409ee0785a6f459f341db8666043e499d8a01870c8e4d59befdce44e8adc953d2322f1612b38522e
   languageName: node
   linkType: hard
 
@@ -3076,7 +3074,7 @@ __metadata:
     "@faker-js/faker": "npm:^9.9.0"
     "@fortawesome/fontawesome-svg-core": "npm:^7.1.0"
     "@fortawesome/free-solid-svg-icons": "npm:^7.0.0"
-    "@fortawesome/react-fontawesome": "npm:^0.2.0"
+    "@fortawesome/react-fontawesome": "npm:^3.1.0"
     "@mui/icons-material": "npm:^7"
     "@mui/material": "npm:^7"
     "@sentry/react": "npm:^10.25.0"
