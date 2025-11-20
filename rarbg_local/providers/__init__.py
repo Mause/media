@@ -49,7 +49,7 @@ async def search_for_tv(
 
     return await spin_up_workers(
         worker,
-        [provider for provider in get_providers() if isinstance(provider, TvProvider)],
+        TvProvider,
     )
 
 
@@ -65,23 +65,17 @@ async def search_for_movie(
         except Exception:
             logger.exception('Unable to load [MOVIE] from %s', provider)
 
-    return await spin_up_workers(
-        worker,
-        [
-            provider
-            for provider in get_providers()
-            if isinstance(provider, MovieProvider)
-        ],
-    )
+    return await spin_up_workers(worker, MovieProvider)
 
 
 async def spin_up_workers[TT: Provider](
     worker: Callable[[Queue[ITorrent | Message], TT], Coroutine[Any, Any, None]],
-    providers: list[TT],
+    target: type[TT],
 ) -> tuple[list[Future[None]], Queue[ITorrent | Message]]:
     output_queue = Queue[ITorrent | Message]()
     tasks = [
         create_monitored_task(worker(output_queue, provider), output_queue.put_nowait)
-        for provider in providers
+        for provider in get_providers()
+        if isinstance(provider, target)
     ]
     return tasks, output_queue
