@@ -571,7 +571,8 @@ async def test_stats(test_client: TestClient, async_session: AsyncSession) -> No
     )
     await async_session.commit()
 
-    assert (await test_client.get('/api/stats')).json() == [
+    res = await test_client.get('/api/stats')
+    assert res.json() == [
         {'user': 'user1', 'values': {'episode': 1, 'movie': 1}},
         {'user': 'user2', 'values': {'episode': 1, 'movie': 0}},
     ]
