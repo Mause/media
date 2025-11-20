@@ -117,7 +117,7 @@ monitor_config: MonitorConfig = {
     'schedule': {
         'type': 'crontab',
         'value': '0 * * * *',  # every hour
-    }
+    },
 }
 
 
