@@ -46,6 +46,7 @@ if TYPE_CHECKING:
 
 
 HASH_STRING = '00000000000000000'
+pytestmark = mark.no_leaks
 
 
 @fixture
