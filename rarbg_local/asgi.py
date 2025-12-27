@@ -33,6 +33,9 @@ if sentry_dsn := os.environ.get('SENTRY_DSN'):
         # there is an active span.
         profile_lifecycle="trace",
         enable_logs=True,
+        _experiments={
+            'enable_metrics': True,
+        },
     )
 else:
     logger.warning('Not configuring sentry')
