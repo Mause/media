@@ -20,7 +20,7 @@ impl ITorrent {
 }
 
 #[pyfunction]
-pub(crate) fn search_leetx(py: Python, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
+pub(crate) fn search_leetx(py: Python<'_>, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
     pyo3_async_runtimes::tokio::future_into_py(py, async move {
         torrent_search::search_l337x(term)
             .await
@@ -40,7 +40,7 @@ pub(crate) fn search_leetx(py: Python, term: String) -> Result<Bound<'_, PyAny>,
 }
 
 #[pyfunction]
-pub fn search_yts(py: Python, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
+pub fn search_yts(py: Python<'_>, term: String) -> Result<Bound<'_, PyAny>, PyErr> {
     pyo3_async_runtimes::tokio::future_into_py(py, async move {
         yts_api::ListMovies::new()
             .query_term(&term.replace(" ", "+"))
