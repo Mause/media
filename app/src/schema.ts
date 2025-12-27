@@ -746,7 +746,7 @@ export interface components {
       | 'torrentscsv'
       | 'nyaasi'
       | 'piratebay'
-      | 'yts';
+      | 'yts'
       | 'luna';
     /** SearchResponse */
     SearchResponse: {
