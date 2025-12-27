@@ -4,7 +4,6 @@ import traceback
 from collections.abc import AsyncGenerator, Callable, Coroutine
 from functools import wraps
 from typing import (
-    TYPE_CHECKING,
     Annotated,
     Any,
     Literal,
@@ -23,6 +22,8 @@ from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
 from starlette.staticfiles import StaticFiles
+from statsig import StatsigServer, StatsigUser
+from statsig.statsig_event import StatsigEvent
 
 from .auth import security
 from .config import commit, production
@@ -95,9 +96,6 @@ from .tmdb import (
 from .types import TmdbId
 from .utils import Message, non_null
 from .websocket import websocket_ns
-
-if TYPE_CHECKING:
-    from statsig_python_core import Statsig
 
 api = APIRouter()
 logger = logging.getLogger(__name__)
@@ -229,7 +227,7 @@ async def api_select(tmdb_id: TmdbId, season: int) -> DownloadAllResponse:
 async def download_post(
     things: list[DownloadPost],
     added_by: Annotated[User, security],
-    statsig: Annotated['Statsig', Depends(get_statsig)],
+    statsig: Annotated[StatsigServer, Depends(get_statsig)],
 ) -> list[MovieDetails | EpisodeDetails]:
     results: list[MovieDetails | EpisodeDetails] = []
 
@@ -267,9 +265,11 @@ async def download_post(
             subpath = 'movies'
 
         statsig.log_event(
-            user=added_by,
-            event_name="add_download",
-            value=thing.magnet,
+            StatsigEvent(
+                user=StatsigUser(added_by.username),
+                event_name="add_download",
+                value=thing.magnet,
+            )
         )
 
         results.append(

@@ -1,5 +1,30 @@
-def test_statsig_integration() -> None:
-    from ..sentry.statsig import StatsigIntegration
+import sentry_sdk
+from sentry_sdk.integrations.statsig import StatsigIntegration
+from sentry_sdk.types import Event
+from statsig import StatsigOptions, StatsigUser, statsig
 
-    StatsigIntegration.setup_once()
-    assert StatsigIntegration.identifier == "statsig-python-core"
+
+def test_sentry_config() -> None:
+    events: list[Event] = []
+    sentry_sdk.init(
+        spotlight=True,
+        integrations=[StatsigIntegration()],
+        before_send=lambda event, hint: events.append(event),
+    )
+
+    client = sentry_sdk.get_client()
+
+    try:
+        assert StatsigIntegration.identifier in client.integrations
+
+        statsig.initialize('server-secret-key', StatsigOptions(local_mode=True))  #
+        statsig.check_gate(StatsigUser("my-user-id"), "my-feature-gate")
+        sentry_sdk.capture_exception(Exception("Something went wrong!"))
+    finally:
+        client.close()
+
+    assert events
+    assert len(events) == 1
+    event = events[0]
+    values = event['contexts']['flags']['values']
+    assert 'my-feature-gate' in {flag['flag'] for flag in values}
