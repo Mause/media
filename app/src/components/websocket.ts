@@ -35,9 +35,16 @@ export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
 ) {
   const base = getPrefix();
   const url = `${base}/ws`;
-  const [state, setState] = useState<string>('idle');
+  const [state, setState] = useState<'idle' | 'sending' | 'error' | 'received'>(
+    'idle',
+  );
+  const [responseError, setResponseError] = useState<
+    ErrorResult['error'] | null
+  >(null);
 
-  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url);
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url, {
+    skipAssert: true,
+  });
   const trigger = useMemo(
     () => () => {
       setState('sending');
@@ -53,6 +60,7 @@ export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
         if ('error' in (lastJsonMessage as ErrorResult)) {
           const error = (lastJsonMessage as ErrorResult).error;
           setState('error');
+          setResponseError(error);
           console.error('Error message', error);
           Sentry.captureException(new Error(error.message), {
             extra: error,
@@ -61,13 +69,15 @@ export function useMessage<REQ extends BaseRequest, T extends SuccessResult>(
           setState('received');
           setMessage(lastJsonMessage as T);
         }
+      } else if ((lastJsonMessage as T).id === -1) {
+        console.log('Got notification', lastJsonMessage);
       } else {
-        console.log('Unexpected message', lastJsonMessage);
+        console.error('Unexpected message', lastJsonMessage);
       }
     }
   }, [lastJsonMessage]);
 
-  return { message, trigger, state, readyState };
+  return { message, trigger, state, readyState, error: responseError };
 }
 
 export function readyStateToString(readyState: ReadyState) {

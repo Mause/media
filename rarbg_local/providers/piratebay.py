@@ -46,7 +46,7 @@ def convert_category(category: int) -> str:
                 return f'{broad} - {subcat}'.replace('_', ' ').title()
 
     message = f'unrecognised category: {category}'
-    logger.warn(message)
+    logger.warning(message)
     return message
 
 

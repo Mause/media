@@ -53,7 +53,7 @@ def normalise(episodes: list[Episode], title: str) -> str | None:
         if sel:
             return title
 
-        logger.warn('unable to find marker in %s', title)
+        logger.warning('unable to find marker in %s', title)
         return None
 
     full, _, i_episode = sel.groups()

@@ -1,7 +1,5 @@
-from ..sentry.statsig import StatsigIntegration
-
-
 def test_statsig_integration() -> None:
-    integration = StatsigIntegration()
-    integration.setup_once()
-    assert integration.identifier == "statsig-python-core"
+    from ..sentry.statsig import StatsigIntegration
+
+    StatsigIntegration.setup_once()
+    assert StatsigIntegration.identifier == "statsig-python-core"

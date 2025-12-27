@@ -17,7 +17,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
 
 import type { components } from './schema';
-import { ExtMLink, MLink, SwrConfigWrapper } from './components';
+import { ExtMLink, MLink, SwrConfigWrapper, CmdK } from './components';
 import routes from './routes';
 
 export type TorrentFile = components['schemas']['InnerTorrentFile'];
@@ -116,6 +116,7 @@ export function ParentComponentInt() {
           <Grid size={{ xs: 'auto' }}>
             <Login />
           </Grid>
+          <CmdK />
         </Grid>
       </NavRoot>
 

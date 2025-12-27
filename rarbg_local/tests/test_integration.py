@@ -929,6 +929,7 @@ async def test_psycopg2_error(
             get_settings: lambda: Settings(
                 database_url='postgresql:///:memory:',
                 plex_token=SecretStr('plex_token'),
+                statsig_key=SecretStr('statsig_key'),
             ),
         }
     )
