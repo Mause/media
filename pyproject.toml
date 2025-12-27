@@ -79,7 +79,7 @@ cli = [
   "rich>=14.0.0",
 ]
 debug = ["pdbpp", "pudb"]
-ty = ["ty>=0.0.1a23"]
+ty = ["ty>=0.0.7"]
 
 [tool.mypy]
 plugins = "pydantic.mypy"
