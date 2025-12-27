@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING, Any
 from ..auth import User, get_current_user
 from ..health import get
 from ..models import ITorrent
+from ..statsig_service import get_statsig
 from ..types import ImdbId, TmdbId
 from ..utils import Message, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
-from .statsig_service import get_statsig
 
 if TYPE_CHECKING:
     from statsig_python_core import Statsig
