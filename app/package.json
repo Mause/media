@@ -89,7 +89,7 @@
     "jsdom": "^27.1.0",
     "mockdate": "^3.0.2",
     "msw": "^2.12.1",
-    "prettier": "3.6.2",
+    "prettier": "4.0.0-alpha.13",
     "typescript-eslint": "^8.46.3",
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-bundlesize": "^0.2.0",
