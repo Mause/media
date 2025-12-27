@@ -47,8 +47,8 @@
     "test": "vitest",
     "format": "yarn prettier -w src",
     "bundlestats": "yarn dlx vite-bundle-visualizer -o stats.html",
-    "generate:static": "npx openapi-typescript ../rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o src/schema.ts && yarn format",
-    "generate:local": "npx openapi-typescript http://localhost:5000/openapi.json -o src/schema.ts && yarn format",
+    "generate:static": "yarn openapi-typescript ../rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o src/schema.ts && yarn format",
+    "generate:local": "yarn openapi-typescript http://localhost:5000/openapi.json -o src/schema.ts && yarn format",
     "generate": "npx openapi-typescript https://media.mause.me/openapi.json -o src/schema.ts && yarn format"
   },
   "browserslist": {
@@ -89,6 +89,7 @@
     "jsdom": "^27.1.0",
     "mockdate": "^3.0.2",
     "msw": "^2.12.1",
+    "openapi-typescript": "^7.10.1",
     "prettier": "4.0.0-alpha.13",
     "typescript-eslint": "^8.46.3",
     "vite": "npm:rolldown-vite@latest",
