@@ -3,7 +3,7 @@ from asyncio import Future, Queue
 from collections.abc import Callable, Coroutine, Iterable
 from typing import Any
 
-from statsig import StatsigUser
+from statsig import StatsigServer, StatsigUser
 
 from ..auth import User, get_current_user
 from ..health import get
@@ -36,7 +36,7 @@ async def get_providers() -> list[Provider]:
         PirateBayProvider(),
     ]
 
-    statsig: Statsig = await get(get_statsig)
+    statsig: StatsigServer = await get(get_statsig)
     user: User = await get(get_current_user)
 
     if statsig.check_gate(StatsigUser(user.username), 'luna'):
