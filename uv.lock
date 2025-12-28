@@ -347,6 +347,18 @@ wheels = [
 ]
 
 [[package]]
+name = "chanx"
+version = "2.3.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/9a/25/f0b5ae60be210fd5ebf32d92020e1c0476c4b0e4d84d8c6d306ee0420ccb/chanx-2.3.1.tar.gz", hash = "sha256:b2ec300732b18aa97785a2be50454996dba885257be9f4d6459ce8546853a12f", size = 72782, upload-time = "2025-12-09T18:41:14.068Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8d/ed/3dc184c7d070b9f80ed1316a46a665a591e04fd45c3cc5e30d5097c63214/chanx-2.3.1-py3-none-any.whl", hash = "sha256:dd32dc0581e49c22f2f031814542aa69e0bdfdd3fcb782de55a3ab717602da31", size = 95965, upload-time = "2025-12-09T18:41:12.481Z" },
+]
+
+[[package]]
 name = "charset-normalizer"
 version = "3.4.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1312,6 +1324,7 @@ dependencies = [
     { name = "backoff" },
     { name = "beautifulsoup4" },
     { name = "cachetools" },
+    { name = "chanx" },
     { name = "dnspython" },
     { name = "email-validator" },
     { name = "eventlet" },
@@ -1395,6 +1408,7 @@ requires-dist = [
     { name = "backoff", specifier = "==2.2.1" },
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "cachetools", specifier = "==5.5.2" },
+    { name = "chanx", specifier = ">=2.3.1" },
     { name = "dnspython", specifier = ">=2.7.0" },
     { name = "email-validator", specifier = "==2.3.0" },
     { name = "eventlet", specifier = "==0.40.3" },
