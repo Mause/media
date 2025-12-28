@@ -358,6 +358,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/8d/ed/3dc184c7d070b9f80ed1316a46a665a591e04fd45c3cc5e30d5097c63214/chanx-2.3.1-py3-none-any.whl", hash = "sha256:dd32dc0581e49c22f2f031814542aa69e0bdfdd3fcb782de55a3ab717602da31", size = 95965, upload-time = "2025-12-09T18:41:12.481Z" },
 ]
 
+[package.optional-dependencies]
+fast-channels = [
+    { name = "fast-channels" },
+    { name = "fastapi" },
+    { name = "pyhumps" },
+    { name = "structlog" },
+    { name = "typing-extensions" },
+]
+
 [[package]]
 name = "charset-normalizer"
 version = "3.4.1"
@@ -618,6 +627,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/f3/03/eb007f5e90c13016debb6ecd717f0595ce758bf30906f2cb273673e8427d/fancycompleter-0.11.0.tar.gz", hash = "sha256:632b265b29dd0315b96d33d13d83132a541d6312262214f50211b3981bb4fa00", size = 341517, upload-time = "2025-04-13T12:48:09.487Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/07/52/d3e234bf32ee97e71b45886a52871dc681345d64b449a930bab38c73cbcb/fancycompleter-0.11.0-py3-none-any.whl", hash = "sha256:a4712fdda8d7f3df08511ab2755ea0f1e669e2c65701a28c0c0aa2ff528521ed", size = 11166, upload-time = "2025-04-13T12:48:08.12Z" },
+]
+
+[[package]]
+name = "fast-channels"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "asgiref" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a4/ab/63f329a23508c1a885f79cc169b92dd2bc6e6bcbc3432a7fd983a900bda2/fast_channels-1.1.0.tar.gz", hash = "sha256:a1c7d8b725af5a6f1b378ed4dc418df6c3c1b23f348d3b4d5ecfae21eb5b60b2", size = 36731, upload-time = "2025-12-13T15:17:31.553Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e8/ce/cdabbf9453f2fab19519d2f1f91cc6032a573d7bc8c15fdea3d6fd1ebb83/fast_channels-1.1.0-py3-none-any.whl", hash = "sha256:a5e31074d169b6278c891304b9314c055dc90b2d5f211e6f2ebd16fb888419c9", size = 49045, upload-time = "2025-12-13T15:17:29.968Z" },
 ]
 
 [[package]]
@@ -1324,7 +1345,7 @@ dependencies = [
     { name = "backoff" },
     { name = "beautifulsoup4" },
     { name = "cachetools" },
-    { name = "chanx" },
+    { name = "chanx", extra = ["fast-channels"] },
     { name = "dnspython" },
     { name = "email-validator" },
     { name = "eventlet" },
@@ -1408,7 +1429,7 @@ requires-dist = [
     { name = "backoff", specifier = "==2.2.1" },
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "cachetools", specifier = "==5.5.2" },
-    { name = "chanx", specifier = ">=2.3.1" },
+    { name = "chanx", extras = ["fast-channels"], specifier = ">=2.3.1" },
     { name = "dnspython", specifier = ">=2.7.0" },
     { name = "email-validator", specifier = "==2.3.0" },
     { name = "eventlet", specifier = "==0.40.3" },
@@ -2172,6 +2193,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pyhumps"
+version = "3.8.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c4/83/fa6f8fb7accb21f39e8f2b6a18f76f6d90626bdb0a5e5448e5cc9b8ab014/pyhumps-3.8.0.tar.gz", hash = "sha256:498026258f7ee1a8e447c2e28526c0bea9407f9a59c03260aee4bd6c04d681a3", size = 9018, upload-time = "2022-10-21T10:38:59.496Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9e/11/a1938340ecb32d71e47ad4914843775011e6e9da59ba1229f181fef3119e/pyhumps-3.8.0-py3-none-any.whl", hash = "sha256:060e1954d9069f428232a1adda165db0b9d8dfdce1d265d36df7fbff540acfd6", size = 6095, upload-time = "2022-10-21T10:38:58.231Z" },
+]
+
+[[package]]
 name = "pyjwt"
 version = "2.10.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2732,6 +2762,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7a/6d/ac74a59aec0dd584d5b433c86743802d8deb1fd12d6f8031a89e9a08ff6c/statsig-0.66.1.tar.gz", hash = "sha256:08fd9e7d2b6dbf30af804fe1cac24bef9b4a186eb07b0fac9378184c13cef637", size = 58021, upload-time = "2025-10-29T18:07:14.924Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/75/cf/06d818a72e489c4d5aec4399ef4ee69777ba2cb73ad9a64fdeed19b149a1/statsig-0.66.1-py3-none-any.whl", hash = "sha256:cb495cea7b8f52a0fbdc6f54716bf1e502ad527c6b33b1f007de10e4a103681a", size = 72953, upload-time = "2025-10-29T18:07:13.48Z" },
+]
+
+[[package]]
+name = "structlog"
+version = "25.5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ef/52/9ba0f43b686e7f3ddfeaa78ac3af750292662284b3661e91ad5494f21dbc/structlog-25.5.0.tar.gz", hash = "sha256:098522a3bebed9153d4570c6d0288abf80a031dfdb2048d59a49e9dc2190fc98", size = 1460830, upload-time = "2025-10-27T08:28:23.028Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a8/45/a132b9074aa18e799b891b91ad72133c98d8042c70f6240e4c5f9dabee2f/structlog-25.5.0-py3-none-any.whl", hash = "sha256:a8453e9b9e636ec59bd9e79bbd4a72f025981b3ba0f5837aebf48f02f37a7f9f", size = 72510, upload-time = "2025-10-27T08:28:21.535Z" },
 ]
 
 [[package]]
