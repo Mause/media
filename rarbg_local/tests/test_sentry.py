@@ -1,3 +1,5 @@
+from typing import cast
+
 import sentry_sdk
 from sentry_sdk.integrations.statsig import StatsigIntegration
 from sentry_sdk.types import Event
@@ -15,7 +17,7 @@ def test_sentry_config() -> None:
     client = sentry_sdk.get_client()
 
     try:
-        assert StatsigIntegration.identifier in client.integrations
+        assert client.get_integration(StatsigIntegration)
 
         statsig.initialize('server-secret-key', StatsigOptions(local_mode=True))  #
         statsig.check_gate(StatsigUser("my-user-id"), "my-feature-gate")
@@ -25,6 +27,6 @@ def test_sentry_config() -> None:
 
     assert events
     assert len(events) == 1
-    event = events[0]
-    values = event['contexts']['flags']['values']
+    event = cast(Event, events[0])
+    values = cast(list[dict], event['contexts']['flags']['values'])
     assert 'my-feature-gate' in {flag['flag'] for flag in values}

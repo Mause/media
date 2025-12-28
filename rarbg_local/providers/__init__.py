@@ -37,7 +37,9 @@ async def get_providers() -> list[Provider]:
     ]
 
     statsig: StatsigServer = await get(get_statsig)
-    user: User = await get(get_current_user)
+    user = await get(get_current_user)
+    if user is None:
+        raise Exception("Missing user")
 
     if statsig.check_gate(StatsigUser(user.username), 'luna'):
         providers.append(LunaProvider())
