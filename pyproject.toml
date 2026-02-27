@@ -104,9 +104,17 @@ module = [
 ]
 disallow_untyped_defs = true
 
-[tool.pytest.ini_options]
-addopts = "--driver chrome --html report.html --self-contained-html --cov-report html --cov"
+[tool.pytest]
+addopts = [
+  "--cov",
+  "--cov-report=html",
+  "--driver=chrome",
+  "--html=report.html",
+  "--self-contained-html"
+]
 testpaths = ["./rarbg_local/tests"]
+
+[tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff]
