@@ -58,9 +58,9 @@ dev = [
   "freezegun>=1.5.5",
   "lxml",
   "pre-commit>=4.2.0",
-  "pytest>=8.3.5",
+  "pytest>=9",
   "pytest-alembic>=0.12.1",
-  "pytest-asyncio==1.2.0",
+  "pytest-asyncio>=1.2.0",
   "pytest-cov>=6.1.1",
   "pytest-html>=3.1.1",
   "pytest-resource-path>=1.4.0",
@@ -113,8 +113,6 @@ addopts = [
   "--self-contained-html"
 ]
 testpaths = ["./rarbg_local/tests"]
-
-[tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff]
