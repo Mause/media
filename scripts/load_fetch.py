@@ -1,11 +1,13 @@
 import ast
 import fileinput
 import json
+from subprocess import check_output
 
 import rich
 import tree_sitter
 import tree_sitter_typescript
 from pydantic import RootModel
+from rich.syntax import Syntax
 
 lang = tree_sitter.Parser(
     tree_sitter.Language(tree_sitter_typescript.language_typescript())
@@ -58,7 +60,20 @@ def main() -> None:
 
     _, args = checked_cast(tuple[str, tuple[str, dict]], res)
 
-    rich.print(args)
+    url, init = args
+    import ruff
+
+    rendered = (
+        'requests.request({method!r}, headers={headers}, json={body})'.format_map(init)
+    )
+
+    result = check_output(
+        [ruff.find_ruff_bin(), "format", "-", "--line-length=80", '--string-format'],
+        input=rendered,
+        text=True,
+        # cwd=Path.cwd(),
+    )
+    rich.print(Syntax(result, "python"))
 
 
 if __name__ == '__main__':
