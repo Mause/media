@@ -2,8 +2,8 @@ version = 1
 revision = 3
 requires-python = ">=3.12.0"
 resolution-markers = [
-    "'android' in platform_release",
-    "'android' not in platform_release",
+    "'android' not in sys_platform",
+    "'android' in sys_platform",
 ]
 
 [[package]]
@@ -1176,8 +1176,8 @@ dependencies = [
     { name = "mause-rpc" },
     { name = "nyaapy" },
     { name = "plexapi" },
-    { name = "psycopg", extra = ["binary"], marker = "'android' not in platform_release" },
-    { name = "psycopg", extra = ["c"], marker = "'android' in platform_release" },
+    { name = "psycopg", extra = ["binary"], marker = "'android' not in sys_platform" },
+    { name = "psycopg", extra = ["c"], marker = "'android' in sys_platform" },
     { name = "psycopg", extra = ["pool"] },
     { name = "pydantic" },
     { name = "pydantic-settings" },
@@ -1259,8 +1259,8 @@ requires-dist = [
     { name = "mause-rpc", specifier = "==0.0.18" },
     { name = "nyaapy", specifier = ">=0.7" },
     { name = "plexapi", specifier = "==4.17.1" },
-    { name = "psycopg", extras = ["binary", "pool"], marker = "'android' not in platform_release", specifier = ">=3.2.9" },
-    { name = "psycopg", extras = ["c", "pool"], marker = "'android' in platform_release", specifier = ">=3.2.9" },
+    { name = "psycopg", extras = ["binary", "pool"], marker = "'android' not in sys_platform", specifier = ">=3.2.9" },
+    { name = "psycopg", extras = ["c", "pool"], marker = "'android' in sys_platform", specifier = ">=3.2.9" },
     { name = "pydantic", specifier = ">=2.12.0" },
     { name = "pydantic-settings", specifier = ">=2.9.1" },
     { name = "pyjwt", specifier = ">=2.10.1" },
@@ -1793,10 +1793,10 @@ wheels = [
 
 [package.optional-dependencies]
 binary = [
-    { name = "psycopg-binary", marker = "implementation_name != 'pypy' and 'android' not in platform_release" },
+    { name = "psycopg-binary", marker = "implementation_name != 'pypy' and 'android' not in sys_platform" },
 ]
 c = [
-    { name = "psycopg-c", marker = "implementation_name != 'pypy' and 'android' in platform_release" },
+    { name = "psycopg-c", marker = "implementation_name != 'pypy' and 'android' in sys_platform" },
 ]
 pool = [
     { name = "psycopg-pool" },

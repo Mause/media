@@ -32,7 +32,7 @@ dependencies = [
   "nyaapy>=0.7",
   "plexapi==4.17.1",
   "psycopg[binary,pool]>=3.2.9; 'android' not in sys_platform",
-  "psycopg[c,pool]>=3.2.9; 'android' in platform_release",
+  "psycopg[c,pool]>=3.2.9; 'android' in sys_platform",
   "pydantic>=2.12.0",
   "pydantic-settings>=2.9.1",
   "pyjwt>=2.10.1",
