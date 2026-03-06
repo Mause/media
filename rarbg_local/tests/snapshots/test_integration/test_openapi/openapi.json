@@ -2257,6 +2257,7 @@
           "torrentscsv",
           "nyaasi",
           "piratebay",
+          "yts",
           "luna"
         ],
         "title": "ProviderSource"

@@ -13,6 +13,7 @@ dependencies = [
   "alembic==1.17.1",
   "aniso8601==10.0.1",
   "asyncache==0.3.1",
+  "attractive",
   "backoff==2.2.1",
   "beautifulsoup4>=4.13.4",
   "cachetools==5.5.2",
@@ -39,6 +40,7 @@ dependencies = [
   "python-healthchecklib>=0.1.1",
   "python-multipart==0.0.20",
   "pytz==2025.2",
+  "rustimport>=1.7.1",
   "sentry-sdk==2.42.1",
   "sqlalchemy-repr==0.1.0",
   "sqlalchemy[mypy]==2.0.44",
@@ -57,6 +59,7 @@ dev = [
   "factory-boy==3.3.3",
   "freezegun>=1.5.5",
   "lxml",
+  "maturin[patchelf]>=1.9.3",
   "pre-commit>=4.2.0",
   "pytest",
   "pytest-alembic>=0.12.1",
@@ -120,3 +123,9 @@ docstring-code-line-length = 20
 [tool.ruff.lint]
 select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 ignore = ["ANN401"]
+
+[tool.uv.workspace]
+members = ["attractive"]
+
+[tool.uv.sources]
+attractive = { workspace = true }

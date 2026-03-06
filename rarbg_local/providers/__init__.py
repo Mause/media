@@ -15,12 +15,12 @@ logger = logging.getLogger(__name__)
 def get_providers() -> list[Provider]:
     # from .horriblesubs import HorriblesubsProvider
     # from .kickass import KickassProvider
+    # from .rarbg import RarbgProvider
     # from .luna import LunaProvider
     from .nyaasi import NyaaProvider
     from .piratebay import PirateBayProvider
-
-    # from .rarbg import RarbgProvider
     from .torrents_csv import TorrentsCsvProvider
+    from .yts import YtsProvider
 
     return [
         # HorriblesubsProvider(),
@@ -29,6 +29,7 @@ def get_providers() -> list[Provider]:
         TorrentsCsvProvider(),
         NyaaProvider(),
         PirateBayProvider(),
+        YtsProvider(),
         # LunaProvider(),
     ]
 
@@ -45,7 +46,7 @@ async def search_for_tv(
             ):
                 output_queue.put_nowait(result)
         except Exception:
-            logger.exception('Unable to load [TV] from %s', provider)
+            logger.exception("Unable to load [TV] from %s", provider)
 
     return await spin_up_workers(
         worker,
@@ -63,7 +64,7 @@ async def search_for_movie(
             async for result in provider.search_for_movie(imdb_id, tmdb_id):
                 output_queue.put_nowait(result)
         except Exception:
-            logger.exception('Unable to load [MOVIE] from %s', provider)
+            logger.exception("Unable to load [MOVIE] from %s", provider)
 
     return await spin_up_workers(
         worker,
