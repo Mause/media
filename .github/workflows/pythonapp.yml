@@ -25,8 +25,8 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
-          cache-dependency-glob: 'uv.lock'
-          version: 'latest'
+          cache-dependency-glob: "uv.lock"
+          version: "latest"
       - name: Install dependencies
         run: |
           uv sync --dev --locked
@@ -42,10 +42,10 @@ jobs:
           linters: pytest
           run: uv run pytest -v
         env:
-          CLOUDAMQP_URL: 'https://hello'
+          CLOUDAMQP_URL: "https://hello"
           TMDB_API_KEY: word
           TMDB_READ_ACCESS_TOKEN: word
-          PYTEST_ADDOPTS: '--color=yes'
+          PYTEST_ADDOPTS: "--color=yes"
       - name: Archive test report
         uses: actions/upload-artifact@v4
         if: always()
@@ -61,9 +61,8 @@ jobs:
       - run: corepack enable
       - uses: actions/setup-node@v6
         with:
-          node-version: '22'
-          cache: 'yarn'
+          node-version: "22"
+          cache: "yarn"
       - run: yarn
         working-directory: app/
-      - uses: actions/setup-python@v6
-      - uses: pre-commit/action@v3.0.1
+      - uses: j178/prek-action@v1
