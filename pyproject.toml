@@ -2,7 +2,7 @@
 name = "media"
 version = "0.1.0"
 description = ""
-requires-python = ">=3.12.0"
+requires-python = ">=3.13.0"
 license = "MIT"
 authors = [{ name = "Elliana May", email = "me@mause.me" }]
 dependencies = [
@@ -31,8 +31,8 @@ dependencies = [
   "mause-rpc==0.0.18",
   "nyaapy>=0.7",
   "plexapi==4.17.1",
-  "psycopg[binary,pool]>=3.2.9; 'android' not in platform_release",
-  "psycopg[c,pool]>=3.2.9; 'android' in platform_release",
+  "psycopg[binary,pool]>=3.2.9; 'android' not in sys_platform",
+  "psycopg[c,pool]>=3.2.9; 'android' in sys_platform",
   "pydantic>=2.12.0",
   "pydantic-settings>=2.9.1",
   "pyjwt>=2.10.1",
