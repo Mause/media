@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "biome": "./app/node_modules/@biomejs/cli-linux-x64/biome",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "make prod"
   },

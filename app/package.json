@@ -42,6 +42,7 @@
     "uritemplate": "^0.3.4"
   },
   "scripts": {
+    "biome": "./node_modules/@biomejs/cli-linux-x64/biome",
     "start": "vite",
     "build": "vite build",
     "test": "vitest",
