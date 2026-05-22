@@ -90,7 +90,7 @@
     "jiti": "^2.6.1",
     "jsdom": "^27.1.0",
     "mockdate": "^3.0.2",
-    "msw": "^2.12.1",
+    "msw": "^2.14.6",
     "typescript-eslint": "^8.46.3",
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-bundlesize": "^0.2.0",
