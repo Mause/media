@@ -1,6 +1,5 @@
 from collections.abc import AsyncGenerator
 from typing import Annotated, Literal
-from urllib.parse import SplitResult, urlencode, urlunsplit
 
 from aiohttp import ClientSession
 from healthcheck import HealthcheckCallbackResponse
@@ -8,6 +7,7 @@ from pydantic import BaseModel, Field
 
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
+from ..utils import build_magnet
 from .abc import MovieProvider
 
 
@@ -52,43 +52,6 @@ udp://tracker.leechers-paradise.org:6969
 udp://p4p.arenabg.ch:1337
 udp://tracker.internetwarriors.net:1337
 """.strip().splitlines()
-
-
-def mk(
-    scheme: str,
-    *,
-    path: str = '',
-    query: list[tuple[str, str]] | None = None,
-) -> str:
-    return urlunsplit(
-        SplitResult(
-            scheme=scheme,
-            query=urlencode(query) if query else '',
-            path=path,
-            netloc='',
-            fragment='',
-        )
-    )
-
-
-def build_magnet(
-    hash: str,
-    title: str,
-) -> str:
-    return mk(
-        scheme='magnet',
-        query=[
-            (
-                'xt',
-                mk(
-                    scheme='urn',
-                    path='btih:' + hash,
-                ),
-            ),
-            ('dn', title),
-            *[('tr', tr) for tr in trackers],
-        ],
-    )
 
 
 class YtsProvider(MovieProvider):
