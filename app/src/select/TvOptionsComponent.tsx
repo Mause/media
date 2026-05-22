@@ -1,5 +1,4 @@
 import { RouteTitle } from '../components';
-
 import { OptionsComponent } from './OptionsComponent';
 
 export function TvOptionsComponent() {

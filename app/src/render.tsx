@@ -1,30 +1,30 @@
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import {
+  faCaretDown,
+  faCaretUp,
+  faCheckCircle,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LinearProgress from '@mui/material/LinearProgress';
 import MenuItem from '@mui/material/MenuItem';
-import { String } from 'typescript-string-operations';
+import * as _ from 'lodash-es';
 // eslint-disable-next-line import-x/no-named-as-default
 import Moment from 'moment';
 import Collapsible from 'react-collapsible';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSearch,
-  faCaretUp,
-  faCaretDown,
-  faCheckCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import LinearProgress from '@mui/material/LinearProgress';
-import * as _ from 'lodash-es';
+import { String } from 'typescript-string-operations';
 
-import { getMarker, getMessage, shouldCollapse } from './utils';
-import type { TV } from './select/SeasonSelectComponent';
+import { ContextMenu, Loading, MLink, OpenPlex } from './components';
 import type {
+  EpisodeResponse,
   MovieResponse,
   SeriesResponse,
   Torrents,
-  EpisodeResponse,
 } from './ParentComponent';
-import { OpenPlex, ContextMenu, Loading, MLink } from './components';
+import type { TV } from './select/SeasonSelectComponent';
+import { getMarker, getMessage, shouldCollapse } from './utils';
 
 function OpenIMDB({ download }: { download: { imdb_id: string } }) {
   return (

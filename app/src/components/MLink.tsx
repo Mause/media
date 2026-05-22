@@ -1,7 +1,7 @@
-import type { ReactElement, ReactNode } from 'react';
-import MaterialLink from '@mui/material/Link';
-import { NavLink, useMatch } from 'react-router-dom';
 import type { TypographyTypeMap } from '@mui/material';
+import MaterialLink from '@mui/material/Link';
+import type { ReactElement, ReactNode } from 'react';
+import { NavLink, useMatch } from 'react-router-dom';
 
 type Props = Parameters<typeof NavLink>[0];
 

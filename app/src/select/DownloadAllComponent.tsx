@@ -2,18 +2,17 @@ import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import {
-  MLink,
   DisplayError,
   DisplayTorrent,
-  RouteTitle,
   Loading,
+  MLink,
+  RouteTitle,
 } from '../components';
 import type { DownloadCall } from '../DownloadComponent';
+import type { ManualAddComponentState } from '../ManualAddComponent';
 import type { Torrents } from '../ParentComponent';
 import type { paths } from '../schema';
 import type { GetResponse } from '../utils';
-import type { ManualAddComponentState } from '../ManualAddComponent';
-
 import { EpisodeSelectBreadcrumbs } from './EpisodeSelectComponent';
 import type { ITorrent } from './OptionsComponent';
 

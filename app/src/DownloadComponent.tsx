@@ -1,9 +1,9 @@
-import { Navigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
+import { Navigate } from 'react-router-dom';
 
-import { usePost, useLocation } from './utils';
-import type { components } from './schema';
 import { DisplayError, Loading, RouteTitle } from './components';
+import type { components } from './schema';
+import { useLocation, usePost } from './utils';
 
 export type DownloadCall = components['schemas']['DownloadPost'];
 export interface DownloadState {
