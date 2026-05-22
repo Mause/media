@@ -17,7 +17,8 @@ async def check_http(url: str, method: str = 'HEAD') -> HealthcheckCallbackRespo
                 )
             else:
                 return HealthcheckCallbackResponse(
-                    HealthcheckStatus.FAIL, f'Failed to reach {url}: {response.status}'
+                    HealthcheckStatus.FAIL,
+                    f'Failed to reach {url}: {response.status} {(await response.text())[:100]}',
                 )
 
 
