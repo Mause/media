@@ -1,8 +1,9 @@
 from collections.abc import AsyncGenerator
+from typing import Annotated, Literal
 
 import aiohttp
 from healthcheck import HealthcheckCallbackResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
@@ -29,8 +30,14 @@ class MovieResponse(BaseModel):
     movies: list[Movie]
 
 
-class Response(BaseModel):
-    data: MovieResponse
+class Meta(BaseModel):
+    api_version: Literal[2]
+    execution_time: str
+
+
+class Response[T](BaseModel):
+    data: T
+    meta: Annotated[Meta, Field(alias='@meta')]
 
 
 class YtsProvider(MovieProvider):
@@ -47,7 +54,7 @@ class YtsProvider(MovieProvider):
                     'query_term': imdb_id,
                 },
             )
-            js = Response.model_validate(await res.json())
+            js = Response[MovieResponse].model_validate(await res.json())
             for item in js.data.movies:
                 for torrent in item.torrents:
                     yield ITorrent(
