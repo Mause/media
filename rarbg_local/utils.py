@@ -125,6 +125,7 @@ def build_magnet(
     info_hash: str,
     display_name: str,
     trackers: list[str] | None = None,
+    filesize: int | None = None,
 ) -> str:
     """
     Generate a magnet link from an info hash.
@@ -142,6 +143,7 @@ def build_magnet(
                 ),
             ),
             ('dn', display_name),
+            *([('xl', str(filesize))] if filesize else []),
             *[('tr', tr) for tr in trackers or []],
         ],
     )

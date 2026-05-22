@@ -1,14 +1,41 @@
+import re
 from collections.abc import AsyncGenerator
+from math import floor
 from typing import Annotated, Literal
 
 from aiohttp import ClientSession
 from healthcheck import HealthcheckCallbackResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from ..models import ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
-from ..utils import build_magnet
+from ..utils import build_magnet, non_null
 from .abc import MovieProvider
+
+PATTERN = re.compile(r'^(?P<value>[0-9.]+) (?P<unit>GB|MB|KB|B)$')
+
+
+class Size(BaseModel):
+    value: float
+    unit: Literal['GB', 'MB', 'KB', 'B']
+
+    def to_bytes(self) -> int:
+        unit = self.unit
+        value = self.value
+
+        if unit == 'GB':
+            value *= 1024
+            unit = 'MB'
+
+        if unit == 'MB':
+            value *= 1024
+            unit = 'KB'
+
+        if unit == 'KB':
+            value *= 1024
+            unit = 'B'
+
+        return floor(value)
 
 
 class YtsTorrent(BaseModel):
@@ -17,6 +44,12 @@ class YtsTorrent(BaseModel):
     video_codec: str
     seeds: int
     type: Literal['web', 'bluray']
+    size: Size
+
+    @field_validator('size', mode='before')
+    @classmethod
+    def valid_size(cls, value: str) -> dict[str, str]:
+        return non_null(re.match(PATTERN, value)).groupdict()
 
 
 class Movie(BaseModel):
@@ -110,7 +143,11 @@ class YtsProvider(MovieProvider):
                     yield ITorrent(
                         source=ProviderSource.YTS,
                         category=torrent.quality,
-                        download=build_magnet(torrent.hash, title),
+                        download=build_magnet(
+                            torrent.hash,
+                            title,
+                            filesize=torrent.size.to_bytes(),
+                        ),
                         title=title,
                         seeders=torrent.seeds,
                     )
