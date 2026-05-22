@@ -118,5 +118,9 @@ docstring-code-format = true
 docstring-code-line-length = 20
 
 [tool.ruff.lint]
-select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
+select = [
+  "F", "E", "W", "I", "T", "LOG", "ANN",
+  "UP",
+  "FA"
+]
 ignore = ["ANN401"]
