@@ -37,7 +37,7 @@ dependencies = [
   "pydantic-settings>=2.9.1",
   "pyjwt>=2.10.1",
   "python-healthchecklib>=0.1.1",
-  "python-multipart==0.0.22",
+  "python-multipart==0.0.27",
   "pytz==2025.2",
   "sentry-sdk==2.42.1",
   "sqlalchemy-repr==0.1.0",
