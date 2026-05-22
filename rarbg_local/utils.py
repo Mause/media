@@ -113,7 +113,7 @@ def mk_url(
     return urlunsplit(
         SplitResult(
             scheme=scheme,
-            query=urlencode(query) if query else '',
+            query=urlencode(query, safe=':') if query else '',
             path=path,
             netloc='',
             fragment='',
