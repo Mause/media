@@ -120,7 +120,7 @@ class YtsProvider(MovieProvider):
         res = await session.get(
             self.base + '/list_movies.json',
             params={
-                k: v
+                k: (str(v).lower() if isinstance(v, bool) else v)
                 for k, v in {
                     'query_term': query_term,
                     'limit': limit,
