@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import geoip2.database
 import geoip_api
@@ -17,4 +17,4 @@ def resolve_location(request: Request) -> City | None:
 def get_age() -> datetime:
     with geoip2.database.Reader(get_database_path()) as city_reader:
         m = city_reader.metadata()
-        return datetime.fromtimestamp(m.build_epoch, timezone.utc)
+        return datetime.fromtimestamp(m.build_epoch, UTC)

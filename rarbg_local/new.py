@@ -8,7 +8,6 @@ from typing import (
     Annotated,
     Any,
     Literal,
-    Union,
     cast,
 )
 
@@ -223,9 +222,7 @@ async def api_select(tmdb_id: TmdbId, season: int) -> DownloadAllResponse:
     )
 
 
-@api.post(
-    '/download', response_model=list[Union[MovieDetailsSchema, EpisodeDetailsSchema]]
-)
+@api.post('/download', response_model=list[MovieDetailsSchema | EpisodeDetailsSchema])
 async def download_post(
     things: list[DownloadPost],
     added_by: Annotated[User, security],
