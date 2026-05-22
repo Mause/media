@@ -1,5 +1,6 @@
 from collections.abc import AsyncGenerator
 from typing import Annotated, Literal
+from urllib.parse import SplitResult, urlencode, urlunsplit
 
 from aiohttp import ClientSession
 from healthcheck import HealthcheckCallbackResponse
@@ -38,6 +39,55 @@ class Meta(BaseModel):
 class Response[T](BaseModel):
     data: T
     meta: Annotated[Meta, Field(alias='@meta')]
+
+
+trackers = """
+udp://glotorrents.pw:6969/announce
+udp://tracker.opentrackr.org:1337/announce
+udp://torrent.gresille.org:80/announce
+udp://tracker.openbittorrent.com:80
+udp://tracker.coppersurfer.tk:6969
+udp://tracker.leechers-paradise.org:6969
+udp://p4p.arenabg.ch:1337
+udp://tracker.internetwarriors.net:1337
+""".strip().splitlines()
+
+
+def mk(
+    scheme: str,
+    *,
+    path: str = '',
+    query: list[tuple[str, str]] | None = None,
+) -> str:
+    return urlunsplit(
+        SplitResult(
+            scheme=scheme,
+            query=urlencode(query) if query else '',
+            path=path,
+            netloc='',
+            fragment='',
+        )
+    )
+
+
+def build_magnet(
+    hash: str,
+    title: str,
+) -> str:
+    return mk(
+        scheme='magnet',
+        query=[
+            (
+                'xt',
+                mk(
+                    scheme='urn',
+                    path='btih:' + hash,
+                ),
+            ),
+            ('dn', title),
+            *[('tr', tr) for tr in trackers],
+        ],
+    )
 
 
 class YtsProvider(MovieProvider):
@@ -92,15 +142,12 @@ class YtsProvider(MovieProvider):
             js = await self.list_movies(session, query_term=imdb_id)
             for item in js.data.movies:
                 for torrent in item.torrents:
+                    title = f'{item.title} - {torrent.quality} - {torrent.video_codec}'
                     yield ITorrent(
                         source=ProviderSource.YTS,
                         category=torrent.quality,
-                        download='magnet:' + torrent.hash,
-                        title=item.title
-                        + ' '
-                        + torrent.quality
-                        + ' '
-                        + torrent.video_codec,
+                        download=build_magnet(torrent.hash, title),
+                        title=title,
                         seeders=torrent.seeds,
                     )
 
