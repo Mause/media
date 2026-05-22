@@ -122,8 +122,8 @@ def mk_url(
 
 
 def build_magnet(
-    torrent_hash: str,
-    title: str,
+    info_hash: str,
+    display_name: str,
     trackers: list[str] | None = None,
 ) -> str:
     return mk_url(
@@ -133,10 +133,10 @@ def build_magnet(
                 'xt',
                 mk_url(
                     scheme='urn',
-                    path='btih:' + torrent_hash,
+                    path='btih:' + info_hash,
                 ),
             ),
-            ('dn', title),
+            ('dn', display_name),
             *[('tr', tr) for tr in trackers or []],
         ],
     )
