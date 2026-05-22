@@ -126,6 +126,11 @@ def build_magnet(
     display_name: str,
     trackers: list[str] | None = None,
 ) -> str:
+    """
+    Generate a magnet link from an info hash.
+
+    See https://en.wikipedia.org/wiki/Magnet_URI_scheme#Format
+    """
     return mk_url(
         scheme='magnet',
         query=[
