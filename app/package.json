@@ -46,7 +46,7 @@
     "start": "vite",
     "build": "vite build",
     "test": "vitest",
-    "format": "biome check --write",
+    "format": "yarn biome check --write",
     "bundlestats": "yarn dlx vite-bundle-visualizer -o stats.html",
     "generate:static": "npx openapi-typescript ../rarbg_local/tests/snapshots/test_integration/test_openapi/openapi.json -o src/schema.ts && yarn format",
     "generate:local": "npx openapi-typescript http://localhost:5000/openapi.json -o src/schema.ts && yarn format",
