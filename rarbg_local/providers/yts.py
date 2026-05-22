@@ -16,6 +16,7 @@ class YtsTorrent(BaseModel):
     quality: str
     video_codec: str
     seeds: int
+    type: Literal['web', 'bluray']
 
 
 class Movie(BaseModel):
