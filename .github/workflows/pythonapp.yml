@@ -47,7 +47,7 @@ jobs:
           TMDB_READ_ACCESS_TOKEN: word
           PYTEST_ADDOPTS: '--color=yes'
       - name: Archive test report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: report-${{ matrix.python-version }}.html
