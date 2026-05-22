@@ -21,9 +21,5 @@
   "engines": {
     "node": "^22.0.0"
   },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
   "packageManager": "yarn@4.10.3"
 }
