@@ -3,8 +3,9 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import pluginDeprecation from 'eslint-plugin-deprecation';
 import reactRefresh from 'eslint-plugin-react-refresh';
+import { defineConfig } from 'eslint/config';
 
-module.exports = tseslint.config(
+module.exports = defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   {
