@@ -1,18 +1,19 @@
 import { StrictMode, useEffect } from 'react';
 import './index.css';
-import { createRoot } from 'react-dom/client';
+
 import { Auth0Provider } from '@auth0/auth0-react';
 import {
-  ThemeProvider,
-  StyledEngineProvider,
   createTheme,
+  StyledEngineProvider,
+  ThemeProvider,
 } from '@mui/material/styles';
 import * as Sentry from '@sentry/react';
+import { createRoot } from 'react-dom/client';
 import {
-  useLocation,
-  useNavigationType,
   createRoutesFromChildren,
   matchRoutes,
+  useLocation,
+  useNavigationType,
 } from 'react-router-dom';
 
 import { ParentComponent } from './ParentComponent';

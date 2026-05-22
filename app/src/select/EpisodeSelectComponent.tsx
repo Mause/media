@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import { Loading, MLink, RouteTitle } from '../components';
-
 import type { Season, TV } from './SeasonSelectComponent';
 import { Shared } from './SeasonSelectComponent';
 

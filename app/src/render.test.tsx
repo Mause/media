@@ -1,19 +1,19 @@
 import { render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import MockDate from 'mockdate';
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
+import { MemoryRouter } from 'react-router-dom';
 
-import { Movies, TVShows, Progress, NextEpisodeAirs } from './render';
-import { renderWithSWR, waitForRequests } from './test.utils';
-import type {
-  MovieResponse,
-  Torrents,
-  TorrentFile,
-  SeriesResponse,
-  EpisodeResponse,
-} from './ParentComponent';
-import { getMessage, shouldCollapse } from './utils';
 import { server } from './msw';
+import type {
+  EpisodeResponse,
+  MovieResponse,
+  SeriesResponse,
+  TorrentFile,
+  Torrents,
+} from './ParentComponent';
+import { Movies, NextEpisodeAirs, Progress, TVShows } from './render';
+import { renderWithSWR, waitForRequests } from './test.utils';
+import { getMessage, shouldCollapse } from './utils';
 
 beforeEach(() => MockDate.reset());
 

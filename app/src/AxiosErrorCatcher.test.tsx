@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { HttpResponse, http } from 'msw';
+import { useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { http, HttpResponse } from 'msw';
 
 import AxiosErrorCatcher from './AxiosErrorCatcher';
 import { server } from './msw';

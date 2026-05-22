@@ -1,17 +1,17 @@
-import { useParams, useLocation } from 'react-router-dom';
-import usePromise from 'react-promise-suspense';
 import { useAuth0 } from '@auth0/auth0-react';
 import * as _ from 'lodash-es';
+import usePromise from 'react-promise-suspense';
+import { useLocation, useParams } from 'react-router-dom';
 
-import type { ITorrent } from './select/OptionsComponent';
-import { getMarker, getToken } from './utils';
-import type { components } from './schema';
 import { DisplayTorrent, RouteTitle } from './components';
 import {
-  useMessages,
-  readyStateToString,
   nextId,
+  readyStateToString,
+  useMessages,
 } from './components/websocket';
+import type { components } from './schema';
+import type { ITorrent } from './select/OptionsComponent';
+import { getMarker, getToken } from './utils';
 
 type StreamRequest = components['schemas']['StreamRequest'];
 type StreamArgs = StreamRequest['params'];

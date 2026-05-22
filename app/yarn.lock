@@ -502,6 +502,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@biomejs/cli-linux-x64@npm:^2.1.1":
+  version: 2.4.15
+  resolution: "@biomejs/cli-linux-x64@npm:2.4.15"
+  checksum: 10/8d2d8d04634cb080a05f2e100053c292113840437c2f399b091996fdfa46e251ab28ad31f2d106cf09153b532601a652d4df05ca4f8c9f9d8d327da98d600c0e
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
 "@csstools/color-helpers@npm:^5.1.0":
   version: 5.1.0
   resolution: "@csstools/color-helpers@npm:5.1.0"
@@ -3068,6 +3076,7 @@ __metadata:
   dependencies:
     "@auth0/auth0-react": "npm:^2.0.0"
     "@babel/runtime": "npm:^7.28.2"
+    "@biomejs/cli-linux-x64": "npm:^2.1.1"
     "@csstools/normalize.css": "npm:^12.0.0"
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.1"
@@ -3109,7 +3118,6 @@ __metadata:
     mockdate: "npm:^3.0.2"
     moment: "npm:^2.29.1"
     msw: "npm:^2.12.1"
-    prettier: "npm:3.6.2"
     prop-types: "npm:^15.7.2"
     react: "npm:^19.0.0"
     react-cmdk: "npm:^1.3.9"
@@ -6134,15 +6142,6 @@ __metadata:
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
   checksum: 10/0b9d2c76801ca652a7f64892dd37b7e3fab149a37d2424920099bf894acccc62abb4424af2155ab36dea8744843060a2d8ddc983518d0b1e22265a22324b72ed
-  languageName: node
-  linkType: hard
-
-"prettier@npm:3.6.2":
-  version: 3.6.2
-  resolution: "prettier@npm:3.6.2"
-  bin:
-    prettier: bin/prettier.cjs
-  checksum: 10/1213691706bcef1371d16ef72773c8111106c3533b660b1cc8ec158bd109cdf1462804125f87f981f23c4a3dba053b6efafda30ab0114cc5b4a725606bb9ff26
   languageName: node
   linkType: hard
 

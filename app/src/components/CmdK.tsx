@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useState } from 'react';
 import CommandPalette, {
   filterItems,
   getItemIndex,
   useHandleOpenCommandPalette,
 } from 'react-cmdk';
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import 'react-cmdk/dist/cmdk.css';
 

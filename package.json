@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "biome": "./app/node_modules/@biomejs/cli-linux-x64/biome",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "make prod"
   },
@@ -19,10 +20,6 @@
   "homepage": "https://github.com/Mause/rarbg_local#readme",
   "engines": {
     "node": "^22.0.0"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "all"
   },
   "packageManager": "yarn@4.10.3"
 }

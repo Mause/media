@@ -1,9 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
 import * as Sentry from '@sentry/react';
+import { useEffect, useMemo, useState } from 'react';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
-import { getPrefix } from '../utils';
 import type { components } from '../schema';
+import { getPrefix } from '../utils';
 
 type BaseRequest = components['schemas']['BaseRequest'];
 type SuccessResult = components['schemas']['SuccessResult'];

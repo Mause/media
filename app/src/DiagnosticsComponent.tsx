@@ -1,10 +1,10 @@
-import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useSWR from 'swr';
 
+import { Loading, RouteTitle } from './components';
 import type { paths } from './schema';
 import type { GetResponse } from './utils';
-import { RouteTitle, Loading } from './components';
 
 type DiagnosticsRoot = GetResponse<paths['/api/diagnostics']>;
 type HealthcheckResponse = GetResponse<
