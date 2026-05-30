@@ -90,7 +90,7 @@ async def test_websocket(
                 method='stream',
                 id=1,
                 params=StreamArgs(
-                    tmdb_id=1,
+                    tmdb_id=TmdbId(1),
                     type='movie',
                 ),
                 authorization=SecretStr('token'),
@@ -129,7 +129,9 @@ async def test_websocket_plex(
         aioresponses,
         method='GET',
         url='https://api.themoviedb.org/3/movie/1/external_ids',
-        json_body=ExternalIds(id=0, imdb_id='tt000000').model_dump(mode='json'),
+        json_body=ExternalIds(id=TmdbId(0), imdb_id=ImdbId('tt000000')).model_dump(
+            mode='json'
+        ),
     )
 
     plex = MagicMock(name='plex')
@@ -159,7 +161,7 @@ async def test_websocket_plex(
                 method='plex',
                 id=1,
                 params=PlexArgs(
-                    tmdb_id=1,
+                    tmdb_id=TmdbId(1),
                     media_type='movie',
                 ),
                 authorization=SecretStr('token'),
