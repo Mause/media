@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 
 import aiohttp
 from healthcheck import HealthcheckCallbackResponse
+from pydantic import BaseModel, TypeAdapter
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
@@ -55,20 +56,27 @@ def magnet(info_hash: str, name: str) -> str:
     return f'magnet:?xt=urn:btih:{info_hash}&' + urlencode({'dn': name})
 
 
+class PirateTorrent(BaseModel):
+    name: str
+    info_hash: str
+    category: str
+    seeders: int
+
+
 class PirateBayProvider(TvProvider, MovieProvider):
     type = ProviderSource.PIRATEBAY
     root = 'https://apibay.org/q.php'
 
     @asynccontextmanager
-    async def search(self, q: str) -> AsyncGenerator[list[dict[str, str]]]:
+    async def search(self, q: str) -> AsyncGenerator[list[PirateTorrent]]:
         async with (
             aiohttp.ClientSession() as session,
             await session.get(self.root, params={'q': q}) as resp,
         ):
             resp.raise_for_status()
-            data = await resp.json()
+            data = TypeAdapter(list[PirateTorrent]).validate_python(await resp.json())
 
-            if len(data) == 1 and data[0]['name'] == 'No results returned':
+            if len(data) == 1 and data[0].name == 'No results returned':
                 yield []
             else:
                 yield data
@@ -84,10 +92,10 @@ class PirateBayProvider(TvProvider, MovieProvider):
             for item in data:
                 yield ITorrent(
                     source=ProviderSource.PIRATEBAY,
-                    title=item['name'],
-                    seeders=int(item['seeders']),
-                    download=magnet(item['info_hash'], item['name']),
-                    category=convert_category(int(item['category'])),
+                    title=item.name,
+                    seeders=int(item.seeders),
+                    download=magnet(item.info_hash, item.name),
+                    category=convert_category(int(item.category)),
                     episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
                 )
 
@@ -98,10 +106,10 @@ class PirateBayProvider(TvProvider, MovieProvider):
             for item in data:
                 yield ITorrent(
                     source=ProviderSource.PIRATEBAY,
-                    title=item['name'],
-                    seeders=int(item['seeders']),
-                    download=magnet(item['info_hash'], item['name']),
-                    category=convert_category(int(item['category'])),
+                    title=item.name,
+                    seeders=int(item.seeders),
+                    download=magnet(item.info_hash, item.name),
+                    category=convert_category(int(item.category)),
                 )
 
     async def health(self) -> HealthcheckCallbackResponse:
