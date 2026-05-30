@@ -89,7 +89,7 @@ export function Movies({
         <Collapsible
           trigger={head(faCaretDown)}
           triggerElementProps={{
-            id: `collapsible-trigger-complete-movies`,
+            id: 'collapsible-trigger-complete-movies',
           }}
           contentElementId="collapsible-content-complete-movies"
           triggerWhenOpen={head(faCaretUp)}
@@ -135,22 +135,21 @@ export function Progress({
   const { eta, percentDone } = prog;
   if (percentDone === 1) {
     return <FontAwesomeIcon icon={faCheckCircle} />;
-  } else {
-    const etaDescr =
-      eta > 0 ? Moment().add(eta, 'seconds').fromNow(true) : 'Unknown time';
-    const title = String.format(
-      '{0:00}% ({1} remaining)',
-      percentDone * 100,
-      etaDescr,
-    );
-    return (
-      <LinearProgress
-        variant="determinate"
-        value={percentDone * 100}
-        title={title}
-      />
-    );
   }
+  const etaDescr =
+    eta > 0 ? Moment().add(eta, 'seconds').fromNow(true) : 'Unknown time';
+  const title = String.format(
+    '{0:00}% ({1} remaining)',
+    percentDone * 100,
+    etaDescr,
+  );
+  return (
+    <LinearProgress
+      variant="determinate"
+      value={percentDone * 100}
+      title={title}
+    />
+  );
 }
 
 function getProgress(
@@ -226,18 +225,18 @@ function Series({
           </MenuItem>
         </ContextMenu>
       </h3>
-      {_.sortBy(Object.entries(serie.seasons), ([key]) => parseInt(key)).map(
-        ([i, season]) => (
-          <Season
-            key={i}
-            i={i}
-            season={season}
-            tmdb_id={serie.tmdb_id}
-            torrents={torrents}
-            collapse={shouldCollapse(i, data, season)}
-          />
-        ),
-      )}
+      {_.sortBy(Object.entries(serie.seasons), ([key]) =>
+        Number.parseInt(key),
+      ).map(([i, season]) => (
+        <Season
+          key={i}
+          i={i}
+          season={season}
+          tmdb_id={serie.tmdb_id}
+          torrents={torrents}
+          collapse={shouldCollapse(i, data, season)}
+        />
+      ))}
     </div>
   );
 }

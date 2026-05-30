@@ -28,7 +28,7 @@ describe('DownloadComponent', () => {
       },
     ];
 
-    let body: DownloadCall[] | undefined = undefined;
+    let body: DownloadCall[] | undefined;
     server.use(
       http.post('/api/download', async ({ request }) => {
         body = (await request.json()) as DownloadCall[];

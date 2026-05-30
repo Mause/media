@@ -95,8 +95,8 @@ export function Storybook() {
   return (
     <RouteTitle title="Storybook">
       <Tabs value={value} onChange={handleChange}>
-        <Tab label="Discover"></Tab>
-        <Tab label="Misc" data-testid="misc"></Tab>
+        <Tab label="Discover" />
+        <Tab label="Misc" data-testid="misc" />
       </Tabs>
       <CustomTabPanel index={0} value={value}>
         <DiscoveryStory />
