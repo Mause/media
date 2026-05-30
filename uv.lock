@@ -1234,6 +1234,8 @@ dependencies = [
     { name = "typing-inspect" },
     { name = "uvicorn", extra = ["standard"] },
     { name = "uvicorn-worker" },
+    { name = "wayback" },
+    { name = "waybackpack" },
 ]
 
 [package.dev-dependencies]
@@ -1316,6 +1318,8 @@ requires-dist = [
     { name = "typing-inspect", specifier = ">=0.9.0" },
     { name = "uvicorn", extras = ["standard"] },
     { name = "uvicorn-worker", specifier = ">=0.3.0" },
+    { name = "wayback", specifier = ">=0.4.5" },
+    { name = "waybackpack", specifier = ">=0.6.4" },
 ]
 
 [package.metadata.requires-dev]
@@ -2928,6 +2932,31 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/fc/17/180ca383f5061b61406477218c55d66ec118e6c0c51f02d8142895fcf0a9/watchfiles-1.0.5-cp313-cp313-musllinux_1_1_x86_64.whl", hash = "sha256:839ebd0df4a18c5b3c1b890145b5a3f5f64063c2a0d02b13c76d78fe5de34936", size = 624677, upload-time = "2025-04-08T10:35:49.65Z" },
     { url = "https://files.pythonhosted.org/packages/bf/15/714d6ef307f803f236d69ee9d421763707899d6298d9f3183e55e366d9af/watchfiles-1.0.5-cp313-cp313-win32.whl", hash = "sha256:4a8ec1e4e16e2d5bafc9ba82f7aaecfeec990ca7cd27e84fb6f191804ed2fcfc", size = 277804, upload-time = "2025-04-08T10:35:51.093Z" },
     { url = "https://files.pythonhosted.org/packages/a8/b4/c57b99518fadf431f3ef47a610839e46e5f8abf9814f969859d1c65c02c7/watchfiles-1.0.5-cp313-cp313-win_amd64.whl", hash = "sha256:f436601594f15bf406518af922a89dcaab416568edb6f65c4e5bbbad1ea45c11", size = 291087, upload-time = "2025-04-08T10:35:52.458Z" },
+]
+
+[[package]]
+name = "wayback"
+version = "0.4.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5e/2c/50cf23834aea1de728967a535ce94f65b432ba95b36110aee3b1dd3204f2/wayback-0.4.5.tar.gz", hash = "sha256:8f260a38ad8e317d9089fde86049151705a1bb4674e85b3da3a9f0204c5d4f55", size = 72216, upload-time = "2024-02-01T19:17:07.803Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/04/0c/3ac76773d81beb57696097eefe98d90137d263e57bb6a6406b9238b273a8/wayback-0.4.5-py3-none-any.whl", hash = "sha256:4de2a65c99045ea99255f37ef2deeca445d94c612cf6fb7e78d46c9bb6b36e55", size = 41107, upload-time = "2024-02-01T19:17:06.379Z" },
+]
+
+[[package]]
+name = "waybackpack"
+version = "0.6.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f1/35/47b69907099e659938849ec6c82a76afad06773e70fc780f3a3acaad564f/waybackpack-0.6.4.tar.gz", hash = "sha256:4324973a9681de0cd9331ba998bbbb404864b6cdfa0ee8520ab7beb3a1c88c9a", size = 10929, upload-time = "2024-05-15T14:16:56.546Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/62/1b/ac1293a409280cb41839baae293b7066313b6ecfe20cbf62003681b6001c/waybackpack-0.6.4-py3-none-any.whl", hash = "sha256:2567daa20fd1009b8defcfa4861ed79dbe7fe17680ec4d90e3bd515c79828743", size = 9389, upload-time = "2024-05-15T14:16:54.886Z" },
 ]
 
 [[package]]

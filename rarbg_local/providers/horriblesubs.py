@@ -1,9 +1,11 @@
 import re
-from collections.abc import AsyncGenerator, Iterable
+from collections.abc import AsyncGenerator, Generator, Iterable
+from datetime import date
 from enum import Enum
 from functools import lru_cache
 from typing import TYPE_CHECKING, TypedDict
 
+import wayback
 from aiohttp import ClientSession
 from cachetools import TTLCache
 from healthcheck import HealthcheckCallbackResponse
@@ -13,7 +15,7 @@ from ..jikan import closeness, get_names
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..tmdb import get_tv
 from ..types import ImdbId, TmdbId
-from ..utils import cached
+from ..utils import cached, non_null
 from .abc import TvProvider, tv_convert
 
 if TYPE_CHECKING:
@@ -21,6 +23,16 @@ if TYPE_CHECKING:
 
 SHOWID_RE = re.compile(r'var hs_showid = (\d+);')
 ROOT = 'https://horriblesubs.info/'
+
+
+def get_wayback() -> Generator:
+    client = wayback.WaybackClient()
+
+    for record in client.search(
+        ROOT + 'shows', to_date=date(2020, 9, 30), fast_latest=True, limit=1
+    ):
+        memento = client.get_memento(record)
+        yield memento
 
 
 def make_session() -> ClientSession:
@@ -192,7 +204,7 @@ class HorriblesubsProvider(TvProvider):
                 source=ProviderSource.HORRIBLESUBS,
                 title=f'{template}E{int(item["episode"], 10):02d} {item["resolution"]}',
                 seeders=0,
-                download=item['download'],
+                download=non_null(item['download']),
                 category=tv_convert(item['resolution']),
                 episode_info=EpisodeInfo(seasonnum=season, epnum=item['episode']),
             )
