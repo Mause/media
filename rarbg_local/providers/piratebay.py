@@ -59,7 +59,7 @@ def magnet(info_hash: str, name: str) -> str:
 class PirateTorrent(BaseModel):
     name: str
     info_hash: str
-    category: str
+    category: int
     seeders: int
 
 
@@ -95,7 +95,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
                     title=item.name,
                     seeders=int(item.seeders),
                     download=magnet(item.info_hash, item.name),
-                    category=convert_category(int(item.category)),
+                    category=convert_category(item.category),
                     episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
                 )
 
@@ -109,7 +109,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
                     title=item.name,
                     seeders=int(item.seeders),
                     download=magnet(item.info_hash, item.name),
-                    category=convert_category(int(item.category)),
+                    category=convert_category(item.category),
                 )
 
     async def health(self) -> HealthcheckCallbackResponse:
