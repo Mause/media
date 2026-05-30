@@ -7,6 +7,7 @@ from ..models import ITorrent
 from ..types import ImdbId, TmdbId
 from ..utils import Message, create_monitored_task
 from .abc import MovieProvider, Provider, TvProvider
+from .yts import YtsProvider
 
 type ProviderType[T] = Callable[..., Iterable[T]]
 logger = logging.getLogger(__name__)
@@ -29,6 +30,7 @@ def get_providers() -> list[Provider]:
         TorrentsCsvProvider(),
         NyaaProvider(),
         PirateBayProvider(),
+        YtsProvider(),
         # LunaProvider(),
     ]
 

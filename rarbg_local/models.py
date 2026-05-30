@@ -23,6 +23,7 @@ class ProviderSource(Enum):
     NYAA_SI = 'nyaasi'
     PIRATEBAY = 'piratebay'
     LUNA = 'luna'
+    YTS = 'YTS'
 
 
 class EpisodeInfo(BaseModel):

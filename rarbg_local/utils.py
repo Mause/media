@@ -3,6 +3,7 @@ from collections.abc import Callable, Coroutine, MutableMapping
 from dataclasses import dataclass
 from functools import partial
 from typing import Any, Protocol, cast, runtime_checkable
+from urllib.parse import SplitResult, urlencode, urlunsplit
 
 from asyncache import cached as _cached
 from cachetools.func import lru_cache as _lru_cache
@@ -101,3 +102,48 @@ def create_monitored_task[T](
 
 def format_marker(season: int, episode: int | None) -> str:
     return f'S{season:02d}E{episode:02d}' if episode else f'S{season:02d}'
+
+
+def mk_url(
+    scheme: str,
+    *,
+    path: str = '',
+    query: list[tuple[str, str]] | None = None,
+) -> str:
+    return urlunsplit(
+        SplitResult(
+            scheme=scheme,
+            query=urlencode(query, safe=':') if query else '',
+            path=path,
+            netloc='',
+            fragment='',
+        )
+    )
+
+
+def build_magnet(
+    info_hash: str,
+    display_name: str,
+    trackers: list[str] | None = None,
+    filesize: int | None = None,
+) -> str:
+    """
+    Generate a magnet link from an info hash.
+
+    See https://en.wikipedia.org/wiki/Magnet_URI_scheme#Format
+    """
+    return mk_url(
+        scheme='magnet',
+        query=[
+            (
+                'xt',
+                mk_url(
+                    scheme='urn',
+                    path='btih:' + info_hash,
+                ),
+            ),
+            ('dn', display_name),
+            *([('xl', str(filesize))] if filesize else []),
+            *[('tr', tr) for tr in trackers or []],
+        ],
+    )
