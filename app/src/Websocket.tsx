@@ -18,7 +18,7 @@ type StreamArgs = StreamRequest['params'];
 
 function get(query: URLSearchParams, key: string): number | undefined {
   const value = query.get(key);
-  return value ? parseInt(value, 10) : undefined;
+  return value ? Number.parseInt(value, 10) : undefined;
 }
 
 function Websocket() {
@@ -27,7 +27,7 @@ function Websocket() {
   const query = new URLSearchParams(search.slice(1));
   const auth = useAuth0();
   const token = 'Bearer ' + usePromise(() => getToken(auth), []);
-  const tmdbId = parseInt(tmdbIdS!, 10);
+  const tmdbId = Number.parseInt(tmdbIdS!, 10);
 
   const initMessage = (
     query.has('season')
@@ -68,9 +68,9 @@ function Websocket() {
         {tmdbId} -{' '}
         {query.has('season')
           ? getMarker({
-              season: parseInt(query.get('season')!, 10),
+              season: Number.parseInt(query.get('season')!, 10),
               episode: query.has('episode')
-                ? parseInt(query.get('episode')!, 10)
+                ? Number.parseInt(query.get('episode')!, 10)
                 : undefined,
             })
           : 'No season'}{' '}
