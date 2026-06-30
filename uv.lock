@@ -973,6 +973,31 @@ wheels = [
 ]
 
 [[package]]
+name = "libtorrent"
+version = "2.0.11"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/31/1b/b0cd5352b15df6e1fe5dcc3d900da3a09f4738b9558f02ea87f98404fe05/libtorrent-2.0.11-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:392f8879911efc7c87f3bc7d6e2cff42be5c17abfc77d766f56083d07c9b6c8b", size = 5555225, upload-time = "2025-01-29T11:34:27.124Z" },
+    { url = "https://files.pythonhosted.org/packages/46/72/ccc462046630f99087ddbc690cfe9f1aab597da8093b91a1928c5f47a396/libtorrent-2.0.11-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:e372dd7bf042296365d42b4bdf266f58626066f6ceb62bbd8ac23b376ab26d30", size = 5654166, upload-time = "2025-01-29T11:34:29.393Z" },
+    { url = "https://files.pythonhosted.org/packages/57/5a/5329d8dc6ccd45c91272ecb3fc9c7c2b01b683335ebb4dfc204ec934ab4b/libtorrent-2.0.11-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:31e2a990a055cefb296ed52d2998bea406ee4db538df8e919af9c6878f4d4c5b", size = 5653459, upload-time = "2025-01-29T11:34:32.611Z" },
+    { url = "https://files.pythonhosted.org/packages/37/99/a4e5711fa26882165e653dd3c661ce1b3542ac9e51c3b660bfd134b43d36/libtorrent-2.0.11-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:fea392e3e0b2f5e84000ec87fd2b3fa11477216875809737ce00c9ba07db4c55", size = 8251384, upload-time = "2025-01-29T11:34:35.699Z" },
+    { url = "https://files.pythonhosted.org/packages/58/bd/475332a05b25de3b6d350144d8c5bfe74c23412c8e7f34dff43f8ded2cdb/libtorrent-2.0.11-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:fbf4418471a96158d995c4573697ce2dcf27ca42d0b03c3bf97b0165015bf641", size = 8514680, upload-time = "2025-01-29T11:34:39.211Z" },
+    { url = "https://files.pythonhosted.org/packages/dc/24/178cd82b11e0c989d24123cb0512d15164f7447ffb05f6a631818bd00f68/libtorrent-2.0.11-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:db0bd26b803c21f3d02a455c9521c8aef4418c457b5751493cd464ca336ae11e", size = 12076821, upload-time = "2025-01-29T11:34:42.273Z" },
+    { url = "https://files.pythonhosted.org/packages/ae/a0/f8c79175be62c66e486d5ec72b4d318191583e30fa52b530add07562bc39/libtorrent-2.0.11-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:545bf693844477c42e8d24e0d461c3bec4ab3a71914cb6aea105044994e40a89", size = 12065535, upload-time = "2025-01-29T11:34:46.64Z" },
+    { url = "https://files.pythonhosted.org/packages/09/75/cf1988d3fe2f933e858449bc3a55c3fa3edba4292f8d3d15a777e1afb568/libtorrent-2.0.11-cp312-cp312-win32.whl", hash = "sha256:00c626742e03447703bc726bb430a0f3e2f0661ae5a5cd06f5d7cd1b81eb92c2", size = 1772291, upload-time = "2025-01-29T11:34:49.452Z" },
+    { url = "https://files.pythonhosted.org/packages/7a/f5/a0e16855d73ea8dc33351a12dfa16dcad12bbacfc2e6632247484fbbed82/libtorrent-2.0.11-cp312-cp312-win_amd64.whl", hash = "sha256:5b8a9a5943c304d1c8093d2a6ec222d81dd84d080861cd5aaaa040e31034417a", size = 1973825, upload-time = "2025-01-29T11:34:54.371Z" },
+    { url = "https://files.pythonhosted.org/packages/92/74/b689c070c1649c69b6f70c27cd9f3418fb3cba7532b6b5f857c1689edcdc/libtorrent-2.0.11-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:f4489732bbc44114c7fb1893b71c578052d1aca352852002938b23ac8a6fb5c3", size = 5555119, upload-time = "2025-01-29T11:34:57.644Z" },
+    { url = "https://files.pythonhosted.org/packages/c1/b8/24e072c2270fc0193332987f1c3082a1cc8276bc462167b3e45fa0bb9a07/libtorrent-2.0.11-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:758662c88a186c6018e4062d1b1b5e58ed55e17189ad4a7389c87b8b2b5efeb4", size = 5654645, upload-time = "2025-01-29T11:35:00.79Z" },
+    { url = "https://files.pythonhosted.org/packages/07/62/5e3bbebfcf19c963f3f960b8a28ad2bf8cad1e56d8dce3ff9387084ef705/libtorrent-2.0.11-cp313-cp313-macosx_15_0_arm64.whl", hash = "sha256:55aa67cdc8cbf777e41998d5432a3ab01f198c955ec6d2fb14c500b309db3f37", size = 5653493, upload-time = "2025-01-29T11:35:03.139Z" },
+    { url = "https://files.pythonhosted.org/packages/5c/85/e067ca5544e79525b80a7a986cb58e28977f274c4f341d1294c0ea35d7c7/libtorrent-2.0.11-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:474e792c52319cc918a007aa61cb34fb7f9236fa6c9603953e8c0fb3e6d922c7", size = 8251482, upload-time = "2025-01-29T11:35:05.522Z" },
+    { url = "https://files.pythonhosted.org/packages/a4/4c/86d834a8bbdd34276e4d87400d105ddab1dd4b8938f2c1229accc03a5b0d/libtorrent-2.0.11-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e234f665c987262d4102f6d2e099d76b12dfa20bcc77b77891184b075ab84ea8", size = 8514771, upload-time = "2025-01-29T11:35:09.604Z" },
+    { url = "https://files.pythonhosted.org/packages/f6/7e/e369802ae56bad9de629d9ad7c719dc4328aecf9aac8f61d33755d20b269/libtorrent-2.0.11-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:8be0e27f40594bfee42e60e7785261834fdaf938267dceee8a08eae08a12a3c2", size = 12076824, upload-time = "2025-01-29T11:35:12.773Z" },
+    { url = "https://files.pythonhosted.org/packages/51/c6/b78e0f1515e65ca1a22383124cd867a1c9eee40053e7971064dd937c4802/libtorrent-2.0.11-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:51daa58d0958ac99d88a1749d6848c6023ea899da98e503b12a1a311189d79fd", size = 12065489, upload-time = "2025-01-29T11:35:16.533Z" },
+    { url = "https://files.pythonhosted.org/packages/db/4a/cac02c0d907ec37f22131207f69e78a97045d8e8cab6c6b0a29647dbf732/libtorrent-2.0.11-cp313-cp313-win32.whl", hash = "sha256:63fcb829d2b9fed566771426c7b1473a4acb7ccb4957ef07793b28de8468cd3e", size = 1772278, upload-time = "2025-01-29T11:35:19.333Z" },
+    { url = "https://files.pythonhosted.org/packages/3d/7b/49ebb7df766398d49d59335481dafd7f4a3e8669a1aee5a6d22f9338b09c/libtorrent-2.0.11-cp313-cp313-win_amd64.whl", hash = "sha256:f72f0075b84aa18d25ee3ab3c39ba5193777d34d016c9a38294c92ffc60f6225", size = 1973890, upload-time = "2025-01-29T11:35:22.157Z" },
+]
+
+[[package]]
 name = "logfire"
 version = "3.18.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1212,6 +1237,7 @@ dependencies = [
     { name = "fuzzywuzzy", extra = ["speedup"] },
     { name = "geoip-py" },
     { name = "gunicorn" },
+    { name = "libtorrent" },
     { name = "logfire", extra = ["aiohttp", "fastapi", "requests", "sqlalchemy"] },
     { name = "lxml" },
     { name = "makefun" },
@@ -1295,6 +1321,7 @@ requires-dist = [
     { name = "fuzzywuzzy", extras = ["speedup"], specifier = "==0.18.0" },
     { name = "geoip-py", specifier = ">=1.0.2" },
     { name = "gunicorn" },
+    { name = "libtorrent", specifier = ">=2.0.11" },
     { name = "logfire", extras = ["fastapi", "aiohttp", "sqlalchemy", "requests"], specifier = ">=3.18.0" },
     { name = "lxml" },
     { name = "makefun", specifier = "==1.16.0" },

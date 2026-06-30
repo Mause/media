@@ -25,6 +25,7 @@ dependencies = [
   "fuzzywuzzy[speedup]==0.18.0",
   "geoip-py>=1.0.2",
   "gunicorn",
+  "libtorrent>=2.0.11",
   "logfire[fastapi,aiohttp,sqlalchemy,requests]>=3.18.0",
   "lxml",
   "makefun==1.16.0",
