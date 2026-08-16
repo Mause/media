@@ -5,6 +5,10 @@ resolution-markers = [
     "'android' not in platform_release",
     "'android' in platform_release",
 ]
+required-markers = [
+    "'android' not in platform_release",
+    "'android' in platform_release",
+]
 
 [[package]]
 name = "aiocache"
