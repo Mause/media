@@ -58,15 +58,15 @@ dev = [
   "freezegun>=1.5.5",
   "lxml",
   "pre-commit>=4.2.0",
-  "pytest",
+  "pytest>=9",
   "pytest-alembic>=0.12.1",
-  "pytest-asyncio==1.2.0",
+  "pytest-asyncio>=1.2.0",
   "pytest-cov>=6.1.1",
   "pytest-html>=3.1.1",
   "pytest-resource-path>=1.4.0",
   "pytest-selenium>=3.0.0",
-  "pytest-snapshot",
-  "pytest-sugar",
+  "pytest-snapshot>=0.9.0",
+  "pytest-sugar>=1.0.0",
   "responses==0.25.8",
   "types-cachetools>=5.5.0.20240820",
   "types-lxml>=2025.3.30",
@@ -104,8 +104,14 @@ module = [
 ]
 disallow_untyped_defs = true
 
-[tool.pytest.ini_options]
-addopts = "--driver chrome --html report.html --self-contained-html --cov-report html --cov"
+[tool.pytest]
+addopts = [
+  "--cov",
+  "--cov-report=html",
+  "--driver=chrome",
+  "--html=report.html",
+  "--self-contained-html"
+]
 testpaths = ["./rarbg_local/tests"]
 asyncio_default_fixture_loop_scope = "function"
 
