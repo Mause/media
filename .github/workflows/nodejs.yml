@@ -15,6 +15,9 @@ jobs:
       run:
         working-directory: app
 
+    permissions:
+      contents: read
+
     steps:
       - uses: actions/checkout@v6
         with:
