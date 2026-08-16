@@ -2,6 +2,9 @@ name: Client
 
 on: push
 
+permissions:
+  contents: read
+
 jobs:
   generate_client:
     name: Check client
@@ -12,13 +15,15 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v6
-    - run: corepack enable
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ matrix.node-version }}
-    - uses: nickcharlton/diff-check@main
-      with:
-        command: |
-          cd app && yarn && yarn generate:static
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - run: corepack enable
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: nickcharlton/diff-check@9fa7ac2bd275b9ec60f13dbcef1b90cfaadc1872 # main
+        with:
+          command: |
+            cd app && yarn && yarn generate:static
