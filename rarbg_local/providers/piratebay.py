@@ -1,14 +1,13 @@
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from urllib.parse import urlencode
 
 import aiohttp
 from healthcheck import HealthcheckCallbackResponse
 
 from ..models import EpisodeInfo, ITorrent, ProviderSource
 from ..types import ImdbId, TmdbId
-from ..utils import format_marker
+from ..utils import build_magnet, format_marker
 from .abc import MovieProvider, TvProvider
 
 logger = logging.getLogger(__name__)
@@ -50,11 +49,6 @@ def convert_category(category: int) -> str:
     return message
 
 
-def magnet(info_hash: str, name: str) -> str:
-    """Generate a magnet link from an info hash."""
-    return f'magnet:?xt=urn:btih:{info_hash}&' + urlencode({'dn': name})
-
-
 class PirateBayProvider(TvProvider, MovieProvider):
     type = ProviderSource.PIRATEBAY
     root = 'https://apibay.org/q.php'
@@ -86,7 +80,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
                     source=ProviderSource.PIRATEBAY,
                     title=item['name'],
                     seeders=int(item['seeders']),
-                    download=magnet(item['info_hash'], item['name']),
+                    download=build_magnet(item['info_hash'], item['name']),
                     category=convert_category(int(item['category'])),
                     episode_info=EpisodeInfo(seasonnum=season, epnum=episode),
                 )
@@ -100,7 +94,7 @@ class PirateBayProvider(TvProvider, MovieProvider):
                     source=ProviderSource.PIRATEBAY,
                     title=item['name'],
                     seeders=int(item['seeders']),
-                    download=magnet(item['info_hash'], item['name']),
+                    download=build_magnet(item['info_hash'], item['name']),
                     category=convert_category(int(item['category'])),
                 )
 
