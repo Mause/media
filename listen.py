@@ -2,7 +2,7 @@ import asyncio
 from asyncio import create_task
 
 import uvloop
-from psycopg import AsyncConnection, connect
+from psycopg import AsyncConnection
 
 
 async def listener(conn: AsyncConnection) -> None:
