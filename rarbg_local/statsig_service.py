@@ -1,29 +1,32 @@
 import json
-from typing import TYPE_CHECKING, Annotated
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
+from statsig import (
+    HashingAlgorithm,
+    StatsigEnvironmentTier,
+    StatsigOptions,
+    StatsigServer,
+    StatsigUser,
+)
 
 from .settings import Settings, get_settings
 
 router = APIRouter()
 
-if TYPE_CHECKING:
-    from statsig_python_core import Statsig
-
 
 async def get_statsig(
     settings: Annotated[Settings, Depends(get_settings)],
-) -> 'Statsig':
-    from statsig_python_core import Statsig, StatsigOptions
-
+) -> StatsigServer:
     key = settings.statsig_key.get_secret_value()
     options = StatsigOptions(
-        environment="development", disable_network=key == "statsig_key"
+        tier=StatsigEnvironmentTier.development,
+        local_mode=key == "statsig_key",
     )
 
-    statsig = Statsig(key, options)
-    statsig.initialize().wait()
+    statsig = StatsigServer()
+    statsig.initialize(key, options)
 
     return statsig
 
@@ -37,10 +40,8 @@ async def statsig_bootstrap(
     request: Request,
     email: str,
     user_id: str,
-    statsig: Annotated['Statsig', Depends(get_statsig)],
+    statsig: Annotated[StatsigServer, Depends(get_statsig)],
 ) -> StatsigBootstrapResponse:
-    from statsig_python_core import StatsigUser
-
     # Create a user object from the request
     user = StatsigUser(
         user_id=user_id,
@@ -51,7 +52,7 @@ async def statsig_bootstrap(
 
     # Generate the client initialize response
     response_data = statsig.get_client_initialize_response(
-        user, hash='djb2', client_sdk_key='client-sdk-key'
+        user, hash=HashingAlgorithm.DJB2, client_sdk_key='client-sdk-key'
     )
 
     # Parse the JSON response
