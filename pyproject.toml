@@ -122,4 +122,4 @@ select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 ignore = ["ANN401"]
 
 [tool.uv.sources]
-aioresponses = { git = "https://github.com/agners/aioresponses", rev = "8f40e0db2eed16621607ecfc857168240c795755" }
+aioresponses = { git = "https://github.com/kleine-safie/aioresponses", rev = "support_pause_reading" }

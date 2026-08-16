@@ -95,7 +95,7 @@ wheels = [
 [[package]]
 name = "aioresponses"
 version = "0.0.1.dev376"
-source = { git = "https://github.com/agners/aioresponses?rev=8f40e0db2eed16621607ecfc857168240c795755#8f40e0db2eed16621607ecfc857168240c795755" }
+source = { git = "https://github.com/kleine-safie/aioresponses?rev=support_pause_reading#1a48e1f898035e3bedc981f06520842c55977706" }
 dependencies = [
     { name = "aiohttp" },
     { name = "packaging" },
@@ -1140,7 +1140,7 @@ debug = [
     { name = "pudb" },
 ]
 dev = [
-    { name = "aioresponses", git = "https://github.com/agners/aioresponses?rev=8f40e0db2eed16621607ecfc857168240c795755" },
+    { name = "aioresponses", git = "https://github.com/kleine-safie/aioresponses?rev=support_pause_reading" },
     { name = "aiosqlite", specifier = ">=0.21.0" },
     { name = "async-asgi-testclient", specifier = "==1.4.11" },
     { name = "cryptography", specifier = "==46.0.6" },
