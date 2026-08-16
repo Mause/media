@@ -22,12 +22,9 @@ async def main() -> None:
     import pudb
 
     pudb.set_trace()
-    conn = connect("dbname=postgres")
-    aconn = AsyncConnection(
-        conn.connection.pgconn,
-    )
-    create_task(publisher(aconn))
-    await listener(aconn)
+    conn = await AsyncConnection.connect("dbname=postgres")
+    create_task(publisher(conn))
+    await listener(conn)
 
 
 if __name__ == "__main__":
