@@ -22,11 +22,11 @@ dependencies = [
   "fastapi==0.119.1",
   "fastapi-oidc>=0.0.10",
   "fastapi-utils==0.8.0",
-  "fuzzywuzzy[speedup]==0.18.0",
+  "fuzzywuzzy[speedup]>=0.18.0",
   "geoip-py>=1.0.2",
   "gunicorn",
   "logfire[fastapi,aiohttp,sqlalchemy,requests]>=3.18.0",
-  "lxml",
+  "lxml>=6.1.1",
   "makefun==1.16.0",
   "mause-rpc==0.0.18",
   "nyaapy>=0.7",
@@ -45,7 +45,7 @@ dependencies = [
   "statsig>=0.72.0",
   "typing-inspect>=0.9.0",
   "uvicorn-worker>=0.3.0",
-  "uvicorn[standard]",
+  "uvicorn[standard]>=0.34.2",
 ]
 
 [dependency-groups]
@@ -129,3 +129,4 @@ required-environments = [
 
 [tool.uv.sources]
 aioresponses = { git = "https://github.com/kleine-safie/aioresponses", rev = "support_pause_reading" }
+nyaapy = { git = "https://github.com/Mause/nyaapy" }
