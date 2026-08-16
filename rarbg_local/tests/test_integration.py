@@ -477,7 +477,7 @@ async def test_search(
                 },
             ]
         },
-        query='&query=chernobyl',
+        query='query=chernobyl',
     )
 
     res = await test_client.get('/api/search?query=chernobyl')

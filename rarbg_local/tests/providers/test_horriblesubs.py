@@ -136,7 +136,7 @@ async def test_provider(
     add_json(
         aioresponses,
         'GET',
-        'https://api.jikan.moe/v4/anime?limit=1&q=Little+Busters%2521',
+        'https://api.jikan.moe/v4/anime?limit=1&q=Little+Busters!',
         {
             'data': [
                 {

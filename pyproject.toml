@@ -2,14 +2,14 @@
 name = "media"
 version = "0.1.0"
 description = ""
-requires-python = ">=3.12.0"
+requires-python = "==3.13.*"
 license = "MIT"
 authors = [{ name = "Elliana May", email = "me@mause.me" }]
 dependencies = [
   "aiocache[redis]>=0.12.3",
   "aiofiles==24.1.0",
-  "aiohttp==3.12.15",
-  "aiontfy>=0.5.3",
+  "aiohttp==3.14.3",
+  "aiontfy>=0.8.5",
   "alembic==1.17.1",
   "aniso8601==10.0.1",
   "asyncache==0.3.1",
@@ -22,11 +22,11 @@ dependencies = [
   "fastapi==0.119.1",
   "fastapi-oidc>=0.0.10",
   "fastapi-utils==0.8.0",
-  "fuzzywuzzy[speedup]==0.18.0",
+  "fuzzywuzzy[speedup]>=0.18.0",
   "geoip-py>=1.0.2",
   "gunicorn",
   "logfire[fastapi,aiohttp,sqlalchemy,requests]>=3.18.0",
-  "lxml",
+  "lxml>=6.1.1",
   "makefun==1.16.0",
   "mause-rpc==0.0.18",
   "nyaapy>=0.7",
@@ -37,20 +37,20 @@ dependencies = [
   "pydantic-settings>=2.9.1",
   "pyjwt>=2.10.1",
   "python-healthchecklib>=0.1.1",
-  "python-multipart==0.0.27",
+  "python-multipart==0.0.31",
   "pytz==2025.2",
   "sentry-sdk==2.42.1",
   "sqlalchemy-repr==0.1.0",
   "sqlalchemy[mypy]==2.0.44",
-  "statsig-python-core>=0.10.2",
+  "statsig>=0.72.0",
   "typing-inspect>=0.9.0",
   "uvicorn-worker>=0.3.0",
-  "uvicorn[standard]",
+  "uvicorn[standard]>=0.34.2",
 ]
 
 [dependency-groups]
 dev = [
-  "aioresponses==0.7.8",
+  "aioresponses",
   "aiosqlite>=0.21.0",
   "async-asgi-testclient==1.4.11",
   "cryptography==46.0.6",
@@ -120,3 +120,13 @@ docstring-code-line-length = 20
 [tool.ruff.lint]
 select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 ignore = ["ANN401"]
+
+[tool.uv]
+required-environments = [
+  "'android' not in platform_release",
+  "'android' in platform_release",
+]
+
+[tool.uv.sources]
+aioresponses = { git = "https://github.com/kleine-safie/aioresponses", rev = "support_pause_reading" }
+nyaapy = { git = "https://github.com/Mause/nyaapy" }
