@@ -103,7 +103,7 @@ logging.getLogger('backoff').handlers.clear()
 
 
 def generate_plain_text(exc: BaseException) -> str:
-    logger.exception('Error occured', exc_info=exc)
+    logger.error('Error occured', exc_info=exc)
     return ''.join(traceback.format_exception(type(exc), exc, exc.__traceback__))
 
 
