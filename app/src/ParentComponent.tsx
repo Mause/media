@@ -1,24 +1,24 @@
-import { useSentryToolbar } from '@sentry/toolbar';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Grid, Link as MaterialLink } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import * as Sentry from '@sentry/react';
+import { useProfiler } from '@sentry/react';
+import { useSentryToolbar } from '@sentry/toolbar';
+import * as _ from 'lodash-es';
 import type { ErrorInfo } from 'react';
+import type { FallbackProps } from 'react-error-boundary';
+import { ErrorBoundary } from 'react-error-boundary';
 import {
-  RouterProvider,
   createBrowserRouter,
   Outlet,
+  RouterProvider,
   useLocation,
   useMatches,
 } from 'react-router-dom';
-import type { FallbackProps } from 'react-error-boundary';
-import { ErrorBoundary } from 'react-error-boundary';
-import { Grid, Link as MaterialLink } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { useProfiler } from '@sentry/react';
-import { useAuth0 } from '@auth0/auth0-react';
-import * as _ from 'lodash-es';
 
-import type { components } from './schema';
-import { ExtMLink, MLink, SwrConfigWrapper, CmdK } from './components';
+import { CmdK, ExtMLink, MLink, SwrConfigWrapper } from './components';
 import routes from './routes';
+import type { components } from './schema';
 
 export type TorrentFile = components['schemas']['InnerTorrentFile'];
 export type Torrents = { [key: string]: components['schemas']['InnerTorrent'] };

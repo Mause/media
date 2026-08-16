@@ -1,13 +1,13 @@
 import { screen } from '@testing-library/react';
-import { Route, Routes, MemoryRouter } from 'react-router-dom';
 import { HttpResponse, http } from 'msw';
 import { act } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { renderWithSWR, waitForRequests } from './test.utils';
 import type { DownloadCall, DownloadState } from './DownloadComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { server } from './msw';
 import type { paths } from './schema';
+import { renderWithSWR, waitForRequests } from './test.utils';
 
 type DownloadResponse =
   paths['/api/download']['post']['responses']['200']['content']['application/json'];

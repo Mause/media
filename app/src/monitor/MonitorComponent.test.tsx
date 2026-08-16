@@ -1,14 +1,13 @@
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { RequestWaiter, renderWithSWR, waitForRequests } from '../test.utils';
 import { server } from '../msw';
-import type { GetResponse } from '../utils';
 import type { paths } from '../schema';
-
-import { MonitorComponent, MonitorAddComponent } from './MonitorComponent';
+import { RequestWaiter, renderWithSWR, waitForRequests } from '../test.utils';
+import type { GetResponse } from '../utils';
+import { MonitorAddComponent, MonitorComponent } from './MonitorComponent';
 
 type MonitorResponse = GetResponse<paths['/api/monitor']>;
 

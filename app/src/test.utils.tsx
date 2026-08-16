@@ -1,14 +1,14 @@
-import { render } from '@testing-library/react';
-import type { ReactElement } from 'react';
-import { act } from 'react';
 import type { Auth0ContextInterface } from '@auth0/auth0-react';
 import { Auth0Context } from '@auth0/auth0-react';
 import {
-  ThemeProvider,
-  StyledEngineProvider,
   createTheme,
+  StyledEngineProvider,
+  ThemeProvider,
 } from '@mui/material/styles';
+import { render } from '@testing-library/react';
 import * as _ from 'lodash-es';
+import type { ReactElement } from 'react';
+import { act } from 'react';
 
 import { SwrConfigWrapper } from './components';
 import { server } from './msw';

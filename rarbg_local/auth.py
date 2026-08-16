@@ -19,7 +19,7 @@ from .db import User, get_async_db
 logger = logging.getLogger(__name__)
 AUTH0_DOMAIN = 'https://mause.au.auth0.com/'
 
-t = TTLCache[str, dict](maxsize=10, ttl=3600)
+t: TTLCache[str, dict] = TTLCache[str, dict](maxsize=10, ttl=3600)
 
 get_my_jwkaas = get_auth(
     client_id="",

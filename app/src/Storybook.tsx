@@ -1,13 +1,13 @@
+import { base, en, en_AU, Faker } from '@faker-js/faker';
+import { Box, Tab, Tabs } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
 import { useSWRConfig } from 'swr';
-import { en_AU, Faker, en, base } from '@faker-js/faker';
-import { Box, Tab, Tabs } from '@mui/material';
 
-import { Progress } from './render';
 import { ContextMenu, RouteTitle } from './components';
 import { SimpleDiagnosticDisplay } from './DiagnosticsComponent';
 import { PureDiscoveryComponent } from './DiscoveryComponent';
+import { Progress } from './render';
 
 function DiscoveryStory() {
   const { mutate } = useSWRConfig();

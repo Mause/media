@@ -1,18 +1,17 @@
-import { useState, useMemo } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import * as _ from 'lodash-es';
-import usePromise from 'react-promise-suspense';
-import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import MenuItem from '@mui/material/MenuItem';
+import * as _ from 'lodash-es';
+import { useMemo, useState } from 'react';
+import usePromise from 'react-promise-suspense';
 
-import { getToken } from '../utils';
 import type { components } from '../schema';
-
+import { getToken } from '../utils';
 import { OpenNewWindow } from './OpenNewWindow';
 import { nextId, readyStateToString, useMessage } from './websocket';
 

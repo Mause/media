@@ -113,10 +113,11 @@ class CronResponse[T](BaseModel):
 
 
 monitor_config: MonitorConfig = {
+    'timezone': 'UTC',
     'schedule': {
         'type': 'crontab',
         'value': '0 * * * *',  # every hour
-    }
+    },
 }
 
 

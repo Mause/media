@@ -1,9 +1,8 @@
+import { HttpResponse, http } from 'msw';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { http, HttpResponse } from 'msw';
 
-import { renderWithSWR, waitForRequests } from '../test.utils';
 import { server } from '../msw';
-
+import { renderWithSWR, waitForRequests } from '../test.utils';
 import { DownloadAllComponent } from './DownloadAllComponent';
 import type { ITorrent } from './OptionsComponent';
 

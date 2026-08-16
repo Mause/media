@@ -1,12 +1,11 @@
-import { it, vi, describe } from 'vitest';
-import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ws } from 'msw';
+import { describe, it, vi } from 'vitest';
 
 import { server } from '../msw';
 import { renderWithSWR } from '../test.utils';
-
-import { OpenPlex, ContextMenu } from '.';
+import { ContextMenu, OpenPlex } from '.';
 
 describe('OpenPlex', () => {
   it('should render without crashing', async () => {

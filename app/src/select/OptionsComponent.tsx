@@ -1,18 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Alert, Breadcrumbs, Typography } from '@mui/material';
+import * as _ from 'lodash-es';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { Alert, Breadcrumbs, Typography } from '@mui/material';
-import { useAuth0 } from '@auth0/auth0-react';
-import * as _ from 'lodash-es';
 
-import * as qs from '../qs';
-import { subscribe, getToken } from '../utils';
-import type { Torrents } from '../ParentComponent';
-import type { components } from '../schema';
-import { DisplayError, MLink, DisplayTorrent, Loading } from '../components';
-import { MonitorAddComponent } from '../monitor/MonitorComponent';
+import { DisplayError, DisplayTorrent, Loading, MLink } from '../components';
 import type { ManualAddComponentState } from '../ManualAddComponent';
-
+import { MonitorAddComponent } from '../monitor/MonitorComponent';
+import type { Torrents } from '../ParentComponent';
+import * as qs from '../qs';
+import type { components } from '../schema';
+import { getToken, subscribe } from '../utils';
 import { Shared } from './SeasonSelectComponent';
 
 export type ITorrent = components['schemas']['ITorrent'];

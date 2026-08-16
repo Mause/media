@@ -1,14 +1,14 @@
+import { faTicketAlt, faTv } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTicketAlt, faTv } from '@fortawesome/free-solid-svg-icons';
 
 import {
   DisplayError,
-  MLink,
-  SearchBox,
-  RouteTitle,
   Loading,
+  MLink,
+  RouteTitle,
+  SearchBox,
 } from './components';
 import type { components, paths } from './schema';
 import type { GetResponse } from './utils';
