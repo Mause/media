@@ -15,15 +15,15 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v6
-      with:
-        persist-credentials: false
-    - run: corepack enable
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ matrix.node-version }}
-    - uses: nickcharlton/diff-check@main
-      with:
-        command: |
-          cd app && yarn && yarn generate:static
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - run: corepack enable
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: nickcharlton/diff-check@main
+        with:
+          command: |
+            cd app && yarn && yarn generate:static
