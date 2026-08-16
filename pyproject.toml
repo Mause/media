@@ -26,7 +26,7 @@ dependencies = [
   "geoip-py>=1.0.2",
   "gunicorn",
   "logfire[fastapi,aiohttp,sqlalchemy,requests]>=3.18.0",
-  "lxml",
+  "lxml>=6.1.1",
   "makefun==1.16.0",
   "mause-rpc==0.0.18",
   "nyaapy>=0.7",
@@ -129,3 +129,4 @@ required-environments = [
 
 [tool.uv.sources]
 aioresponses = { git = "https://github.com/kleine-safie/aioresponses", rev = "support_pause_reading" }
+nyaapy = { git = "https://github.com/Mause/nyaapy" }
