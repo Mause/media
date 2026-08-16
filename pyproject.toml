@@ -50,7 +50,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "aioresponses==0.7.8",
+  "aioresponses",
   "aiosqlite>=0.21.0",
   "async-asgi-testclient==1.4.11",
   "cryptography==46.0.6",
