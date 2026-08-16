@@ -21,7 +21,6 @@ dependencies = [
   "eventlet==0.40.3",
   "fastapi==0.119.1",
   "fastapi-oidc>=0.0.10",
-  "fastapi-utils==0.8.0",
   "fuzzywuzzy[speedup]>=0.18.0",
   "geoip-py>=1.0.2",
   "gunicorn",

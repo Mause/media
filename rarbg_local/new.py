@@ -16,13 +16,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, Response, StreamingResponse
-from fastapi_utils.openapi import simplify_operation_ids
 from pydantic import BaseModel
 from sqlalchemy import Row, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_object_session
 from sqlalchemy.future import select
 from starlette.staticfiles import StaticFiles
 from statsig import StatsigEvent, StatsigServer, StatsigUser
+
+from rarbg_local.openapi import simplify_operation_ids
 
 from .auth import security
 from .config import commit, production
