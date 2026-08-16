@@ -36,13 +36,13 @@ jobs:
         run: |
           uv sync --dev --locked
       - name: Run mypy
-        uses: liskin/gh-problem-matcher-wrap@e7b7beaaafa52524748b31a381160759d68d61fb # v3
+        uses: liskin/gh-problem-matcher-wrap@d31bb388d13cf879e93f878cb2550299f0afb460 # v4
         with:
           linters: mypy
           run: uv run mypy --show-column-numbers rarbg_local
       - run: uv run alembic upgrade head --sql
       - name: Test with pytest
-        uses: liskin/gh-problem-matcher-wrap@e7b7beaaafa52524748b31a381160759d68d61fb # v3
+        uses: liskin/gh-problem-matcher-wrap@d31bb388d13cf879e93f878cb2550299f0afb460 # v4
         with:
           linters: pytest
           run: uv run pytest -v
