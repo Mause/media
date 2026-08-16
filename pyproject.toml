@@ -45,7 +45,7 @@ dependencies = [
   "statsig>=0.72.0",
   "typing-inspect>=0.9.0",
   "uvicorn-worker>=0.3.0",
-  "uvicorn[standard]",
+  "uvicorn[standard]>=0.34.2",
 ]
 
 [dependency-groups]
