@@ -121,5 +121,11 @@ docstring-code-line-length = 20
 select = ["F", "E", "W", "I", "T", "LOG", "ANN"]
 ignore = ["ANN401"]
 
+[tool.uv]
+required-environments = [
+  "'android' not in platform_release",
+  "'android' in platform_release",
+]
+
 [tool.uv.sources]
 aioresponses = { git = "https://github.com/kleine-safie/aioresponses", rev = "support_pause_reading" }
