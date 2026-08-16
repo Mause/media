@@ -1,29 +1,35 @@
 import json
-from typing import TYPE_CHECKING, Annotated
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
+from statsig import (
+    HashingAlgorithm,
+    StatsigEnvironmentTier,
+    StatsigOptions,
+    StatsigServer,
+    StatsigUser,
+)
+
+from rarbg_local.auth import get_current_user
+from rarbg_local.db import User
 
 from .settings import Settings, get_settings
 
 router = APIRouter()
 
-if TYPE_CHECKING:
-    from statsig_python_core import Statsig
-
 
 async def get_statsig(
     settings: Annotated[Settings, Depends(get_settings)],
-) -> 'Statsig':
-    from statsig_python_core import Statsig, StatsigOptions
-
+) -> StatsigServer:
     key = settings.statsig_key.get_secret_value()
     options = StatsigOptions(
-        environment="development", disable_network=key == "statsig_key"
+        tier=StatsigEnvironmentTier.development,
+        local_mode=key == "statsig_key",
     )
 
-    statsig = Statsig(key, options)
-    statsig.initialize().wait()
+    statsig = StatsigServer()
+    statsig.initialize(key, options)
 
     return statsig
 
@@ -32,26 +38,37 @@ class StatsigBootstrapResponse(BaseModel):
     statsig_values: dict | list
 
 
-@router.post('/statsig-bootstrap')
-async def statsig_bootstrap(
-    request: Request,
-    email: str,
-    user_id: str,
-    statsig: Annotated['Statsig', Depends(get_statsig)],
-) -> StatsigBootstrapResponse:
-    from statsig_python_core import StatsigUser
+def get_statsig_user(
+    request: Request, user: Annotated[User, Depends(get_current_user)]
+) -> StatsigUser:
+    return make_statsig_user(request, user.email, str(user.id))
 
-    # Create a user object from the request
-    user = StatsigUser(
+
+def make_statsig_user(
+    request: Request,
+    email: str | None,
+    user_id: str | None,
+) -> StatsigUser:
+    return StatsigUser(
         user_id=user_id,
         email=email,
         ip=request.client.host if request.client else None,
         user_agent=request.headers.get('User-Agent'),
     )
 
+
+@router.post('/statsig-bootstrap')
+async def statsig_bootstrap(
+    request: Request,
+    email: str,
+    user_id: str,
+    statsig: Annotated[StatsigServer, Depends(get_statsig)],
+) -> StatsigBootstrapResponse:
+    user = make_statsig_user(request, email, user_id)
+    # Create a user object from the request
     # Generate the client initialize response
     response_data = statsig.get_client_initialize_response(
-        user, hash='djb2', client_sdk_key='client-sdk-key'
+        user, hash=HashingAlgorithm.DJB2, client_sdk_key='client-sdk-key'
     )
 
     # Parse the JSON response
