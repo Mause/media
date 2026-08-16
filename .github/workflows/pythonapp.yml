@@ -5,6 +5,9 @@ on: [push]
 permissions:
   contents: read
 
+env:
+  FORCE_COLOR: 1
+
 jobs:
   build_backend:
     runs-on: ubuntu-latest
