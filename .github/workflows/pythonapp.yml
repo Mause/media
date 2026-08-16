@@ -20,14 +20,14 @@ jobs:
       UV_PYTHON: ${{ matrix.python-version }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install uv
-        uses: astral-sh/setup-uv@v8.1.0
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
@@ -36,13 +36,13 @@ jobs:
         run: |
           uv sync --dev --locked
       - name: Run mypy
-        uses: liskin/gh-problem-matcher-wrap@v3
+        uses: liskin/gh-problem-matcher-wrap@e7b7beaaafa52524748b31a381160759d68d61fb # v3
         with:
           linters: mypy
           run: uv run mypy --show-column-numbers rarbg_local
       - run: uv run alembic upgrade head --sql
       - name: Test with pytest
-        uses: liskin/gh-problem-matcher-wrap@v3
+        uses: liskin/gh-problem-matcher-wrap@e7b7beaaafa52524748b31a381160759d68d61fb # v3
         with:
           linters: pytest
           run: uv run pytest -v
@@ -52,7 +52,7 @@ jobs:
           TMDB_READ_ACCESS_TOKEN: word
           PYTEST_ADDOPTS: "--color=yes"
       - name: Archive test report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: always()
         with:
           name: report-${{ matrix.python-version }}.html
@@ -62,15 +62,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
       - run: corepack enable
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "22"
           cache: "yarn"
       - run: yarn
         working-directory: app/
-      - uses: actions/setup-python@v6
-      - uses: pre-commit/action@v3.0.1
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
