@@ -31,8 +31,8 @@ dependencies = [
   "mause-rpc==0.0.18",
   "nyaapy>=0.7",
   "plexapi==4.17.1",
-  "psycopg[binary,pool]>=3.2.9; 'android' not in platform_release",
-  "psycopg[c,pool]>=3.2.9; 'android' in platform_release",
+  "psycopg[binary,pool]>=3.2.9; sys.platform != 'android'",
+  "psycopg[c,pool]>=3.2.9; sys.platform == 'android'",
   "pydantic>=2.12.0",
   "pydantic-settings>=2.9.1",
   "pyjwt>=2.10.1",
@@ -123,8 +123,8 @@ ignore = ["ANN401"]
 
 [tool.uv]
 required-environments = [
-  "'android' not in platform_release",
-  "'android' in platform_release",
+  "sys_platform == 'android'",
+  "sys_platform != 'android'",
 ]
 
 [tool.uv.sources]
