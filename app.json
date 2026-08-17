@@ -1,6 +1,10 @@
 {
   "stack": "heroku-26",
   "formation": {
+    "release": {
+      "quantity": 1,
+      "size": "basic"
+    },
     "web": {
       "quantity": 1,
       "size": "basic"
@@ -9,6 +13,10 @@
   "environments": {
     "review": {
       "formation": {
+        "release": {
+          "quantity": 1,
+          "size": "eco"
+        },
         "web": {
           "quantity": 1,
           "size": "eco"
