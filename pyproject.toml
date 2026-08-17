@@ -2,7 +2,7 @@
 name = "media"
 version = "0.1.0"
 description = ""
-requires-python = "==3.13.*"
+requires-python = ">=3.14.0,<3.15.0"
 license = "MIT"
 authors = [{ name = "Elliana May", email = "me@mause.me" }]
 dependencies = [
@@ -21,7 +21,6 @@ dependencies = [
   "eventlet==0.40.3",
   "fastapi==0.119.1",
   "fastapi-oidc>=0.0.10",
-  "fastapi-utils==0.8.0",
   "fuzzywuzzy[speedup]>=0.18.0",
   "geoip-py>=1.0.2",
   "gunicorn",
@@ -31,8 +30,8 @@ dependencies = [
   "mause-rpc==0.0.18",
   "nyaapy>=0.7",
   "plexapi==4.17.1",
-  "psycopg[binary,pool]>=3.2.9; 'android' not in platform_release",
-  "psycopg[c,pool]>=3.2.9; 'android' in platform_release",
+  "psycopg[binary,pool]>=3.2.9; sys.platform != 'android'",
+  "psycopg[c,pool]>=3.2.9; sys.platform == 'android'",
   "pydantic>=2.12.0",
   "pydantic-settings>=2.9.1",
   "pyjwt>=2.10.1",
@@ -57,11 +56,12 @@ dev = [
   "factory-boy==3.3.3",
   "freezegun>=1.5.5",
   "lxml",
+  "mypy>=2.3.1",
   "pre-commit>=4.2.0",
   "pytest",
   "pytest-alembic>=0.12.1",
   "pytest-asyncio==1.2.0",
-  "pytest-cov>=6.1.1",
+  "pytest-cov>=7.1.0",
   "pytest-html>=3.1.1",
   "pytest-resource-path>=1.4.0",
   "pytest-selenium>=3.0.0",
@@ -123,8 +123,8 @@ ignore = ["ANN401"]
 
 [tool.uv]
 required-environments = [
-  "'android' not in platform_release",
-  "'android' in platform_release",
+  "sys_platform == 'android'",
+  "sys_platform != 'android'",
 ]
 
 [tool.uv.sources]

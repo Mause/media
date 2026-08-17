@@ -148,7 +148,7 @@ async def monitor_cron(
     results: list[CronResponse[MonitorGet]] = []
     for result in await gather(*tasks, return_exceptions=True):
         if isinstance(result, BaseException):
-            logger.exception('Error checking monitor', exc_info=result)
+            logger.error('Error checking monitor', exc_info=result)
             results.append(
                 CronResponse[MonitorGet](success=False, message=repr(result))
             )
