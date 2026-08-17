@@ -4,7 +4,7 @@ from asyncio import create_task, sleep
 from collections import ChainMap
 from collections.abc import AsyncGenerator, Coroutine
 from enum import IntEnum
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, HTTPException, Request, WebSocket
 from pydantic import BaseModel, Field, RootModel, SecretStr, ValidationError
@@ -68,7 +68,7 @@ class PlexRequest(BaseRequest[Literal['plex'], PlexArgs]):
 class Reqs(
     RootModel[
         Annotated[
-            Union[StreamRequest, PingRequest, PlexRequest],
+            StreamRequest | PingRequest | PlexRequest,
             Field(discriminator='method'),
         ]
     ]

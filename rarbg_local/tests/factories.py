@@ -1,5 +1,5 @@
 from contextvars import ContextVar
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from factory import Factory, Faker, List, Maybe, SubFactory, lazy_attribute
 from factory.alchemy import SQLAlchemyModelFactory
@@ -132,7 +132,7 @@ class DownloadFactory(SQLFactory):
     tmdb_id = Faker('random_number')
     transmission_id = Faker('uuid4')
     imdb_id = imdb_id
-    timestamp = FuzzyDateTime(start_dt=datetime(2000, 1, 1, tzinfo=timezone.utc))
+    timestamp = FuzzyDateTime(start_dt=datetime(2000, 1, 1, tzinfo=UTC))
 
 
 class EpisodeDetailsFactory(SQLFactory):
