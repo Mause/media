@@ -23,6 +23,8 @@
         }
       },
       "env": {
+        "PLEX_TOKEN": "PLEX_TOKEN",
+        "STATSIG_KEY": "STATSIG_KEY",
         "IS_REVIEW_APP": "true"
       }
     }
