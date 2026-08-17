@@ -1,5 +1,4 @@
-from io import StringIO
-from csv import DictReader, reader
+from csv import DictReader
 from typing import cast
 
 import pudb
@@ -9,7 +8,7 @@ from sqlglot.expressions import Copy
 
 
 def parse_sql_backup(file_path):  # noqa: ANN201
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         for line in f:
             if not line.startswith('COPY '):
                 continue  # Skip lines that do not start with 'COPY '

@@ -7,4 +7,4 @@ prod:
 	pg_restore -f $@ $<
 
 
-restore: b001.sql latest.dump.sql 
+restore: b001.sql latest.dump.sql
