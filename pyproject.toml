@@ -52,7 +52,7 @@ dev = [
   "aioresponses",
   "aiosqlite>=0.21.0",
   "async-asgi-testclient==1.4.11",
-  "cryptography==46.0.6",
+  "cryptography==48.0.1",
   "factory-boy==3.3.3",
   "freezegun>=1.5.5",
   "lxml",
