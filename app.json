@@ -1,7 +1,19 @@
 {
   "stack": "heroku-26",
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
   "environments": {
     "review": {
+      "formation": {
+        "web": {
+          "quantity": 1,
+          "size": "eco"
+        }
+      },
       "env": {
         "IS_REVIEW_APP": "true"
       }
