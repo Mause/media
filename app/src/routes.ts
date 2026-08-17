@@ -29,9 +29,8 @@ export default [
       {
         path: '/select/:tmdb_id/options',
         lazy: async () => {
-          const { MovieOptionsComponent } = await import(
-            './select/MovieOptionsComponent'
-          );
+          const { MovieOptionsComponent } =
+            await import('./select/MovieOptionsComponent');
           return {
             Component: MovieOptionsComponent,
           };
@@ -40,9 +39,8 @@ export default [
       {
         path: '/select/:tmdb_id/season/:season/episode/:episode/options',
         lazy: async () => {
-          const { TvOptionsComponent } = await import(
-            './select/TvOptionsComponent'
-          );
+          const { TvOptionsComponent } =
+            await import('./select/TvOptionsComponent');
           return {
             Component: TvOptionsComponent,
           };
@@ -51,9 +49,8 @@ export default [
       {
         path: '/select/:tmdb_id/season/:season/download_all',
         lazy: async () => {
-          const { DownloadAllComponent } = await import(
-            './select/DownloadAllComponent'
-          );
+          const { DownloadAllComponent } =
+            await import('./select/DownloadAllComponent');
           return {
             Component: DownloadAllComponent,
           };
@@ -62,9 +59,8 @@ export default [
       {
         path: '/select/:tmdb_id/season/:season',
         lazy: async () => {
-          const { EpisodeSelectComponent } = await import(
-            './select/EpisodeSelectComponent'
-          );
+          const { EpisodeSelectComponent } =
+            await import('./select/EpisodeSelectComponent');
           return {
             Component: EpisodeSelectComponent,
           };
@@ -73,9 +69,8 @@ export default [
       {
         path: '/select/:tmdb_id/season',
         lazy: async () => {
-          const { SeasonSelectComponent } = await import(
-            './select/SeasonSelectComponent'
-          );
+          const { SeasonSelectComponent } =
+            await import('./select/SeasonSelectComponent');
           return {
             Component: SeasonSelectComponent,
           };
@@ -120,9 +115,8 @@ export default [
       {
         path: '/diagnostics',
         lazy: async () => {
-          const { DiagnosticsComponent } = await import(
-            './DiagnosticsComponent'
-          );
+          const { DiagnosticsComponent } =
+            await import('./DiagnosticsComponent');
           return {
             Component: DiagnosticsComponent,
           };
@@ -140,9 +134,8 @@ export default [
       {
         path: '/monitor/delete/:id',
         lazy: async () => {
-          const { MonitorDeleteComponent } = await import(
-            './monitor/MonitorDeleteComponent'
-          );
+          const { MonitorDeleteComponent } =
+            await import('./monitor/MonitorDeleteComponent');
           return {
             Component: MonitorDeleteComponent,
           };
@@ -151,9 +144,8 @@ export default [
       {
         path: '/monitor',
         lazy: async () => {
-          const { MonitorComponent } = await import(
-            './monitor/MonitorComponent'
-          );
+          const { MonitorComponent } =
+            await import('./monitor/MonitorComponent');
           return {
             Component: MonitorComponent,
           };
