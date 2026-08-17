@@ -29,7 +29,6 @@
       }
     }
   },
-  "env": { "HEROKU": { "value": "TRUE" } },
   "addons": ["heroku-postgresql:essential-0", "cloudamqp:lemur"],
   "buildpacks": [
     {
