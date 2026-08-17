@@ -39,7 +39,7 @@ export function EpisodeSelectComponent() {
     <RouteTitle title="Select Episode">
       <EpisodeSelectBreadcrumbs
         tmdb_id={tmdb_id!}
-        season={parseInt(seasonNumber!)}
+        season={Number.parseInt(seasonNumber!)}
       />
       {season ? (
         <ol>

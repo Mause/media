@@ -57,9 +57,11 @@ export function getPrefix() {
 
   if (!prefix) {
     return '';
-  } else if (prefix.includes('localhost')) {
+  }
+  if (prefix.includes('localhost')) {
     return '';
-  } else if (prefix) {
+  }
+  if (prefix) {
     return `https://${prefix}`;
   }
 }
@@ -100,9 +102,8 @@ export async function getToken(auth0: Auth0ContextInterface): Promise<string> {
         },
       });
       return '';
-    } else {
-      throw e;
     }
+    throw e;
   }
 }
 
@@ -152,9 +153,8 @@ export function getMarker(episode: {
 }) {
   if (episode.episode) {
     return String.format('S{0:00}E{1:00}', episode.season, episode.episode);
-  } else {
-    return String.format('S{0:00}', episode.season);
   }
+  return String.format('S{0:00}', episode.season);
 }
 
 export function getMessage(air_date: string) {
