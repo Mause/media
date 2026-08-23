@@ -9,6 +9,9 @@
       "size": "basic"
     }
   },
+  "env": {
+    "REACT_APP_HEROKU_SLUG_COMMIT": "${HEROKU_SLUG_COMMIT}"
+  },
   "environments": {
     "review": {
       "formation": {
