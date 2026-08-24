@@ -1,7 +1,7 @@
 import json
 import logging
 from collections.abc import AsyncGenerator, Callable, Generator
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from os.path import exists
 from typing import Annotated, cast
 
@@ -51,7 +51,7 @@ class Movie(Base):
 
 WeirdDateTime = Annotated[
     AwareDatetime,
-    BeforeValidator(lambda x: datetime.strptime(x, fmt).astimezone(tz=timezone.utc)),
+    BeforeValidator(lambda x: datetime.strptime(x, fmt).astimezone(tz=UTC)),
     PlainSerializer(lambda x: x.strftime(fmt)),
 ]
 
