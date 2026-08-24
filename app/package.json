@@ -24,7 +24,7 @@
     "@use-it/interval": "^1.0.0",
     "@vtex/axios-concurrent-retry": "^4.0.11",
     "axios": "^1.13.1",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.23",
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
     "react": "^19.0.0",
