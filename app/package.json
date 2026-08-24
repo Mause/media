@@ -91,7 +91,7 @@
     "jsdom": "^27.1.0",
     "mockdate": "^3.0.2",
     "msw": "^2.15.0",
-    "typescript-eslint": "^8.46.3",
+    "typescript-eslint": "^8.67.0",
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-bundlesize": "^0.2.0",
     "vitest": "^4.0.8"
