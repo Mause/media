@@ -12,7 +12,7 @@ export function SwrConfigWrapper({ children }: { children: ReactNode }) {
         // five minute refresh
         refreshInterval: 5 * 60 * 1000,
         fetcher: async (path: string | [string, object]) => {
-          let params = undefined;
+          let params;
           if (Array.isArray(path)) {
             params = path[1];
             path = path[0];

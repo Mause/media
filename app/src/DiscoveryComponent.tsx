@@ -25,9 +25,8 @@ export type Configuration = GetResponse<paths['/api/tmdb/configuration']>;
 function getYear(release_date: string | null | undefined): string | number {
   if (release_date) {
     return new Date(release_date).getFullYear();
-  } else {
-    return 'Unknown';
   }
+  return 'Unknown';
 }
 
 export function DiscoveryComponent() {
