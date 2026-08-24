@@ -1,13 +1,36 @@
 {
+  "stack": "heroku-26",
+  "formation": {
+    "release": {
+      "size": "basic"
+    },
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "env": {
+    "REACT_APP_HEROKU_SLUG_COMMIT": "${HEROKU_SLUG_COMMIT}"
+  },
   "environments": {
     "review": {
+      "formation": {
+        "release": {
+          "size": "eco"
+        },
+        "web": {
+          "quantity": 1,
+          "size": "eco"
+        }
+      },
       "env": {
+        "PLEX_TOKEN": "PLEX_TOKEN",
+        "STATSIG_KEY": "STATSIG_KEY",
         "IS_REVIEW_APP": "true"
       }
     }
   },
-  "env": { "HEROKU": { "value": "TRUE" } },
-  "addons": ["heroku-postgresql:hobby-dev", "cloudamqp:lemur"],
+  "addons": ["heroku-postgresql:essential-0", "cloudamqp:lemur"],
   "buildpacks": [
     {
       "url": "heroku/python"
