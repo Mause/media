@@ -42,7 +42,7 @@ def get_pool() -> dict:
             },
             timeout=1,
         ).json()
-    except (ReadTimeout, ConnectionError):
+    except ReadTimeout, ConnectionError:
         return {}
 
     return data
