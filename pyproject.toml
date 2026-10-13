@@ -128,5 +128,5 @@ required-environments = [
 ]
 
 [tool.uv.sources]
-aioresponses = { git = "https://github.com/kleine-safie/aioresponses", rev = "support_pause_reading" }
+aioresponses = { git = "https://github.com/kleine-safie/aioresponses", rev = "f95f26bdf226b0c8329e7d4e96b623a3dc33ab22" }
 nyaapy = { git = "https://github.com/Mause/nyaapy" }
